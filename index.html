@@ -1,0 +1,147 @@
+<!DOCTYPE html><html class="default"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>umt</title><meta name="description" content="Documentation for umt"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="assets/style.css"/><link rel="stylesheet" href="assets/highlight.css"/><script async src="assets/search.js" id="search-script"></script></head><body><script>document.body.classList.add(localStorage.getItem("tsd-theme") || "os")</script><header><div class="tsd-page-toolbar"><div class="container"><div class="table-wrap"><div class="table-cell" id="tsd-search" data-base="."><div class="field"><label for="tsd-search-field" class="tsd-widget search no-caption">Search</label><input type="text" id="tsd-search-field"/></div><ul class="results"><li class="state loading">Preparing search index...</li><li class="state failure">The search index is not available</li></ul><a href="index.html" class="title">umt</a></div><div class="table-cell" id="tsd-widgets"><div id="tsd-filter"><a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a><div class="tsd-filter-group"><div class="tsd-select" id="tsd-filter-visibility"><span class="tsd-select-label">All</span><ul class="tsd-select-list"><li data-value="public">Public</li><li data-value="protected">Public/Protected</li><li data-value="private" class="selected">All</li></ul></div> <input type="checkbox" id="tsd-filter-inherited" checked/><label class="tsd-widget" for="tsd-filter-inherited">Inherited</label><input type="checkbox" id="tsd-filter-externals" checked/><label class="tsd-widget" for="tsd-filter-externals">Externals</label></div></div><a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a></div></div></div></div><div class="tsd-page-title"><div class="container"><h1>umt </h1></div></div></header><div class="container container-main"><div class="row"><div class="col-8 col-content"><div class="tsd-panel tsd-typography">
+<a href="#polygon-box" id="polygon-box" style="color: inherit; text-decoration: none;">
+  <h1>Polygon Box</h1>
+</a>
+<ul>
+<li><a href="#requirements">Requirements</a></li>
+<li><a href="#installation">Installation</a></li>
+<li><a href="#setup">Setup</a><ul>
+<li><a href="#using-the-env-file">Using the .env File</a></li>
+<li><a href="#new-configuration-file">New Configuration File</a></li>
+<li><a href="#new-directory-structure-for-artifacts">New Directory Structure for Artifacts</a></li>
+</ul>
+</li>
+<li><a href="#polygon-pos-chain">Polygon PoS Chain</a><ul>
+<li><a href="#compiling">Compiling</a></li>
+<li><a href="#migrating">Migrating</a></li>
+<li><a href="#paying-for-migrations">Paying For Migrations</a></li>
+<li><a href="#basic-commands">Basic Commands</a></li>
+<li><a href="#testing">Testing</a></li>
+<li><a href="#communication-between-ethereum-and-polygon-pos-chains">Communication Between Ethereum and Polygon PoS Chains</a></li>
+</ul>
+</li>
+<li><a href="#support">Support</a></li>
+</ul>
+<p><small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small></p>
+<p>This Truffle Polygon box provides you with the boilerplate structure necessary to start coding for Polygon&#39;s Ethereum L2 solution, the Polygon PoS chain (previously called the Matic PoS chain). For detailed information on how the Polygon PoS chain works, please see their documentation <a href="https://docs.matic.network/docs/develop/getting-started">here</a>.</p>
+<p>As a starting point, this box contains only the SimpleStorage Solidity contract. Including minimal code was a conscious decision as this box is meant to provide the initial building blocks needed to get to work on Polygon PoS without pushing developers to write any particular sort of application. With this box, you will be able to compile, migrate, and test Solidity code against several instances of Polygon PoS networks.</p>
+<p>Polygon&#39;s L2 solution is fully compatible with the EVM. This means you will not need a new compiler to deploy Solidity contracts, and should be able to add your own Solidity contracts to this project. The main difference developers will encounter is in accessing and interacting with the Polygon PoS network. Additionally, Polygon offers multiple ways for dapp developers to implement communication between Ethereum (&quot;Layer 1&quot;) and Polygon PoS. Further information about how to enable Ethereum-Polygon communication can be found in the Polygon documentation <a href="https://docs.matic.network/docs/develop/ethereum-matic/getting-started">here</a>.</p>
+<p><em>A note about naming: The Polygon ecosystem was previously called Matic Network. The chain to which we&#39;ll be deploying in this Truffle Box is now called the Polygon PoS chain. We have named this box the Polygon Box because we expect to include the ability to deploy to future Polygon chains in addition to what is presented here as an initial proof-of-concept, and developers using this Polygon Box may find themselves incorporating additional aspects of the Polygon ecosystem in their work.</em></p>
+
+<a href="#requirements" id="requirements" style="color: inherit; text-decoration: none;">
+  <h2>Requirements</h2>
+</a>
+<p>The Polygon box has the following requirements:</p>
+<ul>
+<li><a href="https://nodejs.org/">Node.js</a> 10.x or later</li>
+<li><a href="https://docs.npmjs.com/cli/">NPM</a> version 5.2 or later</li>
+<li>Windows, Linux or MacOS</li>
+</ul>
+<p>Helpful, but optional:</p>
+<ul>
+<li>An <a href="https://infura.io/">Infura</a> account and Project ID</li>
+<li>A <a href="https://metamask.io/">MetaMask</a> account</li>
+</ul>
+
+<a href="#installation" id="installation" style="color: inherit; text-decoration: none;">
+  <h2>Installation</h2>
+</a>
+<pre><code class="language-bash"><span class="hl-0">$ truffle unbox polygon</span>
+</code></pre>
+
+<a href="#setup" id="setup" style="color: inherit; text-decoration: none;">
+  <h2>Setup</h2>
+</a>
+
+<a href="#using-the-env-file" id="using-the-env-file" style="color: inherit; text-decoration: none;">
+  <h3>Using the env File</h3>
+</a>
+<p>You will need at least one mnemonic to use with the network. The <code>.dotenv</code> npm package has been installed for you, and you will need to create a <code>.env</code> file for storing your mnemonic and any other needed private information.</p>
+<p>The <code>.env</code> file is ignored by git in this project, to help protect your private data. In general, it is good security practice to avoid committing information about your private keys to github. The <code>truffle-config.polygon.js</code> file expects a <code>MNEMONIC</code> value to exist in <code>.env</code> for running migrations on the networks listed in <code>truffle-config.polygon.js</code>.</p>
+<p>If you are unfamiliar with using <code>.env</code> for managing your mnemonics and other keys, the basic steps for doing so are below:</p>
+<ol>
+<li>Use <code>touch .env</code> in the command line to create a <code>.env</code> file at the root of your project.</li>
+<li>Open the <code>.env</code> file in your preferred IDE</li>
+<li>Add the following, filling in your own mnemonic and Infura project key:</li>
+</ol>
+<pre><code><span class="hl-1">MNEMONIC</span><span class="hl-0">=</span><span class="hl-2">&quot;&lt;Your Mnemonic&gt;&quot;</span><br/><span class="hl-1">INFURA_PROJECT_ID</span><span class="hl-0">=</span><span class="hl-2">&quot;&lt;Your Infura Project ID&gt;&quot;</span>
+</code></pre>
+<ol start="4">
+<li>As you develop your project, you can put any other sensitive information in this file. You can access it from other files with <code>require(&#39;dotenv&#39;).config()</code> and refer to the variable you need with <code>process.env[&#39;&lt;YOUR_VARIABLE&gt;&#39;]</code>.</li>
+</ol>
+
+<a href="#new-configuration-file" id="new-configuration-file" style="color: inherit; text-decoration: none;">
+  <h3>New Configuration File</h3>
+</a>
+<p>A new configuration file exists in this project: <code>truffle-config.polygon.js</code>. This file contains a reference to the new file location of the <code>contracts_build_directory</code> for Polygon PoS contracts and lists several networks that are running the Polygon PoS Layer 2 network instance (see <a href="#migrating">below</a>).</p>
+<p>Please note, the classic <code>truffle-config.js</code> configuration file is included here as well, because you will eventually want to deploy contracts to Ethereum as well. All normal truffle commands (<code>truffle compile</code>, <code>truffle migrate</code>, etc.) will use this config file and save built files to <code>build/ethereum-contracts</code>. You can save Solidity contracts that you wish to deploy to Ethereum in the <code>contracts/ethereum</code> folder.</p>
+
+<a href="#new-directory-structure-for-artifacts" id="new-directory-structure-for-artifacts" style="color: inherit; text-decoration: none;">
+  <h3>New Directory Structure for Artifacts</h3>
+</a>
+<p>When you compile or migrate, the resulting <code>json</code> files will be at <code>build/polygon-contracts/</code>. This is to distinguish them from any Ethereum contracts you build, which will live in <code>build/ethereum-contracts </code>. As we have included the appropriate <code>contracts_build_directory</code> in each configuration file, Truffle will know which set of built files to reference!</p>
+
+<a href="#polygon-pos-chain" id="polygon-pos-chain" style="color: inherit; text-decoration: none;">
+  <h2>Polygon PoS Chain</h2>
+</a>
+
+<a href="#compiling" id="compiling" style="color: inherit; text-decoration: none;">
+  <h3>Compiling</h3>
+</a>
+<p>You do not need to add any new compilers or settings to compile your contracts for the Polygon PoS chain, as it is fully EVM compatible. The <code>truffle-config.polygon.js</code> configuration file indicates the contract and build paths for Polygon-destined contracts.</p>
+<p>If you are compiling contracts specifically for the Polygon PoS network, use the following command, which indicates the appropriate configuration file:</p>
+<pre><code><span class="hl-3">npm</span><span class="hl-0"> </span><span class="hl-3">run</span><span class="hl-0"> </span><span class="hl-4">compile</span><span class="hl-0">:</span><span class="hl-3">polygon</span>
+</code></pre>
+<p>If you would like to recompile previously compiled contracts, you can manually run this command with
+<code>truffle compile --config=truffle-config.polygon.js</code> and add the <code>--all</code> flag.</p>
+
+<a href="#migrating" id="migrating" style="color: inherit; text-decoration: none;">
+  <h3>Migrating</h3>
+</a>
+<p>To migrate on the Polygon PoS network, run <code>npm run migrate:polygon --network=(polygon_infura_testnet | polygon_infura_mainnet)</code> (remember to choose a network from these options!).</p>
+<p>As you can see, you have several Polygon PoS L2 networks to choose from:</p>
+<p><em>Infura networks</em>. Infura is running a testnet node as well as a mainnet node for the Polygon PoS chain. Deployment to these networks requires that you sign up for an Infura account and initiate a project. See the Infura website for <a href="https://infura.io/">details</a>. In the example network configuration, we expect you to have a public Infura project key, which you should indicate in your <code>.env</code> file. The following Infura networks are indicated in the <code>truffle-config.polygon.js</code> file:</p>
+<ul>
+<li><code>polygon_infura_testnet</code>: This is the Infura Polygon PoS testnet.</li>
+<li><code>polygon_infura_mainnet</code>: This is the Infura Polygon PoS mainnet. Caution! If you deploy to this network using a connected wallet, the fees are charged in mainnet MATIC.</li>
+</ul>
+<p>If you would like to migrate previously migrated contracts on the same network, you can run <code>truffle migrate --config truffle-config.polygon.js --network= (polygon_infura_testnet | polygon_infura_mainnet)</code> and add the <code>--reset</code> flag.</p>
+
+<a href="#paying-for-migrations" id="paying-for-migrations" style="color: inherit; text-decoration: none;">
+  <h3>Paying for Migrations</h3>
+</a>
+<p>To pay for your deployments, you will need to have an account with ETH available to spend. You will need your mnemomic phrase (saved in the <code>.env</code> file or through some other secure method). The first account generated by the seed needs to have the ETH you need to deploy. For reference, the Polygon PoS testnets are based in goerli, so you should be able to use goerli ETH.</p>
+<p>If you do not have a wallet with funds to deploy, you will need to connect a wallet to at least one of the networks above. For testing, this means you will want to connect a wallet to the <code>polygon_infura_testnet</code> network. We recommend using <a href="https://metamask.io/">MetaMask</a>.</p>
+<p>Documentation for how to set up MetaMask custom networks with the Polygon PoS network can be found <a href="https://docs.matic.network/docs/develop/metamask/config-matic">here</a>.</p>
+<p>Follow the steps in the documentation above using Infura&#39;s RPC endpoints (<code>&quot;https://polygon-mainnet.infura.io/v3/&quot; + infuraProjectId</code> and <code>&quot;https://polygon-mumbai.infura.io/v3/&quot; + infuraProjectId</code>). The <code>chainId</code> values are the same as those in the <code>truffle-config.polygon.js</code> networks entries.</p>
+<p>To get testnet ETH to use, visit a faucet like <a href="https://goerli-faucet.slock.it/">https://goerli-faucet.slock.it/</a>.</p>
+
+<a href="#basic-commands" id="basic-commands" style="color: inherit; text-decoration: none;">
+  <h2>Basic Commands</h2>
+</a>
+<p>The code here will allow you to compile, migrate, and test your code against a Polygon PoS network instance. The following commands can be run (more details on each can be found in the next section):</p>
+<p>To compile:</p>
+<pre><code><span class="hl-3">npm</span><span class="hl-0"> </span><span class="hl-3">run</span><span class="hl-0"> </span><span class="hl-4">compile</span><span class="hl-0">:</span><span class="hl-3">polygon</span>
+</code></pre>
+<p>To migrate:</p>
+<pre><code><span class="hl-3">npm</span><span class="hl-0"> </span><span class="hl-3">run</span><span class="hl-0"> </span><span class="hl-4">migrate</span><span class="hl-0">:</span><span class="hl-3">polygon</span><span class="hl-0"> --</span><span class="hl-3">network</span><span class="hl-0">=(</span><span class="hl-3">polygon_infura_testnet</span><span class="hl-0"> | </span><span class="hl-3">polygon_infura_mainnet</span><span class="hl-0">)</span>
+</code></pre>
+<p>To test:</p>
+<pre><code><span class="hl-3">npm</span><span class="hl-0"> </span><span class="hl-3">run</span><span class="hl-0"> </span><span class="hl-4">test</span><span class="hl-0">:</span><span class="hl-3">polygon</span><span class="hl-0"> --</span><span class="hl-3">network</span><span class="hl-0">=(</span><span class="hl-3">polygon_infura_testnet</span><span class="hl-0"> | </span><span class="hl-3">polygon_infura_mainnet</span><span class="hl-0">)</span>
+</code></pre>
+
+<a href="#testing" id="testing" style="color: inherit; text-decoration: none;">
+  <h3>Testing</h3>
+</a>
+<p>In order to run the test currently in the boilerplate, use the following command: <code>npm run test:polygon --network=(polygon_infura_testnet | polygon_infura_mainnet)</code> (remember to choose a network!). The current test file just has some boilerplate tests to get you started. You will likely want to add network-specific tests to ensure your contracts are behaving as expected.</p>
+
+<a href="#communication-between-ethereum-and-polygon-pos-chains" id="communication-between-ethereum-and-polygon-pos-chains" style="color: inherit; text-decoration: none;">
+  <h3>Communication Between Ethereum and Polygon PoS Chains</h3>
+</a>
+<p>The information above should allow you to deploy to the Polygon PoS Layer 2 chain. This is only the first step! Once you are ready to deploy your own contracts to function on L1 using L2, you will need to be aware of the <a href="https://docs.matic.network/docs/develop/ethereum-matic/getting-started">ways in which Layer 1 and Layer 2 interact in the Polygon ecosystem</a>. Keep an eye out for additional Truffle tooling and examples that elucidate this second step to full Polygon PoS L2 integration!</p>
+
+<a href="#support" id="support" style="color: inherit; text-decoration: none;">
+  <h2>Support</h2>
+</a>
+<p>Support for this box is available via the Truffle community <a href="https://www.trufflesuite.com/community">here</a>.</p>
+</div></div><div class="col-4 col-menu menu-sticky-wrap menu-highlight"><nav class="tsd-navigation primary"><ul><li class="current"><a href="modules.html">Exports</a></li></ul></nav><nav class="tsd-navigation secondary menu-sticky"><ul><li class="tsd-kind-variable"><a href="modules.html#default" class="tsd-kind-icon">default</a></li><li class="tsd-kind-function"><a href="modules.html#EuclideanAlgorithm" class="tsd-kind-icon">Euclidean<wbr/>Algorithm</a></li><li class="tsd-kind-function"><a href="modules.html#ValueSwap" class="tsd-kind-icon">Value<wbr/>Swap</a></li><li class="tsd-kind-function"><a href="modules.html#getDecimalLength" class="tsd-kind-icon">get<wbr/>Decimal<wbr/>Length</a></li></ul></nav></div></div></div><footer class=""><div class="container"><h2>Settings</h2><p>Theme <select id="theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></p></div></footer><div class="overlay"></div><script src="assets/main.js"></script></body></html>
