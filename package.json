@@ -2,8 +2,8 @@
     "name": "umt",
     "version": "1.0.2",
     "description": "",
-    "main": "build/index.js",
-    "types": "build/index.d.js",
+    "main": "module/index.js",
+    "types": "module/index.d.js",
     "scripts": {
         "test": "ts-node --project test/tsconfig.json test/src/index.ts",
         "typedoc": "typedoc ./src/",

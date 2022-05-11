@@ -19,7 +19,7 @@
 		"resolveJsonModule": true,
 		"noEmit": false,
 		"declaration": true,
-		"outDir": "./build",
+		"outDir": "./module",
 		"alwaysStrict": true,
 		"strictPropertyInitialization": true,
 		"strictNullChecks": true,
