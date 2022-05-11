@@ -26,6 +26,10 @@ jobs:
               with:
                   node-version: 16.x
                   registry-url: https://registry.npmjs.org/
+            - run: |
+                  git config --local user.email "action@github.com"
+                  git config --local user.name "GitHub Action"
+                  git commit -m "Add changes" -a
             - run: npm install -g yarn && yarn
             - run: yarn build
             - run: npm version patch && npm publish ./
