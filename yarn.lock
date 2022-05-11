@@ -379,10 +379,10 @@ typescript@^4.1.3:
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.6.4.tgz#caa78bbc3a59e6a5c510d35703f6a09877ce45e9"
   integrity sha512-9ia/jWHIEbo49HfjrLGfKbZSuWo9iTMwXO+Ca3pRsSpbsMbc7/IU8NKdCZVRRBafVPGnoJeFL76ZOAA84I9fEg==
 
-umt@^1.0.2:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/umt/-/umt-1.0.2.tgz#e35fc16dd4e64bea3da0433e3a86bb00ef57deb2"
-  integrity sha512-2ynt+cuxma1AmZhEXEoGNQGvp9prQpHAg5E6HUfk098Pmi2uIuE7emJgskI8N8AM0QbZNdOTCclKrJXkI/c+EA==
+umt@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/umt/-/umt-1.0.3.tgz#59f9f6eaa89ccdf002e54fe34f24df4a41ad1561"
+  integrity sha512-ja+Opa8npzca6pj8ZEurpWeCxTHIWxpkjCYtoD/YhHKgVJKLP7T7dxcFLnt4m8/JoGCD8wbGwU2Qyp2aqVdc9Q==
 
 universalify@^0.1.0:
   version "0.1.2"
