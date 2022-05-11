@@ -1,4 +1,4 @@
-import euclideanAlgorithm from 'umt/build/euclideanAlgorithm';
+import euclideanAlgorithm from 'umt/module/euclideanAlgorithm';
 const test = <X extends unknown[][]>(x: X) => {
     for (const i of x) {
         if (typeof i[0] != 'object' && !Array.isArray(i[0])) {
