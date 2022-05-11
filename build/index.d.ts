@@ -3,6 +3,7 @@ import arraysJoin from './arraysJoin';
 import calculator from './calculator';
 import degToRad from './degToRad';
 import division from './division';
+import euclideanAlgorithm from './euclideanAlgorithm';
 import fact from './fact';
 import getArraysDiff from './getArraysDiff';
 import getArraysIntersect from './getArraysIntersect';
@@ -71,6 +72,7 @@ declare const UMT: {
     quickSort: (array: any[], startID: number, endID: number) => any[];
     calculator: (x: string) => string;
     random: (num: number) => number;
+    euclideanAlgorithm: (x: number, y: number, ...z: number[]) => number;
 };
-export { fact, lcm, nCr, nCrs, nPr, quotient, reduce, repeatedTrial, getArraysIntersect, getArraysDiff, max, min, arraysJoin, isDouble, isNumber, valueSwap, getDecimalLength, subtract, multiplication, addition, division, isPrimeNumber, toBinary, degToRad, radToDeg, primeFactorization, quickSort, calculator, random, };
+export { fact, lcm, nCr, nCrs, nPr, quotient, reduce, repeatedTrial, getArraysIntersect, getArraysDiff, max, min, arraysJoin, isDouble, isNumber, valueSwap, getDecimalLength, subtract, multiplication, addition, division, isPrimeNumber, toBinary, degToRad, radToDeg, primeFactorization, quickSort, calculator, random, euclideanAlgorithm, };
 export default UMT;

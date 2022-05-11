@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.random = exports.calculator = exports.quickSort = exports.primeFactorization = exports.radToDeg = exports.degToRad = exports.toBinary = exports.isPrimeNumber = exports.division = exports.addition = exports.multiplication = exports.subtract = exports.getDecimalLength = exports.valueSwap = exports.isNumber = exports.isDouble = exports.arraysJoin = exports.min = exports.max = exports.getArraysDiff = exports.getArraysIntersect = exports.repeatedTrial = exports.reduce = exports.quotient = exports.nPr = exports.nCrs = exports.nCr = exports.lcm = exports.fact = void 0;
+exports.euclideanAlgorithm = exports.random = exports.calculator = exports.quickSort = exports.primeFactorization = exports.radToDeg = exports.degToRad = exports.toBinary = exports.isPrimeNumber = exports.division = exports.addition = exports.multiplication = exports.subtract = exports.getDecimalLength = exports.valueSwap = exports.isNumber = exports.isDouble = exports.arraysJoin = exports.min = exports.max = exports.getArraysDiff = exports.getArraysIntersect = exports.repeatedTrial = exports.reduce = exports.quotient = exports.nPr = exports.nCrs = exports.nCr = exports.lcm = exports.fact = void 0;
 const addition_1 = __importDefault(require("./addition"));
 exports.addition = addition_1.default;
 const arraysJoin_1 = __importDefault(require("./arraysJoin"));
@@ -14,6 +14,8 @@ const degToRad_1 = __importDefault(require("./degToRad"));
 exports.degToRad = degToRad_1.default;
 const division_1 = __importDefault(require("./division"));
 exports.division = division_1.default;
+const euclideanAlgorithm_1 = __importDefault(require("./euclideanAlgorithm"));
+exports.euclideanAlgorithm = euclideanAlgorithm_1.default;
 const fact_1 = __importDefault(require("./fact"));
 exports.fact = fact_1.default;
 const getArraysDiff_1 = __importDefault(require("./getArraysDiff"));
@@ -92,5 +94,6 @@ const UMT = {
     quickSort: quickSort_1.default,
     calculator: calculator_1.default,
     random: random_1.default,
+    euclideanAlgorithm: euclideanAlgorithm_1.default,
 };
 exports.default = UMT;
