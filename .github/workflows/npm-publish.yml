@@ -4,7 +4,7 @@
 name: Node.js Package
 
 on:
-  push:
+    push:
         branches: [main]
 jobs:
     build:
@@ -13,7 +13,7 @@ jobs:
             - uses: actions/checkout@v3
             - uses: actions/setup-node@v3
               with:
-                  node-version: [12.x, 14.x, 16.x]
+                  node-version: 16.x
             - run: npm test
 
     publish-npm:
@@ -23,7 +23,7 @@ jobs:
             - uses: actions/checkout@v3
             - uses: actions/setup-node@v3
               with:
-                  node-version: [12.x, 14.x, 16.x]
+                  node-version: 16.x
                   registry-url: https://registry.npmjs.org/
             - run: npm install -g yarn && yarn
             - run: yarn build
