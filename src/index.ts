@@ -3,6 +3,7 @@ import arraysJoin from './arraysJoin';
 import calculator from './calculator';
 import degToRad from './degToRad';
 import division from './division';
+import euclideanAlgorithm from './euclideanAlgorithm';
 import fact from './fact';
 import getArraysDiff from './getArraysDiff';
 import getArraysIntersect from './getArraysIntersect';
@@ -57,6 +58,7 @@ const UMT = {
     quickSort,
     calculator,
     random,
+    euclideanAlgorithm,
 };
 export {
     fact,
@@ -88,5 +90,6 @@ export {
     quickSort,
     calculator,
     random,
+    euclideanAlgorithm,
 };
 export default UMT;
