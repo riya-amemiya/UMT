@@ -28,4 +28,5 @@ jobs:
                   registry-url: https://registry.npmjs.org/
             - run: npm install -g yarn && yarn
             - run: yarn build
+            - run: yarn deploy
             - run: npm version patch && npm publish ./
