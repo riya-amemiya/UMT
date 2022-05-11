@@ -1,4 +1,4 @@
-import UMT from 'umt';
+import euclideanAlgorithm from 'umt/build/euclideanAlgorithm';
 const test = <X extends unknown[][]>(x: X) => {
     for (const i of x) {
         if (typeof i[0] != 'object' && !Array.isArray(i[0])) {
@@ -25,4 +25,4 @@ const test = <X extends unknown[][]>(x: X) => {
         }
     }
 };
-test([[UMT.euclideanAlgorithm(910, 2190, 2121), 1]]);
+test([[euclideanAlgorithm(910, 2190, 2121), 1]]);
