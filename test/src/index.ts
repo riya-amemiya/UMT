@@ -25,4 +25,4 @@ const test = <X extends unknown[][]>(x: X) => {
         }
     }
 };
-test([[UMT.EuclideanAlgorithm(910, 2190, 2121), 1]]);
+test([[UMT.euclideanAlgorithm(910, 2190, 2121), 1]]);
