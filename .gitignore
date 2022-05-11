@@ -67,8 +67,6 @@ yarn-error.log
 # Yarn Integrity file
 .yarn-integrity
 
-test
-
 .vscode
 
 *.icloud
@@ -84,3 +82,5 @@ pkg/
 .firebase
 
 api
+
+doc
