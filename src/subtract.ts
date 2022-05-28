@@ -11,7 +11,7 @@ import multiplication from './multiplication';
 const subtract = (x: number, y: number) => {
     const z = Math.pow(
         10,
-        max(getDecimalLength(x), getDecimalLength(y)),
+        max([getDecimalLength(x), getDecimalLength(y)]),
     );
     return (multiplication(x, z) - multiplication(y, z)) / z;
 };

@@ -4,9 +4,9 @@ import multiplication from './multiplication';
 import subtract from './subtract';
 let n = 0;
 /**
- * @param  {string} x
  * 電卓()や符号に対応
  * xなどの文字は未対応
+ * @param  {string} x
  */
 const calculator = (x: string): string => {
     if (n === 0) {
