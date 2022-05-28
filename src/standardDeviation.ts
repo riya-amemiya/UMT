@@ -1,5 +1,8 @@
 import average from './average';
-
+/**
+ * 標準偏差
+ * @param  {number[]} values
+ */
 const standardDeviation = (values: number[]) => {
     const avg = average(values);
     const squareDiffs = values.map((value) => {
