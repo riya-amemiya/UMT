@@ -4,7 +4,7 @@ import calculator from './calculator';
 import degToRad from './degToRad';
 import division from './division';
 import euclideanAlgorithm from './euclideanAlgorithm';
-import fact from './fact';
+import factorial from './factorial';
 import getArraysDiff from './getArraysDiff';
 import getArraysIntersect from './getArraysIntersect';
 import getDecimalLength from './getDecimalLength';
@@ -28,8 +28,12 @@ import repeatedTrial from './repeatedTrial';
 import subtract from './subtract';
 import toBinary from './toBinary';
 import valueSwap from './valueSwap';
+import average from './average';
+import standardDeviation from './standardDeviation';
+import factorize from './factorize';
+import multiples from './multiples';
 const UMT = {
-    fact,
+    factorial,
     lcm,
     nCr,
     nCrs,
@@ -59,9 +63,13 @@ const UMT = {
     calculator,
     random,
     euclideanAlgorithm,
+    average,
+    standardDeviation,
+    factorize,
+    multiples,
 };
 export {
-    fact,
+    factorial,
     lcm,
     nCr,
     nCrs,
@@ -91,5 +99,9 @@ export {
     calculator,
     random,
     euclideanAlgorithm,
+    average,
+    standardDeviation,
+    factorize,
+    multiples,
 };
 export default UMT;
