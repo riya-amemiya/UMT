@@ -1,5 +1,5 @@
 /**
- * 小数点以下の桁
+ * 小数点以下の桁数
  * @param  {number} value
  */
 const getDecimalLength = (value: number) => {
