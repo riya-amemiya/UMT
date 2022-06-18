@@ -4,7 +4,7 @@ import nCr from './nCr';
  * @param  {number} n
  * @param  {number} r
  */
-const nCrs = (n: number, r: number) => {
+const nHr = (n: number, r: number) => {
     if (n === 0 || r === 0) {
         return NaN;
     }
@@ -12,4 +12,4 @@ const nCrs = (n: number, r: number) => {
     if (1 > y) return 0;
     return y;
 };
-export default nCrs;
+export default nHr;
