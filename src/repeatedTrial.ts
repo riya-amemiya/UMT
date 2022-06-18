@@ -1,4 +1,5 @@
-import reduce from './reduce';
+import euclideanAlgorithm from './euclideanAlgorithm';
+import nCr from './nCr';
 /**
  * 反復的な思考
  * @param  {number} n
@@ -10,11 +11,16 @@ const repeatedTrial = (
     r: number,
     p: { x: number; y: number },
 ) => {
-    const x = [p.x ** r, p.y ** r];
-    const y = [(p.y - p.x) ** (n - r), p.y ** (n - r)];
-    p.x = x[0] * y[0] * 10;
-    p.y = x[1] * y[1];
-    const z = reduce(p.x, p.y);
-    return [z.x, z.y];
+    let x = nCr(n, r);
+    let answer1 = x * Math.pow(p.x, r) * Math.pow(p.y - p.x, n - r);
+    let answer2 = Math.pow(p.y, r) * Math.pow(p.y, n - r);
+    let greatest_common_divisor = euclideanAlgorithm(
+        answer1,
+        answer2,
+    );
+    return [
+        answer1 / greatest_common_divisor,
+        answer2 / greatest_common_divisor,
+    ];
 };
 export default repeatedTrial;

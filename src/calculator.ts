@@ -2,13 +2,14 @@ import addition from './addition';
 import division from './division';
 import multiplication from './multiplication';
 import subtract from './subtract';
-let n = 0;
 /**
  * 電卓()や符号に対応
  * xなどの文字は未対応
  * @param  {string} x
+ * @param  {string} n 計算を開始する数字(default 0)
  */
-const calculator = (x: string): string => {
+
+const calculator = (x: string, n: number = 0): string => {
     if (n === 0) {
         x = x.replace(/\s+/g, '');
 
@@ -27,8 +28,9 @@ const calculator = (x: string): string => {
             return calculator(
                 x.replace(
                     y[0],
-                    calculator(y[0].replace(/\(|\)/g, '')),
+                    calculator(y[0].replace(/\(|\)/g, ''), n),
                 ),
+                n,
             );
         } else {
             return calculator(
@@ -39,8 +41,10 @@ const calculator = (x: string): string => {
                     )})`,
                     calculator(
                         x.slice(x.indexOf('(') + 1, x.indexOf(')')),
+                        n,
                     ),
                 ),
+                n,
             );
         }
     } else if (x.indexOf('*') != -1 || x.indexOf('/') != -1) {
@@ -69,6 +73,7 @@ const calculator = (x: string): string => {
                             : '0'
                     }`,
                 ),
+                n,
             );
         }
         return x;
@@ -99,6 +104,7 @@ const calculator = (x: string): string => {
                             : '0'
                     }`,
                 ),
+                n,
             );
         }
         return x;

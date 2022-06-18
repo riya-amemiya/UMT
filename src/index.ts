@@ -16,7 +16,7 @@ import max from './max';
 import min from './min';
 import multiplication from './multiplication';
 import nCr from './nCr';
-import nCrs from './nCrs';
+import nHr from './nHr';
 import nPr from './nPr';
 import primeFactorization from './primeFactorization';
 import quickSort from './quickSort';
@@ -36,7 +36,7 @@ const UMT = {
     factorial,
     lcm,
     nCr,
-    nCrs,
+    nHr,
     nPr,
     quotient,
     reduce,
@@ -72,7 +72,7 @@ export {
     factorial,
     lcm,
     nCr,
-    nCrs,
+    nHr,
     nPr,
     quotient,
     reduce,

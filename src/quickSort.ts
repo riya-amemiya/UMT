@@ -4,7 +4,11 @@
  * @param  {number} startID
  * @param  {number} endID
  */
-const quickSort = (array: any[], startID: number, endID: number) => {
+const quickSort = (
+    array: any[],
+    startID: number = 0,
+    endID: number = array.length - 1,
+) => {
     const pivot = array[Math.floor((startID + endID) / 2)];
     let left = startID;
     let right = endID;
