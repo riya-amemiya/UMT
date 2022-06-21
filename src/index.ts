@@ -1,72 +1,79 @@
-import addition from './addition';
-import arraysJoin from './arraysJoin';
-import calculator from './calculator';
-import degToRad from './degToRad';
-import division from './division';
-import euclideanAlgorithm from './euclideanAlgorithm';
-import factorial from './factorial';
-import getArraysDiff from './getArraysDiff';
-import getArraysIntersect from './getArraysIntersect';
-import getDecimalLength from './getDecimalLength';
-import isDouble from './isDouble';
-import isNumber from './isNumber';
-import isPrimeNumber from './isPrimeNumber';
-import lcm from './lcm';
-import max from './max';
-import min from './min';
-import multiplication from './multiplication';
-import nCr from './nCr';
-import nHr from './nHr';
-import nPr from './nPr';
-import primeFactorization from './primeFactorization';
-import quickSort from './quickSort';
-import quotient from './quotient';
-import radToDeg from './radToDeg';
-import random from './random';
-import reduce from './reduce';
-import repeatedTrial from './repeatedTrial';
-import subtract from './subtract';
-import toBinary from './toBinary';
-import valueSwap from './valueSwap';
-import average from './average';
-import standardDeviation from './standardDeviation';
-import factorize from './factorize';
-import multiples from './multiples';
+/* Array */
+import arraysJoin from './Array/arraysJoin';
+import getArraysDiff from './Array/getArraysDiff';
+import getArraysIntersect from './Array/getArraysIntersect';
+import quickSort from './Array/quickSort';
+
+/* Math */
+import addition from './Math/addition';
+import calculator from './Math/calculator';
+import degToRad from './Math/degToRad';
+import division from './Math/division';
+import euclideanAlgorithm from './Math/euclideanAlgorithm';
+import factorial from './Math/factorial';
+import getDecimalLength from './Math/getDecimalLength';
+import isDouble from './Math/isDouble';
+import isNumber from './Math/isNumber';
+import isPrimeNumber from './Math/isPrimeNumber';
+import lcm from './Math/lcm';
+import max from './Math/max';
+import min from './Math/min';
+import multiplication from './Math/multiplication';
+import nCr from './Math/nCr';
+import nHr from './Math/nHr';
+import nPr from './Math/nPr';
+import primeFactorization from './Math/primeFactorization';
+import quotient from './Math/quotient';
+import radToDeg from './Math/radToDeg';
+import random from './Math/random';
+import reduce from './Math/reduce';
+import repeatedTrial from './Math/repeatedTrial';
+import subtract from './Math/subtract';
+import toBinary from './Math/toBinary';
+import valueSwap from './Math/valueSwap';
+import average from './Math/average';
+import standardDeviation from './Math/standardDeviation';
+import factorize from './Math/factorize';
+import multiples from './Math/multiples';
 const UMT = {
-    factorial,
-    lcm,
-    nCr,
-    nHr,
-    nPr,
-    quotient,
-    reduce,
-    repeatedTrial,
-    getArraysIntersect,
-    getArraysDiff,
-    max,
-    min,
-    arraysJoin,
-    isDouble,
-    isNumber,
-    valueSwap,
-    getDecimalLength,
-    subtract,
-    multiplication,
-    addition,
-    division,
-    isPrimeNumber,
-    toBinary,
-    degToRad,
-    radToDeg,
-    primeFactorization,
-    quickSort,
-    calculator,
-    random,
-    euclideanAlgorithm,
-    average,
-    standardDeviation,
-    factorize,
-    multiples,
+    Array: {
+        arraysJoin,
+        getArraysDiff,
+        getArraysIntersect,
+        quickSort,
+    },
+    Math: {
+        factorial,
+        lcm,
+        nCr,
+        nHr,
+        nPr,
+        quotient,
+        reduce,
+        repeatedTrial,
+        max,
+        min,
+        isDouble,
+        isNumber,
+        valueSwap,
+        getDecimalLength,
+        subtract,
+        multiplication,
+        addition,
+        division,
+        isPrimeNumber,
+        toBinary,
+        degToRad,
+        radToDeg,
+        primeFactorization,
+        calculator,
+        random,
+        euclideanAlgorithm,
+        average,
+        standardDeviation,
+        factorize,
+        multiples,
+    },
 };
 export {
     factorial,
