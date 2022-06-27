@@ -39,7 +39,7 @@ const test = <X extends unknown[][]>(x: X) => {
         count++;
         if (typeof i[0] != 'object' && !Array.isArray(i[0])) {
             if (!(i[0] === i[1])) {
-                throw `Error:${count} x:${i[0]},y:${i[1]}`;
+                throw `Error:${count} out:${i[0]},in:${i[1]}`;
             }
         } else if (Array.isArray(i[0]) && Array.isArray(i[1])) {
             for (let n = 0; n < i[0].length; n++) {
