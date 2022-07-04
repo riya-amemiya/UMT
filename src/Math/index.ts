@@ -61,3 +61,38 @@ export {
     factorize,
     multiples,
 };
+
+const MathFunctions = {
+    factorial,
+    lcm,
+    nCr,
+    nHr,
+    nPr,
+    quotient,
+    reduce,
+    repeatedTrial,
+    max,
+    min,
+    isDouble,
+    isNumber,
+    valueSwap,
+    getDecimalLength,
+    subtract,
+    multiplication,
+    addition,
+    division,
+    isPrimeNumber,
+    toBinary,
+    degToRad,
+    radToDeg,
+    primeFactorization,
+    calculator,
+    random,
+    euclideanAlgorithm,
+    average,
+    standardDeviation,
+    factorize,
+    multiples,
+};
+
+export default MathFunctions;

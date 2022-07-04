@@ -35,45 +35,15 @@ import average from './Math/average';
 import standardDeviation from './Math/standardDeviation';
 import factorize from './Math/factorize';
 import multiples from './Math/multiples';
-const UMT = {
-    Array: {
-        arraysJoin,
-        getArraysDiff,
-        getArraysIntersect,
-        quickSort,
-    },
-    Math: {
-        factorial,
-        lcm,
-        nCr,
-        nHr,
-        nPr,
-        quotient,
-        reduce,
-        repeatedTrial,
-        max,
-        min,
-        isDouble,
-        isNumber,
-        valueSwap,
-        getDecimalLength,
-        subtract,
-        multiplication,
-        addition,
-        division,
-        isPrimeNumber,
-        toBinary,
-        degToRad,
-        radToDeg,
-        primeFactorization,
-        calculator,
-        random,
-        euclideanAlgorithm,
-        average,
-        standardDeviation,
-        factorize,
-        multiples,
-    },
+import MathFunctions from './Math';
+import ArrayFunctions from './Array';
+
+const UMT: {
+    Array: typeof ArrayFunctions;
+    Math: typeof MathFunctions;
+} = {
+    Array: ArrayFunctions,
+    Math: MathFunctions,
 };
 export {
     factorial,
