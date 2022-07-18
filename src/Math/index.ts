@@ -27,6 +27,8 @@ import repeatedTrial from './repeatedTrial';
 import standardDeviation from './standardDeviation';
 import subtract from './subtract';
 import toBinary from './toBinary';
+import toCelsius from './toCelsius';
+import toKelvin from './toKelvin';
 import valueSwap from './valueSwap';
 
 export {
@@ -60,6 +62,8 @@ export {
     standardDeviation,
     factorize,
     multiples,
+    toKelvin,
+    toCelsius,
 };
 
 const MathFunctions = {
