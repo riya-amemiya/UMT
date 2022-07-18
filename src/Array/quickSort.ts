@@ -4,8 +4,8 @@
  * @param  {number} startID
  * @param  {number} endID
  */
-const quickSort = (
-    array: any[],
+const quickSort = <A extends any[]>(
+    array: A,
     startID: number = 0,
     endID: number = array.length - 1,
 ) => {

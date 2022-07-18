@@ -1,5 +1,5 @@
 /**
- * 平均
+ * 平均値
  * @param  {number[]} numbers
  */
 const average = (numbers: number[]): number => {

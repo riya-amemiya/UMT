@@ -3,6 +3,7 @@ import arraysJoin from './Array/arraysJoin';
 import getArraysDiff from './Array/getArraysDiff';
 import getArraysIntersect from './Array/getArraysIntersect';
 import quickSort from './Array/quickSort';
+import ArrayFunctions from './Array';
 
 /* Math */
 import addition from './Math/addition';
@@ -36,7 +37,6 @@ import standardDeviation from './Math/standardDeviation';
 import factorize from './Math/factorize';
 import multiples from './Math/multiples';
 import MathFunctions from './Math';
-import ArrayFunctions from './Array';
 
 const UMT: {
     Array: typeof ArrayFunctions;

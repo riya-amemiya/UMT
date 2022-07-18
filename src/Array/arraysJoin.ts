@@ -3,10 +3,17 @@
  * @param  {any[]} array
  * @param  {any[]} ...arrays
  */
-const arraysJoin = (array: any[], ...arrays: any[]) => {
+const arraysJoin = <
+    A extends any[],
+    B extends any[],
+    C extends A | B,
+>(
+    array: A,
+    ...arrays: B[]
+) => {
     for (const i of arrays) {
         array.push(...i);
     }
-    return [...new Set(array)];
+    return [...new Set(array)] as C;
 };
 export default arraysJoin;
