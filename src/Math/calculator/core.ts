@@ -1,19 +1,15 @@
-import addition from './addition';
-import division from './division';
-import multiplication from './multiplication';
-import subtract from './subtract';
+import addition from '../addition';
+import division from '../division';
+import multiplication from '../multiplication';
+import subtract from '../subtract';
 /**
- * 電卓()や符号に対応
+ * 電卓
+ * ()や符号に対応
  * xなどの文字は未対応
  * @param  {string} x 計算式
  */
 
-const calculator = (x: string, n: number = 0): string => {
-    if (n === 0) {
-        x = x.replace(/\s+/g, '');
-
-        n++;
-    }
+const calculatorCore = (x: string): string => {
     x = x.replace(/--/g, '+');
     x = x.replace(/\+\+/g, '+');
     x = x.replace(/\+-/g, '+0-');
@@ -24,26 +20,23 @@ const calculator = (x: string, n: number = 0): string => {
             /\(\d+\.?(\d+)?(\*|\/|\+|\-)\d+\.?(\d+)?\)/,
         );
         if (y) {
-            return calculator(
+            return calculatorCore(
                 x.replace(
                     y[0],
-                    calculator(y[0].replace(/\(|\)/g, ''), n),
+                    calculatorCore(y[0].replace(/\(|\)/g, '')),
                 ),
-                n,
             );
         } else {
-            return calculator(
+            return calculatorCore(
                 x.replace(
                     `(${x.slice(
                         x.indexOf('(') + 1,
                         x.indexOf(')'),
                     )})`,
-                    calculator(
+                    calculatorCore(
                         x.slice(x.indexOf('(') + 1, x.indexOf(')')),
-                        n,
                     ),
                 ),
-                n,
             );
         }
     } else if (x.indexOf('*') != -1 || x.indexOf('/') != -1) {
@@ -55,7 +48,7 @@ const calculator = (x: string, n: number = 0): string => {
             y[1] = y[0][0].split(/(\d+\.\d+)|(\d+)/g).filter((n) => {
                 return typeof n != 'undefined' && n != '';
             });
-            return calculator(
+            return calculatorCore(
                 x.replace(
                     y[0][0],
                     `${
@@ -72,7 +65,6 @@ const calculator = (x: string, n: number = 0): string => {
                             : '0'
                     }`,
                 ),
-                n,
             );
         }
         return x;
@@ -86,7 +78,7 @@ const calculator = (x: string, n: number = 0): string => {
             y[1] = y[0][0].split(/(\d+\.\d+)|(\d+)/g).filter((n) => {
                 return typeof n != 'undefined' && n !== '';
             });
-            return calculator(
+            return calculatorCore(
                 x.replace(
                     y[0][0],
                     `${
@@ -103,7 +95,6 @@ const calculator = (x: string, n: number = 0): string => {
                             : '0'
                     }`,
                 ),
-                n,
             );
         }
         return x;
@@ -111,4 +102,4 @@ const calculator = (x: string, n: number = 0): string => {
         return x;
     }
 };
-export default calculator;
+export default calculatorCore;

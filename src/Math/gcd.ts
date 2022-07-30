@@ -6,7 +6,7 @@ import valueSwap from './valueSwap';
  * @param  {number} y
  * @param  {number} ...z
  */
-const euclideanAlgorithm = (x: number, y: number, ...z: number[]) => {
+const gcd = (x: number, y: number, ...z: number[]) => {
     if (x === 0 || y === 0) return 0;
     [x, y] = valueSwap(x, y);
     /* ユークリッドの互除法 */
@@ -18,9 +18,9 @@ const euclideanAlgorithm = (x: number, y: number, ...z: number[]) => {
     }
     if (z.length > 0) {
         for (let i = 0; i < z.length; i++) {
-            x = euclideanAlgorithm(x, z[i]);
+            x = gcd(x, z[i]);
         }
     }
     return x;
 };
-export default euclideanAlgorithm;
+export default gcd;

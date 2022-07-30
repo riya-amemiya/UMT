@@ -1,15 +1,18 @@
 import {
-    addition,
     arraysJoin,
+    getArraysDiff,
+    getArraysIntersect,
+    quickSort,
+} from '../../module/Array';
+import {
+    addition,
     average,
     calculator,
     degToRad,
     division,
-    euclideanAlgorithm,
+    gcd,
     factorial,
     factorize,
-    getArraysDiff,
-    getArraysIntersect,
     getDecimalLength,
     isDouble,
     isNumber,
@@ -23,7 +26,6 @@ import {
     nHr,
     nPr,
     primeFactorization,
-    quickSort,
     quotient,
     radToDeg,
     reduce,
@@ -32,7 +34,8 @@ import {
     subtract,
     toBinary,
     valueSwap,
-} from '../../module';
+} from '../../module/Math';
+import { pipeFunction } from '../../module/Tool';
 let count = 0;
 const test = <X extends unknown[][]>(x: X) => {
     for (const i of x) {
@@ -70,7 +73,7 @@ test([
     [calculator('(((2+2)*4)+2)/2'), '9'],
     [degToRad(90), Math.PI / 2],
     [division(1.1, 1.11), 0.9],
-    [euclideanAlgorithm(910, 2190, 2121), 1],
+    [gcd(910, 2190, 2121), 1],
     [factorial(5), 120],
     [factorize(24), [2, 2, 2, 3]],
     [getArraysDiff([1, 2, 3, 4], [1, 2, 3]), [4]],
@@ -106,4 +109,10 @@ test([
     [subtract(1.1, 2), -0.9],
     [toBinary(10), '1010'],
     [valueSwap(2, 1), [1, 2]],
+    [
+        pipeFunction((x: number) => x + 2)(
+            (x) => (y: number) => x(3) + y,
+        )((x) => x(3))(),
+        8,
+    ],
 ]);
