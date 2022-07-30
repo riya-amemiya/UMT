@@ -5,7 +5,8 @@ import subtract from '../subtract';
 /**
  * 電卓
  * ()や符号に対応
- * @param  {string} x
+ * xなどの文字は未対応
+ * @param  {string} x 計算式
  */
 
 const calculatorCore = (x: string): string => {
