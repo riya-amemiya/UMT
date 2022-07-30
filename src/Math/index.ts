@@ -3,7 +3,7 @@ import average from './average';
 import calculator from './calculator';
 import degToRad from './degToRad';
 import division from './division';
-import euclideanAlgorithm from './euclideanAlgorithm';
+import gcd from './gcd';
 import factorial from './factorial';
 import factorize from './factorize';
 import getDecimalLength from './getDecimalLength';
@@ -57,7 +57,7 @@ export {
     primeFactorization,
     calculator,
     random,
-    euclideanAlgorithm,
+    gcd,
     average,
     standardDeviation,
     factorize,
@@ -65,38 +65,3 @@ export {
     toKelvin,
     toCelsius,
 };
-
-const MathFunctions = {
-    factorial,
-    lcm,
-    nCr,
-    nHr,
-    nPr,
-    quotient,
-    reduce,
-    repeatedTrial,
-    max,
-    min,
-    isDouble,
-    isNumber,
-    valueSwap,
-    getDecimalLength,
-    subtract,
-    multiplication,
-    addition,
-    division,
-    isPrimeNumber,
-    toBinary,
-    degToRad,
-    radToDeg,
-    primeFactorization,
-    calculator,
-    random,
-    euclideanAlgorithm,
-    average,
-    standardDeviation,
-    factorize,
-    multiples,
-};
-
-export default MathFunctions;

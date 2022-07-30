@@ -1,4 +1,4 @@
-import euclideanAlgorithm from './euclideanAlgorithm';
+import gcd from './gcd';
 import valueSwap from './valueSwap';
 /**
  * 最小公倍数
@@ -10,6 +10,6 @@ const lcm = (x: number, y: number) => {
         return 0;
     }
     [x, y] = valueSwap(x, y);
-    return (x / euclideanAlgorithm(x, y)) * y;
+    return (x / gcd(x, y)) * y;
 };
 export default lcm;

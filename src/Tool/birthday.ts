@@ -1,14 +1,6 @@
 import now from '../Date/now';
 
-const birthday = ({
-    yer,
-    mon,
-    day,
-}: {
-    yer: number;
-    mon: number;
-    day: number;
-}) => {
+const birthday = (yer: number, mon: number, day: number) => {
     const birthday = new Date(
         yer < 0 ? -yer : yer,
         mon < 0 ? -mon - 1 : mon - 1,

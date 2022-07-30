@@ -1,7 +1,7 @@
-import MathFunctions from './Math';
-import DateFunctions from './Date/index';
-import ToolFunctions from './Tool';
-import ArrayFunctions from './Array';
+import * as MathFunctions from './Math';
+import * as DateFunctions from './Date/index';
+import * as ToolFunctions from './Tool';
+import * as ArrayFunctions from './Array';
 
 const UMT: {
     Array: typeof ArrayFunctions;
