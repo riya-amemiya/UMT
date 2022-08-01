@@ -14,7 +14,6 @@ const calculatorCore = (x: string): string => {
     x = x.replace(/\+\+/g, '+');
     x = x.replace(/\+-/g, '+0-');
     x = x.replace(/\-\+/g, '+0-');
-    console.log('====================================');
     console.log(x);
     console.log('====================================');
     if (x.indexOf('(') != -1 || x.indexOf(')') != -1) {
