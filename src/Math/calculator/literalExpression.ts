@@ -15,11 +15,24 @@ const literalExpression = (x: string) => {
                 .filter((n) => n !== '' && typeof n != 'undefined');
         }
     }
-    cache[0][1] = cache[0][1].replace(/\+/g, 'plus');
-    cache[0][1] = cache[0][1].replace(/\-/g, 'minus');
-    cache[0][1] = cache[0][1].replace(/minus/g, '+');
-    cache[0][1] = cache[0][1].replace(/plus/g, '-');
-    cache[1] = calculatorCore(`${cache[1]}${cache[0][1]}`);
+    if (cache[0][1]) {
+        if (cache[0][1].indexOf('+') !== -1) {
+            cache[0][1] = cache[0][1].replace(/\+/g, 'plus');
+        }
+        if (cache[0][1].indexOf('-') !== -1) {
+            cache[0][1] = cache[0][1].replace(/\-/g, 'minus');
+        }
+        if (cache[0][1].indexOf('plus') !== 1) {
+            cache[0][1] = cache[0][1].replace(/plus/g, '-');
+        }
+        if (cache[0][1].indexOf('minus') !== 1) {
+            cache[0][1] = cache[0][1].replace(/minus/g, '+');
+        }
+    }
+
+    cache[1] = cache[0][1]
+        ? calculatorCore(`${cache[1]}${cache[0][1]}`)
+        : calculatorCore(cache[1]);
 
     cache[0] = cache[0][0]
         .split(/([0-9]+)|([a-zA-Z]+)/)
