@@ -23,6 +23,7 @@ const calculatorCore = (x: string, ex?: Props): string => {
             if ($) {
                 return calculatorCore(
                     x.replace($[0], exchange({ n: $[0], $: ex.$ })),
+                    ex,
                 );
             }
         }
@@ -37,6 +38,7 @@ const calculatorCore = (x: string, ex?: Props): string => {
                     y[0],
                     calculatorCore(y[0].replace(/\(|\)/g, '')),
                 ),
+                ex,
             );
         } else {
             return calculatorCore(
@@ -49,6 +51,7 @@ const calculatorCore = (x: string, ex?: Props): string => {
                         x.slice(x.indexOf('(') + 1, x.indexOf(')')),
                     ),
                 ),
+                ex,
             );
         }
     } else if (x.indexOf('*') != -1 || x.indexOf('/') != -1) {
@@ -77,6 +80,7 @@ const calculatorCore = (x: string, ex?: Props): string => {
                             : '0'
                     }`,
                 ),
+                ex,
             );
         }
         return x;
@@ -107,6 +111,7 @@ const calculatorCore = (x: string, ex?: Props): string => {
                             : '0'
                     }`,
                 ),
+                ex,
             );
         }
         return x;
