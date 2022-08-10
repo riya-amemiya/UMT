@@ -2,20 +2,31 @@ import addition from '../addition';
 import division from '../division';
 import multiplication from '../multiplication';
 import subtract from '../subtract';
+import exchange from './exchange';
 /**
  * 電卓
  * ()や符号に対応
  * xなどの文字は未対応
  * @param  {string} x 計算式
  */
-
-const calculatorCore = (x: string): string => {
+interface Props {
+    $?: number;
+}
+const calculatorCore = (x: string, ex?: Props): string => {
     x = x.replace(/--/g, '+');
     x = x.replace(/\+\+/g, '+');
     x = x.replace(/\+-/g, '+0-');
     x = x.replace(/\-\+/g, '+0-');
-    console.log(x);
-    console.log('====================================');
+    if (x.indexOf('$') != -1) {
+        if (ex) {
+            const $ = x.match(/(\$[0-9]+)/);
+            if ($) {
+                return calculatorCore(
+                    x.replace($[0], exchange({ n: $[0], $: ex.$ })),
+                );
+            }
+        }
+    }
     if (x.indexOf('(') != -1 || x.indexOf(')') != -1) {
         const y = x.match(
             /\(\d+\.?(\d+)?(\*|\/|\+|\-)\d+\.?(\d+)?\)/,

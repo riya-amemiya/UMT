@@ -7,13 +7,15 @@ import literalExpression from './literalExpression';
  * 一文字までの方程式に対応
  * @param  {string} x
  */
-
-const calculator = (x: string) => {
+interface Props {
+    $?: number;
+}
+const calculator = (x: string, ex?: Props) => {
     x = x.replace(/\s+/g, '');
     if (x.indexOf('=') != -1) {
         return literalExpression(x);
     } else {
-        return calculatorCore(x);
+        return calculatorCore(x, ex);
     }
 };
 export default calculator;
