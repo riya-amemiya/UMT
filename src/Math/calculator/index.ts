@@ -6,11 +6,10 @@ import literalExpression from './literalExpression';
  * ()や符号に対応
  * 一文字までの方程式に対応
  * @param  {string} x
+ * @param  {object} ex 為替
  */
-interface Props {
-    $?: number;
-}
-const calculator = (x: string, ex?: Props) => {
+
+const calculator = <T extends object>(x: string, ex?: T) => {
     x = x.replace(/\s+/g, '');
     if (x.indexOf('=') != -1) {
         return literalExpression(x);

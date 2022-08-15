@@ -71,6 +71,7 @@ test([
     [calculator('(2*2)'), '4'],
     [calculator('1.1+2.111'), '3.211'],
     [calculator('(((2+2)*4)+2)/2'), '9'],
+    [calculator('(((2+2)*4)+2)/$2', { $: 100 }), '0.09'],
     [degToRad(90), Math.PI / 2],
     [division(1.1, 1.11), 0.9],
     [gcd(910, 2190, 2121), 1],
@@ -83,6 +84,7 @@ test([
     [isDouble('1.1', false), false],
     [isNumber(1.1), true],
     [isNumber('1.1', false), false],
+    [isNumber('1.1'), true],
     [isPrimeNumber(2), true],
     [lcm(2, 3), 6],
     [max([1, 2, 3, 4]), 4],
@@ -116,6 +118,3 @@ test([
         8,
     ],
 ]);
-console.log('====================================');
-console.log(calculator('$10+$20', { $: 100 }));
-console.log('====================================');

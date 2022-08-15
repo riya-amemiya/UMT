@@ -9,25 +9,38 @@ import exchange from './exchange';
  * xなどの文字は未対応
  * @param  {string} x 計算式
  */
-interface Props {
-    $?: number;
-}
-const calculatorCore = (x: string, ex?: Props): string => {
+const calculatorCore = <T extends object>(
+    x: string,
+    ex?: T,
+): string => {
     x = x.replace(/--/g, '+');
     x = x.replace(/\+\+/g, '+');
     x = x.replace(/\+-/g, '+0-');
     x = x.replace(/\-\+/g, '+0-');
-    if (x.indexOf('$') != -1) {
-        if (ex) {
-            const $ = x.match(/(\$[0-9]+)/);
-            if ($) {
-                return calculatorCore(
-                    x.replace($[0], exchange({ n: $[0], $: ex.$ })),
-                    ex,
-                );
+    if (ex) {
+        for (const i in ex) {
+            if (x.indexOf(i) != -1) {
+                const $ = x.match(new RegExp(`\\${i}` + '([0-9]+)'));
+                if ($) {
+                    return calculatorCore(
+                        x.replace($[0], exchange($[0], ex)),
+                        ex,
+                    );
+                }
             }
         }
     }
+    // if (x.indexOf('$') != -1) {
+    //     if (ex) {
+    //         const $ = x.match(/(\$[0-9]+)/);
+    //         if ($) {
+    //             return calculatorCore(
+    //                 x.replace($[0], exchange($[0], ex)),
+    //                 ex,
+    //             );
+    //         }
+    //     }
+    // }
     if (x.indexOf('(') != -1 || x.indexOf(')') != -1) {
         const y = x.match(
             /\(\d+\.?(\d+)?(\*|\/|\+|\-)\d+\.?(\d+)?\)/,
