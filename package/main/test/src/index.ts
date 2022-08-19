@@ -71,6 +71,7 @@ test([
     [calculator('(2*2)'), '4'],
     [calculator('1.1+2.111'), '3.211'],
     [calculator('(((2+2)*4)+2)/2'), '9'],
+    [calculator('(1+1)^3'), '8'],
     [calculator('(((2+2)*4)+2)/$2', { $: 100 }), '0.09'],
     [degToRad(90), Math.PI / 2],
     [division(1.1, 1.11), 0.9],
