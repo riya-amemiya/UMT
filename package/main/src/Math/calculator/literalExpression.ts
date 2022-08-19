@@ -17,6 +17,7 @@ const literalExpression = (x: string) => {
         }
     }
     if (cache[0][1]) {
+        cache[0][1] = calculatorCore(cache[0][1]);
         if (cache[0][1].indexOf('+') !== -1) {
             cache[0][1] = cache[0][1].replace(/\+/g, 'plus');
         }
@@ -30,23 +31,24 @@ const literalExpression = (x: string) => {
             cache[0][1] = cache[0][1].replace(/minus/g, '+');
         }
     }
-
     cache[1] = cache[0][1]
         ? calculatorCore(`${cache[1]}${cache[0][1]}`)
         : calculatorCore(cache[1]);
-
     cache[0] = cache[0][0]
         .split(/([0-9]+)|([a-zA-Z]+)/)
         .filter((n) => n !== '' && typeof n != 'undefined');
-
-    const cacheGcd = gcd(Number(cache[0][0]), Number(cache[1]));
-    if (cacheGcd !== 1) {
-        return `${division(Number(cache[1]), cacheGcd)[0]}/${
-            division(Number(cache[0][0]), cacheGcd)[0]
-        }`;
+    if (isNaN(Number(cache[0][0]))) {
+        return cache[1];
+    } else {
+        const cacheGcd = gcd(Number(cache[0][0]), Number(cache[1]));
+        if (cacheGcd !== 1) {
+            return `${division(Number(cache[1]), cacheGcd)[0]}/${
+                division(Number(cache[0][0]), cacheGcd)[0]
+            }`;
+        }
+        return cache[0][0] == '1'
+            ? `${cache[1]}/${cache[0][0]}`
+            : cache[1];
     }
-    return cache[0][0] == '1'
-        ? `${cache[1]}/${cache[0][0]}`
-        : cache[1];
 };
 export default literalExpression;

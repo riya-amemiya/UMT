@@ -3,7 +3,7 @@
  * @param  {any[]} array
  * @param  {any[]} ...arrays
  */
-const getArraysIntersect = <
+const getArraysCommon = <
     A extends any[],
     B extends any[],
     C extends A | B,
@@ -19,4 +19,4 @@ const getArraysIntersect = <
         hasArr.includes(value),
     ) as C;
 };
-export default getArraysIntersect;
+export default getArraysCommon;

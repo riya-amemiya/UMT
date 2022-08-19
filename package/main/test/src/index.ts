@@ -1,7 +1,7 @@
 import {
     arraysJoin,
     getArraysDiff,
-    getArraysIntersect,
+    getArraysCommon,
     quickSort,
 } from '../../module/Array';
 import {
@@ -79,7 +79,7 @@ test([
     [factorial(5), 120],
     [factorize(24), [2, 2, 2, 3]],
     [getArraysDiff([1, 2, 3, 4], [1, 2, 3]), [4]],
-    [getArraysIntersect([1, 2, 3, 4], [1, 2, 3]), [1, 2, 3]],
+    [getArraysCommon([1, 2, 3, 4], [1, 2, 3]), [1, 2, 3]],
     [getDecimalLength(1.1), 1],
     [isDouble(1.1), true],
     [isDouble('1.1', false), false],
@@ -119,4 +119,5 @@ test([
         )((x) => x(3))(),
         8,
     ],
+    [pipeFunction(() => 3 + 2)((x) => x() + 3)(), 8],
 ]);
