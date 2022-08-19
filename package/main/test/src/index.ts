@@ -92,6 +92,7 @@ test([
     [multiples(2, 3), [2, 4, 6]],
     [multiplication(1.1, 2.1), 2.31],
     [multiplication(0.1, 0.1), 0.01],
+    [multiplication(8.91, 5.3), 47.223],
     [nCr(7, 2), 21],
     [nHr(7, 2), 28],
     [nPr(7, 2), 42],
