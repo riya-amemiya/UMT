@@ -1,0 +1,19 @@
+{
+    "name": "umt-module",
+    "version": "1.0.0",
+    "description": "",
+    "scripts": {
+    },
+    "keywords": [],
+    "author": "",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/riya-amemiya/UMT"
+    },
+    "homepage": "https://umt.vercel.app/",
+    "workspaces": [
+        "package/*"
+    ],
+    "private": true
+}
