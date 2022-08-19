@@ -1,20 +1,6 @@
 {
-    "name": "umt",
-    "version": "1.0.10",
-    "description": "",
-    "main": "module/index.js",
-    "types": "module/index.d.js",
-    "scripts": {
-        "test": "ts-node --project test/tsconfig.json test/src/index.ts",
-        "typedoc": "typedoc ./src/",
-        "ts-node": "ts-node --project test/tsconfig.json test/src/index.ts",
-        "test-debug": "cd test && tsc",
-        "build": "tsc",
-        "deploy": "yarn typedoc && gh-pages -d doc"
-    },
-    "keywords": [],
     "author": "",
-    "license": "MIT",
+    "description": "",
     "devDependencies": {
         "gh-pages": "^3.2.3",
         "ts-node": "^9.1.1",
@@ -22,12 +8,23 @@
         "typescript": "^4.1.3",
         "umt": "^1.0.3"
     },
+    "homepage": "https://umt.vercel.app/",
+    "keywords": [],
+    "license": "MIT",
+    "main": "module/index.js",
+    "name": "umt",
     "repository": {
         "type": "git",
         "url": "git://github.com/riya-amemiya/UMT"
     },
-    "homepage": "https://umt.vercel.app/",
-    "workspaces": [
-        "package/*"
-    ]
+    "scripts": {
+        "build": "tsc",
+        "deploy": "yarn typedoc && gh-pages -d doc",
+        "test": "ts-node --project test/tsconfig.json test/src/index.ts",
+        "test-debug": "cd test && tsc",
+        "ts-node": "ts-node --project test/tsconfig.json test/src/index.ts",
+        "typedoc": "typedoc ./src/"
+    },
+    "types": "module/index.d.js",
+    "version": "1.0.10"
 }
