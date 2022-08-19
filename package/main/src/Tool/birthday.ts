@@ -6,19 +6,19 @@ const birthday = (
     day: number,
     timeDifference = 9,
 ) => {
-    const birthday = new Date(
+    const Bday = new Date(
         yer < 0 ? -yer : yer,
         mon < 0 ? -mon - 1 : mon - 1,
         day < 0 ? -day : day,
     );
     const nowTime = now(timeDifference);
-    const y = nowTime.getFullYear() - birthday.getFullYear();
+    const y = nowTime.getFullYear() - Bday.getFullYear();
     const r =
         nowTime <
         new Date(
             nowTime.getFullYear(),
-            birthday.getMonth(),
-            birthday.getDate(),
+            Bday.getMonth(),
+            Bday.getDate(),
         )
             ? y - 1
             : y;

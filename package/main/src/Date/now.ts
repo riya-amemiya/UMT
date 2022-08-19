@@ -1,8 +1,7 @@
 /**
- * 現在時刻を取得(時差考慮)
- * @param {number} [timeDifferencet=0] 時差(時)
+ * @param {number} [timeDifference] 時差(時)
  */
-const now = (timeDifference = 9) =>
+const now = (timeDifference: number = 9) =>
     new Date(
         Date.now() +
             (new Date().getTimezoneOffset() + timeDifference * 60) *
