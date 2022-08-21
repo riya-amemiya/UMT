@@ -3,7 +3,7 @@
  * @param {number} x
  * @param  {number} [radix=2] n進数
  */
-interface TOBINARY {
+export interface TOBINARY {
     (): (x: number, radix?: number) => string;
     (x: number, radix?: number): string;
 }
