@@ -1,0 +1,11 @@
+node_modules
+src
+.gitignore
+.babelrc
+.prettierrc
+.vscode
+test
+doc
+typedoc.json
+tsconfig.json
+build/*.map
