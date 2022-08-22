@@ -46,6 +46,16 @@ import birthday from './Tool/birthday';
 import dayOfWeek from './Tool/dayOfWeek';
 import pipeFunction from './Tool/pipeFunction';
 
+//Simple Date
+import nowSimple from './Simple/Date/now';
+
+//Simple Math
+import dayOfWeekSimple from './Simple/Math/dayOfWeek';
+import deviationValueSimple from './Simple/Math/deviationValue';
+
+//Simple Tool
+import birthdaySimple from './Simple/Tool/birthday';
+
 const UMT = {
     Array: { arraysJoin, getArraysDiff, getArraysCommon, quickSort },
     Date: { now },
@@ -85,5 +95,11 @@ const UMT = {
     },
 
     Tool: { birthday, dayOfWeek, pipeFunction },
+
+    Simple: {
+        Date: { nowSimple },
+        Math: { dayOfWeekSimple, deviationValueSimple },
+        Tool: { birthdaySimple },
+    },
 };
 export default UMT;

@@ -1,6 +1,6 @@
 import { average } from '../../Math';
 
-interface DEVIATIONVALUE {
+export interface DEVIATIONVALUE {
     (value: number, averageValue: number): number;
     (value: number, averageValue: number[]): number;
 }
