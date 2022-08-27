@@ -30,6 +30,8 @@ import toBinary from './toBinary';
 import toCelsius from './toCelsius';
 import toKelvin from './toKelvin';
 import valueSwap from './valueSwap';
+import mathConverter from './mathConverter';
+import mathSeparator from './mathSeparator';
 
 export {
     factorial,
@@ -64,4 +66,6 @@ export {
     multiples,
     toKelvin,
     toCelsius,
+    mathConverter,
+    mathSeparator,
 };

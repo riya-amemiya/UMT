@@ -36,6 +36,7 @@ import {
     valueSwap,
 } from '../../module/Math';
 import { pipeFunction } from '../../module/Tool';
+import mathConverter from '../../module/Math/mathConverter';
 let count = 0;
 const test = <X extends unknown[][]>(x: X) => {
     for (const i of x) {
@@ -120,4 +121,8 @@ test([
         8,
     ],
     [pipeFunction(() => 3 + 2)((x) => x() + 3)(), 8],
+    [mathConverter('1250*1250'), '1500*1000+400*100+200*100+50*50'],
 ]);
+console.log('====================================');
+console.log(calculator('3+3+1*2'));
+console.log('====================================');
