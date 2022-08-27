@@ -2,11 +2,7 @@ import dayOfWeek from '../../Tool/dayOfWeek';
 
 const dayOfWeekSimple = (
     props?:
-        | {
-              yer?: number;
-              mon?: number;
-              day?: number;
-          }
+        | { yer?: number; mon?: number; day?: number }
         | string
         | Date,
     timeDifference: number = 9,
