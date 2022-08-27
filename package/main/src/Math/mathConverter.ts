@@ -36,5 +36,4 @@ const mathConverter = (x: string): String => {
         }
     }
 };
-mathConverter('125*125');
 export default mathConverter;

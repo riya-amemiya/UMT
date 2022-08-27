@@ -124,5 +124,5 @@ test([
     [mathConverter('1250*1250'), '1500*1000+400*100+200*100+50*50'],
 ]);
 console.log('====================================');
-console.log(calculator('3+3+1*2'));
+console.log(mathConverter('17*17'));
 console.log('====================================');
