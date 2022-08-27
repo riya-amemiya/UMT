@@ -40,6 +40,8 @@ import factorize from './Math/factorize';
 import multiples from './Math/multiples';
 import toKelvin from './Math/toKelvin';
 import toCelsius from './Math/toCelsius';
+import mathConverter from './Math/mathConverter';
+import mathSeparator from './Math/mathSeparator';
 
 //Tool
 import birthday from './Tool/birthday';
@@ -92,6 +94,8 @@ const UMT = {
         multiples,
         toKelvin,
         toCelsius,
+        mathConverter,
+        mathSeparator,
     },
 
     Tool: { birthday, dayOfWeek, pipeFunction },
