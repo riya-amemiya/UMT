@@ -1,15 +1,26 @@
 import birthday from '../../Tool/birthday';
+import { dayType, monType } from '../../types/int';
 
 const birthdaySimple = (
     birthdays:
-        | string
+        | `${number}-${monType}-${dayType}`
+        | `${number}:${monType}:${dayType}`
+        | `${number}/${monType}/${dayType}`
         | Date
         | { yer: number; mon: number; day: number },
     timeDifference: number = 9,
 ) => {
     if (typeof birthdays === 'string') {
-        const [yer, mon, day] = birthdays.split('-').map(Number);
-        return birthday(yer, mon, day, timeDifference);
+        if (birthdays.includes(':')) {
+            const [yer, mon, day] = birthdays.split(':').map(Number);
+            return birthday(yer, mon, day, timeDifference);
+        } else if (birthdays.includes('/')) {
+            const [yer, mon, day] = birthdays.split('/').map(Number);
+            return birthday(yer, mon, day, timeDifference);
+        } else {
+            const [yer, mon, day] = birthdays.split('-').map(Number);
+            return birthday(yer, mon, day, timeDifference);
+        }
     } else if (birthdays instanceof Date) {
         return birthday(
             birthdays.getFullYear(),
@@ -26,4 +37,5 @@ const birthdaySimple = (
         );
     }
 };
+birthdaySimple('2020/10/01');
 export default birthdaySimple;

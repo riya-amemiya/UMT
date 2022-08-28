@@ -124,8 +124,8 @@ test([
     [mathConverter('1250*1250'), '1500*1000+400*100+200*100+50*50'],
 ]);
 console.log('====================================');
-console.log(calculator(mathConverter('84197214*84197214')));
+console.log(mathConverter('840^2'));
 console.log('====================================');
 console.log('====================================');
-console.log(calculator('84197214*84197214'));
+console.log(calculator('840^2'));
 console.log('====================================');
