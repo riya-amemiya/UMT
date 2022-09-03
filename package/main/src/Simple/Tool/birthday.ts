@@ -1,11 +1,16 @@
 import birthday from '../../Tool/birthday';
-import { dayType, monType } from '../../types/int';
-
-const birthdaySimple = (
+import {
+    dayType,
+    MonthsWihout31Days,
+    MonthsWith31Days,
+} from '../../types/monType';
+const birthdaySimple = <
+    T extends MonthsWith31Days | MonthsWihout31Days,
+>(
     birthdays:
-        | `${number}-${monType}-${dayType}`
-        | `${number}:${monType}:${dayType}`
-        | `${number}/${monType}/${dayType}`
+        | `${number}-${T}-${dayType<T>}`
+        | `${number}:${T}:${dayType<T>}`
+        | `${number}/${T}/${dayType<T>}`
         | Date
         | { yer: number; mon: number; day: number },
     timeDifference: number = 9,
@@ -37,5 +42,4 @@ const birthdaySimple = (
         );
     }
 };
-birthdaySimple('2020/10/01');
 export default birthdaySimple;

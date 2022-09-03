@@ -1,12 +1,18 @@
 import dayOfWeek from '../../Tool/dayOfWeek';
-import { monType, dayType } from '../../types/int';
+import {
+    dayType,
+    MonthsWith31Days,
+    MonthsWihout31Days,
+} from '../../types/monType';
 
-const dayOfWeekSimple = (
+const dayOfWeekSimple = <
+    T extends MonthsWith31Days | MonthsWihout31Days,
+>(
     props?:
         | { yer?: number; mon?: number; day?: number }
-        | `${number}-${monType}-${dayType}`
-        | `${number}:${monType}:${dayType}`
-        | `${number}/${monType}/${dayType}`
+        | `${number}-${T}-${dayType<T>}`
+        | `${number}:${T}:${dayType<T>}`
+        | `${number}/${T}/${dayType<T>}`
         | Date,
     timeDifference: number = 9,
 ) => {
