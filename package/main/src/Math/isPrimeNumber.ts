@@ -9,7 +9,7 @@ const isPrimeNumber = (n: number) => {
     else if (n == 2) return true;
     else if (n % 2 == 0) return false;
     for (let i = 3; i <= Math.sqrt(n); i++) {
-        if (division(n, i)[1] == 0) {
+        if (division(n, i, false)[1] == 0) {
             return false;
         }
     }

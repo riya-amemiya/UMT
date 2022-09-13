@@ -127,5 +127,5 @@ console.log('====================================');
 console.log(mathConverter('840^2'));
 console.log('====================================');
 console.log('====================================');
-console.log(calculator('840^2'));
+console.log(multiplication(4, 9));
 console.log('====================================');

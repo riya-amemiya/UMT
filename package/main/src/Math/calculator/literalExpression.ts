@@ -42,9 +42,10 @@ const literalExpression = (x: string) => {
     } else {
         const cacheGcd = gcd(Number(cache[0][0]), Number(cache[1]));
         if (cacheGcd !== 1) {
-            return `${division(Number(cache[1]), cacheGcd)[0]}/${
-                division(Number(cache[0][0]), cacheGcd)[0]
-            }`;
+            return `${division(
+                Number(cache[1]),
+                cacheGcd,
+            )}/${division(Number(cache[0][0]), cacheGcd)}`;
         }
         return cache[0][0] == '1'
             ? `${cache[1]}/${cache[0][0]}`

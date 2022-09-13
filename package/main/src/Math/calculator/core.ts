@@ -79,7 +79,7 @@ const calculatorCore = <T extends object>(
                             : y[1][1] == '*'
                             ? multiplication(+y[1][0], +y[1][2])
                             : y[1][1] == '/'
-                            ? division(+y[1][0], +y[1][2])[0]
+                            ? division(+y[1][0], +y[1][2])
                             : '0'
                     }`,
                 );
