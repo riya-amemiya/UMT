@@ -42,4 +42,5 @@ const birthdaySimple = <
         );
     }
 };
+
 export default birthdaySimple;

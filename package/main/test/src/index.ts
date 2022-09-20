@@ -75,7 +75,7 @@ test([
     [calculator('(1+1)^3'), '8'],
     [calculator('(((2+2)*4)+2)/$2', { $: 100 }), '0.09'],
     [degToRad(90), Math.PI / 2],
-    [division(1.1, 1.11), 0.9],
+    [division(1.1, 1.1), 1],
     [gcd(910, 2190, 2121), 1],
     [factorial(5), 120],
     [factorize(24), [2, 2, 2, 3]],
@@ -124,8 +124,11 @@ test([
     [mathConverter('1250*1250'), '1500*1000+400*100+200*100+50*50'],
 ]);
 console.log('====================================');
-console.log(mathConverter('840^2'));
-console.log('====================================');
-console.log('====================================');
-console.log(multiplication(4, 9));
+console.log(
+    average(
+        Array(9)
+            .fill(3)
+            .concat(Array(8).fill(4).concat(Array(7).fill(5))),
+    ),
+);
 console.log('====================================');
