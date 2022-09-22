@@ -1,0 +1,4 @@
+print("Hello World")
+print(10 + 20 * 30)
+let letage = 10
+# "Hello"

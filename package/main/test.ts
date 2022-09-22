@@ -1,23 +1,22 @@
-"use strict";
-exports.__esModule = true;
-var core_1 = require("./module/Compiler/core");
-var fs = require("fs");
-var check = function (file) {
-    var hasfaile = false;
+import compilerCore from './module/Compiler/core';
+import compilerToken from './module/Compiler/token';
+import * as fs from 'fs';
+const check = (file: string) => {
+    let hasfaile = false;
     try {
         fs.statSync(file);
         hasfaile = true;
-    }
-    catch (err) {
+    } catch (err) {
         console.log(err);
+
         hasfaile = false;
     }
     return hasfaile;
 };
-var read = function (file) {
+const read = (file: string) => {
     return check(file) ? fs.readFileSync(file, 'utf8') : '';
 };
-var tokenList = [
+const tokenList: [string, RegExp, number | null][] = [
     ['PRINT', /print/, 6],
     ['STRING', /"[^"]*"/, 3],
     ['OPEN_PARENTHESIS', /\(/, 1],
@@ -41,15 +40,20 @@ var tokenList = [
     ['SEMICOLON', /;/, 1],
     ['IDENTIFIER', /let.*?[a-zA-Z_][a-zA-Z0-9_]*/, 0],
 ];
-var process = function (_code, _tokenList, x) {
+const process = (
+    _code: string,
+    _tokenList: [string, RegExp, number | null][],
+    x: { name: string; value: string },
+) => {
     if (x.name === 'PRINT') {
-        return "puts";
+        return `puts`;
     }
     if (x.name === 'IDENTIFIER') {
-        return "".concat(x.value.replace('let', '').slice(1));
+        return `${x.value.replace('let', '').slice(1)}`;
     }
+
     return x.value;
 };
 console.log('====================================');
-console.log((0, core_1["default"])(read('./code.txt'), tokenList, process));
+console.log(compilerCore(read('./code.txt'), tokenList, process));
 console.log('====================================');
