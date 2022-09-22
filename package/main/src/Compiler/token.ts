@@ -3,8 +3,9 @@ const compilerToken = (
     tokenList: [string, RegExp, number | null][],
 ) => {
     const tokenListMax = Math.max(...tokenList.map((n) => n[2] ?? 0));
-    let list: { name: string; value: string }[][] = [];
+    let list: { name: string; value: string; count: number }[][] = [];
     let outCode: string[] = code.split('\n');
+    let count: any = {};
     tokenList.forEach((token) => {
         if (token[2] === null) {
             return (token[2] = tokenListMax + 1);
@@ -23,19 +24,33 @@ const compilerToken = (
     });
     tokenList.forEach((token) => {
         code.split('\n').forEach((_, index) => {
+            count = {};
             outCode[index] = outCode[index].replace(
                 new RegExp(token[1], 'g'),
                 (match) => {
                     try {
+                        count[token[0]].value += 1;
+                    } catch {
+                        count[token[0]] = {
+                            value: 0,
+                        };
+                    }
+                    try {
                         list[index].push({
                             name: token[0],
                             value: match,
+                            count: count[token[0]].value,
                         });
                     } catch {
                         list[index] = [
-                            { name: token[0], value: match },
+                            {
+                                name: token[0],
+                                value: match,
+                                count: 0,
+                            },
                         ];
                     }
+
                     return ` ${token[0]} `;
                 },
             );
