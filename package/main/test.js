@@ -1,6 +1,6 @@
 "use strict";
 exports.__esModule = true;
-var core_1 = require("./module/Compiler/core");
+var token_1 = require("./module/Compiler/token");
 var fs = require("fs");
 var check = function (file) {
     var hasfaile = false;
@@ -39,7 +39,9 @@ var tokenList = [
     ['CLOSE_BRACKET_SQUARE', /\]/, 1],
     ['COMMA', /,/, 1],
     ['SEMICOLON', /;/, 1],
-    ['IDENTIFIER', /let.*?[a-zA-Z_][a-zA-Z0-9_]*/, 0],
+    ['FUNCTION', /def/, 6],
+    ['COLON', /:/, null],
+    ['RETURN', /return/, null],
 ];
 var process = function (_code, _tokenList, x) {
     if (x.name === 'PRINT') {
@@ -51,5 +53,7 @@ var process = function (_code, _tokenList, x) {
     return x.value;
 };
 console.log('====================================');
-console.log((0, core_1["default"])(read('./code.txt'), tokenList, process));
+console.log((0, token_1["default"])(read('./code.py'), tokenList, [
+    ['IDENTIFIER', /[a-zA-Z_][a-zA-Z0-9_]*/, 0],
+]));
 console.log('====================================');

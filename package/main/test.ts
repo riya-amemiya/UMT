@@ -38,7 +38,9 @@ const tokenList: [string, RegExp, number | null][] = [
     ['CLOSE_BRACKET_SQUARE', /\]/, 1],
     ['COMMA', /,/, 1],
     ['SEMICOLON', /;/, 1],
-    ['IDENTIFIER', /let.*?[a-zA-Z_][a-zA-Z0-9_]*/, 0],
+    ['FUNCTION', /def/, 6],
+    ['COLON', /:/, null],
+    ['RETURN', /return/, null],
 ];
 const process = (
     _code: string,
@@ -55,5 +57,9 @@ const process = (
     return x.value;
 };
 console.log('====================================');
-console.log(compilerCore(read('./code.txt'), tokenList, process));
+console.log(
+    compilerToken(read('./code.py'), tokenList, [
+        ['IDENTIFIER', /[a-zA-Z_][a-zA-Z0-9_]*/, 0],
+    ]),
+);
 console.log('====================================');
