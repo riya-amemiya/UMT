@@ -1,0 +1,12 @@
+pub mod average;
+pub use average::*;
+pub mod get_decimal_length;
+pub use get_decimal_length::*;
+pub mod factorial;
+pub use factorial::*;
+pub mod gcd;
+pub use gcd::*;
+pub mod ncr;
+pub use ncr::*;
+pub mod npr;
+pub use npr::*;
