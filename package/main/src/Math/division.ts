@@ -1,3 +1,6 @@
+import getDecimalLength from './getDecimalLength';
+import valueSwap from './valueSwap';
+
 /**
  * 誤差のない割り算
  * @param  {number} x
@@ -9,8 +12,24 @@ export interface DIVISION {
     (x: number, y: number, isFloor?: false): number[];
 }
 const division = ((x: number, y: number, isFloor: boolean = true) => {
+    const [decimalLengthX, decimalLengthY] = valueSwap(
+        getDecimalLength(x),
+        getDecimalLength(y),
+    );
+    const n =
+        decimalLengthX == decimalLengthY
+            ? 1
+            : Math.pow(10, decimalLengthY - decimalLengthX);
     x = +(x + '').replace('.', '');
     y = +(y + '').replace('.', '');
-    return isFloor ? x / y : [(x - (x % y)) / y, x % y];
+    return isFloor
+        ? x > y
+            ? x / y / n
+            : (x / y) * n
+        : [
+              x > y ? (x - (x % y)) / y / n : ((x - (x % y)) / y) * n,
+              x % y,
+          ];
+    // return isFloor ? x / y : [(x - (x % y)) / y, x % y];
 }) as DIVISION;
 export default division;

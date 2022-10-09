@@ -1,6 +1,6 @@
 import compilerCore from './module/Compiler/core';
-import compilerToken from './module/Compiler/token';
 import * as fs from 'fs';
+import compilerToken from './module/Compiler/token';
 const check = (file: string) => {
     let hasfaile = false;
     try {
@@ -47,19 +47,15 @@ const process = (
     _tokenList: [string, RegExp, number | null][],
     x: { name: string; value: string },
 ) => {
-    if (x.name === 'PRINT') {
-        return `puts`;
-    }
-    if (x.name === 'IDENTIFIER') {
-        return `${x.value.replace('let', '').slice(1)}`;
-    }
-
     return x.value;
 };
 console.log('====================================');
 console.log(
-    compilerToken(read('./code.py'), tokenList, [
-        ['IDENTIFIER', /[a-zA-Z_][a-zA-Z0-9_]*/, 0],
-    ]),
+    compilerCore(
+        read('./code.txt'),
+        tokenList,
+        [['IDENTIFIER', /[a-zA-Z_][a-zA-Z0-9_]*/, 0]],
+        process,
+    ),
 );
 console.log('====================================');

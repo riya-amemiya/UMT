@@ -3,14 +3,16 @@ import average from './average';
 import calculator from './calculator';
 import degToRad from './degToRad';
 import division from './division';
-import gcd from './gcd';
 import factorial from './factorial';
 import factorize from './factorize';
+import gcd from './gcd';
 import getDecimalLength from './getDecimalLength';
 import isDouble from './isDouble';
 import isNumber from './isNumber';
 import isPrimeNumber from './isPrimeNumber';
 import lcm from './lcm';
+import mathConverter from './mathConverter';
+import mathSeparator from './mathSeparator';
 import max from './max';
 import min from './min';
 import multiples from './multiples';
@@ -24,14 +26,14 @@ import radToDeg from './radToDeg';
 import random from './random';
 import reduce from './reduce';
 import repeatedTrial from './repeatedTrial';
+import roundOf from './roundOff';
+import softmax from './softmax';
 import standardDeviation from './standardDeviation';
 import subtract from './subtract';
 import toBinary from './toBinary';
 import toCelsius from './toCelsius';
 import toKelvin from './toKelvin';
 import valueSwap from './valueSwap';
-import mathConverter from './mathConverter';
-import mathSeparator from './mathSeparator';
 
 export {
     factorial,
@@ -68,4 +70,6 @@ export {
     toCelsius,
     mathConverter,
     mathSeparator,
+    softmax,
+    roundOf,
 };
