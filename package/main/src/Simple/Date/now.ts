@@ -1,7 +1,7 @@
 import { now } from '../../Date';
 import { isNumber } from '../../Math';
 
-const nowSimple = (timeDifference: number | string = 9) => {
+export const nowSimple = (timeDifference: number | string = 9) => {
     if (typeof timeDifference === 'number') {
         return now(timeDifference);
     } else if (isNumber(timeDifference)) {
@@ -10,4 +10,3 @@ const nowSimple = (timeDifference: number | string = 9) => {
         return now();
     }
 };
-export default nowSimple;

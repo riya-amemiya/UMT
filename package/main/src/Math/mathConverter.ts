@@ -1,11 +1,11 @@
-import mathSeparator from './mathSeparator';
+import { mathSeparator } from './mathSeparator';
 
-const mathConverter = (x: string): String => {
+export const mathConverter = (x: string): string => {
     while (true) {
         if (x.indexOf('^') != -1 || x.indexOf('*') != -1) {
             //掛け算と割り算の処理
             const y: [RegExpMatchArray | null, string[]] = [
-                x.match(/\d+\.?(\d+)?(\*|\/|\^)\d+\.?(\d+)?/),
+                x.match(/\d+\.?(\d+)?(\*|\^)\d+\.?(\d+)?/),
                 [''],
             ];
             if (y[0]) {
@@ -14,7 +14,10 @@ const mathConverter = (x: string): String => {
                     .filter((n) => {
                         return typeof n != 'undefined' && n != '';
                     });
-                if (y[1][0] == y[1][2]) {
+                if (
+                    y[1][0] == y[1][2] ||
+                    (y[1][2] && y[1][1] == '^')
+                ) {
                     let [n, m] = mathSeparator(y[1][0]);
 
                     if (n) {
@@ -36,5 +39,3 @@ const mathConverter = (x: string): String => {
         }
     }
 };
-mathConverter('125*125');
-export default mathConverter;

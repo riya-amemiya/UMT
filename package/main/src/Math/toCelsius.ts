@@ -1,4 +1,3 @@
-import subtract from './subtract';
+import { subtract } from './subtract';
 
-const toCelsius = (kelvin: number) => subtract(kelvin, 273.15);
-export default toCelsius;
+export const toCelsius = (kelvin: number) => subtract(kelvin, 273.15);

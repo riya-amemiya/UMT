@@ -1,4 +1,3 @@
-import birthday from './birthday';
-import dayOfWeek from './dayOfWeek';
-import pipeFunction from './pipeFunction';
-export { birthday, dayOfWeek, pipeFunction };
+export { birthday } from './birthday';
+export { dayOfWeek } from './dayOfWeek';
+export { pipeFunction } from './pipeFunction';

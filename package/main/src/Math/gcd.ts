@@ -1,4 +1,4 @@
-import valueSwap from './valueSwap';
+import { valueSwap } from './valueSwap';
 
 /**
  * 自然数の最大公約数
@@ -6,7 +6,7 @@ import valueSwap from './valueSwap';
  * @param  {number} y
  * @param  {number} ...z
  */
-const gcd = (x: number, y: number, ...z: number[]) => {
+export const gcd = (x: number, y: number, ...z: number[]) => {
     if (x === 0 || y === 0) return 0;
     [x, y] = valueSwap(x, y);
     /* ユークリッドの互除法 */
@@ -23,4 +23,3 @@ const gcd = (x: number, y: number, ...z: number[]) => {
     }
     return x;
 };
-export default gcd;

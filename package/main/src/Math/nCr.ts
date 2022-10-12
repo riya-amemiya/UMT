@@ -1,10 +1,10 @@
-import nPr from './nPr';
+import { nPr } from './nPr';
 /**
  * nCr
  * @param  {number} n
  * @param  {number} r
  */
-const nCr = (n: number, r: number) => {
+export const nCr = (n: number, r: number) => {
     //nCr
     let y = nPr(n, r);
     let age = 1;
@@ -15,4 +15,3 @@ const nCr = (n: number, r: number) => {
     if (1 > y) return 0;
     return y;
 };
-export default nCr;

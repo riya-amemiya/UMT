@@ -1,15 +1,31 @@
-import birthday from '../../Tool/birthday';
-
-const birthdaySimple = (
+import { birthday } from '../../Tool/birthday';
+import {
+    dayType,
+    MonthsWihout31Days,
+    MonthsWith31Days,
+} from '../../types/monType';
+export const birthdaySimple = <
+    T extends MonthsWith31Days | MonthsWihout31Days,
+>(
     birthdays:
-        | string
+        | `${number}-${T}-${dayType<T>}`
+        | `${number}:${T}:${dayType<T>}`
+        | `${number}/${T}/${dayType<T>}`
         | Date
         | { yer: number; mon: number; day: number },
     timeDifference: number = 9,
 ) => {
     if (typeof birthdays === 'string') {
-        const [yer, mon, day] = birthdays.split('-').map(Number);
-        return birthday(yer, mon, day, timeDifference);
+        if (birthdays.includes(':')) {
+            const [yer, mon, day] = birthdays.split(':').map(Number);
+            return birthday(yer, mon, day, timeDifference);
+        } else if (birthdays.includes('/')) {
+            const [yer, mon, day] = birthdays.split('/').map(Number);
+            return birthday(yer, mon, day, timeDifference);
+        } else {
+            const [yer, mon, day] = birthdays.split('-').map(Number);
+            return birthday(yer, mon, day, timeDifference);
+        }
     } else if (birthdays instanceof Date) {
         return birthday(
             birthdays.getFullYear(),
@@ -26,4 +42,3 @@ const birthdaySimple = (
         );
     }
 };
-export default birthdaySimple;

@@ -1,15 +1,15 @@
-import addition from '../addition';
-import division from '../division';
-import multiplication from '../multiplication';
-import subtract from '../subtract';
-import exchange from './exchange';
+import { addition } from '../addition';
+import { division } from '../division';
+import { multiplication } from '../multiplication';
+import { subtract } from '../subtract';
+import { exchange } from './exchange';
 /**
  * 電卓
  * ()や符号に対応
  * xなどの文字は未対応
  * @param  {string} x 計算式
  */
-const calculatorCore = <T extends object>(
+export const calculatorCore = <T extends object>(
     x: string,
     ex?: T,
 ): string => {
@@ -79,7 +79,7 @@ const calculatorCore = <T extends object>(
                             : y[1][1] == '*'
                             ? multiplication(+y[1][0], +y[1][2])
                             : y[1][1] == '/'
-                            ? division(+y[1][0], +y[1][2])[0]
+                            ? division(+y[1][0], +y[1][2])
                             : '0'
                     }`,
                 );
@@ -118,4 +118,3 @@ const calculatorCore = <T extends object>(
         }
     }
 };
-export default calculatorCore;

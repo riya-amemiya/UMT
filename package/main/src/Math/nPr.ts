@@ -3,7 +3,7 @@
  * @param  {number} n
  * @param  {number} r
  */
-const nPr = (n: number, r: number) => {
+export const nPr = (n: number, r: number) => {
     //nPr
     if (n === 0 || r === 0) {
         return NaN;
@@ -29,4 +29,3 @@ const nPr = (n: number, r: number) => {
     if (1 > y) return 0;
     return y;
 };
-export default nPr;

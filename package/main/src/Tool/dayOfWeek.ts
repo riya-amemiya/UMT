@@ -1,6 +1,6 @@
 import { now } from '../Date';
 
-const dayOfWeek = (
+export const dayOfWeek = (
     props?: {
         yer?: number;
         mon?: number;
@@ -12,11 +12,10 @@ const dayOfWeek = (
     if (props) {
         return new Date(
             props.yer || nowTime.getFullYear(),
-            props.mon ? props.mon - 1 : nowTime.getMonth(),
+            props.mon ? props.mon - [1](#1) : nowTime.getMonth(),
             props.day || nowTime.getDate(),
         ).getDay();
     } else {
         return nowTime.getDay();
     }
 };
-export default dayOfWeek;

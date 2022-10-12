@@ -3,20 +3,19 @@
  * @param  {any[]} array
  * @param  {any[]} ...arrays
  */
-const getArraysCommon = <
-    A extends any[],
-    B extends any[],
-    C extends A | B,
->(
-    array: A,
-    ...arrays: B[]
-) => {
-    let hasArr: any[] = [];
-    for (const i of arrays) {
-        hasArr.push(...i);
+export const getArraysCommon = (array: any[], ...arrays: any[]) => {
+    const result: any[] = [];
+    for (const i of array) {
+        let flag = true;
+        for (const j of arrays) {
+            if (!j.includes(i)) {
+                flag = false;
+                break;
+            }
+        }
+        if (flag) {
+            result.push(i);
+        }
     }
-    return [...new Set(array)].filter((value) =>
-        hasArr.includes(value),
-    ) as C;
+    return result;
 };
-export default getArraysCommon;

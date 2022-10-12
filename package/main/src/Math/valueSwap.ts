@@ -3,7 +3,7 @@
  * @param  {number} x
  * @param  {number} y
  */
-const valueSwap = (x: number, y: number) => {
+export const valueSwap = (x: number, y: number) => {
     let tmp: number;
     if (y < x) {
         tmp = y;
@@ -12,4 +12,3 @@ const valueSwap = (x: number, y: number) => {
     }
     return [x, y];
 };
-export default valueSwap;

@@ -1,5 +1,5 @@
-import calculatorCore from './core';
-import literalExpression from './literalExpression';
+import { calculatorCore } from './core';
+import { literalExpression } from './literalExpression';
 
 /**
  * 電卓
@@ -9,7 +9,7 @@ import literalExpression from './literalExpression';
  * @param  {object} ex 為替
  */
 
-const calculator = <T extends object>(x: string, ex?: T) => {
+export const calculator = <T extends object>(x: string, ex?: T) => {
     x = x.replace(/\s+/g, '');
     if (x.indexOf('=') != -1) {
         return literalExpression(x);
@@ -17,4 +17,3 @@ const calculator = <T extends object>(x: string, ex?: T) => {
         return calculatorCore(x, ex);
     }
 };
-export default calculator;

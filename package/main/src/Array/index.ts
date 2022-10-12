@@ -1,6 +1,4 @@
-import arraysJoin from './arraysJoin';
-import getArraysDiff from './getArraysDiff';
-import getArraysCommon from './getArraysCommon';
-import quickSort from './quickSort';
-
-export { arraysJoin, getArraysDiff, getArraysCommon, quickSort };
+export { arraysJoin } from './arraysJoin';
+export { getArraysCommon } from './getArraysCommon';
+export { getArraysDiff } from './getArraysDiff';
+export { quickSort } from './quickSort';
