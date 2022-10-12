@@ -6,4 +6,10 @@
 
 ## doc
 
-<https://umt.oshaburikitchin.com/>
+### Array
+
+- [Array](doc/array.md)
+
+### Math
+
+- [Math](doc/math.md)

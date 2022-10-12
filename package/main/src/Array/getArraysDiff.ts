@@ -3,22 +3,20 @@
  * @param  {any[]} array
  * @param  {any[]} ...arrays
  */
-const getArraysDiff = <
-    A extends any[],
-    B extends any[],
-    C extends A | B,
->(
-    array: A,
-    ...arrays: B[]
-) => {
-    let hasArr: any[] = [];
-    for (const i of arrays) {
-        hasArr.push(...i);
+const getArraysDiff = (array: any[], ...arrays: any[]): any[] => {
+    const result: any[] = [];
+    for (const i of array) {
+        let flag = true;
+        for (const j of arrays) {
+            if (j.includes(i)) {
+                flag = false;
+                break;
+            }
+        }
+        if (flag) {
+            result.push(i);
+        }
     }
-    const arr01 = [...new Set(array)];
-    const arr02 = [...new Set(hasArr)];
-    return [...arr01, ...arr02].filter(
-        (value) => !arr01.includes(value) || !arr02.includes(value),
-    ) as C;
+    return result;
 };
 export default getArraysDiff;

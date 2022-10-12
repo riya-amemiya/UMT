@@ -23,8 +23,7 @@
         "deploy": "yarn typedoc && gh-pages -d doc",
         "test": "ts-node --project test/tsconfig.json test/src/index.ts",
         "test-debug": "cd test && tsc",
-        "ts-node": "ts-node --project test/tsconfig.json test/src/index.ts",
-        "typedoc": "typedoc ./src/"
+        "ts-node": "ts-node --project test/tsconfig.json test/src/index.ts"
     },
     "types": "module/index.d.js",
     "version": "1.0.10"
