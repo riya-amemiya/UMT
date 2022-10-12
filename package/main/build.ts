@@ -27,6 +27,9 @@ fs.readdir('./doc', (err, files) => {
             console.log('====================================');
             console.log(html);
             console.log('====================================');
+            if (!check('./doc/html')) {
+                fs.mkdirSync('./doc/html');
+            }
             fs.writeFileSync(
                 `./doc/html/${file.replace('.md', '.html')}`,
                 html,
