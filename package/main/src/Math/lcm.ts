@@ -1,5 +1,5 @@
-import gcd from './gcd';
-import valueSwap from './valueSwap';
+import { gcd } from './gcd';
+import { valueSwap } from './valueSwap';
 /**
  * 最小公倍数
  * @param  {number} x
@@ -12,4 +12,4 @@ const lcm = (x: number, y: number) => {
     [x, y] = valueSwap(x, y);
     return (x / gcd(x, y)) * y;
 };
-export default lcm;
+export { lcm };

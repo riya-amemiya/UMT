@@ -4,4 +4,4 @@
  */
 const max = (...num: number[]) =>
     Math.max.apply(null, [...new Set(num)]);
-export default max;
+export { max };

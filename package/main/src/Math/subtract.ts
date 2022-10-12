@@ -1,6 +1,6 @@
-import getDecimalLength from './getDecimalLength';
-import max from './max';
-import multiplication from './multiplication';
+import { getDecimalLength } from './getDecimalLength';
+import { max } from './max';
+import { multiplication } from './multiplication';
 
 /**
  * 誤差のない引き算
@@ -15,4 +15,4 @@ const subtract = (x: number, y: number) => {
     );
     return (multiplication(x, z) - multiplication(y, z)) / z;
 };
-export default subtract;
+export { subtract };

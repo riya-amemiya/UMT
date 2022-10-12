@@ -19,4 +19,4 @@ const getArraysCommon = (array: any[], ...arrays: any[]) => {
     }
     return result;
 };
-export default getArraysCommon;
+export { getArraysCommon };

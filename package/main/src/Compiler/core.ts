@@ -1,4 +1,4 @@
-import compilerToken from './token';
+import { compilerToken } from './token';
 const compilerCore = (
     code: string,
     tokenList: [string, RegExp, number | null][],
@@ -32,4 +32,4 @@ const compilerCore = (
     return outCode;
 };
 
-export default compilerCore;
+export { compilerCore };

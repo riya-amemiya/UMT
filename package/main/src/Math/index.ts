@@ -1,75 +1,36 @@
-import addition from './addition';
-import average from './average';
-import calculator from './calculator';
-import degToRad from './degToRad';
-import division from './division';
-import factorial from './factorial';
-import factorize from './factorize';
-import gcd from './gcd';
-import getDecimalLength from './getDecimalLength';
-import isDouble from './isDouble';
-import isNumber from './isNumber';
-import isPrimeNumber from './isPrimeNumber';
-import lcm from './lcm';
-import mathConverter from './mathConverter';
-import mathSeparator from './mathSeparator';
-import max from './max';
-import min from './min';
-import multiples from './multiples';
-import multiplication from './multiplication';
-import nCr from './nCr';
-import nHr from './nHr';
-import nPr from './nPr';
-import primeFactorization from './primeFactorization';
-import quotient from './quotient';
-import radToDeg from './radToDeg';
-import random from './random';
-import reduce from './reduce';
-import repeatedTrial from './repeatedTrial';
-import roundOf from './roundOff';
-import softmax from './softmax';
-import standardDeviation from './standardDeviation';
-import subtract from './subtract';
-import toBinary from './toBinary';
-import toCelsius from './toCelsius';
-import toKelvin from './toKelvin';
-import valueSwap from './valueSwap';
-
-export {
-    factorial,
-    lcm,
-    nCr,
-    nHr,
-    nPr,
-    quotient,
-    reduce,
-    repeatedTrial,
-    max,
-    min,
-    isDouble,
-    isNumber,
-    valueSwap,
-    getDecimalLength,
-    subtract,
-    multiplication,
-    addition,
-    division,
-    isPrimeNumber,
-    toBinary,
-    degToRad,
-    radToDeg,
-    primeFactorization,
-    calculator,
-    random,
-    gcd,
-    average,
-    standardDeviation,
-    factorize,
-    multiples,
-    toKelvin,
-    toCelsius,
-    mathConverter,
-    mathSeparator,
-    softmax,
-    roundOf,
-};
+export { addition } from './addition';
+export { average } from './average';
+export { calculator } from './calculator';
+export { degToRad } from './degToRad';
+export { division } from './division';
+export { factorial } from './factorial';
+export { factorize } from './factorize';
+export { gcd } from './gcd';
+export { getDecimalLength } from './getDecimalLength';
+export { isDouble } from './isDouble';
+export { isNumber } from './isNumber';
+export { isPrimeNumber } from './isPrimeNumber';
+export { lcm } from './lcm';
+export { mathConverter } from './mathConverter';
+export { mathSeparator } from './mathSeparator';
+export { max } from './max';
+export { min } from './min';
+export { multiples } from './multiples';
+export { multiplication } from './multiplication';
+export { nCr } from './nCr';
+export { nHr } from './nHr';
+export { nPr } from './nPr';
+export { primeFactorization } from './primeFactorization';
+export { quotient } from './quotient';
+export { radToDeg } from './radToDeg';
+export { random } from './random';
+export { reduce } from './reduce';
+export { repeatedTrial } from './repeatedTrial';
+export { roundOf } from './roundOff';
+export { softmax } from './softmax';
+export { standardDeviation } from './standardDeviation';
+export { subtract } from './subtract';
+export { toBinary } from './toBinary';
+export { toCelsius } from './toCelsius';
+export { toKelvin } from './toKelvin';
+export { valueSwap } from './valueSwap';

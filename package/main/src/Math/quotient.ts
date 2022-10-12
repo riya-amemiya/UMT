@@ -7,4 +7,4 @@ const quotient = (x: number, y: number) => [
     (x - (x % y)) / y,
     (x % y) + 0,
 ];
-export default quotient;
+export { quotient };

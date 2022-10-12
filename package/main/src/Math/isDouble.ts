@@ -16,4 +16,4 @@ const isDouble = (x: any, loose: boolean = true) => {
         );
     }
 };
-export default isDouble;
+export { isDouble };

@@ -8,4 +8,4 @@ const isNumber = (x: any, loose: boolean = true) => {
         ? isFinite(x)
         : Number.isFinite(x);
 };
-export default isNumber;
+export { isNumber };

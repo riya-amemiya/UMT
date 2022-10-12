@@ -10,4 +10,4 @@ const deviationValueSimple = (
         return ((value - averageValue) / averageValue) * 10 + 50;
     }
 };
-export default deviationValueSimple;
+export { deviationValueSimple };

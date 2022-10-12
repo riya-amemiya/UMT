@@ -8,4 +8,4 @@ const now = (timeDifference: number = 9) =>
                 60 *
                 1000,
     );
-export default now;
+export { now };

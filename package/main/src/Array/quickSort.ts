@@ -36,4 +36,4 @@ const quickSort = <A extends any[]>(
     }
     return array;
 };
-export default quickSort;
+export { quickSort };

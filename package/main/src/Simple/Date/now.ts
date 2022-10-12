@@ -10,4 +10,4 @@ const nowSimple = (timeDifference: number | string = 9) => {
         return now();
     }
 };
-export default nowSimple;
+export { nowSimple };

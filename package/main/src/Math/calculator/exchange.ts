@@ -1,5 +1,5 @@
-import multiplication from '../multiplication';
-import isNumber from '../isNumber';
+import { isNumber } from '../isNumber';
+import { multiplication } from '../multiplication';
 
 const exchange = <T extends object>(n: string, props?: T) => {
     if (props) {
@@ -22,4 +22,4 @@ const exchange = <T extends object>(n: string, props?: T) => {
         return n;
     }
 };
-export default exchange;
+export { exchange };

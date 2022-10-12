@@ -19,4 +19,4 @@ const getArraysDiff = (array: any[], ...arrays: any[]): any[] => {
     }
     return result;
 };
-export default getArraysDiff;
+export { getArraysDiff };

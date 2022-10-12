@@ -1,4 +1,4 @@
-import isNumber from './isNumber';
+import { isNumber } from './isNumber';
 
 const mathSeparator = (number: string | number) => {
     if (isNumber(number)) {
@@ -13,4 +13,4 @@ const mathSeparator = (number: string | number) => {
     }
     return [0, 0];
 };
-export default mathSeparator;
+export { mathSeparator };

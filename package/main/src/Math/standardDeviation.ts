@@ -1,4 +1,4 @@
-import average from './average';
+import { average } from './average';
 /**
  * 標準偏差
  * @param  {number[]} values
@@ -14,4 +14,4 @@ const standardDeviation = (values: number[]) => {
     const stdDev = Math.sqrt(avgSquareDiff);
     return stdDev;
 };
-export default standardDeviation;
+export { standardDeviation };

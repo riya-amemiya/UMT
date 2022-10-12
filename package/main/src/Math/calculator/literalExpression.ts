@@ -1,6 +1,6 @@
-import division from '../division';
-import gcd from '../gcd';
-import calculatorCore from './core';
+import { division } from '../division';
+import { gcd } from '../gcd';
+import { calculatorCore } from './core';
 /**
  * 方程式計算
  * @param  {string} x
@@ -52,4 +52,4 @@ const literalExpression = (x: string) => {
             : cache[1];
     }
 };
-export default literalExpression;
+export { literalExpression };

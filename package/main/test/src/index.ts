@@ -4,7 +4,7 @@ import {
     getArraysDiff,
     quickSort,
 } from '../../module/Array';
-import sum from '../../module/Array/sum';
+import { sum } from '../../module/Array/sum';
 import {
     addition,
     average,
@@ -37,8 +37,8 @@ import {
     toBinary,
     valueSwap,
 } from '../../module/Math';
-import mathConverter from '../../module/Math/mathConverter';
-import softmax from '../../module/Math/softmax';
+import { mathConverter } from '../../module/Math/mathConverter';
+import { softmax } from '../../module/Math/softmax';
 import { pipeFunction } from '../../module/Tool';
 const dummyFunction = <T>(x: T) => {
     return x;

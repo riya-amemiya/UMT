@@ -9,4 +9,4 @@ const getDecimalLength = (value: number) => {
     }
     return 0;
 };
-export default getDecimalLength;
+export { getDecimalLength };

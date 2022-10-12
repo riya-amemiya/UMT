@@ -4,4 +4,4 @@
  */
 const random = (num: number) =>
     Math.floor(Math.random() * (num || 1));
-export default random;
+export { random };

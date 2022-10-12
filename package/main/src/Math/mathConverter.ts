@@ -1,4 +1,4 @@
-import mathSeparator from './mathSeparator';
+import { mathSeparator } from './mathSeparator';
 
 const mathConverter = (x: string): string => {
     while (true) {
@@ -39,4 +39,4 @@ const mathConverter = (x: string): string => {
         }
     }
 };
-export default mathConverter;
+export { mathConverter };

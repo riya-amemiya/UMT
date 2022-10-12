@@ -136,4 +136,4 @@ const compilerToken = (
         };
     });
 };
-export default compilerToken;
+export { compilerToken };

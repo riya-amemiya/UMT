@@ -1,4 +1,4 @@
-import division from './division';
+import { division } from './division';
 
 /**
  * 素数判定
@@ -15,4 +15,4 @@ const isPrimeNumber = (n: number) => {
     }
     return true;
 };
-export default isPrimeNumber;
+export { isPrimeNumber };

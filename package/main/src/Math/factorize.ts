@@ -12,4 +12,4 @@ const factorize = (n: number): number[] => {
     }
     return result;
 };
-export default factorize;
+export { factorize };

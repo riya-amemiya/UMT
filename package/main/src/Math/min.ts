@@ -4,4 +4,4 @@
  */
 const min = (...num: number[]) =>
     Math.min.apply(null, [...new Set(num)]);
-export default min;
+export { min };

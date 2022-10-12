@@ -1,2 +1,1 @@
-import now from './now';
-export { now };
+export { now } from './now';

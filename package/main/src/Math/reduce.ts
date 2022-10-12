@@ -1,4 +1,4 @@
-import gcd from './gcd';
+import { gcd } from './gcd';
 /**
  * 約分
  * @param  {number} x
@@ -11,4 +11,4 @@ const reduce = (x: number, y: number) => {
     let n = gcd(x, y);
     return { x: x / n, y: y / n, gcd: gcd(x, y) };
 };
-export default reduce;
+export { reduce };

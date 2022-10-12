@@ -1,4 +1,4 @@
-import now from '../Date/now';
+import { now } from '../Date/now';
 
 const birthday = (
     yer: number,
@@ -24,4 +24,4 @@ const birthday = (
             : y;
     return yer < 100 ? 1900 + y : r;
 };
-export default birthday;
+export { birthday };

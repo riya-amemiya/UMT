@@ -12,4 +12,4 @@ const factorial = (x: number): number => {
     }
     return result;
 };
-export default factorial;
+export { factorial };

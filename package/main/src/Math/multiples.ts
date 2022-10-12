@@ -10,4 +10,4 @@ const multiples = (x: number, n: number) => {
     }
     return result;
 };
-export default multiples;
+export { multiples };

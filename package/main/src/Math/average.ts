@@ -7,4 +7,4 @@ const average = (numbers: number[]): number => {
     const avg = sum / numbers.length;
     return avg;
 };
-export default average;
+export { average };

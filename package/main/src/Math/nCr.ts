@@ -1,4 +1,4 @@
-import nPr from './nPr';
+import { nPr } from './nPr';
 /**
  * nCr
  * @param  {number} n
@@ -15,4 +15,4 @@ const nCr = (n: number, r: number) => {
     if (1 > y) return 0;
     return y;
 };
-export default nCr;
+export { nCr };

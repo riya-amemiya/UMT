@@ -1,8 +1,8 @@
-import addition from '../addition';
-import division from '../division';
-import multiplication from '../multiplication';
-import subtract from '../subtract';
-import exchange from './exchange';
+import { addition } from '../addition';
+import { division } from '../division';
+import { multiplication } from '../multiplication';
+import { subtract } from '../subtract';
+import { exchange } from './exchange';
 /**
  * 電卓
  * ()や符号に対応
@@ -118,4 +118,4 @@ const calculatorCore = <T extends object>(
         }
     }
 };
-export default calculatorCore;
+export { calculatorCore };

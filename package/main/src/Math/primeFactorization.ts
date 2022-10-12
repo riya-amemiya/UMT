@@ -17,4 +17,4 @@ const primeFactorization = (x: number) => {
     }
     return out;
 };
-export default primeFactorization;
+export { primeFactorization };

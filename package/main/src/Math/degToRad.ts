@@ -5,4 +5,4 @@
 const degToRad = (x: number) => {
     return x * (Math.PI / 180);
 };
-export default degToRad;
+export { degToRad };

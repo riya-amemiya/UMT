@@ -1,2 +1,1 @@
-import deviationValueSimple from './deviationValue';
-export { deviationValueSimple };
+export { deviationValueSimple } from './deviationValue';

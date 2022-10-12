@@ -19,4 +19,4 @@ const dayOfWeek = (
         return nowTime.getDay();
     }
 };
-export default dayOfWeek;
+export { dayOfWeek };

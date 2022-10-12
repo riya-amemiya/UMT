@@ -5,4 +5,4 @@ const roundOf = (num: number, precision: number) => {
     );
 };
 
-export default roundOf;
+export { roundOf };

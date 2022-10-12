@@ -12,4 +12,4 @@ const UMT = {
     Simple: UMT_Simple,
 };
 
-export default UMT;
+export { UMT };

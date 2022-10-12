@@ -1,4 +1,4 @@
-import nCr from './nCr';
+import { nCr } from './nCr';
 /**
  * 重複を許して取り出す
  * @param  {number} n
@@ -12,4 +12,4 @@ const nHr = (n: number, r: number) => {
     if (1 > y) return 0;
     return y;
 };
-export default nHr;
+export { nHr };

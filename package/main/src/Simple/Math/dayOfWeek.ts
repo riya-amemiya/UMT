@@ -1,8 +1,8 @@
-import dayOfWeek from '../../Tool/dayOfWeek';
+import { dayOfWeek } from '../../Tool/dayOfWeek';
 import {
     dayType,
-    MonthsWith31Days,
     MonthsWihout31Days,
+    MonthsWith31Days,
 } from '../../types/monType';
 
 const dayOfWeekSimple = <
@@ -40,4 +40,4 @@ const dayOfWeekSimple = <
         return dayOfWeek(props, timeDifference);
     }
 };
-export default dayOfWeekSimple;
+export { dayOfWeekSimple };

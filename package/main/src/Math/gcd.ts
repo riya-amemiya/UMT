@@ -1,4 +1,4 @@
-import valueSwap from './valueSwap';
+import { valueSwap } from './valueSwap';
 
 /**
  * 自然数の最大公約数
@@ -23,4 +23,4 @@ const gcd = (x: number, y: number, ...z: number[]) => {
     }
     return x;
 };
-export default gcd;
+export { gcd };

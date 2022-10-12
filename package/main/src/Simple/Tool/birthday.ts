@@ -1,4 +1,4 @@
-import birthday from '../../Tool/birthday';
+import { birthday } from '../../Tool/birthday';
 import {
     dayType,
     MonthsWihout31Days,
@@ -43,4 +43,4 @@ const birthdaySimple = <
     }
 };
 
-export default birthdaySimple;
+export { birthdaySimple };

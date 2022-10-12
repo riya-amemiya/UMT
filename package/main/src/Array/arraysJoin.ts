@@ -16,4 +16,4 @@ const arraysJoin = <
     }
     return [...new Set(array)] as C;
 };
-export default arraysJoin;
+export { arraysJoin };

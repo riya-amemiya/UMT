@@ -29,4 +29,4 @@ const nPr = (n: number, r: number) => {
     if (1 > y) return 0;
     return y;
 };
-export default nPr;
+export { nPr };

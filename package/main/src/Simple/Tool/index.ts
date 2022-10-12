@@ -1,3 +1,1 @@
-import birthday from './birthday';
-
-export { birthday };
+export { birthdaySimple } from './birthday';

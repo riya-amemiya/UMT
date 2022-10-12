@@ -1,6 +1,5 @@
-import compilerCore from './module/Compiler/core';
 import * as fs from 'fs';
-import compilerToken from './module/Compiler/token';
+import { compilerCore } from './module/Compiler/core';
 const check = (file: string) => {
     let hasfaile = false;
     try {

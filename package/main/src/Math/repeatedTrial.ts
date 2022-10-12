@@ -1,5 +1,5 @@
-import gcd from './gcd';
-import nCr from './nCr';
+import { gcd } from './gcd';
+import { nCr } from './nCr';
 /**
  * 反復的な思考
  * @param  {number} n
@@ -20,4 +20,4 @@ const repeatedTrial = (
         answer2 / greatest_common_divisor,
     ];
 };
-export default repeatedTrial;
+export { repeatedTrial };

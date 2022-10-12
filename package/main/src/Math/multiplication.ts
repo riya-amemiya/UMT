@@ -1,4 +1,4 @@
-import getDecimalLength from './getDecimalLength';
+import { getDecimalLength } from './getDecimalLength';
 
 /**
  * 誤差のない掛け算
@@ -11,4 +11,4 @@ const multiplication = (x: number, y: number) => {
     y = +(y + '').replace('.', '');
     return (x * y) / n;
 };
-export default multiplication;
+export { multiplication };

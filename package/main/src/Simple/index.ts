@@ -1,10 +1,4 @@
-import nowSimple from './Date/now';
-import dayOfWeekSimple from './Math/dayOfWeek';
-import deviationValueSimple from './Math/deviationValue';
-import birthdaySimple from './Tool/birthday';
-export {
-    nowSimple,
-    dayOfWeekSimple,
-    deviationValueSimple,
-    birthdaySimple,
-};
+export { nowSimple } from './Date/now';
+export { dayOfWeekSimple } from './Math/dayOfWeek';
+export { deviationValueSimple } from './Math/deviationValue';
+export { birthdaySimple } from './Tool/birthday';
