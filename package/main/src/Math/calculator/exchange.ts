@@ -1,7 +1,7 @@
 import { isNumber } from '../isNumber';
 import { multiplication } from '../multiplication';
 
-const exchange = <T extends object>(n: string, props?: T) => {
+export const exchange = <T extends object>(n: string, props?: T) => {
     if (props) {
         for (const i in props) {
             if (n[0] == i) {
@@ -22,4 +22,3 @@ const exchange = <T extends object>(n: string, props?: T) => {
         return n;
     }
 };
-export { exchange };

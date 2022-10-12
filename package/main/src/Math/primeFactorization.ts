@@ -2,7 +2,7 @@
  * 素因数分解
  * @param  {number} x
  */
-const primeFactorization = (x: number) => {
+export const primeFactorization = (x: number) => {
     let n = 0;
     const out: { number: number; count: number }[] = [];
     for (let i = 2; i <= x; i++) {
@@ -17,4 +17,3 @@ const primeFactorization = (x: number) => {
     }
     return out;
 };
-export { primeFactorization };

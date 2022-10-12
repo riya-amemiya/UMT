@@ -3,7 +3,7 @@
  * @param  {any[]} array
  * @param  {any[]} ...arrays
  */
-const getArraysCommon = (array: any[], ...arrays: any[]) => {
+export const getArraysCommon = (array: any[], ...arrays: any[]) => {
     const result: any[] = [];
     for (const i of array) {
         let flag = true;
@@ -19,4 +19,3 @@ const getArraysCommon = (array: any[], ...arrays: any[]) => {
     }
     return result;
 };
-export { getArraysCommon };

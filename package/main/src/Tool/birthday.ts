@@ -1,6 +1,6 @@
 import { now } from '../Date/now';
 
-const birthday = (
+export const birthday = (
     yer: number,
     mon: number,
     day: number,
@@ -24,4 +24,3 @@ const birthday = (
             : y;
     return yer < 100 ? 1900 + y : r;
 };
-export { birthday };

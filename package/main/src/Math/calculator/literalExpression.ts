@@ -5,7 +5,7 @@ import { calculatorCore } from './core';
  * 方程式計算
  * @param  {string} x
  */
-const literalExpression = (x: string) => {
+export const literalExpression = (x: string) => {
     let cache: [string[], string] = [[], ''];
     for (const i of x.split('=')) {
         if (/[a-zA-Z]+/.test(i) === false) {
@@ -52,4 +52,3 @@ const literalExpression = (x: string) => {
             : cache[1];
     }
 };
-export { literalExpression };

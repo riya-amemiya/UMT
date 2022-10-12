@@ -6,7 +6,7 @@ import { nCr } from './nCr';
  * @param  {number} r
  * @param  {{x:number;y:number}} p
  */
-const repeatedTrial = (
+export const repeatedTrial = (
     n: number,
     r: number,
     p: { x: number; y: number },
@@ -20,4 +20,3 @@ const repeatedTrial = (
         answer2 / greatest_common_divisor,
     ];
 };
-export { repeatedTrial };

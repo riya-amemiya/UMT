@@ -2,7 +2,7 @@
  * 小数点を含むかどうか
  * @param  {any} x
  */
-const isDouble = (x: any, loose: boolean = true) => {
+export const isDouble = (x: any, loose: boolean = true) => {
     if (loose) {
         return (
             isFinite(x) &&
@@ -16,4 +16,3 @@ const isDouble = (x: any, loose: boolean = true) => {
         );
     }
 };
-export { isDouble };

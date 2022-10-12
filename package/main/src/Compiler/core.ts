@@ -1,5 +1,5 @@
 import { compilerToken } from './token';
-const compilerCore = (
+export const compilerCore = (
     code: string,
     tokenList: [string, RegExp, number | null][],
     UncategorizedTokenList: [string, RegExp, number | null][],
@@ -31,5 +31,3 @@ const compilerCore = (
 
     return outCode;
 };
-
-export { compilerCore };

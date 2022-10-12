@@ -3,7 +3,7 @@
  * @param  {any[]} array
  * @param  {any[]} ...arrays
  */
-const arraysJoin = <
+export const arraysJoin = <
     A extends any[],
     B extends any[],
     C extends A & B,
@@ -16,4 +16,3 @@ const arraysJoin = <
     }
     return [...new Set(array)] as C;
 };
-export { arraysJoin };

@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import { compilerCore } from './module/Compiler/core';
-const check = (file: string) => {
+export const check = (file: string) => {
     let hasfaile = false;
     try {
         fs.statSync(file);
@@ -12,7 +12,7 @@ const check = (file: string) => {
     }
     return hasfaile;
 };
-const read = (file: string) => {
+export const read = (file: string) => {
     return check(file) ? fs.readFileSync(file, 'utf8') : '';
 };
 const tokenList: [string, RegExp, number | null][] = [
@@ -41,7 +41,7 @@ const tokenList: [string, RegExp, number | null][] = [
     ['COLON', /:/, null],
     ['RETURN', /return/, null],
 ];
-const process = (
+export const process = (
     _code: string,
     _tokenList: [string, RegExp, number | null][],
     x: { name: string; value: string },

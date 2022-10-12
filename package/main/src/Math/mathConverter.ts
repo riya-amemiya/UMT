@@ -1,6 +1,6 @@
 import { mathSeparator } from './mathSeparator';
 
-const mathConverter = (x: string): string => {
+export const mathConverter = (x: string): string => {
     while (true) {
         if (x.indexOf('^') != -1 || x.indexOf('*') != -1) {
             //掛け算と割り算の処理
@@ -39,4 +39,3 @@ const mathConverter = (x: string): string => {
         }
     }
 };
-export { mathConverter };

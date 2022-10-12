@@ -9,7 +9,7 @@ import { exchange } from './exchange';
  * xなどの文字は未対応
  * @param  {string} x 計算式
  */
-const calculatorCore = <T extends object>(
+export const calculatorCore = <T extends object>(
     x: string,
     ex?: T,
 ): string => {
@@ -118,4 +118,3 @@ const calculatorCore = <T extends object>(
         }
     }
 };
-export { calculatorCore };

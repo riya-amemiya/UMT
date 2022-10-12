@@ -5,7 +5,7 @@ import {
     MonthsWith31Days,
 } from '../../types/monType';
 
-const dayOfWeekSimple = <
+export const dayOfWeekSimple = <
     T extends MonthsWith31Days | MonthsWihout31Days,
 >(
     props?:
@@ -40,4 +40,3 @@ const dayOfWeekSimple = <
         return dayOfWeek(props, timeDifference);
     }
 };
-export { dayOfWeekSimple };

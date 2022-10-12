@@ -3,7 +3,10 @@
  * @param  {any[]} array
  * @param  {any[]} ...arrays
  */
-const getArraysDiff = (array: any[], ...arrays: any[]): any[] => {
+export const getArraysDiff = (
+    array: any[],
+    ...arrays: any[]
+): any[] => {
     const result: any[] = [];
     for (const i of array) {
         let flag = true;
@@ -19,4 +22,3 @@ const getArraysDiff = (array: any[], ...arrays: any[]): any[] => {
     }
     return result;
 };
-export { getArraysDiff };

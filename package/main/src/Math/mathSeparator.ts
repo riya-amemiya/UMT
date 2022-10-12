@@ -1,6 +1,6 @@
 import { isNumber } from './isNumber';
 
-const mathSeparator = (number: string | number) => {
+export const mathSeparator = (number: string | number) => {
     if (isNumber(number)) {
         const [n, x] =
             typeof number === 'string'
@@ -13,4 +13,3 @@ const mathSeparator = (number: string | number) => {
     }
     return [0, 0];
 };
-export { mathSeparator };

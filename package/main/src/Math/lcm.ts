@@ -5,11 +5,10 @@ import { valueSwap } from './valueSwap';
  * @param  {number} x
  * @param  {number} y
  */
-const lcm = (x: number, y: number) => {
+export const lcm = (x: number, y: number) => {
     if (x === 0 || y === 0) {
         return 0;
     }
     [x, y] = valueSwap(x, y);
     return (x / gcd(x, y)) * y;
 };
-export { lcm };

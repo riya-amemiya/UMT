@@ -4,7 +4,7 @@
  * @param  {number} startID
  * @param  {number} endID
  */
-const quickSort = <A extends any[]>(
+export const quickSort = <A extends any[]>(
     array: A,
     startID: number = 0,
     endID: number = array.length - 1,
@@ -36,4 +36,3 @@ const quickSort = <A extends any[]>(
     }
     return array;
 };
-export { quickSort };

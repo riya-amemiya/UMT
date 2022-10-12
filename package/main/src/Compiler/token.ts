@@ -1,4 +1,4 @@
-const compilerToken = (
+export const compilerToken = (
     code: string,
     tokenList: [string, RegExp, number | null][],
     UncategorizedTokenList: [string, RegExp, number | null][],
@@ -136,4 +136,3 @@ const compilerToken = (
         };
     });
 };
-export { compilerToken };

@@ -6,11 +6,10 @@ import { multiplication } from './multiplication';
  * @param  {number} x
  * @param  {number} y
  */
-const addition = (x: number, y: number) => {
+export const addition = (x: number, y: number) => {
     const z = Math.pow(
         10,
         max(getDecimalLength(x), getDecimalLength(y)),
     );
     return (multiplication(x, z) + multiplication(y, z)) / z;
 };
-export { addition };

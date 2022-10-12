@@ -4,7 +4,7 @@ import { division } from './division';
  * 素数判定
  * @param  {number} n
  */
-const isPrimeNumber = (n: number) => {
+export const isPrimeNumber = (n: number) => {
     if (n < 2) return false;
     else if (n == 2) return true;
     else if (n % 2 == 0) return false;
@@ -15,4 +15,3 @@ const isPrimeNumber = (n: number) => {
     }
     return true;
 };
-export { isPrimeNumber };

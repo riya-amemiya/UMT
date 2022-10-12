@@ -4,7 +4,7 @@ import {
     MonthsWihout31Days,
     MonthsWith31Days,
 } from '../../types/monType';
-const birthdaySimple = <
+export const birthdaySimple = <
     T extends MonthsWith31Days | MonthsWihout31Days,
 >(
     birthdays:
@@ -42,5 +42,3 @@ const birthdaySimple = <
         );
     }
 };
-
-export { birthdaySimple };

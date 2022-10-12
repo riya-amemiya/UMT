@@ -1,6 +1,6 @@
 import { now } from '../Date';
 
-const dayOfWeek = (
+export const dayOfWeek = (
     props?: {
         yer?: number;
         mon?: number;
@@ -19,4 +19,3 @@ const dayOfWeek = (
         return nowTime.getDay();
     }
 };
-export { dayOfWeek };

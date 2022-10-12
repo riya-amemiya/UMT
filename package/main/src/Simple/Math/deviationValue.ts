@@ -1,5 +1,5 @@
 import { average } from '../../Math';
-const deviationValueSimple = (
+export const deviationValueSimple = (
     value: number,
     averageValue: number | number[],
 ) => {
@@ -10,4 +10,3 @@ const deviationValueSimple = (
         return ((value - averageValue) / averageValue) * 10 + 50;
     }
 };
-export { deviationValueSimple };

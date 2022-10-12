@@ -11,7 +11,11 @@ export interface DIVISION {
  * @param  {number} y
  * @param  {boolean} [isFloor=true]
  */
-const division = ((x: number, y: number, isFloor: boolean = true) => {
+export const division = ((
+    x: number,
+    y: number,
+    isFloor: boolean = true,
+) => {
     const [decimalLengthX, decimalLengthY] = valueSwap(
         getDecimalLength(x),
         getDecimalLength(y),
@@ -32,4 +36,3 @@ const division = ((x: number, y: number, isFloor: boolean = true) => {
           ];
     // return isFloor ? x / y : [(x - (x % y)) / y, x % y];
 }) as DIVISION;
-export { division };
