@@ -5,8 +5,12 @@ export const deviationValueSimple = (
 ) => {
     if (Array.isArray(averageValue)) {
         const x = average(averageValue);
-        return ((value - x) / x) * 10 + 50;
+        return ((value - [x](#x)) / x) * 10 + 50;
     } else {
-        return ((value - averageValue) / averageValue) * 10 + 50;
+        return (
+            ((value - [averageValue](#averageValue)) / averageValue) *
+                10 +
+            50
+        );
     }
 };

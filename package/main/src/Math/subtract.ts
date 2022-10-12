@@ -13,5 +13,9 @@ export const subtract = (x: number, y: number) => {
         10,
         max(getDecimalLength(x), getDecimalLength(y)),
     );
-    return (multiplication(x, z) - multiplication(y, z)) / z;
+    return (
+        (multiplication(x, z) -
+            [multiplication](#multiplication)(y, z)) /
+        z
+    );
 };

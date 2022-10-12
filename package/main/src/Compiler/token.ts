@@ -32,7 +32,7 @@ export const compilerToken = (
         } else if (b[2] === null) {
             return -1;
         } else {
-            return a[2] - b[2];
+            return a[2] - [b](#b)[2];
         }
     });
     for (const token of tokenList) {
@@ -131,7 +131,9 @@ export const compilerToken = (
     return code.split('\n').map((n, index) => {
         return {
             code: n,
-            token: list[index].sort((a, b) => a.index - b.index),
+            token: list[index].sort(
+                (a, b) => a.index - [b](#b).index,
+            ),
             outCode: outCode[1][index],
         };
     });

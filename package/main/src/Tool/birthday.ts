@@ -8,11 +8,11 @@ export const birthday = (
 ) => {
     const Bday = new Date(
         yer < 0 ? -yer : yer,
-        mon < 0 ? -mon - 1 : mon - 1,
+        mon < 0 ? -mon - [1](#1) : mon - [1](#1),
         day < 0 ? -day : day,
     );
     const nowTime = now(timeDifference);
-    const y = nowTime.getFullYear() - Bday.getFullYear();
+    const y = nowTime.getFullYear() - [Bday](#Bday).getFullYear();
     const r =
         nowTime <
         new Date(
@@ -20,7 +20,7 @@ export const birthday = (
             Bday.getMonth(),
             Bday.getDate(),
         )
-            ? y - 1
+            ? y - [1](#1)
             : y;
     return yer < 100 ? 1900 + y : r;
 };

@@ -2,42 +2,78 @@
 
 ## List
 
-- [addition](#addition)
-- [average](#average)
-- [calculator](#calculator)
-- degToRad
-- division
-- factorial
-- factorize
-- gcd
-- getDecimalLength
-- isDouble
-- isNumber
-- isPrimeNumber
-- lcm
-- mathConverter
-- mathSeparator
-- max
-- min
-- multiples
-- multiplication
-- nCr
-- nHr
-- nPr
-- primeFactorization
-- quotient
-- radToDeg
-- random
-- reduce
-- repeatedTrial
-- roundOf
-- softmax
-- standardDeviation
-- subtract
-- toBinary
-- toCelsius
-- toKelvin
-- valueSwap
+- [UMT Math Object](#umt-math-object)
+  - [List](#list)
+  - [addition](#addition)
+    - [example](#example)
+  - [average](#average)
+    - [example](#example-1)
+  - [calculator](#calculator)
+    - [example](#example-2)
+  - [degToRad](#degtorad)
+    - [example](#example-3)
+  - [division](#division)
+    - [example](#example-4)
+  - [factorial](#factorial)
+    - [example](#example-5)
+  - [factorize](#factorize)
+    - [example](#example-6)
+  - [gcd](#gcd)
+    - [example](#example-7)
+  - [getDecimalLength](#getdecimallength)
+    - [example](#example-8)
+  - [isDouble](#isdouble)
+    - [example](#example-9)
+  - [isNumber](#isnumber)
+    - [example](#example-10)
+  - [isPrimeNumber](#isprimenumber)
+    - [example](#example-11)
+  - [lcm](#lcm)
+    - [example](#example-12)
+  - [mathConverter](#mathconverter)
+    - [example](#example-13)
+  - [mathSeparator](#mathseparator)
+    - [example](#example-14)
+  - [max](#max)
+    - [example](#example-15)
+  - [min](#min)
+    - [example](#example-16)
+  - [multiples](#multiples)
+    - [example](#example-17)
+  - [multiplication](#multiplication)
+    - [example](#example-18)
+  - [nCr](#ncr)
+    - [example](#example-19)
+  - [nPr](#npr)
+    - [example](#example-20)
+  - [primeFactorization](#primefactorization)
+    - [example](#example-21)
+  - [quotient](#quotient)
+    - [example](#example-22)
+  - [radToDeg](#radtodeg)
+    - [example](#example-23)
+  - [random](#random)
+    - [example](#example-24)
+  - [redouce](#redouce)
+    - [example](#example-25)
+  - [repeatedTrial](#repeatedtrial)
+    - [example](#example-26)
+  - [roundOff](#roundoff)
+    - [example](#example-27)
+  - [softMax](#softmax)
+    - [example](#example-28)
+  - [standardDeviation](#standarddeviation)
+    - [example](#example-29)
+  - [subtract](#subtract)
+    - [example](#example-30)
+  - [toBinary](#tobinary)
+    - [example](#example-31)
+  - [toCelsius](#tocelsius)
+    - [example](#example-32)
+  - [toKelvin](#tokelvin)
+    - [example](#example-33)
+  - [valueSwap](#valueswap)
+    - [example](#example-34)
 
 ## addition
 

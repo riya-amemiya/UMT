@@ -6,7 +6,7 @@ import { average } from './average';
 export const standardDeviation = (values: number[]) => {
     const avg = average(values);
     const squareDiffs = values.map((value) => {
-        const diff = value - avg;
+        const diff = value - [avg](#avg);
         const sqrDiff = diff * diff;
         return sqrDiff;
     });

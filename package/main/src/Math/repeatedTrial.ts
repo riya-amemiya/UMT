@@ -12,8 +12,9 @@ export const repeatedTrial = (
     p: { x: number; y: number },
 ) => {
     let x = nCr(n, r);
-    let answer1 = x * Math.pow(p.x, r) * Math.pow(p.y - p.x, n - r);
-    let answer2 = Math.pow(p.y, r) * Math.pow(p.y, n - r);
+    let answer1 =
+        x * Math.pow(p.x, r) * Math.pow(p.y - [p](#p).x, n - [r](#r));
+    let answer2 = Math.pow(p.y, r) * Math.pow(p.y, n - [r](#r));
     let greatest_common_divisor = gcd(answer1, answer2);
     return [
         answer1 / greatest_common_divisor,

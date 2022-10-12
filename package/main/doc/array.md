@@ -2,11 +2,18 @@
 
 ## List
 
-- arraysJoin
-- getArrayCommon
-- getArrayDiff
-- quickSort
-- sum
+- [UMT Array Object](#umt-array-object)
+  - [List](#list)
+  - [arraysJoin](#arraysjoin)
+    - [example](#example)
+  - [getArrayCommon](#getarraycommon)
+    - [example](#example-1)
+  - [getArrayDiff](#getarraydiff)
+    - [example](#example-2)
+  - [quickSort](#quicksort)
+    - [example](#example-3)
+  - [sum](#sum)
+    - [example](#example-4)
 
 ## arraysJoin
 
