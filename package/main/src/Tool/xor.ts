@@ -1,5 +1,5 @@
-import { XOR } from '../types/logicType';
+import { isBoolean, XOR } from '../types/logicType';
 
 export const xor = ((x: boolean, y: boolean) => {
     return x !== y;
-}) as <X extends boolean, Y extends boolean>(x: X, y: Y) => XOR<X, Y>;
+}) as <X, Y>(x: X, y: Y) => XOR<isBoolean<X>, isBoolean<Y>>;

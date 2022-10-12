@@ -7,7 +7,7 @@
 export const quickSort = <A extends any[]>(
     array: A,
     startID: number = 0,
-    endID: number = array.length - [1](#1),
+    endID: number = array.length - 1,
 ) => {
     const pivot = array[Math.floor((startID + endID) / 2)];
     let left = startID;
@@ -28,8 +28,8 @@ export const quickSort = <A extends any[]>(
         left++;
         right--;
     }
-    if (startID < left - [1](#1)) {
-        quickSort(array, startID, left - [1](#1));
+    if (startID < left - 1) {
+        quickSort(array, startID, left - 1);
     }
     if (right + 1 < endID) {
         quickSort(array, right + 1, endID);
