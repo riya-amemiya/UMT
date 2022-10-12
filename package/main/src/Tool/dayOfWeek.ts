@@ -12,7 +12,7 @@ export const dayOfWeek = (
     if (props) {
         return new Date(
             props.yer || nowTime.getFullYear(),
-            props.mon ? props.mon - [1](#1) : nowTime.getMonth(),
+            props.mon ? props.mon - 1 : nowTime.getMonth(),
             props.day || nowTime.getDate(),
         ).getDay();
     } else {

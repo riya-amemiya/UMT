@@ -15,7 +15,7 @@ export const subtract = (x: number, y: number) => {
     );
     return (
         (multiplication(x, z) -
-            [multiplication](#multiplication)(y, z)) /
+        multiplication(y, z)) /
         z
     );
 };

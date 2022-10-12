@@ -23,10 +23,7 @@ export const division = ((
     const n =
         decimalLengthX == decimalLengthY
             ? 1
-            : Math.pow(
-                  10,
-                  decimalLengthY - [decimalLengthX](#decimalLengthX),
-              );
+            : Math.pow(10, decimalLengthY - decimalLengthX);
     x = +(x + '').replace('.', '');
     y = +(y + '').replace('.', '');
     return isFloor

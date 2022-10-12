@@ -8,7 +8,7 @@ export const nHr = (n: number, r: number) => {
     if (n === 0 || r === 0) {
         return NaN;
     }
-    const y = nCr(n + r - [1](#1), r);
+    const y = nCr(n + r - 1, r);
     if (1 > y) return 0;
     return y;
 };
