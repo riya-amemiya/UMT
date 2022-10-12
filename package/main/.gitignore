@@ -88,3 +88,6 @@ build
 module
 
 lib
+
+doc/html
+

@@ -6,10 +6,4 @@
 
 ## doc
 
-### Array
-
-- [Array](doc/array.md)
-
-### Math
-
-- [Math](doc/math.md)
+- [Doc](./doc/index.md)
