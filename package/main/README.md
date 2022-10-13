@@ -5,6 +5,12 @@
 Main Packageに依存関係はありません。
 JavaScriptからの呼び出しに対応しています。
 
-## doc
+## Doc
 
 - [Doc](./doc/index.md)
+
+## Install
+
+```bash
+yarn add umt
+```

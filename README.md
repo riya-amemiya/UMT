@@ -5,12 +5,6 @@
 
 ## Doc
 
-[Main Package](./main/doc/index.md)
+[Main Package](./package/main/doc/index.md)
 
-[Wasm Package](./wasm/doc/index.md)
-
-## Install
-
-```bash
-yarn add umt-plugin-wasm
-```
+[Wasm Package](./package/main/doc/index.md)
