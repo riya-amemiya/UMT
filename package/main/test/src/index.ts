@@ -184,12 +184,3 @@ test([
     [[mathConverter, '1250*1250'], '1500*1000+400*100+200*100+50*50'],
     [[sum, softmax([1, 2, 4])], 1],
 ]);
-console.log('====================================');
-console.log(
-    average(
-        Array(9)
-            .fill(3)
-            .concat(Array(8).fill(4).concat(Array(7).fill(5))),
-    ),
-);
-console.log('====================================');
