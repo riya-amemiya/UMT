@@ -5,12 +5,13 @@ import { nCr } from './nCr';
  * @param  {number} n
  * @param  {number} r
  * @param  {{x:number;y:number}} p
+ * @return {number[]}
  */
 export const repeatedTrial = (
     n: number,
     r: number,
     p: { x: number; y: number },
-) => {
+): number[] => {
     let x = nCr(n, r);
     let answer1 = x * Math.pow(p.x, r) * Math.pow(p.y - p.x, n - r);
     let answer2 = Math.pow(p.y, r) * Math.pow(p.y, n - r);

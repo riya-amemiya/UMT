@@ -1,5 +1,10 @@
 import { mathSeparator } from './mathSeparator';
 
+/**
+ * @param {string} x
+ * @returns string
+ */
+
 export const mathConverter = (x: string): string => {
     while (true) {
         if (x.indexOf('^') != -1 || x.indexOf('*') != -1) {

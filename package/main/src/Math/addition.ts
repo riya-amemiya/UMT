@@ -5,6 +5,7 @@ import { multiplication } from './multiplication';
  * 誤差のない足し算
  * @param  {number} x
  * @param  {number} y
+ * @returns number
  */
 export const addition = (x: number, y: number) => {
     const z = Math.pow(

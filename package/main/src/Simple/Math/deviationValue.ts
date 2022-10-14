@@ -1,12 +1,32 @@
-import { average } from '../../Math';
-export const deviationValueSimple = (
+import { average, standardDeviation } from '../../Math';
+import { deviationValue } from '../../Math/deviationValue';
+
+export interface DeviationValueSimple {
+    (
+        value: number,
+        averageValue: number,
+        standardDeviationValue: number,
+    ): number;
+    (value: number, averageValue: number[]): number;
+}
+
+export const deviationValueSimple = ((
     value: number,
     averageValue: number | number[],
+    standardDeviationValue: number,
 ) => {
     if (Array.isArray(averageValue)) {
         const x = average(averageValue);
-        return ((value - x) / x) * 10 + 50;
+        return deviationValue(
+            value,
+            x,
+            standardDeviation(averageValue),
+        );
     } else {
-        return ((value - averageValue) / averageValue) * 10 + 50;
+        return deviationValue(
+            value,
+            averageValue,
+            standardDeviationValue,
+        );
     }
-};
+}) as DeviationValueSimple;
