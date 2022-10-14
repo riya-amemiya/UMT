@@ -1,6 +1,7 @@
 /**
  * 階乗
  * @param  {number} x
+ * @returns number
  */
 export const factorial = (x: number): number => {
     let result = 1;

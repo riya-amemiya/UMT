@@ -1,6 +1,7 @@
 /**
  * 因数分解
  * @param  {number} n
+ * @returns number[]
  */
 export const factorize = (n: number): number[] => {
     const result: number[] = [];

@@ -3,6 +3,7 @@ import { division } from './division';
 /**
  * 素数判定
  * @param  {number} n
+ * @returns boolean
  */
 export const isPrimeNumber = (n: number) => {
     if (n < 2) return false;

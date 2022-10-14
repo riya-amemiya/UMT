@@ -1,10 +1,16 @@
 import { now } from '../Date/now';
-
+/**
+ * @param  {number} yer
+ * @param  {number} mon
+ * @param  {number} day
+ * @param  {number} [timeDifference=9] 時差
+ * @returns number 年齢
+ */
 export const birthday = (
     yer: number,
     mon: number,
     day: number,
-    timeDifference = 9,
+    timeDifference: number = 9,
 ) => {
     const Bday = new Date(
         yer < 0 ? -yer : yer,

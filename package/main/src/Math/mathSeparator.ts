@@ -1,5 +1,8 @@
 import { isNumber } from './isNumber';
-
+/**
+ * @param  {string|number} number
+ * @returns string
+ */
 export const mathSeparator = (number: string | number) => {
     if (isNumber(number)) {
         const [n, x] =

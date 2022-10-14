@@ -5,6 +5,7 @@ import { valueSwap } from './valueSwap';
  * @param  {number} x
  * @param  {number} y
  * @param  {number} ...z
+ * @returns number
  */
 export const gcd = (x: number, y: number, ...z: number[]) => {
     if (x === 0 || y === 0) return 0;

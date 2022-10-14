@@ -10,6 +10,7 @@ export interface DIVISION {
  * @param  {number} x
  * @param  {number} y
  * @param  {boolean} [isFloor=true]
+ * @returns number
  */
 export const division = ((
     x: number,

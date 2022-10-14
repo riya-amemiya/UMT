@@ -1,6 +1,7 @@
 /**
  * 小数点以下の桁数
  * @param  {number} value
+ * @returns number
  */
 export const getDecimalLength = (value: number) => {
     let x = (value + '').split('.')[1];
