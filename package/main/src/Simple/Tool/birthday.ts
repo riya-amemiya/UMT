@@ -4,7 +4,18 @@ import {
     MonthsWihout31Days,
     MonthsWith31Days,
 } from '../../types/monType';
-export const birthdaySimple = <
+export interface BIRTHDAYSIMPLE {
+    <T extends MonthsWith31Days | MonthsWihout31Days>(
+        birthdays:
+            | Date
+            | `${number}-${T}-${dayType<T>}`
+            | `${number}:${T}:${dayType<T>}`
+            | `${number}/${T}/${dayType<T>}`
+            | { yer: number; mon: number; day: number },
+        timeDifference?: number,
+    ): number;
+}
+export const birthdaySimple = (<
     T extends MonthsWith31Days | MonthsWihout31Days,
 >(
     birthdays:
@@ -41,4 +52,4 @@ export const birthdaySimple = <
             timeDifference,
         );
     }
-};
+}) as BIRTHDAYSIMPLE;
