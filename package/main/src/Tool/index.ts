@@ -8,19 +8,37 @@ import { pipeFunction } from './pipeFunction';
 export { birthday, dayOfWeek, pipeFunction };
 
 export class UMTToolClass {
-    birthday: typeof birthday;
-    dayOfWeek: typeof dayOfWeek;
-    pipeFunction: typeof pipeFunction;
-    isBrowser: boolean;
-    isNode: boolean;
-    isNodeWebkit: boolean;
+    #Localbirthday: typeof birthday;
+    #LocaldayOfWeek: typeof dayOfWeek;
+    #LocalpipeFunction: typeof pipeFunction;
+    #LocalisBrowser: boolean;
+    #LocalisNode: boolean;
+    #LocalisNodeWebkit: boolean;
     constructor() {
-        this.birthday = birthday;
-        this.dayOfWeek = dayOfWeek;
-        this.pipeFunction = pipeFunction;
-        this.isBrowser = isBrowser;
-        this.isNode = isNode;
-        this.isNodeWebkit = isNodeWebkit;
+        this.#Localbirthday = birthday;
+        this.#LocaldayOfWeek = dayOfWeek;
+        this.#LocalpipeFunction = pipeFunction;
+        this.#LocalisBrowser = isBrowser;
+        this.#LocalisNode = isNode;
+        this.#LocalisNodeWebkit = isNodeWebkit;
+    }
+    get birthday() {
+        return this.#Localbirthday;
+    }
+    get dayOfWeek() {
+        return this.#LocaldayOfWeek;
+    }
+    get pipeFunction() {
+        return this.#LocalpipeFunction;
+    }
+    get isBrowser() {
+        return this.#LocalisBrowser;
+    }
+    get isNode() {
+        return this.#LocalisNode;
+    }
+    get isNodeWebkit() {
+        return this.#LocalisNodeWebkit;
     }
 }
 

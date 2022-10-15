@@ -1,33 +1,33 @@
-import { nowSimple } from './Date/now';
-import { dayOfWeekSimple } from './Math/dayOfWeek';
-import { deviationValueSimple } from './Math/deviationValue';
-import { birthdaySimple } from './Tool/birthday';
+import { UMTSimpleDateClass } from './Date/index';
+import { UMTSimpleMathClass } from './Math';
+import { UMTSimpleToolClass } from './Tool';
+export class UMTSimpleClass<LOCALDATE, LOCALMATH, LOCALTOOL> {
+    #LocalDate: LOCALDATE;
+    #LocalMath: LOCALMATH;
+    #LocalTool: LOCALTOOL;
 
-export class UMTSimpleClass {
-    Date: {
-        nowSimple: typeof nowSimple;
-    };
-    Math: {
-        dayOfWeekSimple: typeof dayOfWeekSimple;
-        deviationValueSimple: typeof deviationValueSimple;
-    };
-    Tool: {
-        birthdaySimple: typeof birthdaySimple;
-    };
-
-    constructor() {
-        this.Date = {
-            nowSimple: nowSimple,
-        };
-        this.Math = {
-            dayOfWeekSimple: dayOfWeekSimple,
-            deviationValueSimple: deviationValueSimple,
-        };
-
-        this.Tool = {
-            birthdaySimple: birthdaySimple,
-        };
+    constructor(
+        constructorLocalDateValue: LOCALDATE,
+        constructorLocalMathValue: LOCALMATH,
+        constructorLocalToolValue: LOCALTOOL,
+    ) {
+        this.#LocalDate = constructorLocalDateValue;
+        this.#LocalMath = constructorLocalMathValue;
+        this.#LocalTool = constructorLocalToolValue;
+    }
+    get Date() {
+        return this.#LocalDate;
+    }
+    get Math() {
+        return this.#LocalMath;
+    }
+    get Tool() {
+        return this.#LocalTool;
     }
 }
 
-export const UMT_Simple = new UMTSimpleClass();
+export const UMT_Simple = new UMTSimpleClass(
+    new UMTSimpleDateClass(),
+    new UMTSimpleMathClass(),
+    new UMTSimpleToolClass(),
+);

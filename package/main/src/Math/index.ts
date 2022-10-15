@@ -76,82 +76,192 @@ export {
     valueSwap,
 };
 export class UMTMathClass {
-    addition: typeof addition;
-    average: typeof average;
-    calculator: typeof calculator;
-    degToRad: typeof degToRad;
-    deviationValue: typeof deviationValue;
-    division: typeof division;
-    factorial: typeof factorial;
-    factorize: typeof factorize;
-    gcd: typeof gcd;
-    getDecimalLength: typeof getDecimalLength;
-    isDouble: typeof isDouble;
-    isNumber: typeof isNumber;
-    isPrimeNumber: typeof isPrimeNumber;
-    lcm: typeof lcm;
-    mathConverter: typeof mathConverter;
-    mathSeparator: typeof mathSeparator;
-    max: typeof max;
-    min: typeof min;
-    multiples: typeof multiples;
-    multiplication: typeof multiplication;
-    nCr: typeof nCr;
-    nHr: typeof nHr;
-    nPr: typeof nPr;
-    primeFactorization: typeof primeFactorization;
-    quotient: typeof quotient;
-    radToDeg: typeof radToDeg;
-    random: typeof random;
-    reduce: typeof reduce;
-    repeatedTrial: typeof repeatedTrial;
-    roundOf: typeof roundOf;
-    softmax: typeof softmax;
-    standardDeviation: typeof standardDeviation;
-    subtract: typeof subtract;
-    toBinary: typeof toBinary;
-    toCelsius: typeof toCelsius;
-    toKelvin: typeof toKelvin;
-    valueSwap: typeof valueSwap;
+    #Localaddition: typeof addition;
+    #Localaverage: typeof average;
+    #Localcalculator: typeof calculator;
+    #LocaldegToRad: typeof degToRad;
+    #LocaldeviationValue: typeof deviationValue;
+    #Localdivision: typeof division;
+    #Localfactorial: typeof factorial;
+    #Localfactorize: typeof factorize;
+    #Localgcd: typeof gcd;
+    #LocalgetDecimalLength: typeof getDecimalLength;
+    #LocalisDouble: typeof isDouble;
+    #LocalisNumber: typeof isNumber;
+    #LocalisPrimeNumber: typeof isPrimeNumber;
+    #Locallcm: typeof lcm;
+    #LocalmathConverter: typeof mathConverter;
+    #LocalmathSeparator: typeof mathSeparator;
+    #Localmax: typeof max;
+    #Localmin: typeof min;
+    #Localmultiples: typeof multiples;
+    #Localmultiplication: typeof multiplication;
+    #LocalnCr: typeof nCr;
+    #LocalnHr: typeof nHr;
+    #LocalnPr: typeof nPr;
+    #LocalprimeFactorization: typeof primeFactorization;
+    #Localquotient: typeof quotient;
+    #LocalradToDeg: typeof radToDeg;
+    #Localrandom: typeof random;
+    #Localreduce: typeof reduce;
+    #LocalrepeatedTrial: typeof repeatedTrial;
+    #LocalroundOf: typeof roundOf;
+    #Localsoftmax: typeof softmax;
+    #LocalstandardDeviation: typeof standardDeviation;
+    #Localsubtract: typeof subtract;
+    #LocaltoBinary: typeof toBinary;
+    #LocaltoCelsius: typeof toCelsius;
+    #LocaltoKelvin: typeof toKelvin;
+    #LocalvalueSwap: typeof valueSwap;
     constructor() {
-        this.addition = addition;
-        this.average = average;
-        this.calculator = calculator;
-        this.degToRad = degToRad;
-        this.deviationValue = deviationValue;
-        this.division = division;
-        this.factorial = factorial;
-        this.factorize = factorize;
-        this.gcd = gcd;
-        this.getDecimalLength = getDecimalLength;
-        this.isDouble = isDouble;
-        this.isNumber = isNumber;
-        this.isPrimeNumber = isPrimeNumber;
-        this.lcm = lcm;
-        this.mathConverter = mathConverter;
-        this.mathSeparator = mathSeparator;
-        this.max = max;
-        this.min = min;
-        this.multiples = multiples;
-        this.multiplication = multiplication;
-        this.nCr = nCr;
-        this.nHr = nHr;
-        this.nPr = nPr;
-        this.primeFactorization = primeFactorization;
-        this.quotient = quotient;
-        this.radToDeg = radToDeg;
-        this.random = random;
-        this.reduce = reduce;
-        this.repeatedTrial = repeatedTrial;
-        this.roundOf = roundOf;
-        this.softmax = softmax;
-        this.standardDeviation = standardDeviation;
-        this.subtract = subtract;
-        this.toBinary = toBinary;
-        this.toCelsius = toCelsius;
-        this.toKelvin = toKelvin;
-        this.valueSwap = valueSwap;
+        this.#Localaddition = addition;
+        this.#Localaverage = average;
+        this.#Localcalculator = calculator;
+        this.#LocaldegToRad = degToRad;
+        this.#LocaldeviationValue = deviationValue;
+        this.#Localdivision = division;
+        this.#Localfactorial = factorial;
+        this.#Localfactorize = factorize;
+        this.#Localgcd = gcd;
+        this.#LocalgetDecimalLength = getDecimalLength;
+        this.#LocalisDouble = isDouble;
+        this.#LocalisNumber = isNumber;
+        this.#LocalisPrimeNumber = isPrimeNumber;
+        this.#Locallcm = lcm;
+        this.#LocalmathConverter = mathConverter;
+        this.#LocalmathSeparator = mathSeparator;
+        this.#Localmax = max;
+        this.#Localmin = min;
+        this.#Localmultiples = multiples;
+        this.#Localmultiplication = multiplication;
+        this.#LocalnCr = nCr;
+        this.#LocalnHr = nHr;
+        this.#LocalnPr = nPr;
+        this.#LocalprimeFactorization = primeFactorization;
+        this.#Localquotient = quotient;
+        this.#LocalradToDeg = radToDeg;
+        this.#Localrandom = random;
+        this.#Localreduce = reduce;
+        this.#LocalrepeatedTrial = repeatedTrial;
+        this.#LocalroundOf = roundOf;
+        this.#Localsoftmax = softmax;
+        this.#LocalstandardDeviation = standardDeviation;
+        this.#Localsubtract = subtract;
+        this.#LocaltoBinary = toBinary;
+        this.#LocaltoCelsius = toCelsius;
+        this.#LocaltoKelvin = toKelvin;
+        this.#LocalvalueSwap = valueSwap;
+    }
+    get addition() {
+        return this.#Localaddition;
+    }
+    get average() {
+        return this.#Localaverage;
+    }
+    get calculator() {
+        return this.#Localcalculator;
+    }
+    get degToRad() {
+        return this.#LocaldegToRad;
+    }
+    get deviationValue() {
+        return this.#LocaldeviationValue;
+    }
+    get division() {
+        return this.#Localdivision;
+    }
+    get factorial() {
+        return this.#Localfactorial;
+    }
+    get factorize() {
+        return this.#Localfactorize;
+    }
+    get gcd() {
+        return this.#Localgcd;
+    }
+    get getDecimalLength() {
+        return this.#LocalgetDecimalLength;
+    }
+    get isDouble() {
+        return this.#LocalisDouble;
+    }
+    get isNumber() {
+        return this.#LocalisNumber;
+    }
+    get isPrimeNumber() {
+        return this.#LocalisPrimeNumber;
+    }
+    get lcm() {
+        return this.#Locallcm;
+    }
+    get mathConverter() {
+        return this.#LocalmathConverter;
+    }
+    get mathSeparator() {
+        return this.#LocalmathSeparator;
+    }
+    get max() {
+        return this.#Localmax;
+    }
+    get min() {
+        return this.#Localmin;
+    }
+    get multiples() {
+        return this.#Localmultiples;
+    }
+    get multiplication() {
+        return this.#Localmultiplication;
+    }
+    get nCr() {
+        return this.#LocalnCr;
+    }
+    get nHr() {
+        return this.#LocalnHr;
+    }
+    get nPr() {
+        return this.#LocalnPr;
+    }
+    get primeFactorization() {
+        return this.#LocalprimeFactorization;
+    }
+    get quotient() {
+        return this.#Localquotient;
+    }
+    get radToDeg() {
+        return this.#LocalradToDeg;
+    }
+    get random() {
+        return this.#Localrandom;
+    }
+    get reduce() {
+        return this.#Localreduce;
+    }
+    get repeatedTrial() {
+        return this.#LocalrepeatedTrial;
+    }
+    get roundOf() {
+        return this.#LocalroundOf;
+    }
+    get softmax() {
+        return this.#Localsoftmax;
+    }
+    get standardDeviation() {
+        return this.#LocalstandardDeviation;
+    }
+    get subtract() {
+        return this.#Localsubtract;
+    }
+    get toBinary() {
+        return this.#LocaltoBinary;
+    }
+    get toCelsius() {
+        return this.#LocaltoCelsius;
+    }
+    get toKelvin() {
+        return this.#LocaltoKelvin;
+    }
+    get valueSwap() {
+        return this.#LocalvalueSwap;
     }
 }
-
 export const UMT_Math = new UMTMathClass();
