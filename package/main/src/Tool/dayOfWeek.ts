@@ -1,10 +1,17 @@
 import { now } from '../Date';
+import {
+    dayTypeInt,
+    MonthsWihout31DaysInt,
+    MonthsWith31DaysInt,
+} from '../types/monType';
 
-export const dayOfWeek = (
+export const dayOfWeek = <
+    T extends MonthsWith31DaysInt | MonthsWihout31DaysInt,
+>(
     props?: {
         yer?: number;
-        mon?: number;
-        day?: number;
+        mon?: T;
+        day?: dayTypeInt<T>;
     },
     timeDifference = 9,
 ) => {
