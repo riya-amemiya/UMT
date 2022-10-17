@@ -40,6 +40,6 @@ console.log(result);
 ### example
 
 ```js
-const result = pipeFunction((x) => x + 1)(x => x(2));
-console.log(result); // 3
+const result = pipeFunction((x: number) => x + 1)((x) => x(2));
+console.log(result()); // 3
 ```
