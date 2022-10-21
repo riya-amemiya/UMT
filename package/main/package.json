@@ -26,5 +26,5 @@
         "ts-node": "ts-node --project test/tsconfig.json test/src/index.ts"
     },
     "types": "module/index.d.js",
-    "version": "1.0.10"
+    "version": "1.0.11"
 }
