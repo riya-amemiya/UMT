@@ -9,3 +9,4 @@ doc
 typedoc.json
 tsconfig.json
 build/*.map
+lib

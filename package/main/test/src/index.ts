@@ -184,5 +184,3 @@ test([
     [[mathConverter, '1250*1250'], '1500*1000+400*100+200*100+50*50'],
     [[sum, softmax([1, 2, 4])], 1],
 ]);
-const result = pipeFunction((x: number) => x + 1)((x) => x(2));
-console.log(result());
