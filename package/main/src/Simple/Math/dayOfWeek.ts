@@ -9,7 +9,7 @@ export const dayOfWeekSimple = <
     T extends MonthsWith31Days | MonthsWihout31Days,
 >(
     props?:
-        | { yer?: number; mon?: number; day?: number }
+        | { yer?: number; mon?: T; day?: dayType<T> }
         | `${number}-${T}-${dayType<T>}`
         | `${number}:${T}:${dayType<T>}`
         | `${number}/${T}/${dayType<T>}`
@@ -18,25 +18,31 @@ export const dayOfWeekSimple = <
 ) => {
     if (typeof props === 'string') {
         if (props.includes(':')) {
-            const [yer, mon, day] = props.split(':').map(Number);
+            const [yer, mon, day] = props
+                .split(':')
+                .map(Number) as any;
             return dayOfWeek({ yer, mon, day }, timeDifference);
         } else if (props.includes('/')) {
-            const [yer, mon, day] = props.split('/').map(Number);
+            const [yer, mon, day] = props
+                .split('/')
+                .map(Number) as any;
             return dayOfWeek({ yer, mon, day }, timeDifference);
         } else {
-            const [yer, mon, day] = props.split('-').map(Number);
+            const [yer, mon, day] = props
+                .split('-')
+                .map(Number) as any;
             return dayOfWeek({ yer, mon, day }, timeDifference);
         }
     } else if (props instanceof Date) {
         return dayOfWeek(
             {
                 yer: props.getFullYear(),
-                mon: props.getMonth(),
-                day: props.getDate(),
+                mon: props.getMonth() as any,
+                day: props.getDate() as any,
             },
             timeDifference,
         );
     } else {
-        return dayOfWeek(props, timeDifference);
+        return dayOfWeek(props as any, timeDifference);
     }
 };
