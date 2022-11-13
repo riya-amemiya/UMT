@@ -1,6 +1,7 @@
 import { addition } from './addition';
 import { average } from './average';
 import { calculator } from './calculator';
+import { calculatorInitialization } from './calculator/calculatorInitialization';
 import { degToRad } from './degToRad';
 import { deviationValue } from './deviationValue';
 import { division } from './division';
@@ -40,6 +41,7 @@ export {
     addition,
     average,
     calculator,
+    calculatorInitialization,
     degToRad,
     deviationValue,
     division,
@@ -79,6 +81,7 @@ export class UMTMathClass {
     #Localaddition: typeof addition;
     #Localaverage: typeof average;
     #Localcalculator: typeof calculator;
+    #LocalcalculatorInitialization: typeof calculatorInitialization;
     #LocaldegToRad: typeof degToRad;
     #LocaldeviationValue: typeof deviationValue;
     #Localdivision: typeof division;
@@ -117,6 +120,8 @@ export class UMTMathClass {
         this.#Localaddition = addition;
         this.#Localaverage = average;
         this.#Localcalculator = calculator;
+        this.#LocalcalculatorInitialization =
+            calculatorInitialization;
         this.#LocaldegToRad = degToRad;
         this.#LocaldeviationValue = deviationValue;
         this.#Localdivision = division;
@@ -160,6 +165,9 @@ export class UMTMathClass {
     }
     get calculator() {
         return this.#Localcalculator;
+    }
+    get calculatorInitialization() {
+        return this.#LocalcalculatorInitialization;
     }
     get degToRad() {
         return this.#LocaldegToRad;
