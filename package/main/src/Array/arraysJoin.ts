@@ -11,8 +11,17 @@ export const arraysJoin = <
     array: A,
     ...arrays: B[]
 ) => {
+    if (!array || !Array.isArray(array)) {
+        throw new Error('Invalid array');
+    }
+
     for (const i of arrays) {
+        if (!i || !Array.isArray(i)) {
+            throw new Error('Invalid array');
+        }
+
         array.push(...i);
     }
+
     return [...new Set(array)] as C;
 };

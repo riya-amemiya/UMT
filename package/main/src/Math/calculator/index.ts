@@ -6,14 +6,17 @@ import { literalExpression } from './literalExpression';
  * ()や符号に対応
  * 一文字までの方程式に対応
  * @param  {string} x
- * @param  {object} ex 為替
+ * @param  {object} exchange 為替
  */
 
-export const calculator = <T extends object>(x: string, ex?: T) => {
-    x = x.replace(/\s+/g, '');
+export const calculator = <T extends object>(
+    x: string,
+    exchange?: T,
+) => {
+    x = x.replace(/\s+/g, ''); // Remove spaces
     if (x.indexOf('=') != -1) {
-        return literalExpression(x);
+        return literalExpression(x); // If the expression contains an equal sign, then it is a literal expression
     } else {
-        return calculatorCore(x, ex);
+        return calculatorCore(x, exchange);
     }
 };
