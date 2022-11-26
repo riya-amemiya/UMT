@@ -2,27 +2,27 @@ import { UMTSimpleDateClass } from './Date/index';
 import { UMTSimpleMathClass } from './Math';
 import { UMTSimpleToolClass } from './Tool';
 export class UMTSimpleClass<LOCALDATE, LOCALMATH, LOCALTOOL> {
-    #LocalDate: LOCALDATE;
-    #LocalMath: LOCALMATH;
-    #LocalTool: LOCALTOOL;
+    #Local_Date: LOCALDATE;
+    #Local_Math: LOCALMATH;
+    #Local_Tool: LOCALTOOL;
 
     constructor(
         constructorLocalDateValue: LOCALDATE,
         constructorLocalMathValue: LOCALMATH,
         constructorLocalToolValue: LOCALTOOL,
     ) {
-        this.#LocalDate = constructorLocalDateValue;
-        this.#LocalMath = constructorLocalMathValue;
-        this.#LocalTool = constructorLocalToolValue;
+        this.#Local_Date = constructorLocalDateValue;
+        this.#Local_Math = constructorLocalMathValue;
+        this.#Local_Tool = constructorLocalToolValue;
     }
     get Date() {
-        return this.#LocalDate;
+        return this.#Local_Date;
     }
     get Math() {
-        return this.#LocalMath;
+        return this.#Local_Math;
     }
     get Tool() {
-        return this.#LocalTool;
+        return this.#Local_Tool;
     }
 }
 

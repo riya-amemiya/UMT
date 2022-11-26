@@ -1,11 +1,11 @@
 import { birthdaySimple } from './birthday';
 
 export class UMTSimpleToolClass {
-    #Localbirthday: typeof birthdaySimple;
+    #Local_birthday: typeof birthdaySimple;
     constructor() {
-        this.#Localbirthday = birthdaySimple;
+        this.#Local_birthday = birthdaySimple;
     }
     get birthday() {
-        return this.#Localbirthday;
+        return this.#Local_birthday;
     }
 }

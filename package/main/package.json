@@ -9,7 +9,6 @@
         "typescript": "^4.8.4",
         "umt": "^1.0.12"
     },
-    "homepage": "https://umt.vercel.app/",
     "keywords": [],
     "license": "MIT",
     "main": "module/index.js",

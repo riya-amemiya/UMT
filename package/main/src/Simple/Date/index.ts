@@ -1,11 +1,11 @@
 import { nowSimple } from './now';
 
 export class UMTSimpleDateClass {
-    #Localnow: typeof nowSimple;
+    #Local_now: typeof nowSimple;
     constructor() {
-        this.#Localnow = nowSimple;
+        this.#Local_now = nowSimple;
     }
     get now() {
-        return this.#Localnow;
+        return this.#Local_now;
     }
 }
