@@ -10,3 +10,5 @@ pub mod ncr;
 pub use ncr::*;
 pub mod npr;
 pub use npr::*;
+pub mod calculator;
+pub use calculator::*;
