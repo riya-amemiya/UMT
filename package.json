@@ -1,0 +1,25 @@
+{
+  "name": "umt",
+  "version": "1.0.0",
+  "description": "個人的に作った便利関数集 個人用途なので破壊的変更がある可能性があります。",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/riya-amemiya/UMT.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/riya-amemiya/UMT/issues"
+  },
+  "homepage": "https://github.com/riya-amemiya/UMT#readme",
+  "private": true,
+  "workspaces": [
+    "package/umt_plugin_node",
+    "package/main"
+  ]
+}
