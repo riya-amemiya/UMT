@@ -1,5 +1,8 @@
 {
   "author": "",
+  "bugs": {
+    "url": "https://github.com/riya-amemiya/UMT/issues"
+  },
   "description": "個人的に作った便利関数集 個人用途なので破壊的変更がある可能性があります。 Main Packageに依存関係はありません。 JavaScriptからの呼び出しに対応しています。",
   "devDependencies": {
     "@types/jest": "^29.2.3",
@@ -12,6 +15,12 @@
     "typescript": "^4.8.4",
     "umt": "^1.0.12"
   },
+  "directories": {
+    "doc": "doc",
+    "lib": "lib",
+    "test": "tests"
+  },
+  "homepage": "https://github.com/riya-amemiya/UMT#readme",
   "keywords": [],
   "license": "MIT",
   "main": "module/index.js",
@@ -21,21 +30,12 @@
     "url": "git://github.com/riya-amemiya/UMT.git"
   },
   "scripts": {
-    "build": "tsc build.ts && node build.js",
+    "build": "tsc",
     "deploy": "yarn typedoc && gh-pages -d doc",
     "test": "jest",
     "test-debug": "cd test && tsc",
     "ts-node": "ts-node --project test/tsconfig.json test/src/index.ts"
   },
   "types": "module/index.d.js",
-  "version": "1.0.14",
-  "bugs": {
-    "url": "https://github.com/riya-amemiya/UMT/issues"
-  },
-  "homepage": "https://github.com/riya-amemiya/UMT#readme",
-  "directories": {
-    "doc": "doc",
-    "lib": "lib",
-    "test": "tests"
-  }
+  "version": "1.0.14"
 }
