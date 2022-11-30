@@ -35,6 +35,16 @@ pub fn npr(n: i32, r: i32) -> i32 {
 }
 
 #[wasm_bindgen]
-pub fn calculator(expression: String) -> String {
-    umt_calculator(expression)
+pub fn deg_to_rad(degrees: f32) -> f32 {
+    umt_deg_to_rad(degrees)
+}
+
+#[wasm_bindgen]
+pub fn deviation_value(value: f64, average_value: f64, standard_deviation_value: f64) -> f64 {
+    umt_deviation_value(value, average_value, standard_deviation_value)
+}
+
+#[wasm_bindgen]
+pub fn factorize(n: i32) -> Vec<i32> {
+    umt_factorize(n)
 }

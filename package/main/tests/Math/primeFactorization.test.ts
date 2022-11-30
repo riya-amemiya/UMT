@@ -1,15 +1,11 @@
 import { primeFactorization } from '../../module/Math/primeFactorization';
 test('{primeFactorization}', () => {
-    expect(primeFactorization(1)).toBe([
-        {
-            name: '1',
-            count: 1,
-        },
-    ]);
-    expect(primeFactorization(49)).toBe([
-        {
-            name: '7',
-            count: 2,
-        },
-    ]);
+    const result = primeFactorization(100);
+    result.forEach((item) => {
+        if (item.number == 2) {
+            expect(item.count).toBe(2);
+        } else if (item.number == 5) {
+            expect(item.count).toBe(2);
+        }
+    });
 });
