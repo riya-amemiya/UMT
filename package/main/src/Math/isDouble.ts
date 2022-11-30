@@ -1,7 +1,6 @@
 /**
- * 小数点を含むかどうか
- * @param  {any} x
- * @param  {boolean} [isStrict=true] - 文字列も対象にするかどうか
+ * @param {any} x
+ * @param {boolean} [loose=true] - 文字列も対象にするかどうか
  * @returns boolean
  */
 export const isDouble = (x: any, loose: boolean = true) => {

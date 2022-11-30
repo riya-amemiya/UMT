@@ -8,37 +8,37 @@ import { pipeFunction } from './pipeFunction';
 export { birthday, dayOfWeek, pipeFunction };
 
 export class UMTToolClass {
-    #Localbirthday: typeof birthday;
-    #LocaldayOfWeek: typeof dayOfWeek;
-    #LocalpipeFunction: typeof pipeFunction;
-    #LocalisBrowser: boolean;
-    #LocalisNode: boolean;
-    #LocalisNodeWebkit: boolean;
+    #Local_birthday: typeof birthday;
+    #Local_dayOfWeek: typeof dayOfWeek;
+    #Local_pipeFunction: typeof pipeFunction;
+    #Local_isBrowser: boolean;
+    #Local_isNode: boolean;
+    #Local_isNodeWebkit: boolean;
     constructor() {
-        this.#Localbirthday = birthday;
-        this.#LocaldayOfWeek = dayOfWeek;
-        this.#LocalpipeFunction = pipeFunction;
-        this.#LocalisBrowser = isBrowser;
-        this.#LocalisNode = isNode;
-        this.#LocalisNodeWebkit = isNodeWebkit;
+        this.#Local_birthday = birthday;
+        this.#Local_dayOfWeek = dayOfWeek;
+        this.#Local_pipeFunction = pipeFunction;
+        this.#Local_isBrowser = isBrowser;
+        this.#Local_isNode = isNode;
+        this.#Local_isNodeWebkit = isNodeWebkit;
     }
     get birthday() {
-        return this.#Localbirthday;
+        return this.#Local_birthday;
     }
     get dayOfWeek() {
-        return this.#LocaldayOfWeek;
+        return this.#Local_dayOfWeek;
     }
     get pipeFunction() {
-        return this.#LocalpipeFunction;
+        return this.#Local_pipeFunction;
     }
     get isBrowser() {
-        return this.#LocalisBrowser;
+        return this.#Local_isBrowser;
     }
     get isNode() {
-        return this.#LocalisNode;
+        return this.#Local_isNode;
     }
     get isNodeWebkit() {
-        return this.#LocalisNodeWebkit;
+        return this.#Local_isNodeWebkit;
     }
 }
 

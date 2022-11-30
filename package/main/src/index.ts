@@ -4,32 +4,32 @@ import { UMT_Math } from './Math';
 import { UMT_Simple } from './Simple';
 import { UMT_Tool } from './Tool';
 export class UMTClass {
-    #LocalArray: typeof UMT_Array;
-    #LocalDate: typeof UMT_Date;
-    #LocalMath: typeof UMT_Math;
-    #LocalSimple: typeof UMT_Simple;
-    #LocalTool: typeof UMT_Tool;
+    #Local_Array: typeof UMT_Array;
+    #Local_Date: typeof UMT_Date;
+    #Local_Math: typeof UMT_Math;
+    #Local_Simple: typeof UMT_Simple;
+    #Local_Tool: typeof UMT_Tool;
     constructor() {
-        this.#LocalArray = UMT_Array;
-        this.#LocalDate = UMT_Date;
-        this.#LocalMath = UMT_Math;
-        this.#LocalSimple = UMT_Simple;
-        this.#LocalTool = UMT_Tool;
+        this.#Local_Array = UMT_Array;
+        this.#Local_Date = UMT_Date;
+        this.#Local_Math = UMT_Math;
+        this.#Local_Simple = UMT_Simple;
+        this.#Local_Tool = UMT_Tool;
     }
     get Array() {
-        return this.#LocalArray;
+        return this.#Local_Array;
     }
     get Date() {
-        return this.#LocalDate;
+        return this.#Local_Date;
     }
     get Math() {
-        return this.#LocalMath;
+        return this.#Local_Math;
     }
     get Simple() {
-        return this.#LocalSimple;
+        return this.#Local_Simple;
     }
     get Tool() {
-        return this.#LocalTool;
+        return this.#Local_Tool;
     }
 }
 export const UMT = new UMTClass();

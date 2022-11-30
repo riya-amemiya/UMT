@@ -4,18 +4,24 @@
  * @param  {any[]} ...arrays
  */
 export const getArraysCommon = (array: any[], ...arrays: any[]) => {
-    const result: any[] = [];
-    for (const i of array) {
-        let flag = true;
-        for (const j of arrays) {
-            if (!j.includes(i)) {
-                flag = false;
-                break;
-            }
-        }
-        if (flag) {
-            result.push(i);
-        }
-    }
+    const result: any[] = [array, ...arrays].reduce(
+        (prev, current) => {
+            return prev.filter((item: any) => current.includes(item));
+        },
+    );
     return result;
+    // const result: any[] = [];
+    // for (const i of array) {
+    //     let flag = true;
+    //     for (const j of arrays) {
+    //         if (!j.includes(i)) {
+    //             flag = false;
+    //             break;
+    //         }
+    //     }
+    //     if (flag) {
+    //         result.push(i);
+    //     }
+    // }
+    // return result;
 };

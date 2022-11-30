@@ -7,18 +7,10 @@ export const getArraysDiff = (
     array: any[],
     ...arrays: any[]
 ): any[] => {
-    const result: any[] = [];
-    for (const i of array) {
-        let flag = true;
-        for (const j of arrays) {
-            if (j.includes(i)) {
-                flag = false;
-                break;
-            }
-        }
-        if (flag) {
-            result.push(i);
-        }
-    }
+    const result = array
+        .concat(...arrays)
+        .filter((val, _index, arr) => {
+            return arr.indexOf(val) === arr.lastIndexOf(val);
+        });
     return result;
 };

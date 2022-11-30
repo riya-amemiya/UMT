@@ -91,3 +91,6 @@ lib
 
 doc/html
 
+python/
+
+coverage_dir

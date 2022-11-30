@@ -3,12 +3,12 @@ import { now } from './now';
 export { now };
 
 export class UMTDateClass {
-    #Localnow: typeof now;
+    #Local_now: typeof now;
     constructor() {
-        this.#Localnow = now;
+        this.#Local_now = now;
     }
     get now() {
-        return this.#Localnow;
+        return this.#Local_now;
     }
 }
 
