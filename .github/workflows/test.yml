@@ -10,11 +10,18 @@ jobs:
     build:
         name: Test on Ubuntu
         runs-on: ubuntu-latest
+        strategy:
+          matrix:
+            node-version: [16.x]
         defaults:
           run:
             working-directory: ./package/main
         steps:
             - uses: actions/checkout@v3
+            - name: Use Node.js ${{ matrix.node-version }}
+              uses: actions/setup-node@v3
+              with:
+                node-version: ${{ matrix.node-version }}
             - run: pwd && ls
             - name: yarn install
               run: yarn install
