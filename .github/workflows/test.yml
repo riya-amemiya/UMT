@@ -3,7 +3,7 @@ name: Main Package Test
 
 # タイミングを指定
 on:
-    pull_request:
+    push:
         branches: [main]
 
 jobs:
@@ -14,7 +14,7 @@ jobs:
           run:
             working-directory: ./package/main
         steps:
-            - uses: actions/checkout@v1
+            - uses: actions/checkout@v3
             - name: yarn install
               run: yarn install
             - name: Run Test
