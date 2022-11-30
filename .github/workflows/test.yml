@@ -15,6 +15,7 @@ jobs:
             working-directory: ./package/main
         steps:
             - uses: actions/checkout@v3
+            - run: pwd && ls
             - name: yarn install
               run: yarn install
             - name: Run Build
