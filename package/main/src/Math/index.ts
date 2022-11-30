@@ -28,7 +28,7 @@ import { radToDeg } from './radToDeg';
 import { random } from './random';
 import { reduce } from './reduce';
 import { repeatedTrial } from './repeatedTrial';
-import { roundOf } from './roundOff';
+import { roundOf } from './roundOf';
 import { softmax } from './softmax';
 import { standardDeviation } from './standardDeviation';
 import { subtract } from './subtract';
