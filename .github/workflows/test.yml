@@ -1,0 +1,44 @@
+# アクション名
+name: Main Package Test
+
+# タイミングを指定
+on:
+    pull_request:
+        branches: [main]
+
+jobs:
+    build:
+        name: Test on Ubuntu
+        runs-on: ubuntu-latest
+        defaults:
+          run:
+            working-directory: ./package/main
+        steps:
+            - uses: actions/checkout@v1
+            - name: yarn install
+              run: yarn install
+            - name: Run Test
+              run: yarn test
+            - name: Publish to Cloudflare Pages
+              id: cloudflare_pages_deploy
+              uses: cloudflare/pages-action@1
+              with:
+                apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+                accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+                projectName: umt-main-test-result
+                directory: ./coverage_dir
+                gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+            - name: Add publish URL as commit status
+              uses: actions/github-script@v6
+              with:
+                script: |
+                  const sha = context.payload.pull_request?.head.sha ?? context.sha;
+                  await github.rest.repos.createCommitStatus({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    context: 'Cloudflare Pages',
+                    description: 'Cloudflare Pages deployment',
+                    state: 'success',
+                    sha,
+                    target_url: "${{ steps.cloudflare_pages_deploy.outputs.url }}",
+                  });
