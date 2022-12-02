@@ -44,6 +44,7 @@
 	},
 	"include": [
 		"src",
-		"types"
+		"types",
+		"src/Simple/Math/.is_file().ts"
 	]
 }

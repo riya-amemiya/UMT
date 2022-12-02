@@ -6,9 +6,9 @@
  * @returns number
  */
 export const deviationValue = (
-    value: number,
-    averageValue: number,
-    standardDeviationValue: number,
+    value: number, // current sensor value
+    averageValue: number, // average value of all sensor values
+    standardDeviationValue: number, // standard deviation of all sensor values
 ) => {
     return (
         ((value - averageValue) / standardDeviationValue) * 10 + 50

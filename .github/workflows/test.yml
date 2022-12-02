@@ -4,7 +4,8 @@ name: Main Package Test
 # タイミングを指定
 on:
     push:
-        branches: [main]
+        paths:
+            - 'package/main/src/**'
 
 jobs:
     build:
