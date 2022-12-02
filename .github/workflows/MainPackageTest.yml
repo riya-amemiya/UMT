@@ -1,0 +1,31 @@
+# アクション名
+name: Main Package Test
+
+# タイミングを指定
+on:
+    push:
+        paths:
+            - 'package/main/src/**'
+
+jobs:
+    build:
+        name: Main Package Test on Ubuntu
+        runs-on: ubuntu-latest
+        strategy:
+          matrix:
+            node-version: [16.x]
+        defaults:
+          run:
+            working-directory: ./package/main
+        steps:
+            - uses: actions/checkout@v3
+            - name: Use Node.js ${{ matrix.node-version }}
+              uses: actions/setup-node@v3
+              with:
+                node-version: ${{ matrix.node-version }}
+            - name: yarn install
+              run: yarn
+            - name: Run Build
+              run: yarn build
+            - name: Run Test
+              run: yarn test
