@@ -1,6 +1,9 @@
 mod math {
     mod test_average;
+    mod test_deg_to_rad;
+    mod test_deviation_value;
     mod test_factorial;
+    mod test_factorize;
     mod test_gcd;
     mod test_get_decimal_length;
     mod test_ncr;
