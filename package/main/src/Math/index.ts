@@ -29,7 +29,6 @@ import { random } from './random';
 import { reduce } from './reduce';
 import { repeatedTrial } from './repeatedTrial';
 import { roundOf } from './roundOf';
-import { softmax } from './softmax';
 import { standardDeviation } from './standardDeviation';
 import { subtract } from './subtract';
 import { toBinary } from './toBinary';
@@ -69,7 +68,6 @@ export {
     reduce,
     repeatedTrial,
     roundOf,
-    softmax,
     standardDeviation,
     subtract,
     toBinary,
@@ -109,7 +107,6 @@ export class UMTMathClass {
     #Local_reduce: typeof reduce;
     #Local_repeatedTrial: typeof repeatedTrial;
     #Local_roundOf: typeof roundOf;
-    #Local_softmax: typeof softmax;
     #Local_standardDeviation: typeof standardDeviation;
     #Local_subtract: typeof subtract;
     #Local_toBinary: typeof toBinary;
@@ -149,7 +146,6 @@ export class UMTMathClass {
         this.#Local_reduce = reduce;
         this.#Local_repeatedTrial = repeatedTrial;
         this.#Local_roundOf = roundOf;
-        this.#Local_softmax = softmax;
         this.#Local_standardDeviation = standardDeviation;
         this.#Local_subtract = subtract;
         this.#Local_toBinary = toBinary;
@@ -249,9 +245,6 @@ export class UMTMathClass {
     }
     get roundOf() {
         return this.#Local_roundOf;
-    }
-    get softmax() {
-        return this.#Local_softmax;
     }
     get standardDeviation() {
         return this.#Local_standardDeviation;

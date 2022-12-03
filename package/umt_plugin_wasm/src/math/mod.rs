@@ -16,4 +16,7 @@ pub mod ncr;
 pub use ncr::*;
 pub mod npr;
 pub use npr::*;
-
+pub mod softmax;
+pub use softmax::*;
+pub mod round_of;
+pub use round_of::*;
