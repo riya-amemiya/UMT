@@ -3,7 +3,7 @@ name: UMT Wasm Plugin Package Test
 
 # タイミングを指定
 on:
-    push:
+    pull_request:
         paths:
             - 'package/umt_plugin_wasm/src/**'
 

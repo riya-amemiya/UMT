@@ -3,7 +3,7 @@ name: Main Package Test
 
 # タイミングを指定
 on:
-    push:
+    pull_request:
         paths:
             - 'package/main/src/**'
 
