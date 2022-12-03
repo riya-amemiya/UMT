@@ -27,13 +27,8 @@ jobs:
         run:
           working-directory: ./package/umt_plugin_wasm
       steps:
-      - name: create database for test
-        run: PGPASSWORD=postgres psql -h localhost -U postgres -c "CREATE DATABASE test"
-
       - uses: actions/checkout@v3
-
       - uses: ./.github/actions/cache_cargo
-
       - name: test
         run: cargo test --all -- --nocapture
       needs: build_cache
