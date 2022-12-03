@@ -48,3 +48,13 @@ pub fn deviation_value(value: f64, average_value: f64, standard_deviation_value:
 pub fn factorize(n: i32) -> Vec<i32> {
     umt_factorize(n)
 }
+
+#[wasm_bindgen]
+pub fn softmax(x: Vec<f64>,decimal_place: i32) -> Vec<f64> {
+    umt_softmax(x,decimal_place)
+}
+
+#[wasm_bindgen]
+pub fn round_of(value: f64, decimal_place: i32) -> f64 {
+    umt_round_of(value, decimal_place)
+}

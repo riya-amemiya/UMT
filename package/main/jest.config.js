@@ -5,9 +5,12 @@ module.exports = {
     roots: ['<rootDir>/tests'],
     collectCoverage: true,
     collectCoverageFrom: [
-        '<rootDir>/tests/**/*.ts',
+        '<rootDir>/module/**/*.{js,ts}',
+        '<rootDir>/src/**/*.{js,ts}',
         '!**/node_modules/**',
+        '!**/{index,random}.{js,ts}',
+        '!**/Date/**',
     ],
     coverageDirectory: 'coverage_dir',
-    coverageReporters: ['html'],
+    coverageReporters: ['text'],
 };
