@@ -1,4 +1,4 @@
-import { calculatorCore } from './core';
+import { calculator } from '.';
 
 /**
  * Initializes the calculator.
@@ -12,5 +12,5 @@ export const calculatorInitialization = <T extends object>(
      * @param {string} x - amount of money
      * @return {string} - converted amount of money
      */
-    return (x: string): string => calculatorCore(x, exchange);
+    return (x: string): string => calculator(x, exchange);
 };
