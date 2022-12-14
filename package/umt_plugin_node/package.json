@@ -27,7 +27,7 @@
     "ts-node": "ts-node --project test/tsconfig.json test/src/index.ts"
   },
   "types": "module/index.d.js",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "bugs": {
     "url": "https://github.com/riya-amemiya/UMT/issues"
   },

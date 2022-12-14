@@ -15,4 +15,5 @@ export class UMTNodeFileClass {
         return this.#Local_read;
     }
 }
+export { check, read };
 export const UMTNodeFile = new UMTNodeFileClass();
