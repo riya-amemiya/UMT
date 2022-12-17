@@ -9,6 +9,7 @@
     "@types/node": "^18.11.9",
     "gh-pages": "^4.0.0",
     "jest": "^29.3.1",
+    "rome": "^11.0.0",
     "ts-jest": "^29.0.3",
     "ts-node": "^10.9.1",
     "typedoc": "^0.23.20",
@@ -34,7 +35,8 @@
     "deploy": "yarn typedoc && gh-pages -d doc",
     "test": "jest",
     "test-debug": "cd test && tsc",
-    "ts-node": "ts-node --project test/tsconfig.json test/src/index.ts"
+    "ts-node": "ts-node --project test/tsconfig.json test/src/index.ts",
+    "romeCheck": "rome check ."
   },
   "types": "module/index.d.js",
   "version": "1.0.15"

@@ -4,6 +4,8 @@
  * @param  {boolean} loose 文字列も対象にするかどうか
  * @returns boolean
  */
+
+// rome-ignore lint/suspicious/noExplicitAny: <explanation>
 export const isNumber = (x: any, loose: boolean = true) => {
     return x !== null && typeof x !== 'boolean' && loose
         ? isFinite(x)

@@ -22,11 +22,11 @@ export const division = ((
         getDecimalLength(y),
     );
     const n =
-        decimalLengthX == decimalLengthY
+        decimalLengthX === decimalLengthY
             ? 1
             : Math.pow(10, decimalLengthY - decimalLengthX);
-    x = +(x + '').replace('.', '');
-    y = +(y + '').replace('.', '');
+    x = +`${x}`.replace('.', '');
+    y = +`${y}`.replace('.', '');
     return isFloor
         ? x > y
             ? x / y / n

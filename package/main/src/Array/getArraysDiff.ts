@@ -1,12 +1,12 @@
 /**
  * 共通しない要素をとりだす
- * @param  {any[]} array
- * @param  {any[]} ...arrays
+ * @param  {unknown[]} array
+ * @param  {unknown[]} ...arrays
  */
 export const getArraysDiff = (
-    array: any[],
-    ...arrays: any[]
-): any[] => {
+    array: unknown[],
+    ...arrays: unknown[]
+): unknown[] => {
     const result = array
         .concat(...arrays)
         .filter((val, _index, arr) => {

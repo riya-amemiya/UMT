@@ -5,9 +5,9 @@ import { multiplication } from '../multiplication';
 export const exchange = <T extends object>(n: string, props?: T) => {
     if (props) {
         for (const i in props) {
-            if (n.indexOf(i) != -1) {
+            if (n.indexOf(i) !== -1) {
                 if (isNumber(props[i])) {
-                    let x = multiplication(
+                    const x = multiplication(
                         Number(n.slice(i.length)),
                         Number(props[i]),
                     );

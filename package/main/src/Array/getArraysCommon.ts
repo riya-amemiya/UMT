@@ -3,10 +3,14 @@
  * @param  {any[]} array
  * @param  {any[]} ...arrays
  */
+
+// rome-ignore lint/suspicious/noExplicitAny: <explanation>
 export const getArraysCommon = (array: any[], ...arrays: any[]) => {
-    const result: any[] = [array, ...arrays].reduce(
+    const result: unknown[] = [array, ...arrays].reduce(
         (prev, current) => {
-            return prev.filter((item: any) => current.includes(item));
+            return prev.filter((item: unknown) =>
+                current.includes(item),
+            );
         },
     );
     return result;

@@ -12,6 +12,8 @@ export const nCr = (n: number, r: number) => {
         age *= i;
     }
     y /= age;
-    if (1 > y) return 0;
+    if (1 > y) {
+        return 0;
+    }
     return y;
 };

@@ -26,6 +26,8 @@ export const nPr = (n: number, r: number) => {
             y *= n;
         }
     }
-    if (1 > y) return 0;
+    if (1 > y) {
+        return 0;
+    }
     return y;
 };

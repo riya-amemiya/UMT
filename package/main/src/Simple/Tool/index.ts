@@ -3,21 +3,21 @@ import { dayOfWeekSimple } from './dayOfWeekSimple';
 import { deviationValueSimple } from './deviationValueSimple';
 
 export class UMTSimpleToolClass {
-    #Local_birthday: typeof birthdaySimple;
-    #Local_dayOfWeek: typeof dayOfWeekSimple;
-    #Local_deviationValue: typeof deviationValueSimple;
+    private localBirthday: typeof birthdaySimple;
+    private localDayOfWeek: typeof dayOfWeekSimple;
+    private localDeviationValue: typeof deviationValueSimple;
     constructor() {
-        this.#Local_dayOfWeek = dayOfWeekSimple;
-        this.#Local_deviationValue = deviationValueSimple;
-        this.#Local_birthday = birthdaySimple;
+        this.localDayOfWeek = dayOfWeekSimple;
+        this.localDeviationValue = deviationValueSimple;
+        this.localBirthday = birthdaySimple;
     }
     get birthday() {
-        return this.#Local_birthday;
+        return this.localBirthday;
     }
     get dayOfWeek() {
-        return this.#Local_dayOfWeek;
+        return this.localDayOfWeek;
     }
     get deviationValue() {
-        return this.#Local_deviationValue;
+        return this.localDeviationValue;
     }
 }

@@ -22,10 +22,8 @@ export const calculatorCore = <T extends object>(
     while (true) {
         if (ex) {
             for (const i in ex) {
-                if (x.indexOf(i) != -1) {
-                    const $ = x.match(
-                        new RegExp(`\\${i}` + '([0-9]+)'),
-                    );
+                if (x.indexOf(i) !== -1) {
+                    const $ = x.match(new RegExp(`\\${i}([0-9]+)`));
                     if ($) {
                         x = x.replace($[0], exchange($[0], ex));
                     }
@@ -33,7 +31,7 @@ export const calculatorCore = <T extends object>(
             }
         }
         //括弧の処理
-        if (x.indexOf('(') != -1 || x.indexOf(')') != -1) {
+        if (x.indexOf('(') !== -1 || x.indexOf(')') !== -1) {
             //括弧の中身をぬく
             const y = x.match(
                 /\(\d+\.?(\d+)?(\*|\/|\+|\-)\d+\.?(\d+)?\)/,
@@ -56,9 +54,9 @@ export const calculatorCore = <T extends object>(
                 );
             }
         } else if (
-            x.indexOf('^') != -1 ||
-            x.indexOf('*') != -1 ||
-            x.indexOf('/') != -1
+            x.indexOf('^') !== -1 ||
+            x.indexOf('*') !== -1 ||
+            x.indexOf('/') !== -1
         ) {
             //掛け算と割り算の処理
             const y: [RegExpMatchArray | null, string[]] = [
@@ -69,24 +67,24 @@ export const calculatorCore = <T extends object>(
                 y[1] = y[0][0]
                     .split(/(\d+\.\d+)|(\d+)/g)
                     .filter((n) => {
-                        return typeof n != 'undefined' && n != '';
+                        return typeof n !== 'undefined' && n !== '';
                     });
                 x = x.replace(
                     y[0][0],
                     `${
-                        y[1][1] == '^'
+                        y[1][1] === '^'
                             ? Math.pow(+y[1][0], +y[1][2])
-                            : y[1][1] == '*'
+                            : y[1][1] === '*'
                             ? multiplication(+y[1][0], +y[1][2])
-                            : y[1][1] == '/'
+                            : y[1][1] === '/'
                             ? division(+y[1][0], +y[1][2])
                             : '0'
                     }`,
                 );
             }
-        } else if (x.indexOf('+') != -1 || x.indexOf('-') != -1) {
+        } else if (x.indexOf('+') !== -1 || x.indexOf('-') !== -1) {
             //加算と減算の処理
-            let y: [RegExpMatchArray | null, string[]] = [
+            const y: [RegExpMatchArray | null, string[]] = [
                 x.match(/\d+\.?(\d+)?(\+|\-)\d+\.?(\d+)?/),
                 [''],
             ];
@@ -94,17 +92,17 @@ export const calculatorCore = <T extends object>(
                 y[1] = y[0][0]
                     .split(/(\d+\.\d+)|(\d+)/g)
                     .filter((n) => {
-                        return typeof n != 'undefined' && n !== '';
+                        return typeof n !== 'undefined' && n !== '';
                     });
                 x = x.replace(
                     y[0][0],
                     `${
-                        y[1][1] == '+'
+                        y[1][1] === '+'
                             ? addition(
                                   Number(y[1][0]),
                                   Number(y[1][2]),
                               )
-                            : y[1][1] == '-'
+                            : y[1][1] === '-'
                             ? subtract(
                                   Number(y[1][0]),
                                   Number(y[1][2]),

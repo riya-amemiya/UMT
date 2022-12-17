@@ -7,33 +7,33 @@ import { sum } from './sum';
 export { arraysJoin, getArraysCommon, getArraysDiff, quickSort, sum };
 
 export class UMTArrayClass {
-    #Local_arraysJoin: typeof arraysJoin;
-    #Local_getArraysCommon: typeof getArraysCommon;
-    #Local_getArraysDiff: typeof getArraysDiff;
-    #Local_quickSort: typeof quickSort;
-    #Local_sum: typeof sum;
+    private localArraysJoin: typeof arraysJoin;
+    private localGetArraysCommon: typeof getArraysCommon;
+    private localGetArraysDiff: typeof getArraysDiff;
+    private localQuickSort: typeof quickSort;
+    private locaLsum: typeof sum;
     constructor() {
-        this.#Local_arraysJoin = arraysJoin;
-        this.#Local_getArraysCommon = getArraysCommon;
-        this.#Local_getArraysDiff = getArraysDiff;
-        this.#Local_quickSort = quickSort;
-        this.#Local_sum = sum;
+        this.localArraysJoin = arraysJoin;
+        this.localGetArraysCommon = getArraysCommon;
+        this.localGetArraysDiff = getArraysDiff;
+        this.localQuickSort = quickSort;
+        this.locaLsum = sum;
     }
 
     get arraysJoin() {
-        return this.#Local_arraysJoin;
+        return this.localArraysJoin;
     }
     get getArraysCommon() {
-        return this.#Local_getArraysCommon;
+        return this.localGetArraysCommon;
     }
     get getArraysDiff() {
-        return this.#Local_getArraysDiff;
+        return this.localGetArraysDiff;
     }
     get quickSort() {
-        return this.#Local_quickSort;
+        return this.localQuickSort;
     }
     get sum() {
-        return this.#Local_sum;
+        return this.locaLsum;
     }
 }
 

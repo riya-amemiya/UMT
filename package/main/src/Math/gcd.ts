@@ -8,7 +8,9 @@ import { valueSwap } from './valueSwap';
  * @returns number
  */
 export const gcd = (x: number, y: number, ...z: number[]) => {
-    if (x === 0 || y === 0) return 0;
+    if (x === 0 || y === 0) {
+        return 0;
+    }
     [x, y] = valueSwap(x, y);
     /* ユークリッドの互除法 */
     let r = y % x;
