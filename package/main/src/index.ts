@@ -4,32 +4,32 @@ import { UMT_Math } from './Math';
 import { UMT_Simple } from './Simple';
 import { UMT_Tool } from './Tool';
 export class UMTClass {
-    #Local_Array: typeof UMT_Array;
-    #Local_Date: typeof UMT_Date;
-    #Local_Math: typeof UMT_Math;
-    #Local_Simple: typeof UMT_Simple;
-    #Local_Tool: typeof UMT_Tool;
+    private loaclArray: typeof UMT_Array;
+    private loaclDate: typeof UMT_Date;
+    private loaclMath: typeof UMT_Math;
+    private loaclSimple: typeof UMT_Simple;
+    private loaclTool: typeof UMT_Tool;
     constructor() {
-        this.#Local_Array = UMT_Array;
-        this.#Local_Date = UMT_Date;
-        this.#Local_Math = UMT_Math;
-        this.#Local_Simple = UMT_Simple;
-        this.#Local_Tool = UMT_Tool;
+        this.loaclArray = UMT_Array;
+        this.loaclDate = UMT_Date;
+        this.loaclMath = UMT_Math;
+        this.loaclSimple = UMT_Simple;
+        this.loaclTool = UMT_Tool;
     }
-    get Array() {
-        return this.#Local_Array;
+    get getArray() {
+        return this.loaclArray;
     }
-    get Date() {
-        return this.#Local_Date;
+    get getDate() {
+        return this.loaclDate;
     }
-    get Math() {
-        return this.#Local_Math;
+    get getMath() {
+        return this.loaclMath;
     }
-    get Simple() {
-        return this.#Local_Simple;
+    get getSimple() {
+        return this.loaclSimple;
     }
-    get Tool() {
-        return this.#Local_Tool;
+    get getTool() {
+        return this.loaclTool;
     }
 }
 export const UMT = new UMTClass();

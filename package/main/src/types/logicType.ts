@@ -13,12 +13,14 @@ export type isBoolean<X> = X extends number
     : X extends null
     ? false
     : X extends object
-    ? X extends Array<any>
+    ? // rome-ignore lint/suspicious/noExplicitAny: <explanation>
+      X extends Array<any>
         ? X extends []
             ? false
             : true
         : true
-    : X extends Function
+    : // rome-ignore lint/nursery/noBannedTypes: <explanation>
+    X extends Function
     ? false
     : true;
 export type AND<X extends boolean, Y extends boolean> = X extends true

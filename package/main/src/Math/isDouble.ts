@@ -3,6 +3,8 @@
  * @param {boolean} [loose=true] - 文字列も対象にするかどうか
  * @returns boolean
  */
+
+// rome-ignore lint/suspicious/noExplicitAny: <explanation>
 export const isDouble = (x: any, loose: boolean = true) => {
     if (loose) {
         return (

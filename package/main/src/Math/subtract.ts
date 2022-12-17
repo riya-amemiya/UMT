@@ -13,7 +13,7 @@ export const subtract = (x: number, y: number): number => {
         throw new Error('x または y が数値ではありません。');
     }
 
-    if (!isFinite(x) || !isFinite(y)) {
+    if (!(isFinite(x) && isFinite(y))) {
         throw new Error('x または y が有限ではありません。');
     }
 

@@ -8,6 +8,6 @@ export const reduce = (x: number, y: number) => {
     if (x === 0 || y === 0) {
         return { x: NaN, y: NaN };
     }
-    let n = gcd(x, y);
+    const n = gcd(x, y);
     return { x: x / n, y: y / n, gcd: gcd(x, y) };
 };

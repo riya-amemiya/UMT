@@ -1,8 +1,11 @@
 import { dayOfWeek } from '../../Tool/dayOfWeek';
 import {
-    dayType,
     MonthsWihout31Days,
+    MonthsWihout31DaysInt,
     MonthsWith31Days,
+    MonthsWith31DaysInt,
+    dayType,
+    dayTypeInt,
 } from '../../types/monType';
 
 export const dayOfWeekSimple = <
@@ -20,16 +23,19 @@ export const dayOfWeekSimple = <
         if (props.includes(':')) {
             const [yer, mon, day] = props
                 .split(':')
+                // rome-ignore lint/suspicious/noExplicitAny: <explanation>
                 .map(Number) as any;
             return dayOfWeek({ yer, mon, day }, timeDifference);
         } else if (props.includes('/')) {
             const [yer, mon, day] = props
                 .split('/')
+                // rome-ignore lint/suspicious/noExplicitAny: <explanation>
                 .map(Number) as any;
             return dayOfWeek({ yer, mon, day }, timeDifference);
         } else {
             const [yer, mon, day] = props
                 .split('-')
+                // rome-ignore lint/suspicious/noExplicitAny: <explanation>
                 .map(Number) as any;
             return dayOfWeek({ yer, mon, day }, timeDifference);
         }
@@ -37,12 +43,25 @@ export const dayOfWeekSimple = <
         return dayOfWeek(
             {
                 yer: props.getFullYear(),
-                mon: props.getMonth() as any,
-                day: props.getDate() as any,
+                mon: props.getMonth() as
+                    | MonthsWihout31DaysInt
+                    | MonthsWith31DaysInt,
+                day: props.getDate() as dayTypeInt<
+                    MonthsWith31DaysInt | MonthsWihout31DaysInt
+                >,
             },
             timeDifference,
         );
     } else {
-        return dayOfWeek(props as any, timeDifference);
+        return dayOfWeek(
+            props as {
+                yer?: number;
+                mon?: MonthsWihout31DaysInt | MonthsWith31DaysInt;
+                day?: dayTypeInt<
+                    MonthsWith31DaysInt | MonthsWihout31DaysInt
+                >;
+            },
+            timeDifference,
+        );
     }
 };

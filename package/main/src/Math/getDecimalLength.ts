@@ -4,7 +4,7 @@
  * @returns number
  */
 export const getDecimalLength = (value: number) => {
-    let x = (value + '').split('.')[1];
+    const x = `${value}`.split('.')[1];
     if (typeof x !== 'undefined' && x.length > 0) {
         return x.length;
     }

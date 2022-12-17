@@ -14,7 +14,7 @@ export const calculator = <T extends object>(
     exchange?: T,
 ) => {
     x = x.replace(/\s+/g, ''); // Remove spaces
-    if (x.indexOf('=') != -1) {
+    if (x.indexOf('=') !== -1) {
         return literalExpression(x); // If the expression contains an equal sign, then it is a literal expression
     } else {
         return calculatorCore(x, exchange);

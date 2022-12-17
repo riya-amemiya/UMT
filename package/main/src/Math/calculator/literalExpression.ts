@@ -6,14 +6,14 @@ import { calculatorCore } from './core';
  * @param  {string} x
  */
 export const literalExpression = (x: string) => {
-    let cache: [string[], string] = [[], ''];
+    const cache: [string[], string] = [[], ''];
     for (const i of x.split('=')) {
         if (/[a-zA-Z]+/.test(i) === false) {
             cache[1] = i;
         } else {
             cache[0] = i
                 .split(/([0-9]+[a-zA-Z]+)|([^a-zA-Z]+)/)
-                .filter((n) => n !== '' && typeof n != 'undefined');
+                .filter((n) => n !== '' && typeof n !== 'undefined');
         }
     }
     if (cache[0][1]) {
@@ -36,7 +36,7 @@ export const literalExpression = (x: string) => {
         : calculatorCore(cache[1]);
     cache[0] = cache[0][0]
         .split(/([0-9]+)|([a-zA-Z]+)/)
-        .filter((n) => n !== '' && typeof n != 'undefined');
+        .filter((n) => n !== '' && typeof n !== 'undefined');
     if (isNaN(Number(cache[0][0]))) {
         return cache[1];
     } else {
@@ -47,7 +47,7 @@ export const literalExpression = (x: string) => {
                 cacheGcd,
             )}/${division(Number(cache[0][0]), cacheGcd)}`;
         }
-        return cache[0][0] == '1'
+        return cache[0][0] === '1'
             ? `${cache[1]}/${cache[0][0]}`
             : cache[1];
     }

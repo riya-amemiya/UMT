@@ -4,7 +4,7 @@
  * @param  {number} n
  */
 export const multiples = (x: number, n: number) => {
-    let result = [];
+    const result = [];
     for (let i = 1; i <= n; i++) {
         result.push(x * i);
     }

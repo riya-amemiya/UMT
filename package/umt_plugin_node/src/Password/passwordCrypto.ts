@@ -20,8 +20,12 @@ export class PasswordCryptoClass {
     reset() {
         this.#Local_iv = '';
     }
-    generator(text: string, key: crypto.CipherKey) {
-        this.#Local_iv = crypto.randomBytes(16).toString('hex');
+    generator(
+        text: string,
+        key: crypto.CipherKey,
+        iv = crypto.randomBytes(16).toString('hex'),
+    ) {
+        this.#Local_iv = iv;
         const cipher = crypto.createCipheriv(
             this.#Local_algorithm,
             key,

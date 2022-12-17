@@ -9,6 +9,8 @@ export const nHr = (n: number, r: number) => {
         return NaN;
     }
     const y = nCr(n + r - 1, r);
-    if (1 > y) return 0;
+    if (1 > y) {
+        return 0;
+    }
     return y;
 };

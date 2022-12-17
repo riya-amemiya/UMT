@@ -9,8 +9,30 @@ on:
     workflow_dispatch:
 
 jobs:
-    build:
-        name: Main Package Test on Ubuntu
+    javascriptCheck:
+        name: JavaScript Check on Ubuntu
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                node-version: [16.x]
+        defaults:
+          run:
+            working-directory: ./package/main
+        steps:
+            - uses: actions/checkout@v3
+            - name: Use Node.js ${{ matrix.node-version }}
+              uses: actions/setup-node@v3
+              with:
+                  node-version: ${{ matrix.node-version }}
+            - uses: actions/cache@v2
+              with:
+                  path: ${YARN_CACHE_FOLDER}
+                  key: ${{ runner.os }}-yarn-cache-v1
+            - run: yarn
+            - name: Run check
+              run: yarn romeCheck
+    javascriptTest:
+        needs: javascriptCheck
         runs-on: ubuntu-latest
         strategy:
           matrix:

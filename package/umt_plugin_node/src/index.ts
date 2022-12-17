@@ -1,5 +1,9 @@
 import { UMTNodeFile } from './File';
+import { check } from './File/check';
+import { read } from './File/read';
 import { UMTNodePassword } from './Password';
+import { PasswordCryptoClass } from './Password/passwordCrypto';
+import { passwordGenerator } from './Password/passwordGenerator';
 
 export class UMTNodeClass {
     #Local_File: typeof UMTNodeFile;
@@ -15,4 +19,5 @@ export class UMTNodeClass {
         return this.#Local_Password;
     }
 }
+export { check, read, passwordGenerator, PasswordCryptoClass };
 export const UMTNode = new UMTNodeClass();

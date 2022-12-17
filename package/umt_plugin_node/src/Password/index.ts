@@ -15,5 +15,6 @@ export class UMTNodePasswordClass {
         return this.#Local_PasswordCryptoClass;
     }
 }
+export { passwordGenerator, PasswordCryptoClass };
 
 export const UMTNodePassword = new UMTNodePasswordClass();
