@@ -20,3 +20,5 @@ pub mod softmax;
 pub use softmax::*;
 pub mod round_of;
 pub use round_of::*;
+pub mod value_swap;
+pub use value_swap::*;
