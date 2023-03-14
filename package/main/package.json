@@ -36,7 +36,8 @@
     "test": "jest",
     "test-debug": "cd test && tsc",
     "ts-node": "ts-node --project test/tsconfig.json test/src/index.ts",
-    "romeCheck": "rome check ."
+    "romeCheck": "rome check .",
+    "format": "rome format ."
   },
   "types": "module/index.d.js",
   "version": "1.0.15"

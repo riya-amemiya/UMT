@@ -58,3 +58,8 @@ pub fn softmax(x: Vec<f64>,decimal_place: i32) -> Vec<f64> {
 pub fn round_of(value: f64, decimal_place: i32) -> f64 {
     umt_round_of(value, decimal_place)
 }
+
+#[wasm_bindgen]
+pub fn value_swap(x: f64, y: f64) -> Vec<f64> {
+    umt_value_swap(x, y)
+}
