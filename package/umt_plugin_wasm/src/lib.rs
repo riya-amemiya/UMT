@@ -63,3 +63,8 @@ pub fn round_of(value: f64, decimal_place: i32) -> f64 {
 pub fn value_swap(x: f64, y: f64) -> Vec<f64> {
     umt_value_swap(x, y)
 }
+
+#[wasm_bindgen]
+pub fn math_separator(x: i32) -> Vec<i32> {
+    umt_math_separator(x)
+}

@@ -5,7 +5,6 @@
         "lineWidth": 80,
         "ignore": [
             "node_modules",
-            "tests",
             "module"
         ],
         "formatWithErrors": false
