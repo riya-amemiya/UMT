@@ -1,12 +1,15 @@
 import os
 import pathlib
+
 paths = ["Array", "Math", "Simple"]
 for path in paths:
     path = f"src/{path}"
     files = os.listdir(path)
     files_file = [f for f in files if os.path.isfile(os.path.join(path, f))]
+    for i in range(len(files_file)):
+        print(files_file[i])
     for file in files_file:
-        if(file == "index.ts" or file == ".DS_Store" or file in "random"):
+        if file == "index.ts" or file == ".DS_Store" or file in "random":
             continue
         path = pathlib.Path(path)
         p_dir = path.name
@@ -21,4 +24,6 @@ for path in paths:
             f.write(
                 """import { %s } from "../../module/%s/%s";
 test('{%s}', () => {});
-""" % (file, path.name, file, file))
+"""
+                % (file, path.name, file, file)
+            )

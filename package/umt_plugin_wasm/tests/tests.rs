@@ -12,4 +12,5 @@ mod math {
     mod test_softmax;
     mod test_round_of;
     mod test_value_swap;
+    mod test_math_separator;
 }
