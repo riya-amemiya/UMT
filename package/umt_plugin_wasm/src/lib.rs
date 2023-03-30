@@ -4,6 +4,8 @@ extern crate wasm_bindgen;
 use math::*;
 use wasm_bindgen::prelude::*;
 
+
+
 #[wasm_bindgen]
 pub fn average(numbers: Vec<f64>) -> f64 {
     umt_average_function(numbers)
@@ -67,4 +69,27 @@ pub fn value_swap(x: f64, y: f64) -> Vec<f64> {
 #[wasm_bindgen]
 pub fn math_separator(x: i32) -> Vec<i32> {
     umt_math_separator(x)
+}
+
+// #[wasm_bindgen]
+// pub fn soleve_equation(coefficients: Vec<Vec<f64>>, constants: Vec<f64>) -> Vec<f64> {
+//     umt_solve_equation(coefficients, constants)
+// }
+
+#[wasm_bindgen]
+pub extern "C" fn solve_equation(coefficients_ptr: *const f64, constants_ptr: *const f64, rows: usize, cols: usize) -> *mut f64 {
+    let coefficients = unsafe { std::slice::from_raw_parts(coefficients_ptr, rows * cols) }
+        .chunks(cols)
+        .map(|c| c.to_vec())
+        .collect::<Vec<Vec<f64>>>();
+
+    let constants = unsafe { std::slice::from_raw_parts(constants_ptr, rows) }
+        .to_vec();
+
+    let solution = umt_solve_equation(coefficients, constants);
+
+    let result_ptr = solution.as_ptr() as *mut f64;
+    std::mem::forget(solution);
+
+    result_ptr
 }

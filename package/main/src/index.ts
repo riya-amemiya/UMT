@@ -3,6 +3,7 @@ import { UMT_Date } from "./Date";
 import { UMT_Math } from "./Math";
 import { UMT_Object } from "./Object";
 import { UMT_Simple } from "./Simple";
+import { UMT_String } from "./String";
 import { UMT_Tool } from "./Tool";
 export class UMTClass {
 	private loaclArray: typeof UMT_Array;
@@ -11,6 +12,7 @@ export class UMTClass {
 	private loaclSimple: typeof UMT_Simple;
 	private loaclTool: typeof UMT_Tool;
 	private loaclObject: typeof UMT_Object;
+	private loaclString: typeof UMT_String;
 	constructor() {
 		this.loaclArray = UMT_Array;
 		this.loaclDate = UMT_Date;
@@ -18,6 +20,7 @@ export class UMTClass {
 		this.loaclSimple = UMT_Simple;
 		this.loaclTool = UMT_Tool;
 		this.loaclObject = UMT_Object;
+		this.loaclString = UMT_String;
 	}
 	get getArray() {
 		return this.loaclArray;
@@ -36,6 +39,9 @@ export class UMTClass {
 	}
 	get getObject() {
 		return this.loaclObject;
+	}
+	get getString() {
+		return this.loaclString;
 	}
 }
 export const UMT = new UMTClass();

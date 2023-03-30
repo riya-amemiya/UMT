@@ -24,3 +24,5 @@ pub mod value_swap;
 pub use value_swap::*;
 pub mod math_separator;
 pub use math_separator::*;
+pub use solve_equation::*;
+pub mod solve_equation;
