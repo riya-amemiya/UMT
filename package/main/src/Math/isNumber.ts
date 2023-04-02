@@ -6,7 +6,7 @@
  */
 
 // rome-ignore lint/suspicious/noExplicitAny: <explanation>
-export const isNumber = (x: any, loose: boolean = true) => {
+export const isNumber = (x: any, loose = true) => {
     return x !== null && typeof x !== 'boolean' && loose
         ? isFinite(x)
         : Number.isFinite(x);

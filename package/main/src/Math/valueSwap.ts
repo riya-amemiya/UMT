@@ -6,10 +6,12 @@
  */
 export const valueSwap = (x: number, y: number): [number, number] => {
 	let tmp: number;
-	if (y < x) {
-		tmp = y;
-		y = x;
-		x = tmp;
+	let copyX = x;
+	let copyY = y;
+	if (copyY < copyX) {
+		tmp = copyY;
+		copyY = copyX;
+		copyX = tmp;
 	}
-	return [x, y];
+	return [copyX, copyY];
 };

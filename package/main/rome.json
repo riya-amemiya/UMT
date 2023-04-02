@@ -5,7 +5,8 @@
         "lineWidth": 80,
         "ignore": [
             "node_modules",
-            "module"
+            "module",
+            ".vscode"
         ],
         "formatWithErrors": false
     },
@@ -14,13 +15,15 @@
         "ignore": [
             "node_modules",
             "tests",
-            "module"
+            "module",
+            ".vscode"
         ],
         "rules": {
             "recommended": true,
             "correctness": {
                 "noUndeclaredVariables": "warn",
-                "noUnusedVariables": "warn"
+                "noUnusedVariables": "warn",
+                "noSetterReturn": "error"
             },
             "style": {
                 "noImplicitBoolean": "warn",
@@ -28,23 +31,38 @@
                 "useBlockStatements": "error",
                 "useFragmentSyntax": "warn"
             },
+            "suspicious": {
+                "noRedundantUseStrict": "error"
+            },
             "nursery": {
+                "noAssignInExpressions": "error",
                 "noBannedTypes": "error",
-                "noConstructorReturn": "error",
-                "noDistractingElements": "warn",
-                "noDuplicateObjectKeys": "error",
-                "noEmptyInterface": "warn",
-                "noExtraNonNullAssertion": "warn",
-                "noNonNullAssertion": "error",
-                "noRedundantUseStrict": "error",
-                "noSetterReturn": "error",
-                "noStringCaseMismatch": "error",
-                "noVar": "error",
-                "useConst": "warn",
-                "noVoidTypeReturn": "error",
+                "noClassAssign": "error",
+                "noCommaOperator": "error",
+                "noConfusingLabels": "error",
+                "noDuplicateCase": "error",
+                "noDuplicateClassMembers": "error",
+                "noDuplicateJsxProps": "error",
+                "noExtraLabels": "error",
+                "noExtraSemicolons": "error",
+                "noGlobalObjectCalls": "error",
+                "noInferrableTypes": "warn",
+                "noInnerDeclarations": "error",
+                "noInvalidConstructorSuper": "error",
+                "noNamespace": "error",
+                "noNoninteractiveElementToInteractiveRole": "error",
+                "noParameterAssign": "error",
+                "noPrototypeBuiltins": "error",
+                "noParameterProperties": "error",
+                "noRedeclare": "error",
+                "noSelfAssign": "error",
+                "noSelfCompare": "error",
+                "noSwitchDeclarations": "error",
+                "noUselessRename": "error",
+                "noUselessSwitchCase": "error",
+                "noWith": "error",
                 "useCamelCase": "warn",
-                "useDefaultSwitchClauseLast": "error",
-                "useEnumInitializers": "error"
+                "useHookAtTopLevel": "error"
             }
         }
     }

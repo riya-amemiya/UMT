@@ -4,12 +4,13 @@
  * @returns number[]
  */
 export const factorize = (n: number): number[] => {
-    const result: number[] = [];
-    for (let i = 2; i <= n; i++) {
-        while (n % i === 0) {
-            result.push(i);
-            n /= i;
-        }
-    }
-    return result;
+	const result: number[] = [];
+	let copyN = n;
+	for (let i = 2; i <= copyN; i++) {
+		while (copyN % i === 0) {
+			result.push(i);
+			copyN /= i;
+		}
+	}
+	return result;
 };

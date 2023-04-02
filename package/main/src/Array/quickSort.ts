@@ -10,7 +10,7 @@ import { random } from "../Math/random";
 // rome-ignore lint/suspicious/noExplicitAny: <explanation>
 export const quickSort = <A extends any[]>(
 	array: A,
-	startID: number = 0,
+	startID = 0,
 	endID: number = array.length - 1,
 ) => {
 	const pivot = array[random(endID, startID)];
