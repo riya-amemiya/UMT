@@ -1,0 +1,34 @@
+# アクション名
+name: UMT Wasm Plugin Package Test
+
+# タイミングを指定
+on:
+    pull_request:
+        paths:
+            - 'package/umt_plugin_wasm/src/**'
+    workflow_dispatch:
+
+jobs:
+    build_cache:
+        name: UMT Wasm Plugin Package Build on Ubuntu
+        runs-on: ubuntu-latest
+        defaults:
+          run:
+            working-directory: ./package/umt_plugin_wasm
+        steps:
+        - uses: actions/checkout@v3
+        - uses: ./.github/actions/cache_cargo
+        - name: build
+          run: cargo build
+    test:
+      name: UMT Wasm Plugin Package Test on Ubuntu
+      runs-on: ubuntu-latest
+      defaults:
+        run:
+          working-directory: ./package/umt_plugin_wasm
+      steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/cache_cargo
+      - name: test
+        run: cargo test --all -- --nocapture
+      needs: build_cache

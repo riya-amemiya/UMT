@@ -1,0 +1,69 @@
+{
+    "formatter": {
+        "enabled": true,
+        "indentStyle": "tab",
+        "lineWidth": 80,
+        "ignore": [
+            "node_modules",
+            "module",
+            ".vscode"
+        ],
+        "formatWithErrors": false
+    },
+    "linter": {
+        "enabled": true,
+        "ignore": [
+            "node_modules",
+            "tests",
+            "module",
+            ".vscode"
+        ],
+        "rules": {
+            "recommended": true,
+            "correctness": {
+                "noUndeclaredVariables": "warn",
+                "noUnusedVariables": "warn",
+                "noSetterReturn": "error"
+            },
+            "style": {
+                "noImplicitBoolean": "warn",
+                "noNegationElse": "error",
+                "useBlockStatements": "error",
+                "useFragmentSyntax": "warn"
+            },
+            "suspicious": {
+                "noRedundantUseStrict": "error"
+            },
+            "nursery": {
+                "noAssignInExpressions": "error",
+                "noBannedTypes": "error",
+                "noClassAssign": "error",
+                "noCommaOperator": "error",
+                "noConfusingLabels": "error",
+                "noDuplicateCase": "error",
+                "noDuplicateClassMembers": "error",
+                "noDuplicateJsxProps": "error",
+                "noExtraLabels": "error",
+                "noExtraSemicolons": "error",
+                "noGlobalObjectCalls": "error",
+                "noInferrableTypes": "warn",
+                "noInnerDeclarations": "error",
+                "noInvalidConstructorSuper": "error",
+                "noNamespace": "error",
+                "noNoninteractiveElementToInteractiveRole": "error",
+                "noParameterAssign": "error",
+                "noPrototypeBuiltins": "error",
+                "noParameterProperties": "error",
+                "noRedeclare": "error",
+                "noSelfAssign": "error",
+                "noSelfCompare": "error",
+                "noSwitchDeclarations": "error",
+                "noUselessRename": "error",
+                "noUselessSwitchCase": "error",
+                "noWith": "error",
+                "useCamelCase": "warn",
+                "useHookAtTopLevel": "error"
+            }
+        }
+    }
+}
