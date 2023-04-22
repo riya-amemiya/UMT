@@ -10,7 +10,7 @@ export const birthday = (
     yer: number,
     mon: number,
     day: number,
-    timeDifference: number = 9,
+    timeDifference = 9,
 ) => {
     const Bday = new Date(
         yer < 0 ? -yer : yer,

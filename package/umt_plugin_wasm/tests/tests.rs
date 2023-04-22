@@ -9,8 +9,8 @@ mod math {
     mod test_ncr;
     mod test_npr;
 
-    mod test_softmax;
-    mod test_round_of;
-    mod test_value_swap;
     mod test_math_separator;
+    mod test_round_of;
+    mod test_softmax;
+    mod test_value_swap;
 }

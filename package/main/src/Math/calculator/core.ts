@@ -10,52 +10,55 @@ import { exchange } from "./exchange";
  * @param  {string} x 計算式
  */
 export const calculatorCore = <T extends object>(x: string, ex?: T): string => {
+	let copyX = x;
 	//符号反転
-	x = x.replace(/--/g, "+");
-	x = x.replace(/\+\+/g, "+");
-	x = x.replace(/\+-/g, "+0-");
-	x = x.replace(/\-\+/g, "+0-");
+	copyX = copyX.replace(/--/g, "+");
+	copyX = copyX.replace(/\+\+/g, "+");
+	copyX = copyX.replace(/\+-/g, "+0-");
+	copyX = copyX.replace(/\-\+/g, "+0-");
 
 	//円計算
 	while (true) {
 		if (ex) {
 			for (const i in ex) {
-				if (x.indexOf(i) !== -1) {
-					const $ = x.match(new RegExp(`\\${i}([0-9]+)`));
+				if (copyX.indexOf(i) !== -1) {
+					const $ = copyX.match(new RegExp(`\\${i}([0-9]+)`));
 					if ($) {
-						x = x.replace($[0], exchange($[0], ex));
+						copyX = copyX.replace($[0], exchange($[0], ex));
 					}
 				}
 			}
 		}
 		//括弧の処理
-		if (x.indexOf("(") !== -1 || x.indexOf(")") !== -1) {
+		if (copyX.indexOf("(") !== -1 || copyX.indexOf(")") !== -1) {
 			//括弧の中身をぬく
-			const y = x.match(/\(\d+\.?(\d+)?(\*|\/|\+|\-)\d+\.?(\d+)?\)/);
+			const y = copyX.match(/\(\d+\.?(\d+)?(\*|\/|\+|\-)\d+\.?(\d+)?\)/);
 			if (y) {
 				//括弧の中身を計算
-				x = x.replace(y[0], calculatorCore(y[0].replace(/\(|\)/g, "")));
+				copyX = copyX.replace(y[0], calculatorCore(y[0].replace(/\(|\)/g, "")));
 			} else {
-				x = x.replace(
-					`(${x.slice(x.indexOf("(") + 1, x.indexOf(")"))})`,
-					calculatorCore(x.slice(x.indexOf("(") + 1, x.indexOf(")"))),
+				copyX = copyX.replace(
+					`(${copyX.slice(copyX.indexOf("(") + 1, copyX.indexOf(")"))})`,
+					calculatorCore(
+						copyX.slice(copyX.indexOf("(") + 1, copyX.indexOf(")")),
+					),
 				);
 			}
 		} else if (
-			x.indexOf("^") !== -1 ||
-			x.indexOf("*") !== -1 ||
-			x.indexOf("/") !== -1
+			copyX.indexOf("^") !== -1 ||
+			copyX.indexOf("*") !== -1 ||
+			copyX.indexOf("/") !== -1
 		) {
 			//掛け算と割り算の処理
 			const y: [RegExpMatchArray | null, string[]] = [
-				x.match(/\d+\.?(\d+)?(\*|\/|\^)\d+\.?(\d+)?/),
+				copyX.match(/\d+\.?(\d+)?(\*|\/|\^)\d+\.?(\d+)?/),
 				[""],
 			];
 			if (y[0]) {
 				y[1] = y[0][0].split(/(\d+\.\d+)|(\d+)/g).filter((n) => {
 					return typeof n !== "undefined" && n !== "";
 				});
-				x = x.replace(
+				copyX = copyX.replace(
 					y[0][0],
 					`${
 						y[1][1] === "^"
@@ -68,17 +71,17 @@ export const calculatorCore = <T extends object>(x: string, ex?: T): string => {
 					}`,
 				);
 			}
-		} else if (x.indexOf("+") !== -1 || x.indexOf("-") !== -1) {
+		} else if (copyX.indexOf("+") !== -1 || copyX.indexOf("-") !== -1) {
 			//加算と減算の処理
 			const y: [RegExpMatchArray | null, string[]] = [
-				x.match(/\d+\.?(\d+)?(\+|\-)\d+\.?(\d+)?/),
+				copyX.match(/\d+\.?(\d+)?(\+|\-)\d+\.?(\d+)?/),
 				[""],
 			];
 			if (y[0]) {
 				y[1] = y[0][0].split(/(\d+\.\d+)|(\d+)/g).filter((n) => {
 					return typeof n !== "undefined" && n !== "";
 				});
-				x = x.replace(
+				copyX = copyX.replace(
 					y[0][0],
 					`${
 						y[1][1] === "+"
@@ -90,7 +93,7 @@ export const calculatorCore = <T extends object>(x: string, ex?: T): string => {
 				);
 			}
 		} else {
-			return x;
+			return copyX;
 		}
 	}
 };

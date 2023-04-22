@@ -17,7 +17,7 @@ export const dayOfWeekSimple = <
         | `${number}:${T}:${dayType<T>}`
         | `${number}/${T}/${dayType<T>}`
         | Date,
-    timeDifference: number = 9,
+    timeDifference = 9,
 ) => {
     if (typeof props === 'string') {
         if (props.includes(':')) {

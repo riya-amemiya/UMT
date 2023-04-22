@@ -50,8 +50,8 @@ pub fn factorize(n: i32) -> Vec<i32> {
 }
 
 #[wasm_bindgen]
-pub fn softmax(x: Vec<f64>,decimal_place: i32) -> Vec<f64> {
-    umt_softmax(x,decimal_place)
+pub fn softmax(x: Vec<f64>, decimal_place: i32) -> Vec<f64> {
+    umt_softmax(x, decimal_place)
 }
 
 #[wasm_bindgen]
