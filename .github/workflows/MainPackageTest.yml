@@ -30,7 +30,7 @@ jobs:
                   key: ${{ runner.os }}-yarn-cache-v1
             - run: yarn
             - name: Run check
-              run: yarn romeCheck
+              run: yarn lint
     javascriptTest:
         needs: javascriptCheck
         runs-on: ubuntu-latest
