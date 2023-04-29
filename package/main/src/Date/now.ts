@@ -3,7 +3,12 @@
  * @returns {Date} 現在時刻
  */
 export const now = (timeDifference = 9): Date => {
-	const n = timeDifference * 2;
+	const timezoneOffset = new Date().getTimezoneOffset();
+	const localTimeDifference = -timezoneOffset / 60;
+	const n =
+		localTimeDifference === timeDifference
+			? timeDifference * 2
+			: localTimeDifference + timeDifference;
 	return new Date(
 		Date.now() +
 			(new Date().getTimezoneOffset() +

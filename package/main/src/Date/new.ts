@@ -11,7 +11,7 @@ export const newDateInt = <T extends monTypeInt>(
 	yer: number,
 	mon: T,
 	day: dayTypeInt<T>,
-	hours: hoursTypeInt = 0,
+	hours: hoursTypeInt = 9,
 	minutes: minutesTypeInt = 0,
 	seconds: secondsTypeInt = 0,
 	milliseconds: millisecondsTypeInt = 0,
@@ -19,7 +19,7 @@ export const newDateInt = <T extends monTypeInt>(
 	const date = new Date(
 		yer,
 		mon - 1,
-		day + 1,
+		day,
 		hours,
 		minutes,
 		seconds,
