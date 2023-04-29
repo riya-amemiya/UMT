@@ -43,7 +43,7 @@
     "test-debug": "cd test && tsc",
     "ts-node": "ts-node --project test/tsconfig.json test/src/index.ts",
     "lint": "rome check .",
-    "format": "rome format ."
+    "format": "rome format . --write"
   },
-  "version": "1.1.1"
+  "version": "1.1.2"
 }

@@ -1,4 +1,4 @@
-import { subtract } from './subtract';
+import { subtract } from "./subtract";
 
 /**
  * Converts a temperature from Kelvin to Celsius.
