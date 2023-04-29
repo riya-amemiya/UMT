@@ -11,8 +11,7 @@ export const now = (timeDifference = 9): Date => {
 			: localTimeDifference + timeDifference;
 	return new Date(
 		Date.now() +
-			(new Date().getTimezoneOffset() +
-				(new Date().getTimezoneOffset() === 0 ? timeDifference : n) * 60) *
+			(timezoneOffset + (timezoneOffset === 0 ? timeDifference : n) * 60) *
 				60 *
 				1000,
 	);
