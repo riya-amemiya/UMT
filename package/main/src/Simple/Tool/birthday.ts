@@ -1,9 +1,5 @@
-import { birthday } from "../../Tool/birthday";
-import {
-	MonthsWihout31Days,
-	MonthsWith31Days,
-	dayType,
-} from "../../types/monType";
+import { birthday } from "@/Tool/birthday";
+import { MonthsWihout31Days, MonthsWith31Days, dayType } from "$/dateType";
 export interface BIRTHDAYSIMPLE {
 	<T extends MonthsWith31Days | MonthsWihout31Days>(
 		birthdays:

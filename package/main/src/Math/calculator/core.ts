@@ -1,7 +1,7 @@
-import { addition } from "../addition";
-import { division } from "../division";
-import { multiplication } from "../multiplication";
-import { subtract } from "../subtract";
+import { addition } from "@/Math/addition";
+import { division } from "@/Math/division";
+import { multiplication } from "@/Math/multiplication";
+import { subtract } from "@/Math/subtract";
 import { exchange } from "./exchange";
 /**
  * 電卓

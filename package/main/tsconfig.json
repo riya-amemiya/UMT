@@ -41,6 +41,15 @@
 		"strictBindCallApply": true,
 		"noUnusedLocals": true,
 		"noUnusedParameters": true,
+		"baseUrl": "./",
+		"paths": {
+			"@/*": [
+				"./src/*"
+			],
+			"$/*": [
+				"./src/types/*"
+			],
+		},
 	},
 	"include": [
 		"src",

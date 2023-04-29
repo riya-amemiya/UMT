@@ -1,11 +1,10 @@
+import { random } from "../Math/random";
 /**
  * 配列を高速にソート
  * @param  {any[]} array
  * @param  {number} startID
  * @param  {number} endID
  */
-
-import { random } from "../Math/random";
 
 // rome-ignore lint/suspicious/noExplicitAny: <explanation>
 export const quickSort = <A extends any[]>(

@@ -1,20 +1,25 @@
-import { newDate } from "./new";
+import { newDateInt, newDateStr } from "./new";
 import { now } from "./now";
 
-export { now, newDate };
+export { now, newDateInt, newDateStr };
 
 export class UMTDateClass {
 	private localNow: typeof now;
-	private localNewDate: typeof newDate;
+	private localNewDateInt: typeof newDateInt;
+	private localNewDateStr: typeof newDateStr;
 	constructor() {
 		this.localNow = now;
-		this.localNewDate = newDate;
+		this.localNewDateInt = newDateInt;
+		this.localNewDateStr = newDateStr;
 	}
 	get now() {
 		return this.localNow;
 	}
-	get newDate() {
-		return this.localNewDate;
+	get newDateInt() {
+		return this.localNewDateInt;
+	}
+	get newDateStr() {
+		return this.localNewDateStr;
 	}
 }
 

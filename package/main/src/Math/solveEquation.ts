@@ -20,10 +20,7 @@ import { subtract } from "./subtract";
  * },
  * ); // [-2, 6]
  */
-export const solveEquation = (
-	coefficients: number[][],
-	constants: number[],
-): number[] => {
+export const solveEquation = (coefficients: number[][],constants: number[] ): number[] => {
 	const n = constants.length;
 	for (let i = 0; i < n; i++) {
 		// Find the max element in the column
