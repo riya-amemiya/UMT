@@ -2,7 +2,8 @@
     "$schema": "https://json.schemastore.org/swcrc",
     "module": {
         "type": "commonjs",
-        "strict": true
+        "strict": true,
+        "lazy": false
     },
     "jsc": {
         "parser": {

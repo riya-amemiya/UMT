@@ -1,19 +1,5 @@
-const { solveEquation } = require("./module/Math/solveEquation");
 const { newDateStr, newDateInt } = require("./module/Date/new");
 const { now } = require("./module/Date/now");
-console.log(
-	solveEquation({
-		/*
-		 * 0.04x - 1.3y = 1.5
-		 * -x + y = -6
-		 */
-		coefficients: [
-			[0.04, -1.3],
-			[-1, 1],
-		],
-		constants: [1.5, -6],
-	}),
-);
 const date1 = newDateStr("1995-02-01");
 const date2 = newDateInt(1995, 2, 1);
 const n = now();
