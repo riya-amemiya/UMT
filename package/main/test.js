@@ -12,3 +12,11 @@ console.log(
 		constants: [1.5, -6],
 	}),
 );
+const date1 = new Date("1995-2-17");
+
+const date2 = new Date("1995-02-17");
+
+console.log("====================================");
+console.log(date1);
+console.log(date2);
+console.log("====================================");
