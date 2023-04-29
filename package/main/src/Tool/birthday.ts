@@ -1,4 +1,6 @@
+import { newDateInt } from "@/Date";
 import { now } from "@/Date/now";
+import { dayTypeInt, monTypeInt } from "@/types/dateType";
 /**
  * @param  {number} year
  * @param  {number} mon
@@ -6,17 +8,13 @@ import { now } from "@/Date/now";
  * @param  {number} [timeDifference=9] 時差
  * @returns number 年齢
  */
-export const birthday = (
+export const birthday = <T extends monTypeInt>(
 	year: number,
-	mon: number,
-	day: number,
+	mon: T,
+	day: dayTypeInt<T>,
 	timeDifference = 9,
 ) => {
-	const Bday = new Date(
-		year < 0 ? -year : year,
-		mon < 0 ? -mon - 1 : mon - 1,
-		day < 0 ? -day : day,
-	);
+	const Bday = newDateInt(year, mon, day);
 	const nowTime = now(timeDifference);
 	const y = nowTime.getFullYear() - Bday.getFullYear();
 	const r =

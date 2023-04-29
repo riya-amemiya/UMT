@@ -1,7 +1,7 @@
 import { birthday } from "@/Tool/birthday";
-import { MonthsWihout31Days, MonthsWith31Days, dayType } from "$/dateType";
+import { dayType, dayTypeInt, monType, monTypeInt } from "$/dateType";
 export interface BIRTHDAYSIMPLE {
-	<T extends MonthsWith31Days | MonthsWihout31Days>(
+	<T extends monType>(
 		birthdays:
 			| Date
 			| `${number}-${T}-${dayType<T>}`
@@ -11,9 +11,7 @@ export interface BIRTHDAYSIMPLE {
 		timeDifference?: number,
 	): number;
 }
-export const birthdaySimple = (<
-	T extends MonthsWith31Days | MonthsWihout31Days,
->(
+export const birthdaySimple = (<T extends monType>(
 	birthdays:
 		| `${number}-${T}-${dayType<T>}`
 		| `${number}:${T}:${dayType<T>}`
@@ -24,27 +22,39 @@ export const birthdaySimple = (<
 ) => {
 	if (typeof birthdays === "string") {
 		if (birthdays.includes(":")) {
-			const [year, mon, day] = birthdays.split(":").map(Number);
+			const [year, mon, day] = birthdays.split(":").map(Number) as [
+				number,
+				monTypeInt,
+				dayTypeInt<monTypeInt>,
+			];
 			return birthday(year, mon, day, timeDifference);
 		} else if (birthdays.includes("/")) {
-			const [year, mon, day] = birthdays.split("/").map(Number);
+			const [year, mon, day] = birthdays.split("/").map(Number) as [
+				number,
+				monTypeInt,
+				dayTypeInt<monTypeInt>,
+			];
 			return birthday(year, mon, day, timeDifference);
 		} else {
-			const [year, mon, day] = birthdays.split("-").map(Number);
+			const [year, mon, day] = birthdays.split("-").map(Number) as [
+				number,
+				monTypeInt,
+				dayTypeInt<monTypeInt>,
+			];
 			return birthday(year, mon, day, timeDifference);
 		}
 	} else if (birthdays instanceof Date) {
 		return birthday(
 			birthdays.getFullYear(),
-			birthdays.getMonth(),
-			birthdays.getDate(),
+			birthdays.getMonth() as monTypeInt,
+			birthdays.getDate() as dayTypeInt<monTypeInt>,
 			timeDifference,
 		);
 	} else {
 		return birthday(
 			birthdays.year,
-			birthdays.mon,
-			birthdays.day,
+			birthdays.mon as monTypeInt,
+			birthdays.day as dayTypeInt<monTypeInt>,
 			timeDifference,
 		);
 	}
