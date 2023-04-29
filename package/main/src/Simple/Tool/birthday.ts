@@ -7,7 +7,7 @@ export interface BIRTHDAYSIMPLE {
 			| `${number}-${T}-${dayType<T>}`
 			| `${number}:${T}:${dayType<T>}`
 			| `${number}/${T}/${dayType<T>}`
-			| { yer: number; mon: number; day: number },
+			| { year: number; mon: number; day: number },
 		timeDifference?: number,
 	): number;
 }
@@ -19,19 +19,19 @@ export const birthdaySimple = (<
 		| `${number}:${T}:${dayType<T>}`
 		| `${number}/${T}/${dayType<T>}`
 		| Date
-		| { yer: number; mon: number; day: number },
+		| { year: number; mon: number; day: number },
 	timeDifference = 9,
 ) => {
 	if (typeof birthdays === "string") {
 		if (birthdays.includes(":")) {
-			const [yer, mon, day] = birthdays.split(":").map(Number);
-			return birthday(yer, mon, day, timeDifference);
+			const [year, mon, day] = birthdays.split(":").map(Number);
+			return birthday(year, mon, day, timeDifference);
 		} else if (birthdays.includes("/")) {
-			const [yer, mon, day] = birthdays.split("/").map(Number);
-			return birthday(yer, mon, day, timeDifference);
+			const [year, mon, day] = birthdays.split("/").map(Number);
+			return birthday(year, mon, day, timeDifference);
 		} else {
-			const [yer, mon, day] = birthdays.split("-").map(Number);
-			return birthday(yer, mon, day, timeDifference);
+			const [year, mon, day] = birthdays.split("-").map(Number);
+			return birthday(year, mon, day, timeDifference);
 		}
 	} else if (birthdays instanceof Date) {
 		return birthday(
@@ -42,7 +42,7 @@ export const birthdaySimple = (<
 		);
 	} else {
 		return birthday(
-			birthdays.yer,
+			birthdays.year,
 			birthdays.mon,
 			birthdays.day,
 			timeDifference,

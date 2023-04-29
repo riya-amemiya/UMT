@@ -8,7 +8,7 @@ import {
 } from "@/types/clockType";
 
 export const newDateInt = <T extends monTypeInt>(
-	yer: number,
+	year: number,
 	mon: T,
 	day: dayTypeInt<T>,
 	hours: hoursTypeInt = 9,
@@ -17,7 +17,7 @@ export const newDateInt = <T extends monTypeInt>(
 	milliseconds: millisecondsTypeInt = 0,
 ): Date => {
 	const date = new Date(
-		yer,
+		year,
 		mon - 1,
 		day,
 		hours,
