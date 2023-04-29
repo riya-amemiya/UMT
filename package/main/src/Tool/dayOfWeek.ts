@@ -1,9 +1,9 @@
-import { now } from "../Date/now";
+import { now } from "@/Date/now";
 import {
 	MonthsWihout31DaysInt,
 	MonthsWith31DaysInt,
 	dayTypeInt,
-} from "../types/monType";
+} from "@/types/dateType";
 
 export const dayOfWeek = <
 	T extends MonthsWith31DaysInt | MonthsWihout31DaysInt,
