@@ -17,7 +17,7 @@
 		"module": "commonjs",
 		"moduleResolution": "node",
 		"resolveJsonModule": true,
-		"noEmit": false,
+		"noEmit": true,
 		"declaration": true,
 		"outDir": "./module",
 		"alwaysStrict": true,

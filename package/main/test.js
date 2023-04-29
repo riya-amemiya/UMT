@@ -16,7 +16,7 @@ console.log(
 );
 const date1 = newDateStr("1995-02-01");
 const date2 = newDateInt(1995, 2, 1);
-const n = now(9);
+const n = now();
 console.log("====================================");
 console.log(new Date().getUTCHours());
 console.log(n);
