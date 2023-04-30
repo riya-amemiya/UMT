@@ -14,7 +14,10 @@ export class DateWrapper {
 	/**
 	 * @param date Date or number, numberを渡すとnow関数に渡される(UTCとの時差)
 	 */
-	constructor(date: Date | number = now()) {
+	constructor(
+		date: Date | number = now(),
+		initialState: Date | number = now(),
+	) {
 		let tmp;
 		if (typeof date === "number") {
 			tmp = now(date);
@@ -23,8 +26,8 @@ export class DateWrapper {
 		}
 		this.timeDifference = 9;
 		this.now = now;
-		this.date = tmp;
-		this.initialState = tmp;
+		this.date = new Date(tmp);
+		this.initialState = new Date(initialState);
 	}
 	setInitialState() {
 		this.date = this.initialState;
@@ -83,8 +86,11 @@ export class DateWrapper {
 			timeDifference: this.getTimeDifference(),
 		};
 	}
-	copyDate() {
-		return Object.assign({}, this.date);
+	copy(
+		date: Date | number = this.date,
+		initialState: Date | number = this.initialState,
+	) {
+		return new DateWrapper(date, initialState);
 	}
 	getDayOfWeek() {
 		return this.date.getUTCDay();
