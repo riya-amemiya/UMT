@@ -7,9 +7,10 @@ import {
 } from "@/types/clockType";
 
 export class DateWrapper {
-	now: (timeDifference: number) => Date;
-	date: Date;
-	timeDifference: number;
+	private readonly now: (timeDifference: number) => Date;
+	private date: Date;
+	private timeDifference: number;
+	private readonly initialState: Date;
 	/**
 	 * @param date Date or number, numberを渡すとnow関数に渡される(UTCとの時差)
 	 */
@@ -23,13 +24,18 @@ export class DateWrapper {
 		this.timeDifference = 9;
 		this.now = now;
 		this.date = tmp;
+		this.initialState = tmp;
+	}
+	setInitialState() {
+		this.date = this.initialState;
+		return this;
 	}
 	setDate(date: Date) {
 		this.date = date;
 		return this;
 	}
-	setNow() {
-		this.date = this.now(this.timeDifference);
+	setNow(timeDifference = this.timeDifference) {
+		this.date = this.now(timeDifference);
 		return this;
 	}
 	setTimeDifference(timeDifference: number) {
@@ -74,6 +80,7 @@ export class DateWrapper {
 			second: this.getSecond(),
 			millisecond: this.getMillisecond(),
 			dayOfWeek: this.getDayOfWeek(),
+			timeDifference: this.getTimeDifference(),
 		};
 	}
 	copyDate() {
@@ -105,6 +112,9 @@ export class DateWrapper {
 	}
 	getMillisecond() {
 		return this.date.getUTCMilliseconds();
+	}
+	getTimeDifference() {
+		return this.timeDifference;
 	}
 	toString() {
 		return this.date.toUTCString();

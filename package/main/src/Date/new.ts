@@ -2,8 +2,11 @@ import { dayType, dayTypeInt, monTypeInt, monTypeZero } from "@/types/dateType";
 import {
 	hoursType,
 	hoursTypeInt,
+	millisecondsType,
 	millisecondsTypeInt,
+	minutesType,
 	minutesTypeInt,
+	secondsType,
 	secondsTypeInt,
 } from "@/types/clockType";
 
@@ -29,7 +32,13 @@ export const newDateInt = <T extends monTypeInt>(
 };
 export const newDateStr = <T extends monTypeZero>(
 	date: `${number}-${T}-${dayType<T extends monTypeZero ? T : never>}`,
+	hours: hoursType = "00",
+	minutes: minutesType = "00",
+	seconds: secondsType = "00",
+	miliSeconds: millisecondsType = "000",
 	timeDifference: hoursType = "00",
 ): Date => {
-	return new Date(`${date}T00:00:00+${timeDifference}:00`);
+	return new Date(
+		`${date}T${hours}:${minutes}:${seconds}.${miliSeconds}+${timeDifference}:00`,
+	);
 };
