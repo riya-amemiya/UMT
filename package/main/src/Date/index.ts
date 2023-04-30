@@ -1,7 +1,8 @@
+import { DateWrapper } from "./DateWrapper";
 import { newDateInt, newDateStr } from "./new";
 import { now } from "./now";
 
-export { now, newDateInt, newDateStr };
+export { now, newDateInt, newDateStr, DateWrapper };
 
 export class UMTDateClass {
 	private localNow: typeof now;

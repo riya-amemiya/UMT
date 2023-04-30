@@ -6,16 +6,14 @@
 
 // rome-ignore lint/suspicious/noExplicitAny: <explanation>
 export const isDouble = (x: any, loose = true) => {
-    if (loose) {
-        return (
-            isFinite(x) &&
-            !Number.isNaN(x) &&
-            Number.isFinite(Number(x)) &&
-            !Number.isInteger(Number(x))
-        );
-    } else {
-        return (
-            x !== null && typeof x !== 'boolean' && Number.isFinite(x)
-        );
-    }
+	if (loose) {
+		return (
+			isFinite(x) &&
+			!Number.isNaN(x) &&
+			Number.isFinite(Number(x)) &&
+			!Number.isInteger(Number(x))
+		);
+	} else {
+		return x !== null && typeof x !== "boolean" && Number.isFinite(x);
+	}
 };

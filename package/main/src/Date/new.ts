@@ -2,24 +2,27 @@ import { dayType, dayTypeInt, monTypeInt, monTypeZero } from "@/types/dateType";
 import {
 	hoursType,
 	hoursTypeInt,
+	millisecondsType,
 	millisecondsTypeInt,
+	minutesType,
 	minutesTypeInt,
+	secondsType,
 	secondsTypeInt,
 } from "@/types/clockType";
 
 export const newDateInt = <T extends monTypeInt>(
-	yer: number,
+	year: number,
 	mon: T,
 	day: dayTypeInt<T>,
-	hours: hoursTypeInt = 0,
+	hours: hoursTypeInt = (-new Date().getTimezoneOffset() / 60) as hoursTypeInt,
 	minutes: minutesTypeInt = 0,
 	seconds: secondsTypeInt = 0,
 	milliseconds: millisecondsTypeInt = 0,
 ): Date => {
 	const date = new Date(
-		yer,
+		year,
 		mon - 1,
-		day + 1,
+		day,
 		hours,
 		minutes,
 		seconds,
@@ -29,7 +32,13 @@ export const newDateInt = <T extends monTypeInt>(
 };
 export const newDateStr = <T extends monTypeZero>(
 	date: `${number}-${T}-${dayType<T extends monTypeZero ? T : never>}`,
+	hours: hoursType = "00",
+	minutes: minutesType = "00",
+	seconds: secondsType = "00",
+	miliSeconds: millisecondsType = "000",
 	timeDifference: hoursType = "00",
 ): Date => {
-	return new Date(`${date}T00:00:00+${timeDifference}:00`);
+	return new Date(
+		`${date}T${hours}:${minutes}:${seconds}.${miliSeconds}+${timeDifference}:00`,
+	);
 };

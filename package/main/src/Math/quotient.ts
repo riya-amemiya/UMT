@@ -4,6 +4,6 @@
  * @param  {number} y
  */
 export const quotient = (x: number, y: number) => [
-    (x - (x % y)) / y,
-    (x % y) + 0,
+	(x - (x % y)) / y,
+	(x % y) + 0,
 ];

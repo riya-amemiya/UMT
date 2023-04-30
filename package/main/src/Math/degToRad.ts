@@ -4,5 +4,5 @@
  * @returns number
  */
 export const degToRad = (x: number) => {
-    return x * (Math.PI / 180);
+	return x * (Math.PI / 180);
 };

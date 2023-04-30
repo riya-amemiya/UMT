@@ -1,50 +1,60 @@
 import { birthday } from "@/Tool/birthday";
-import { MonthsWihout31Days, MonthsWith31Days, dayType } from "$/dateType";
+import { dayType, dayTypeInt, monType, monTypeInt } from "$/dateType";
 export interface BIRTHDAYSIMPLE {
-	<T extends MonthsWith31Days | MonthsWihout31Days>(
+	<T extends monType>(
 		birthdays:
 			| Date
 			| `${number}-${T}-${dayType<T>}`
 			| `${number}:${T}:${dayType<T>}`
 			| `${number}/${T}/${dayType<T>}`
-			| { yer: number; mon: number; day: number },
+			| { year: number; mon: number; day: number },
 		timeDifference?: number,
 	): number;
 }
-export const birthdaySimple = (<
-	T extends MonthsWith31Days | MonthsWihout31Days,
->(
+export const birthdaySimple = (<T extends monType>(
 	birthdays:
 		| `${number}-${T}-${dayType<T>}`
 		| `${number}:${T}:${dayType<T>}`
 		| `${number}/${T}/${dayType<T>}`
 		| Date
-		| { yer: number; mon: number; day: number },
+		| { year: number; mon: number; day: number },
 	timeDifference = 9,
 ) => {
 	if (typeof birthdays === "string") {
 		if (birthdays.includes(":")) {
-			const [yer, mon, day] = birthdays.split(":").map(Number);
-			return birthday(yer, mon, day, timeDifference);
+			const [year, mon, day] = birthdays.split(":").map(Number) as [
+				number,
+				monTypeInt,
+				dayTypeInt<monTypeInt>,
+			];
+			return birthday(year, mon, day, timeDifference);
 		} else if (birthdays.includes("/")) {
-			const [yer, mon, day] = birthdays.split("/").map(Number);
-			return birthday(yer, mon, day, timeDifference);
+			const [year, mon, day] = birthdays.split("/").map(Number) as [
+				number,
+				monTypeInt,
+				dayTypeInt<monTypeInt>,
+			];
+			return birthday(year, mon, day, timeDifference);
 		} else {
-			const [yer, mon, day] = birthdays.split("-").map(Number);
-			return birthday(yer, mon, day, timeDifference);
+			const [year, mon, day] = birthdays.split("-").map(Number) as [
+				number,
+				monTypeInt,
+				dayTypeInt<monTypeInt>,
+			];
+			return birthday(year, mon, day, timeDifference);
 		}
 	} else if (birthdays instanceof Date) {
 		return birthday(
 			birthdays.getFullYear(),
-			birthdays.getMonth(),
-			birthdays.getDate(),
+			birthdays.getMonth() as monTypeInt,
+			birthdays.getDate() as dayTypeInt<monTypeInt>,
 			timeDifference,
 		);
 	} else {
 		return birthday(
-			birthdays.yer,
-			birthdays.mon,
-			birthdays.day,
+			birthdays.year,
+			birthdays.mon as monTypeInt,
+			birthdays.day as dayTypeInt<monTypeInt>,
 			timeDifference,
 		);
 	}

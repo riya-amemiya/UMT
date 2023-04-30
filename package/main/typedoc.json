@@ -1,6 +1,6 @@
 {
-    "excludePrivate": true,
-    "excludeProtected": true,
-    "hideGenerator": true,
-    "out": "./doc"
+	"excludePrivate": true,
+	"excludeProtected": true,
+	"hideGenerator": true,
+	"out": "./doc"
 }

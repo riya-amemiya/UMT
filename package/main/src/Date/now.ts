@@ -1,14 +1,8 @@
 /**
- * @param {number} [timeDifference=0] 時差(時)
+ * タイムゾーンに関係なく、UTCを基準に指定した時差を加えた現在時刻を取得します。
+ * @param {number} [timeDifference=9] UTCからの時差を指定します。デフォルトは日本時間です。
  * @returns {Date} 現在時刻
  */
 export const now = (timeDifference = 9): Date => {
-	const n = timeDifference * 2;
-	return new Date(
-		Date.now() +
-			(new Date().getTimezoneOffset() +
-				(new Date().getTimezoneOffset() === 0 ? timeDifference : n) * 60) *
-				60 *
-				1000,
-	);
+	return new Date(Date.now() + timeDifference * 60 * 60 * 1000);
 };

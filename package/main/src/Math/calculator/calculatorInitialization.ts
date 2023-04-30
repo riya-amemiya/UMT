@@ -1,4 +1,4 @@
-import { calculator } from '.';
+import { calculator } from ".";
 
 /**
  * Initializes the calculator.
@@ -6,11 +6,11 @@ import { calculator } from '.';
  * @return {Function} - calculator
  */
 export const calculatorInitialization = <T extends object>(
-    exchange: T,
+	exchange: T,
 ): ((x: string) => string) => {
-    /**
-     * @param {string} x - amount of money
-     * @return {string} - converted amount of money
-     */
-    return (x: string): string => calculator(x, exchange);
+	/**
+	 * @param {string} x - amount of money
+	 * @return {string} - converted amount of money
+	 */
+	return (x: string): string => calculator(x, exchange);
 };
