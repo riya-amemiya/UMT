@@ -11,7 +11,7 @@ export const newDateInt = <T extends monTypeInt>(
 	year: number,
 	mon: T,
 	day: dayTypeInt<T>,
-	hours: hoursTypeInt = 9,
+	hours: hoursTypeInt = (-new Date().getTimezoneOffset() / 60) as hoursTypeInt,
 	minutes: minutesTypeInt = 0,
 	seconds: secondsTypeInt = 0,
 	milliseconds: millisecondsTypeInt = 0,
