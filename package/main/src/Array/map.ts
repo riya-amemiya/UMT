@@ -1,18 +1,17 @@
 import { isArr } from "@/Tool/isArr";
 
 export const map = <T, U>(
-	array: T[],
-	callbackfn: (value: T, index: number, array: T[]) => U,
-) => {
-	const result = [];
-	const isArray = isArr(array);
-	if (isArray) {
-		for (let i = 0; i < array.length; i++) {
-			result.push(callbackfn(array[i], i, array));
-		}
+	array: T[] | Record<string, T>,
+	callbackfn: (value: T, index: number, rowArray: typeof array) => U,
+): U[] => {
+	const result: U[] = [];
+	if (isArr(array)) {
+		array.forEach((value, index, rowArray) => {
+			result.push(callbackfn(value, index, rowArray));
+		});
 	} else {
-		Object.values(array).forEach((value, index) => {
-			result.push(callbackfn(value, index, array));
+		Object.keys(array).forEach((key, index) => {
+			result.push(callbackfn(array[key], index, array));
 		});
 	}
 	return result;
