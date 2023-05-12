@@ -71,8 +71,7 @@ jobs:
               id: cache-restore-prod
               with:
                   enableCrossOsArchive: true
-                  path: |
-                    '**/module'
+                  path: './module/**'
                   key: ${{ matrix.node-version }}-${{ github.sha }}
             - name: Build
               if: steps.cache-restore-prod.outputs.cache-hit != 'true'
@@ -83,8 +82,7 @@ jobs:
               uses: actions/cache/save@v3
               with:
                   enableCrossOsArchive: true
-                  path: |
-                    '**/module'
+                  path: './module/**'
                   key: ${{ matrix.node-version }}-${{ github.sha }}
 
     javascriptTest:
