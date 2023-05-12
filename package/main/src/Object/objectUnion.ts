@@ -1,11 +1,9 @@
 export const objectUnion = <
-	// rome-ignore lint/suspicious/noExplicitAny: <explanation>
 	A extends {
-		[key in string]: any;
+		[key in string]: unknown;
 	},
-	// rome-ignore lint/suspicious/noExplicitAny: <explanation>
 	B extends {
-		[key in string]: any;
+		[key in string]: unknown;
 	},
 	C extends A & B,
 >(
