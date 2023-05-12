@@ -4,8 +4,17 @@ import { getArraysDiff } from "./getArraysDiff";
 import { quickSort } from "./quickSort";
 import { sum } from "./sum";
 import { map } from "./map";
+import { ArrayWrapper } from "./ArrayWrapper";
 
-export { arraysJoin, getArraysCommon, getArraysDiff, quickSort, sum, map };
+export {
+	arraysJoin,
+	getArraysCommon,
+	getArraysDiff,
+	quickSort,
+	sum,
+	map,
+	ArrayWrapper,
+};
 
 export class UMTArrayClass {
 	private localArraysJoin: typeof arraysJoin;
