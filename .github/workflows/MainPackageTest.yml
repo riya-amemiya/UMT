@@ -26,7 +26,10 @@ jobs:
                   node-version: ${{ matrix.node-version }}
             - uses: actions/cache@v3
               with:
-                  path: ${YARN_CACHE_FOLDER}
+                  enableCrossOsArchive: true
+                  path: |
+                    ${YARN_CACHE_FOLDER}
+                    module
                   key: ${{ runner.os }}-yarn-cache-v1
             - run: yarn
             - name: Run check
