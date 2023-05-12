@@ -9,7 +9,7 @@ on:
     workflow_dispatch:
 
 jobs:
-    javascriptCheck:
+    javascriptSetup:
         name: JavaScript Check on Ubuntu
         runs-on: ${{ matrix.os }}
         strategy:
@@ -43,6 +43,7 @@ jobs:
                   key: dev-depends-${{ matrix.os }}-node${{ matrix.node-version }}-${{ hashFiles('yarn.lock') }}
     javascriptBuild:
           name: JavaScript Build on Ubuntu
+          needs: javascriptSetup
           runs-on: ${{ matrix.os }}
           strategy:
               matrix:
@@ -85,7 +86,7 @@ jobs:
 
     javascriptTest:
         name: JavaScript Test on Ubuntu
-        needs: javascriptCheck
+        needs: javascriptBuild
         runs-on: ubuntu-latest
         strategy:
           matrix:
