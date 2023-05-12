@@ -72,7 +72,7 @@ jobs:
               with:
                   enableCrossOsArchive: true
                   path: |
-                    module
+                    '**/module'
                   key: ${{ matrix.node-version }}-${{ github.sha }}
             - name: Build
               if: steps.cache-restore-prod.outputs.cache-hit != 'true'
@@ -83,7 +83,7 @@ jobs:
               with:
                   enableCrossOsArchive: true
                   path: |
-                    module
+                    '**/module'
                   key: ${{ matrix.node-version }}-${{ github.sha }}
 
     javascriptTest:
