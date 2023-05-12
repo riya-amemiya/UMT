@@ -107,7 +107,7 @@ jobs:
               uses: actions/cache/restore@v3
               with:
                   path: '**/node_modules'
-                  key: depends-${{ matrix.os }}-node${{ matrix.node-version }}-${{ hashFiles('yarn.lock') }}
+                  key: dev-depends-${{ matrix.os }}-node${{ matrix.node-version }}-${{ hashFiles('yarn.lock') }}
             - uses: actions/cache/restore@v3
               id: cache-restore-prod
               with:
