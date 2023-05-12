@@ -29,7 +29,6 @@ jobs:
                   enableCrossOsArchive: true
                   path: |
                     ${YARN_CACHE_FOLDER}
-                    module
                   key: ${{ runner.os }}-yarn-cache-v1
             - run: yarn
             - name: Run check
@@ -55,5 +54,11 @@ jobs:
               run: yarn
             - name: Run Build
               run: yarn build
+            - uses: actions/cache@v3
+              with:
+                  enableCrossOsArchive: true
+                  path: |
+                    ${YARN_CACHE_FOLDER}
+                  key: ${{ runner.os }}-${{ matrix.node-version }}-${{ matrix.shard }}-${{ github.sha }}
             - name: Run Test ${{ matrix.shard }}
               run: yarn test --shard ${{ matrix.shard }}
