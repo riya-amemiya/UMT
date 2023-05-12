@@ -1,0 +1,10 @@
+node_modules
+src
+.gitignore
+.babelrc
+.prettierrc
+.vscode
+test
+doc
+typedoc.json
+build/*.map
