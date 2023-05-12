@@ -58,7 +58,7 @@ jobs:
               with:
                   enableCrossOsArchive: true
                   path: |
-                    ${YARN_CACHE_FOLDER}
+                    module
                   key: ${{ runner.os }}-${{ matrix.node-version }}-${{ matrix.shard }}-${{ github.sha }}
             - name: Run Test ${{ matrix.shard }}
               run: yarn test --shard ${{ matrix.shard }}
