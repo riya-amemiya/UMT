@@ -1,5 +1,6 @@
-import { newDateInt } from "@/Date";
+import { DateWrapper, newDateInt } from "@/Date";
 import { now } from "@/Date/now";
+import { hoursTypeInt } from "@/types/clockType";
 import { dayTypeInt, monTypeInt } from "@/types/dateType";
 /**
  * @param  {number} year
@@ -12,13 +13,15 @@ export const birthday = <T extends monTypeInt>(
 	year: number,
 	mon: T,
 	day: dayTypeInt<T>,
-	timeDifference = 9,
+	timeDifference: hoursTypeInt = 9,
 ) => {
-	const Bday = newDateInt(year, mon, day);
+	const Bday = new DateWrapper(newDateInt(year, mon, day)).setTimeDifference(
+		timeDifference,
+	);
 	const nowTime = now(timeDifference);
-	const y = nowTime.getFullYear() - Bday.getFullYear();
+	const y = nowTime.getFullYear() - Bday.getYear();
 	const r =
-		nowTime < new Date(nowTime.getFullYear(), Bday.getMonth(), Bday.getDate())
+		nowTime < newDateInt(nowTime.getFullYear(), Bday.getMonth(), Bday.getDay())
 			? y - 1
 			: y;
 	return year < 100 ? 1900 + y : r;
