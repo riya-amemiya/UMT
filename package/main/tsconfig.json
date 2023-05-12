@@ -10,7 +10,7 @@
 		"skipLibCheck": true,
 		"esModuleInterop": true,
 		"allowSyntheticDefaultImports": true,
-		"sourceMap": false,
+		"sourceMap": true,
 		"incremental": true,
 		"declarationMap": false,
 		"forceConsistentCasingInFileNames": true,
