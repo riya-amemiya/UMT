@@ -67,8 +67,6 @@ yarn-error.log
 # Yarn Integrity file
 .yarn-integrity
 
-.vscode
-
 *.icloud
 
 # Local Netlify folder
