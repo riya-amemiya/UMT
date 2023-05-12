@@ -89,11 +89,12 @@ jobs:
     javascriptTest:
         name: JavaScript Test on Ubuntu
         needs: javascriptBuild
-        runs-on: ubuntu-latest
+        runs-on: ${{ matrix.os }}
         strategy:
           matrix:
             node-version: [18.x, 20.x]
             shard: [1/4, 2/4, 3/4, 4/4]
+            os: [ubuntu-latest]
         defaults:
           run:
             working-directory: ./package/main
@@ -103,10 +104,11 @@ jobs:
               uses: actions/setup-node@v3
               with:
                 node-version: ${{ matrix.node-version }}
-            - name: yarn install
-              run: yarn
-            - name: Run Build
-              run: yarn build
+            - name: Cache Restore productionDependencies
+              uses: actions/cache/restore@v3
+              with:
+                  path: '**/node_modules'
+                  key: depends-${{ matrix.os }}-node${{ matrix.node-version }}-${{ hashFiles('yarn.lock') }}
             - uses: actions/cache/restore@v3
               id: cache-restore-prod
               with:
