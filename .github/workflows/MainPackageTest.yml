@@ -77,6 +77,7 @@ jobs:
             - name: Build
               if: steps.cache-restore-prod.outputs.cache-hit != 'true'
               run: yarn build
+            - run: ls
             - name: Cache Save Production
               if: steps.cache-restore-prod.outputs.cache-hit != 'true'
               uses: actions/cache/save@v3
