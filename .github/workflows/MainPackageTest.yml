@@ -72,7 +72,7 @@ jobs:
               with:
                   enableCrossOsArchive: true
                   path: 'module/**/*'
-                  key: ${{ matrix.node-version }}-${{ github.sha }}
+                  key: ${{ matrix.node-version }}-${{ github.sha }}-${{ hashFiles('module/index.js') }}
             - name: Build
               if: steps.cache-restore-prod.outputs.cache-hit != 'true'
               run: yarn build
@@ -83,7 +83,7 @@ jobs:
               with:
                   enableCrossOsArchive: true
                   path: 'module/**/*'
-                  key: ${{ matrix.node-version }}-${{ github.sha }}
+                  key: ${{ matrix.node-version }}-${{ github.sha }}-${{ hashFiles('module/index.js') }}
 
     javascriptTest:
         name: JavaScript Test on Ubuntu
@@ -113,7 +113,7 @@ jobs:
               with:
                   enableCrossOsArchive: true
                   path: 'module/**/*'
-                  key: ${{ matrix.node-version }}-${{ github.sha }}
+                  key: ${{ matrix.node-version }}-${{ github.sha }}-${{ hashFiles('module/index.js') }}
             - name: Build
               if: steps.cache-restore-prod.outputs.cache-hit != 'true'
               run: yarn build
