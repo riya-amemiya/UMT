@@ -6,15 +6,17 @@ on:
     pull_request:
         paths:
             - 'package/main/src/**'
+            - '.github/workflows/**'
     workflow_dispatch:
 
 jobs:
-    javascriptCheck:
+    javascriptSetup:
         name: JavaScript Check on Ubuntu
-        runs-on: ubuntu-latest
+        runs-on: ${{ matrix.os }}
         strategy:
             matrix:
                 node-version: [18.x, 20.x]
+                os: [ubuntu-latest]
         defaults:
           run:
             working-directory: ./package/main
@@ -24,23 +26,74 @@ jobs:
               uses: actions/setup-node@v3
               with:
                   node-version: ${{ matrix.node-version }}
-            - uses: actions/cache@v3
+            - name: Cache Restore devDependencies
+              id: cache-restore-dev-depends
+              uses: actions/cache/restore@v3
               with:
-                  enableCrossOsArchive: true
-                  path: |
-                    ${YARN_CACHE_FOLDER}
-                  key: ${{ runner.os }}-yarn-cache-v1
-            - run: yarn
+                  path: '**/node_modules'
+                  key: dev-depends-${{ matrix.os }}-node${{ matrix.node-version }}-${{ hashFiles('yarn.lock') }}
+            - name: Install dependencies
+              if: steps.cache-restore-dev-depends.outputs.cache-hit != 'true'
+              run: yarn install --frozen-lockfile --check-files
             - name: Run check
               run: yarn lint
+            - name: Cache Save devDependencies
+              if: steps.cache-restore-dev-depends.outputs.cache-hit != 'true'
+              id: cache-save-dev-depends
+              uses: actions/cache/save@v3
+              with:
+                  path: '**/node_modules'
+                  key: dev-depends-${{ matrix.os }}-node${{ matrix.node-version }}-${{ hashFiles('yarn.lock') }}
+    javascriptBuild:
+          name: JavaScript Build on Ubuntu
+          needs: javascriptSetup
+          runs-on: ${{ matrix.os }}
+          strategy:
+              matrix:
+                  node-version: [18.x, 20.x]
+                  os: [ubuntu-latest]
+          defaults:
+            run:
+              working-directory: ./package/main
+          steps:
+            - uses: actions/checkout@v3
+            - name: Use Node.js ${{ matrix.node-version }}
+              uses: actions/setup-node@v3
+              with:
+                  node-version: ${{ matrix.node-version }}
+            - name: Cache Restore devDependencies
+              id: cache-restore-dev-depends
+              uses: actions/cache/restore@v3
+              with:
+                  path: '**/node_modules'
+                  key: dev-depends-${{ matrix.os }}-node${{ matrix.node-version }}-${{ hashFiles('yarn.lock') }}
+            - uses: actions/cache/restore@v3
+              id: cache-restore-prod
+              with:
+                  enableCrossOsArchive: true
+                  path: 'module/**/*'
+                  key: ${{ matrix.node-version }}-${{ github.sha }}
+            - name: Build
+              if: steps.cache-restore-prod.outputs.cache-hit != 'true'
+              run: yarn build
+            - run: ls module
+            - name: Cache Save Build
+              if: steps.cache-restore-prod.outputs.cache-hit != 'true'
+              uses: actions/cache/save@v3
+              with:
+                  enableCrossOsArchive: true
+                  path: 'module/**/*'
+                  key: ${{ matrix.node-version }}-${{ github.sha }}
+
     javascriptTest:
         name: JavaScript Test on Ubuntu
-        needs: javascriptCheck
-        runs-on: ubuntu-latest
+        needs: javascriptBuild
+        runs-on: ${{ matrix.os }}
         strategy:
           matrix:
             node-version: [18.x, 20.x]
             shard: [1/4, 2/4, 3/4, 4/4]
+            os: [ubuntu-latest]
         defaults:
           run:
             working-directory: ./package/main
@@ -50,15 +103,26 @@ jobs:
               uses: actions/setup-node@v3
               with:
                 node-version: ${{ matrix.node-version }}
-            - name: yarn install
-              run: yarn
-            - name: Run Build
-              run: yarn build
-            - uses: actions/cache@v3
+            - name: Cache Restore productionDependencies
+              uses: actions/cache/restore@v3
+              with:
+                  path: '**/node_modules'
+                  key: dev-depends-${{ matrix.os }}-node${{ matrix.node-version }}-${{ hashFiles('yarn.lock') }}
+            - uses: actions/cache/restore@v3
+              id: cache-restore-prod
               with:
                   enableCrossOsArchive: true
-                  path: |
-                    module
-                  key: ${{ runner.os }}-${{ matrix.node-version }}-${{ matrix.shard }}-${{ github.sha }}
+                  path: 'module/**/*'
+                  key: ${{ matrix.node-version }}-${{ github.sha }}
+            - name: Build
+              if: steps.cache-restore-prod.outputs.cache-hit != 'true'
+              run: yarn build
             - name: Run Test ${{ matrix.shard }}
               run: yarn test --shard ${{ matrix.shard }}
+            - name: Cache Save Build
+              if: steps.cache-restore-prod.outputs.cache-hit != 'true'
+              uses: actions/cache/save@v3
+              with:
+                  enableCrossOsArchive: true
+                  path: 'module/**/*'
+                  key: ${{ matrix.node-version }}-${{ github.sha }}

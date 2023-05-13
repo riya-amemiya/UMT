@@ -1,40 +1,44 @@
-const { newDateStr, newDateInt } = require("./module/Date/new");
-const { now } = require("./module/Date/now");
-const { DateWrapper } = require("./module/Date/DateWrapper");
-const date1 = newDateStr("1995-02-01");
-const date2 = newDateInt(1995, 2, 1);
-const date3 = new DateWrapper();
-const n = now();
-const n2 = new Date();
+const { map } = require("./module/Array/map");
+const inisalArray = Array.from({ length: 100000 }, (_, i) => i + 1);
+const inisalObject = Object.fromEntries(
+	Array.from({ length: 100000 }, (_, i) => [i, i + 1]),
+);
+const callbackfn = (item) => {
+	let n = item ** 2;
+	while (n !== 1) {
+		if (n % 2 === 0) {
+			n = n / 2;
+		} else {
+			n = n * 3 + 1;
+		}
+	}
+	return n;
+};
+const answer = inisalArray.map(callbackfn);
+console.log("====================================");
+console.time("dmap:array");
+const arr1 = [...inisalArray];
+const newArr1 = arr1.map(callbackfn);
+console.log(newArr1.toString() === answer.toString());
+console.timeEnd("dmap:array");
 
-console.log(new Date().getTimezoneOffset());
+console.time("dmap:object");
+const obj1 = { ...inisalObject };
+const newObj1 = Object.values(obj1).map(callbackfn);
+console.log(newObj1.toString() === answer.toString());
+console.timeEnd("dmap:object");
 console.log("====================================");
-console.log(n);
-console.log(n.getUTCHours());
-console.log(n.getHours());
-console.log(n.getUTCDate());
-console.log(n.toString());
-console.log("====================================");
-console.log(n2);
-console.log(n2.getUTCHours());
-console.log(n2.getHours());
-console.log(n2.getUTCDate());
-console.log(n2.toString());
-console.log("====================================");
-console.log(date1);
-console.log(date1.getUTCHours());
-console.log(date1.getHours());
-console.log(date1.getUTCDate());
-console.log(date1.toString());
-console.log("====================================");
-console.log(date2);
-console.log(date2.getUTCHours());
-console.log(date2.getHours());
-console.log(date2.getUTCDate());
-console.log(date2.toString());
-console.log("====================================");
-console.log(date3);
-console.log(date3.setTimeDifference(9).subMonth(5).subDay(30).getDateObj());
-console.log(date3);
-console.log(date3.copy());
+
+console.time("map:array");
+const arr2 = [...inisalArray];
+const newArr2 = map(arr2, callbackfn);
+console.log(newArr2.toString() === answer.toString());
+console.timeEnd("map:array");
+
+console.time("map:object");
+const obj2 = { ...inisalObject };
+const newObj2 = map(obj2, callbackfn);
+console.log(newObj2.toString() === answer.toString());
+console.timeEnd("map:object");
+
 console.log("====================================");

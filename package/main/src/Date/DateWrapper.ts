@@ -101,11 +101,11 @@ export class DateWrapper {
 	getYear() {
 		return this.date.getUTCFullYear();
 	}
-	getMonth() {
-		return this.date.getUTCMonth() + 1;
+	getMonth(): monTypeInt {
+		return (this.date.getUTCMonth() + 1) as monTypeInt;
 	}
-	getDay() {
-		return this.date.getUTCDate();
+	getDay(): dayTypeInt<monTypeInt> {
+		return this.date.getUTCDate() as dayTypeInt<monTypeInt>;
 	}
 	getHour() {
 		return this.date.getUTCHours();
