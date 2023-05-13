@@ -71,18 +71,18 @@ jobs:
               id: cache-restore-prod
               with:
                   enableCrossOsArchive: true
-                  path: './module/**'
+                  path: 'module/**'
                   key: ${{ matrix.node-version }}-${{ github.sha }}
             - name: Build
               if: steps.cache-restore-prod.outputs.cache-hit != 'true'
               run: yarn build
-            - run: ls
+            - run: ls module
             - name: Cache Save Production
               if: steps.cache-restore-prod.outputs.cache-hit != 'true'
               uses: actions/cache/save@v3
               with:
                   enableCrossOsArchive: true
-                  path: './module/**'
+                  path: 'module/**'
                   key: ${{ matrix.node-version }}-${{ github.sha }}
 
     javascriptTest:
