@@ -7,7 +7,7 @@ module.exports = {
 	roots: ["<rootDir>/tests"],
 	collectCoverage: true,
 	collectCoverageFrom: [
-		"<rootDir>/module/**/*.{js,ts}",
+		"<rootDir>/module/**/*/*.{js,ts}",
 		"<rootDir>/src/**/*.{js,ts}",
 		"!**/node_modules/**",
 		"!**/{index,random}.{js,ts}",
