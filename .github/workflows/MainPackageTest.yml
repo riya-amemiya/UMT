@@ -6,6 +6,7 @@ on:
     pull_request:
         paths:
             - 'package/main/src/**'
+            - 'tests/**'
             - '.github/workflows/**'
     workflow_dispatch:
 
@@ -71,8 +72,8 @@ jobs:
               id: cache-restore-prod
               with:
                   enableCrossOsArchive: true
-                  path: 'module/**/*'
-                  key: ${{ matrix.node-version }}-${{ github.sha }}
+                  path: '**/module'
+                  key: ${{ matrix.node-version }}-${{ github.sha }}-${{ hashFiles('module/index.js') }}
             - name: Build
               if: steps.cache-restore-prod.outputs.cache-hit != 'true'
               run: yarn build
@@ -82,8 +83,8 @@ jobs:
               uses: actions/cache/save@v3
               with:
                   enableCrossOsArchive: true
-                  path: 'module/**/*'
-                  key: ${{ matrix.node-version }}-${{ github.sha }}
+                  path: '**/module'
+                  key: ${{ matrix.node-version }}-${{ github.sha }}-${{ hashFiles('module/index.js') }}
 
     javascriptTest:
         name: JavaScript Test on Ubuntu
@@ -112,8 +113,8 @@ jobs:
               id: cache-restore-prod
               with:
                   enableCrossOsArchive: true
-                  path: 'module/**/*'
-                  key: ${{ matrix.node-version }}-${{ github.sha }}
+                  path: '**/module'
+                  key: ${{ matrix.node-version }}-${{ github.sha }}-${{ hashFiles('module/index.js') }}
             - name: Build
               if: steps.cache-restore-prod.outputs.cache-hit != 'true'
               run: yarn build
@@ -124,5 +125,5 @@ jobs:
               uses: actions/cache/save@v3
               with:
                   enableCrossOsArchive: true
-                  path: 'module/**/*'
+                  path: '**/module'
                   key: ${{ matrix.node-version }}-${{ github.sha }}

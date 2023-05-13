@@ -1,4 +1,5 @@
-const { map } = require("./module/Array/map");
+const { arrayMap } = require("./module/Array/arrayMap");
+const { objectMap } = require("./module/Object/objectMap");
 const inisalArray = Array.from({ length: 100000 }, (_, i) => i + 1);
 const inisalObject = Object.fromEntries(
 	Array.from({ length: 100000 }, (_, i) => [i, i + 1]),
@@ -31,13 +32,13 @@ console.log("====================================");
 
 console.time("map:array");
 const arr2 = [...inisalArray];
-const newArr2 = map(arr2, callbackfn);
+const newArr2 = arrayMap(arr2, callbackfn);
 console.log(newArr2.toString() === answer.toString());
 console.timeEnd("map:array");
 
 console.time("map:object");
 const obj2 = { ...inisalObject };
-const newObj2 = map(obj2, callbackfn);
+const newObj2 = objectMap(obj2, callbackfn);
 console.log(newObj2.toString() === answer.toString());
 console.timeEnd("map:object");
 
