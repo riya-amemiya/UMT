@@ -3,7 +3,7 @@ import { getArraysCommon } from "./getArraysCommon";
 import { getArraysDiff } from "./getArraysDiff";
 import { quickSort } from "./quickSort";
 import { sum } from "./sum";
-import { map } from "./map";
+import { arrayMap } from "./arrayMap";
 import { ArrayWrapper } from "./ArrayWrapper";
 
 export {
@@ -12,7 +12,7 @@ export {
 	getArraysDiff,
 	quickSort,
 	sum,
-	map,
+	arrayMap,
 	ArrayWrapper,
 };
 
@@ -22,14 +22,14 @@ export class UMTArrayClass {
 	private localGetArraysDiff: typeof getArraysDiff;
 	private localQuickSort: typeof quickSort;
 	private locaLsum: typeof sum;
-	private localMap: typeof map;
+	private localArrayMap: typeof arrayMap;
 	constructor() {
 		this.localArraysJoin = arraysJoin;
 		this.localGetArraysCommon = getArraysCommon;
 		this.localGetArraysDiff = getArraysDiff;
 		this.localQuickSort = quickSort;
 		this.locaLsum = sum;
-		this.localMap = map;
+		this.localArrayMap = arrayMap;
 	}
 
 	get arraysJoin() {
@@ -47,8 +47,8 @@ export class UMTArrayClass {
 	get sum() {
 		return this.locaLsum;
 	}
-	get map() {
-		return this.localMap;
+	get arrayMap() {
+		return this.localArrayMap;
 	}
 }
 
