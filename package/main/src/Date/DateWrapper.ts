@@ -7,17 +7,14 @@ import {
 } from "@/types/clockType";
 
 export class DateWrapper {
-	private readonly now: (timeDifference: number) => Date;
+	private readonly now: (timeDifference: hoursTypeInt) => Date;
 	private date: Date;
-	private timeDifference: number;
+	private timeDifference: hoursTypeInt;
 	private readonly initialState: Date;
 	/**
 	 * @param date Date or number, numberを渡すとnow関数に渡される(UTCとの時差)
 	 */
-	constructor(
-		date: Date | number = now(),
-		initialState: Date | number = now(),
-	) {
+	constructor(date: Date | hoursTypeInt, timeDifference: hoursTypeInt = 9) {
 		let tmp;
 		if (typeof date === "number") {
 			tmp = now(date);
@@ -27,7 +24,9 @@ export class DateWrapper {
 		this.timeDifference = 9;
 		this.now = now;
 		this.date = new Date(tmp);
-		this.initialState = new Date(initialState);
+		this.date.setUTCHours(timeDifference);
+		this.initialState = new Date(tmp);
+		this.initialState.setUTCHours(timeDifference);
 	}
 	setInitialState() {
 		this.date = this.initialState;
@@ -41,7 +40,7 @@ export class DateWrapper {
 		this.date = this.now(timeDifference);
 		return this;
 	}
-	setTimeDifference(timeDifference: number) {
+	setTimeDifference(timeDifference: hoursTypeInt) {
 		this.timeDifference = timeDifference;
 		return this;
 	}
@@ -78,7 +77,7 @@ export class DateWrapper {
 			year: this.getYear(),
 			month: this.getMonth(),
 			day: this.getDay(),
-			hour: this.getHour(),
+			hour: this.getHours(),
 			minute: this.getMinute(),
 			second: this.getSecond(),
 			millisecond: this.getMillisecond(),
@@ -86,11 +85,8 @@ export class DateWrapper {
 			timeDifference: this.getTimeDifference(),
 		};
 	}
-	copy(
-		date: Date | number = this.date,
-		initialState: Date | number = this.initialState,
-	) {
-		return new DateWrapper(date, initialState);
+	copy(date: Date | hoursTypeInt = this.date) {
+		return new DateWrapper(date);
 	}
 	getDayOfWeek() {
 		return this.date.getUTCDay();
@@ -107,7 +103,7 @@ export class DateWrapper {
 	getDay(): dayTypeInt<monTypeInt> {
 		return this.date.getUTCDate() as dayTypeInt<monTypeInt>;
 	}
-	getHour() {
+	getHours() {
 		return this.date.getUTCHours();
 	}
 	getMinute() {
@@ -138,7 +134,7 @@ export class DateWrapper {
 		return this;
 	}
 	addHour(hour: number) {
-		this.date.setUTCHours(this.getHour() + hour);
+		this.date.setUTCHours(this.getHours() + hour);
 		return this;
 	}
 	addMinute(minute: number) {
@@ -166,7 +162,7 @@ export class DateWrapper {
 		return this;
 	}
 	subHour(hour: number) {
-		this.date.setUTCHours(this.getHour() - hour);
+		this.date.setUTCHours(this.getHours() - hour);
 		return this;
 	}
 	subMinute(minute: number) {

@@ -7,7 +7,8 @@ import { mathSeparator } from "./mathSeparator";
 
 export const mathConverter = (x: string): string => {
 	let returnValue = x;
-	while (true) {
+	let flag = true;
+	while (flag) {
 		if (returnValue.indexOf("^") !== -1 || returnValue.indexOf("*") !== -1) {
 			//掛け算と割り算の処理
 			const y: [RegExpMatchArray | null, string[]] = [
@@ -27,17 +28,23 @@ export const mathConverter = (x: string): string => {
 							returnValue += `${m}*${m}`;
 						} else {
 							returnValue += mathConverter(`${m}*${m}`);
-							return returnValue;
+							flag = false;
+							break;
 						}
-						return returnValue;
+						flag = false;
+						break;
 					}
 				}
-				return returnValue;
+				flag = false;
+				break;
 			} else {
-				return returnValue;
+				flag = false;
+				break;
 			}
 		} else {
-			return returnValue;
+			flag = false;
+			break;
 		}
 	}
+	return returnValue;
 };

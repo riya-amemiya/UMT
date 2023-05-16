@@ -1,6 +1,11 @@
 {
+	"$schema": "https://typedoc.org/schema.json",
 	"excludePrivate": true,
 	"excludeProtected": true,
 	"hideGenerator": true,
-	"out": "./doc"
+	"out": "./doc",
+	"entryPoints": [
+		"./src"
+	],
+	"entryPointStrategy": "expand",
 }

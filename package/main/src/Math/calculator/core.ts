@@ -16,9 +16,9 @@ export const calculatorCore = <T extends object>(x: string, ex?: T): string => {
 	copyX = copyX.replace(/\+\+/g, "+");
 	copyX = copyX.replace(/\+-/g, "+0-");
 	copyX = copyX.replace(/\-\+/g, "+0-");
-
+	let flag = true;
 	//円計算
-	while (true) {
+	while (flag) {
 		if (ex) {
 			for (const i in ex) {
 				if (copyX.indexOf(i) !== -1) {
@@ -62,7 +62,7 @@ export const calculatorCore = <T extends object>(x: string, ex?: T): string => {
 					y[0][0],
 					`${
 						y[1][1] === "^"
-							? Math.pow(+y[1][0], +y[1][2])
+							? (+y[1][0]) ** +y[1][2]
 							: y[1][1] === "*"
 							? multiplication(+y[1][0], +y[1][2])
 							: y[1][1] === "/"
@@ -93,7 +93,9 @@ export const calculatorCore = <T extends object>(x: string, ex?: T): string => {
 				);
 			}
 		} else {
-			return copyX;
+			flag = false;
+			break;
 		}
 	}
+	return copyX;
 };
