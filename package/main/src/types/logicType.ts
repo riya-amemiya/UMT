@@ -14,7 +14,7 @@ export type isBoolean<X> = X extends number
 	? false
 	: X extends object
 	? // rome-ignore lint/suspicious/noExplicitAny: <explanation>
-	  X extends Array<any>
+	  X extends any[]
 		? X extends []
 			? false
 			: true

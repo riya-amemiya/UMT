@@ -22,7 +22,7 @@ export const division = ((x: number, y: number, isFloor = true) => {
 	const n =
 		decimalLengthX === decimalLengthY
 			? 1
-			: Math.pow(10, decimalLengthY - decimalLengthX);
+			: 10 ** (decimalLengthY - decimalLengthX);
 	copyX = +`${copyX}`.replace(".", "");
 	copyY = +`${copyY}`.replace(".", "");
 	return isFloor
