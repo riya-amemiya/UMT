@@ -36,8 +36,6 @@ jobs:
             - name: Install dependencies
               if: steps.cache-restore-dev-depends.outputs.cache-hit != 'true'
               run: yarn install --frozen-lockfile --check-files
-            - name: Run check
-              run: yarn lint
             - name: Cache Save devDependencies
               if: steps.cache-restore-dev-depends.outputs.cache-hit != 'true'
               id: cache-save-dev-depends
@@ -45,6 +43,32 @@ jobs:
               with:
                   path: '**/node_modules'
                   key: dev-depends-${{ matrix.os }}-node${{ matrix.node-version }}-${{ hashFiles('yarn.lock') }}
+    javascriptLint:
+        name: JavaScript Lint on Ubuntu
+        needs: javascriptSetup
+        runs-on: ${{ matrix.os }}
+        strategy:
+            matrix:
+                node-version: [18.x, 20.x]
+                os: [ubuntu-latest]
+        defaults:
+          run:
+            working-directory: ./package/main
+        steps:
+            - uses: actions/checkout@v3
+            - name: Use Node.js ${{ matrix.node-version }}
+              uses: actions/setup-node@v3
+              with:
+                  node-version: ${{ matrix.node-version }}
+            - name: Cache Restore devDependencies
+              id: cache-restore-dev-depends
+              uses: actions/cache/restore@v3
+              with:
+                  path: '**/node_modules'
+                  key: dev-depends-${{ matrix.os }}-node${{ matrix.node-version }}-${{ hashFiles('yarn.lock') }}
+            - name: Lint
+              run: yarn lint
+
     javascriptBuild:
           name: JavaScript Build on Ubuntu
           needs: javascriptSetup
