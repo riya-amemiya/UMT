@@ -1,14 +1,14 @@
 export const objectUnion = <
-	A extends {
-		[key in string]: unknown;
-	},
-	B extends {
-		[key in string]: unknown;
-	},
-	C extends A & B,
+  A extends {
+    [key in string]: unknown;
+  },
+  B extends {
+    [key in string]: unknown;
+  },
+  C extends A & B,
 >(
-	array: A,
-	...arrays: B[]
+  array: A,
+  ...arrays: B[]
 ) => {
-	return Object.assign({}, array, ...arrays) as C;
+  return Object.assign({}, array, ...arrays) as C;
 };

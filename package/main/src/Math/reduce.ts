@@ -5,9 +5,9 @@ import { gcd } from "./gcd";
  * @param  {number} y
  */
 export const reduce = (x: number, y: number) => {
-	if (x === 0 || y === 0) {
-		return { x: NaN, y: NaN };
-	}
-	const n = gcd(x, y);
-	return { x: x / n, y: y / n, gcd: gcd(x, y) };
+  if (x === 0 || y === 0) {
+    return { x: NaN, y: NaN };
+  }
+  const n = gcd(x, y);
+  return { x: x / n, y: y / n, gcd: gcd(x, y) };
 };

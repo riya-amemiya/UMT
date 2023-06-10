@@ -5,12 +5,12 @@ import { nCr } from "./nCr";
  * @param  {number} r
  */
 export const nHr = (n: number, r: number) => {
-	if (n === 0 || r === 0) {
-		return NaN;
-	}
-	const y = nCr(n + r - 1, r);
-	if (1 > y) {
-		return 0;
-	}
-	return y;
+  if (n === 0 || r === 0) {
+    return NaN;
+  }
+  const y = nCr(n + r - 1, r);
+  if (1 > y) {
+    return 0;
+  }
+  return y;
 };

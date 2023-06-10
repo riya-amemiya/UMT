@@ -5,12 +5,15 @@
 			"beforeEach",
 			"it",
 			"expect",
-			"test"
+			"test",
+			"beforeAll",
+			"afterEach",
+			"afterAll"
 		]
 	},
 	"formatter": {
 		"enabled": true,
-		"indentStyle": "tab",
+		"indentStyle": "space",
 		"lineWidth": 80,
 		"ignore": [
 			"node_modules",
@@ -26,7 +29,8 @@
 			"node_modules",
 			"module",
 			"*.json",
-			"doc"
+			"doc",
+			"tests"
 		],
 		"rules": {
 			"recommended": true,
@@ -57,7 +61,7 @@
 				"noAccumulatingSpread": "error",
 				"noBannedTypes": "error",
 				"noConfusingArrow": "error",
-				"noConstantCondition": "error",
+				"noConstantCondition": "off",
 				"noDuplicateJsxProps": "error",
 				"noForEach": "error",
 				"noSelfAssign": "error",

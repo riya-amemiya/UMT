@@ -10,19 +10,19 @@ import { dayTypeInt, monTypeInt } from "@/types/dateType";
  * @returns number 年齢
  */
 export const birthday = <T extends monTypeInt>(
-	year: number,
-	mon: T,
-	day: dayTypeInt<T>,
-	timeDifference: hoursTypeInt = 9,
+  year: number,
+  mon: T,
+  day: dayTypeInt<T>,
+  timeDifference: hoursTypeInt = 9,
 ) => {
-	const Bday = new DateWrapper(newDateInt(year, mon, day)).setTimeDifference(
-		timeDifference,
-	);
-	const nowTime = now(timeDifference);
-	const y = nowTime.getFullYear() - Bday.getYear();
-	const r =
-		nowTime < newDateInt(nowTime.getFullYear(), Bday.getMonth(), Bday.getDay())
-			? y - 1
-			: y;
-	return year < 100 ? 1900 + y : r;
+  const Bday = new DateWrapper(newDateInt(year, mon, day)).setTimeDifference(
+    timeDifference,
+  );
+  const nowTime = now(timeDifference);
+  const y = nowTime.getFullYear() - Bday.getYear();
+  const r =
+    nowTime < newDateInt(nowTime.getFullYear(), Bday.getMonth(), Bday.getDay())
+      ? y - 1
+      : y;
+  return year < 100 ? 1900 + y : r;
 };
