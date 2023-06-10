@@ -12,7 +12,6 @@ import {
 export const dayOfWeekSimple = <
   T extends MonthsWith31Days | MonthsWihout31Days,
 >(
-<<<<<<< HEAD
   props?:
     | { year?: number; mon?: T; day?: dayType<T> }
     | `${number}-${T}-${dayType<T>}`
@@ -20,15 +19,6 @@ export const dayOfWeekSimple = <
     | `${number}/${T}/${dayType<T>}`
     | Date,
   timeDifference: hoursTypeInt = 9,
-=======
-	props?:
-		| { year?: number; mon?: T; day?: dayType<T> }
-		| `${number}-${T}-${dayType<T>}`
-		| `${number}:${T}:${dayType<T>}`
-		| `${number}/${T}/${dayType<T>}`
-		| Date,
-	timeDifference: hoursTypeInt = 9,
->>>>>>> origin/main
 ) => {
   if (typeof props === "string") {
     if (props.includes(":")) {

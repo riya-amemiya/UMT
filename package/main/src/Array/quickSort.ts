@@ -15,7 +15,12 @@ export const quickSort = <A extends any[]>(
   const pivot = array[random(endID, startID)];
   let left = startID;
   let right = endID;
+<<<<<<< HEAD
   while (true) {
+=======
+  let flag = true;
+  while (flag) {
+>>>>>>> 0db4701 (コンフリクト解消)
     while (array[left] < pivot) {
       left++;
     }
@@ -23,6 +28,10 @@ export const quickSort = <A extends any[]>(
       right--;
     }
     if (right <= left) {
+<<<<<<< HEAD
+=======
+      flag = false;
+>>>>>>> 0db4701 (コンフリクト解消)
       break;
     }
     const tmp = array[left];
