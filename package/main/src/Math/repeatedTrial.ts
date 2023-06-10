@@ -12,9 +12,17 @@ export const repeatedTrial = (
   r: number,
   p: { x: number; y: number },
 ): number[] => {
+<<<<<<< HEAD
   const x = nCr(n, r);
   const answer1 = x * p.x ** r * (p.y - p.x) ** (n - r);
   const answer2 = p.y ** r * p.y ** (n - r);
   const greatest_common_divisor = gcd(answer1, answer2);
   return [answer1 / greatest_common_divisor, answer2 / greatest_common_divisor];
+=======
+	const x = nCr(n, r);
+	const answer1 = x * p.x ** r * (p.y - p.x) ** (n - r);
+	const answer2 = p.y ** r * p.y ** (n - r);
+	const greatest_common_divisor = gcd(answer1, answer2);
+	return [answer1 / greatest_common_divisor, answer2 / greatest_common_divisor];
+>>>>>>> 58a3e53 (修正)
 };

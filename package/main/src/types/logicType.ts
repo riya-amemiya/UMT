@@ -1,4 +1,5 @@
 export type isBoolean<X> = X extends number
+<<<<<<< HEAD
   ? X extends 0
     ? false
     : true
@@ -23,6 +24,32 @@ export type isBoolean<X> = X extends number
   X extends Function
   ? false
   : true;
+=======
+	? X extends 0
+		? false
+		: true
+	: X extends string
+	? X extends ""
+		? false
+		: true
+	: X extends boolean
+	? X
+	: X extends undefined
+	? false
+	: X extends null
+	? false
+	: X extends object
+	? // rome-ignore lint/suspicious/noExplicitAny: <explanation>
+	  X extends any[]
+		? X extends []
+			? false
+			: true
+		: true
+	: // rome-ignore lint/nursery/noBannedTypes: <explanation>
+	X extends Function
+	? false
+	: true;
+>>>>>>> 58a3e53 (修正)
 export type AND<X, Y> = isBoolean<X> extends true
   ? isBoolean<Y> extends true
     ? true

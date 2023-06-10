@@ -17,8 +17,9 @@
 		"lineWidth": 80,
 		"ignore": [
 			"node_modules",
+			"module",
 			"*.json",
-			"module"
+			"doc"
 		],
 		"formatWithErrors": false
 	},
@@ -26,15 +27,12 @@
 		"enabled": true,
 		"ignore": [
 			"node_modules",
-			"*.json",
 			"module",
-			"tests"
+			"*.json",
+			"doc"
 		],
 		"rules": {
 			"recommended": true,
-			"a11y": {
-				"useKeyWithClickEvents": "off"
-			},
 			"complexity": {
 				"noUselessFragments": "warn",
 				"useSimplifiedLogicExpression": "error"
@@ -45,6 +43,7 @@
 			},
 			"style": {
 				"noImplicitBoolean": "warn",
+				"noNamespace": "warn",
 				"noNegationElse": "error",
 				"noParameterProperties": "off",
 				"noShoutyConstants": "warn",
@@ -61,7 +60,7 @@
 				"noAccumulatingSpread": "error",
 				"noBannedTypes": "error",
 				"noConfusingArrow": "error",
-				"noConstantCondition": "off",
+				"noConstantCondition": "error",
 				"noDuplicateJsxProps": "error",
 				"noForEach": "error",
 				"noSelfAssign": "error",
