@@ -1,19 +1,19 @@
 const { arrayMap } = require("./module/Array/arrayMap");
 const { objectMap } = require("./module/Object/objectMap");
-const inisalArray = Array.from({ length: 100000 }, (_, i) => i + 1);
+const inisalArray = Array.from({ length: 1000000 }, (_, i) => i + 1);
 const inisalObject = Object.fromEntries(
-	Array.from({ length: 100000 }, (_, i) => [i, i + 1]),
+  Array.from({ length: 1000000 }, (_, i) => [i, i + 1]),
 );
 const callbackfn = (item) => {
-	let n = item ** 2;
-	while (n !== 1) {
-		if (n % 2 === 0) {
-			n = n / 2;
-		} else {
-			n = n * 3 + 1;
-		}
-	}
-	return n;
+  let n = item ** 2;
+  while (n !== 1) {
+    if (n % 2 === 0) {
+      n = n / 2;
+    } else {
+      n = n * 3 + 1;
+    }
+  }
+  return n;
 };
 const answer = inisalArray.map(callbackfn);
 console.log("====================================");

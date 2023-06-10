@@ -10,11 +10,11 @@ import { literalExpression } from "./literalExpression";
  */
 
 export const calculator = <T extends object>(x: string, exchange?: T) => {
-	let copyX = x;
-	copyX = copyX.replace(/\s+/g, ""); // Remove spaces
-	if (copyX.indexOf("=") !== -1) {
-		return literalExpression(copyX); // If the expression contains an equal sign, then it is a literal expression
-	} else {
-		return calculatorCore(copyX, exchange);
-	}
+  let copyX = x;
+  copyX = copyX.replace(/\s+/g, ""); // Remove spaces
+  if (copyX.indexOf("=") !== -1) {
+    return literalExpression(copyX); // If the expression contains an equal sign, then it is a literal expression
+  } else {
+    return calculatorCore(copyX, exchange);
+  }
 };

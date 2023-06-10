@@ -1,2 +1,2 @@
 export const isNode =
-	typeof process !== "undefined" && typeof require !== "undefined";
+  typeof process !== "undefined" && typeof require !== "undefined";

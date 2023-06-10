@@ -1,59 +1,83 @@
 {
+	"javascript": {
+		"globals": [
+			"describe",
+			"beforeEach",
+			"it",
+			"expect",
+			"test",
+			"beforeAll",
+			"afterEach",
+			"afterAll"
+		]
+	},
 	"formatter": {
 		"enabled": true,
-		"indentStyle": "tab",
+		"indentStyle": "space",
 		"lineWidth": 80,
-		"ignore": ["node_modules", "module", ".vscode"],
+		"ignore": [
+			"node_modules",
+			".next",
+			"*.json",
+			"./scripts/*.js",
+			"src/gql/generated.ts"
+		],
 		"formatWithErrors": false
 	},
 	"linter": {
 		"enabled": true,
-		"ignore": ["node_modules", "tests", "module", ".vscode"],
+		"ignore": [
+			"node_modules",
+			".next",
+			"*.json",
+			"./scripts/*.js",
+			"next.config.js",
+			"./src/gql/*"
+		],
 		"rules": {
 			"recommended": true,
+			"a11y": {
+				"noSvgWithoutTitle": "warn",
+				"useKeyWithClickEvents": "off"
+			},
+			"complexity": {
+				"noUselessFragments": "warn",
+				"useSimplifiedLogicExpression": "error"
+			},
 			"correctness": {
 				"noUndeclaredVariables": "warn",
-				"noUnusedVariables": "warn",
-				"noSetterReturn": "error"
+				"noUnusedVariables": "off"
 			},
 			"style": {
 				"noImplicitBoolean": "warn",
 				"noNegationElse": "error",
+				"noParameterProperties": "off",
+				"noShoutyConstants": "warn",
 				"useBlockStatements": "error",
-				"useFragmentSyntax": "warn"
+				"useExponentiationOperator": "error",
+				"useFragmentSyntax": "error",
+				"useShorthandArrayType": "error",
+				"useSingleCaseStatement": "error"
 			},
 			"suspicious": {
-				"noRedundantUseStrict": "error"
+				"noRedundantUseStrict": "warn"
 			},
 			"nursery": {
-				"noAssignInExpressions": "error",
+				"noAccumulatingSpread": "error",
 				"noBannedTypes": "error",
-				"noClassAssign": "error",
-				"noCommaOperator": "error",
-				"noConfusingLabels": "error",
-				"noDuplicateCase": "error",
-				"noDuplicateClassMembers": "error",
+				"noConfusingArrow": "error",
+				"noConstantCondition": "error",
 				"noDuplicateJsxProps": "error",
-				"noExtraLabels": "error",
-				"noExtraSemicolons": "error",
-				"noGlobalObjectCalls": "error",
-				"noInferrableTypes": "warn",
-				"noInnerDeclarations": "error",
-				"noInvalidConstructorSuper": "error",
-				"noNamespace": "error",
-				"noNoninteractiveElementToInteractiveRole": "error",
-				"noParameterAssign": "error",
-				"noPrototypeBuiltins": "error",
-				"noParameterProperties": "error",
-				"noRedeclare": "error",
+				"noForEach": "error",
 				"noSelfAssign": "error",
-				"noSelfCompare": "error",
-				"noSwitchDeclarations": "error",
-				"noUselessRename": "error",
-				"noUselessSwitchCase": "error",
-				"noWith": "error",
 				"useCamelCase": "warn",
-				"useHookAtTopLevel": "error"
+				"useExhaustiveDependencies": "off",
+				"useGroupedTypeImport": "error",
+				"useHookAtTopLevel": "error",
+				"useIsNan": "error",
+				"useLiteralEnumMembers": "error",
+				"useLiteralKeys": "error",
+				"useSimpleNumberKeys": "error"
 			}
 		}
 	}

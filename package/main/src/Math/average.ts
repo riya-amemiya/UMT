@@ -6,7 +6,7 @@ import { division } from "./division";
  * @returns number
  */
 export const average = (numbers: number[]): number => {
-	const sum = numbers.reduce((a, b) => addition(a, b), 0);
-	const avg = division(sum, numbers.length);
-	return avg;
+  const sum = numbers.reduce((a, b) => addition(a, b), 0);
+  const avg = division(sum, numbers.length);
+  return avg;
 };
