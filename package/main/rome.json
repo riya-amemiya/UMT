@@ -17,10 +17,8 @@
 		"lineWidth": 80,
 		"ignore": [
 			"node_modules",
-			".next",
 			"*.json",
-			"./scripts/*.js",
-			"src/gql/generated.ts"
+			"module"
 		],
 		"formatWithErrors": false
 	},
@@ -28,16 +26,13 @@
 		"enabled": true,
 		"ignore": [
 			"node_modules",
-			".next",
 			"*.json",
-			"./scripts/*.js",
-			"next.config.js",
-			"./src/gql/*"
+			"module",
+			"tests"
 		],
 		"rules": {
 			"recommended": true,
 			"a11y": {
-				"noSvgWithoutTitle": "warn",
 				"useKeyWithClickEvents": "off"
 			},
 			"complexity": {
@@ -66,7 +61,7 @@
 				"noAccumulatingSpread": "error",
 				"noBannedTypes": "error",
 				"noConfusingArrow": "error",
-				"noConstantCondition": "error",
+				"noConstantCondition": "off",
 				"noDuplicateJsxProps": "error",
 				"noForEach": "error",
 				"noSelfAssign": "error",

@@ -62,7 +62,7 @@ export const calculatorCore = <T extends object>(x: string, ex?: T): string => {
           y[0][0],
           `${
             y[1][1] === "^"
-              ? Math.pow(+y[1][0], +y[1][2])
+              ? (+y[1][0]) ** +y[1][2]
               : y[1][1] === "*"
               ? multiplication(+y[1][0], +y[1][2])
               : y[1][1] === "/"

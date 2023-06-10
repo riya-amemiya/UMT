@@ -3,8 +3,8 @@ export const arrayMap = <T, U>(
   callbackfn: (value: T, index: number, rowArray: typeof array) => U,
 ): U[] => {
   const result: U[] = [];
-  array.forEach((value, index, array) => {
-    result.push(callbackfn(value, index, array));
-  });
+  for (const value of array) {
+    result.push(callbackfn(value, array.indexOf(value), array));
+  }
   return result;
 };
