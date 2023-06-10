@@ -29,7 +29,8 @@
 			"node_modules",
 			"module",
 			"*.json",
-			"doc"
+			"doc",
+			"tests"
 		],
 		"rules": {
 			"recommended": true,

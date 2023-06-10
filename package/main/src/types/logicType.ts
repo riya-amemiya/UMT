@@ -19,7 +19,8 @@ export type isBoolean<X> = X extends number
       ? false
       : true
     : true
-  : X extends Function
+  : // rome-ignore lint/nursery/noBannedTypes: <explanation>
+  X extends Function
   ? false
   : true;
 export type AND<X, Y> = isBoolean<X> extends true
