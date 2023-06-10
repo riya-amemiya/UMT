@@ -60,7 +60,7 @@
 				"noAccumulatingSpread": "error",
 				"noBannedTypes": "error",
 				"noConfusingArrow": "error",
-				"noConstantCondition": "error",
+				"noConstantCondition": "off",
 				"noDuplicateJsxProps": "error",
 				"noForEach": "error",
 				"noSelfAssign": "error",
