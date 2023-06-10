@@ -7,16 +7,16 @@ import {
 } from "@/types/clockType";
 
 export class DateWrapper {
-  private readonly now: (timeDifference: number) => Date;
+  private readonly now: (timeDifference: hoursTypeInt) => Date;
   private date: Date;
-  private timeDifference: number;
+  private timeDifference: hoursTypeInt;
   private readonly initialState: Date;
   /**
    * @param date Date or number, numberを渡すとnow関数に渡される(UTCとの時差)
    */
   constructor(
-    date: Date | number = now(),
-    initialState: Date | number = now(),
+    date: Date | hoursTypeInt = now(),
+    initialState: Date | hoursTypeInt = now(),
   ) {
     let tmp;
     if (typeof date === "number") {
@@ -41,7 +41,7 @@ export class DateWrapper {
     this.date = this.now(timeDifference);
     return this;
   }
-  setTimeDifference(timeDifference: number) {
+  setTimeDifference(timeDifference: hoursTypeInt) {
     this.timeDifference = timeDifference;
     return this;
   }
@@ -87,8 +87,8 @@ export class DateWrapper {
     };
   }
   copy(
-    date: Date | number = this.date,
-    initialState: Date | number = this.initialState,
+    date: Date | hoursTypeInt = this.date,
+    initialState: Date | hoursTypeInt = this.initialState,
   ) {
     return new DateWrapper(date, initialState);
   }

@@ -1,4 +1,5 @@
 import { dayOfWeek } from "@/Tool/dayOfWeek";
+import { hoursTypeInt } from "@/types/clockType";
 import {
   MonthsWith31Days,
   MonthsWihout31Days,
@@ -17,7 +18,7 @@ export const dayOfWeekSimple = <
     | `${number}:${T}:${dayType<T>}`
     | `${number}/${T}/${dayType<T>}`
     | Date,
-  timeDifference = 9,
+  timeDifference: hoursTypeInt = 9,
 ) => {
   if (typeof props === "string") {
     if (props.includes(":")) {
