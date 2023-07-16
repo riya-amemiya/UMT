@@ -153,10 +153,9 @@ type biynaryToDecimalParser<
     : F extends "1"
     ? biynaryToDecimalParser<R, [...C, ...C], A, FL>
     : biynaryToDecimalParser<R, [...C, ...C], [...A, ...C], FL>
+  : FL extends true
+  ? Length<A>
   : Length<Shift<A>>;
 export type biynaryToDecimal<
   X extends `${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}`,
 > = biynaryToDecimalParser<X>;
-export type a = biynaryComplement<"11111111">;
-export type b = biynaryComplement<biynaryAdd<a, "00000000">>;
-export type c = biynaryToDecimal<"11111110">;
