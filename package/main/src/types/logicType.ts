@@ -46,13 +46,14 @@ export type NOR<X, Y> = NOT<OR<X, Y>>;
 export type XNOR<X, Y> = NOT<XOR<X, Y>>;
 export type IMPLY<X, Y> = NOT<X> extends true ? true : isBoolean<Y>;
 
-export type Length<T extends unknown[]> = T["length"];
-export type LengthOfString<
+export type StringToArray<
   S extends string,
-  T extends string[] = [],
-> = S extends `${string}${infer R}`
-  ? LengthOfString<R, [...T, string]>
-  : T["length"];
+  T extends unknown[] = [],
+> = S extends `${infer F}${infer R}` ? StringToArray<R, [...T, F]> : T;
+
+export type Length<T extends unknown[]> = T["length"];
+export type LengthOfString<S extends string,> = StringToArray<S>["length"];
+
 export type Shift<T extends unknown[]> = T extends [unknown, ...infer R]
   ? R
   : never;
