@@ -56,6 +56,9 @@ export type LengthOfString<
 export type Shift<T extends unknown[]> = T extends [unknown, ...infer R]
   ? R
   : never;
+export type Pop<T extends unknown[]> = T extends [...infer R, unknown]
+  ? R
+  : never;
 export type ShiftString<S extends string> = S extends `${string}${infer R}`
   ? R
   : never;
@@ -64,6 +67,7 @@ export type StringToUnion<S extends string> = S extends `${infer F}${infer R}`
   : never;
 
 export type IsAny<T> = 0 extends 1 & T ? true : false;
+
 export type StringReverse<S extends string> = S extends `${infer F}${infer R}`
   ? `${StringReverse<R>}${F}`
   : "";
@@ -131,3 +135,28 @@ type biynaryComplementParser<X extends string> =
 export type biynaryComplement<
   X extends `${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}`,
 > = First8Chars<biynaryAdd<biynaryComplementParser<X>, "00000001">>;
+
+type biynaryToDecimalParser<
+  X extends string,
+  C extends unknown[] = [""],
+  A extends unknown[] = [""],
+  FL extends boolean = false,
+> = X extends `${infer F}${infer R}`
+  ? LengthOfString<X> extends 8
+    ? F extends "1"
+      ? `-${biynaryToDecimalParser<StringReverse<R>, C, A, true>}`
+      : biynaryToDecimalParser<StringReverse<R>, C, A, FL>
+    : FL extends false
+    ? F extends "1"
+      ? biynaryToDecimalParser<R, [...C, ...C], [...A, ...C], FL>
+      : biynaryToDecimalParser<R, [...C, ...C], A, FL>
+    : F extends "1"
+    ? biynaryToDecimalParser<R, [...C, ...C], A, FL>
+    : biynaryToDecimalParser<R, [...C, ...C], [...A, ...C], FL>
+  : Length<Shift<A>>;
+export type biynaryToDecimal<
+  X extends `${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}`,
+> = biynaryToDecimalParser<X>;
+export type a = biynaryComplement<"11111111">;
+export type b = biynaryComplement<biynaryAdd<a, "00000000">>;
+export type c = biynaryToDecimal<"11111110">;
