@@ -62,10 +62,11 @@ export type ShiftString<S extends string> = S extends `${string}${infer R}`
 export type StringToUnion<S extends string> = S extends `${infer F}${infer R}`
   ? F | StringToUnion<R>
   : never;
+
+export type IsAny<T> = 0 extends 1 & T ? true : false;
 export type StringReverse<S extends string> = S extends `${infer F}${infer R}`
   ? `${StringReverse<R>}${F}`
   : "";
-export type IsAny<T> = 0 extends 1 & T ? true : false;
 
 export type First8Chars<
   S extends string,
@@ -89,24 +90,6 @@ export type First8Chars<
   ? First8Chars<Rest, [...T, Head]>
   : never;
 
-export type biynaryComplement<
-  X extends `${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}`,
-> = First8Chars<
-  StringReverse<biynaryAdd<biynaryComplementParser<X>, "00000001">>
->;
-type biynaryComplementParser<X extends string> =
-  X extends `${infer L}${infer R}`
-    ? L extends "0"
-      ? `1${biynaryComplementParser<R>}`
-      : `0${biynaryComplementParser<R>}`
-    : "";
-export type biynaryAdd<
-  X extends `${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}`,
-  Y extends `${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}`,
-> = First8Chars<
-  StringReverse<biynaryAddParser<StringReverse<X>, StringReverse<Y>>>
->;
-
 type biynaryAddParser<
   A extends string,
   B extends string,
@@ -128,3 +111,23 @@ type biynaryAddParser<
     ? `${biynaryAddParser<A2, B2, "1">}0`
     : `${biynaryAddParser<A2, B2, "1">}1`
   : `${C}`;
+
+export type biynaryAdd<
+  X extends `${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}`,
+  Y extends `${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}`,
+> = StringReverse<
+  First8Chars<
+    StringReverse<biynaryAddParser<StringReverse<X>, StringReverse<Y>>>
+  >
+>;
+
+type biynaryComplementParser<X extends string> =
+  X extends `${infer L}${infer R}`
+    ? L extends "0"
+      ? `1${biynaryComplementParser<R>}`
+      : `0${biynaryComplementParser<R>}`
+    : "";
+
+export type biynaryComplement<
+  X extends `${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}`,
+> = First8Chars<biynaryAdd<biynaryComplementParser<X>, "00000001">>;
