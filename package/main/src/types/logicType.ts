@@ -168,3 +168,130 @@ export type biynaryAbs<
     ? biynaryComplement<X>
     : X
   : never;
+
+export type decimal4bitToHex<X extends string> = X extends "10"
+  ? "A"
+  : X extends "11"
+  ? "B"
+  : X extends "12"
+  ? "C"
+  : X extends "13"
+  ? "D"
+  : X extends "14"
+  ? "E"
+  : X extends "15"
+  ? "F"
+  : X;
+
+export type hex4bitToDecimal<X extends string> = X extends "A"
+  ? "10"
+  : X extends "B"
+  ? "11"
+  : X extends "C"
+  ? "12"
+  : X extends "D"
+  ? "13"
+  : X extends "E"
+  ? "14"
+  : X extends "F"
+  ? "15"
+  : X;
+
+export type decimal4bitToBiynary<X extends string> = X extends "0"
+  ? "0000"
+  : X extends "1"
+  ? "0001"
+  : X extends "2"
+  ? "0010"
+  : X extends "3"
+  ? "0011"
+  : X extends "4"
+  ? "0100"
+  : X extends "5"
+  ? "0101"
+  : X extends "6"
+  ? "0110"
+  : X extends "7"
+  ? "0111"
+  : X extends "8"
+  ? "1000"
+  : X extends "9"
+  ? "1001"
+  : X extends "10"
+  ? "1010"
+  : X extends "11"
+  ? "1011"
+  : X extends "12"
+  ? "1100"
+  : X extends "13"
+  ? "1101"
+  : X extends "14"
+  ? "1110"
+  : X extends "15"
+  ? "1111"
+  : never;
+
+// 1バイトの2進数を16進数に変換する型
+type biynaryToHexParser<
+  X extends string,
+  C extends string = "",
+  A extends string = "",
+> = X extends `${infer F}${infer R}`
+  ? LengthOfString<`${F}${C}`> extends 4
+    ? biynaryToHexParser<
+        R,
+        "",
+        `${A}${decimal4bitToHex<`${biynaryToDecimalParser<`${F}${C}`>}`>}`
+      >
+    : biynaryToHexParser<R, `${F}${C}`, A>
+  : A;
+
+export type biynaryToHex<
+  X extends `${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}`,
+> = biynaryToHexParser<X>;
+
+// 1バイトの16進数を2進数に変換する型
+type hexToBiynaryParser<
+  X extends string,
+  C extends string = "",
+> = LengthOfString<X> extends 1
+  ? `${C}${decimal4bitToBiynary<hex4bitToDecimal<X>>}`
+  : X extends `${infer F}${infer R}`
+  ? hexToBiynaryParser<R, `${C}${decimal4bitToBiynary<hex4bitToDecimal<F>>}`>
+  : C;
+
+export type hexToBiynary<
+  X extends `${
+    | 0
+    | 1
+    | 2
+    | 3
+    | 4
+    | 5
+    | 6
+    | 7
+    | 8
+    | 9
+    | "A"
+    | "B"
+    | "C"
+    | "D"
+    | "E"
+    | "F"}${
+    | 0
+    | 1
+    | 2
+    | 3
+    | 4
+    | 5
+    | 6
+    | 7
+    | 8
+    | 9
+    | "A"
+    | "B"
+    | "C"
+    | "D"
+    | "E"
+    | "F"}`,
+> = hexToBiynaryParser<X>;
