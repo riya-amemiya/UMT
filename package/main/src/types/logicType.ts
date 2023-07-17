@@ -809,3 +809,121 @@ export type hexToBiynary<
     | "E"
     | "F"}`,
 > = hexToBiynaryParser<X>;
+
+export type biynaryAND<
+  X extends `${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}`,
+  Y extends `${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}`,
+> = biynaryANDParser<X, Y>;
+
+type biynaryANDParser<
+  X extends string,
+  Y extends string,
+  A extends string = "",
+> = X extends `${infer F}${infer R}`
+  ? Y extends `${infer F2}${infer R2}`
+    ? F extends "1"
+      ? F2 extends "1"
+        ? biynaryANDParser<R, R2, `${A}1`>
+        : biynaryANDParser<R, R2, `${A}0`>
+      : biynaryANDParser<R, R2, `${A}0`>
+    : A
+  : A;
+
+export type biynaryOR<
+  X extends `${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}`,
+  Y extends `${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}`,
+> = biynaryORParser<X, Y>;
+
+type biynaryORParser<
+  X extends string,
+  Y extends string,
+  A extends string = "",
+> = X extends `${infer F}${infer R}`
+  ? Y extends `${infer F2}${infer R2}`
+    ? F extends "1"
+      ? biynaryORParser<R, R2, `${A}1`>
+      : F2 extends "1"
+      ? biynaryORParser<R, R2, `${A}1`>
+      : biynaryORParser<R, R2, `${A}0`>
+    : A
+  : A;
+
+export type biynaryXOR<
+  X extends `${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}`,
+  Y extends `${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}`,
+> = biynaryXORParser<X, Y>;
+
+type biynaryXORParser<
+  X extends string,
+  Y extends string,
+  A extends string = "",
+> = X extends `${infer F}${infer R}`
+  ? Y extends `${infer F2}${infer R2}`
+    ? F extends "1"
+      ? F2 extends "1"
+        ? biynaryXORParser<R, R2, `${A}0`>
+        : biynaryXORParser<R, R2, `${A}1`>
+      : F2 extends "1"
+      ? biynaryXORParser<R, R2, `${A}1`>
+      : biynaryXORParser<R, R2, `${A}0`>
+    : A
+  : A;
+
+export type biynaryNAND<
+  X extends `${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}`,
+  Y extends `${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}`,
+> = biynaryNANDParser<X, Y>;
+
+type biynaryNANDParser<
+  X extends string,
+  Y extends string,
+  A extends string = "",
+> = X extends `${infer F}${infer R}`
+  ? Y extends `${infer F2}${infer R2}`
+    ? F extends "1"
+      ? F2 extends "1"
+        ? biynaryNANDParser<R, R2, `${A}0`>
+        : biynaryNANDParser<R, R2, `${A}1`>
+      : biynaryNANDParser<R, R2, `${A}1`>
+    : A
+  : A;
+
+export type biynaryNOR<
+  X extends `${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}`,
+  Y extends `${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}`,
+> = biynaryNORParser<X, Y>;
+
+type biynaryNORParser<
+  X extends string,
+  Y extends string,
+  A extends string = "",
+> = X extends `${infer F}${infer R}`
+  ? Y extends `${infer F2}${infer R2}`
+    ? F extends "1"
+      ? biynaryNORParser<R, R2, `${A}0`>
+      : F2 extends "1"
+      ? biynaryNORParser<R, R2, `${A}0`>
+      : biynaryNORParser<R, R2, `${A}1`>
+    : A
+  : A;
+
+export type biynaryXNOR<
+  X extends `${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}`,
+  Y extends `${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}`,
+> = biynaryXNORParser<X, Y>;
+
+type biynaryXNORParser<
+  X extends string,
+  Y extends string,
+  A extends string = "",
+> = X extends `${infer F}${infer R}`
+  ? Y extends `${infer F2}${infer R2}`
+    ? F extends "1"
+      ? F2 extends "1"
+        ? biynaryXNORParser<R, R2, `${A}1`>
+        : biynaryXNORParser<R, R2, `${A}0`>
+      : F2 extends "1"
+      ? biynaryXNORParser<R, R2, `${A}0`>
+      : biynaryXNORParser<R, R2, `${A}1`>
+    : A
+  : A;
