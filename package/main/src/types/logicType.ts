@@ -160,3 +160,11 @@ type biynaryToDecimalParser<
 export type biynaryToDecimal<
   X extends `${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}`,
 > = biynaryToDecimalParser<X>;
+
+export type biynaryAbs<
+  X extends `${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}`,
+> = X extends `${infer F}${infer _}`
+  ? F extends "1"
+    ? biynaryComplement<X>
+    : X
+  : never;
