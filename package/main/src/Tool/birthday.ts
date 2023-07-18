@@ -1,4 +1,4 @@
-import { DateWrapper, newDateInt } from "@/Date";
+import { newDateInt } from "@/Date";
 import { now } from "@/Date/now";
 import { hoursTypeInt } from "@/types/clockType";
 import { dayTypeInt, monTypeInt } from "@/types/dateType";
@@ -15,13 +15,47 @@ export const birthday = <T extends monTypeInt>(
   day: dayTypeInt<T>,
   timeDifference: hoursTypeInt = 9,
 ) => {
-  const Bday = new DateWrapper(newDateInt(year, mon, day)).setTimeDifference(
-    timeDifference,
-  );
+  const Bday = new Date(newDateInt(year, mon, day));
   const nowTime = now(timeDifference);
-  const y = nowTime.getFullYear() - Bday.getYear();
+  const y = nowTime.getFullYear() - Bday.getFullYear();
   const r =
-    nowTime < newDateInt(nowTime.getFullYear(), Bday.getMonth(), Bday.getDay())
+    nowTime <
+    newDateInt(
+      nowTime.getFullYear(),
+      (Bday.getMonth() - 1) as monTypeInt,
+      Bday.getDay() as
+        | 1
+        | 2
+        | 3
+        | 4
+        | 5
+        | 6
+        | 7
+        | 8
+        | 9
+        | 10
+        | 11
+        | 12
+        | 13
+        | 14
+        | 15
+        | 16
+        | 17
+        | 18
+        | 19
+        | 20
+        | 21
+        | 22
+        | 23
+        | 24
+        | 25
+        | 26
+        | 27
+        | 28
+        | 29
+        | 30
+        | 31,
+    )
       ? y - 1
       : y;
   return year < 100 ? 1900 + y : r;

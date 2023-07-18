@@ -13,14 +13,12 @@ export type isBoolean<X> = X extends number
   : X extends null
   ? false
   : X extends object
-  ? // rome-ignore lint/suspicious/noExplicitAny: <explanation>
-    X extends any[]
+  ? X extends unknown[]
     ? X extends []
       ? false
       : true
     : true
-  : // rome-ignore lint/nursery/noBannedTypes: <explanation>
-  X extends Function
+  : X extends (...args: unknown[]) => unknown
   ? false
   : true;
 export type AND<X, Y> = isBoolean<X> extends true
@@ -47,3 +45,885 @@ export type NAND<X, Y> = NOT<AND<X, Y>>;
 export type NOR<X, Y> = NOT<OR<X, Y>>;
 export type XNOR<X, Y> = NOT<XOR<X, Y>>;
 export type IMPLY<X, Y> = NOT<X> extends true ? true : isBoolean<Y>;
+
+export type StringToArray<
+  S extends string,
+  T extends unknown[] = [],
+> = S extends `${infer F}${infer R}` ? StringToArray<R, [...T, F]> : T;
+
+export type Length<T extends unknown[]> = T["length"];
+export type LengthOfString<S extends string,> = StringToArray<S>["length"];
+
+export type Shift<T extends unknown[]> = T extends [unknown, ...infer R]
+  ? R
+  : never;
+export type Pop<T extends unknown[]> = T extends [...infer R, unknown]
+  ? R
+  : never;
+export type ShiftString<S extends string> = S extends `${string}${infer R}`
+  ? R
+  : never;
+export type StringToUnion<S extends string> = S extends `${infer F}${infer R}`
+  ? F | StringToUnion<R>
+  : never;
+
+export type IsAny<T> = 0 extends 1 & T ? true : false;
+
+export type StringReverse<S extends string> = S extends `${infer F}${infer R}`
+  ? `${StringReverse<R>}${F}`
+  : "";
+
+export type First8Chars<
+  S extends string,
+  T extends unknown[] = [],
+> = T["length"] extends 8
+  ? T extends [
+      infer C1,
+      infer C2,
+      infer C3,
+      infer C4,
+      infer C5,
+      infer C6,
+      infer C7,
+      infer C8,
+      ...unknown[],
+    ]
+    ? `${C1 & string}${C2 & string}${C3 & string}${C4 & string}${C5 &
+        string}${C6 & string}${C7 & string}${C8 & string}`
+    : never
+  : S extends `${infer Head}${infer Rest}`
+  ? First8Chars<Rest, [...T, Head]>
+  : never;
+
+type biynaryAddParser<
+  A extends string,
+  B extends string,
+  C extends "0" | "1" = "0",
+> = [A, B] extends [`${infer A1}${infer A2}`, `${infer B1}${infer B2}`]
+  ? A1 extends "0"
+    ? B1 extends "0"
+      ? C extends "0"
+        ? `${biynaryAddParser<A2, B2, "0">}0`
+        : `${biynaryAddParser<A2, B2, "0">}1`
+      : C extends "0"
+      ? `${biynaryAddParser<A2, B2, "0">}1`
+      : `${biynaryAddParser<A2, B2, "1">}0`
+    : B1 extends "0"
+    ? C extends "0"
+      ? `${biynaryAddParser<A2, B2, "0">}1`
+      : `${biynaryAddParser<A2, B2, "1">}0`
+    : C extends "0"
+    ? `${biynaryAddParser<A2, B2, "1">}0`
+    : `${biynaryAddParser<A2, B2, "1">}1`
+  : `${C}`;
+
+export type biynaryAdd<
+  X extends `${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}`,
+  Y extends `${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}`,
+> = StringReverse<
+  First8Chars<
+    StringReverse<biynaryAddParser<StringReverse<X>, StringReverse<Y>>>
+  >
+>;
+
+type biynaryComplementParser<X extends string> =
+  X extends `${infer L}${infer R}`
+    ? L extends "0"
+      ? `1${biynaryComplementParser<R>}`
+      : `0${biynaryComplementParser<R>}`
+    : "";
+
+export type biynaryComplement<
+  X extends `${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}`,
+> = First8Chars<biynaryAdd<biynaryComplementParser<X>, "00000001">>;
+
+type biynaryToDecimalParser<
+  X extends string,
+  C extends unknown[] = [""],
+  A extends unknown[] = [""],
+  FL extends boolean = false,
+> = X extends `${infer F}${infer R}`
+  ? LengthOfString<X> extends 8
+    ? F extends "1"
+      ? `-${biynaryToDecimalParser<StringReverse<R>, C, A, true>}`
+      : biynaryToDecimalParser<StringReverse<R>, C, A, FL>
+    : FL extends false
+    ? F extends "1"
+      ? biynaryToDecimalParser<R, [...C, ...C], [...A, ...C], FL>
+      : biynaryToDecimalParser<R, [...C, ...C], A, FL>
+    : F extends "1"
+    ? biynaryToDecimalParser<R, [...C, ...C], A, FL>
+    : biynaryToDecimalParser<R, [...C, ...C], [...A, ...C], FL>
+  : FL extends true
+  ? Length<A>
+  : Length<Shift<A>>;
+export type biynaryToDecimal<
+  X extends `${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}`,
+> = biynaryToDecimalParser<X>;
+
+export type biynaryAbs<
+  X extends `${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}`,
+> = X extends `${infer F}${infer _}`
+  ? F extends "1"
+    ? biynaryComplement<X>
+    : X
+  : never;
+
+export type decimal4bitToHex<X extends string> = X extends "10"
+  ? "A"
+  : X extends "11"
+  ? "B"
+  : X extends "12"
+  ? "C"
+  : X extends "13"
+  ? "D"
+  : X extends "14"
+  ? "E"
+  : X extends "15"
+  ? "F"
+  : X;
+
+export type hex4bitToDecimal<X extends string> = X extends "A"
+  ? "10"
+  : X extends "B"
+  ? "11"
+  : X extends "C"
+  ? "12"
+  : X extends "D"
+  ? "13"
+  : X extends "E"
+  ? "14"
+  : X extends "F"
+  ? "15"
+  : X;
+
+export type decimal4bitToBiynary<X extends string> = X extends "0"
+  ? "0000"
+  : X extends "1"
+  ? "0001"
+  : X extends "2"
+  ? "0010"
+  : X extends "3"
+  ? "0011"
+  : X extends "4"
+  ? "0100"
+  : X extends "5"
+  ? "0101"
+  : X extends "6"
+  ? "0110"
+  : X extends "7"
+  ? "0111"
+  : X extends "8"
+  ? "1000"
+  : X extends "9"
+  ? "1001"
+  : X extends "10"
+  ? "1010"
+  : X extends "11"
+  ? "1011"
+  : X extends "12"
+  ? "1100"
+  : X extends "13"
+  ? "1101"
+  : X extends "14"
+  ? "1110"
+  : X extends "15"
+  ? "1111"
+  : never;
+
+export type decimal1biteToBiynary<X extends string> = X extends "0"
+  ? "00000000"
+  : X extends "1"
+  ? "00000001"
+  : X extends "2"
+  ? "00000010"
+  : X extends "3"
+  ? "00000011"
+  : X extends "4"
+  ? "00000100"
+  : X extends "5"
+  ? "00000101"
+  : X extends "6"
+  ? "00000110"
+  : X extends "7"
+  ? "00000111"
+  : X extends "8"
+  ? "00001000"
+  : X extends "9"
+  ? "00001001"
+  : X extends "10"
+  ? "00001010"
+  : X extends "11"
+  ? "00001011"
+  : X extends "12"
+  ? "00001100"
+  : X extends "13"
+  ? "00001101"
+  : X extends "14"
+  ? "00001110"
+  : X extends "15"
+  ? "00001111"
+  : X extends "16"
+  ? "00010000"
+  : X extends "17"
+  ? "00010001"
+  : X extends "18"
+  ? "00010010"
+  : X extends "19"
+  ? "00010011"
+  : X extends "20"
+  ? "00010100"
+  : X extends "21"
+  ? "00010101"
+  : X extends "22"
+  ? "00010110"
+  : X extends "23"
+  ? "00010111"
+  : X extends "24"
+  ? "00011000"
+  : X extends "25"
+  ? "00011001"
+  : X extends "26"
+  ? "00011010"
+  : X extends "27"
+  ? "00011011"
+  : X extends "28"
+  ? "00011100"
+  : X extends "29"
+  ? "00011101"
+  : X extends "30"
+  ? "00011110"
+  : X extends "31"
+  ? "00011111"
+  : X extends "32"
+  ? "00100000"
+  : X extends "33"
+  ? "00100001"
+  : X extends "34"
+  ? "00100010"
+  : X extends "35"
+  ? "00100011"
+  : X extends "36"
+  ? "00100100"
+  : X extends "37"
+  ? "00100101"
+  : X extends "38"
+  ? "00100110"
+  : X extends "39"
+  ? "00100111"
+  : X extends "40"
+  ? "00101000"
+  : X extends "41"
+  ? "00101001"
+  : X extends "42"
+  ? "00101010"
+  : X extends "43"
+  ? "00101011"
+  : X extends "44"
+  ? "00101100"
+  : X extends "45"
+  ? "00101101"
+  : X extends "46"
+  ? "00101110"
+  : X extends "47"
+  ? "00101111"
+  : X extends "48"
+  ? "00110000"
+  : X extends "49"
+  ? "00110001"
+  : X extends "50"
+  ? "00110010"
+  : X extends "51"
+  ? "00110011"
+  : X extends "52"
+  ? "00110100"
+  : X extends "53"
+  ? "00110101"
+  : X extends "54"
+  ? "00110110"
+  : X extends "55"
+  ? "00110111"
+  : X extends "56"
+  ? "00111000"
+  : X extends "57"
+  ? "00111001"
+  : X extends "58"
+  ? "00111010"
+  : X extends "59"
+  ? "00111011"
+  : X extends "60"
+  ? "00111100"
+  : X extends "61"
+  ? "00111101"
+  : X extends "62"
+  ? "00111110"
+  : X extends "63"
+  ? "00111111"
+  : X extends "64"
+  ? "01000000"
+  : X extends "65"
+  ? "01000001"
+  : X extends "66"
+  ? "01000010"
+  : X extends "67"
+  ? "01000011"
+  : X extends "68"
+  ? "01000100"
+  : X extends "69"
+  ? "01000101"
+  : X extends "70"
+  ? "01000110"
+  : X extends "71"
+  ? "01000111"
+  : X extends "72"
+  ? "01001000"
+  : X extends "73"
+  ? "01001001"
+  : X extends "74"
+  ? "01001010"
+  : X extends "75"
+  ? "01001011"
+  : X extends "76"
+  ? "01001100"
+  : X extends "77"
+  ? "01001101"
+  : X extends "78"
+  ? "01001110"
+  : X extends "79"
+  ? "01001111"
+  : X extends "80"
+  ? "01010000"
+  : X extends "81"
+  ? "01010001"
+  : X extends "82"
+  ? "01010010"
+  : X extends "83"
+  ? "01010011"
+  : X extends "84"
+  ? "01010100"
+  : X extends "85"
+  ? "01010101"
+  : X extends "86"
+  ? "01010110"
+  : X extends "87"
+  ? "01010111"
+  : X extends "88"
+  ? "01011000"
+  : X extends "89"
+  ? "01011001"
+  : X extends "90"
+  ? "01011010"
+  : X extends "91"
+  ? "01011011"
+  : X extends "92"
+  ? "01011100"
+  : X extends "93"
+  ? "01011101"
+  : X extends "94"
+  ? "01011110"
+  : X extends "95"
+  ? "01011111"
+  : X extends "96"
+  ? "01100000"
+  : X extends "97"
+  ? "01100001"
+  : X extends "98"
+  ? "01100010"
+  : X extends "99"
+  ? "01100011"
+  : X extends "100"
+  ? "01100100"
+  : X extends "101"
+  ? "01100101"
+  : X extends "102"
+  ? "01100110"
+  : X extends "103"
+  ? "01100111"
+  : X extends "104"
+  ? "01101000"
+  : X extends "105"
+  ? "01101001"
+  : X extends "106"
+  ? "01101010"
+  : X extends "107"
+  ? "01101011"
+  : X extends "108"
+  ? "01101100"
+  : X extends "109"
+  ? "01101101"
+  : X extends "110"
+  ? "01101110"
+  : X extends "111"
+  ? "01101111"
+  : X extends "112"
+  ? "01110000"
+  : X extends "113"
+  ? "01110001"
+  : X extends "114"
+  ? "01110010"
+  : X extends "115"
+  ? "01110011"
+  : X extends "116"
+  ? "01110100"
+  : X extends "117"
+  ? "01110101"
+  : X extends "118"
+  ? "01110110"
+  : X extends "119"
+  ? "01110111"
+  : X extends "120"
+  ? "01111000"
+  : X extends "121"
+  ? "01111001"
+  : X extends "122"
+  ? "01111010"
+  : X extends "123"
+  ? "01111011"
+  : X extends "124"
+  ? "01111100"
+  : X extends "125"
+  ? "01111101"
+  : X extends "126"
+  ? "01111110"
+  : X extends "127"
+  ? "01111111"
+  : X extends "-128"
+  ? "10000000"
+  : X extends "-127"
+  ? "10000001"
+  : X extends "-126"
+  ? "10000010"
+  : X extends "-125"
+  ? "10000011"
+  : X extends "-124"
+  ? "10000100"
+  : X extends "-123"
+  ? "10000101"
+  : X extends "-122"
+  ? "10000110"
+  : X extends "-121"
+  ? "10000111"
+  : X extends "-120"
+  ? "10001000"
+  : X extends "-119"
+  ? "10001001"
+  : X extends "-118"
+  ? "10001010"
+  : X extends "-117"
+  ? "10001011"
+  : X extends "-116"
+  ? "10001100"
+  : X extends "-115"
+  ? "10001101"
+  : X extends "-114"
+  ? "10001110"
+  : X extends "-113"
+  ? "10001111"
+  : X extends "-112"
+  ? "10010000"
+  : X extends "-111"
+  ? "10010001"
+  : X extends "-110"
+  ? "10010010"
+  : X extends "-109"
+  ? "10010011"
+  : X extends "-108"
+  ? "10010100"
+  : X extends "-107"
+  ? "10010101"
+  : X extends "-106"
+  ? "10010110"
+  : X extends "-105"
+  ? "10010111"
+  : X extends "-104"
+  ? "10011000"
+  : X extends "-103"
+  ? "10011001"
+  : X extends "-102"
+  ? "10011010"
+  : X extends "-101"
+  ? "10011011"
+  : X extends "-100"
+  ? "10011100"
+  : X extends "-99"
+  ? "10011101"
+  : X extends "-98"
+  ? "10011110"
+  : X extends "-97"
+  ? "10011111"
+  : X extends "-96"
+  ? "10100000"
+  : X extends "-95"
+  ? "10100001"
+  : X extends "-94"
+  ? "10100010"
+  : X extends "-93"
+  ? "10100011"
+  : X extends "-92"
+  ? "10100100"
+  : X extends "-91"
+  ? "10100101"
+  : X extends "-90"
+  ? "10100110"
+  : X extends "-89"
+  ? "10100111"
+  : X extends "-88"
+  ? "10101000"
+  : X extends "-87"
+  ? "10101001"
+  : X extends "-86"
+  ? "10101010"
+  : X extends "-85"
+  ? "10101011"
+  : X extends "-84"
+  ? "10101100"
+  : X extends "-83"
+  ? "10101101"
+  : X extends "-82"
+  ? "10101110"
+  : X extends "-81"
+  ? "10101111"
+  : X extends "-80"
+  ? "10110000"
+  : X extends "-79"
+  ? "10110001"
+  : X extends "-78"
+  ? "10110010"
+  : X extends "-77"
+  ? "10110011"
+  : X extends "-76"
+  ? "10110100"
+  : X extends "-75"
+  ? "10110101"
+  : X extends "-74"
+  ? "10110110"
+  : X extends "-73"
+  ? "10110111"
+  : X extends "-72"
+  ? "10111000"
+  : X extends "-71"
+  ? "10111001"
+  : X extends "-70"
+  ? "10111010"
+  : X extends "-69"
+  ? "10111011"
+  : X extends "-68"
+  ? "10111100"
+  : X extends "-67"
+  ? "10111101"
+  : X extends "-66"
+  ? "10111110"
+  : X extends "-65"
+  ? "10111111"
+  : X extends "-64"
+  ? "11000000"
+  : X extends "-63"
+  ? "11000001"
+  : X extends "-62"
+  ? "11000010"
+  : X extends "-61"
+  ? "11000011"
+  : X extends "-60"
+  ? "11000100"
+  : X extends "-59"
+  ? "11000101"
+  : X extends "-58"
+  ? "11000110"
+  : X extends "-57"
+  ? "11000111"
+  : X extends "-56"
+  ? "11001000"
+  : X extends "-55"
+  ? "11001001"
+  : X extends "-54"
+  ? "11001010"
+  : X extends "-53"
+  ? "11001011"
+  : X extends "-52"
+  ? "11001100"
+  : X extends "-51"
+  ? "11001101"
+  : X extends "-50"
+  ? "11001110"
+  : X extends "-49"
+  ? "11001111"
+  : X extends "-48"
+  ? "11010000"
+  : X extends "-47"
+  ? "11010001"
+  : X extends "-46"
+  ? "11010010"
+  : X extends "-45"
+  ? "11010011"
+  : X extends "-44"
+  ? "11010100"
+  : X extends "-43"
+  ? "11010101"
+  : X extends "-42"
+  ? "11010110"
+  : X extends "-41"
+  ? "11010111"
+  : X extends "-40"
+  ? "11011000"
+  : X extends "-39"
+  ? "11011001"
+  : X extends "-38"
+  ? "11011010"
+  : X extends "-37"
+  ? "11011011"
+  : X extends "-36"
+  ? "11011100"
+  : X extends "-35"
+  ? "11011101"
+  : X extends "-34"
+  ? "11011110"
+  : X extends "-33"
+  ? "11011111"
+  : X extends "-32"
+  ? "11100000"
+  : X extends "-31"
+  ? "11100001"
+  : X extends "-30"
+  ? "11100010"
+  : X extends "-29"
+  ? "11100011"
+  : X extends "-28"
+  ? "11100100"
+  : X extends "-27"
+  ? "11100101"
+  : X extends "-26"
+  ? "11100110"
+  : X extends "-25"
+  ? "11100111"
+  : X extends "-24"
+  ? "11101000"
+  : X extends "-23"
+  ? "11101001"
+  : X extends "-22"
+  ? "11101010"
+  : X extends "-21"
+  ? "11101011"
+  : X extends "-20"
+  ? "11101100"
+  : X extends "-19"
+  ? "11101101"
+  : X extends "-18"
+  ? "11101110"
+  : X extends "-17"
+  ? "11101111"
+  : X extends "-16"
+  ? "11110000"
+  : X extends "-15"
+  ? "11110001"
+  : X extends "-14"
+  ? "11110010"
+  : X extends "-13"
+  ? "11110011"
+  : X extends "-12"
+  ? "11110100"
+  : X extends "-11"
+  ? "11110101"
+  : X extends "-10"
+  ? "11110110"
+  : X extends "-9"
+  ? "11110111"
+  : X extends "-8"
+  ? "11111000"
+  : X extends "-7"
+  ? "11111001"
+  : X extends "-6"
+  ? "11111010"
+  : X extends "-5"
+  ? "11111011"
+  : X extends "-4"
+  ? "11111100"
+  : X extends "-3"
+  ? "11111101"
+  : X extends "-2"
+  ? "11111110"
+  : X extends "-1"
+  ? "11111111"
+  : never;
+
+// 1バイトの2進数を16進数に変換する型
+type biynaryToHexParser<
+  X extends string,
+  C extends string = "",
+  A extends string = "",
+> = X extends `${infer F}${infer R}`
+  ? LengthOfString<`${F}${C}`> extends 4
+    ? biynaryToHexParser<
+        R,
+        "",
+        `${A}${decimal4bitToHex<`${biynaryToDecimalParser<`${F}${C}`>}`>}`
+      >
+    : biynaryToHexParser<R, `${F}${C}`, A>
+  : A;
+
+export type biynaryToHex<
+  X extends `${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}`,
+> = biynaryToHexParser<X>;
+
+// 16進数を2進数に変換する型
+type hexToBiynaryParser<
+  X extends string,
+  C extends string = "",
+> = LengthOfString<X> extends 1
+  ? `${C}${decimal4bitToBiynary<hex4bitToDecimal<X>>}`
+  : X extends `${infer F}${infer R}`
+  ? hexToBiynaryParser<R, `${C}${decimal4bitToBiynary<hex4bitToDecimal<F>>}`>
+  : C;
+
+export type hexToBiynary<
+  X extends `${
+    | 0
+    | 1
+    | 2
+    | 3
+    | 4
+    | 5
+    | 6
+    | 7
+    | 8
+    | 9
+    | "A"
+    | "B"
+    | "C"
+    | "D"
+    | "E"
+    | "F"}${
+    | 0
+    | 1
+    | 2
+    | 3
+    | 4
+    | 5
+    | 6
+    | 7
+    | 8
+    | 9
+    | "A"
+    | "B"
+    | "C"
+    | "D"
+    | "E"
+    | "F"}`,
+> = hexToBiynaryParser<X>;
+
+export type biynaryAND<
+  X extends `${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}`,
+  Y extends `${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}`,
+> = biynaryANDParser<X, Y>;
+
+type biynaryANDParser<
+  X extends string,
+  Y extends string,
+  A extends string = "",
+> = X extends `${infer F}${infer R}`
+  ? Y extends `${infer F2}${infer R2}`
+    ? F extends "1"
+      ? F2 extends "1"
+        ? biynaryANDParser<R, R2, `${A}1`>
+        : biynaryANDParser<R, R2, `${A}0`>
+      : biynaryANDParser<R, R2, `${A}0`>
+    : A
+  : A;
+
+export type biynaryOR<
+  X extends `${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}`,
+  Y extends `${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}`,
+> = biynaryORParser<X, Y>;
+
+type biynaryORParser<
+  X extends string,
+  Y extends string,
+  A extends string = "",
+> = X extends `${infer F}${infer R}`
+  ? Y extends `${infer F2}${infer R2}`
+    ? F extends "1"
+      ? biynaryORParser<R, R2, `${A}1`>
+      : F2 extends "1"
+      ? biynaryORParser<R, R2, `${A}1`>
+      : biynaryORParser<R, R2, `${A}0`>
+    : A
+  : A;
+
+export type biynaryXOR<
+  X extends `${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}`,
+  Y extends `${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}`,
+> = biynaryXORParser<X, Y>;
+
+type biynaryXORParser<
+  X extends string,
+  Y extends string,
+  A extends string = "",
+> = X extends `${infer F}${infer R}`
+  ? Y extends `${infer F2}${infer R2}`
+    ? F extends "1"
+      ? F2 extends "1"
+        ? biynaryXORParser<R, R2, `${A}0`>
+        : biynaryXORParser<R, R2, `${A}1`>
+      : F2 extends "1"
+      ? biynaryXORParser<R, R2, `${A}1`>
+      : biynaryXORParser<R, R2, `${A}0`>
+    : A
+  : A;
+
+export type biynaryNAND<
+  X extends `${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}`,
+  Y extends `${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}`,
+> = biynaryNANDParser<X, Y>;
+
+type biynaryNANDParser<
+  X extends string,
+  Y extends string,
+  A extends string = "",
+> = X extends `${infer F}${infer R}`
+  ? Y extends `${infer F2}${infer R2}`
+    ? F extends "1"
+      ? F2 extends "1"
+        ? biynaryNANDParser<R, R2, `${A}0`>
+        : biynaryNANDParser<R, R2, `${A}1`>
+      : biynaryNANDParser<R, R2, `${A}1`>
+    : A
+  : A;
+
+export type biynaryNOR<
+  X extends `${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}`,
+  Y extends `${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}`,
+> = biynaryNORParser<X, Y>;
+
+type biynaryNORParser<
+  X extends string,
+  Y extends string,
+  A extends string = "",
+> = X extends `${infer F}${infer R}`
+  ? Y extends `${infer F2}${infer R2}`
+    ? F extends "1"
+      ? biynaryNORParser<R, R2, `${A}0`>
+      : F2 extends "1"
+      ? biynaryNORParser<R, R2, `${A}0`>
+      : biynaryNORParser<R, R2, `${A}1`>
+    : A
+  : A;
+
+export type biynaryXNOR<
+  X extends `${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}`,
+  Y extends `${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}`,
+> = biynaryXNORParser<X, Y>;
+
+type biynaryXNORParser<
+  X extends string,
+  Y extends string,
+  A extends string = "",
+> = X extends `${infer F}${infer R}`
+  ? Y extends `${infer F2}${infer R2}`
+    ? F extends "1"
+      ? F2 extends "1"
+        ? biynaryXNORParser<R, R2, `${A}1`>
+        : biynaryXNORParser<R, R2, `${A}0`>
+      : F2 extends "1"
+      ? biynaryXNORParser<R, R2, `${A}0`>
+      : biynaryXNORParser<R, R2, `${A}1`>
+    : A
+  : A;
