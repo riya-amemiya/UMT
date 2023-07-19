@@ -145,9 +145,19 @@ type binaryHalfAdderParser<
 export type binaryFullAdder<
   X extends string,
   Y extends string,
+  B extends number = 8,
 > = LengthOfString<X> extends LengthOfString<Y>
-  ? ShiftString<
-      StringReverse<binaryFullAdderParser<StringReverse<X>, StringReverse<Y>>>
+  ? FirstNChars<
+      ShiftString<
+        StringReverse<
+          binaryFullAdderParser<
+            StringReverse<FirstNChars<X, B>>,
+            StringReverse<FirstNChars<Y, B>>,
+            B
+          >
+        >
+      >,
+      B
     >
   : never;
 
