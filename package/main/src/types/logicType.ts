@@ -116,6 +116,17 @@ export type First8Chars<
   ? First8Chars<Rest, [...T, Head]>
   : never;
 
+export type FirstNChars<
+  S extends string,
+  N extends number,
+  C extends unknown[] = [],
+  A extends string = "",
+> = C["length"] extends N
+  ? A
+  : S extends `${infer Head}${infer Rest}`
+  ? FirstNChars<Rest, N, [...C, Head], `${A}${Head}`>
+  : never;
+
 // 半加算器
 export type binaryHalfAdder<
   X extends `${0 | 1}`,
@@ -144,13 +155,20 @@ export type binaryFullAdder<
 type binaryFullAdderParser<
   X extends string,
   Y extends string,
+  B extends number = 8,
   A extends string = "",
   C extends string = "0",
 > = X extends `${infer F}${infer R}`
   ? Y extends `${infer F2}${infer R2}`
     ? binaryHalfAdderParser<F, F2> extends `${infer F3}${infer R3}`
       ? binaryHalfAdderParser<R3, C> extends `${infer F4}${infer R4}`
-        ? binaryFullAdderParser<R, R2, `${A}${R4}`, binary1bitORParser<F3, F4>>
+        ? binaryFullAdderParser<
+            R,
+            R2,
+            B,
+            `${A}${R4}`,
+            binary1bitORParser<F3, F4>
+          >
         : never
       : never
     : never
