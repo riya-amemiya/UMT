@@ -116,6 +116,17 @@ export type First8Chars<
   ? First8Chars<Rest, [...T, Head]>
   : never;
 
+export type FirstNChars<
+  S extends string,
+  N extends number,
+  C extends unknown[] = [],
+  A extends string = "",
+> = C["length"] extends N
+  ? A
+  : S extends `${infer Head}${infer Rest}`
+  ? FirstNChars<Rest, N, [...C, Head], `${A}${Head}`>
+  : never;
+
 // 半加算器
 export type binaryHalfAdder<
   X extends `${0 | 1}`,
@@ -127,16 +138,27 @@ type binaryHalfAdderParser<
   Y extends string,
   C extends string = "",
 > = C extends ""
-  ? binaryHalfAdderParser<X, Y, biynary1bitANDParser<X, Y>>
-  : `${C}${biynary1bitANDParser<
-      biynaryNOTParser<C>,
-      biynary1bitORParser<X, Y>
-    >}`;
+  ? binaryHalfAdderParser<X, Y, binary1bitANDParser<X, Y>>
+  : `${C}${binary1bitANDParser<binaryNOTParser<C>, binary1bitORParser<X, Y>>}`;
 
 // 全加算器
-export type binaryFullAdder<X extends string, Y extends string> = ShiftString<
-  StringReverse<binaryFullAdderParser<StringReverse<X>, StringReverse<Y>>>
->;
+export type binaryFullAdder<
+  X extends string,
+  Y extends string,
+  B extends number = 8,
+> = LengthOfString<X> extends LengthOfString<Y>
+  ? FirstNChars<
+      ShiftString<
+        StringReverse<
+          binaryFullAdderParser<
+            StringReverse<FirstNChars<X, B>>,
+            StringReverse<FirstNChars<Y, B>>
+          >
+        >
+      >,
+      B
+    >
+  : never;
 
 // マイナスを扱えないが任意のバイト数の加算器
 type binaryFullAdderParser<
@@ -148,14 +170,14 @@ type binaryFullAdderParser<
   ? Y extends `${infer F2}${infer R2}`
     ? binaryHalfAdderParser<F, F2> extends `${infer F3}${infer R3}`
       ? binaryHalfAdderParser<R3, C> extends `${infer F4}${infer R4}`
-        ? binaryFullAdderParser<R, R2, `${A}${R4}`, biynary1bitORParser<F3, F4>>
+        ? binaryFullAdderParser<R, R2, `${A}${R4}`, binary1bitORParser<F3, F4>>
         : never
       : never
     : never
   : `${A}${C}`;
 
 // マイナスを扱えるが1バイトまでの加算器
-type biynaryAddParser<
+type binaryAddParser<
   A extends string,
   B extends string,
   C extends "0" | "1" = "0",
@@ -163,42 +185,41 @@ type biynaryAddParser<
   ? A1 extends "0"
     ? B1 extends "0"
       ? C extends "0"
-        ? `${biynaryAddParser<A2, B2, "0">}0`
-        : `${biynaryAddParser<A2, B2, "0">}1`
+        ? `${binaryAddParser<A2, B2, "0">}0`
+        : `${binaryAddParser<A2, B2, "0">}1`
       : C extends "0"
-      ? `${biynaryAddParser<A2, B2, "0">}1`
-      : `${biynaryAddParser<A2, B2, "1">}0`
+      ? `${binaryAddParser<A2, B2, "0">}1`
+      : `${binaryAddParser<A2, B2, "1">}0`
     : B1 extends "0"
     ? C extends "0"
-      ? `${biynaryAddParser<A2, B2, "0">}1`
-      : `${biynaryAddParser<A2, B2, "1">}0`
+      ? `${binaryAddParser<A2, B2, "0">}1`
+      : `${binaryAddParser<A2, B2, "1">}0`
     : C extends "0"
-    ? `${biynaryAddParser<A2, B2, "1">}0`
-    : `${biynaryAddParser<A2, B2, "1">}1`
+    ? `${binaryAddParser<A2, B2, "1">}0`
+    : `${binaryAddParser<A2, B2, "1">}1`
   : `${C}`;
 
-export type biynaryAdd<
+export type binaryAdd<
   X extends `${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}`,
   Y extends `${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}`,
 > = StringReverse<
   First8Chars<
-    StringReverse<biynaryAddParser<StringReverse<X>, StringReverse<Y>>>
+    StringReverse<binaryAddParser<StringReverse<X>, StringReverse<Y>>>
   >
 >;
 
-type biynaryComplementParser<X extends string> =
-  X extends `${infer L}${infer R}`
-    ? L extends "0"
-      ? `1${biynaryComplementParser<R>}`
-      : `0${biynaryComplementParser<R>}`
-    : "";
+type binaryComplementParser<X extends string> = X extends `${infer L}${infer R}`
+  ? L extends "0"
+    ? `1${binaryComplementParser<R>}`
+    : `0${binaryComplementParser<R>}`
+  : "";
 
 // 2の補数を求める型
-export type biynaryComplement<
+export type binaryComplement<
   X extends `${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}`,
-> = First8Chars<biynaryAdd<biynaryComplementParser<X>, "00000001">>;
+> = First8Chars<binaryAdd<binaryComplementParser<X>, "00000001">>;
 
-type biynaryToDecimalParser<
+type binaryToDecimalParser<
   X extends string,
   C extends unknown[] = [""],
   A extends unknown[] = [""],
@@ -206,30 +227,30 @@ type biynaryToDecimalParser<
 > = X extends `${infer F}${infer R}`
   ? LengthOfString<X> extends 8
     ? F extends "1"
-      ? `-${biynaryToDecimalParser<StringReverse<R>, C, A, true>}`
-      : biynaryToDecimalParser<StringReverse<R>, C, A, FL>
+      ? `-${binaryToDecimalParser<StringReverse<R>, C, A, true>}`
+      : binaryToDecimalParser<StringReverse<R>, C, A, FL>
     : FL extends false
     ? F extends "1"
-      ? biynaryToDecimalParser<R, [...C, ...C], [...A, ...C], FL>
-      : biynaryToDecimalParser<R, [...C, ...C], A, FL>
+      ? binaryToDecimalParser<R, [...C, ...C], [...A, ...C], FL>
+      : binaryToDecimalParser<R, [...C, ...C], A, FL>
     : F extends "1"
-    ? biynaryToDecimalParser<R, [...C, ...C], A, FL>
-    : biynaryToDecimalParser<R, [...C, ...C], [...A, ...C], FL>
+    ? binaryToDecimalParser<R, [...C, ...C], A, FL>
+    : binaryToDecimalParser<R, [...C, ...C], [...A, ...C], FL>
   : FL extends true
   ? Length<A>
   : Length<Shift<A>>;
 
 // 2進数を10進数に変換する型
-export type biynaryToDecimal<
+export type binaryToDecimal<
   X extends `${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}`,
-> = biynaryToDecimalParser<X>;
+> = binaryToDecimalParser<X>;
 
 // 2進数の絶対値を求める型
-export type biynaryAbs<
+export type binaryAbs<
   X extends `${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}`,
 > = X extends `${infer F}${infer _}`
   ? F extends "1"
-    ? biynaryComplement<X>
+    ? binaryComplement<X>
     : X
   : never;
 
@@ -264,7 +285,7 @@ export type hex4bitToDecimal<X extends string> = X extends "A"
   : X;
 
 // 4bitの10進数を2進数に変換する型
-export type decimal4bitToBiynary<X extends string> = X extends "0"
+export type decimal4bitTobinary<X extends string> = X extends "0"
   ? "0000"
   : X extends "1"
   ? "0001"
@@ -299,7 +320,7 @@ export type decimal4bitToBiynary<X extends string> = X extends "0"
   : never;
 
 // 1bitの2進数を10進数に変換する型
-export type decimal1biteToBiynary<X extends string> = X extends "0"
+export type decimal1biteTobinary<X extends string> = X extends "0"
   ? "00000000"
   : X extends "1"
   ? "00000001"
@@ -813,36 +834,36 @@ export type decimal1biteToBiynary<X extends string> = X extends "0"
   ? "11111111"
   : never;
 
-type biynaryToHexParser<
+type binaryToHexParser<
   X extends string,
   C extends string = "",
   A extends string = "",
 > = X extends `${infer F}${infer R}`
   ? LengthOfString<`${F}${C}`> extends 4
-    ? biynaryToHexParser<
+    ? binaryToHexParser<
         R,
         "",
-        `${A}${decimal4bitToHex<`${biynaryToDecimalParser<`${F}${C}`>}`>}`
+        `${A}${decimal4bitToHex<`${binaryToDecimalParser<`${F}${C}`>}`>}`
       >
-    : biynaryToHexParser<R, `${F}${C}`, A>
+    : binaryToHexParser<R, `${F}${C}`, A>
   : A;
 
 // 1バイトの2進数を16進数に変換する型
-export type biynaryToHex<
+export type binaryToHex<
   X extends `${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}`,
-> = biynaryToHexParser<X>;
+> = binaryToHexParser<X>;
 
-type hexToBiynaryParser<
+type hexTobinaryParser<
   X extends string,
   C extends string = "",
 > = LengthOfString<X> extends 1
-  ? `${C}${decimal4bitToBiynary<hex4bitToDecimal<X>>}`
+  ? `${C}${decimal4bitTobinary<hex4bitToDecimal<X>>}`
   : X extends `${infer F}${infer R}`
-  ? hexToBiynaryParser<R, `${C}${decimal4bitToBiynary<hex4bitToDecimal<F>>}`>
+  ? hexTobinaryParser<R, `${C}${decimal4bitTobinary<hex4bitToDecimal<F>>}`>
   : C;
 
 // 16進数を2進数に変換する型
-export type hexToBiynary<
+export type hexTobinary<
   X extends `${
     | 0
     | 1
@@ -876,15 +897,15 @@ export type hexToBiynary<
     | "D"
     | "E"
     | "F"}`,
-> = hexToBiynaryParser<X>;
+> = hexTobinaryParser<X>;
 
 // 2進数のANDを求める型
-export type biynaryAND<
+export type binaryAND<
   X extends `${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}`,
   Y extends `${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}`,
-> = biynaryANDParser<X, Y>;
+> = binaryANDParser<X, Y>;
 
-type biynaryANDParser<
+type binaryANDParser<
   X extends string,
   Y extends string,
   A extends string = "",
@@ -892,63 +913,63 @@ type biynaryANDParser<
   ? Y extends `${infer F2}${infer R2}`
     ? F extends "1"
       ? F2 extends "1"
-        ? biynaryANDParser<R, R2, `${A}1`>
-        : biynaryANDParser<R, R2, `${A}0`>
-      : biynaryANDParser<R, R2, `${A}0`>
+        ? binaryANDParser<R, R2, `${A}1`>
+        : binaryANDParser<R, R2, `${A}0`>
+      : binaryANDParser<R, R2, `${A}0`>
     : A
   : A;
 
 // 1bitの2進数のANDを求める型
-export type biynary1bitAND<
+export type binary1bitAND<
   X extends `${0 | 1}`,
   Y extends `${0 | 1}`,
-> = biynary1bitANDParser<X, Y>;
+> = binary1bitANDParser<X, Y>;
 
-type biynary1bitANDParser<X extends string, Y extends string> = X extends "1"
+type binary1bitANDParser<X extends string, Y extends string> = X extends "1"
   ? Y extends "1"
     ? "1"
     : "0"
   : "0";
 
 // 2進数のORを求める型
-export type biynaryOR<
+export type binaryOR<
   X extends `${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}`,
   Y extends `${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}`,
-> = biynaryORParser<X, Y>;
+> = binaryORParser<X, Y>;
 
-type biynaryORParser<
+type binaryORParser<
   X extends string,
   Y extends string,
   A extends string = "",
 > = X extends `${infer F}${infer R}`
   ? Y extends `${infer F2}${infer R2}`
     ? F extends "1"
-      ? biynaryORParser<R, R2, `${A}1`>
+      ? binaryORParser<R, R2, `${A}1`>
       : F2 extends "1"
-      ? biynaryORParser<R, R2, `${A}1`>
-      : biynaryORParser<R, R2, `${A}0`>
+      ? binaryORParser<R, R2, `${A}1`>
+      : binaryORParser<R, R2, `${A}0`>
     : A
   : A;
 
 // 1bitの2進数のORを求める型
-export type biynary1bitOR<
+export type binary1bitOR<
   X extends `${0 | 1}`,
   Y extends `${0 | 1}`,
-> = biynary1bitORParser<X, Y>;
+> = binary1bitORParser<X, Y>;
 
-type biynary1bitORParser<X extends string, Y extends string> = X extends "1"
+type binary1bitORParser<X extends string, Y extends string> = X extends "1"
   ? "1"
   : Y extends "1"
   ? "1"
   : "0";
 
 // 2進数のXORを求める型
-export type biynaryXOR<
+export type binaryXOR<
   X extends `${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}`,
   Y extends `${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}`,
-> = biynaryXORParser<X, Y>;
+> = binaryXORParser<X, Y>;
 
-type biynaryXORParser<
+type binaryXORParser<
   X extends string,
   Y extends string,
   A extends string = "",
@@ -956,21 +977,21 @@ type biynaryXORParser<
   ? Y extends `${infer F2}${infer R2}`
     ? F extends "1"
       ? F2 extends "1"
-        ? biynaryXORParser<R, R2, `${A}0`>
-        : biynaryXORParser<R, R2, `${A}1`>
+        ? binaryXORParser<R, R2, `${A}0`>
+        : binaryXORParser<R, R2, `${A}1`>
       : F2 extends "1"
-      ? biynaryXORParser<R, R2, `${A}1`>
-      : biynaryXORParser<R, R2, `${A}0`>
+      ? binaryXORParser<R, R2, `${A}1`>
+      : binaryXORParser<R, R2, `${A}0`>
     : A
   : A;
 
 // 1bitの2進数のXORを求める型
-export type biynary1bitXOR<
+export type binary1bitXOR<
   X extends `${0 | 1}`,
   Y extends `${0 | 1}`,
-> = biynary1bitXORParser<X, Y>;
+> = binary1bitXORParser<X, Y>;
 
-type biynary1bitXORParser<X extends string, Y extends string> = X extends "1"
+type binary1bitXORParser<X extends string, Y extends string> = X extends "1"
   ? Y extends "1"
     ? "0"
     : "1"
@@ -979,12 +1000,12 @@ type biynary1bitXORParser<X extends string, Y extends string> = X extends "1"
   : "0";
 
 // 2進数のNot ANDを求める型
-export type biynaryNAND<
+export type binaryNAND<
   X extends `${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}`,
   Y extends `${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}`,
-> = biynaryNANDParser<X, Y>;
+> = binaryNANDParser<X, Y>;
 
-type biynaryNANDParser<
+type binaryNANDParser<
   X extends string,
   Y extends string,
   A extends string = "",
@@ -992,63 +1013,63 @@ type biynaryNANDParser<
   ? Y extends `${infer F2}${infer R2}`
     ? F extends "1"
       ? F2 extends "1"
-        ? biynaryNANDParser<R, R2, `${A}0`>
-        : biynaryNANDParser<R, R2, `${A}1`>
-      : biynaryNANDParser<R, R2, `${A}1`>
+        ? binaryNANDParser<R, R2, `${A}0`>
+        : binaryNANDParser<R, R2, `${A}1`>
+      : binaryNANDParser<R, R2, `${A}1`>
     : A
   : A;
 
 // 1bitの2進数のNot ANDを求める型
-export type biynary1bitNAND<
+export type binary1bitNAND<
   X extends `${0 | 1}`,
   Y extends `${0 | 1}`,
-> = biynary1bitNANDParser<X, Y>;
+> = binary1bitNANDParser<X, Y>;
 
-type biynary1bitNANDParser<X extends string, Y extends string> = X extends "1"
+type binary1bitNANDParser<X extends string, Y extends string> = X extends "1"
   ? Y extends "1"
     ? "0"
     : "1"
   : "1";
 
 // 2進数のNot ORを求める型
-export type biynaryNOR<
+export type binaryNOR<
   X extends `${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}`,
   Y extends `${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}`,
-> = biynaryNORParser<X, Y>;
+> = binaryNORParser<X, Y>;
 
-type biynaryNORParser<
+type binaryNORParser<
   X extends string,
   Y extends string,
   A extends string = "",
 > = X extends `${infer F}${infer R}`
   ? Y extends `${infer F2}${infer R2}`
     ? F extends "1"
-      ? biynaryNORParser<R, R2, `${A}0`>
+      ? binaryNORParser<R, R2, `${A}0`>
       : F2 extends "1"
-      ? biynaryNORParser<R, R2, `${A}0`>
-      : biynaryNORParser<R, R2, `${A}1`>
+      ? binaryNORParser<R, R2, `${A}0`>
+      : binaryNORParser<R, R2, `${A}1`>
     : A
   : A;
 
 // 1bitの2進数のNot ORを求める型
-export type biynary1bitNOR<
+export type binary1bitNOR<
   X extends `${0 | 1}`,
   Y extends `${0 | 1}`,
-> = biynary1bitNORParser<X, Y>;
+> = binary1bitNORParser<X, Y>;
 
-type biynary1bitNORParser<X extends string, Y extends string> = X extends "1"
+type binary1bitNORParser<X extends string, Y extends string> = X extends "1"
   ? "0"
   : Y extends "1"
   ? "0"
   : "1";
 
 // 2進数のNot XORを求める型
-export type biynaryXNOR<
+export type binaryXNOR<
   X extends `${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}`,
   Y extends `${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}`,
-> = biynaryXNORParser<X, Y>;
+> = binaryXNORParser<X, Y>;
 
-type biynaryXNORParser<
+type binaryXNORParser<
   X extends string,
   Y extends string,
   A extends string = "",
@@ -1056,21 +1077,21 @@ type biynaryXNORParser<
   ? Y extends `${infer F2}${infer R2}`
     ? F extends "1"
       ? F2 extends "1"
-        ? biynaryXNORParser<R, R2, `${A}1`>
-        : biynaryXNORParser<R, R2, `${A}0`>
+        ? binaryXNORParser<R, R2, `${A}1`>
+        : binaryXNORParser<R, R2, `${A}0`>
       : F2 extends "1"
-      ? biynaryXNORParser<R, R2, `${A}0`>
-      : biynaryXNORParser<R, R2, `${A}1`>
+      ? binaryXNORParser<R, R2, `${A}0`>
+      : binaryXNORParser<R, R2, `${A}1`>
     : A
   : A;
 
 // 1bitの2進数のNot XORを求める型
-export type biynary1bitXNOR<
+export type binary1bitXNOR<
   X extends `${0 | 1}`,
   Y extends `${0 | 1}`,
-> = biynary1bitXNORParser<X, Y>;
+> = binary1bitXNORParser<X, Y>;
 
-type biynary1bitXNORParser<X extends string, Y extends string> = X extends "1"
+type binary1bitXNORParser<X extends string, Y extends string> = X extends "1"
   ? Y extends "1"
     ? "1"
     : "0"
@@ -1079,6 +1100,6 @@ type biynary1bitXNORParser<X extends string, Y extends string> = X extends "1"
   : "1";
 
 // 2進数のNOTを求める型
-export type biynaryNOT<X extends `${0 | 1}`> = biynaryNOTParser<X>;
+export type binaryNOT<X extends `${0 | 1}`> = binaryNOTParser<X>;
 
-type biynaryNOTParser<X extends string,> = X extends "1" ? "0" : "1";
+type binaryNOTParser<X extends string,> = X extends "1" ? "0" : "1";
