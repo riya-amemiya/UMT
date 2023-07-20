@@ -152,8 +152,7 @@ export type binaryFullAdder<
         StringReverse<
           binaryFullAdderParser<
             StringReverse<FirstNChars<X, B>>,
-            StringReverse<FirstNChars<Y, B>>,
-            B
+            StringReverse<FirstNChars<Y, B>>
           >
         >
       >,
@@ -165,20 +164,13 @@ export type binaryFullAdder<
 type binaryFullAdderParser<
   X extends string,
   Y extends string,
-  B extends number = 8,
   A extends string = "",
   C extends string = "0",
 > = X extends `${infer F}${infer R}`
   ? Y extends `${infer F2}${infer R2}`
     ? binaryHalfAdderParser<F, F2> extends `${infer F3}${infer R3}`
       ? binaryHalfAdderParser<R3, C> extends `${infer F4}${infer R4}`
-        ? binaryFullAdderParser<
-            R,
-            R2,
-            B,
-            `${A}${R4}`,
-            binary1bitORParser<F3, F4>
-          >
+        ? binaryFullAdderParser<R, R2, `${A}${R4}`, binary1bitORParser<F3, F4>>
         : never
       : never
     : never
