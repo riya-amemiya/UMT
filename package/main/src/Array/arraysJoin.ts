@@ -1,13 +1,11 @@
 /**
  * 重複をしないで結合
- * @param  {any[]} array
- * @param  {any[]} ...arrays
+ * @param  {unknown[]} array
+ * @param  {unknown[]} ...arrays
  */
 export const arraysJoin = <
-  // rome-ignore lint/suspicious/noExplicitAny: <explanation>
-  A extends any[],
-  // rome-ignore lint/suspicious/noExplicitAny: <explanation>
-  B extends any[],
+  A extends unknown[],
+  B extends unknown[],
   C extends A & B,
 >(
   array: A,
