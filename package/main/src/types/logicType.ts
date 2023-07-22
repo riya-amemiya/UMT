@@ -126,6 +126,10 @@ export type FirstNChars<
   : S extends `${infer Head}${infer Rest}`
   ? FirstNChars<Rest, N, [...C, Head], `${A}${Head}`>
   : never;
+export type ZeroString<
+  N extends number,
+  A extends string = "",
+> = LengthOfString<A> extends N ? A : ZeroString<N, `${A}0`>;
 
 // 半加算器
 export type binaryHalfAdder<
@@ -160,7 +164,7 @@ export type binaryFullAdder<
     >
   : never;
 
-// マイナスを扱えないが任意のバイト数の加算器
+// 任意のバイト数の加算器
 type binaryFullAdderParser<
   X extends string,
   Y extends string,
@@ -176,7 +180,7 @@ type binaryFullAdderParser<
     : never
   : `${A}${C}`;
 
-// マイナスを扱えるが1バイトまでの加算器
+// 1バイトまでの加算器
 type binaryAddParser<
   A extends string,
   B extends string,
@@ -214,10 +218,16 @@ type binaryComplementParser<X extends string> = X extends `${infer L}${infer R}`
     : `0${binaryComplementParser<R>}`
   : "";
 
-// 2の補数を求める型
+// 1バイトの2の補数を求める型
 export type binaryComplement<
   X extends `${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}`,
 > = First8Chars<binaryAdd<binaryComplementParser<X>, "00000001">>;
+
+// 2の補数を求める型
+export type binaryNComplement<X extends string,> = binaryFullAdder<
+  binaryComplementParser<X>,
+  StringReverse<`1${ShiftString<ZeroString<LengthOfString<X>>>}`>
+>;
 
 type binaryToDecimalParser<
   X extends string,
