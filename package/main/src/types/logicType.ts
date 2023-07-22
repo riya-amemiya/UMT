@@ -226,7 +226,8 @@ export type binaryComplement<
 // 2の補数を求める型
 export type binaryNComplement<X extends string,> = binaryFullAdder<
   binaryComplementParser<X>,
-  StringReverse<`1${ShiftString<ZeroString<LengthOfString<X>>>}`>
+  StringReverse<`1${ShiftString<ZeroString<LengthOfString<X>>>}`>,
+  LengthOfString<X>
 >;
 
 type binaryToDecimalParser<
@@ -863,7 +864,7 @@ export type binaryToHex<
   X extends `${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}`,
 > = binaryToHexParser<X>;
 
-type hexTobinaryParser<
+export type hexTobinaryParser<
   X extends string,
   C extends string = "",
 > = LengthOfString<X> extends 1
