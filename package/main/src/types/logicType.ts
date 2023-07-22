@@ -116,6 +116,18 @@ export type First8Chars<
   ? First8Chars<Rest, [...T, Head]>
   : never;
 
+
+export type FirstNChars<
+  S extends string,
+  N extends number,
+  C extends unknown[] = [],
+  A extends string = "",
+> = C["length"] extends N
+  ? A
+  : S extends `${infer Head}${infer Rest}`
+  ? FirstNChars<Rest, N, [...C, Head], `${A}${Head}`>
+  : never;
+
 export type ZeroString<
   N extends number,
   A extends string = "",
@@ -139,9 +151,18 @@ type binaryHalfAdderParser<
 export type binaryFullAdder<
   X extends string,
   Y extends string,
+  B extends number = 8,
 > = LengthOfString<X> extends LengthOfString<Y>
-  ? ShiftString<
-      StringReverse<binaryFullAdderParser<StringReverse<X>, StringReverse<Y>>>
+  ? FirstNChars<
+      ShiftString<
+        StringReverse<
+          binaryFullAdderParser<
+            StringReverse<FirstNChars<X, B>>,
+            StringReverse<FirstNChars<Y, B>>
+          >
+        >
+      >,
+      B
     >
   : never;
 
