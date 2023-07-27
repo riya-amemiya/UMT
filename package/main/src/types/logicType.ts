@@ -149,7 +149,7 @@ type binaryHalfAdderParser<
 export type binaryFullAdder<
   X extends string,
   Y extends string,
-  B extends number = 8,
+  B extends number = LengthOfString<X>,
 > = LengthOfString<X> extends LengthOfString<Y>
   ? FirstNChars<
       ShiftString<
