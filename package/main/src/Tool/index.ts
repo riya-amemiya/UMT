@@ -6,6 +6,8 @@ import { isNodeWebkit } from "./isNodeWebkit";
 import { pipeFunction } from "./pipeFunction";
 import { isObj } from "./isObj";
 import { isArr } from "./isArr";
+import { deleteSpace } from "./deleteSpace";
+import { isNotEmpty } from "./isNotEmpty";
 
 export {
   birthday,
@@ -16,4 +18,6 @@ export {
   isNodeWebkit,
   isObj,
   isArr,
+  deleteSpace,
+  isNotEmpty,
 };
