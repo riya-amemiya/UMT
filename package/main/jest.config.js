@@ -4,7 +4,7 @@ module.exports = {
     "^.+\\.(t|j)sx?$": ["@swc/jest"],
   },
   testEnvironment: "node",
-  roots: ["<rootDir>/tests"],
+  roots: ["<rootDir>/src/tests"],
   collectCoverage: true,
   collectCoverageFrom: [
     "<rootDir>/**/module/*.{js,ts}",

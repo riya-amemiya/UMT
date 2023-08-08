@@ -14,4 +14,4 @@ python/
 
 coverage_dir
 
-tests
+module/tests
