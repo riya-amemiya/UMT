@@ -4,42 +4,20 @@ import { isBrowser } from "./isBrowser";
 import { isNode } from "./isNode";
 import { isNodeWebkit } from "./isNodeWebkit";
 import { pipeFunction } from "./pipeFunction";
+import { isObj } from "./isObj";
+import { isArr } from "./isArr";
+import { deleteSpace } from "./deleteSpace";
+import { isNotEmpty } from "./isNotEmpty";
 
-export { birthday, dayOfWeek, pipeFunction };
-
-export class UMTToolClass {
-  private localBirthday: typeof birthday;
-  private localDayOfWeek: typeof dayOfWeek;
-  private localPipeFunction: typeof pipeFunction;
-  private localIsBrowser: boolean;
-  private localIsNode: boolean;
-  private localIsNodeWebkit: boolean;
-  constructor() {
-    this.localBirthday = birthday;
-    this.localDayOfWeek = dayOfWeek;
-    this.localPipeFunction = pipeFunction;
-    this.localIsBrowser = isBrowser;
-    this.localIsNode = isNode;
-    this.localIsNodeWebkit = isNodeWebkit;
-  }
-  get birthday() {
-    return this.localBirthday;
-  }
-  get dayOfWeek() {
-    return this.localDayOfWeek;
-  }
-  get pipeFunction() {
-    return this.localPipeFunction;
-  }
-  get isBrowser() {
-    return this.localIsBrowser;
-  }
-  get isNode() {
-    return this.localIsNode;
-  }
-  get isNodeWebkit() {
-    return this.localIsNodeWebkit;
-  }
-}
-
-export const UMT_Tool = new UMTToolClass();
+export {
+  birthday,
+  dayOfWeek,
+  pipeFunction,
+  isBrowser,
+  isNode,
+  isNodeWebkit,
+  isObj,
+  isArr,
+  deleteSpace,
+  isNotEmpty,
+};
