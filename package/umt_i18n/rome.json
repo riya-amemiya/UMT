@@ -1,0 +1,79 @@
+{
+	"javascript": {
+		"globals": [
+			"describe",
+			"beforeEach",
+			"it",
+			"expect",
+			"test",
+			"beforeAll",
+			"afterEach",
+			"afterAll"
+		]
+	},
+	"formatter": {
+		"enabled": true,
+		"indentStyle": "space",
+		"lineWidth": 80,
+		"ignore": [
+			"node_modules",
+			"module",
+			"*.json",
+			"doc"
+		],
+		"formatWithErrors": false
+	},
+	"linter": {
+		"enabled": true,
+		"ignore": [
+			"node_modules",
+			"module",
+			"*.json",
+			"doc",
+			"tests"
+		],
+		"rules": {
+			"recommended": true,
+			"complexity": {
+				"noUselessFragments": "warn",
+				"useSimplifiedLogicExpression": "error"
+			},
+			"correctness": {
+				"noUndeclaredVariables": "warn",
+				"noUnusedVariables": "off"
+			},
+			"style": {
+				"noImplicitBoolean": "warn",
+				"noNamespace": "warn",
+				"noNegationElse": "error",
+				"noParameterProperties": "off",
+				"noShoutyConstants": "warn",
+				"useBlockStatements": "error",
+				"useExponentiationOperator": "error",
+				"useFragmentSyntax": "error",
+				"useShorthandArrayType": "error",
+				"useSingleCaseStatement": "error"
+			},
+			"suspicious": {
+				"noRedundantUseStrict": "warn"
+			},
+			"nursery": {
+				"noAccumulatingSpread": "error",
+				"noBannedTypes": "error",
+				"noConfusingArrow": "error",
+				"noConstantCondition": "off",
+				"noDuplicateJsxProps": "error",
+				"noForEach": "error",
+				"noSelfAssign": "error",
+				"useCamelCase": "warn",
+				"useExhaustiveDependencies": "off",
+				"useGroupedTypeImport": "error",
+				"useHookAtTopLevel": "error",
+				"useIsNan": "error",
+				"useLiteralEnumMembers": "error",
+				"useLiteralKeys": "error",
+				"useSimpleNumberKeys": "error"
+			}
+		}
+	}
+}
