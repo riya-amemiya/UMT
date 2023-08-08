@@ -1,4 +1,4 @@
-import { solveEquation } from "../../../module/Math/solveEquation";
+import { solveEquation } from "@/Math/solveEquation";
 test("{solveEquation", () => {
   expect(
     solveEquation(

@@ -1,4 +1,4 @@
-import { nHr } from "../../../module/Math/nHr";
+import { nHr } from "@/Math/nHr";
 test("{nHr}", () => {
   expect(nHr(1, 1)).toBe(1);
   expect(nHr(2, 1)).toBe(2);

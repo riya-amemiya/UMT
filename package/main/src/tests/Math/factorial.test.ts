@@ -1,4 +1,4 @@
-import { factorial } from "../../../module/Math/factorial";
+import { factorial } from "@/Math/factorial";
 test("{factorial}", () => {
   expect(factorial(0)).toBe(1);
   expect(factorial(1)).toBe(1);

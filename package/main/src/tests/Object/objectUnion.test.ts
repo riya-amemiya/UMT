@@ -1,4 +1,5 @@
-import { objectUnion } from "../../../module/Object/objectUnion";
+import { objectUnion } from "@/Object/objectUnion";
+
 test("{objectUnion}", () => {
   expect(objectUnion({ a: 1 }, { b: 2 })).toEqual({ a: 1, b: 2 });
   expect(objectUnion({ a: 1 }, { a: 2 })).toEqual({ a: 2 });

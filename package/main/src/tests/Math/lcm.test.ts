@@ -1,4 +1,4 @@
-import { lcm } from "../../../module/Math/lcm";
+import { lcm } from "@/Math/lcm";
 test("{lcm}", () => {
   expect(lcm(1, 1)).toBe(1);
   expect(lcm(1, 2)).toBe(2);

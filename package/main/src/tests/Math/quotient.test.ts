@@ -1,4 +1,4 @@
-import { quotient } from "../../../module/Math/quotient";
+import { quotient } from "@/Math/quotient";
 test("{quotient}", () => {
   expect(quotient(1, 1)).toEqual(expect.arrayContaining([1, 0]));
   expect(quotient(1, 2)).toEqual(expect.arrayContaining([0, 1]));

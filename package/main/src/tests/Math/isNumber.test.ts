@@ -1,4 +1,4 @@
-import { isNumber } from "../../../module/Math/isNumber";
+import { isNumber } from "@/Math/isNumber";
 test("{isNumber}", () => {
   expect(isNumber(1)).toBeTruthy();
   expect(isNumber(1.1)).toBeTruthy();

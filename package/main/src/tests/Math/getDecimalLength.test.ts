@@ -1,4 +1,4 @@
-import { getDecimalLength } from "../../../module/Math/getDecimalLength";
+import { getDecimalLength } from "@/Math/getDecimalLength";
 test("{getDecimalLength}", () => {
   expect(getDecimalLength(1)).toBe(0);
   expect(getDecimalLength(1.1)).toBe(1);

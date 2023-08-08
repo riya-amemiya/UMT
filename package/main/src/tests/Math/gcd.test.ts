@@ -1,4 +1,4 @@
-import { gcd } from "../../../module/Math/gcd";
+import { gcd } from "@/Math/gcd";
 test("{gcd}", () => {
   expect(gcd(1, 1)).toBe(1);
   expect(gcd(1, 2)).toBe(1);

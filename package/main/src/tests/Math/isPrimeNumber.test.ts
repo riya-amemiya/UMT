@@ -1,4 +1,4 @@
-import { isPrimeNumber } from "../../../module/Math/isPrimeNumber";
+import { isPrimeNumber } from "@/Math/isPrimeNumber";
 test("{isPrimeNumber}", () => {
   expect(isPrimeNumber(1)).toBeFalsy();
   expect(isPrimeNumber(2)).toBeTruthy();

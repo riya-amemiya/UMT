@@ -1,4 +1,4 @@
-import { primeFactorization } from "../../../module/Math/primeFactorization";
+import { primeFactorization } from "@/Math/primeFactorization";
 test("{primeFactorization}", () => {
   const result = primeFactorization(100);
   result.forEach((item) => {

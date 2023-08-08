@@ -1,4 +1,5 @@
-import { objectMap } from "../../../module/Object/objectMap";
+import { objectMap } from "@/Object/objectMap";
+
 test("{objectMap}", () => {
   expect(objectMap({ a: 1, b: 2, c: 3 }, (value) => value * 2)).toEqual(
     expect.objectContaining({ a: 2, b: 4, c: 6 }),

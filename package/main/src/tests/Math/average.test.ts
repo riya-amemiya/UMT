@@ -1,4 +1,4 @@
-import { average } from "../../../module/Math/average";
+import { average } from "@/Math/average";
 test("{average}", () => {
   expect(average([1, 2])).toBe(1.5);
   expect(average([1.1, 2.2])).toBeCloseTo(1.65);

@@ -1,4 +1,4 @@
-import { degToRad } from "../../../module/Math/degToRad";
+import { degToRad } from "@/Math/degToRad";
 test("{degToRad}", () => {
   expect(degToRad(0)).toBe(0);
   expect(degToRad(90)).toBe(Math.PI / 2);

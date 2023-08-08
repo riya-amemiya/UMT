@@ -1,4 +1,4 @@
-import { calculator } from "../../../../module/Math/calculator";
+import { calculator } from "@/Math/calculator";
 test("calculator", () => {
   expect(calculator("1+1")).toBe("2");
   expect(calculator("1+1+1")).toBe("3");

@@ -1,4 +1,4 @@
-import { isDouble } from "../../../module/Math/isDouble";
+import { isDouble } from "@/Math/isDouble";
 test("{isDouble}", () => {
   expect(isDouble(1)).toBeFalsy();
   expect(isDouble(1.1)).toBeTruthy();

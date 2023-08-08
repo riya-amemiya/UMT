@@ -1,4 +1,4 @@
-import { reduce } from "../../../module/Math/reduce";
+import { reduce } from "@/Math/reduce";
 test("{reduce}", () => {
   expect(reduce(16, 2)).toMatchObject({
     x: 8,

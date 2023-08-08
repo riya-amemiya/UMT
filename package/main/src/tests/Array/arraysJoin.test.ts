@@ -1,4 +1,4 @@
-import { arraysJoin } from "../../../module/Array/arraysJoin";
+import { arraysJoin } from "@/Array/arraysJoin";
 test("{arraysJoin}", () => {
   expect(arraysJoin([1, 2, 3], [4, 5, 6])).toEqual(
     expect.arrayContaining([1, 2, 3, 4, 5, 6]),

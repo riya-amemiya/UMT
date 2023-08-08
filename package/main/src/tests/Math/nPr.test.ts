@@ -1,4 +1,4 @@
-import { nPr } from "../../../module/Math/nPr";
+import { nPr } from "@/Math/nPr";
 test("{nPr}", () => {
   expect(nPr(1, 1)).toBe(1);
   expect(nPr(2, 1)).toBe(2);

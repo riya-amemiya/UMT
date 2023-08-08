@@ -1,4 +1,4 @@
-import { roundOf } from "../../../module/Math/roundOf";
+import { roundOf } from "@/Math/roundOf";
 test("{roundOf", () => {
   expect(roundOf(1.111111111111, 2)).toBe(1.11);
   expect(roundOf(1.111111111111, 3)).toBe(1.111);

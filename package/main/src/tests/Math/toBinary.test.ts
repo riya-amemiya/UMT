@@ -1,4 +1,4 @@
-import { toBinary } from "../../../module/Math/toBinary";
+import { toBinary } from "@/Math/toBinary";
 test("{toBinary}", () => {
   //2進数
   expect(toBinary(1)).toBe("1");

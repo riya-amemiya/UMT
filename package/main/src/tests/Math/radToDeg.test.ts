@@ -1,4 +1,4 @@
-import { radToDeg } from "../../../module/Math/radToDeg";
+import { radToDeg } from "@/Math/radToDeg";
 test("{radToDeg}", () => {
   expect(radToDeg(1)).toBe(57.29577951308232);
   expect(radToDeg(2)).toBe(114.59155902616465);
