@@ -1,6 +1,9 @@
+mod array;
 mod math;
 
 extern crate wasm_bindgen;
+
+use array::*;
 use math::*;
 use wasm_bindgen::prelude::*;
 
@@ -67,4 +70,9 @@ pub fn value_swap(x: f64, y: f64) -> Vec<f64> {
 #[wasm_bindgen]
 pub fn math_separator(x: i32) -> Vec<i32> {
     umt_math_separator(x)
+}
+
+#[wasm_bindgen]
+pub fn range(min: i32, max: i32) -> Vec<i32> {
+    umt_range_function(min, max)
 }
