@@ -1,4 +1,4 @@
-use umt_plugin_wasm::gcd;
+use umtn_wasm::gcd;
 
 #[test]
 fn test_gcd() {

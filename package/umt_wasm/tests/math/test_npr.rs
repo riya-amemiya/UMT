@@ -1,4 +1,4 @@
-use umt_plugin_wasm::npr;
+use umtn_wasm::npr;
 
 #[test]
 fn test_npr() {

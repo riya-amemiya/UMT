@@ -1,4 +1,4 @@
-use umt_plugin_wasm::math_separator;
+use umtn_wasm::math_separator;
 
 #[test]
 fn test_math_separator() {

@@ -1,4 +1,4 @@
-use umt_plugin_wasm::value_swap;
+use umtn_wasm::value_swap;
 
 #[test]
 fn test_value_swap() {

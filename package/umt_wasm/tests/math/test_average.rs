@@ -1,4 +1,4 @@
-use umt_plugin_wasm::average;
+use umtn_wasm::average;
 
 #[test]
 fn test_average() {

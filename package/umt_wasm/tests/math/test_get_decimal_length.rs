@@ -1,4 +1,4 @@
-use umt_plugin_wasm::get_decimal_length;
+use umtn_wasm::get_decimal_length;
 
 #[test]
 fn test_get_decimal_length() {

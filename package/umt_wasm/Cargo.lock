@@ -59,7 +59,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "umt_plugin_wasm"
+name = "umtn_wasm"
 version = "0.1.0"
 dependencies = [
  "wasm-bindgen",

@@ -1,4 +1,4 @@
-use umt_plugin_wasm::softmax;
+use umtn_wasm::softmax;
 
 #[test]
 fn test_softmax() {

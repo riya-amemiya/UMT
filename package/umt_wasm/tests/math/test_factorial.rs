@@ -1,4 +1,4 @@
-use umt_plugin_wasm::factorial;
+use umtn_wasm::factorial;
 
 #[test]
 fn test_factorial() {
