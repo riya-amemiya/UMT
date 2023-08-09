@@ -2,7 +2,7 @@ export type UMT_i18nData<
   T extends { [key: string]: string },
   L extends string,
 > = {
-  [key in L]: T;
+  [key in L]: Partial<T>;
 };
 export class UMT_i18n<
   T extends {
@@ -13,9 +13,11 @@ export class UMT_i18n<
 > {
   private data: T;
   private locale: keyof T;
+  private defaultLocale: keyof T;
   constructor(data: T, locale: keyof T) {
     this.data = data;
     this.locale = locale;
+    this.defaultLocale = locale;
   }
   public getLocale() {
     return this.locale;
@@ -29,7 +31,18 @@ export class UMT_i18n<
     return this.data;
   }
 
+  public getDefaultLocale() {
+    return this.defaultLocale;
+  }
+
+  public setDefaultLocale(locale: keyof T) {
+    this.defaultLocale = locale;
+    return this;
+  }
+
   public translate(key: keyof T[keyof T]) {
-    return this.data[this.locale][key];
+    const locale = this.data[this.locale];
+    const out = locale[key];
+    return out ? out : this.data[this.defaultLocale][key];
   }
 }

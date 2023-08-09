@@ -4,7 +4,7 @@ const data: UMT_i18nData<
     hello: string;
     world: string;
   },
-  "en" | "zh"
+  "en" | "zh" | "ja"
 > = {
   en: {
     hello: "hello",
@@ -13,6 +13,9 @@ const data: UMT_i18nData<
   zh: {
     hello: "你好",
     world: "世界",
+  },
+  ja: {
+    hello: "こんにちは",
   },
 };
 
@@ -24,4 +27,9 @@ test("UMT_i18n Test", () => {
   expect(i18n.setLocale("zh").translate("world")).toBe("世界");
   expect(i18n.setLocale("en").translate("world")).toBe("world");
   expect(i18n.getLocaleData()).toBe(data);
+  expect(i18n.getDefaultLocale()).toBe("en");
+  expect(i18n.setLocale("ja").translate("hello")).toBe("こんにちは");
+  expect(i18n.translate("world")).toBe("world");
+  i18n.setDefaultLocale("ja");
+  expect(i18n.translate("world")).toBe(undefined);
 });
