@@ -1,4 +1,5 @@
-import { UMT_i18nData, UMT_i18n } from "..";
+import { UMT_i18n, UMT_i18nData } from "@/UMT_i18n";
+
 const data: UMT_i18nData<
   {
     hello: string;
