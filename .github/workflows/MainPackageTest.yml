@@ -32,7 +32,7 @@ jobs:
               uses: actions/cache/restore@v3
               with:
                   path: '**/node_modules'
-                  key: dev-depends-${{ matrix.os }}-node${{ matrix.bun-version }}-${{ hashFiles('bun.lockb') }}
+                  key: dev-depends-${{ matrix.os }}-node${{ matrix.bun-version }}-${{ hashFiles('package.json') }}
             - name: Install dependencies
               if: steps.cache-restore-dev-depends.outputs.cache-hit != 'true'
               run: bun i
@@ -42,7 +42,7 @@ jobs:
               uses: actions/cache/save@v3
               with:
                   path: '**/node_modules'
-                  key: dev-depends-${{ matrix.os }}-node${{ matrix.bun-version }}-${{ hashFiles('bun.lockb') }}
+                  key: dev-depends-${{ matrix.os }}-node${{ matrix.bun-version }}-${{ hashFiles('package.json') }}
     javascriptLint:
         name: JavaScript Lint on Ubuntu
         needs: javascriptSetup
@@ -65,7 +65,7 @@ jobs:
               uses: actions/cache/restore@v3
               with:
                   path: '**/node_modules'
-                  key: dev-depends-${{ matrix.os }}-node${{ matrix.bun-version }}-${{ hashFiles('bun.lockb') }}
+                  key: dev-depends-${{ matrix.os }}-node${{ matrix.bun-version }}-${{ hashFiles('package.json') }}
             - name: Lint
               run: bun run lint
 
@@ -91,7 +91,7 @@ jobs:
               uses: actions/cache/restore@v3
               with:
                   path: '**/node_modules'
-                  key: dev-depends-${{ matrix.os }}-node${{ matrix.bun-version }}-${{ hashFiles('bun.lockb') }}
+                  key: dev-depends-${{ matrix.os }}-node${{ matrix.bun-version }}-${{ hashFiles('package.json') }}
             - uses: actions/cache/restore@v3
               id: cache-restore-prod
               with:
@@ -132,7 +132,7 @@ jobs:
               uses: actions/cache/restore@v3
               with:
                   path: '**/node_modules'
-                  key: dev-depends-${{ matrix.os }}-node${{ matrix.bun-version }}-${{ hashFiles('bun.lockb') }}
+                  key: dev-depends-${{ matrix.os }}-node${{ matrix.bun-version }}-${{ hashFiles('package.json') }}
             - uses: actions/cache/restore@v3
               id: cache-restore-prod
               with:
