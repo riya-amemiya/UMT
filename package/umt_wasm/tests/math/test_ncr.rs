@@ -1,4 +1,4 @@
-use umt_plugin_wasm::ncr;
+use umtn_wasm::ncr;
 
 #[test]
 fn test_ncr() {

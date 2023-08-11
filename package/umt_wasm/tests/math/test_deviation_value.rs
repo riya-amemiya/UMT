@@ -1,4 +1,4 @@
-use umt_plugin_wasm::deviation_value;
+use umtn_wasm::deviation_value;
 
 #[test]
 fn test_deviation_value() {

@@ -135,7 +135,7 @@ export type ZeroString<
 export type binaryHalfAdder<
   X extends `${0 | 1}`,
   Y extends `${0 | 1}`,
-> = binaryHalfAdderParser<StringReverse<X>, StringReverse<Y>>;
+> = binaryHalfAdderParser<X, Y>;
 
 type binaryHalfAdderParser<
   X extends string,
@@ -143,7 +143,7 @@ type binaryHalfAdderParser<
   C extends string = "",
 > = C extends ""
   ? binaryHalfAdderParser<X, Y, binary1bitANDParser<X, Y>>
-  : `${C}${binary1bitANDParser<binaryNOTParser<C>, binary1bitORParser<X, Y>>}`;
+  : `${C}${binary1bitXORParser<X, Y>}`;
 
 // 全加算器
 export type binaryFullAdder<

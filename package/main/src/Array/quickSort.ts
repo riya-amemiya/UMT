@@ -11,7 +11,7 @@ export const quickSort = <A extends any[]>(
   array: A,
   startID = 0,
   endID: number = array.length - 1,
-) => {
+): unknown[] => {
   const pivot = array[random(endID, startID)];
   let left = startID;
   let right = endID;

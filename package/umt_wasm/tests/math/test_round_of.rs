@@ -1,4 +1,4 @@
-use umt_plugin_wasm::round_of;
+use umtn_wasm::round_of;
 
 #[test]
 fn test_round_of(){

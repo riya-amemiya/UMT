@@ -1,4 +1,4 @@
-use umt_plugin_wasm::factorize;
+use umtn_wasm::factorize;
 
 #[test]
 fn test_factorize(){

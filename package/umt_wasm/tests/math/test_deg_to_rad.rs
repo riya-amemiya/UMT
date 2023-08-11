@@ -1,4 +1,4 @@
-use umt_plugin_wasm::deg_to_rad;
+use umtn_wasm::deg_to_rad;
 
 #[test]
 fn test_deg_to_rad() {
