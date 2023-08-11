@@ -1,7 +1,7 @@
 /** @type {import('ts-jest').JestConfigWithTsJest} */
 module.exports = {
   transform: {
-    "^.+\\.(t|j)sx?$": ["@swc/jest"],
+    "^.+\\.(t|j)sx?$": ["ts-jest"],
   },
   testEnvironment: "node",
   roots: ["<rootDir>/src/tests"],
@@ -13,4 +13,8 @@ module.exports = {
   ],
   coverageDirectory: "coverage_dir",
   coverageReporters: ["text"],
+  moduleDirectories: ["node_modules", "src"],
+  moduleNameMapper: {
+    "@/(.*)": "<rootDir>/src/$1",
+  },
 };
