@@ -16,58 +16,58 @@ jobs:
         runs-on: ${{ matrix.os }}
         strategy:
             matrix:
-                node-version: [18.x, 20.x]
+                bun-version: [0.7.0]
                 os: [ubuntu-latest]
         defaults:
           run:
             working-directory: ./package/main
         steps:
             - uses: actions/checkout@v3
-            - name: Use Node.js ${{ matrix.node-version }}
-              uses: actions/setup-node@v3
+            - name: Use Bun ${{ matrix.bun-version }}
+              uses: oven-sh/setup-bun@v1
               with:
-                  node-version: ${{ matrix.node-version }}
+                  bun-version: ${{ matrix.bun-version }}
             - name: Cache Restore devDependencies
               id: cache-restore-dev-depends
               uses: actions/cache/restore@v3
               with:
                   path: '**/node_modules'
-                  key: dev-depends-${{ matrix.os }}-node${{ matrix.node-version }}-${{ hashFiles('yarn.lock') }}
+                  key: dev-depends-${{ matrix.os }}-node${{ matrix.bun-version }}-${{ hashFiles('package.json') }}
             - name: Install dependencies
               if: steps.cache-restore-dev-depends.outputs.cache-hit != 'true'
-              run: yarn install --frozen-lockfile --check-files
+              run: bun i
             - name: Cache Save devDependencies
               if: steps.cache-restore-dev-depends.outputs.cache-hit != 'true'
               id: cache-save-dev-depends
               uses: actions/cache/save@v3
               with:
                   path: '**/node_modules'
-                  key: dev-depends-${{ matrix.os }}-node${{ matrix.node-version }}-${{ hashFiles('yarn.lock') }}
+                  key: dev-depends-${{ matrix.os }}-node${{ matrix.bun-version }}-${{ hashFiles('package.json') }}
     javascriptLint:
         name: JavaScript Lint on Ubuntu
         needs: javascriptSetup
         runs-on: ${{ matrix.os }}
         strategy:
             matrix:
-                node-version: [18.x, 20.x]
+                bun-version: [0.7.0]
                 os: [ubuntu-latest]
         defaults:
           run:
             working-directory: ./package/main
         steps:
             - uses: actions/checkout@v3
-            - name: Use Node.js ${{ matrix.node-version }}
-              uses: actions/setup-node@v3
+            - name: Use Bun ${{ matrix.bun-version }}
+              uses: oven-sh/setup-bun@v1
               with:
-                  node-version: ${{ matrix.node-version }}
+                  bun-version: ${{ matrix.bun-version }}
             - name: Cache Restore devDependencies
               id: cache-restore-dev-depends
               uses: actions/cache/restore@v3
               with:
                   path: '**/node_modules'
-                  key: dev-depends-${{ matrix.os }}-node${{ matrix.node-version }}-${{ hashFiles('yarn.lock') }}
+                  key: dev-depends-${{ matrix.os }}-node${{ matrix.bun-version }}-${{ hashFiles('package.json') }}
             - name: Lint
-              run: yarn lint
+              run: bun run lint
 
     javascriptBuild:
           name: JavaScript Build on Ubuntu
@@ -75,32 +75,32 @@ jobs:
           runs-on: ${{ matrix.os }}
           strategy:
               matrix:
-                  node-version: [18.x, 20.x]
+                  bun-version: [0.7.0]
                   os: [ubuntu-latest]
           defaults:
             run:
               working-directory: ./package/main
           steps:
             - uses: actions/checkout@v3
-            - name: Use Node.js ${{ matrix.node-version }}
-              uses: actions/setup-node@v3
+            - name: Use Bun ${{ matrix.bun-version }}
+              uses: oven-sh/setup-bun@v1
               with:
-                  node-version: ${{ matrix.node-version }}
+                  bun-version: ${{ matrix.bun-version }}
             - name: Cache Restore devDependencies
               id: cache-restore-dev-depends
               uses: actions/cache/restore@v3
               with:
                   path: '**/node_modules'
-                  key: dev-depends-${{ matrix.os }}-node${{ matrix.node-version }}-${{ hashFiles('yarn.lock') }}
+                  key: dev-depends-${{ matrix.os }}-node${{ matrix.bun-version }}-${{ hashFiles('package.json') }}
             - uses: actions/cache/restore@v3
               id: cache-restore-prod
               with:
                   enableCrossOsArchive: true
                   path: '**/module'
-                  key: ${{ matrix.node-version }}-${{ github.sha }}-${{ hashFiles('module/index.js') }}
+                  key: ${{ matrix.bun-version }}-${{ github.sha }}-${{ hashFiles('module/index.js') }}
             - name: Build
               if: steps.cache-restore-prod.outputs.cache-hit != 'true'
-              run: yarn build
+              run: bun run build
             - run: ls module
             - name: Cache Save Build
               if: steps.cache-restore-prod.outputs.cache-hit != 'true'
@@ -108,7 +108,7 @@ jobs:
               with:
                   enableCrossOsArchive: true
                   path: '**/module'
-                  key: ${{ matrix.node-version }}-${{ github.sha }}-${{ hashFiles('module/index.js') }}
+                  key: ${{ matrix.bun-version }}-${{ github.sha }}-${{ hashFiles('module/index.js') }}
 
     javascriptTest:
         name: JavaScript Test on Ubuntu
@@ -116,7 +116,7 @@ jobs:
         runs-on: ${{ matrix.os }}
         strategy:
           matrix:
-            node-version: [18.x, 20.x]
+            bun-version: [0.7.0]
             shard: [1/4, 2/4, 3/4, 4/4]
             os: [ubuntu-latest]
         defaults:
@@ -124,30 +124,27 @@ jobs:
             working-directory: ./package/main
         steps:
             - uses: actions/checkout@v3
-            - name: Use Node.js ${{ matrix.node-version }}
-              uses: actions/setup-node@v3
+            - name: Use Bun ${{ matrix.bun-version }}
+              uses: oven-sh/setup-bun@v1
               with:
-                node-version: ${{ matrix.node-version }}
+                bun-version: ${{ matrix.bun-version }}
             - name: Cache Restore productionDependencies
               uses: actions/cache/restore@v3
               with:
                   path: '**/node_modules'
-                  key: dev-depends-${{ matrix.os }}-node${{ matrix.node-version }}-${{ hashFiles('yarn.lock') }}
+                  key: dev-depends-${{ matrix.os }}-node${{ matrix.bun-version }}-${{ hashFiles('package.json') }}
             - uses: actions/cache/restore@v3
               id: cache-restore-prod
               with:
                   enableCrossOsArchive: true
                   path: '**/module'
-                  key: ${{ matrix.node-version }}-${{ github.sha }}-${{ hashFiles('module/index.js') }}
-            - name: Build
-              if: steps.cache-restore-prod.outputs.cache-hit != 'true'
-              run: yarn build
+                  key: ${{ matrix.bun-version }}-${{ github.sha }}-${{ hashFiles('module/index.js') }}
             - name: Run Test ${{ matrix.shard }}
-              run: yarn test --shard ${{ matrix.shard }}
+              run: bun run test --shard ${{ matrix.shard }}
             - name: Cache Save Build
               if: steps.cache-restore-prod.outputs.cache-hit != 'true'
               uses: actions/cache/save@v3
               with:
                   enableCrossOsArchive: true
                   path: '**/module'
-                  key: ${{ matrix.node-version }}-${{ github.sha }}
+                  key: ${{ matrix.bun-version }}-${{ github.sha }}
