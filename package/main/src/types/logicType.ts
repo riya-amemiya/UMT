@@ -1,3 +1,5 @@
+import { Subtract } from "./mathType";
+
 // booleanに変換する型
 export type isBoolean<X> = X extends number
   ? X extends 0
@@ -55,10 +57,19 @@ export type StringToArray<
 > = S extends `${infer F}${infer R}` ? StringToArray<R, [...T, F]> : T;
 
 // 配列の長さを取得する型
-export type Length<T extends unknown[]> = T["length"];
+export type Length<T extends unknown[]> = T extends { length: infer L }
+  ? L extends number
+    ? L
+    : never
+  : never;
 
 // 文字を配列に変換して長さを取得する型
 export type LengthOfString<S extends string,> = StringToArray<S>["length"];
+
+// 文字の先頭を大文字にする型
+export type Capitalize<S extends string> = S extends `${infer F}${infer R}`
+  ? `${Uppercase<F>}${R}`
+  : S;
 
 // 配列の先頭を削除する型
 export type Shift<T extends unknown[]> = T extends [unknown, ...infer R]
@@ -130,6 +141,31 @@ export type ZeroString<
   N extends number,
   A extends string = "",
 > = LengthOfString<A> extends N ? A : ZeroString<N, `${A}0`>;
+
+// XとYが等しいかどうかを判定する型
+export type Equal<X, Y> = X extends Y ? true : false;
+
+// AまたはBが0かどうか
+export type ZeroAorB<A extends number, B extends number> = Equal<
+  A,
+  0
+> extends true
+  ? true
+  : Equal<B, 0> extends true
+  ? true
+  : false;
+
+// 比較 (B < A)
+export type BGreaterThanA<A extends number, B extends number> = ZeroAorB<
+  A,
+  B
+> extends true
+  ? Equal<A, B> extends true
+    ? false
+    : A extends 0
+    ? true
+    : false
+  : BGreaterThanA<Subtract<A, 1>, Subtract<B, 1>>;
 
 // 半加算器
 export type binaryHalfAdder<
