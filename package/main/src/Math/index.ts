@@ -35,6 +35,7 @@ import { subtract } from "./subtract";
 import { toBinary } from "./toBinary";
 import { toCelsius } from "./toCelsius";
 import { toKelvin } from "./toKelvin";
+import { valueIsNaN } from "./valueIsNaN";
 import { valueSwap } from "./valueSwap";
 
 export {
@@ -75,5 +76,6 @@ export {
   toBinary,
   toCelsius,
   toKelvin,
+  valueIsNaN,
   valueSwap,
 };
