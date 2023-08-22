@@ -17,7 +17,11 @@ export type Subtract<A extends number, B extends number> = NumToArr<A> extends [
   ...infer R,
 ]
   ? Length<R>
-  : 0;
+  : NumToArr<B> extends [...NumToArr<A>, ...infer R]
+  ? `-${Length<R>}` extends `${infer M extends number}`
+    ? M
+    : never
+  : never;
 
 // 掛け算
 export type Multiply<A extends number, B extends number> = MultiHelper<A, B, 0>;
