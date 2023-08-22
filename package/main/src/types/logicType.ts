@@ -155,11 +155,17 @@ export type ZeroAorB<A extends number, B extends number> = Equal<
   ? true
   : false;
 
-// 比較 (B < A)
-export type BGreaterThanA<A extends number, B extends number> = ZeroAorB<
-  A,
-  B
-> extends true
+// 比較 (A < B)
+export type BGreaterThanA<
+  A extends number,
+  B extends number,
+> = `${A}` extends `-${infer N extends number}`
+  ? `${B}` extends `-${infer M extends number}`
+    ? BGreaterThanA<N, M>
+    : BGreaterThanA<N, B>
+  : `${B}` extends `-${infer M extends number}`
+  ? BGreaterThanA<A, M>
+  : ZeroAorB<A, B> extends true
   ? Equal<A, B> extends true
     ? false
     : A extends 0
