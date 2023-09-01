@@ -8,7 +8,8 @@
 export const isDouble = (x: any, loose = true) => {
   if (loose) {
     return (
-      Number.isFinite(x) &&
+      // rome-ignore lint/nursery/noGlobalIsFinite: <explanation>
+      isFinite(x) &&
       !Number.isNaN(x) &&
       Number.isFinite(Number(x)) &&
       !Number.isInteger(Number(x))
