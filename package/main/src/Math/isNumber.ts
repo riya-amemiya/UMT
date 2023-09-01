@@ -8,6 +8,7 @@
 // rome-ignore lint/suspicious/noExplicitAny: <explanation>
 export const isNumber = (x: any, loose = true) => {
   return x !== null && typeof x !== "boolean" && loose
-    ? isFinite(x)
+    ? // rome-ignore lint/nursery/noGlobalIsFinite: <explanation>
+      isFinite(x)
     : Number.isFinite(x);
 };

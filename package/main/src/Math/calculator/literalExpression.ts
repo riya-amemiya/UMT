@@ -37,7 +37,7 @@ export const literalExpression = (x: string) => {
   cache[0] = cache[0][0]
     .split(/([0-9]+)|([a-zA-Z]+)/)
     .filter((n) => n !== "" && typeof n !== "undefined");
-  if (isNaN(Number(cache[0][0]))) {
+  if (Number.isNaN(Number(cache[0][0]))) {
     return cache[1];
   } else {
     const cacheGcd = gcd(Number(cache[0][0]), Number(cache[1]));

@@ -1,4 +1,4 @@
-import { objectUnion } from "./objectUnion";
 import { objectMap } from "./objectMap";
+import { objectUnion } from "./objectUnion";
 
 export { objectUnion, objectMap };

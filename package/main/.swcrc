@@ -1,29 +1,25 @@
 {
-    "$schema": "https://json.schemastore.org/swcrc",
-    "module": {
-        "type": "commonjs",
-        "strict": true,
-        "lazy": false
+  "$schema": "https://json.schemastore.org/swcrc",
+  "module": {
+    "type": "commonjs",
+    "strict": true,
+    "lazy": false
+  },
+  "jsc": {
+    "parser": {
+      "syntax": "typescript",
+      "dynamicImport": false,
+      "decorators": true
     },
-    "jsc": {
-        "parser": {
-            "syntax": "typescript",
-            "dynamicImport": false,
-            "decorators": true
-        },
-        "target": "esnext",
-        "loose": false,
-        "externalHelpers": false,
-        "baseUrl": "./",
-        "paths": {
-            "@/*": [
-                "./src/*"
-            ],
-            "$/*": [
-                "./src/types/*"
-            ]
-        },
-        "preserveAllComments": true
+    "target": "esnext",
+    "loose": false,
+    "externalHelpers": false,
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["./src/*"],
+      "$/*": ["./src/types/*"]
     },
-    "minify": false
+    "preserveAllComments": true
+  },
+  "minify": false
 }
