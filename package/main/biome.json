@@ -1,4 +1,5 @@
 {
+	"$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
 	"javascript": {
 		"globals": [
 			"describe",
@@ -34,17 +35,22 @@
 		],
 		"rules": {
 			"recommended": true,
+			"a11y": {
+				"noSvgWithoutTitle": "warn",
+				"useKeyWithClickEvents": "off"
+			},
 			"complexity": {
+				"noForEach": "error",
 				"noUselessFragments": "warn",
-				"useSimplifiedLogicExpression": "error"
+				"useSimplifiedLogicExpression": "error",
+				"useSimpleNumberKeys": "error"
 			},
 			"correctness": {
-				"noUndeclaredVariables": "warn",
+				"noUndeclaredVariables": "off",
 				"noUnusedVariables": "off"
 			},
 			"style": {
 				"noImplicitBoolean": "warn",
-				"noNamespace": "warn",
 				"noNegationElse": "error",
 				"noParameterProperties": "off",
 				"noShoutyConstants": "warn",
@@ -55,24 +61,41 @@
 				"useSingleCaseStatement": "error"
 			},
 			"suspicious": {
-				"noRedundantUseStrict": "warn"
+				"noRedundantUseStrict": "warn",
+				"noConsoleLog": "warn"
 			},
 			"nursery": {
 				"noAccumulatingSpread": "error",
 				"noBannedTypes": "error",
 				"noConfusingArrow": "error",
-				"noConstantCondition": "off",
-				"noDuplicateJsxProps": "error",
-				"noForEach": "error",
+				"noConstantCondition": "error",
+				"noControlCharactersInRegex": "error",
+				"noDuplicateJsonKeys": "error",
+				"noExcessiveComplexity": "off",
+				"noFallthroughSwitchClause": "error",
+				"noGlobalIsFinite": "error",
+				"noGlobalIsNan": "error",
+				"noNonoctalDecimalEscape": "error",
 				"noSelfAssign": "error",
-				"useCamelCase": "warn",
+				"noStaticOnlyClass": "error",
+				"noUnsafeDeclarationMerging": "error",
+				"noUselessEmptyExport": "error",
+				"noUselessThisAlias": "error",
+				"noVoid": "error",
+				"useArrowFunction": "warn",
 				"useExhaustiveDependencies": "off",
+				"useGetterReturn": "error",
 				"useGroupedTypeImport": "error",
 				"useHookAtTopLevel": "error",
-				"useIsNan": "error",
+				"useIsArray": "error",
 				"useLiteralEnumMembers": "error",
-				"useLiteralKeys": "error",
-				"useSimpleNumberKeys": "error"
+				"useNamingConvention": {
+					"level": "off",
+					"options": {
+						"strictCase": true,
+						"enumMemberCase": "CONSTANT_CASE"
+					}
+				}
 			}
 		}
 	}

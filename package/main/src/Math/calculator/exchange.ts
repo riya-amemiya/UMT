@@ -8,7 +8,7 @@ export const exchange = <T extends object>(n: string, props?: T) => {
       if (n.indexOf(i) !== -1) {
         if (isNumber(props[i])) {
           const x = multiplication(Number(n.slice(i.length)), Number(props[i]));
-          if (isNaN(x)) {
+          if (Number.isNaN(x)) {
             return n;
           } else {
             return String(

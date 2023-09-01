@@ -1,4 +1,3 @@
-import { dayType, dayTypeInt, monTypeInt, monTypeZero } from "@/types/dateType";
 import {
   hoursType,
   hoursTypeInt,
@@ -9,6 +8,7 @@ import {
   secondsType,
   secondsTypeInt,
 } from "@/types/clockType";
+import { dayType, dayTypeInt, monTypeInt, monTypeZero } from "@/types/dateType";
 
 export const newDateInt = <T extends monTypeInt>(
   year: number,
