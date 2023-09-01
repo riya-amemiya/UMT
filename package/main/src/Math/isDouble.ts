@@ -1,15 +1,16 @@
 /**
- * @param {any} x
+ * @param {unknown} x
  * @param {boolean} [loose=true] - 文字列も対象にするかどうか
  * @returns boolean
  */
 
-// rome-ignore lint/suspicious/noExplicitAny: <explanation>
-export const isDouble = (x: any, loose = true) => {
+function isDouble(x: unknown): x is number | string;
+function isDouble(x: unknown, loose: false): x is number;
+function isDouble(x: unknown, loose = true): x is number {
   if (loose) {
     return (
       // rome-ignore lint/nursery/noGlobalIsFinite: <explanation>
-      isFinite(x) &&
+      isFinite(x as number) &&
       !Number.isNaN(x) &&
       Number.isFinite(Number(x)) &&
       !Number.isInteger(Number(x))
@@ -17,4 +18,6 @@ export const isDouble = (x: any, loose = true) => {
   } else {
     return x !== null && typeof x !== "boolean" && Number.isFinite(x);
   }
-};
+}
+
+export { isDouble };
