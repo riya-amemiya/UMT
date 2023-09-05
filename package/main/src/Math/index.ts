@@ -12,6 +12,7 @@ import { getDecimalLength } from "./getDecimalLength";
 import { isDouble } from "./isDouble";
 import { isNumber } from "./isNumber";
 import { isPrimeNumber } from "./isPrimeNumber";
+import { isValueNaN } from "./isValueNaN";
 import { lcm } from "./lcm";
 import { mathConverter } from "./mathConverter";
 import { mathSeparator } from "./mathSeparator";
@@ -35,7 +36,6 @@ import { subtract } from "./subtract";
 import { toBinary } from "./toBinary";
 import { toCelsius } from "./toCelsius";
 import { toKelvin } from "./toKelvin";
-import { valueIsNaN } from "./valueIsNaN";
 import { valueSwap } from "./valueSwap";
 
 export {
@@ -76,6 +76,6 @@ export {
   toBinary,
   toCelsius,
   toKelvin,
-  valueIsNaN,
+  isValueNaN,
   valueSwap,
 };
