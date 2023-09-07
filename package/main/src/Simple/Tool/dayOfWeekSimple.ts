@@ -64,19 +64,19 @@ function dayOfWeekSimple<
     if (props.includes(":")) {
       const [year, mon, day] = props
         .split(":")
-        // rome-ignore lint/suspicious/noExplicitAny: <explanation>
+        // biome-ignore lint/suspicious/noExplicitAny: <explanation>
         .map(Number) as any;
       return dayOfWeek({ year, mon, day }, timeDifference);
     } else if (props.includes("/")) {
       const [year, mon, day] = props
         .split("/")
-        // rome-ignore lint/suspicious/noExplicitAny: <explanation>
+        // biome-ignore lint/suspicious/noExplicitAny: <explanation>
         .map(Number) as any;
       return dayOfWeek({ year, mon, day }, timeDifference);
     } else {
       const [year, mon, day] = props
         .split("-")
-        // rome-ignore lint/suspicious/noExplicitAny: <explanation>
+        // biome-ignore lint/suspicious/noExplicitAny: <explanation>
         .map(Number) as any;
       return dayOfWeek({ year, mon, day }, timeDifference);
     }

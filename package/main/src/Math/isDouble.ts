@@ -9,7 +9,7 @@ function isDouble(x: unknown, loose: false): x is number;
 function isDouble(x: unknown, loose = true): x is number {
   if (loose) {
     return (
-      // rome-ignore lint/nursery/noGlobalIsFinite: <explanation>
+      // biome-ignore lint/nursery/noGlobalIsFinite: <explanation>
       isFinite(x as number) &&
       !Number.isNaN(x) &&
       Number.isFinite(Number(x)) &&

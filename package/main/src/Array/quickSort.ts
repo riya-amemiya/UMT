@@ -6,7 +6,7 @@ import { random } from "../Math/random";
  * @param  {number} endID
  */
 
-// rome-ignore lint/suspicious/noExplicitAny: <explanation>
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 export const quickSort = <A extends any[]>(
   array: A,
   startID = 0,

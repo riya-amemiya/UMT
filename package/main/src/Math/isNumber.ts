@@ -9,7 +9,7 @@ function isNumber(x: unknown, loose?: true): x is number | string;
 function isNumber(x: unknown, loose?: false): x is number;
 function isNumber(x: unknown, loose = true): x is number {
   return x !== null && typeof x !== "boolean" && loose
-    ? // rome-ignore lint/nursery/noGlobalIsFinite: <explanation>
+    ? // biome-ignore lint/nursery/noGlobalIsFinite: <explanation>
       isFinite(x as number)
     : Number.isFinite(x);
 }
