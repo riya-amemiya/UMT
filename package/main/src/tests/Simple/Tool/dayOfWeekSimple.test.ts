@@ -5,15 +5,15 @@ describe("dayOfWeekSimple", () => {
   });
 
   it("should return 1 for Monday", () => {
-    expect(dayOfWeekSimple("2022-01-03")).toBe(1);
+    expect(dayOfWeekSimple("2022/01/03")).toBe(1);
   });
 
   it("should return 2 for Tuesday", () => {
-    expect(dayOfWeekSimple("2022-01-04")).toBe(2);
+    expect(dayOfWeekSimple("2022:01:04")).toBe(2);
   });
 
   it("should return 3 for Wednesday", () => {
-    expect(dayOfWeekSimple("2022-01-05")).toBe(3);
+    expect(dayOfWeekSimple({ year: 2022, mon: 1, day: 5 })).toBe(3);
   });
 
   it("should return 4 for Thursday", () => {

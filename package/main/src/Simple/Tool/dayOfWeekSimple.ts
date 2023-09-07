@@ -9,17 +9,57 @@ import {
   dayTypeInt,
 } from "@/types/dateType";
 
-export const dayOfWeekSimple = <
-  T extends MonthsWith31Days | MonthsWihout31Days,
->(
+function dayOfWeekSimple<T extends MonthsWith31DaysInt | MonthsWihout31DaysInt>(
+  props?: {
+    year?: number;
+    mon?: T;
+    day?: dayTypeInt<T>;
+  },
+  timeDifference?: hoursTypeInt,
+): number;
+function dayOfWeekSimple<T extends MonthsWith31Days | MonthsWihout31Days>(
   props?:
-    | { year?: number; mon?: T; day?: dayType<T> }
     | `${number}-${T}-${dayType<T>}`
     | `${number}:${T}:${dayType<T>}`
     | `${number}/${T}/${dayType<T>}`
     | Date,
+  timeDifference?: hoursTypeInt,
+): number;
+function dayOfWeekSimple<
+  T extends
+    | MonthsWith31Days
+    | MonthsWihout31Days
+    | MonthsWith31DaysInt
+    | MonthsWihout31DaysInt,
+>(
+  props?:
+    | {
+        year?: number;
+        mon?: T;
+        day?: T extends MonthsWith31Days | MonthsWihout31Days
+          ? dayType<T>
+          : T extends MonthsWith31DaysInt | MonthsWihout31DaysInt
+          ? dayTypeInt<T>
+          : never;
+      }
+    | `${number}-${T}-${T extends MonthsWith31Days | MonthsWihout31Days
+        ? dayType<T>
+        : T extends MonthsWith31DaysInt | MonthsWihout31DaysInt
+        ? dayTypeInt<T>
+        : never}`
+    | `${number}:${T}:${T extends MonthsWith31Days | MonthsWihout31Days
+        ? dayType<T>
+        : T extends MonthsWith31DaysInt | MonthsWihout31DaysInt
+        ? dayTypeInt<T>
+        : never}`
+    | `${number}/${T}/${T extends MonthsWith31Days | MonthsWihout31Days
+        ? dayType<T>
+        : T extends MonthsWith31DaysInt | MonthsWihout31DaysInt
+        ? dayTypeInt<T>
+        : never}`
+    | Date,
   timeDifference: hoursTypeInt = 9,
-): number => {
+): number {
   if (typeof props === "string") {
     if (props.includes(":")) {
       const [year, mon, day] = props
@@ -63,4 +103,6 @@ export const dayOfWeekSimple = <
       timeDifference,
     );
   }
-};
+}
+
+export { dayOfWeekSimple };
