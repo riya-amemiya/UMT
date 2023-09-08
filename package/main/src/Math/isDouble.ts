@@ -16,7 +16,7 @@ function isDouble(x: unknown, loose = true): x is number {
       !Number.isInteger(Number(x))
     );
   } else {
-    return x !== null && typeof x !== "boolean" && Number.isFinite(x);
+    return Number.isFinite(x);
   }
 }
 

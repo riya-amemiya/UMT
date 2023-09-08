@@ -20,5 +20,9 @@ describe("isDouble", () => {
     expect(isDouble({})).toBe(false);
     expect(isDouble([])).toBe(false);
     expect(isDouble(0x12)).toBe(false);
+    expect(isDouble(-Infinity, false)).toBe(false);
+    expect(isDouble(null, false)).toBe(false);
+    expect(isDouble(true, false)).toBe(false);
+    expect(isDouble(false, false)).toBe(false);
   });
 });
