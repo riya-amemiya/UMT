@@ -8,6 +8,7 @@ describe("isDouble", () => {
 
   it("should return false for invalid doubles", () => {
     expect(isDouble(1)).toBe(false);
+    expect(isDouble(1, false)).toBe(false);
     expect(isDouble("1")).toBe(false);
     expect(isDouble("1", false)).toBe(false);
     expect(isDouble(NaN)).toBe(false);
