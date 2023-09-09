@@ -117,7 +117,6 @@ jobs:
         strategy:
           matrix:
             bun-version: [1.0.0]
-            shard: [1/4, 2/4, 3/4, 4/4]
             os: [ubuntu-latest]
         defaults:
           run:
@@ -139,8 +138,8 @@ jobs:
                   enableCrossOsArchive: true
                   path: '**/module'
                   key: ${{ matrix.bun-version }}-${{ github.sha }}-${{ hashFiles('module/index.js') }}
-            - name: Run Test ${{ matrix.shard }}
-              run: bun run test --shard ${{ matrix.shard }}
+            - name: Run Test
+              run: bun test
             - name: Cache Save Build
               if: steps.cache-restore-prod.outputs.cache-hit != 'true'
               uses: actions/cache/save@v3
