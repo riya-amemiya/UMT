@@ -12,7 +12,7 @@ test("{solveEquation", () => {
       ],
       [4, 10],
     ),
-  ).toEqual(expect.arrayContaining([-2, 6]));
+  ).toEqual([-2, 6]);
   expect(
     solveEquation(
       /*
@@ -25,7 +25,7 @@ test("{solveEquation", () => {
       ],
       [33, 8],
     ),
-  ).toEqual(expect.arrayContaining([3, 5]));
+  ).toEqual([3, 5]);
   expect(
     solveEquation(
       /*
@@ -40,5 +40,5 @@ test("{solveEquation", () => {
       ],
       [8, 14, 74],
     ),
-  ).toEqual(expect.arrayContaining([2, 5, 3]));
+  ).toEqual([2, 5, 3]);
 });
