@@ -2,7 +2,7 @@ import { arrayMap } from "./arrayMap";
 
 export class ArrayWrapper {
   private readonly localArrayMap: typeof arrayMap;
-  // rome-ignore lint/suspicious/noExplicitAny: <explanation>
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   private localData: any[] = [];
   constructor() {
     this.localArrayMap = arrayMap;

@@ -1,16 +1,22 @@
 import { gcd } from "@/Math/gcd";
-test("{gcd}", () => {
-  expect(gcd(1, 1)).toBe(1);
-  expect(gcd(1, 2)).toBe(1);
-  expect(gcd(2, 1)).toBe(1);
-  expect(gcd(2, 2)).toBe(2);
-  expect(gcd(2, 3)).toBe(1);
-  expect(gcd(2, 4)).toBe(2);
-  expect(gcd(4, 2)).toBe(2);
-  expect(gcd(2, 6)).toBe(2);
-  expect(gcd(6, 2)).toBe(2);
-  expect(gcd(2, 8)).toBe(2);
-  expect(gcd(8, 2)).toBe(2);
-  expect(gcd(2, 10)).toBe(2);
-  expect(gcd(10, 2)).toBe(2);
+describe("gcd", () => {
+  test("gcd of 0 and 0 is 0", () => {
+    expect(gcd(0, 0)).toBe(0);
+  });
+
+  test("gcd of 0 and non-zero number is 0", () => {
+    expect(gcd(0, 5)).toBe(0);
+  });
+
+  test("gcd of two numbers", () => {
+    expect(gcd(12, 18)).toBe(6);
+  });
+
+  test("gcd of three numbers", () => {
+    expect(gcd(12, 18, 24)).toBe(6);
+  });
+
+  test("gcd of four numbers", () => {
+    expect(gcd(12, 18, 24, 36)).toBe(6);
+  });
 });
