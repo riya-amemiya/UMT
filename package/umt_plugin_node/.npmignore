@@ -1,10 +1,12 @@
 node_modules
 src
+tests
 .gitignore
-.babelrc
+.markdownlint.json
+.nvmrc
 .prettierrc
+jest.config.js
 .vscode
-test
 doc
 typedoc.json
 tsconfig.json
