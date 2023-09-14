@@ -8,6 +8,7 @@ describe("hexToRgba", () => {
     expect(hexToRgba("#FFFFFF")).toEqual({ r: 255, g: 255, b: 255, a: 1 });
     expect(hexToRgba("#000000")).toEqual({ r: 0, g: 0, b: 0, a: 1 });
     expect(hexToRgba("#FFA500")).toEqual({ r: 255, g: 165, b: 0, a: 1 });
+    expect(hexToRgba("#FFA50099")).toEqual({ r: 255, g: 165, b: 0, a: 0.6 });
   });
 
   it("should throw an error for invalid hex code", () => {
