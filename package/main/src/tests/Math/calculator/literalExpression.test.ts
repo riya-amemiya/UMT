@@ -4,4 +4,6 @@ test("literalExpression", () => {
   expect(literalExpression("x=1+1+1")).toBe("3");
   expect(literalExpression("x=1+1+1+1")).toBe("4");
   expect(literalExpression("x=1+1+1+1+1")).toBe("5");
+  expect(literalExpression("x=1+1+1+1-1")).toBe("3");
+  expect(literalExpression("x=1-1")).toBe("0");
 });
