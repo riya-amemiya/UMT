@@ -6,12 +6,12 @@ import { random } from "../Math/random";
  * @param  {number} endID
  */
 
-// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-export const quickSort = <A extends any[]>(
-  array: A,
+export const quickSort = <A extends unknown[]>(
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+  array: any[],
   startID = 0,
   endID: number = array.length - 1,
-): unknown[] => {
+): A => {
   const pivot = array[random(endID, startID)];
   let left = startID;
   let right = endID;
@@ -37,5 +37,5 @@ export const quickSort = <A extends any[]>(
   if (right + 1 < endID) {
     quickSort(array, right + 1, endID);
   }
-  return array;
+  return array as A;
 };

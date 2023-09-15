@@ -3,12 +3,12 @@
  * @param  {unknown[]} array
  * @param  {unknown[]} ...arrays
  */
-export const getArraysDiff = (
+export const getArraysDiff = <A extends unknown[]>(
   array: unknown[],
   ...arrays: unknown[]
-): unknown[] => {
+): A => {
   const result = array.concat(...arrays).filter((val, _index, arr) => {
     return arr.indexOf(val) === arr.lastIndexOf(val);
   });
-  return result;
+  return result as A;
 };
