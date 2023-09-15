@@ -139,7 +139,7 @@ jobs:
                   path: '**/module'
                   key: ${{ matrix.bun-version }}-${{ github.sha }}-${{ hashFiles('module/index.js') }}
             - name: Run Test
-              run: bun test
+              run: bun test src
             - name: Cache Save Build
               if: steps.cache-restore-prod.outputs.cache-hit != 'true'
               uses: actions/cache/save@v3
