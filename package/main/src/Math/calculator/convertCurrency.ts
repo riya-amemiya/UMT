@@ -8,7 +8,11 @@ import { multiplication } from "../multiplication";
  * @param conversionRates - 通貨記号と換算レートのオブジェクト
  * @returns 換算後の通貨額を文字列で返す。換算できない場合は元の文字列を返す。
  */
-export const convertCurrency = <T extends object>(
+export const convertCurrency = <
+  T extends {
+    [key: string]: number | string;
+  },
+>(
   inputString: string,
   conversionRates?: T,
 ) => {

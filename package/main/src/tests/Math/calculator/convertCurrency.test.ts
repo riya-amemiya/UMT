@@ -18,4 +18,7 @@ test("convertCurrency", () => {
 
   // 換算レートが数値でない場合、元の文字列 "$1" を返すことを確認
   expect(convertCurrency("$1", { $: "abc" })).toBe("$1");
+
+  // 換算レートが文字列の数値の場合、"$1" を 100 倍して "100" になることを確認
+  expect(convertCurrency("$1", { $: "100" })).toBe("100");
 });
