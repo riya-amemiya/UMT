@@ -1,13 +1,13 @@
 import { calculator } from "./calculator";
 import { calculatorInitialization } from "./calculatorInitialization";
+import { convertCurrency } from "./convertCurrency";
 import { calculatorCore } from "./core";
-import { exchange } from "./exchange";
 import { literalExpression } from "./literalExpression";
 
 export {
   calculator,
   calculatorInitialization,
   calculatorCore,
-  exchange,
+  convertCurrency,
   literalExpression,
 };

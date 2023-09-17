@@ -3,13 +3,9 @@
  * @param  {unknown[]} array
  * @param  {unknown[]} ...arrays
  */
-export const arraysJoin = <
-  A extends unknown[],
-  B extends unknown[],
-  C extends A & B,
->(
-  array: A,
-  ...arrays: B[]
+export const arraysJoin = <A extends unknown[]>(
+  array: unknown[],
+  ...arrays: unknown[]
 ) => {
-  return [...new Set(array.concat(...arrays))] as C;
+  return [...new Set(array.concat(...arrays))] as A;
 };

@@ -1,9 +1,14 @@
 # UMT Main Package
 
-個人的に作った便利関数集
-個人用途なので破壊的変更がある可能性があります。
+Amemiya Riyaの便利関数集
+UMT = Useful My Tools
+アプデで破壊的変更がある可能性があります。
 Main Packageに依存関係はありません。
-JavaScriptからの呼び出しに対応しています。
+
+## 実装方針
+
+- 依存関係を持たない
+- 拡張性を持たせるために、最小限の機能のみを実装する
 
 ## Doc
 
@@ -12,5 +17,17 @@ JavaScriptからの呼び出しに対応しています。
 ## Install
 
 ```bash
+npm install umt
+
+# or
+
 yarn add umt
+
+# or
+
+pnpm add umt
+
+# or
+
+bun add umt
 ```

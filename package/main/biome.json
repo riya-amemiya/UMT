@@ -46,8 +46,8 @@
 				"useSimpleNumberKeys": "error"
 			},
 			"correctness": {
-				"noUndeclaredVariables": "off",
-				"noUnusedVariables": "off"
+				"noUndeclaredVariables": "warn",
+				"noUnusedVariables": "warn"
 			},
 			"style": {
 				"noImplicitBoolean": "warn",

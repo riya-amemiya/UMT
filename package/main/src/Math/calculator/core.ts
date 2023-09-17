@@ -2,98 +2,132 @@ import { addition } from "@/Math/addition";
 import { division } from "@/Math/division";
 import { multiplication } from "@/Math/multiplication";
 import { subtract } from "@/Math/subtract";
-import { exchange } from "./exchange";
-/**
- * 電卓
- * ()や符号に対応
- * xなどの文字は未対応
- * @param  {string} x 計算式
- */
-export const calculatorCore = <T extends object>(x: string, ex?: T): string => {
-  let copyX = x;
-  //符号反転
-  copyX = copyX.replace(/--/g, "+");
-  copyX = copyX.replace(/\+\+/g, "+");
-  copyX = copyX.replace(/\+-/g, "+0-");
-  copyX = copyX.replace(/\-\+/g, "+0-");
+import { convertCurrency } from "./convertCurrency";
 
-  //円計算
+export const calculatorCore = <T extends { [key: string]: string | number }>(
+  expression: string,
+  currencyExchange?: T,
+): string => {
+  let sanitizedExpression = expression;
+
+  // 符号の処理
+  sanitizedExpression = sanitizeSigns(sanitizedExpression);
+
+  // 主要な計算ループ
   while (true) {
-    if (ex) {
-      for (const i in ex) {
-        if (copyX.indexOf(i) !== -1) {
-          const $ = copyX.match(new RegExp(`\\${i}([0-9]+)`));
-          if ($) {
-            copyX = copyX.replace($[0], exchange($[0], ex));
-          }
-        }
-      }
+    // 通貨計算
+    if (currencyExchange) {
+      sanitizedExpression = applyCurrencyExchange(
+        sanitizedExpression,
+        currencyExchange,
+      );
     }
-    //括弧の処理
-    if (copyX.indexOf("(") !== -1 || copyX.indexOf(")") !== -1) {
-      //括弧の中身をぬく
-      const y = copyX.match(/\(\d+\.?(\d+)?(\*|\/|\+|\-)\d+\.?(\d+)?\)/);
-      if (y) {
-        //括弧の中身を計算
-        copyX = copyX.replace(y[0], calculatorCore(y[0].replace(/\(|\)/g, "")));
-      } else {
-        copyX = copyX.replace(
-          `(${copyX.slice(copyX.indexOf("(") + 1, copyX.indexOf(")"))})`,
-          calculatorCore(
-            copyX.slice(copyX.indexOf("(") + 1, copyX.indexOf(")")),
-          ),
-        );
-      }
-    } else if (
-      copyX.indexOf("^") !== -1 ||
-      copyX.indexOf("*") !== -1 ||
-      copyX.indexOf("/") !== -1
-    ) {
-      //掛け算と割り算の処理
-      const y: [RegExpMatchArray | null, string[]] = [
-        copyX.match(/\d+\.?(\d+)?(\*|\/|\^)\d+\.?(\d+)?/),
-        [""],
-      ];
-      if (y[0]) {
-        y[1] = y[0][0].split(/(\d+\.\d+)|(\d+)/g).filter((n) => {
-          return typeof n !== "undefined" && n !== "";
-        });
-        copyX = copyX.replace(
-          y[0][0],
-          `${
-            y[1][1] === "^"
-              ? (+y[1][0]) ** +y[1][2]
-              : y[1][1] === "*"
-              ? multiplication(+y[1][0], +y[1][2])
-              : y[1][1] === "/"
-              ? division(+y[1][0], +y[1][2])
-              : "0"
-          }`,
-        );
-      }
-    } else if (copyX.indexOf("+") !== -1 || copyX.indexOf("-") !== -1) {
-      //加算と減算の処理
-      const y: [RegExpMatchArray | null, string[]] = [
-        copyX.match(/\d+\.?(\d+)?(\+|\-)\d+\.?(\d+)?/),
-        [""],
-      ];
-      if (y[0]) {
-        y[1] = y[0][0].split(/(\d+\.\d+)|(\d+)/g).filter((n) => {
-          return typeof n !== "undefined" && n !== "";
-        });
-        copyX = copyX.replace(
-          y[0][0],
-          `${
-            y[1][1] === "+"
-              ? addition(Number(y[1][0]), Number(y[1][2]))
-              : y[1][1] === "-"
-              ? subtract(Number(y[1][0]), Number(y[1][2]))
-              : "0"
-          }`,
-        );
-      }
-    } else {
-      return copyX;
+
+    // 括弧の処理
+    if (containsParentheses(sanitizedExpression)) {
+      sanitizedExpression = resolveParentheses(sanitizedExpression);
+    }
+
+    // 乗算、除算、べき乗の処理
+    else if (containsMulDivExp(sanitizedExpression)) {
+      sanitizedExpression = resolveMulDivExp(sanitizedExpression);
+    }
+
+    // 加算と減算の処理
+    else if (containsAddSub(sanitizedExpression)) {
+      sanitizedExpression = resolveAddSub(sanitizedExpression);
+    }
+
+    // もう計算するものがなければ結果を返す
+    else {
+      return sanitizedExpression;
     }
   }
+};
+
+const sanitizeSigns = (expr: string): string => {
+  return expr
+    .replace(/--/g, "+")
+    .replace(/\+\+/g, "+")
+    .replace(/\+-/g, "+0-")
+    .replace(/\-\+/g, "+0-");
+};
+
+const applyCurrencyExchange = <T extends { [key: string]: string | number }>(
+  expr: string,
+  rates: T,
+): string => {
+  let returnExpr = expr;
+  // 通貨の交換ロジック
+  for (const i in rates) {
+    if (returnExpr.indexOf(i) !== -1) {
+      const $ = returnExpr.match(new RegExp(`\\${i}([0-9]+)`));
+      if ($) {
+        returnExpr = returnExpr.replace($[0], convertCurrency($[0], rates));
+      }
+    }
+  }
+  return returnExpr;
+};
+
+const containsParentheses = (expr: string): boolean => {
+  return expr.indexOf("(") !== -1 || expr.indexOf(")") !== -1;
+};
+
+const resolveParentheses = (expr: string): string => {
+  // 括弧内の計算ロジック
+  const match = expr.match(/\(\d+\.?(\d+)?(\*|\/|\+|\-)\d+\.?(\d+)?\)/);
+  if (match) {
+    return expr.replace(
+      match[0],
+      calculatorCore(match[0].replace(/\(|\)/g, "")),
+    );
+  }
+  return expr;
+};
+
+const containsMulDivExp = (expr: string): boolean => {
+  return (
+    expr.indexOf("^") !== -1 ||
+    expr.indexOf("*") !== -1 ||
+    expr.indexOf("/") !== -1
+  );
+};
+
+const resolveMulDivExp = (expr: string): string => {
+  // 乗算、除算、べき乗の計算ロジック
+  const match = expr.match(/\d+\.?(\d+)?(\*|\/|\^)\d+\.?(\d+)?/);
+  if (match) {
+    const operands = match[0].split(/(\*|\/|\^)/);
+    const result =
+      operands[1] === "^"
+        ? Number(operands[0]) ** Number(operands[2])
+        : operands[1] === "*"
+        ? multiplication(Number(operands[0]), Number(operands[2]))
+        : operands[1] === "/"
+        ? division(Number(operands[0]), Number(operands[2]))
+        : 0;
+    return expr.replace(match[0], String(result));
+  }
+  return expr;
+};
+
+const containsAddSub = (expr: string): boolean => {
+  return expr.indexOf("+") !== -1 || expr.indexOf("-") !== -1;
+};
+
+const resolveAddSub = (expr: string): string => {
+  // 加算、減算の計算ロジック
+  const match = expr.match(/\d+\.?(\d+)?(\+|\-)\d+\.?(\d+)?/);
+  if (match) {
+    const operands = match[0].split(/(\+|\-)/);
+    const result =
+      operands[1] === "+"
+        ? addition(Number(operands[0]), Number(operands[2]))
+        : operands[1] === "-"
+        ? subtract(Number(operands[0]), Number(operands[2]))
+        : 0;
+    return expr.replace(match[0], String(result));
+  }
+  return expr;
 };

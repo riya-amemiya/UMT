@@ -9,7 +9,10 @@ import { literalExpression } from "./literalExpression";
  * @param  {object} exchange 為替
  */
 
-export const calculator = <T extends object>(x: string, exchange?: T) => {
+export const calculator = <T extends { [key: string]: string | number }>(
+  x: string,
+  exchange?: T,
+) => {
   let copyX = x;
   copyX = copyX.replace(/\s+/g, ""); // Remove spaces
   if (copyX.indexOf("=") !== -1) {
