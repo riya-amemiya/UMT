@@ -97,7 +97,7 @@ jobs:
               with:
                   enableCrossOsArchive: true
                   path: '**/module'
-                  key: ${{ matrix.bun-version }}-${{ github.sha }}-${{ hashFiles('module/index.js') }}
+                  key: ${{ matrix.bun-version }}-${{ github.sha }}-${{ hashFiles('module/tsconfig.tsbuildinfo') }}
             - name: Build
               if: steps.cache-restore-prod.outputs.cache-hit != 'true'
               run: bun run build
@@ -108,7 +108,7 @@ jobs:
               with:
                   enableCrossOsArchive: true
                   path: '**/module'
-                  key: ${{ matrix.bun-version }}-${{ github.sha }}-${{ hashFiles('module/index.js') }}
+                  key: ${{ matrix.bun-version }}-${{ github.sha }}-${{ hashFiles('module/tsconfig.tsbuildinfo') }}
 
     javascriptTest:
         name: JavaScript Test on Ubuntu
@@ -137,7 +137,7 @@ jobs:
               with:
                   enableCrossOsArchive: true
                   path: '**/module'
-                  key: ${{ matrix.bun-version }}-${{ github.sha }}-${{ hashFiles('module/index.js') }}
+                  key: ${{ matrix.bun-version }}-${{ github.sha }}-${{ hashFiles('module/tsconfig.tsbuildinfo') }}
             - name: Run Test
               run: bun test src
             - name: Cache Save Build
