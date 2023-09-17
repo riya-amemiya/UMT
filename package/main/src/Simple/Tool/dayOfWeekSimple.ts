@@ -1,16 +1,18 @@
 import { dayOfWeek } from "@/Tool/dayOfWeek";
 import { hoursTypeInt } from "@/types/clockType";
 import {
-  MonthsWithout31Days,
-  MonthsWithout31DaysInt,
   MonthsWith31Days,
   MonthsWith31DaysInt,
+  MonthsWithout31Days,
+  MonthsWithout31DaysInt,
   convertMonTypeZero,
   dayType,
   dayTypeInt,
 } from "@/types/dateType";
 
-function dayOfWeekSimple<T extends MonthsWith31DaysInt | MonthsWithout31DaysInt>(
+function dayOfWeekSimple<
+  T extends MonthsWith31DaysInt | MonthsWithout31DaysInt,
+>(
   props?: {
     year?: number;
     mon?: T;
