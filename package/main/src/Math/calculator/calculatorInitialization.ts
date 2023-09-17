@@ -5,7 +5,9 @@ import { calculator } from "./calculator";
  * @param {object} exchange - current exchange rate
  * @return {Function} - calculator
  */
-export const calculatorInitialization = <T extends object>(
+export const calculatorInitialization = <
+  T extends { [key: string]: string | number },
+>(
   exchange: T,
 ): ((x: string) => string) => {
   /**

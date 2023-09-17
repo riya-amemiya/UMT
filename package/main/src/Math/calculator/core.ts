@@ -4,7 +4,7 @@ import { multiplication } from "@/Math/multiplication";
 import { subtract } from "@/Math/subtract";
 import { convertCurrency } from "./convertCurrency";
 
-export const calculatorCore = <T extends object>(
+export const calculatorCore = <T extends { [key: string]: string | number }>(
   expression: string,
   currencyExchange?: T,
 ): string => {
@@ -53,7 +53,7 @@ const sanitizeSigns = (expr: string): string => {
     .replace(/\-\+/g, "+0-");
 };
 
-const applyCurrencyExchange = <T extends object>(
+const applyCurrencyExchange = <T extends { [key: string]: string | number }>(
   expr: string,
   rates: T,
 ): string => {
