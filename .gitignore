@@ -83,7 +83,5 @@ api
 
 build
 
-module
-
 package-lock.json
 yarn-error.log

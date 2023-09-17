@@ -83,7 +83,9 @@ api
 
 build
 
-module
+
+/module/*
+!/module/tsconfig.tsbuildinfo
 
 lib
 

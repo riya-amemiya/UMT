@@ -1,15 +1,18 @@
 import { dayOfWeek } from "@/Tool/dayOfWeek";
 import { hoursTypeInt } from "@/types/clockType";
 import {
-  MonthsWihout31Days,
-  MonthsWihout31DaysInt,
   MonthsWith31Days,
   MonthsWith31DaysInt,
+  MonthsWithout31Days,
+  MonthsWithout31DaysInt,
+  convertMonTypeZero,
   dayType,
   dayTypeInt,
 } from "@/types/dateType";
 
-function dayOfWeekSimple<T extends MonthsWith31DaysInt | MonthsWihout31DaysInt>(
+function dayOfWeekSimple<
+  T extends MonthsWith31DaysInt | MonthsWithout31DaysInt,
+>(
   props?: {
     year?: number;
     mon?: T;
@@ -17,44 +20,44 @@ function dayOfWeekSimple<T extends MonthsWith31DaysInt | MonthsWihout31DaysInt>(
   },
   timeDifference?: hoursTypeInt,
 ): number;
-function dayOfWeekSimple<T extends MonthsWith31Days | MonthsWihout31Days>(
+function dayOfWeekSimple<T extends MonthsWith31Days | MonthsWithout31Days>(
   props?:
-    | `${number}-${T}-${dayType<T>}`
-    | `${number}:${T}:${dayType<T>}`
-    | `${number}/${T}/${dayType<T>}`
+    | `${number}-${convertMonTypeZero<T>}-${dayType<T>}`
+    | `${number}:${convertMonTypeZero<T>}:${dayType<T>}`
+    | `${number}/${convertMonTypeZero<T>}/${dayType<T>}`
     | Date,
   timeDifference?: hoursTypeInt,
 ): number;
 function dayOfWeekSimple<
   T extends
     | MonthsWith31Days
-    | MonthsWihout31Days
+    | MonthsWithout31Days
     | MonthsWith31DaysInt
-    | MonthsWihout31DaysInt,
+    | MonthsWithout31DaysInt,
 >(
   props?:
     | {
         year?: number;
         mon?: T;
-        day?: T extends MonthsWith31Days | MonthsWihout31Days
+        day?: T extends MonthsWith31Days | MonthsWithout31Days
           ? dayType<T>
-          : T extends MonthsWith31DaysInt | MonthsWihout31DaysInt
+          : T extends MonthsWith31DaysInt | MonthsWithout31DaysInt
           ? dayTypeInt<T>
           : never;
       }
-    | `${number}-${T}-${T extends MonthsWith31Days | MonthsWihout31Days
+    | `${number}-${T}-${T extends MonthsWith31Days | MonthsWithout31Days
         ? dayType<T>
-        : T extends MonthsWith31DaysInt | MonthsWihout31DaysInt
+        : T extends MonthsWith31DaysInt | MonthsWithout31DaysInt
         ? dayTypeInt<T>
         : never}`
-    | `${number}:${T}:${T extends MonthsWith31Days | MonthsWihout31Days
+    | `${number}:${T}:${T extends MonthsWith31Days | MonthsWithout31Days
         ? dayType<T>
-        : T extends MonthsWith31DaysInt | MonthsWihout31DaysInt
+        : T extends MonthsWith31DaysInt | MonthsWithout31DaysInt
         ? dayTypeInt<T>
         : never}`
-    | `${number}/${T}/${T extends MonthsWith31Days | MonthsWihout31Days
+    | `${number}/${T}/${T extends MonthsWith31Days | MonthsWithout31Days
         ? dayType<T>
-        : T extends MonthsWith31DaysInt | MonthsWihout31DaysInt
+        : T extends MonthsWith31DaysInt | MonthsWithout31DaysInt
         ? dayTypeInt<T>
         : never}`
     | Date,
@@ -85,10 +88,10 @@ function dayOfWeekSimple<
       {
         year: props.getFullYear(),
         mon: (props.getMonth() + 1) as
-          | MonthsWihout31DaysInt
+          | MonthsWithout31DaysInt
           | MonthsWith31DaysInt,
         day: props.getDate() as dayTypeInt<
-          MonthsWith31DaysInt | MonthsWihout31DaysInt
+          MonthsWith31DaysInt | MonthsWithout31DaysInt
         >,
       },
       timeDifference,
@@ -97,8 +100,8 @@ function dayOfWeekSimple<
     return dayOfWeek(
       props as {
         year?: number;
-        mon?: MonthsWihout31DaysInt | MonthsWith31DaysInt;
-        day?: dayTypeInt<MonthsWith31DaysInt | MonthsWihout31DaysInt>;
+        mon?: MonthsWithout31DaysInt | MonthsWith31DaysInt;
+        day?: dayTypeInt<MonthsWith31DaysInt | MonthsWithout31DaysInt>;
       },
       timeDifference,
     );
