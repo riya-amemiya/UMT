@@ -5,7 +5,6 @@
  */
 
 export const isNotEmpty = (obj: object): boolean => {
-  // objectが空かどうかを確認して
+  // objectが空かどうかを確認する
   return Object.keys(obj).length > 0;
-  // trueかfalseを返す
 };
