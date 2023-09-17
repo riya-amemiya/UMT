@@ -1,4 +1,3 @@
-import { ArrayWrapper } from "./ArrayWrapper";
 import { arrayMap } from "./arrayMap";
 import { arraysJoin } from "./arraysJoin";
 import { chunk } from "./chunk";
@@ -16,6 +15,5 @@ export {
   sum,
   arrayMap,
   range,
-  ArrayWrapper,
   chunk,
 };
