@@ -30,4 +30,17 @@ describe("chunkArray function", () => {
     const output = chunk(input, n);
     expect(output).toEqual(expected);
   });
+
+  it("type checks", () => {
+    const input: [0, 1, 2, 3, 4, 5, 6, 7] = [0, 1, 2, 3, 4, 5, 6, 7];
+    const n = 3;
+    const output = chunk(input, n);
+    const expected: typeof output = [
+      [0, 1, 2],
+      [3, 4, 5],
+      [6, 7],
+    ];
+
+    expect(output).toEqual(expected);
+  });
 });

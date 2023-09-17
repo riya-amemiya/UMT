@@ -131,6 +131,12 @@ export type StringReverse<S extends string> = S extends `${infer F}${infer R}`
   ? `${StringReverse<R>}${F}`
   : "";
 
+// 配列を反転する型
+export type ArrayReverse<
+  S extends unknown[],
+  T extends unknown[] = [],
+> = S extends [infer F, ...infer R] ? ArrayReverse<R, [F, ...T]> : T;
+
 // 先頭から8文字を取得する型
 export type First8Chars<
   S extends string,
