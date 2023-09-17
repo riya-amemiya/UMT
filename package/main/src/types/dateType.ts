@@ -4,17 +4,16 @@ export type monTypeZero =
 export type monTypeNoZero =
   | `${1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9}`
   | `${1}${0 | 1 | 2}`;
+export type convertMonTypeZero<T extends string | number> =
+  `${T}` extends `${1}${0 | 1 | 2}` ? T : `${0}${T}`;
+export type convertMonTypeNoZero<T extends string> = T extends `${0}${infer U}`
+  ? U
+  : T;
 export type monType = monTypeZero | monTypeNoZero;
 export type monTypeInt = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
-export type MonthsWith31Days =
-  | `${0}${1 | 3 | 5 | 7 | 8}`
-  | `${1}${0 | 2}`
-  | `${0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9}`;
+export type MonthsWith31Days = `${MonthsWith31DaysInt}`;
 export type MonthsWith31DaysInt = 1 | 3 | 5 | 7 | 8 | 10 | 12;
-export type MonthsWihout31Days =
-  | `${0}${2 | 4 | 6 | 9}`
-  | `${1}${1}`
-  | `${2 | 4 | 6 | 9}`;
+export type MonthsWihout31Days = `${MonthsWihout31DaysInt}`;
 export type MonthsWihout31DaysInt = 2 | 4 | 6 | 9 | 11;
 export type dayType<T extends string> = T extends "02" | "2"
   ?
@@ -125,7 +124,19 @@ export type dayTypeInt<T extends number> = T extends 2
       | 30
       | 31;
 
-export type DateType<T extends monType> =
-  | `${number}-${monType}-${dayType<T>}`
-  | `${number}/${monType}/${dayType<T>}`
-  | `${number}.${monType}.${dayType<T>}`;
+export type DateType<T extends monTypeNoZero | monTypeInt> =
+  | `${number}-${T | convertMonTypeZero<T>}-${T extends monTypeNoZero
+      ? dayType<T>
+      : T extends monTypeInt
+      ? dayTypeInt<T>
+      : never}`
+  | `${number}/${T | convertMonTypeZero<T>}/${T extends monTypeNoZero
+      ? dayType<T>
+      : T extends monTypeInt
+      ? dayTypeInt<T>
+      : never}`
+  | `${number}:${T | convertMonTypeZero<T>}:${T extends monTypeNoZero
+      ? dayType<T>
+      : T extends monTypeInt
+      ? dayTypeInt<T>
+      : never}`;

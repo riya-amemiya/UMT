@@ -5,6 +5,7 @@ import {
   MonthsWihout31DaysInt,
   MonthsWith31Days,
   MonthsWith31DaysInt,
+  convertMonTypeZero,
   dayType,
   dayTypeInt,
 } from "@/types/dateType";
@@ -19,9 +20,9 @@ function dayOfWeekSimple<T extends MonthsWith31DaysInt | MonthsWihout31DaysInt>(
 ): number;
 function dayOfWeekSimple<T extends MonthsWith31Days | MonthsWihout31Days>(
   props?:
-    | `${number}-${T}-${dayType<T>}`
-    | `${number}:${T}:${dayType<T>}`
-    | `${number}/${T}/${dayType<T>}`
+    | `${number}-${convertMonTypeZero<T>}-${dayType<T>}`
+    | `${number}:${convertMonTypeZero<T>}:${dayType<T>}`
+    | `${number}/${convertMonTypeZero<T>}/${dayType<T>}`
     | Date,
   timeDifference?: hoursTypeInt,
 ): number;
