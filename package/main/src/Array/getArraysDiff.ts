@@ -3,12 +3,19 @@
  * @param  {unknown[]} array
  * @param  {unknown[]} ...arrays
  */
-export const getArraysDiff = <A extends unknown[]>(
-  array: unknown[],
-  ...arrays: unknown[]
-): A => {
-  const result = array.concat(...arrays).filter((val, _index, arr) => {
-    return arr.indexOf(val) === arr.lastIndexOf(val);
-  });
-  return result as A;
+export const getArraysDiff = <T>(array: T[], ...arrays: T[][]): T[] => {
+  const allValues = new Set(array);
+  const duplicates = new Set<T>();
+
+  for (const arr of arrays) {
+    for (const val of arr) {
+      if (allValues.has(val)) {
+        duplicates.add(val);
+      } else {
+        allValues.add(val);
+      }
+    }
+  }
+
+  return Array.from(allValues).filter((val) => !duplicates.has(val));
 };
