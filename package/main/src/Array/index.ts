@@ -1,6 +1,7 @@
 import { ArrayWrapper } from "./ArrayWrapper";
 import { arrayMap } from "./arrayMap";
 import { arraysJoin } from "./arraysJoin";
+import { chunk } from "./chunk";
 import { getArraysCommon } from "./getArraysCommon";
 import { getArraysDiff } from "./getArraysDiff";
 import { quickSort } from "./quickSort";
@@ -16,4 +17,5 @@ export {
   arrayMap,
   range,
   ArrayWrapper,
+  chunk,
 };
