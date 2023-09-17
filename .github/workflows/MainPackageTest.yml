@@ -32,7 +32,7 @@ jobs:
               uses: actions/cache/restore@v3
               with:
                   path: '**/node_modules'
-                  key: dev-depends-${{ matrix.os }}-node${{ matrix.bun-version }}-${{ hashFiles('package.json') }}
+                  key: dev-depends-${{ matrix.os }}-bun${{ matrix.bun-version }}-${{ hashFiles('package/main/package.json') }}
             - name: Install dependencies
               if: steps.cache-restore-dev-depends.outputs.cache-hit != 'true'
               run: bun i
@@ -42,7 +42,7 @@ jobs:
               uses: actions/cache/save@v3
               with:
                   path: '**/node_modules'
-                  key: dev-depends-${{ matrix.os }}-node${{ matrix.bun-version }}-${{ hashFiles('package.json') }}
+                  key: dev-depends-${{ matrix.os }}-bun${{ matrix.bun-version }}-${{ hashFiles('package/main/package.json') }}
     javascriptLint:
         name: JavaScript Lint on Ubuntu
         needs: javascriptSetup
@@ -65,7 +65,7 @@ jobs:
               uses: actions/cache/restore@v3
               with:
                   path: '**/node_modules'
-                  key: dev-depends-${{ matrix.os }}-node${{ matrix.bun-version }}-${{ hashFiles('package.json') }}
+                  key: dev-depends-${{ matrix.os }}-bun${{ matrix.bun-version }}-${{ hashFiles('package/main/package.json') }}
             - name: Lint
               run: bun run lint
 
@@ -91,13 +91,13 @@ jobs:
               uses: actions/cache/restore@v3
               with:
                   path: '**/node_modules'
-                  key: dev-depends-${{ matrix.os }}-node${{ matrix.bun-version }}-${{ hashFiles('package.json') }}
+                  key: dev-depends-${{ matrix.os }}-bun${{ matrix.bun-version }}-${{ hashFiles('package/main/package.json') }}
             - uses: actions/cache/restore@v3
               id: cache-restore-prod
               with:
                   enableCrossOsArchive: true
                   path: '**/module'
-                  key: ${{ matrix.bun-version }}-${{ github.sha }}-${{ hashFiles('module/tsconfig.tsbuildinfo') }}
+                  key: ${{ matrix.bun-version }}-${{ hashFiles('package/main/module/tsconfig.tsbuildinfo') }}
             - name: Build
               if: steps.cache-restore-prod.outputs.cache-hit != 'true'
               run: bun run build
@@ -108,7 +108,7 @@ jobs:
               with:
                   enableCrossOsArchive: true
                   path: '**/module'
-                  key: ${{ matrix.bun-version }}-${{ github.sha }}-${{ hashFiles('module/tsconfig.tsbuildinfo') }}
+                  key: ${{ matrix.bun-version }}-${{ hashFiles('package/main/module/tsconfig.tsbuildinfo') }}
 
     javascriptTest:
         name: JavaScript Test on Ubuntu
@@ -131,13 +131,13 @@ jobs:
               uses: actions/cache/restore@v3
               with:
                   path: '**/node_modules'
-                  key: dev-depends-${{ matrix.os }}-node${{ matrix.bun-version }}-${{ hashFiles('package.json') }}
+                  key: dev-depends-${{ matrix.os }}-bun${{ matrix.bun-version }}-${{ hashFiles('package/main/package.json') }}
             - uses: actions/cache/restore@v3
               id: cache-restore-prod
               with:
                   enableCrossOsArchive: true
                   path: '**/module'
-                  key: ${{ matrix.bun-version }}-${{ github.sha }}-${{ hashFiles('module/tsconfig.tsbuildinfo') }}
+                  key: ${{ matrix.bun-version }}-${{ hashFiles('package/main/module/tsconfig.tsbuildinfo') }}
             - name: Run Test
               run: bun test src
             - name: Cache Save Build
