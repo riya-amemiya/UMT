@@ -1,4 +1,5 @@
 import { birthday } from "./birthday";
+import { createPipeline } from "./createPipeline";
 import { dayOfWeek } from "./dayOfWeek";
 import { deleteSpace } from "./deleteSpace";
 import { isArr } from "./isArr";
@@ -7,12 +8,11 @@ import { isNode } from "./isNode";
 import { isNodeWebkit } from "./isNodeWebkit";
 import { isNotEmpty } from "./isNotEmpty";
 import { isObj } from "./isObj";
-import { pipeFunction } from "./pipeFunction";
 
 export {
   birthday,
   dayOfWeek,
-  pipeFunction,
+  createPipeline,
   isBrowser,
   isNode,
   isNodeWebkit,
