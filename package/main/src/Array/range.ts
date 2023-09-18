@@ -1,5 +1,3 @@
-function range(end: number): number[];
-function range(start: number, end: number): number[];
 function range(start: number, end?: number) {
   const arr = [];
   if (!end) {
