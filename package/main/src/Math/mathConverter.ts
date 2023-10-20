@@ -33,11 +33,9 @@ export const mathConverter = (x: string): string => {
           }
         }
         return returnValue;
-      } else {
-        return returnValue;
       }
-    } else {
       return returnValue;
     }
+    return returnValue;
   }
 };

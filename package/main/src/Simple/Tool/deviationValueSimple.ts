@@ -15,7 +15,6 @@ export const deviationValueSimple = ((
   if (Array.isArray(averageValue)) {
     const x = average(averageValue);
     return deviationValue(value, x, standardDeviation(averageValue));
-  } else {
-    return deviationValue(value, averageValue, standardDeviationValue);
   }
+  return deviationValue(value, averageValue, standardDeviationValue);
 }) as DeviationValueSimple;

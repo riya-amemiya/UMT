@@ -9,15 +9,14 @@ function isDouble(x: unknown, loose: false): x is number;
 function isDouble(x: unknown, loose = true): x is number {
   if (loose) {
     return (
-      // biome-ignore lint/nursery/noGlobalIsFinite: <explanation>
+      // biome-ignore lint/suspicious/noGlobalIsFinite: <explanation>
       isFinite(x as number) &&
       !Number.isNaN(x) &&
       Number.isFinite(Number(x)) &&
       !Number.isInteger(Number(x))
     );
-  } else {
-    return Number.isFinite(x) && !Number.isInteger(x);
   }
+  return Number.isFinite(x) && !Number.isInteger(x);
 }
 
 export { isDouble };

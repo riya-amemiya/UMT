@@ -10,7 +10,7 @@ function isNumber<T extends boolean>(
   loose: T = true as T,
 ): number is T extends true ? number | string : number {
   return number !== null && typeof number !== "boolean" && loose
-    ? // biome-ignore lint/nursery/noGlobalIsFinite: <explanation>
+    ? // biome-ignore lint/suspicious/noGlobalIsFinite: <explanation>
       isFinite(number as number)
     : Number.isFinite(number as number);
 }

@@ -29,34 +29,34 @@ export const birthdaySimple = (<T extends monType>(
         dayTypeInt<monTypeInt>,
       ];
       return birthday(year, mon, day, timeDifference);
-    } else if (birthdays.includes("/")) {
+    }
+    if (birthdays.includes("/")) {
       const [year, mon, day] = birthdays.split("/").map(Number) as [
         number,
         monTypeInt,
         dayTypeInt<monTypeInt>,
       ];
       return birthday(year, mon, day, timeDifference);
-    } else {
-      const [year, mon, day] = birthdays.split("-").map(Number) as [
-        number,
-        monTypeInt,
-        dayTypeInt<monTypeInt>,
-      ];
-      return birthday(year, mon, day, timeDifference);
     }
-  } else if (birthdays instanceof Date) {
+    const [year, mon, day] = birthdays.split("-").map(Number) as [
+      number,
+      monTypeInt,
+      dayTypeInt<monTypeInt>,
+    ];
+    return birthday(year, mon, day, timeDifference);
+  }
+  if (birthdays instanceof Date) {
     return birthday(
       birthdays.getFullYear(),
       birthdays.getMonth() as monTypeInt,
       birthdays.getDate() as dayTypeInt<monTypeInt>,
       timeDifference,
     );
-  } else {
-    return birthday(
-      birthdays.year,
-      birthdays.mon as monTypeInt,
-      birthdays.day as dayTypeInt<monTypeInt>,
-      timeDifference,
-    );
   }
+  return birthday(
+    birthdays.year,
+    birthdays.mon as monTypeInt,
+    birthdays.day as dayTypeInt<monTypeInt>,
+    timeDifference,
+  );
 }) as BIRTHDAYSIMPLE;
