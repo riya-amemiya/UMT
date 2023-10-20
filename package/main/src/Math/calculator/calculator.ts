@@ -17,7 +17,6 @@ export const calculator = <T extends { [key: string]: string | number }>(
   copyX = copyX.replace(/\s+/g, ""); // Remove spaces
   if (copyX.indexOf("=") !== -1) {
     return literalExpression(copyX); // If the expression contains an equal sign, then it is a literal expression
-  } else {
-    return calculatorCore(copyX, exchange);
   }
+  return calculatorCore(copyX, exchange);
 };

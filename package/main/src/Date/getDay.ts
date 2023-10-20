@@ -17,7 +17,7 @@ function getDay(
 function getDay(day: number): "日" | "月" | "火" | "水" | "木" | "金" | "土";
 function getDay(day: number, lang: "de" | "ko" | "en" | "ja" = "ja") {
   const dayList: {
-    [key in typeof lang]: [
+    [_key in typeof lang]: [
       string,
       string,
       string,

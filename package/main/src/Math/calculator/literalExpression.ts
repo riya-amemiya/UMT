@@ -39,14 +39,13 @@ export const literalExpression = (x: string) => {
     .filter((n) => n !== "" && typeof n !== "undefined");
   if (Number.isNaN(Number(cache[0][0]))) {
     return cache[1];
-  } else {
-    const cacheGcd = gcd(Number(cache[0][0]), Number(cache[1]));
-    if (cacheGcd !== 1) {
-      return `${division(Number(cache[1]), cacheGcd)}/${division(
-        Number(cache[0][0]),
-        cacheGcd,
-      )}`;
-    }
-    return cache[0][0] === "1" ? `${cache[1]}/${cache[0][0]}` : cache[1];
   }
+  const cacheGcd = gcd(Number(cache[0][0]), Number(cache[1]));
+  if (cacheGcd !== 1) {
+    return `${division(Number(cache[1]), cacheGcd)}/${division(
+      Number(cache[0][0]),
+      cacheGcd,
+    )}`;
+  }
+  return cache[0][0] === "1" ? `${cache[1]}/${cache[0][0]}` : cache[1];
 };

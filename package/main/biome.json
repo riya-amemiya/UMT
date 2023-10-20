@@ -40,11 +40,13 @@
 			},
 			"complexity": {
 				"noBannedTypes": "error",
+				"noExcessiveCognitiveComplexity": "off",
 				"noForEach": "error",
 				"noStaticOnlyClass": "error",
 				"noUselessEmptyExport": "error",
 				"noUselessFragments": "warn",
 				"noUselessThisAlias": "error",
+				"noVoid": "error",
 				"useSimpleNumberKeys": "error",
 				"useSimplifiedLogicExpression": "error"
 			},
@@ -53,21 +55,24 @@
 				"noNonoctalDecimalEscape": "error",
 				"noSelfAssign": "error",
 				"noUndeclaredVariables": "warn",
-				"noUnusedVariables": "warn"
+				"noUnusedVariables": "warn",
+				"useExhaustiveDependencies": "off",
+				"useHookAtTopLevel": "error"
 			},
 			"nursery": {
-				"noAccumulatingSpread": "error",
+				"noApproximativeNumericConstant": "error",
 				"noDuplicateJsonKeys": "error",
-				"noExcessiveComplexity": "off",
-				"noFallthroughSwitchClause": "error",
-				"noGlobalIsFinite": "error",
-				"noGlobalIsNan": "error",
-				"noVoid": "error",
+				"noEmptyBlockStatements": "error",
+				"noEmptyCharacterClassInRegex": "error",
+				"noInvalidNewBuiltin": "error",
+				"noMisleadingInstantiator": "error",
+				"noMisrefactoredShorthandAssign": "error",
+				"noUnusedImports": "error",
+				"noUselessElse": "error",
 				"useArrowFunction": "warn",
-				"useExhaustiveDependencies": "off",
+				"useAsConstAssertion": "error",
 				"useGroupedTypeImport": "error",
-				"useHookAtTopLevel": "error",
-				"useIsArray": "error"
+				"useShorthandAssign": "error"
 			},
 			"recommended": true,
 			"style": {
@@ -90,11 +95,16 @@
 				"useSingleCaseStatement": "error"
 			},
 			"suspicious": {
+				"noConfusingVoidType": "off",
 				"noConsoleLog": "warn",
 				"noControlCharactersInRegex": "error",
+				"noFallthroughSwitchClause": "error",
+				"noGlobalIsFinite": "error",
+				"noGlobalIsNan": "error",
 				"noRedundantUseStrict": "warn",
 				"noUnsafeDeclarationMerging": "error",
-				"useGetterReturn": "error"
+				"useGetterReturn": "error",
+				"useIsArray": "error"
 			}
 		}
 	}

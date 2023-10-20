@@ -18,7 +18,6 @@ export const dayOfWeek = <T extends monTypeInt,>(
       props.mon || ((nowTime.getMonth() + 1) as monTypeInt),
       props.day || (nowTime.getDate() as dayTypeInt<T>),
     ).getDay();
-  } else {
-    return nowTime.getDay();
   }
+  return nowTime.getDay();
 };

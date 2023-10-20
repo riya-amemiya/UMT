@@ -70,20 +70,21 @@ function dayOfWeekSimple<
         // biome-ignore lint/suspicious/noExplicitAny: <explanation>
         .map(Number) as any;
       return dayOfWeek({ year, mon, day }, timeDifference);
-    } else if (props.includes("/")) {
+    }
+    if (props.includes("/")) {
       const [year, mon, day] = props
         .split("/")
         // biome-ignore lint/suspicious/noExplicitAny: <explanation>
         .map(Number) as any;
       return dayOfWeek({ year, mon, day }, timeDifference);
-    } else {
-      const [year, mon, day] = props
-        .split("-")
-        // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-        .map(Number) as any;
-      return dayOfWeek({ year, mon, day }, timeDifference);
     }
-  } else if (props instanceof Date) {
+    const [year, mon, day] = props
+      .split("-")
+      // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+      .map(Number) as any;
+    return dayOfWeek({ year, mon, day }, timeDifference);
+  }
+  if (props instanceof Date) {
     return dayOfWeek(
       {
         year: props.getFullYear(),
@@ -96,16 +97,15 @@ function dayOfWeekSimple<
       },
       timeDifference,
     );
-  } else {
-    return dayOfWeek(
-      props as {
-        year?: number;
-        mon?: MonthsWithout31DaysInt | MonthsWith31DaysInt;
-        day?: dayTypeInt<MonthsWith31DaysInt | MonthsWithout31DaysInt>;
-      },
-      timeDifference,
-    );
   }
+  return dayOfWeek(
+    props as {
+      year?: number;
+      mon?: MonthsWithout31DaysInt | MonthsWith31DaysInt;
+      day?: dayTypeInt<MonthsWith31DaysInt | MonthsWithout31DaysInt>;
+    },
+    timeDifference,
+  );
 }
 
 export { dayOfWeekSimple };

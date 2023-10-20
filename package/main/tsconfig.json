@@ -14,7 +14,7 @@
 		"incremental": true,
 		"declarationMap": false,
 		"forceConsistentCasingInFileNames": true,
-		"module": "commonjs",
+		"module": "ESNext",
 		"moduleResolution": "node",
 		"resolveJsonModule": true,
 		"noEmit": false,

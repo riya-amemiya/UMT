@@ -1,6 +1,6 @@
-export const arrayMap = <T, U>(
-  array: T[],
-  callbackfn: (value: T, index: number, rowArray: typeof array) => U,
+export const arrayMap = <T extends unknown[], U>(
+  array: T,
+  callbackfn: (value: T[number], index: number, rowArray: typeof array) => U,
 ): U[] => {
   const result: U[] = [];
   for (const value of array) {
