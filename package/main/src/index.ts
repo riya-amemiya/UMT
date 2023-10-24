@@ -4,3 +4,4 @@ export * from "./Simple";
 export * from "./String";
 export * from "./Tool";
 export * from "./Date";
+export * from "./Consts";
