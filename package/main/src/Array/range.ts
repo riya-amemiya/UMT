@@ -1,3 +1,9 @@
+/**
+ * 連続した数値の配列を生成する
+ * @param start 開始数値
+ * @param end 終了数値 (省略した場合は0からstartまでの配列を生成)
+ * @returns 連続した数値の配列
+ */
 function range(start: number, end?: number) {
   const arr = [];
   if (!end) {
