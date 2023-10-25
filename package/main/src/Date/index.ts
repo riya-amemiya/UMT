@@ -1,4 +1,2 @@
-import { newDateInt, newDateStr } from "./new";
-import { now } from "./now";
-
-export { now, newDateInt, newDateStr };
+export * from "./new";
+export * from "./now";

@@ -7,7 +7,7 @@
 function range(start: number, end?: number) {
   const arr = [];
   if (!end) {
-    for (let i = 0; i < start; i++) {
+    for (let i = 0; i <= start; i++) {
       arr.push(i);
     }
     return arr;
