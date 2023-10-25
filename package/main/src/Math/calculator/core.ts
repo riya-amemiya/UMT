@@ -50,7 +50,7 @@ const sanitizeSigns = (expr: string): string => {
     .replace(/--/g, "+")
     .replace(/\+\+/g, "+")
     .replace(/\+-/g, "+0-")
-    .replace(/\-\+/g, "+0-");
+    .replace(/-\+/g, "+0-");
 };
 
 const applyCurrencyExchange = <T extends { [key: string]: string | number }>(
@@ -76,7 +76,7 @@ const containsParentheses = (expr: string): boolean => {
 
 const resolveParentheses = (expr: string): string => {
   // 括弧内の計算ロジック
-  const match = expr.match(/\(\d+\.?(\d+)?(\*|\/|\+|\-)\d+\.?(\d+)?\)/);
+  const match = expr.match(/\(\d+\.?(\d+)?(\*|\/|\+|-)\d+\.?(\d+)?\)/);
   if (match) {
     return expr.replace(
       match[0],
@@ -118,9 +118,9 @@ const containsAddSub = (expr: string): boolean => {
 
 const resolveAddSub = (expr: string): string => {
   // 加算、減算の計算ロジック
-  const match = expr.match(/\d+\.?(\d+)?(\+|\-)\d+\.?(\d+)?/);
+  const match = expr.match(/\d+\.?(\d+)?(\+|-)\d+\.?(\d+)?/);
   if (match) {
-    const operands = match[0].split(/(\+|\-)/);
+    const operands = match[0].split(/(\+|-)/);
     const result =
       operands[1] === "+"
         ? addition(Number(operands[0]), Number(operands[2]))
