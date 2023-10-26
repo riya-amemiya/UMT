@@ -19,9 +19,7 @@ function getDay(day: number, lang: "en"): ArrayToUnion<DayList["en"]>;
 function getDay(day: number, lang: "ja"): ArrayToUnion<DayList["ja"]>;
 function getDay(day: number): ArrayToUnion<DayList["ja"]>;
 function getDay(day: number, lang: "de" | "ko" | "en" | "ja" = "ja") {
-  const dayList: {
-    [key in typeof lang]: DayList[key];
-  } = {
+  const dayList: DayList = {
     de: ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"],
     ko: ["일", "월", "화", "수", "목", "금", "토"],
     en: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
