@@ -1,3 +1,5 @@
+import { range } from "..";
+
 /**
  * 条件式を満たす数値の配列を返す
  * @param start 開始数値
@@ -10,19 +12,18 @@ export const rangeAdvance = (
   end?: number,
   conditionalExpression?: (num: number) => boolean,
 ) => {
-  const arr = [];
-  if (!end) {
-    for (let i = 0; i <= start; i++) {
-      conditionalExpression
-        ? conditionalExpression(i) && arr.push(i)
-        : arr.push(i);
+  if (conditionalExpression) {
+    const arr = [];
+    if (!end) {
+      for (let i = 0; i <= start; i++) {
+        conditionalExpression(i) && arr.push(i);
+      }
+      return arr;
+    }
+    for (let i = start; i <= end; i++) {
+      conditionalExpression(i) && arr.push(i);
     }
     return arr;
   }
-  for (let i = start; i <= end; i++) {
-    conditionalExpression
-      ? conditionalExpression(i) && arr.push(i)
-      : arr.push(i);
-  }
-  return arr;
+  return range(start, end);
 };
