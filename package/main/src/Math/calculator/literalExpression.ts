@@ -22,7 +22,7 @@ export const literalExpression = (x: string) => {
       cache[0][1] = cache[0][1].replace(/\+/g, "plus");
     }
     if (cache[0][1].indexOf("-") !== -1) {
-      cache[0][1] = cache[0][1].replace(/\-/g, "minus");
+      cache[0][1] = cache[0][1].replace(/-/g, "minus");
     }
     if (cache[0][1].indexOf("plus") !== 1) {
       cache[0][1] = cache[0][1].replace(/plus/g, "-");

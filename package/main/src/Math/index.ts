@@ -1,81 +1,39 @@
-import { addition } from "./addition";
-import { average } from "./average";
-import { calculator } from "./calculator";
-import { calculatorInitialization } from "./calculator/calculatorInitialization";
-import { degToRad } from "./degToRad";
-import { deviationValue } from "./deviationValue";
-import { division } from "./division";
-import { factorial } from "./factorial";
-import { factorize } from "./factorize";
-import { gcd } from "./gcd";
-import { getDecimalLength } from "./getDecimalLength";
-import { isDouble } from "./isDouble";
-import { isNumber } from "./isNumber";
-import { isPrimeNumber } from "./isPrimeNumber";
-import { isValueNaN } from "./isValueNaN";
-import { lcm } from "./lcm";
-import { mathConverter } from "./mathConverter";
-import { mathSeparator } from "./mathSeparator";
-import { max } from "./max";
-import { min } from "./min";
-import { multiples } from "./multiples";
-import { multiplication } from "./multiplication";
-import { nCr } from "./nCr";
-import { nHr } from "./nHr";
-import { nPr } from "./nPr";
-import { primeFactorization } from "./primeFactorization";
-import { quotient } from "./quotient";
-import { radToDeg } from "./radToDeg";
-import { random } from "./random";
-import { reduce } from "./reduce";
-import { repeatedTrial } from "./repeatedTrial";
-import { roundOf } from "./roundOf";
-import { solveEquation } from "./solveEquation";
-import { standardDeviation } from "./standardDeviation";
-import { subtract } from "./subtract";
-import { toBinary } from "./toBinary";
-import { toCelsius } from "./toCelsius";
-import { toKelvin } from "./toKelvin";
-import { valueSwap } from "./valueSwap";
-
-export {
-  addition,
-  average,
-  calculator,
-  calculatorInitialization,
-  degToRad,
-  deviationValue,
-  division,
-  factorial,
-  factorize,
-  gcd,
-  getDecimalLength,
-  isDouble,
-  isNumber,
-  isPrimeNumber,
-  lcm,
-  mathConverter,
-  mathSeparator,
-  max,
-  min,
-  multiples,
-  multiplication,
-  nCr,
-  nHr,
-  nPr,
-  primeFactorization,
-  quotient,
-  radToDeg,
-  random,
-  reduce,
-  repeatedTrial,
-  roundOf,
-  solveEquation,
-  standardDeviation,
-  subtract,
-  toBinary,
-  toCelsius,
-  toKelvin,
-  isValueNaN,
-  valueSwap,
-};
+export * from "./addition";
+export * from "./average";
+export * from "./calculator";
+export * from "./calculator/calculatorInitialization";
+export * from "./degToRad";
+export * from "./deviationValue";
+export * from "./division";
+export * from "./factorial";
+export * from "./factorize";
+export * from "./gcd";
+export * from "./getDecimalLength";
+export * from "./isDouble";
+export * from "./isNumber";
+export * from "./isPrimeNumber";
+export * from "./isValueNaN";
+export * from "./lcm";
+export * from "./mathConverter";
+export * from "./mathSeparator";
+export * from "./max";
+export * from "./min";
+export * from "./multiples";
+export * from "./multiplication";
+export * from "./nCr";
+export * from "./nHr";
+export * from "./nPr";
+export * from "./primeFactorization";
+export * from "./quotient";
+export * from "./radToDeg";
+export * from "./random";
+export * from "./reduce";
+export * from "./repeatedTrial";
+export * from "./roundOf";
+export * from "./solveEquation";
+export * from "./standardDeviation";
+export * from "./subtract";
+export * from "./toBinary";
+export * from "./toCelsius";
+export * from "./toKelvin";
+export * from "./valueSwap";

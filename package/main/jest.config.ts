@@ -1,14 +1,15 @@
-/** @type {import('ts-jest').JestConfigWithTsJest} */
-module.exports = {
+import type { Config } from "jest";
+
+const config: Config = {
   transform: {
-    "^.+\\.(t|j)sx?$": ["@swc/jest"],
+    "^.+\\.(t|j)sx?$": "@swc/jest",
   },
   testEnvironment: "node",
   roots: ["<rootDir>/src/tests"],
   collectCoverage: true,
   collectCoverageFrom: [
     "!**/node_modules/**",
-    "!**/{index,random}.{js,ts}",
+    "!**/{index,random,birthday,isBrowser,isNode,isNodeWebkit,clock}.{js,ts}",
     "!**/Date/**",
   ],
   coverageDirectory: "coverage_dir",
@@ -18,3 +19,4 @@ module.exports = {
     "@/(.*)": "<rootDir>/src/$1",
   },
 };
+export default config;

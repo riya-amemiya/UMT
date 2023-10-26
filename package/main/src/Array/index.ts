@@ -1,19 +1,7 @@
-import { arrayMap } from "./arrayMap";
-import { arraysJoin } from "./arraysJoin";
-import { chunk } from "./chunk";
-import { getArraysCommon } from "./getArraysCommon";
-import { getArraysDiff } from "./getArraysDiff";
-import { quickSort } from "./quickSort";
-import { range } from "./range";
-import { sum } from "./sum";
-
-export {
-  arraysJoin,
-  getArraysCommon,
-  getArraysDiff,
-  quickSort,
-  sum,
-  arrayMap,
-  range,
-  chunk,
-};
+export * from "./arraysJoin";
+export * from "./chunk";
+export * from "./getArraysCommon";
+export * from "./getArraysDiff";
+export * from "./quickSort";
+export * from "./range";
+export * from "./sum";
