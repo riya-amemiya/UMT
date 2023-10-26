@@ -3,7 +3,7 @@ import { isNumber } from "./isNumber";
  * @param  {string|number} number
  * @returns string
  */
-export const mathSeparator = (number: string | number) => {
+export const mathSeparator = (number: string | number): [number, number] => {
   if (isNumber(number)) {
     const [n, x] =
       typeof number === "string"
@@ -12,7 +12,7 @@ export const mathSeparator = (number: string | number) => {
     if (n) {
       return [10 ** n, x - 10 ** n];
     }
-    return [0, 0];
+    return [Number(number), 0];
   }
   return [0, 0];
 };

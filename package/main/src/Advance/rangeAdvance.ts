@@ -7,23 +7,18 @@ import { range } from "..";
  * @param conditionalExpression 条件式
  * @returns
  */
-export const rangeAdvance = (
+function rangeAdvance(
   start: number,
   end?: number,
   conditionalExpression?: (num: number) => boolean,
-) => {
+): number[] {
   if (conditionalExpression) {
     const arr = [];
-    if (!end) {
-      for (let i = 0; i <= start; i++) {
-        conditionalExpression(i) && arr.push(i);
-      }
-      return arr;
-    }
-    for (let i = start; i <= end; i++) {
+    for (let i = start; i <= (end as number); i++) {
       conditionalExpression(i) && arr.push(i);
     }
     return arr;
   }
   return range(start, end);
-};
+}
+export { rangeAdvance };

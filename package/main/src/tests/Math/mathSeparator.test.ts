@@ -6,4 +6,7 @@ test("{mathSeparator}", () => {
   expect(mathSeparator("11110")).toEqual([10000, 1110]);
   expect(mathSeparator("11111")).toEqual([10000, 1111]);
   expect(mathSeparator("111110")).toEqual([100000, 11110]);
+  expect(mathSeparator("a")).toEqual([0, 0]);
+  expect(mathSeparator("1")).toEqual([1, 0]);
+  expect(mathSeparator(2)).toEqual([2, 0]);
 });
