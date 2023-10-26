@@ -1,4 +1,3 @@
-export * from "./arrayMap";
 export * from "./arraysJoin";
 export * from "./chunk";
 export * from "./getArraysCommon";
