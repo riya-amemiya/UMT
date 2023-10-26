@@ -2,6 +2,7 @@ import { addition } from "@/Math/addition";
 import { division } from "@/Math/division";
 import { multiplication } from "@/Math/multiplication";
 import { subtract } from "@/Math/subtract";
+import { isNumber } from "../isNumber";
 import { convertCurrency } from "./convertCurrency";
 
 export const calculatorCore = <T extends { [key: string]: string | number }>(
@@ -34,7 +35,10 @@ export const calculatorCore = <T extends { [key: string]: string | number }>(
     }
 
     // 加算と減算の処理
-    else if (containsAddSub(sanitizedExpression)) {
+    else if (
+      containsAddSub(sanitizedExpression) &&
+      !isNumber(sanitizedExpression)
+    ) {
       sanitizedExpression = resolveAddSub(sanitizedExpression);
     }
 
@@ -118,14 +122,13 @@ const containsAddSub = (expr: string): boolean => {
 
 const resolveAddSub = (expr: string): string => {
   // 加算、減算の計算ロジック
-  const match = expr.match(/\d+\.?(\d+)?(\+|-)\d+\.?(\d+)?/);
+  const match = expr.match(/(-?\d+)\.?(\d+)?(\+|-)(-?\d+)\.?(\d+)?/);
   if (match) {
-    const operands = match[0].split(/(\+|-)/);
     const result =
-      operands[1] === "+"
-        ? addition(Number(operands[0]), Number(operands[2]))
-        : operands[1] === "-"
-        ? subtract(Number(operands[0]), Number(operands[2]))
+      match[3] === "+"
+        ? addition(Number(match[1]), Number(match[4]))
+        : match[3] === "-"
+        ? subtract(Number(match[1]), Number(match[4]))
         : 0;
     return expr.replace(match[0], String(result));
   }

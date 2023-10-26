@@ -47,7 +47,7 @@
     "deploy": "yarn typedoc && gh-pages -d doc",
     "test": "jest",
     "test-debug": "cd test && tsc",
-    "ts-node": "ts-node --project test/tsconfig.json test/src/index.ts",
+    "ts-node": "yarn build && ts-node --project tmp/tsconfig.json tmp/src/index.ts",
     "lint": "biome check .",
     "format": "biome format . --write"
   },

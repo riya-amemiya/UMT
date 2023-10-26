@@ -8,14 +8,21 @@ test("calculator", () => {
 
   // 引き算
   expect(calculator("1-1")).toBe("0");
+  expect(calculator("1-1-1")).toBe("-1");
+  expect(calculator("1-1-1-1")).toBe("-2");
+  expect(calculator("1-1-1-1-1")).toBe("-3");
 
   // 掛け算
   expect(calculator("2*2")).toBe("4");
   expect(calculator("2*2*2")).toBe("8");
+  expect(calculator("2*2*2*2")).toBe("16");
+  expect(calculator("2*2*2*2*2")).toBe("32");
 
   // 割り算
   expect(calculator("2/2")).toBe("1");
   expect(calculator("2/2/2")).toBe("0.5");
+  expect(calculator("2/2/2/2")).toBe("0.25");
+  expect(calculator("2/2/2/2/2")).toBe("0.125");
 
   // 括弧
   expect(calculator("(1+1)")).toBe("2");
