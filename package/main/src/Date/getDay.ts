@@ -1,31 +1,26 @@
-function getDay(
-  day: number,
-  lang: "de",
-): "So" | "Mo" | "Di" | "Mi" | "Do" | "Fr" | "Sa";
-function getDay(
-  day: number,
-  lang: "ko",
-): "일" | "월" | "화" | "수" | "목" | "금" | "토";
-function getDay(
-  day: number,
-  lang: "en",
-): "Sun" | "Mon" | "Tue" | "Wed" | "Thu" | "Fri" | "Sat";
-function getDay(
-  day: number,
-  lang: "ja",
-): "日" | "月" | "火" | "水" | "木" | "金" | "土";
-function getDay(day: number): "日" | "月" | "火" | "水" | "木" | "金" | "土";
+import { ArrayToUnion } from "@/types/logicType";
+
+interface DayList {
+  de: ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"];
+  ko: ["일", "월", "화", "수", "목", "금", "토"];
+  en: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  ja: ["日", "月", "火", "水", "木", "金", "土"];
+}
+
+/**
+ * 数値を曜日に変換する
+ * @param day 曜日を表す数値
+ * @param lang 言語
+ * @returns langに応じた曜日
+ */
+function getDay(day: number, lang: "de"): ArrayToUnion<DayList["de"]>;
+function getDay(day: number, lang: "ko"): ArrayToUnion<DayList["ko"]>;
+function getDay(day: number, lang: "en"): ArrayToUnion<DayList["en"]>;
+function getDay(day: number, lang: "ja"): ArrayToUnion<DayList["ja"]>;
+function getDay(day: number): ArrayToUnion<DayList["ja"]>;
 function getDay(day: number, lang: "de" | "ko" | "en" | "ja" = "ja") {
   const dayList: {
-    [_key in typeof lang]: [
-      string,
-      string,
-      string,
-      string,
-      string,
-      string,
-      string,
-    ];
+    [key in typeof lang]: DayList[key];
   } = {
     de: ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"],
     ko: ["일", "월", "화", "수", "목", "금", "토"],
