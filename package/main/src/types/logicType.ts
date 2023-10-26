@@ -1189,3 +1189,6 @@ type binary1bitXNORParser<X extends string, Y extends string> = X extends "1"
 export type binaryNOT<X extends `${0 | 1}`> = binaryNOTParser<X>;
 
 type binaryNOTParser<X extends string,> = X extends "1" ? "0" : "1";
+
+// Array型をUnion型に変換する型
+export type ArrayToUnion<X extends unknown[]> = X[number];
