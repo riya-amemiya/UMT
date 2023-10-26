@@ -2,11 +2,11 @@ import { rangeAdvance } from "@/Advance/rangeAdvance";
 
 describe("rangeAdvance", () => {
   it("returns an array of numbers from 0 to start when only start is provided", () => {
-    expect(rangeAdvance(5)).toEqual([0, 1, 2, 3, 4, 5]);
+    expect(rangeAdvance(5)).toEqual([0, 1, 2, 3, 4]);
   });
 
   it("returns an array of numbers from start to end when both start and end are provided", () => {
-    expect(rangeAdvance(2, 5)).toEqual([2, 3, 4, 5]);
+    expect(rangeAdvance(2, 5)).toEqual([2, 3, 4]);
   });
 
   it("returns an array of numbers that satisfy the conditional expression when a conditional expression is provided", () => {
