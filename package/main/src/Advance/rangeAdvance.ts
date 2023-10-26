@@ -14,7 +14,7 @@ function rangeAdvance(
 ): number[] {
   if (conditionalExpression) {
     const arr = [];
-    for (let i = start; i <= (end as number); i++) {
+    for (let i = start; i < (end as number); i++) {
       conditionalExpression(i) && arr.push(i);
     }
     return arr;
