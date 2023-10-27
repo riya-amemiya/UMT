@@ -4,7 +4,7 @@
  * @returns {boolean} true: 空でない, false: 空
  */
 
-export const isNotEmpty = (obj: object): boolean => {
+export const isNotEmpty = (object: object): boolean => {
   // objectが空かどうかを確認する
-  return Object.keys(obj).length > 0;
+  return Object.keys(object).length > 0;
 };

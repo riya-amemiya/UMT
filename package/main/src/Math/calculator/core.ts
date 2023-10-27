@@ -51,10 +51,10 @@ export const calculatorCore = <T extends { [key: string]: string | number }>(
 
 const sanitizeSigns = (expr: string): string => {
   return expr
-    .replace(/--/g, "+")
-    .replace(/\+\+/g, "+")
-    .replace(/\+-/g, "+0-")
-    .replace(/-\+/g, "+0-");
+    .replaceAll("--", "+")
+    .replaceAll("++", "+")
+    .replaceAll("+-", "+0-")
+    .replaceAll("-+", "+0-");
 };
 
 const applyCurrencyExchange = <T extends { [key: string]: string | number }>(
@@ -63,9 +63,9 @@ const applyCurrencyExchange = <T extends { [key: string]: string | number }>(
 ): string => {
   let returnExpr = expr;
   // 通貨の交換ロジック
-  for (const i in rates) {
-    if (returnExpr.indexOf(i) !== -1) {
-      const $ = returnExpr.match(new RegExp(`\\${i}([0-9]+)`));
+  for (const index in rates) {
+    if (returnExpr.includes(index)) {
+      const $ = returnExpr.match(new RegExp(`\\${index}([0-9]+)`));
       if ($) {
         returnExpr = returnExpr.replace($[0], convertCurrency($[0], rates));
       }
@@ -75,34 +75,30 @@ const applyCurrencyExchange = <T extends { [key: string]: string | number }>(
 };
 
 const containsParentheses = (expr: string): boolean => {
-  return expr.indexOf("(") !== -1 || expr.indexOf(")") !== -1;
+  return expr.includes("(") || expr.includes(")");
 };
 
 const resolveParentheses = (expr: string): string => {
   // 括弧内の計算ロジック
-  const match = expr.match(/\(\d+\.?(\d+)?(\*|\/|\+|-)\d+\.?(\d+)?\)/);
+  const match = expr.match(/\(\d+\.?(\d+)?([*+/-])\d+\.?(\d+)?\)/);
   if (match) {
     return expr.replace(
       match[0],
-      calculatorCore(match[0].replace(/\(|\)/g, "")),
+      calculatorCore(match[0].replaceAll(/\(|\)/g, "")),
     );
   }
   return expr;
 };
 
 const containsMulDivExp = (expr: string): boolean => {
-  return (
-    expr.indexOf("^") !== -1 ||
-    expr.indexOf("*") !== -1 ||
-    expr.indexOf("/") !== -1
-  );
+  return expr.includes("^") || expr.includes("*") || expr.includes("/");
 };
 
 const resolveMulDivExp = (expr: string): string => {
   // 乗算、除算、べき乗の計算ロジック
-  const match = expr.match(/\d+\.?(\d+)?(\*|\/|\^)\d+\.?(\d+)?/);
+  const match = expr.match(/\d+\.?(\d+)?([*/^])\d+\.?(\d+)?/);
   if (match) {
-    const operands = match[0].split(/(\*|\/|\^)/);
+    const operands = match[0].split(/([*/^])/);
     const result =
       operands[1] === "^"
         ? Number(operands[0]) ** Number(operands[2])
@@ -117,7 +113,7 @@ const resolveMulDivExp = (expr: string): string => {
 };
 
 const containsAddSub = (expr: string): boolean => {
-  return expr.indexOf("+") !== -1 || expr.indexOf("-") !== -1;
+  return expr.includes("+") || expr.includes("-");
 };
 
 const resolveAddSub = (expr: string): string => {

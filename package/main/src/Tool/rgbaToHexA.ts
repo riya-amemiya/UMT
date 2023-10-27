@@ -1,3 +1,7 @@
+const hex = (x: number) => {
+  const hexCode = x.toString(16);
+  return hexCode.length === 1 ? `0${hexCode}` : hexCode;
+};
 export function rgbaToHexA({
   r,
   g,
@@ -23,9 +27,5 @@ export function rgbaToHexA({
     throw new Error("Invalid rgba value");
   }
 
-  const hex = (x: number) => {
-    const hexCode = x.toString(16);
-    return hexCode.length === 1 ? `0${hexCode}` : hexCode;
-  };
   return `#${hex(r)}${hex(g)}${hex(b)}${hex(Math.round(a * 255))}`;
 }

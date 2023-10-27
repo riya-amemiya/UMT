@@ -11,6 +11,6 @@ export const standardDeviation = (values: number[]) => {
     return sqrDiff;
   });
   const avgSquareDiff = average(squareDiffs);
-  const stdDev = Math.sqrt(avgSquareDiff);
-  return stdDev;
+  const standardDeviation_ = Math.sqrt(avgSquareDiff);
+  return standardDeviation_;
 };

@@ -23,8 +23,8 @@ export const gcd = (x: number, y: number, ...z: number[]) => {
     r = copyY % copyX;
   }
   if (copyZ.length > 0) {
-    for (let i = 0; i < copyZ.length; i++) {
-      copyX = gcd(copyX, copyZ[i]);
+    for (const element of copyZ) {
+      copyX = gcd(copyX, element);
     }
   }
   return copyX;

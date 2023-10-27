@@ -1,43 +1,43 @@
-import { isObj } from "@/Tool/isObj";
+import { isObject } from "@/Tool/isObject";
 
 describe("isObj", () => {
   it("should return true for an object with string properties", () => {
-    expect(isObj({ foo: "bar", baz: "qux" })).toBe(true);
+    expect(isObject({ foo: "bar", baz: "qux" })).toBe(true);
   });
 
   it("should return true for an object with number properties", () => {
-    expect(isObj({ foo: 1, bar: 2 })).toBe(true);
+    expect(isObject({ foo: 1, bar: 2 })).toBe(true);
   });
 
   it("should return true for an object with boolean properties", () => {
-    expect(isObj({ foo: true, bar: false })).toBe(true);
+    expect(isObject({ foo: true, bar: false })).toBe(true);
   });
 
   it("should return true for an object with mixed properties", () => {
-    expect(isObj({ foo: "bar", baz: 1, qux: true })).toBe(true);
+    expect(isObject({ foo: "bar", baz: 1, qux: true })).toBe(true);
   });
 
   it("should return false for an array", () => {
-    expect(isObj([1, 2, 3])).toBe(false);
+    expect(isObject([1, 2, 3])).toBe(false);
   });
 
   it("should return false for a string", () => {
-    expect(isObj("foo")).toBe(false);
+    expect(isObject("foo")).toBe(false);
   });
 
   it("should return false for a number", () => {
-    expect(isObj(42)).toBe(false);
+    expect(isObject(42)).toBe(false);
   });
 
   it("should return false for a boolean", () => {
-    expect(isObj(true)).toBe(false);
+    expect(isObject(true)).toBe(false);
   });
 
   it("should return false for null", () => {
-    expect(isObj(null)).toBe(false);
+    expect(isObject(null)).toBe(false);
   });
 
   it("should return false for undefined", () => {
-    expect(isObj(undefined)).toBe(false);
+    expect(isObject(undefined)).toBe(false);
   });
 });

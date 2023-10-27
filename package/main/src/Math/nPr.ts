@@ -8,7 +8,7 @@ export const nPr = (n: number, r: number) => {
   let copyR = r;
   // nPr;
   if (copyN === 0 || copyR === 0) {
-    return NaN;
+    return Number.NaN;
   }
   let y = copyN;
   let x = 0;

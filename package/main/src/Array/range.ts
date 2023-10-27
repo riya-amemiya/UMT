@@ -5,16 +5,16 @@
  * @returns 連続した数値の配列
  */
 function range(start: number, end?: number) {
-  const arr = [];
+  const array = [];
   if (end) {
-    for (let i = start; i < end; i++) {
-      arr.push(i);
+    for (let index = start; index < end; index++) {
+      array.push(index);
     }
   } else {
-    for (let i = 0; i < start; i++) {
-      arr.push(i);
+    for (let index = 0; index < start; index++) {
+      array.push(index);
     }
   }
-  return arr;
+  return array;
 }
 export { range };

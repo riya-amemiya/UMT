@@ -10,8 +10,8 @@ export const getArraysCommon = <A extends unknown[]>(
   // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   ...arrays: any[]
 ) => {
-  const result: unknown[] = [array, ...arrays].reduce((prev, current) => {
-    return prev.filter((item: unknown) => current.includes(item));
+  const result: unknown[] = [array, ...arrays].reduce((previous, current) => {
+    return previous.filter((item: unknown) => current.includes(item));
   });
   return result as A;
 };

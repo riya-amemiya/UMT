@@ -8,7 +8,7 @@ import { mathSeparator } from "./mathSeparator";
 export const mathConverter = (x: string): string => {
   let returnValue = x;
   while (true) {
-    if (returnValue.indexOf("^") !== -1 || returnValue.indexOf("*") !== -1) {
+    if (returnValue.includes("^") || returnValue.includes("*")) {
       //掛け算と割り算の処理
       const y: [RegExpMatchArray | null, string[]] = [
         returnValue.match(/\d+\.?(\d+)?(\*|\^)\d+\.?(\d+)?/),
@@ -16,7 +16,7 @@ export const mathConverter = (x: string): string => {
       ];
       if (y[0]) {
         y[1] = y[0][0].split(/(\d+\.\d+)|(\d+)/g).filter((n) => {
-          return typeof n !== "undefined" && n !== "";
+          return n !== undefined && n !== "";
         });
         if (y[1][0] === y[1][2] || (y[1][2] && y[1][1] === "^")) {
           const [n, m] = mathSeparator(y[1][0]);

@@ -21,11 +21,11 @@ export const convertCurrency = <
 
   for (const currencySymbol in conversionRates) {
     if (inputString.startsWith(currencySymbol)) {
-      const amountStr = inputString.slice(currencySymbol.length);
+      const amountString = inputString.slice(currencySymbol.length);
       const rate = conversionRates[currencySymbol];
 
       if (isNumber(rate)) {
-        const amount = Number(amountStr);
+        const amount = Number(amountString);
         const convertedAmount = multiplication(amount, Number(rate));
 
         return Number.isNaN(convertedAmount)

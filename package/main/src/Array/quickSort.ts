@@ -25,9 +25,9 @@ export const quickSort = <A extends unknown[]>(
     if (right <= left) {
       break;
     }
-    const tmp = array[left];
+    const temporary = array[left];
     array[left] = array[right];
-    array[right] = tmp;
+    array[right] = temporary;
     left++;
     right--;
   }

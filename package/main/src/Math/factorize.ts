@@ -6,10 +6,10 @@
 export const factorize = (n: number): number[] => {
   const result: number[] = [];
   let copyN = n;
-  for (let i = 2; i <= copyN; i++) {
-    while (copyN % i === 0) {
-      result.push(i);
-      copyN /= i;
+  for (let index = 2; index <= copyN; index++) {
+    while (copyN % index === 0) {
+      result.push(index);
+      copyN /= index;
     }
   }
   return result;

@@ -5,13 +5,13 @@
  * @return {[number, number]}
  */
 export const valueSwap = (x: number, y: number): [number, number] => {
-  let tmp: number;
+  let temporary: number;
   let copyX = x;
   let copyY = y;
   if (copyY < copyX) {
-    tmp = copyY;
+    temporary = copyY;
     copyY = copyX;
-    copyX = tmp;
+    copyX = temporary;
   }
   return [copyX, copyY];
 };

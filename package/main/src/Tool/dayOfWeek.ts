@@ -4,7 +4,7 @@ import { hoursTypeInt } from "@/types/clockType";
 import { dayTypeInt, monTypeInt } from "@/types/dateType";
 
 export const dayOfWeek = <T extends monTypeInt,>(
-  props?: {
+  properties?: {
     year?: number;
     mon?: T;
     day?: dayTypeInt<T>;
@@ -12,11 +12,11 @@ export const dayOfWeek = <T extends monTypeInt,>(
   timeDifference: hoursTypeInt = 9,
 ) => {
   const nowTime = now(timeDifference);
-  if (props) {
+  if (properties) {
     return newDateInt(
-      props.year || nowTime.getFullYear(),
-      props.mon || ((nowTime.getMonth() + 1) as monTypeInt),
-      props.day || (nowTime.getDate() as dayTypeInt<T>),
+      properties.year || nowTime.getFullYear(),
+      properties.mon || ((nowTime.getMonth() + 1) as monTypeInt),
+      properties.day || (nowTime.getDate() as dayTypeInt<T>),
     ).getDay();
   }
   return nowTime.getDay();

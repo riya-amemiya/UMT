@@ -6,7 +6,7 @@ import { nCr } from "./nCr";
  */
 export const nHr = (n: number, r: number) => {
   if (n === 0 || r === 0) {
-    return NaN;
+    return Number.NaN;
   }
   const y = nCr(n + r - 1, r);
   if (1 > y) {

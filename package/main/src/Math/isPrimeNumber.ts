@@ -8,8 +8,8 @@ export const isPrimeNumber = (n: number): boolean => {
     return false;
   }
 
-  for (let i = 2; i <= Math.sqrt(n); i++) {
-    if (n % i === 0) {
+  for (let index = 2; index <= Math.sqrt(n); index++) {
+    if (n % index === 0) {
       return false;
     }
   }

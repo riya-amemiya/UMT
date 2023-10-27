@@ -6,14 +6,14 @@ export const primeFactorization = (x: number) => {
   let n = 0;
   let cooyX = x;
   const out: { number: number; count: number }[] = [];
-  for (let i = 2; i <= cooyX; i++) {
-    if (cooyX % i === 0) {
+  for (let index = 2; index <= cooyX; index++) {
+    if (cooyX % index === 0) {
       n = 0;
-      while (cooyX % i === 0) {
+      while (cooyX % index === 0) {
         n++;
-        cooyX /= i;
+        cooyX /= index;
       }
-      out.push({ number: i, count: n });
+      out.push({ number: index, count: n });
     }
   }
   return out;
