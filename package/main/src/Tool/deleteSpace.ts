@@ -1,3 +1,3 @@
-export const deleteSpace = (str: string) => {
-  return str.replaceAll(/\s/g, "");
+export const deleteSpace = (string_: string) => {
+  return string_.replaceAll(/\s/g, "");
 };

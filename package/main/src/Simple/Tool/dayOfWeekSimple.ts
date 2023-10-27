@@ -13,7 +13,7 @@ import {
 function dayOfWeekSimple<
   T extends MonthsWith31DaysInt | MonthsWithout31DaysInt,
 >(
-  props?: {
+  properties?: {
     year?: number;
     mon?: T;
     day?: dayTypeInt<T>;
@@ -21,7 +21,7 @@ function dayOfWeekSimple<
   timeDifference?: hoursTypeInt,
 ): number;
 function dayOfWeekSimple<T extends MonthsWith31Days | MonthsWithout31Days>(
-  props?:
+  properties?:
     | `${number}-${convertMonTypeZero<T>}-${dayType<T>}`
     | `${number}:${convertMonTypeZero<T>}:${dayType<T>}`
     | `${number}/${convertMonTypeZero<T>}/${dayType<T>}`
@@ -35,7 +35,7 @@ function dayOfWeekSimple<
     | MonthsWith31DaysInt
     | MonthsWithout31DaysInt,
 >(
-  props?:
+  properties?:
     | {
         year?: number;
         mon?: T;
@@ -63,35 +63,35 @@ function dayOfWeekSimple<
     | Date,
   timeDifference: hoursTypeInt = 9,
 ): number {
-  if (typeof props === "string") {
-    if (props.includes(":")) {
-      const [year, mon, day] = props
+  if (typeof properties === "string") {
+    if (properties.includes(":")) {
+      const [year, mon, day] = properties
         .split(":")
         // biome-ignore lint/suspicious/noExplicitAny: <explanation>
         .map(Number) as any;
       return dayOfWeek({ year, mon, day }, timeDifference);
     }
-    if (props.includes("/")) {
-      const [year, mon, day] = props
+    if (properties.includes("/")) {
+      const [year, mon, day] = properties
         .split("/")
         // biome-ignore lint/suspicious/noExplicitAny: <explanation>
         .map(Number) as any;
       return dayOfWeek({ year, mon, day }, timeDifference);
     }
-    const [year, mon, day] = props
+    const [year, mon, day] = properties
       .split("-")
       // biome-ignore lint/suspicious/noExplicitAny: <explanation>
       .map(Number) as any;
     return dayOfWeek({ year, mon, day }, timeDifference);
   }
-  if (props instanceof Date) {
+  if (properties instanceof Date) {
     return dayOfWeek(
       {
-        year: props.getFullYear(),
-        mon: (props.getMonth() + 1) as
+        year: properties.getFullYear(),
+        mon: (properties.getMonth() + 1) as
           | MonthsWithout31DaysInt
           | MonthsWith31DaysInt,
-        day: props.getDate() as dayTypeInt<
+        day: properties.getDate() as dayTypeInt<
           MonthsWith31DaysInt | MonthsWithout31DaysInt
         >,
       },
@@ -99,7 +99,7 @@ function dayOfWeekSimple<
     );
   }
   return dayOfWeek(
-    props as {
+    properties as {
       year?: number;
       mon?: MonthsWithout31DaysInt | MonthsWith31DaysInt;
       day?: dayTypeInt<MonthsWith31DaysInt | MonthsWithout31DaysInt>;

@@ -7,15 +7,15 @@ export const getArraysDiff = <T>(array: T[], ...arrays: T[][]): T[] => {
   const allValues = new Set(array);
   const duplicates = new Set<T>();
 
-  for (const arr of arrays) {
-    for (const val of arr) {
-      if (allValues.has(val)) {
-        duplicates.add(val);
+  for (const array_ of arrays) {
+    for (const value of array_) {
+      if (allValues.has(value)) {
+        duplicates.add(value);
       } else {
-        allValues.add(val);
+        allValues.add(value);
       }
     }
   }
 
-  return Array.from(allValues).filter((val) => !duplicates.has(val));
+  return [...allValues].filter((value) => !duplicates.has(value));
 };

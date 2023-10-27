@@ -8,8 +8,8 @@ export const nCr = (n: number, r: number) => {
   //nCr
   let y = nPr(n, r);
   let age = 1;
-  for (let i = 2; i <= r; i++) {
-    age *= i;
+  for (let index = 2; index <= r; index++) {
+    age *= index;
   }
   y /= age;
   if (1 > y) {

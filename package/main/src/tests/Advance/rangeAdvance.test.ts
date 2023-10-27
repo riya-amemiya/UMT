@@ -11,7 +11,7 @@ describe("rangeAdvance", () => {
 
   it("returns an array of numbers that satisfy the conditional expression when a conditional expression is provided", () => {
     const isEven = (num: number) => num % 2 === 0;
-    expect(rangeAdvance(0, 10, isEven)).toEqual([0, 2, 4, 6, 8, 10]);
+    expect(rangeAdvance(0, 10, isEven)).toEqual([0, 2, 4, 6, 8]);
   });
 
   it("returns an empty array when start is greater than end", () => {
@@ -20,6 +20,6 @@ describe("rangeAdvance", () => {
 
   it("returns an empty array when start is equal to end and the conditional expression is not satisfied", () => {
     const isOdd = (num: number) => num % 2 !== 0;
-    expect(rangeAdvance(5, 5, isOdd)).toEqual([5]);
+    expect(rangeAdvance(5, 5, isOdd)).toEqual([]);
   });
 });

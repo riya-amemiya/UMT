@@ -7,14 +7,14 @@ export function hexToRgba(hex: string): {
   a: number;
 } {
   // hex形式かどうかのチェック
-  if (/^#([0-9a-f]{3}|[0-9a-f]{6}|[0-9a-f]{8})$/i.test(hex) === false) {
+  if (/^#([\da-f]{3}|[\da-f]{6}|[\da-f]{8})$/i.test(hex) === false) {
     throw new Error("Invalid hex code");
   }
 
   const hexCode = hex.replace("#", "");
-  const r = parseInt(hexCode.substring(0, 2), 16);
-  const g = parseInt(hexCode.substring(2, 4), 16);
-  const b = parseInt(hexCode.substring(4, 6), 16);
-  const a = division(parseInt(hexCode.substring(6, 8), 16), 255);
+  const r = Number.parseInt(hexCode.slice(0, 2), 16);
+  const g = Number.parseInt(hexCode.slice(2, 4), 16);
+  const b = Number.parseInt(hexCode.slice(4, 6), 16);
+  const a = division(Number.parseInt(hexCode.slice(6, 8), 16), 255);
   return { r, g, b, a: Number.isNaN(a) ? 1 : a };
 }

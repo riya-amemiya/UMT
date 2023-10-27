@@ -1,10 +1,10 @@
 import { BGreaterThanA, Length } from "./logicType";
 
 // 数値を配列に変換する
-export type NumToArr<
+export type NumberToArray<
   T extends number,
   U extends number[] = [],
-> = U["length"] extends T ? U : NumToArr<T, [...U, U["length"]]>;
+> = U["length"] extends T ? U : NumberToArray<T, [...U, U["length"]]>;
 
 // たし算
 export type Add<
@@ -18,7 +18,7 @@ export type Add<
     : Subtract<Y, N>
   : `${Y}` extends `-${infer M extends number}`
   ? Subtract<X, M>
-  : Length<[...NumToArr<X>, ...NumToArr<Y>]>;
+  : Length<[...NumberToArray<X>, ...NumberToArray<Y>]>;
 
 // 引き算
 export type Subtract<
@@ -31,10 +31,10 @@ export type Subtract<
     ? R
     : never
   : `${B}` extends `-${infer M extends number}`
-  ? Length<[...NumToArr<A>, ...NumToArr<M>]>
-  : NumToArr<A> extends [...NumToArr<B>, ...infer R]
+  ? Length<[...NumberToArray<A>, ...NumberToArray<M>]>
+  : NumberToArray<A> extends [...NumberToArray<B>, ...infer R]
   ? Length<R>
-  : NumToArr<B> extends [...NumToArr<A>, ...infer R]
+  : NumberToArray<B> extends [...NumberToArray<A>, ...infer R]
   ? `-${Length<R>}` extends `${infer M extends number}`
     ? M
     : never

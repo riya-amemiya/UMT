@@ -4,6 +4,6 @@
  * @param  {number} precision - 四捨五入する桁数
  * @returns number
  */
-export const roundOf = (num: number, precision: number) => {
-  return Math.round(num * 10 ** precision) / 10 ** precision;
+export const roundOf = (number_: number, precision: number) => {
+  return Math.round(number_ * 10 ** precision) / 10 ** precision;
 };

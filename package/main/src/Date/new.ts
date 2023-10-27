@@ -31,7 +31,7 @@ export const newDateInt = <T extends monTypeInt>(
   return date;
 };
 
-export const newDateStr = <T extends monTypeZero>(
+export const newDateString = <T extends monTypeZero>(
   date: `${number}-${T}-${dayType<T>}`,
   hours: hoursType = "00",
   minutes: minutesType = "00",

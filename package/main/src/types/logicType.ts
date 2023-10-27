@@ -21,7 +21,7 @@ export type isBoolean<X> = X extends number
       ? false
       : true
     : true
-  : X extends (...args: unknown[]) => unknown
+  : X extends (...arguments_: unknown[]) => unknown
   ? false
   : true;
 

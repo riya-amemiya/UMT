@@ -7,36 +7,36 @@ import { calculatorCore } from "./core";
  */
 export const literalExpression = (x: string) => {
   const cache: [string[], string] = [[], ""];
-  for (const i of x.split("=")) {
-    if (/[a-zA-Z]+/.test(i) === false) {
-      cache[1] = i;
+  for (const index of x.split("=")) {
+    if (/[A-Za-z]+/.test(index) === false) {
+      cache[1] = index;
     } else {
-      cache[0] = i
-        .split(/([0-9]+[a-zA-Z]+)|([^a-zA-Z]+)/)
-        .filter((n) => n !== "" && typeof n !== "undefined");
+      cache[0] = index
+        .split(/(\d+[A-Za-z]+)|([^A-Za-z]+)/)
+        .filter((n) => n !== "" && n !== undefined);
     }
   }
   if (cache[0][1]) {
     cache[0][1] = calculatorCore(cache[0][1]);
-    if (cache[0][1].indexOf("+") !== -1) {
-      cache[0][1] = cache[0][1].replace(/\+/g, "plus");
+    if (cache[0][1].includes("+")) {
+      cache[0][1] = cache[0][1].replaceAll("+", "plus");
     }
-    if (cache[0][1].indexOf("-") !== -1) {
-      cache[0][1] = cache[0][1].replace(/-/g, "minus");
+    if (cache[0][1].includes("-")) {
+      cache[0][1] = cache[0][1].replaceAll("-", "minus");
     }
     if (cache[0][1].indexOf("plus") !== 1) {
-      cache[0][1] = cache[0][1].replace(/plus/g, "-");
+      cache[0][1] = cache[0][1].replaceAll("plus", "-");
     }
     if (cache[0][1].indexOf("minus") !== 1) {
-      cache[0][1] = cache[0][1].replace(/minus/g, "+");
+      cache[0][1] = cache[0][1].replaceAll("minus", "+");
     }
   }
   cache[1] = cache[0][1]
     ? calculatorCore(`${cache[1]}${cache[0][1]}`)
     : calculatorCore(cache[1]);
   cache[0] = cache[0][0]
-    .split(/([0-9]+)|([a-zA-Z]+)/)
-    .filter((n) => n !== "" && typeof n !== "undefined");
+    .split(/(\d+)|([A-Za-z]+)/)
+    .filter((n) => n !== "" && n !== undefined);
   if (Number.isNaN(Number(cache[0][0]))) {
     return cache[1];
   }

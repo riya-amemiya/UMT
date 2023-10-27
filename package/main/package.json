@@ -48,8 +48,9 @@
     "test": "jest",
     "test-debug": "cd test && tsc",
     "ts-node": "yarn build && ts-node --project tmp/tsconfig.json tmp/src/index.ts",
-    "lint": "biome check .",
-    "format": "biome format . --write"
+    "lint": "yarn eslint --fix && biome check . && tsc",
+    "format": "biome format . --write",
+    "eslint": "eslint src"
   },
   "version": "1.1.7"
 }

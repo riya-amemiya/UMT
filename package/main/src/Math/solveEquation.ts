@@ -25,42 +25,45 @@ export const solveEquation = (
   constants: number[],
 ): number[] => {
   const n = constants.length;
-  for (let i = 0; i < n; i++) {
+  for (let index = 0; index < n; index++) {
     // Find the max element in the column
-    let maxElement = Math.abs(coefficients[i][i]);
-    let maxRow = i;
-    for (let j = i + 1; j < n; j++) {
-      if (Math.abs(coefficients[j][i]) > maxElement) {
-        maxElement = Math.abs(coefficients[j][i]);
-        maxRow = j;
+    let maxElement = Math.abs(coefficients[index][index]);
+    let maxRow = index;
+    for (let index_ = index + 1; index_ < n; index_++) {
+      if (Math.abs(coefficients[index_][index]) > maxElement) {
+        maxElement = Math.abs(coefficients[index_][index]);
+        maxRow = index_;
       }
     }
 
     // Swap the row with the max element to the top of the matrix
-    for (let j = i; j < n; j++) {
-      const tmp = coefficients[maxRow][j];
-      coefficients[maxRow][j] = coefficients[i][j];
-      coefficients[i][j] = tmp;
+    for (let index_ = index; index_ < n; index_++) {
+      const temporary_ = coefficients[maxRow][index_];
+      coefficients[maxRow][index_] = coefficients[index][index_];
+      coefficients[index][index_] = temporary_;
     }
 
-    const tmp = constants[maxRow];
-    constants[maxRow] = constants[i];
-    constants[i] = tmp;
+    const temporary = constants[maxRow];
+    constants[maxRow] = constants[index];
+    constants[index] = temporary;
 
     // Perform elimination on the rows below
-    for (let j = i + 1; j < n; j++) {
+    for (let index_ = index + 1; index_ < n; index_++) {
       // const factor = coefficients[j][i] / coefficients[i][i];
-      const factor = division(coefficients[j][i], coefficients[i][i]);
-      // constants[j] -= factor * constants[i];
-      constants[j] = subtract(
-        constants[j],
-        multiplication(factor, constants[i]),
+      const factor = division(
+        coefficients[index_][index],
+        coefficients[index][index],
       );
-      for (let k = i; k < n; k++) {
+      // constants[j] -= factor * constants[i];
+      constants[index_] = subtract(
+        constants[index_],
+        multiplication(factor, constants[index]),
+      );
+      for (let k = index; k < n; k++) {
         // coefficients[j][k] -= factor * coefficients[i][k];
-        coefficients[j][k] = subtract(
-          coefficients[j][k],
-          multiplication(factor, coefficients[i][k]),
+        coefficients[index_][k] = subtract(
+          coefficients[index_][k],
+          multiplication(factor, coefficients[index][k]),
         );
       }
     }
@@ -68,20 +71,22 @@ export const solveEquation = (
   const solution: number[] = [];
 
   // Back substitute to find the solution
-  for (let i = n - 1; i >= 0; i--) {
+  for (let index = n - 1; index >= 0; index--) {
     let sum = 0;
-    for (let j = i + 1; j < n; j++) {
+    for (let index_ = index + 1; index_ < n; index_++) {
       // sum += coefficients[i][j] * solution[n - j - 1];
       sum = addition(
         sum,
         multiplication(
-          coefficients[i][j],
-          solution[subtract(subtract(n, j), 1)],
+          coefficients[index][index_],
+          solution[subtract(subtract(n, index_), 1)],
         ),
       );
     }
     // solution.push((constants[i] - sum) / coefficients[i][i]);
-    solution.push(division(subtract(constants[i], sum), coefficients[i][i]));
+    solution.push(
+      division(subtract(constants[index], sum), coefficients[index][index]),
+    );
   }
   return solution.reverse().map((x) => roundOf(x, 1));
 };

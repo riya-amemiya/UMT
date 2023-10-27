@@ -26,22 +26,30 @@ function getDay(day: number, lang: "de" | "ko" | "en" | "ja" = "ja") {
     ja: ["日", "月", "火", "水", "木", "金", "土"],
   };
   switch (day) {
-    case 0:
+    case 0: {
       return dayList[lang][0];
-    case 1:
+    }
+    case 1: {
       return dayList[lang][1];
-    case 2:
+    }
+    case 2: {
       return dayList[lang][2];
-    case 3:
+    }
+    case 3: {
       return dayList[lang][3];
-    case 4:
+    }
+    case 4: {
       return dayList[lang][4];
-    case 5:
+    }
+    case 5: {
       return dayList[lang][5];
-    case 6:
+    }
+    case 6: {
       return dayList[lang][6];
-    default:
+    }
+    default: {
       return dayList[lang][0];
+    }
   }
 }
 

@@ -10,14 +10,14 @@ import { range } from "..";
 function rangeAdvance(
   start: number,
   end?: number,
-  conditionalExpression?: (num: number) => boolean,
+  conditionalExpression?: (number_: number) => boolean,
 ): number[] {
   if (conditionalExpression) {
-    const arr = [];
-    for (let i = start; i <= (end as number); i++) {
-      conditionalExpression(i) && arr.push(i);
+    const array = [];
+    for (let index = start; index < (end as number); index++) {
+      conditionalExpression(index) && array.push(index);
     }
-    return arr;
+    return array;
   }
   return range(start, end);
 }

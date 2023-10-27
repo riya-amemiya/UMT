@@ -7,12 +7,12 @@ import { ChunkArrayType } from "@/types/arrayType";
  * @returns 分割された配列
  */
 export const chunk = <T extends unknown[], N extends number>(
-  arr: T,
+  array: T,
   n: N,
 ): ChunkArrayType<T, N> => {
   const result: T[][] = [];
-  for (let i = 0; i < arr.length; i += n) {
-    result.push(arr.slice(i, i + n) as unknown as T[]);
+  for (let index = 0; index < array.length; index += n) {
+    result.push(array.slice(index, index + n) as unknown as T[]);
   }
   return result as ChunkArrayType<T, N>;
 };
