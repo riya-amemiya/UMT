@@ -96,3 +96,5 @@ python/
 coverage_dir
 
 doc
+
+tmp/src
