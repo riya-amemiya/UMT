@@ -29,7 +29,7 @@ test("calculator", () => {
   expect(calculator("(1+1)+(1+1)")).toBe("4");
 
   // 方程式
-  expect(calculator("2x=(1+1)+(1+1)+(1+1)")).toBe("3/1");
+  expect(calculator("2x=(1+1)+(1+1)+(1+1)")).toBe("3");
 
   // 変数
   expect(calculator("$10*2", { $: 100 })).toBe("2000");
