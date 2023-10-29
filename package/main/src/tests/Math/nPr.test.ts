@@ -1,11 +1,21 @@
 import { nPr } from "@/Math/nPr";
-test("{nPr}", () => {
-  expect(nPr(1, 1)).toBe(1);
-  expect(nPr(2, 1)).toBe(2);
-  expect(nPr(2, 2)).toBe(2);
-  expect(nPr(3, 1)).toBe(3);
-  expect(nPr(3, 2)).toBe(6);
-  expect(nPr(3, 3)).toBe(6);
-  expect(nPr(4, 1)).toBe(4);
-  expect(nPr(4, 2)).toBe(12);
+describe("nPr function", () => {
+  // 正常系
+  test("calculate nPr for n=5, r=2", () => {
+    expect(nPr(5, 2)).toBe(20);
+  });
+
+  test("calculate nPr for n=10, r=4", () => {
+    expect(nPr(10, 4)).toBe(5040);
+  });
+
+  // 異常系
+  test("return NaN when n or r is 0", () => {
+    expect(nPr(0, 5)).toBeNaN();
+    expect(nPr(5, 0)).toBeNaN();
+  });
+
+  test("return NaN when n < r", () => {
+    expect(nPr(2, 5)).toBeNaN();
+  });
 });

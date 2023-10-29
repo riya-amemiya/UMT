@@ -2,3 +2,4 @@
 print = "yarn"
 [test]
 coverage = true
+root = "./src"
