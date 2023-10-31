@@ -1,4 +1,5 @@
 /**
+ * 小数かどうかを判定する
  * @param {unknown} x
  * @param {boolean} [loose=true] - 文字列も対象にするかどうか
  * @returns boolean
