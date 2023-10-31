@@ -44,6 +44,7 @@ describe("calculator", () => {
     expect(calculator("2^2^2^2")).toBe("65536");
     expect(calculator("2^2^2^2^2")).toBe("Infinity");
     expect(calculator("3^4")).toBe("81");
+    expect(calculator("3^4^2")).toBe("43046721");
   });
 
   // 括弧
