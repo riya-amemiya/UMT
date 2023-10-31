@@ -46,9 +46,7 @@ export const mathConverter = (equation: string): string => {
             return convertedEquation;
           }
         }
-        return convertedEquation;
       }
-      return convertedEquation;
     }
     return convertedEquation;
   }
