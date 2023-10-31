@@ -58,6 +58,9 @@ export const literalExpression = (x: string): string => {
     }
     return numericalPart;
   }
+  if (variablePart[0] !== "1") {
+    numericalPart = `${numericalPart}/${variablePart[0]}`;
+  }
 
   return numericalPart;
 };

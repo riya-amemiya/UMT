@@ -20,7 +20,7 @@ describe("literalExpression", () => {
     expect(literalExpression("1x=1")).toBe("1");
     expect(literalExpression("3x=-6")).toBe("-2");
     expect(literalExpression("2x+2=4")).toBe("1");
-    expect(literalExpression("3x-2=-6")).toBe("4/-3");
+    expect(literalExpression("3x-2=-6")).toBe("-4/3");
   });
 
   // 数値と変数が混在(右辺)
@@ -29,7 +29,7 @@ describe("literalExpression", () => {
     expect(literalExpression("1=1x")).toBe("1");
     expect(literalExpression("-6=3x")).toBe("-2");
     expect(literalExpression("4=2x+2")).toBe("1");
-    expect(literalExpression("-6=3x-2")).toBe("4/-3");
+    expect(literalExpression("-6=3x-2")).toBe("-4/3");
   });
 
   // 最大公約数が1より大きい場合
