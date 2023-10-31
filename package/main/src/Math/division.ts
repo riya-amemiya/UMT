@@ -35,5 +35,4 @@ export const division = ((x: number, y: number, isFloor = true) => {
           : ((copyX - (copyX % copyY)) / copyY) * n,
         copyX % copyY,
       ];
-  // return isFloor ? copyX / copyY : [(copyX - (copyX % copyY)) / copyY, copyX % copyY];
 }) as DIVISION;

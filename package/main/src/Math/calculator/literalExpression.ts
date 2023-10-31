@@ -56,7 +56,6 @@ export const literalExpression = (x: string): string => {
     if (/(-?)\d+\/1/.test(numericalPart)) {
       return numericalPart.replace(/\/1/, "");
     }
-    return numericalPart;
   }
   if (variablePart[0] !== "1") {
     numericalPart = `${numericalPart}/${variablePart[0]}`;
