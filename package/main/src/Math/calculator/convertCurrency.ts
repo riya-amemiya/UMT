@@ -16,8 +16,9 @@ export const convertCurrency = <
   inputString: string,
   conversionRates?: T,
 ) => {
-  // biome-ignore lint/style/useBlockStatements: <explanation>
-  if (!conversionRates) return inputString;
+  if (!conversionRates) {
+    return inputString;
+  }
 
   for (const currencySymbol in conversionRates) {
     if (inputString.startsWith(currencySymbol)) {
@@ -27,7 +28,6 @@ export const convertCurrency = <
       if (isNumber(rate)) {
         const amount = Number(amountString);
         const convertedAmount = multiplication(amount, Number(rate));
-
         return Number.isNaN(convertedAmount)
           ? inputString
           : String(convertedAmount);

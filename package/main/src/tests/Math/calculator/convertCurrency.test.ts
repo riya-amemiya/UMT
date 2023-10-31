@@ -3,22 +3,29 @@ import { convertCurrency } from "@/Math/calculator/convertCurrency";
 /**
  * convertCurrency関数のテスト
  */
-test("convertCurrency", () => {
-  // "$1" を 100 倍して "100" になることを確認
-  expect(convertCurrency("$1", { $: 100 })).toBe("100");
+describe("convertCurrency", () => {
+  // ケース 1
+  test("conversionRatesが未定義", () => {
+    expect(convertCurrency("¥1000")).toBe("¥1000");
+  });
 
-  // 未知の通貨記号 "a$" が入力された場合、元の文字列 "a$1" を返すことを確認
-  expect(convertCurrency("a$1", { $: 100 })).toBe("a$1");
+  // ケース 2
+  test("通貨記号がマッチしない", () => {
+    expect(convertCurrency("¥1000", { $: 1.1 })).toBe("¥1000");
+  });
 
-  // "a$1" が 100 倍して "100" になることを確認
-  expect(convertCurrency("a$1", { a$: 100 })).toBe("100");
+  // ケース 3
+  test("通貨記号がマッチし、換算レートが数値", () => {
+    expect(convertCurrency("¥1000", { "¥": 1.1 })).toBe("1100");
+  });
 
-  // 換算レートが指定されていない場合、元の文字列 "$1" を返すことを確認
-  expect(convertCurrency("$1")).toBe("$1");
+  // ケース 4
+  test("通貨記号がマッチし、換算レートが数値でない", () => {
+    expect(convertCurrency("¥1000", { "¥": "invalid" })).toBe("¥1000");
+  });
 
-  // 換算レートが数値でない場合、元の文字列 "$1" を返すことを確認
-  expect(convertCurrency("$1", { $: "abc" })).toBe("$1");
-
-  // 換算レートが文字列の数値の場合、"$1" を 100 倍して "100" になることを確認
-  expect(convertCurrency("$1", { $: "100" })).toBe("100");
+  // ケース 5
+  test("換算結果がNaN", () => {
+    expect(convertCurrency("¥NaN", { "¥": 1.1 })).toBe("¥NaN");
+  });
 });

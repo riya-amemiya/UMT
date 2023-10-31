@@ -17,6 +17,7 @@ describe("literalExpression", () => {
   // 数値と変数が混在
   test("should handle equations with mixed numerical and variable parts", () => {
     expect(literalExpression("2x=4")).toBe("2");
+    expect(literalExpression("1x=1")).toBe("1");
     expect(literalExpression("3x=-6")).toBe("-2");
     expect(literalExpression("2x+2=4")).toBe("1");
     expect(literalExpression("3x-2=-6")).toBe("4/-3");
@@ -25,6 +26,7 @@ describe("literalExpression", () => {
   // 数値と変数が混在(右辺)
   test("should handle equations with mixed numerical and variable parts (right side)", () => {
     expect(literalExpression("4=2x")).toBe("2");
+    expect(literalExpression("1=1x")).toBe("1");
     expect(literalExpression("-6=3x")).toBe("-2");
     expect(literalExpression("4=2x+2")).toBe("1");
     expect(literalExpression("-6=3x-2")).toBe("4/-3");

@@ -26,12 +26,20 @@ export const calculatorCore = <T extends { [key: string]: string | number }>(
 
     // 括弧の処理
     if (containsParentheses(sanitizedExpression)) {
-      sanitizedExpression = resolveParentheses(sanitizedExpression);
+      const temporary = resolveParentheses(sanitizedExpression);
+      if (temporary === NaN.toString()) {
+        return sanitizedExpression;
+      }
+      sanitizedExpression = temporary;
     }
 
     // 乗算、除算、べき乗の処理
     else if (containsMulDivExp(sanitizedExpression)) {
-      sanitizedExpression = resolveMulDivExp(sanitizedExpression);
+      const temporary = resolveMulDivExp(sanitizedExpression);
+      if (temporary === NaN.toString()) {
+        return sanitizedExpression;
+      }
+      sanitizedExpression = temporary;
     }
 
     // 加算と減算の処理
@@ -39,7 +47,11 @@ export const calculatorCore = <T extends { [key: string]: string | number }>(
       containsAddSub(sanitizedExpression) &&
       !isNumber(sanitizedExpression)
     ) {
-      sanitizedExpression = resolveAddSub(sanitizedExpression);
+      const temporary = resolveAddSub(sanitizedExpression);
+      if (temporary === NaN.toString()) {
+        return sanitizedExpression;
+      }
+      sanitizedExpression = temporary;
     }
 
     // もう計算するものがなければ結果を返す
@@ -87,7 +99,7 @@ const resolveParentheses = (expr: string): string => {
       calculatorCore(match[0].replaceAll(/\(|\)/g, "")),
     );
   }
-  return expr;
+  return NaN.toString();
 };
 
 const containsMulDivExp = (expr: string): boolean => {
@@ -101,7 +113,9 @@ const resolveMulDivExp = (expr: string): string => {
     const operands = match[0].split(/([*/^])/);
     const result =
       operands[1] === "^"
-        ? Number(operands[0]) ** Number(operands[2])
+        ? /^\d+\.?(\d+)?([*/^])\d+\.?(\d+)?$/.test(expr)
+          ? Number(operands[0]) ** Number(operands[2])
+          : Number(operands[2]) ** Number(operands[0])
         : operands[1] === "*"
         ? multiplication(Number(operands[0]), Number(operands[2]))
         : operands[1] === "/"
@@ -109,7 +123,7 @@ const resolveMulDivExp = (expr: string): string => {
         : 0;
     return expr.replace(match[0], String(result));
   }
-  return expr;
+  return NaN.toString();
 };
 
 const containsAddSub = (expr: string): boolean => {
@@ -128,5 +142,5 @@ const resolveAddSub = (expr: string): string => {
         : 0;
     return expr.replace(match[0], String(result));
   }
-  return expr;
+  return NaN.toString();
 };
