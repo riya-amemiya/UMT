@@ -9,7 +9,8 @@ import { random } from "../Math/random";
  */
 
 export const quickSort = <A extends unknown[]>(
-  array: A[],
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+  array: any[],
   startID = 0,
   endID: number = array.length - 1,
 ): A => {
