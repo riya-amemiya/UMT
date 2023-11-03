@@ -4,6 +4,7 @@
  * @param  {number} averageValue - センサー値の平均値
  * @param  {number} standardDeviationValue - センサー値の標準偏差
  * @returns {number} 偏差値
+ * @example deviationValue(10, 5, 2); // 75
  */
 export const deviationValue = (
   value: number,

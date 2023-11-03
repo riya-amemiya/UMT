@@ -5,6 +5,7 @@ import { nCr } from "./nCr";
  * @param n - 選ぶ元となる全体の数
  * @param r - 選ぶ個数
  * @returns 重複組み合わせの結果、または引数が無効な場合はNaN
+ * @example nHr(5, 2); // 15
  */
 export const nHr = (n: number, r: number): number => {
   if (n === 0 || r === 0 || n < 0 || r < 0) {

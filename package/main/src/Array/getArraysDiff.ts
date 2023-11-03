@@ -2,6 +2,8 @@
  * 共通しない要素をとりだす
  * @param  {unknown[]} array
  * @param  {unknown[]} ...arrays
+ * @returns unknown[]
+ * @example getArraysDiff([1, 2, 3], [2, 3, 4]); // [1, 4]
  */
 export const getArraysDiff = <T>(array: T[], ...arrays: T[][]): T[] => {
   const allValues = new Set(array);

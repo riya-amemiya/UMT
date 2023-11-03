@@ -3,6 +3,8 @@ import { gcd } from "./gcd";
  * 約分
  * @param  {number} x
  * @param  {number} y
+ * @returns {x: number, y: number, gcd: number}
+ * @example reduce(2, 4); // {x: 1, y: 2, gcd: 2}
  */
 export const reduce = (x: number, y: number) => {
   if (x === 0 || y === 0) {

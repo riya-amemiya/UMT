@@ -6,6 +6,7 @@ import { nCr } from "./nCr";
  * @param  {number} r
  * @param  {{x:number;y:number}} p
  * @return {number[]}
+ * @example repeatedTrial(5, 2, {x: 1/3, y: 2/3}); // [10, 27]
  */
 export const repeatedTrial = (
   n: number,

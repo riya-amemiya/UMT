@@ -11,6 +11,7 @@ export interface DIVISION {
  * @param  {number} y
  * @param  {boolean} [isFloor=true]
  * @returns number
+ * @example division(0.1, 0.2); // 0.5
  */
 export const division = ((x: number, y: number, isFloor = true) => {
   const [decimalLengthX, decimalLengthY] = valueSwap(

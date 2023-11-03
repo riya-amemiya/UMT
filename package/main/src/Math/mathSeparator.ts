@@ -2,12 +2,9 @@ import { isDouble } from "./isDouble";
 import { isNumber } from "./isNumber";
 /**
  * 最大値の位で区切ります。
- *
- * 1250 => [1000, 250]
- *
- * 150 => [100, 50]
  * @param  {string|number} number
  * @returns string
+ * @example mathSeparator(1250); // [1000, 250]
  */
 export const mathSeparator = (number: string | number): [number, number] => {
   let copyNumber = number;

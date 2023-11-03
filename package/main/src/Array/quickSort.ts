@@ -1,14 +1,15 @@
 import { random } from "../Math/random";
 /**
  * 配列を高速にソート
- * @param  {any[]} array
- * @param  {number} startID
- * @param  {number} endID
+ * @param  {unknown[]} array 配列
+ * @param  {number} startID 開始インデックス
+ * @param  {number} endID 終了インデックス
+ * @returns unknown[]
+ * @example quickSort([1, 3, 2, 4, 5]); // [1, 2, 3, 4, 5]
  */
 
 export const quickSort = <A extends unknown[]>(
-  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-  array: any[],
+  array: A[],
   startID = 0,
   endID: number = array.length - 1,
 ): A => {

@@ -7,6 +7,7 @@ import { multiplication } from "../multiplication";
  * @param inputString - 換算する通貨額を含む文字列
  * @param conversionRates - 通貨記号と換算レートのオブジェクト
  * @returns 換算後の通貨額を文字列で返す。換算できない場合は元の文字列を返す。
+ * @example convertCurrency("¥100", { "¥": 0.01 }); // "1"
  */
 export const convertCurrency = <
   T extends {

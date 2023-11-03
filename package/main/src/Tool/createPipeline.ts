@@ -9,9 +9,12 @@ export interface Pipeline<T> {
 }
 
 /**
- * Pipelineインスタンスを生成する関数。
- * @param initialValue 初期値。
- * @returns Pipelineインスタンス。
+ * Pipelineインスタンスを生成する関数
+ * @param initialValue 初期値
+ * @returns Pipelineインスタンス
+ * @example const pipeline = createPipeline(1);
+ * pipeline(); // 1
+ * pipeline((x) => x + 1)(); // 2
  */
 export const createPipeline: <T>(initialValue: T) => Pipeline<T> = <T>(
   initialValue: T,

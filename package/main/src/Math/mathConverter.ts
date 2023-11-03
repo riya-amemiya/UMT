@@ -1,12 +1,10 @@
 import { mathSeparator } from "./mathSeparator";
 
 /**
- * nの2乗を展開します。
- *
- * 1250*1250 => 1500*1000+400*100+200*100+50*50
- *
+ * nの2乗を展開します
  * @param {string} equation - 変換する数学的な式
  * @returns {string} 変換後の式
+ * @example mathConverter("1250*1250"); // "1500*1000+400*100+200*100+50*50"
  */
 export const mathConverter = (equation: string): string => {
   let convertedEquation = equation;

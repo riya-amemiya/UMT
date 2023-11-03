@@ -3,6 +3,9 @@
  * @param  {unknown} x
  * @param  {boolean} loose 文字列も対象にするかどうか (default: true)
  * @returns boolean
+ * @example isNumber(0.1); // true
+ * isNumber("0.1"); // true
+ * isNumber("0.1", false); // false
  */
 
 function isNumber<T extends boolean>(

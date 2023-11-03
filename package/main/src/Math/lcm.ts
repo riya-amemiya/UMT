@@ -5,6 +5,7 @@ import { valueSwap } from "./valueSwap";
  * @param  {number} x
  * @param  {number} y
  * @returns number
+ * @example lcm(2, 3); // 6
  */
 export const lcm = (x: number, y: number) => {
   let copyX = x;

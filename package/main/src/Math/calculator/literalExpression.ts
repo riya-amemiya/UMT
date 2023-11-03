@@ -5,6 +5,7 @@ import { calculatorCore } from "./core";
  * 文字式の方程式を計算する
  * @param x 方程式の文字列
  * @returns 計算結果
+ * @example literalExpression("x+1=2"); // "1"
  */
 export const literalExpression = (x: string): string => {
   // 方程式の数値と変数部分を格納

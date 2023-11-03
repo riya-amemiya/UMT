@@ -4,6 +4,7 @@ import { calculator } from "./calculator";
  * 電卓関数を初期化する
  * @param {object} exchange - 為替レート
  * @return {Function} - calculator
+ * @example calculatorInitialization({ $: 100 })("$1"); // "100"
  */
 export const calculatorInitialization = <
   T extends { [key: string]: string | number },

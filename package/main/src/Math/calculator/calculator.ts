@@ -7,8 +7,9 @@ import { literalExpression } from "./literalExpression";
  * 一文字までの方程式に対応
  * @param  {string} x
  * @param  {object} exchange 為替
+ * @returns 計算結果
+ * @example calculator("1+2"); // 3
  */
-
 export const calculator = <T extends { [key: string]: string | number }>(
   x: string,
   exchange?: T,

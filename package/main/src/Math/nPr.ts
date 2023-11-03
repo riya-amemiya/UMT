@@ -3,6 +3,7 @@
  * @param n - 選ぶ元となる全体の数
  * @param r - 選ぶ個数
  * @returns 順列の結果、または引数が無効な場合はNaN
+ * @example nPr(5, 2); // 20
  */
 export const nPr = (n: number, r: number): number => {
   if (n === 0 || r === 0 || n < r) {

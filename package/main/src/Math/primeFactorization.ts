@@ -1,6 +1,8 @@
 /**
  * 素因数分解
  * @param  {number} x
+ * @returns {number: number; count: number}[]
+ * @example primeFactorization(12); // [{number: 2, count: 2}, {number: 3, count: 1}]
  */
 export const primeFactorization = (x: number) => {
   let n = 0;

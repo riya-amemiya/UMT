@@ -1,8 +1,9 @@
 import { subtract } from "./subtract";
 
 /**
- * Converts a temperature from Kelvin to Celsius.
- * @param kelvin The temperature in Kelvin.
- * @returns The temperature in Celsius.
+ * ケルビンを摂氏に変換する
+ * @param kelvin
+ * @returns number
+ * @example toCelsius(300); // 26.85
  */
 export const toCelsius = (kelvin: number) => subtract(kelvin, 273.15);

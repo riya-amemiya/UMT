@@ -2,6 +2,8 @@ import { average } from "./average";
 /**
  * 標準偏差
  * @param  {number[]} values
+ * @returns number
+ * @example standardDeviation([1, 2, 3]); // 0.816496580927726
  */
 export const standardDeviation = (values: number[]) => {
   const avg = average(values);

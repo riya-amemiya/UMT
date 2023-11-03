@@ -4,6 +4,7 @@
  * @param  {number} y
  * @param  {number} ...z
  * @returns number
+ * @example gcd(12, 18); // 6
  */
 export const gcd = (x: number, y: number, ...z: number[]) => {
   let copyX = Math.abs(x);

@@ -5,7 +5,8 @@ import { range } from "..";
  * @param start 開始数値
  * @param end 終了数値
  * @param conditionalExpression 条件式
- * @returns
+ * @returns 条件式を満たす数値の配列
+ * @example rangeAdvance(1, 10, (number) => number % 2 === 0); // [2, 4, 6, 8]
  */
 function rangeAdvance(
   start: number,

@@ -12,6 +12,7 @@ interface DayList {
  * @param day 曜日を表す数値
  * @param lang 言語
  * @returns langに応じた曜日
+ * @example getDay(0); // "日"
  */
 function getDay(day: number, lang: "de"): ArrayToUnion<DayList["de"]>;
 function getDay(day: number, lang: "ko"): ArrayToUnion<DayList["ko"]>;

@@ -12,6 +12,17 @@ export interface BIRTHDAYSIMPLE {
     timeDifference: hoursTypeInt,
   ): number;
 }
+/**
+ * 年齢を取得する
+ * @param birthdays - 誕生日
+ * @param timeDifference - 時差 (default: 9)
+ * @returns number
+ * @example birthdaySimple("2000-01-01");
+ * birthdaySimple("2000:01:01");
+ * birthdaySimple("2000/01/01");
+ * birthdaySimple({ year: 2000, mon: 1, day: 1 });
+ * birthdaySimple(new Date(2000, 0, 1));
+ */
 export const birthdaySimple = (<T extends monType>(
   birthdays:
     | `${number}-${T}-${dayType<T>}`

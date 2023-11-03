@@ -2,6 +2,7 @@
  * 素数判定
  * @param  {number} n
  * @returns boolean
+ * @example isPrimeNumber(2); // true
  */
 export const isPrimeNumber = (n: number): boolean => {
   if (n <= 1) {
