@@ -1,7 +1,6 @@
 export * from "./addition";
 export * from "./average";
 export * from "./calculator";
-export * from "./calculator/calculatorInitialization";
 export * from "./degToRad";
 export * from "./deviationValue";
 export * from "./division";

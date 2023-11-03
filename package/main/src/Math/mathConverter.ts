@@ -1,41 +1,51 @@
 import { mathSeparator } from "./mathSeparator";
 
 /**
- * @param {string} x
- * @returns string
+ * nの2乗を展開します
+ * @param {string} equation - 変換する数学的な式
+ * @returns {string} 変換後の式
+ * @example mathConverter("1250*1250"); // "1500*1000+400*100+200*100+50*50"
  */
+export const mathConverter = (equation: string): string => {
+  let convertedEquation = equation;
 
-export const mathConverter = (x: string): string => {
-  let returnValue = x;
   while (true) {
-    if (returnValue.includes("^") || returnValue.includes("*")) {
-      //掛け算と割り算の処理
-      const y: [RegExpMatchArray | null, string[]] = [
-        returnValue.match(/\d+\.?(\d+)?(\*|\^)\d+\.?(\d+)?/),
+    if (convertedEquation.includes("^") || convertedEquation.includes("*")) {
+      // 乗算と累乗の処理
+      const extractedData: [RegExpMatchArray | null, string[]] = [
+        convertedEquation.match(/\d+\.?(\d+)?(\*|\^)\d+\.?(\d+)?/),
         [""],
       ];
-      if (y[0]) {
-        y[1] = y[0][0].split(/(\d+\.\d+)|(\d+)/g).filter((n) => {
-          return n !== undefined && n !== "";
-        });
-        if (y[1][0] === y[1][2] || (y[1][2] && y[1][1] === "^")) {
-          const [n, m] = mathSeparator(y[1][0]);
 
-          if (n) {
-            returnValue = `${Number(y[1][0]) + m}*${n}+`;
-            if (m <= 100) {
-              returnValue += `${m}*${m}`;
+      if (extractedData[0]) {
+        extractedData[1] = extractedData[0][0]
+          .split(/(\d+\.\d+)|(\d+)/g)
+          .filter((number_) => {
+            return number_ !== undefined && number_ !== "";
+          });
+
+        if (
+          extractedData[1][0] === extractedData[1][2] ||
+          (extractedData[1][2] && extractedData[1][1] === "^")
+        ) {
+          const [primary, remainder] = mathSeparator(extractedData[1][0]);
+
+          if (primary) {
+            convertedEquation = `${
+              Number(extractedData[1][0]) + remainder
+            }*${primary}+`;
+
+            if (remainder <= 100) {
+              convertedEquation += `${remainder}*${remainder}`;
             } else {
-              returnValue += mathConverter(`${m}*${m}`);
-              return returnValue;
+              convertedEquation += mathConverter(`${remainder}*${remainder}`);
+              return convertedEquation;
             }
-            return returnValue;
+            return convertedEquation;
           }
         }
-        return returnValue;
       }
-      return returnValue;
     }
-    return returnValue;
+    return convertedEquation;
   }
 };

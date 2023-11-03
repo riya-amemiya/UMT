@@ -1,35 +1,17 @@
 /**
- * nPr
- * @param  {number} n
- * @param  {number} r
+ * n個からr個を選ぶ順列（nPr）を計算します。
+ * @param n - 選ぶ元となる全体の数
+ * @param r - 選ぶ個数
+ * @returns 順列の結果、または引数が無効な場合はNaN
+ * @example nPr(5, 2); // 20
  */
-export const nPr = (n: number, r: number) => {
-  let copyN = n;
-  let copyR = r;
-  // nPr;
-  if (copyN === 0 || copyR === 0) {
+export const nPr = (n: number, r: number): number => {
+  if (n === 0 || r === 0 || n < r) {
     return Number.NaN;
   }
-  let y = copyN;
-  let x = 0;
-  while (x === 0) {
-    if (copyR === 1) {
-      y *= copyR;
-    }
-    copyR--;
-    if (copyR === 0) {
-      x++;
-    } else {
-      copyN--;
-      if (copyN === 0) {
-        x++;
-        break;
-      }
-      y *= copyN;
-    }
+  let result = 1;
+  for (let index = 0; index < r; index++) {
+    result *= n - index;
   }
-  if (1 > y) {
-    return 0;
-  }
-  return y;
+  return result;
 };

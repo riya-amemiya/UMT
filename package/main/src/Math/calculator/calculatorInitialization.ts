@@ -1,9 +1,10 @@
 import { calculator } from "./calculator";
 
 /**
- * Initializes the calculator.
- * @param {object} exchange - current exchange rate
+ * 電卓関数を初期化する
+ * @param {object} exchange - 為替レート
  * @return {Function} - calculator
+ * @example calculatorInitialization({ $: 100 })("$1"); // "100"
  */
 export const calculatorInitialization = <
   T extends { [key: string]: string | number },
@@ -11,8 +12,8 @@ export const calculatorInitialization = <
   exchange: T,
 ): ((x: string) => string) => {
   /**
-   * @param {string} x - amount of money
-   * @return {string} - converted amount of money
+   * @param {string} x - 金額
+   * @return {string} - 計算結果
    */
   return (x: string): string => calculator(x, exchange);
 };

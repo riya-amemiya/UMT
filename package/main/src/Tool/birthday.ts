@@ -8,6 +8,7 @@ import { dayTypeInt, monTypeInt } from "@/types/dateType";
  * @param  {number} day
  * @param  {number} [timeDifference=9] 時差
  * @returns number 年齢
+ * @example birthday(2000, 1, 1); // 21
  */
 export const birthday = <T extends monTypeInt>(
   year: number,

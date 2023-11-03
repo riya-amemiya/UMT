@@ -1,20 +1,20 @@
-import { valueSwap } from "./valueSwap";
-
 /**
- * 自然数の最大公約数
+ * 最大公約数
  * @param  {number} x
  * @param  {number} y
  * @param  {number} ...z
  * @returns number
+ * @example gcd(12, 18); // 6
  */
 export const gcd = (x: number, y: number, ...z: number[]) => {
-  let copyX = x;
-  let copyY = y;
-  const copyZ = z;
+  let copyX = Math.abs(x);
+  let copyY = Math.abs(y);
+  const copyZ = z.map((element) => Math.abs(element));
   if (copyX === 0 || copyY === 0) {
     return 0;
   }
-  [copyX, copyY] = valueSwap(copyX, copyY);
+  [copyX, copyY] = [Math.max(copyX, copyY), Math.min(copyX, copyY)];
+
   /* ユークリッドの互除法 */
   let r = copyY % copyX;
   while (r !== 0) {

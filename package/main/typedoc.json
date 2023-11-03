@@ -8,4 +8,7 @@
 		"./src"
 	],
 	"entryPointStrategy": "expand",
+	"exclude": [
+		"module/test/**/*"
+	],
 }

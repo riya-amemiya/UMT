@@ -4,12 +4,12 @@ import { multiplication } from "./multiplication";
 import { roundOf } from "./roundOf";
 import { subtract } from "./subtract";
 /**
- * Solve a system of linear equations using Gauss-Jordan elimination
- * @param {Equation} equation - The system of linear equations
- * @returns {number[]} The solution to the system of linear equations
+ * 連立一次方程式を解く
+ * @param {Equation} equation - 連立一次方程式
+ * @returns {number[]} 解
  * @example
- * x + y = 4
- * x + 2y = 10
+ * // x + y = 4
+ * // x + 2y = 10
  * solveEquation(
  * {
  * 	coefficients: [

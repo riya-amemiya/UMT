@@ -9,7 +9,17 @@ import {
   dayType,
   dayTypeInt,
 } from "@/types/dateType";
-
+/**
+ * 曜日を取得する
+ * @param properties - 年月日
+ * @param timeDifference - 時差 (default: 9)
+ * @returns number
+ * @example dayOfWeekSimple("2000-01-01");
+ * dayOfWeekSimple("2000:01:01");
+ * dayOfWeekSimple("2000/01/01");
+ * dayOfWeekSimple({ year: 2000, mon: 1, day: 1 });
+ * dayOfWeekSimple(new Date(2000, 0, 1));
+ */
 function dayOfWeekSimple<
   T extends MonthsWith31DaysInt | MonthsWithout31DaysInt,
 >(

@@ -3,6 +3,13 @@ import { now } from "@/Date/now";
 import { hoursTypeInt } from "@/types/clockType";
 import { dayTypeInt, monTypeInt } from "@/types/dateType";
 
+/**
+ * 曜日を取得する
+ * @param properties
+ * @param timeDifference
+ * @returns number
+ * @example dayOfWeek({ year: 2000, mon: 1, day: 1 });
+ */
 export const dayOfWeek = <T extends monTypeInt,>(
   properties?: {
     year?: number;

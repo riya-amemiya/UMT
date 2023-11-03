@@ -1,19 +1,25 @@
 import { nPr } from "./nPr";
+
 /**
- * nCr
- * @param  {number} n
- * @param  {number} r
+ * n個からr個を選ぶ組み合わせ（nCr）を計算します。
+ * @param n - 選ぶ元となる全体の数
+ * @param r - 選ぶ個数
+ * @returns 組み合わせの結果、または引数が無効な場合はNaN
+ * @example nCr(5, 2); // 10
  */
-export const nCr = (n: number, r: number) => {
-  //nCr
-  let y = nPr(n, r);
-  let age = 1;
+export const nCr = (n: number, r: number): number => {
+  if (n === 0 || r === 0 || n < r) {
+    return Number.NaN;
+  }
+
+  const numerator = nPr(n, r);
+  let denominator = 1;
+
   for (let index = 2; index <= r; index++) {
-    age *= index;
+    denominator *= index;
   }
-  y /= age;
-  if (1 > y) {
-    return 0;
-  }
-  return y;
+
+  const result = numerator / denominator;
+
+  return result;
 };

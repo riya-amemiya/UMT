@@ -97,4 +97,4 @@ coverage_dir
 
 doc
 
-tmp
+tmp/src

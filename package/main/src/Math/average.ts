@@ -4,6 +4,7 @@ import { division } from "./division";
  * 平均値
  * @param  {number[]} numbers
  * @returns number
+ * @example average([1, 2, 3]); // 2
  */
 export const average = (numbers: number[]): number => {
   if (numbers.length === 0) {

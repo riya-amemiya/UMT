@@ -9,7 +9,7 @@ const config: Config = {
   collectCoverage: true,
   collectCoverageFrom: [
     "!**/node_modules/**",
-    "!**/{index,random,birthday,isBrowser,isNode,isNodeWebkit,clock}.{js,ts}",
+    "!**/{index,random,birthday,isBrowser,isNode,isNodeWebkit,clock,randomString,randomStringInitialization}.{js,ts}",
     "!**/Date/**",
   ],
   coverageDirectory: "coverage_dir",

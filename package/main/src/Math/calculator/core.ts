@@ -26,12 +26,29 @@ export const calculatorCore = <T extends { [key: string]: string | number }>(
 
     // 括弧の処理
     if (containsParentheses(sanitizedExpression)) {
-      sanitizedExpression = resolveParentheses(sanitizedExpression);
+      const temporary = resolveParentheses(sanitizedExpression);
+      if (temporary === NaN.toString()) {
+        return sanitizedExpression;
+      }
+      sanitizedExpression = temporary;
     }
 
-    // 乗算、除算、べき乗の処理
-    else if (containsMulDivExp(sanitizedExpression)) {
-      sanitizedExpression = resolveMulDivExp(sanitizedExpression);
+    // 乗算、べき乗の処理
+    else if (containsMulExp(sanitizedExpression)) {
+      const temporary = resolveMulExp(sanitizedExpression);
+      if (temporary === NaN.toString()) {
+        return sanitizedExpression;
+      }
+      sanitizedExpression = temporary;
+    }
+
+    // 除算の処理
+    else if (containsDiv(sanitizedExpression)) {
+      const temporary = resolveDiv(sanitizedExpression);
+      if (temporary === NaN.toString()) {
+        return sanitizedExpression;
+      }
+      sanitizedExpression = temporary;
     }
 
     // 加算と減算の処理
@@ -39,7 +56,11 @@ export const calculatorCore = <T extends { [key: string]: string | number }>(
       containsAddSub(sanitizedExpression) &&
       !isNumber(sanitizedExpression)
     ) {
-      sanitizedExpression = resolveAddSub(sanitizedExpression);
+      const temporary = resolveAddSub(sanitizedExpression);
+      if (temporary === NaN.toString()) {
+        return sanitizedExpression;
+      }
+      sanitizedExpression = temporary;
     }
 
     // もう計算するものがなければ結果を返す
@@ -87,29 +108,40 @@ const resolveParentheses = (expr: string): string => {
       calculatorCore(match[0].replaceAll(/\(|\)/g, "")),
     );
   }
-  return expr;
+  return NaN.toString();
 };
 
-const containsMulDivExp = (expr: string): boolean => {
-  return expr.includes("^") || expr.includes("*") || expr.includes("/");
+const containsMulExp = (expr: string): boolean => {
+  return expr.includes("^") || expr.includes("*");
 };
 
-const resolveMulDivExp = (expr: string): string => {
-  // 乗算、除算、べき乗の計算ロジック
-  const match = expr.match(/\d+\.?(\d+)?([*/^])\d+\.?(\d+)?/);
+const containsDiv = (expr: string): boolean => {
+  return expr.includes("/");
+};
+
+const resolveMulExp = (expr: string): string => {
+  // 乗算、べき乗の計算ロジック
+  const match = expr.match(/(.*?)(\d+\.?(\d+)?([*^])\d+\.?(\d+)?$)/);
   if (match) {
-    const operands = match[0].split(/([*/^])/);
+    const operands = match[2].split(/([*/^])/);
     const result =
       operands[1] === "^"
         ? Number(operands[0]) ** Number(operands[2])
-        : operands[1] === "*"
-        ? multiplication(Number(operands[0]), Number(operands[2]))
-        : operands[1] === "/"
-        ? division(Number(operands[0]), Number(operands[2]))
-        : 0;
+        : multiplication(Number(operands[0]), Number(operands[2]));
+    return `${match[1]}${result}`;
+  }
+  return NaN.toString();
+};
+
+const resolveDiv = (expr: string): string => {
+  // 除算の計算ロジック
+  const match = expr.match(/\d+\.?(\d+)?(\/)\d+\.?(\d+)?/);
+  if (match) {
+    const operands = match[0].split(/(\/)/);
+    const result = division(Number(operands[0]), Number(operands[2]));
     return expr.replace(match[0], String(result));
   }
-  return expr;
+  return NaN.toString();
 };
 
 const containsAddSub = (expr: string): boolean => {
@@ -123,10 +155,8 @@ const resolveAddSub = (expr: string): string => {
     const result =
       match[3] === "+"
         ? addition(Number(match[1]), Number(match[4]))
-        : match[3] === "-"
-        ? subtract(Number(match[1]), Number(match[4]))
-        : 0;
+        : subtract(Number(match[1]), Number(match[4]));
     return expr.replace(match[0], String(result));
   }
-  return expr;
+  return NaN.toString();
 };

@@ -3,6 +3,7 @@
  * @param  {number} x
  * @param  {number} y
  * @return {[number, number]}
+ * @example valueSwap(2, 1); // [1, 2]
  */
 export const valueSwap = (x: number, y: number): [number, number] => {
   let temporary: number;
