@@ -1,9 +1,9 @@
 import { ipToLong } from "./ipToLong";
 
 /**
- * IPクラスを取得します。
- * @param {string} ip - IPアドレス。
- * @returns {string} IPクラス（A, B, C, D, Eまたは空文字列）。
+ * IPクラスを取得します
+ * @param {string} ip - IPアドレス
+ * @returns {string} IPクラス（A, B, C, D, Eまたは空文字列）
  */
 export const getIpClass = (ip: string): string => {
   const long = ipToLong(ip);

@@ -1,7 +1,7 @@
 /**
- * 32ビットの数値をIPアドレスに変換します。
- * @param {number} long - 変換する32ビットの数値。
- * @returns {string} IPアドレス。
+ * 32ビットの数値をIPアドレスに変換します
+ * @param {number} long - 変換する32ビットの数値
+ * @returns {string} IPアドレス
  */
 export const longToIp = (long: number): string => {
   const binary = long.toString(2).padStart(32, "0");

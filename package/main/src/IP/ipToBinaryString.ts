@@ -1,7 +1,7 @@
 /**
- * IPアドレスをバイナリ文字列に変換します。
- * @param {string} ip - 変換するIPアドレス。
- * @returns {string} バイナリ文字列。
+ * IPアドレスをバイナリ文字列に変換します
+ * @param {string} ip - 変換するIPアドレス
+ * @returns {string} バイナリ文字列
  */
 export const ipToBinaryString = (ip: string): string =>
   ip
