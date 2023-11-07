@@ -1,6 +1,5 @@
 export * from "./cidrToLong";
 export * from "./cidrToSubnetMask";
-export * from "./getBroadcastAddress";
 export * from "./getIpClass";
 export * from "./getNetworkAddress";
 export * from "./ipToBinaryString";

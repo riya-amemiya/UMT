@@ -6,4 +6,4 @@ import { ipToBinaryString } from "./ipToBinaryString";
  * @returns {number} CIDR
  */
 export const subnetMaskToCidr = (subnetMask: string): number =>
-  ipToBinaryString(subnetMask).indexOf("0");
+  ipToBinaryString(subnetMask).match(/1/g)?.length || 0;

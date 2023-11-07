@@ -6,4 +6,4 @@ import { ipToBinaryString } from "./ipToBinaryString";
  * @returns {number} 32ビットの数値
  */
 export const ipToLong = (ip: string): number =>
-  parseInt(ipToBinaryString(ip), 2);
+  parseInt(ipToBinaryString(ip), 2) >>> 0;
