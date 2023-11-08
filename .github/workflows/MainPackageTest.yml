@@ -16,7 +16,7 @@ jobs:
         runs-on: ${{ matrix.os }}
         strategy:
             matrix:
-                bun-version: [1.0.0]
+                bun-version: [latest]
                 os: [ubuntu-latest]
         defaults:
           run:
