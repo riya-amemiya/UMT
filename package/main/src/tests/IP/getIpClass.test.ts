@@ -21,4 +21,8 @@ describe("getIpClass", () => {
   test("IPクラスEを識別する", () => {
     expect(getIpClass("240.0.0.1")).toBe("E");
   });
+
+  test("無効な範囲のIPアドレス", () => {
+    expect(getIpClass("")).toBe("");
+  });
 });

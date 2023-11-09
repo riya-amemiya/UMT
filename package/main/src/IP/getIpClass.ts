@@ -6,6 +6,9 @@ import { ipToLong } from "./ipToLong";
  * @returns {string} IPクラス（A, B, C, D, Eまたは空文字列）
  */
 export const getIpClass = (ip: string): string => {
+  if (!ip) {
+    return "";
+  }
   const long = ipToLong(ip);
   if (long >= ipToLong("0.0.0.0") && long <= ipToLong("127.255.255.255")) {
     return "A";
