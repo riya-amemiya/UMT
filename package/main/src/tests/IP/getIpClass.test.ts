@@ -24,5 +24,6 @@ describe("getIpClass", () => {
 
   test("無効な範囲のIPアドレス", () => {
     expect(getIpClass("")).toBe("");
+    expect(getIpClass("256.0.0.1")).toBe("");
   });
 });
