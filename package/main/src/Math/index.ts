@@ -16,6 +16,7 @@ export * from "./lcm";
 export * from "./mathConverter";
 export * from "./mathSeparator";
 export * from "./max";
+export * from "./median";
 export * from "./min";
 export * from "./multiples";
 export * from "./multiplication";

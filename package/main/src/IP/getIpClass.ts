@@ -1,25 +1,28 @@
-import { ipToLong } from "./ipToLong";
-
 /**
  * IPクラスを取得します
  * @param {string} ip - IPアドレス
  * @returns {string} IPクラス（A, B, C, D, Eまたは空文字列）
  */
 export const getIpClass = (ip: string): string => {
-  const long = ipToLong(ip);
-  if (long >= ipToLong("0.0.0.0") && long <= ipToLong("127.255.255.255")) {
+  if (!ip) {
+    return "";
+  }
+  // IPアドレスの最初のオクテットを取得
+  const firstOctet = parseInt(ip.split(".")[0]);
+
+  if (firstOctet < 128) {
     return "A";
   }
-  if (long >= ipToLong("128.0.0.0") && long <= ipToLong("191.255.255.255")) {
+  if (firstOctet < 192) {
     return "B";
   }
-  if (long >= ipToLong("192.0.0.0") && long <= ipToLong("223.255.255.255")) {
+  if (firstOctet < 224) {
     return "C";
   }
-  if (long >= ipToLong("224.0.0.0") && long <= ipToLong("239.255.255.255")) {
+  if (firstOctet < 240) {
     return "D";
   }
-  if (long >= ipToLong("240.0.0.0") && long <= ipToLong("255.255.255.255")) {
+  if (firstOctet < 256) {
     return "E";
   }
   return "";

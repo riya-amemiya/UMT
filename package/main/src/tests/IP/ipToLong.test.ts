@@ -12,4 +12,12 @@ describe("ipToLong", () => {
   it("全てのオクテットが0の場合、0に変換される", () => {
     expect(ipToLong("0.0.0.0")).toBe(0);
   });
+
+  it("空の文字列が渡された場合、0に変換される", () => {
+    expect(ipToLong("")).toBe(0);
+  });
+
+  it("範囲外のIPアドレスの場合、0に変換される", () => {
+    expect(ipToLong("256.0.0.0")).toBe(0);
+  });
 });
