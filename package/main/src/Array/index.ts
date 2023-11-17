@@ -5,4 +5,5 @@ export * from "./getArraysCommon";
 export * from "./getArraysDiff";
 export * from "./quickSort";
 export * from "./range";
+export * from "./shuffle";
 export * from "./sum";
