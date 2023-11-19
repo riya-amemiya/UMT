@@ -12,7 +12,7 @@ Main Packageに依存関係はありません。
 
 ## Doc
 
-- [Doc](./doc/index.md)
+- [Doc](https://umt-main.oshaburikitchin.com/)
 
 ## Install
 
