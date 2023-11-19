@@ -24,38 +24,7 @@ export const birthday = <T extends monTypeInt>(
     newDateInt(
       nowTime.getFullYear(),
       (Bday.getMonth() - 1) as monTypeInt,
-      Bday.getDay() as
-        | 1
-        | 2
-        | 3
-        | 4
-        | 5
-        | 6
-        | 7
-        | 8
-        | 9
-        | 10
-        | 11
-        | 12
-        | 13
-        | 14
-        | 15
-        | 16
-        | 17
-        | 18
-        | 19
-        | 20
-        | 21
-        | 22
-        | 23
-        | 24
-        | 25
-        | 26
-        | 27
-        | 28
-        | 29
-        | 30
-        | 31,
+      Bday.getDay() as dayTypeInt<T>,
     )
       ? y - 1
       : y;
