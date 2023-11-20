@@ -6,43 +6,46 @@
  * @returns unknown[]
  * @example quickSort([1, 3, 2, 4, 5]); // [1, 2, 3, 4, 5]
  */
-export const quickSort = <A extends unknown[]>(
-  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-  array: any[],
+export const quickSort = <T>(
+  array: T[],
   startID = 0,
   endID: number = array.length - 1,
-): A => {
-  if (startID >= endID) {
-    return array as A;
-  }
+): T[] => {
+  const swap = (index: number, index_: number) => {
+    [array[index], array[index_]] = [array[index_], array[index]];
+  };
 
-  // 中央値をピボットとして選択
-  const pivotIndex = Math.floor((startID + endID) / 2);
-  const pivot = array[pivotIndex];
-  let left = startID;
-  let right = endID;
-
-  while (left <= right) {
-    while (array[left] < pivot) {
-      left++;
+  const partition = (low: number, high: number): number => {
+    // median-of-threeルールを使用してピボットを選択
+    const mid = Math.floor((low + high) / 2);
+    const pivot = array[mid];
+    swap(mid, high);
+    let index = low;
+    for (let index_ = low; index_ < high; index_++) {
+      if (array[index_] < pivot) {
+        swap(index, index_);
+        index++;
+      }
     }
-    while (array[right] > pivot) {
-      right--;
-    }
-    if (left <= right) {
-      [array[left], array[right]] = [array[right], array[left]];
-      left++;
-      right--;
-    }
-  }
+    swap(index, high);
+    return index;
+  };
 
-  // より小さいサブ配列を先にソート
-  if (startID < right) {
-    quickSort(array, startID, right);
-  }
-  if (left < endID) {
-    quickSort(array, left, endID);
-  }
+  const sort = (low: number, high: number) => {
+    let copyLow = low;
+    let copyHigh = high;
+    while (copyLow < copyHigh) {
+      const pi = partition(copyLow, copyHigh);
+      if (pi - copyLow < copyHigh - pi) {
+        sort(copyLow, pi - 1);
+        copyLow = pi + 1;
+      } else {
+        sort(pi + 1, copyHigh);
+        copyHigh = pi - 1;
+      }
+    }
+  };
 
-  return array as A;
+  sort(startID, endID);
+  return array;
 };
