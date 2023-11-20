@@ -11,23 +11,19 @@ export const quickSort = <T>(
   startID = 0,
   endID: number = array.length - 1,
 ): T[] => {
-  const swap = (index: number, index_: number) => {
-    [array[index], array[index_]] = [array[index_], array[index]];
-  };
-
   const partition = (low: number, high: number): number => {
     // median-of-threeルールを使用してピボットを選択
     const mid = Math.floor((low + high) / 2);
     const pivot = array[mid];
-    swap(mid, high);
+    [array[high], array[mid]] = [array[mid], array[high]];
     let index = low;
     for (let index_ = low; index_ < high; index_++) {
       if (array[index_] < pivot) {
-        swap(index, index_);
+        [array[index], array[index_]] = [array[index_], array[index]];
         index++;
       }
     }
-    swap(index, high);
+    [array[index], array[high]] = [array[high], array[index]];
     return index;
   };
 
