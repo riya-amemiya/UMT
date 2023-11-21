@@ -7,23 +7,22 @@ import { isNumber } from "./isNumber";
  * @example mathSeparator(1250); // [1000, 250]
  */
 export const mathSeparator = (number: string | number): [number, number] => {
-  let copyNumber = number;
   let decimalPart = 0;
-  if (isDouble(copyNumber)) {
-    const splitNumber = String(copyNumber).split(".");
+  if (isDouble(number)) {
+    const splitNumber = String(number).split(".");
     // 小数点部分を取得
     decimalPart = Number(`0.${splitNumber[1]}`);
-    copyNumber = splitNumber[0];
+    number = splitNumber[0];
   }
-  if (isNumber(copyNumber)) {
+  if (isNumber(number)) {
     const [n, x] =
-      typeof copyNumber === "string"
-        ? [copyNumber.length - 1, Number(copyNumber)]
-        : [String(copyNumber).length - 1, copyNumber];
+      typeof number === "string"
+        ? [number.length - 1, Number(number)]
+        : [String(number).length - 1, number];
     if (n) {
       return [10 ** n, x - 10 ** n + decimalPart];
     }
-    return [Number(copyNumber), 0];
+    return [Number(number), 0];
   }
   return [0, 0];
 };

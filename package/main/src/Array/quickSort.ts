@@ -27,17 +27,32 @@ export const quickSort = <T>(
     return index;
   };
 
+  const insertionSort = (low: number, high: number) => {
+    for (let index = low + 1; index <= high; index++) {
+      const key = array[index];
+      let index_ = index - 1;
+      while (index_ >= low && array[index_] > key) {
+        array[index_ + 1] = array[index_];
+        index_--;
+      }
+      array[index_ + 1] = key;
+    }
+  };
+
   const sort = (low: number, high: number) => {
-    let copyLow = low;
-    let copyHigh = high;
-    while (copyLow < copyHigh) {
-      const pi = partition(copyLow, copyHigh);
-      if (pi - copyLow < copyHigh - pi) {
-        sort(copyLow, pi - 1);
-        copyLow = pi + 1;
+    while (low < high) {
+      // 小さい配列に対しては挿入ソートを使用
+      if (high - low < 10) {
+        insertionSort(low, high);
+        break;
+      }
+      const pi = partition(low, high);
+      if (pi - low < high - pi) {
+        sort(low, pi - 1);
+        low = pi + 1;
       } else {
-        sort(pi + 1, copyHigh);
-        copyHigh = pi - 1;
+        sort(pi + 1, high);
+        high = pi - 1;
       }
     }
   };
