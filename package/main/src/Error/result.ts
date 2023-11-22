@@ -1,6 +1,6 @@
-interface OkType<T> {
+interface OkType<O> {
   type: "ok";
-  value: T;
+  value: O;
 }
 
 interface ErrorType<E> {
@@ -8,9 +8,9 @@ interface ErrorType<E> {
   error: E;
 }
 
-export type Result<T, E> = OkType<T> | ErrorType<E>;
-const okFunction = <T>(value: T): OkType<T> => ({ type: "ok", value });
-const errorFunction = <T>(error: T): ErrorType<T> => ({ type: "err", error });
+export type Result<O, E> = OkType<O> | ErrorType<E>;
+const okFunction = <O>(value: O): OkType<O> => ({ type: "ok", value });
+const errorFunction = <E>(error: E): ErrorType<E> => ({ type: "err", error });
 export const result = <O, E = Error>(callback: () => O): Result<O, E> => {
   try {
     return okFunction<O>(callback());
