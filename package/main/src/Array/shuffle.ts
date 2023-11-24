@@ -1,4 +1,3 @@
-// src/Array/shuffle.ts
 /**
  * 配列の要素をランダムにシャッフルする
  * @param array シャッフルする配列

@@ -31,4 +31,12 @@ describe("isPrimeNumber", () => {
     expect(isPrimeNumber(16)).toBe(false);
     expect(isPrimeNumber(18)).toBe(false);
   });
+  test("should return false for large non-prime number", () => {
+    const largeNonPrimeNumber = 10000000000000;
+    expect(isPrimeNumber(largeNonPrimeNumber)).toBe(false);
+  });
+  test("should return true for large prime number", () => {
+    const largePrimeNumber = 982451653; // This is a known large prime number
+    expect(isPrimeNumber(largePrimeNumber)).toBe(true);
+  });
 });

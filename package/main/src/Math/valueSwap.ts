@@ -7,12 +7,10 @@
  */
 export const valueSwap = (x: number, y: number): [number, number] => {
   let temporary: number;
-  let copyX = x;
-  let copyY = y;
-  if (copyY < copyX) {
-    temporary = copyY;
-    copyY = copyX;
-    copyX = temporary;
+  if (y < x) {
+    temporary = y;
+    y = x;
+    x = temporary;
   }
-  return [copyX, copyY];
+  return [x, y];
 };

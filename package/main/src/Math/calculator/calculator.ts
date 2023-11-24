@@ -14,10 +14,9 @@ export const calculator = <T extends { [key: string]: string | number }>(
   x: string,
   exchange?: T,
 ) => {
-  let copyX = x;
-  copyX = copyX.replaceAll(/\s+/g, "");
-  if (copyX.includes("=")) {
-    return literalExpression(copyX);
+  x = x.replaceAll(/\s+/g, "");
+  if (x.includes("=")) {
+    return literalExpression(x);
   }
-  return calculatorCore(copyX, exchange);
+  return calculatorCore(x, exchange);
 };

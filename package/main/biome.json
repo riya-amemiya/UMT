@@ -79,6 +79,7 @@
 				"noImplicitBoolean": "warn",
 				"noNegationElse": "error",
 				"noParameterProperties": "off",
+				"noParameterAssign": "off",
 				"noShoutyConstants": "warn",
 				"useBlockStatements": "error",
 				"useExponentiationOperator": "error",

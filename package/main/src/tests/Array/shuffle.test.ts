@@ -26,4 +26,11 @@ describe("shuffle関数のテスト", () => {
     expect(shuffledArray).not.toEqual(array);
     expect(shuffledArray.sort()).toEqual(array.sort());
   });
+
+  it("長い配列の要素がシャッフルされること", () => {
+    const array = Array.from({ length: 1000 }, (_, index) => index);
+    const shuffledArray = shuffle(array);
+    expect(shuffledArray).not.toEqual(array);
+    expect(shuffledArray.sort()).toEqual(array.sort());
+  });
 });

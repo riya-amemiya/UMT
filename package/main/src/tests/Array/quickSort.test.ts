@@ -17,7 +17,6 @@ describe("quickSort", () => {
       1, 1, 2, 3, 3, 4, 5, 5, 5, 6, 9,
     ]);
   });
-
   it("重複した要素を含む配列を正しくソートする", () => {
     expect(quickSort([3, 3, 3, 2, 1, 1, 4, 4, 5])).toEqual([
       1, 1, 2, 3, 3, 3, 4, 4, 5,
@@ -29,5 +28,15 @@ describe("quickSort", () => {
     );
     const sortedArray = [...largeArray].sort((a, b) => a - b);
     expect(quickSort(largeArray)).toEqual(sortedArray);
+  });
+  it("負の数を含む配列を正しくソートする", () => {
+    expect(quickSort([5, -1, 3, 2, 4, -5, 1, -2, 0])).toEqual([
+      -5, -2, -1, 0, 1, 2, 3, 4, 5,
+    ]);
+  });
+  it("配列を降順にソートする", () => {
+    expect(quickSort([1, 2, 3, 4, 5], (a, b) => b - a)).toEqual([
+      5, 4, 3, 2, 1,
+    ]);
   });
 });

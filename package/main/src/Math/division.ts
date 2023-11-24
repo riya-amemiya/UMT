@@ -18,22 +18,15 @@ export const division = ((x: number, y: number, isFloor = true) => {
     getDecimalLength(x),
     getDecimalLength(y),
   );
-  let copyX = x;
-  let copyY = y;
   const n =
     decimalLengthX === decimalLengthY
       ? 1
       : 10 ** (decimalLengthY - decimalLengthX);
-  copyX = +`${copyX}`.replace(".", "");
-  copyY = +`${copyY}`.replace(".", "");
+  x = +`${x}`.replace(".", "");
+  y = +`${y}`.replace(".", "");
   return isFloor
-    ? copyX > copyY
-      ? copyX / copyY / n
-      : (copyX / copyY) * n
-    : [
-        copyX > copyY
-          ? (copyX - (copyX % copyY)) / copyY / n
-          : ((copyX - (copyX % copyY)) / copyY) * n,
-        copyX % copyY,
-      ];
+    ? x > y
+      ? x / y / n
+      : (x / y) * n
+    : [x > y ? (x - (x % y)) / y / n : ((x - (x % y)) / y) * n, x % y];
 }) as DIVISION;

@@ -8,14 +8,12 @@ import { valueSwap } from "./valueSwap";
  * @example lcm(2, 3); // 6
  */
 export const lcm = (x: number, y: number) => {
-  let copyX = x;
-  let copyY = y;
   // If either input is 0, the least common multiple is 0
-  if (copyX === 0 || copyY === 0) {
+  if (x === 0 || y === 0) {
     return 0;
   }
   // Swap the values of x and y if x is greater than y
-  [copyX, copyY] = valueSwap(copyX, copyY);
+  [x, y] = valueSwap(x, y);
   // The least common multiple is x times y divided by their greatest common divisor
-  return (copyX / gcd(copyX, copyY)) * copyY;
+  return (x / gcd(x, y)) * y;
 };

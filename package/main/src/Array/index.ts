@@ -6,4 +6,5 @@ export * from "./getArraysDiff";
 export * from "./quickSort";
 export * from "./range";
 export * from "./shuffle";
+export * from "./shuffle2DArray";
 export * from "./sum";
