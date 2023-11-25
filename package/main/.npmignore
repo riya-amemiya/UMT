@@ -98,3 +98,5 @@ coverage_dir
 doc
 
 tmp/src
+
+README.md
