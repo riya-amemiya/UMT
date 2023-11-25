@@ -39,4 +39,21 @@ describe("quickSort", () => {
       5, 4, 3, 2, 1,
     ]);
   });
+  it("部分配列をソートする", () => {
+    expect(quickSort([3, 1, 4, 1, 5], undefined, 1, 3)).toEqual([
+      3, 1, 1, 4, 5,
+    ]);
+  });
+
+  it("単一要素の配列が変更されずに返される", () => {
+    expect(quickSort([1])).toEqual([1]);
+  });
+  it("compareFunctionが例外を投げる場合", () => {
+    const throwCompare = () => {
+      throw new Error("Error during comparison");
+    };
+    expect(() => quickSort([3, 1, 4], throwCompare)).toThrow(
+      "Error during comparison",
+    );
+  });
 });
