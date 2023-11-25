@@ -35,7 +35,9 @@
   "main": "module/index.js",
   "types": "module/index.d.js",
   "files": [
-    "module"
+    "module",
+    "!module/tests",
+    "!module/tsconfig.tsbuildinfo"
   ],
   "name": "umt",
   "repository": {
