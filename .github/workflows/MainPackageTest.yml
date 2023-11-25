@@ -146,4 +146,4 @@ jobs:
               with:
                   enableCrossOsArchive: true
                   path: '**/module'
-                  key: ${{ matrix.bun-version }}-${{ github.sha }}
+                  key: ${{ matrix.bun-version }}-${{ hashFiles('package/main/module/tsconfig.tsbuildinfo') }}
