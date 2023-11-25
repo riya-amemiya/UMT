@@ -14,7 +14,7 @@ python/
 
 coverage_dir
 
-module/tests
+module/tests/
 
 tsconfig.tsbuildinfo
 
