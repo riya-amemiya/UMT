@@ -1,4 +1,4 @@
-import { isDouble } from "@/Math/isDouble";
+import { isDouble } from "@/Validate/isDouble";
 describe("isDouble", () => {
   it("should return true for valid doubles", () => {
     expect(isDouble(1.5)).toBe(true);

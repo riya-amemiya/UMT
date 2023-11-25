@@ -11,11 +11,7 @@ tsconfig.json
 build/*.map
 lib
 python/
-
 coverage_dir
-
-module/tests
-
+module/tests/
 tsconfig.tsbuildinfo
-
 tmp

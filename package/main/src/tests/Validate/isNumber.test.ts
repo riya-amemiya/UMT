@@ -1,4 +1,4 @@
-import { isNumber } from "@/Math/isNumber";
+import { isNumber } from "@/Validate/isNumber";
 describe("isNumber", () => {
   // 引数が数値であるケース
   test("should return true when a number is provided", () => {

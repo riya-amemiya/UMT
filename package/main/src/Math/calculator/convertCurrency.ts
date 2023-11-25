@@ -1,5 +1,5 @@
-import { isNumber } from "../isNumber";
-import { multiplication } from "../multiplication";
+import { multiplication } from "@/Math/multiplication";
+import { isNumber } from "@/Validate/isNumber";
 
 /**
  * 文字列内の通貨記号を利用して通貨を換算する。

@@ -1,5 +1,5 @@
-import { isDouble } from "./isDouble";
-import { isNumber } from "./isNumber";
+import { isDouble } from "@/Validate/isDouble";
+import { isNumber } from "@/Validate/isNumber";
 /**
  * 最大値の位で区切ります。
  * @param  {string|number} number

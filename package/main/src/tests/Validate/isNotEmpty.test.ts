@@ -1,4 +1,4 @@
-import { isNotEmpty } from "@/Tool/isNotEmpty";
+import { isNotEmpty } from "@/Validate/isNotEmpty";
 
 describe("isNotEmpty", () => {
   it("should return true for a non-empty object", () => {

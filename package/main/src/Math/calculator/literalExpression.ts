@@ -1,5 +1,5 @@
-import { division } from "../division";
-import { gcd } from "../gcd";
+import { division } from "@/Math/division";
+import { gcd } from "@/Math/gcd";
 import { calculatorCore } from "./core";
 /**
  * 文字式の方程式を計算する
