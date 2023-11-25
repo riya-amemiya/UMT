@@ -1,4 +1,4 @@
-import { isObject } from "@/Tool/isObject";
+import { isObject } from "@/Validate/isObject";
 
 describe("isObj", () => {
   it("should return true for an object with string properties", () => {

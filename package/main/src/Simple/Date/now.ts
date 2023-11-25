@@ -1,5 +1,5 @@
 import { now } from "@/Date/now";
-import { isNumber } from "@/Math/isNumber";
+import { isNumber } from "@/Validate/isNumber";
 import { hoursType, hoursTypeInt } from "@/types/clockType";
 /**
  * 現在時刻を取得する

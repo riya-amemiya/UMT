@@ -1,4 +1,4 @@
-import { isArray } from "@/Tool/isArray";
+import { isArray } from "@/Validate/isArray";
 
 describe("isArray", () => {
   it("should return true for an array", () => {

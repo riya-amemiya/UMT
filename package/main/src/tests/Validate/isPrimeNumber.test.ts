@@ -1,4 +1,4 @@
-import { isPrimeNumber } from "@/Math/isPrimeNumber";
+import { isPrimeNumber } from "@/Validate/isPrimeNumber";
 
 describe("isPrimeNumber", () => {
   test("returns false for numbers less than or equal to 1", () => {
