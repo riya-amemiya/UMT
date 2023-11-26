@@ -1,3 +1,7 @@
+// Validate Function
+export * from "./string";
+
+// Other Validate
 export * from "./isArray";
 export * from "./isBrowser";
 export * from "./isDouble";
