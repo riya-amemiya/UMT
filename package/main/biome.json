@@ -52,6 +52,8 @@
 			},
 			"correctness": {
 				"noConstantCondition": "error",
+				"noEmptyCharacterClassInRegex": "error",
+				"noInvalidNewBuiltin": "error",
 				"noNonoctalDecimalEscape": "error",
 				"noSelfAssign": "error",
 				"noUndeclaredVariables": "warn",
@@ -60,26 +62,17 @@
 				"useHookAtTopLevel": "error"
 			},
 			"nursery": {
-				"noApproximativeNumericConstant": "error",
 				"noDuplicateJsonKeys": "error",
 				"noEmptyBlockStatements": "error",
-				"noEmptyCharacterClassInRegex": "error",
-				"noInvalidNewBuiltin": "error",
-				"noMisleadingInstantiator": "error",
-				"noMisrefactoredShorthandAssign": "error",
 				"noUnusedImports": "error",
-				"noUselessElse": "error",
-				"useArrowFunction": "warn",
-				"useAsConstAssertion": "error",
-				"useGroupedTypeImport": "error",
-				"useShorthandAssign": "error"
+				"useGroupedTypeImport": "error"
 			},
 			"recommended": true,
 			"style": {
 				"noImplicitBoolean": "warn",
 				"noNegationElse": "error",
-				"noParameterProperties": "off",
 				"noParameterAssign": "off",
+				"noParameterProperties": "off",
 				"noShoutyConstants": "warn",
 				"useBlockStatements": "error",
 				"useExponentiationOperator": "error",
@@ -93,15 +86,19 @@
 					}
 				},
 				"useShorthandArrayType": "error",
+				"useShorthandAssign": "error",
 				"useSingleCaseStatement": "error"
 			},
 			"suspicious": {
+				"noApproximativeNumericConstant": "error",
 				"noConfusingVoidType": "off",
 				"noConsoleLog": "warn",
 				"noControlCharactersInRegex": "error",
 				"noFallthroughSwitchClause": "error",
 				"noGlobalIsFinite": "error",
 				"noGlobalIsNan": "error",
+				"noMisleadingInstantiator": "error",
+				"noMisrefactoredShorthandAssign": "error",
 				"noRedundantUseStrict": "warn",
 				"noUnsafeDeclarationMerging": "error",
 				"useGetterReturn": "error",
