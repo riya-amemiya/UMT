@@ -9,7 +9,7 @@ export interface BIRTHDAYSIMPLE {
       | `${number}:${T}:${dayType<T>}`
       | `${number}/${T}/${dayType<T>}`
       | { year: number; mon: number; day: number },
-    timeDifference: hoursTypeInt,
+    timeDifference?: hoursTypeInt,
   ): number;
 }
 /**

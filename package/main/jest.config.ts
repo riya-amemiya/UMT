@@ -8,9 +8,12 @@ const config: Config = {
   roots: ["<rootDir>/src/tests"],
   collectCoverage: true,
   collectCoverageFrom: [
-    "!**/node_modules/**",
-    "!**/{index,random,birthday,isBrowser,isNode,isNodeWebkit,clock,randomString,randomStringInitialization}.{js,ts}",
-    "!**/Date/**",
+    "**/*.ts",
+    "!<rootDir>/**/{birthday,isNode,isNodeWebkit}.ts",
+  ],
+  coveragePathIgnorePatterns: [
+    "<rootDir>/src/Date",
+    "<rootDir>/src/Simple/Date",
   ],
   coverageDirectory: "coverage_dir",
   coverageReporters: ["text"],

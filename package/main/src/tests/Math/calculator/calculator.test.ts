@@ -65,5 +65,6 @@ describe("calculator", () => {
   // 変数
   test("should handle variables", () => {
     expect(calculator("$10*2", { $: 100 })).toBe("2000");
+    expect(calculator("2*$10", { $: 100 })).toBe("2000");
   });
 });
