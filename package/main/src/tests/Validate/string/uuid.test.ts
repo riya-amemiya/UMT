@@ -67,4 +67,57 @@ describe("uuid", () => {
     expect(validateUUID(invalidUUID).validate).toBe(false);
     expect(validateUUID(invalidUUID).message).toBe(customMessage);
   });
+
+  it("大文字と小文字が混在する有効なUUIDを検証する", () => {
+    const validateUUID = uuid();
+    expect(validateUUID.validate("123e4567-E89b-42D3-a456-426614174000")).toBe(
+      true,
+    );
+  });
+
+  it("UUIDのバージョンが異なる場合を検証する", () => {
+    const validateUUID = uuid([1, 2, 3, 4, 5]);
+    expect(validateUUID.validate("123e4567-e89b-12d3-a456-426614174000")).toBe(
+      true,
+    );
+    expect(validateUUID.validate("123e4567-e89b-22d3-a456-426614174000")).toBe(
+      true,
+    );
+    expect(validateUUID.validate("123e4567-e89b-32d3-a456-426614174000")).toBe(
+      true,
+    );
+    expect(validateUUID.validate("123e4567-e89b-52d3-a456-426614174000")).toBe(
+      true,
+    );
+  });
+
+  it("UUIDの形式が完全に異なる文字列を検証する", () => {
+    const validateUUID = uuid();
+    expect(validateUUID.validate("completely-invalid-format")).toBe(false);
+  });
+
+  it("空文字列を検証する", () => {
+    const validateUUID = uuid();
+    expect(validateUUID.validate("")).toBe(false);
+  });
+
+  it("nullを検証する", () => {
+    const validateUUID = uuid();
+    // @ts-ignore
+    expect(validateUUID.validate(null)).toBe(false);
+  });
+
+  it("UUIDの長さが不足している場合を検証する", () => {
+    const validateUUID = uuid();
+    expect(validateUUID.validate("123e4567-e89b-42d3-a456-42661417400")).toBe(
+      false,
+    );
+  });
+
+  it("UUIDの長さが超過している場合を検証する", () => {
+    const validateUUID = uuid();
+    expect(
+      validateUUID.validate("123e4567-e89b-42d3-a456-4266141740001234"),
+    ).toBe(false);
+  });
 });
