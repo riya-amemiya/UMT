@@ -9,3 +9,4 @@ export * from "./Simple";
 export * from "./String";
 export * from "./Tool";
 export * from "./types";
+export * from "./Validate";

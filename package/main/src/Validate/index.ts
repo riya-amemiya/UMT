@@ -1,4 +1,5 @@
 // Validate Function
+export * from "./number";
 export * from "./string";
 
 // Other Validate

@@ -1,12 +1,12 @@
 import { ValidateReturnType } from "@/Validate/type";
 
-export const min = (
-  minValue: number,
+export const maxValue = (
+  maxValue: number,
   message?: string,
 ): ValidateReturnType<number> => {
   return {
     type: "number",
     message,
-    validate: (value) => value >= minValue,
+    validate: (value) => value <= maxValue,
   };
 };
