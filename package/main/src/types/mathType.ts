@@ -17,8 +17,8 @@ export type Add<
       : never
     : Subtract<Y, N>
   : `${Y}` extends `-${infer M extends number}`
-  ? Subtract<X, M>
-  : Length<[...NumberToArray<X>, ...NumberToArray<Y>]>;
+    ? Subtract<X, M>
+    : Length<[...NumberToArray<X>, ...NumberToArray<Y>]>;
 
 // 引き算
 export type Subtract<
@@ -28,17 +28,17 @@ export type Subtract<
   ? `${B}` extends `-${infer M extends number}`
     ? Subtract<M, N>
     : `-${Add<N, B>}` extends `${infer R extends number}`
-    ? R
-    : never
+      ? R
+      : never
   : `${B}` extends `-${infer M extends number}`
-  ? Length<[...NumberToArray<A>, ...NumberToArray<M>]>
-  : NumberToArray<A> extends [...NumberToArray<B>, ...infer R]
-  ? Length<R>
-  : NumberToArray<B> extends [...NumberToArray<A>, ...infer R]
-  ? `-${Length<R>}` extends `${infer M extends number}`
-    ? M
-    : never
-  : never;
+    ? Length<[...NumberToArray<A>, ...NumberToArray<M>]>
+    : NumberToArray<A> extends [...NumberToArray<B>, ...infer R]
+      ? Length<R>
+      : NumberToArray<B> extends [...NumberToArray<A>, ...infer R]
+        ? `-${Length<R>}` extends `${infer M extends number}`
+          ? M
+          : never
+        : never;
 
 // 掛け算
 export type Multiply<A extends number, B extends number> = MultiHelper<A, B>;
@@ -52,32 +52,32 @@ type MultiHelper<
   ? `${Y}` extends `-${infer M extends number}`
     ? MultiHelper<N, M, A>
     : `-${MultiHelper<N, Y, A>}` extends `${infer R extends number}`
-    ? R
-    : never
+      ? R
+      : never
   : `${Y}` extends `-${infer M extends number}`
-  ? `-${MultiHelper<X, M, A>}` extends `${infer R extends number}`
-    ? R
-    : never
-  : Y extends 0
-  ? A
-  : MultiHelper<X, Subtract<Y, 1>, Add<X, A>>;
+    ? `-${MultiHelper<X, M, A>}` extends `${infer R extends number}`
+      ? R
+      : never
+    : Y extends 0
+      ? A
+      : MultiHelper<X, Subtract<Y, 1>, Add<X, A>>;
 
 // 割り算
 export type Divide<A extends number, B extends number> = A extends 0
   ? never
   : B extends 0
-  ? never
-  : `${A}` extends `-${infer N extends number}`
-  ? `${B}` extends `-${infer M extends number}`
-    ? DivideHelper<N, M>
-    : `-${DivideHelper<N, B>}` extends `${infer R extends number}`
-    ? R
-    : never
-  : `${B}` extends `-${infer M extends number}`
-  ? `-${DivideHelper<A, M>}` extends `${infer R extends number}`
-    ? R
-    : never
-  : DivideHelper<A, B>;
+    ? never
+    : `${A}` extends `-${infer N extends number}`
+      ? `${B}` extends `-${infer M extends number}`
+        ? DivideHelper<N, M>
+        : `-${DivideHelper<N, B>}` extends `${infer R extends number}`
+          ? R
+          : never
+      : `${B}` extends `-${infer M extends number}`
+        ? `-${DivideHelper<A, M>}` extends `${infer R extends number}`
+          ? R
+          : never
+        : DivideHelper<A, B>;
 
 // 割り算のヘルパー
 type DivideHelper<
@@ -97,7 +97,7 @@ export type Modulo<
     ? Modulo<N, M>
     : Modulo<N, B>
   : `${B}` extends `-${infer M extends number}`
-  ? Modulo<A, M>
-  : BGreaterThanA<A, B> extends true
-  ? A
-  : Modulo<Subtract<A, B>, B>;
+    ? Modulo<A, M>
+    : BGreaterThanA<A, B> extends true
+      ? A
+      : Modulo<Subtract<A, B>, B>;

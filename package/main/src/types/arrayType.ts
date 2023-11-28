@@ -10,9 +10,9 @@ type Chunk<
     ? Chunk<L, N, [F], [...R, C]>
     : Chunk<L, N, [...C, F], R>
   : Length<C> extends 0
-  ? Length<R> extends 0
-    ? T[]
-    : R
-  : [...R, C];
+    ? Length<R> extends 0
+      ? T[]
+      : R
+    : [...R, C];
 
 export type ChunkArrayType<T, N extends number> = Chunk<T, N>;

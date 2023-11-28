@@ -10,7 +10,7 @@ import { dayTypeInt, monTypeInt } from "@/types/dateType";
  * @returns number
  * @example dayOfWeek({ year: 2000, mon: 1, day: 1 });
  */
-export const dayOfWeek = <T extends monTypeInt,>(
+export const dayOfWeek = <T extends monTypeInt>(
   properties?: {
     year?: number;
     mon?: T;

@@ -52,24 +52,24 @@ function dayOfWeekSimple<
         day?: T extends MonthsWith31Days | MonthsWithout31Days
           ? dayType<T>
           : T extends MonthsWith31DaysInt | MonthsWithout31DaysInt
-          ? dayTypeInt<T>
-          : never;
+            ? dayTypeInt<T>
+            : never;
       }
     | `${number}-${T}-${T extends MonthsWith31Days | MonthsWithout31Days
         ? dayType<T>
         : T extends MonthsWith31DaysInt | MonthsWithout31DaysInt
-        ? dayTypeInt<T>
-        : never}`
+          ? dayTypeInt<T>
+          : never}`
     | `${number}:${T}:${T extends MonthsWith31Days | MonthsWithout31Days
         ? dayType<T>
         : T extends MonthsWith31DaysInt | MonthsWithout31DaysInt
-        ? dayTypeInt<T>
-        : never}`
+          ? dayTypeInt<T>
+          : never}`
     | `${number}/${T}/${T extends MonthsWith31Days | MonthsWithout31Days
         ? dayType<T>
         : T extends MonthsWith31DaysInt | MonthsWithout31DaysInt
-        ? dayTypeInt<T>
-        : never}`
+          ? dayTypeInt<T>
+          : never}`
     | Date,
   timeDifference: hoursTypeInt = 9,
 ): number {
