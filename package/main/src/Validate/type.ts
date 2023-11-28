@@ -1,4 +1,4 @@
-type Types<T> = T extends string
+export type Types<T> = T extends string
   ? "string"
   : T extends number
   ? "number"
