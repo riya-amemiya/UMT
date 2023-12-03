@@ -64,8 +64,12 @@
 			"nursery": {
 				"noDuplicateJsonKeys": "error",
 				"noEmptyBlockStatements": "error",
+				"noImplicitAnyLet": "error",
 				"noUnusedImports": "error",
-				"useGroupedTypeImport": "error"
+				"noUnusedPrivateClassMembers": "error",
+				"useAwait": "error",
+				"useGroupedTypeImport": "error",
+				"useRegexLiterals": "error"
 			},
 			"recommended": true,
 			"style": {
