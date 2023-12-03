@@ -9,7 +9,7 @@ const config: Config = {
   collectCoverage: true,
   collectCoverageFrom: [
     "**/*.ts",
-    "!<rootDir>/**/{birthday,isNode,isNodeWebkit}.ts",
+    "!<rootDir>/**/{birthday,birthdaySimple,isNode,isNodeWebkit}.ts",
   ],
   coveragePathIgnorePatterns: [
     "<rootDir>/src/Date",
