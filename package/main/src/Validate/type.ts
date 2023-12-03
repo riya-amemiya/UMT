@@ -32,9 +32,8 @@ export type ValidateType<T> = T extends "string"
     ? number
     : T extends "boolean"
       ? boolean
-      : T extends "array"
-        ? // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-          any[]
-        : T extends "object"
-          ? object
+      : T extends `array<${infer U}>`
+        ? U[]
+        : T extends `object<${infer V}>`
+          ? V
           : never;

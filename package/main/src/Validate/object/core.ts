@@ -23,10 +23,10 @@ export const object = <
       };
     }
     for (const validate in option) {
-      if (!option[validate](value[validate] as object).validate) {
+      if (!option[validate](value[validate]).validate) {
         return {
           validate: false,
-          message: option[validate](value as object).message,
+          message: option[validate](value).message,
           type: value,
         };
       }
