@@ -25,3 +25,16 @@ export interface ValidateReturnType<T> {
 export interface ValidateFunctionType<T> {
   (value: T): boolean;
 }
+
+export type ValidateType<T> = T extends "string"
+  ? string
+  : T extends "number"
+    ? number
+    : T extends "boolean"
+      ? boolean
+      : T extends "array"
+        ? // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+          any[]
+        : T extends "object"
+          ? object
+          : never;
