@@ -29,4 +29,9 @@ describe("isNumber", () => {
   test("should return false when a string is provided and loose mode is off", () => {
     expect(isNumber("5", false)).toBe(false);
   });
+
+  // 空文字列が引数として渡されたケース
+  test("should return false when an empty string is provided", () => {
+    expect(isNumber("")).toBe(true);
+  });
 });

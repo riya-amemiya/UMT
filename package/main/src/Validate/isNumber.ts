@@ -1,5 +1,5 @@
 /**
- * 数字かどうか
+ * 数字を表すかどうかを判定する
  * @param  {unknown} x
  * @param  {boolean} loose 文字列も対象にするかどうか (default: true)
  * @returns boolean

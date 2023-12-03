@@ -25,3 +25,15 @@ export interface ValidateReturnType<T> {
 export interface ValidateFunctionType<T> {
   (value: T): boolean;
 }
+
+export type ValidateType<T> = T extends "string"
+  ? string
+  : T extends "number"
+    ? number
+    : T extends "boolean"
+      ? boolean
+      : T extends `array<${infer U}>`
+        ? U[]
+        : T extends `object<${infer V}>`
+          ? V
+          : never;
