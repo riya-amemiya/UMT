@@ -12,7 +12,7 @@ describe("object validation", () => {
       "object",
     );
 
-    const validData = {
+    const validData: ReturnType<typeof validateObject>["type"] = {
       name: "John Doe",
       age: 30,
     };
