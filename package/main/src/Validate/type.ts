@@ -4,11 +4,7 @@ export type Types<T> = T extends string
     ? "number"
     : T extends boolean
       ? "boolean"
-      : T extends Array<infer _>
-        ? "array"
-        : T extends object
-          ? "object"
-          : never;
+      : T;
 
 export interface ValidateCoreReturnType<T> {
   validate: boolean;
@@ -32,8 +28,4 @@ export type ValidateType<T> = T extends "string"
     ? number
     : T extends "boolean"
       ? boolean
-      : T extends `array<${infer U}>`
-        ? U[]
-        : T extends `object<${infer V}>`
-          ? V
-          : never;
+      : T;

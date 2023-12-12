@@ -32,7 +32,7 @@ export const array = <A>(
       if (!validater?.(value).validate) {
         return {
           validate: false,
-          message: message || "",
+          message: validater?.(value).message || "",
           type: values,
         };
       }

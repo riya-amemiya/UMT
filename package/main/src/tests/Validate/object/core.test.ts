@@ -1,6 +1,7 @@
 import { object } from "@/Validate/object/core";
 import { string } from "@/Validate/string";
 import { number } from "@/Validate/number";
+import { array } from "@/Validate";
 
 describe("object validation", () => {
   it("should validate an object with string and number types", () => {
@@ -8,6 +9,13 @@ describe("object validation", () => {
       {
         name: string([], "string"),
         age: number([], "number"),
+        array: array<string | number>(
+          {
+            string: string([], "string"),
+            number: number([], "number"),
+          },
+          "array",
+        ),
       },
       "object",
     );
@@ -15,6 +23,7 @@ describe("object validation", () => {
     const validData: ReturnType<typeof validateObject>["type"] = {
       name: "John Doe",
       age: 30,
+      array: ["John Doe", 30],
     };
 
     const invalidData = {
