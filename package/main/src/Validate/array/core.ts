@@ -1,21 +1,18 @@
-import { ValidateCoreReturnType } from "@/Validate/type";
+import { Types, ValidateCoreReturnType, ValidateType } from "@/Validate/type";
 import { isArray } from "@/Validate/isArray";
-
-export const array = <A>(
-  option: Partial<
-    Record<
-      | "string"
-      | "number"
-      | "bigint"
-      | "boolean"
-      | "symbol"
-      | "undefined"
-      | "object"
-      | "function",
-      // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-      (value: any) => ValidateCoreReturnType<any>
-    >
-  >,
+export const array = <
+  A extends string | number | boolean,
+  O extends {
+    [P in Types<A>]: (
+      value: ValidateType<P>,
+    ) => ValidateCoreReturnType<ValidateType<P>>;
+  } = {
+    [P in Types<A>]: (
+      value: ValidateType<P>,
+    ) => ValidateCoreReturnType<ValidateType<P>>;
+  },
+>(
+  option: O,
   message?: string,
 ) => {
   return (values: A[]) => {
@@ -28,11 +25,11 @@ export const array = <A>(
     }
 
     for (const value of values) {
-      const validater = option[typeof value];
-      if (!validater?.(value).validate) {
+      const validater = option[typeof value as Types<A>];
+      if (!validater?.(value as never).validate) {
         return {
           validate: false,
-          message: validater?.(value).message || "",
+          message: validater?.(value as never).message || "",
           type: values,
         };
       }
