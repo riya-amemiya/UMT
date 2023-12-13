@@ -15,7 +15,7 @@ export const array = <
   option: O,
   message?: string,
 ) => {
-  return (values: A[]) => {
+  return (values: A[]): ValidateCoreReturnType<A[]> => {
     if (!isArray(values)) {
       return {
         validate: false,

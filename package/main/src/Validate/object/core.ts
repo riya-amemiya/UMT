@@ -14,7 +14,11 @@ export const object = <
     value: {
       [key in keyof T]: ValidateType<ReturnType<T[key]>["type"]>;
     },
-  ) => {
+  ): {
+    validate: boolean;
+    message: string;
+    type: { [key in keyof T]: ValidateType<ReturnType<T[key]>["type"]> };
+  } => {
     if (!isObject(value)) {
       return {
         validate: false,
