@@ -39,7 +39,7 @@ describe("object validation", () => {
   it("should return a custom message on number validation failure", () => {
     const customMessage = "Invalid object structure";
     const validateObject = object({
-      name: string([]),
+      name: string(),
       age: number([], customMessage),
     });
 
@@ -57,8 +57,8 @@ describe("object validation", () => {
     const customMessage = "Invalid object structure";
     const validateObject = object(
       {
-        name: string([]),
-        age: number([]),
+        name: string(),
+        age: number(),
       },
       customMessage,
     );
@@ -72,8 +72,8 @@ describe("object validation", () => {
 
   it("should return an empty message on validation failure", () => {
     const validateObject = object({
-      name: string([]),
-      age: number([]),
+      name: string(),
+      age: number(),
     });
 
     const invalidData = "John Doe";

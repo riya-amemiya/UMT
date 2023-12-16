@@ -4,7 +4,7 @@ import { maxLength, string } from "@/Validate/string";
 
 describe("array core validation", () => {
   it("should validate an array of strings", () => {
-    const validateArray = array<string>({ string: string([]) });
+    const validateArray = array<string>({ string: string() });
     expect(validateArray(["apple", "banana", "cherry"]).validate).toBe(true);
     // @ts-ignore
     expect(validateArray(["apple", 1, true]).validate).toBe(false);
@@ -33,14 +33,14 @@ describe("array core validation", () => {
 
   it("should return a custom message on validation failure", () => {
     const customMessage = "Array validation failed";
-    const validateArray = array<string>({ string: string([]) }, customMessage);
+    const validateArray = array<string>({ string: string() }, customMessage);
     // @ts-ignore
     const result = validateArray(1);
     expect(result.validate).toBe(false);
     expect(result.message).toBe(customMessage);
   });
   it("should return an empty message on validation failure", () => {
-    const validateArray = array<string>({ string: string([]) });
+    const validateArray = array<string>({ string: string() });
     // @ts-ignore
     const result = validateArray(1);
     expect(result.validate).toBe(false);

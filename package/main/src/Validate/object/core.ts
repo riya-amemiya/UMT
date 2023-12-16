@@ -7,7 +7,7 @@ export const object = <
     [key: string]: (value: any) => ValidateCoreReturnType<any>;
   },
 >(
-  option: T,
+  option: T = [] as unknown as T,
   message?: string,
 ) => {
   return (

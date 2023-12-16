@@ -12,7 +12,7 @@ export const array = <
     ) => ValidateCoreReturnType<ValidateType<P>>;
   },
 >(
-  option: O,
+  option: O = {} as O,
   message?: string,
 ) => {
   return (values: A[]): ValidateCoreReturnType<A[]> => {
