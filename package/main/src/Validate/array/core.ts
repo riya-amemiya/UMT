@@ -1,5 +1,6 @@
 import { Types, ValidateCoreReturnType, ValidateType } from "@/Validate/type";
 import { isArray } from "@/Validate/isArray";
+import { isNotEmpty } from "../isNotEmpty";
 export const array = <
   A extends string | number | boolean,
   O extends {
@@ -23,15 +24,16 @@ export const array = <
         type: values,
       };
     }
-
-    for (const value of values) {
-      const validater = option[typeof value as Types<A>];
-      if (!validater?.(value as never).validate) {
-        return {
-          validate: false,
-          message: validater?.(value as never).message || "",
-          type: values,
-        };
+    if (isNotEmpty(option)) {
+      for (const value of values) {
+        const validater = option[typeof value as Types<A>];
+        if (!validater?.(value as never).validate) {
+          return {
+            validate: false,
+            message: validater?.(value as never).message || "",
+            type: values,
+          };
+        }
       }
     }
     return {

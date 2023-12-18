@@ -3,6 +3,13 @@ import { array } from "@/Validate/array/core";
 import { maxLength, string } from "@/Validate/string";
 
 describe("array core validation", () => {
+  it("should validate an array", () => {
+    const validateArray = array<string>();
+    expect(validateArray(["apple", "banana", "cherry"]).validate).toBe(true);
+    // @ts-ignore
+    expect(validateArray(["apple", 1, true]).validate).toBe(true);
+  });
+
   it("should validate an array of strings", () => {
     const validateArray = array<string>({ string: string() });
     expect(validateArray(["apple", "banana", "cherry"]).validate).toBe(true);

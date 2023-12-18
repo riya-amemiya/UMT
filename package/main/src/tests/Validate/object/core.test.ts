@@ -4,6 +4,18 @@ import { number } from "@/Validate/number";
 import { array } from "@/Validate";
 
 describe("object validation", () => {
+  it("should validate an object with string type", () => {
+    const validateObject = object();
+
+    const invalidData = {
+      name: "John Doe",
+      age: "thirty",
+    };
+    // @ts-ignore
+    const result = validateObject(invalidData);
+    expect(result.validate).toBe(true);
+  });
+
   it("should validate an object with string and number types", () => {
     const validateObject = object(
       {
