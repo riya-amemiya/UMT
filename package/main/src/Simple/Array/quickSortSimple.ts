@@ -1,4 +1,5 @@
-import { compareFunctionDefault, quickSort } from "@/Array/quickSort";
+import { compareFunctionDefault } from "@/Array/compareFunctionDefault";
+import { quickSort } from "@/Array/quickSort";
 
 /**
  * 配列を高速にソート
