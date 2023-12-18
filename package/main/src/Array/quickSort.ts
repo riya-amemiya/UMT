@@ -1,6 +1,28 @@
 export const compareFunctionDefault = <T>(a: T, b: T): number =>
   a > b ? 1 : a < b ? -1 : 0;
 
+const medianOfThree = <T>(
+  array: T[],
+  a: number,
+  b: number,
+  c: number,
+  compareFunction: (a: T, b: T) => number,
+): T => {
+  const ab = compareFunction(array[a], array[b]);
+  const ac = compareFunction(array[a], array[c]);
+  const bc = compareFunction(array[b], array[c]);
+  if (ab < 0) {
+    if (bc < 0) {
+      return array[b];
+    }
+    return ac < 0 ? array[c] : array[a];
+  }
+  if (ac < 0) {
+    return array[a];
+  }
+  return bc < 0 ? array[c] : array[b];
+};
+
 /**
  * 配列を高速にソート
  * @param  {T[]} array 配列
@@ -15,20 +37,30 @@ export const quickSort = <T>(
   compareFunction: (a: T, b: T) => number = compareFunctionDefault<T>,
   startID = 0,
   endID: number = array.length - 1,
+  insertionSortThreshold = 10,
 ): T[] => {
   const partition = (low: number, high: number): number => {
-    const mid = Math.floor((low + high) / 2);
-    const pivot = array[mid];
-    [array[high], array[mid]] = [array[mid], array[high]];
-    let index = low;
-    for (let index_ = low; index_ < high; index_++) {
-      if (compareFunction(array[index_], pivot) < 0) {
-        [array[index], array[index_]] = [array[index_], array[index]];
+    const pivot = medianOfThree(
+      array,
+      low,
+      Math.floor((low + high) / 2),
+      high,
+      compareFunction,
+    );
+    let index = low - 1;
+    let index_ = high + 1;
+    while (true) {
+      do {
         index++;
+      } while (compareFunction(array[index], pivot) < 0);
+      do {
+        index_--;
+      } while (compareFunction(array[index_], pivot) > 0);
+      if (index >= index_) {
+        return index_;
       }
+      [array[index], array[index_]] = [array[index_], array[index]];
     }
-    [array[index], array[high]] = [array[high], array[index]];
-    return index;
   };
 
   const insertionSort = (low: number, high: number) => {
@@ -45,17 +77,17 @@ export const quickSort = <T>(
 
   const sort = (low: number, high: number) => {
     while (low < high) {
-      if (high - low < 10) {
+      if (high - low < insertionSortThreshold) {
         insertionSort(low, high);
         break;
       }
       const pi = partition(low, high);
       if (pi - low < high - pi) {
-        sort(low, pi - 1);
+        sort(low, pi);
         low = pi + 1;
       } else {
         sort(pi + 1, high);
-        high = pi - 1;
+        high = pi;
       }
     }
   };
