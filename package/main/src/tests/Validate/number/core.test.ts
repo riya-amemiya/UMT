@@ -4,7 +4,7 @@ import { minValue } from "@/Validate/number/minValue";
 
 describe("number function", () => {
   it("should validate number with no additional options", () => {
-    const validateNumber = number([]);
+    const validateNumber = number();
     expect(validateNumber(5).validate).toBeTruthy();
     // @ts-ignore
     expect(validateNumber("5").validate).toBeFalsy();

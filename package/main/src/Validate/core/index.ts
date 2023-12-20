@@ -8,7 +8,7 @@ export const core =
   <T>(type: Types<T>) =>
   <O extends ValidateReturnType<T>[]>(
     value: T,
-    option: O,
+    option: O = [] as unknown as O,
     message?: string,
   ): ValidateCoreReturnType<T> => {
     // biome-ignore lint/suspicious/useValidTypeof: <explanation>

@@ -7,14 +7,18 @@ export const object = <
     [key: string]: (value: any) => ValidateCoreReturnType<any>;
   },
 >(
-  option: T,
+  option: T = {} as T,
   message?: string,
 ) => {
   return (
     value: {
       [key in keyof T]: ValidateType<ReturnType<T[key]>["type"]>;
     },
-  ) => {
+  ): {
+    validate: boolean;
+    message: string;
+    type: { [key in keyof T]: ValidateType<ReturnType<T[key]>["type"]> };
+  } => {
     if (!isObject(value)) {
       return {
         validate: false,
@@ -31,6 +35,7 @@ export const object = <
         };
       }
     }
+
     return {
       validate: true,
       message: "",

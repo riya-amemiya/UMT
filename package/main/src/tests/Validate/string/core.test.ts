@@ -2,7 +2,7 @@ import { maxLength, minLength, string } from "@/Validate/string";
 
 describe("string validation", () => {
   it("string", () => {
-    const validateString = string([]);
+    const validateString = string();
     expect(validateString("").validate).toBeTruthy();
     expect(validateString("abc").validate).toBeTruthy();
     // @ts-expect-error

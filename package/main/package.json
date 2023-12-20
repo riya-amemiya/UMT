@@ -46,6 +46,7 @@
   },
   "scripts": {
     "build": "tsc && tsc-alias -p tsconfig.json",
+    "clean-build": "rm -rf module && yarn build",
     "deploy": "yarn typedoc && gh-pages -d doc",
     "test": "jest",
     "test-debug": "cd test && tsc",
@@ -54,5 +55,5 @@
     "format": "biome format . --write",
     "eslint": "eslint src"
   },
-  "version": "1.4.0"
+  "version": "1.4.1"
 }
