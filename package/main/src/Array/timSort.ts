@@ -1,5 +1,17 @@
 import { compareFunctionDefault } from "./compareFunctionDefault";
 
+/**
+ * TimSortアルゴリズムを実装した関数です。
+ * 挿入ソートとマージソートの良い特性を組み合わせたソートアルゴリズムで、
+ * 安定なソートを提供し、最悪のケースでもO(n log n)の時間複雑度を持ちます。
+ *
+ * @param {T[]} array - ソートする配列
+ * @param {(a: T, b: T) => number} [compareFunction=compareFunctionDefault<T>] -
+ *        要素比較のための関数
+ * @param {number} [start=0] - ソートを開始する配列のインデックス
+ * @param {number} [end=array.length - 1] - ソートを終了する配列のインデックス
+ * @returns {T[]} - ソートされた配列
+ */
 export const timSort = <T>(
   array: T[],
   compareFunction: (a: T, b: T) => number = compareFunctionDefault<T>,
