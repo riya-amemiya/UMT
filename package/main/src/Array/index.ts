@@ -3,6 +3,7 @@ export * from "./checkFlagAlignment";
 export * from "./chunk";
 export * from "./getArraysCommon";
 export * from "./getArraysDiff";
+export * from "./insertionSort";
 export * from "./mergeSort";
 export * from "./quickSort";
 export * from "./range";
