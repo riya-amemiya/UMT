@@ -3,6 +3,8 @@ import { compareFunctionDefault } from "./compareFunctionDefault";
 export const timSort = <T>(
   array: T[],
   compareFunction: (a: T, b: T) => number = compareFunctionDefault<T>,
+  start = 0,
+  end: number = array.length - 1,
 ): T[] => {
   const MIN_RUN = 32;
 
@@ -55,17 +57,17 @@ export const timSort = <T>(
     return n + r;
   };
 
-  const n = array.length;
+  const n = end - start + 1;
   const minRun = getMinRunLength(n);
 
-  for (let index = 0; index < n; index += minRun) {
-    insertionSort(index, Math.min(index + MIN_RUN - 1, n - 1));
+  for (let index = start; index <= end; index += minRun) {
+    insertionSort(index, Math.min(index + MIN_RUN - 1, end));
   }
 
   for (let size = minRun; size < n; size *= 2) {
-    for (let left = 0; left < n; left += 2 * size) {
+    for (let left = start; left <= end; left += 2 * size) {
       const mid = left + size - 1;
-      const right = Math.min(left + 2 * size - 1, n - 1);
+      const right = Math.min(left + 2 * size - 1, end);
 
       if (mid < right) {
         merge(left, mid, right);

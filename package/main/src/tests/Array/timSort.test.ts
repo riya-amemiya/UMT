@@ -40,4 +40,10 @@ describe("timSort", () => {
   it("配列を降順にソートする", () => {
     expect(timSort([1, 2, 3], (a, b) => b - a)).toEqual([3, 2, 1]);
   });
+
+  it("部分配列をソートする", () => {
+    expect(timSort([1, 3, 2, 5, 4], (a, b) => a - b, 1, 3)).toEqual([
+      1, 2, 3, 5, 4,
+    ]);
+  });
 });
