@@ -1,41 +1,54 @@
 import { compareFunctionDefault } from "./compareFunctionDefault";
 
-export const mergeSort = <T>(
+/**
+ * マージソート
+ * @param  {T[]} array 配列
+ * @param  {(a: T, b: T) => number} compareFunction 比較関数
+ * @returns T[]
+ * @example mergeSort([1, 3, 2, 4, 5], (a, b) => a - b); // [1, 2, 3, 4, 5]
+ */
+export function mergeSort<T>(
   array: T[],
-  compareFunction: (a: T, b: T) => number = compareFunctionDefault<T>,
-  start = 0,
-  end: number = array.length,
-): T[] => {
-  const length = end - start;
-  if (length <= 1) {
-    return array.slice(start, end);
+  compareFunction: (a: T, b: T) => number = compareFunctionDefault,
+): T[] {
+  if (array.length <= 1) {
+    return array;
   }
 
-  const middle = start + Math.floor(length / 2);
-  const left = mergeSort(array, compareFunction, start, middle);
-  const right = mergeSort(array, compareFunction, middle, end);
+  const middle = Math.floor(array.length / 2);
+  const left = array.slice(0, middle);
+  const right = array.slice(middle);
 
-  return merge(left, right, compareFunction);
-};
+  return merge(
+    mergeSort(left, compareFunction),
+    mergeSort(right, compareFunction),
+    compareFunction,
+  );
+}
 
+/**
+ * 2つの配列をマージする関数
+ * @param left - マージする左の配列
+ * @param right - マージする右の配列
+ * @param compareFunction - 比較関数
+ * @returns マージされた新しい配列
+ */
 function merge<T>(
   left: T[],
   right: T[],
   compareFunction: (a: T, b: T) => number,
 ): T[] {
-  const result: T[] = [];
-  let leftIndex = 0;
-  let rightIndex = 0;
+  const array: T[] = [];
+  let lIndex = 0;
+  let rIndex = 0;
 
-  while (leftIndex < left.length && rightIndex < right.length) {
-    if (compareFunction(left[leftIndex], right[rightIndex]) <= 0) {
-      result.push(left[leftIndex]);
-      leftIndex++;
+  while (lIndex < left.length && rIndex < right.length) {
+    if (compareFunction(left[lIndex], right[rIndex]) <= 0) {
+      array.push(left[lIndex++]);
     } else {
-      result.push(right[rightIndex]);
-      rightIndex++;
+      array.push(right[rIndex++]);
     }
   }
 
-  return result.concat(left.slice(leftIndex)).concat(right.slice(rightIndex));
+  return array.concat(left.slice(lIndex)).concat(right.slice(rIndex));
 }
