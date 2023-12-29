@@ -15,5 +15,6 @@ export const subnetMaskToCidr = (subnetMask: string): number => {
   ) {
     return 0;
   }
-  return ipToBinaryString(subnetMask).match(/1/g)?.length as number;
+  return (ipToBinaryString(subnetMask).match(/1/g) as RegExpMatchArray)
+    .length as number;
 };
