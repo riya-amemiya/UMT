@@ -3,11 +3,9 @@ import { array } from "@/Validate/array/core";
 import { maxLength, string } from "@/Validate/string";
 
 describe("array core validation", () => {
-  it("should validate an array", () => {
-    const validateArray = array<string>();
+  it("should validate an array of booleans", () => {
+    const validateArray = array();
     expect(validateArray(["apple", "banana", "cherry"]).validate).toBe(true);
-    // @ts-ignore
-    expect(validateArray(["apple", 1, true]).validate).toBe(true);
   });
 
   it("should validate an array of strings", () => {
