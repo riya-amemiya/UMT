@@ -31,7 +31,8 @@
 			"module",
 			"*.json",
 			"doc",
-			"tests"
+			"tests",
+			".dependency-cruiser.js"
 		],
 		"rules": {
 			"a11y": {
