@@ -1,5 +1,5 @@
 import { dayOfWeek } from "@/Tool/dayOfWeek";
-import { hoursTypeInt } from "@/types/clockType";
+import { hoursTypeInt } from "$/clockType";
 import {
   MonthsWith31Days,
   MonthsWith31DaysInt,
@@ -8,7 +8,7 @@ import {
   convertMonTypeZero,
   dayType,
   dayTypeInt,
-} from "@/types/dateType";
+} from "$/dateType";
 /**
  * 曜日を取得する
  * @param properties - 年月日

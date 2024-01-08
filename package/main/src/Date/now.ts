@@ -1,5 +1,5 @@
-import { hoursTypeInt } from "@/types/clockType";
-import { OneHourMs } from "..";
+import { hoursTypeInt } from "$/clockType";
+import { OneHourMs } from "@/Consts/clock";
 
 /**
  * タイムゾーンに関係なく、UTCを基準に指定した時差を加えた現在時刻を取得します。

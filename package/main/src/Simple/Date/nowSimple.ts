@@ -1,6 +1,6 @@
 import { now } from "@/Date/now";
 import { isNumber } from "@/Validate/isNumber";
-import { hoursType, hoursTypeInt } from "@/types/clockType";
+import { hoursType, hoursTypeInt } from "$/clockType";
 /**
  * 現在時刻を取得する
  * @param timeDifference - 時差 (default: 9)

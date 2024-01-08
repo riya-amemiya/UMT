@@ -1,6 +1,6 @@
 import { dayType, dayTypeInt, monType, monTypeInt } from "$/dateType";
 import { birthday } from "@/Tool/birthday";
-import { hoursTypeInt } from "@/types/clockType";
+import { hoursTypeInt } from "$/clockType";
 export interface BIRTHDAYSIMPLE {
   <T extends monType>(
     birthdays:
