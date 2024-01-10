@@ -1,5 +1,5 @@
-import { ValidateReturnType } from "@/Validate/type";
 import { isPrimeNumber } from "@/Validate/isPrimeNumber";
+import { ValidateReturnType } from "@/Validate/type";
 
 export const prime = (message?: string): ValidateReturnType<number> => {
   return {
