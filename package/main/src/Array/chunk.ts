@@ -1,4 +1,5 @@
-import { ChunkArrayType } from "@/types/arrayType"; /**
+import { ChunkArrayType } from "$/arrayType";
+/**
  * 配列を指定した数で分割する
  * @param arr 配列
  * @param n 分割数

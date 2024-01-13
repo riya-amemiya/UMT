@@ -1,7 +1,7 @@
+import { hoursTypeInt } from "$/clockType";
+import { dayTypeInt, monTypeInt } from "$/dateType";
 import { newDateInt } from "@/Date/new";
 import { now } from "@/Date/now";
-import { hoursTypeInt } from "@/types/clockType";
-import { dayTypeInt, monTypeInt } from "@/types/dateType";
 
 /**
  * 曜日を取得する

@@ -1,7 +1,7 @@
+import { hoursTypeInt } from "$/clockType";
+import { dayTypeInt, monTypeInt } from "$/dateType";
 import { newDateInt } from "@/Date";
 import { now } from "@/Date/now";
-import { hoursTypeInt } from "@/types/clockType";
-import { dayTypeInt, monTypeInt } from "@/types/dateType";
 /**
  * @param  {number} year
  * @param  {number} mon
