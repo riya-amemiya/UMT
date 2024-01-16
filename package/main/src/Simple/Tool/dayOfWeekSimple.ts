@@ -1,5 +1,5 @@
-import { hoursTypeInt } from "$/clockType";
-import {
+import type { hoursTypeInt } from "$/clockType";
+import type {
   MonthsWith31Days,
   MonthsWith31DaysInt,
   MonthsWithout31Days,

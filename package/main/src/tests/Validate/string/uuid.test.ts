@@ -1,5 +1,5 @@
-import { uuid } from "@/Validate/string/uuid";
 import { string } from "@/Validate";
+import { uuid } from "@/Validate/string/uuid";
 
 describe("uuid", () => {
   it("有効なUUIDを検証する", () => {

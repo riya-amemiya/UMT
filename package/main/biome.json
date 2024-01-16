@@ -1,5 +1,5 @@
 {
-	"$schema": "https://biomejs.dev/schemas/1.4.1/schema.json",
+	"$schema": "https://biomejs.dev/schemas/1.5.2/schema.json",
 	"formatter": {
 		"enabled": true,
 		"formatWithErrors": false,
@@ -23,6 +23,11 @@
 			"afterEach",
 			"afterAll"
 		]
+	},
+	"json": {
+		"formatter": {
+			"enabled": false
+		}
 	},
 	"linter": {
 		"enabled": true,
@@ -68,7 +73,15 @@
 				"noUnusedImports": "error",
 				"noUnusedPrivateClassMembers": "error",
 				"useAwait": "error",
-				"useGroupedTypeImport": "error"
+				"useGroupedTypeImport": "error",
+				"useExportType": "error",
+				"useImportType": "error",
+				"noInvalidUseBeforeDeclaration": "error",
+				"noGlobalEval": "error",
+				"noGlobalAssign": "error",
+				"noMisleadingCharacterClass": "off",
+				"noThenProperty": "error",
+				"noUselessTernary": "error"
 			},
 			"recommended": true,
 			"style": {

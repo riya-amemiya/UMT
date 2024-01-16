@@ -1,4 +1,4 @@
-import { ArrayToUnion } from "$/logicType";
+import type { ArrayToUnion } from "$/logicType";
 
 interface DayList {
   de: ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"];

@@ -1,4 +1,4 @@
-import { Length } from "./logicType";
+import type { Length } from "./logicType";
 
 type Chunk<
   T,

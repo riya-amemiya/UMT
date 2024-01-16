@@ -1,7 +1,7 @@
+import { array } from "@/Validate";
+import { number } from "@/Validate/number";
 import { object } from "@/Validate/object/core";
 import { string } from "@/Validate/string";
-import { number } from "@/Validate/number";
-import { array } from "@/Validate";
 
 describe("object validation", () => {
   it("should validate an object with string type", () => {

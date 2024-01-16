@@ -1,4 +1,4 @@
-import { hoursType, hoursTypeInt } from "$/clockType";
+import type { hoursType, hoursTypeInt } from "$/clockType";
 import { now } from "@/Date/now";
 import { isNumber } from "@/Validate/isNumber";
 /**

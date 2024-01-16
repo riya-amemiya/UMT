@@ -1,4 +1,4 @@
-import { hoursTypeInt } from "$/clockType";
+import type { hoursTypeInt } from "$/clockType";
 import { OneHourMs } from "@/Consts/clock";
 
 /**
