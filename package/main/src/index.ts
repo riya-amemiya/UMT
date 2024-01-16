@@ -1,4 +1,4 @@
-Math = Math;
+console.log("index.ts");
 
 export * from "./Advance";
 export * from "./Array";
