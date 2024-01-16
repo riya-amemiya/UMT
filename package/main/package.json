@@ -52,7 +52,7 @@
     "test": "jest",
     "test-debug": "cd test && tsc",
     "ts-node": "yarn build && ts-node --project tmp/tsconfig.json tmp/src/index.ts",
-    "lint": "yarn eslint --fix && biome check . && tsc",
+    "lint": "yarn eslint --fix && biome ci . && tsc",
     "format": "biome format . --write",
     "eslint": "eslint src"
   },
