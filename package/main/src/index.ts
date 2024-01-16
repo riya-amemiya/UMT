@@ -1,5 +1,3 @@
-console.log("index.ts");
-
 export * from "./Advance";
 export * from "./Array";
 export * from "./Consts";
