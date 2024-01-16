@@ -9,7 +9,8 @@ on:
             - 'tests/**'
             - '.github/workflows/**'
     workflow_dispatch:
-
+permissions:
+  pull-requests: write
 jobs:
     javascriptSetup:
         name: JavaScript Check on Ubuntu
