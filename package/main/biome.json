@@ -1,14 +1,16 @@
 {
 	"$schema": "https://biomejs.dev/schemas/1.5.2/schema.json",
-	"formatter": {
-		"enabled": true,
-		"formatWithErrors": false,
+	"files": {
 		"ignore": [
 			"node_modules",
 			"module",
 			"*.json",
 			"doc"
-		],
+		]
+	},
+	"formatter": {
+		"enabled": true,
+		"formatWithErrors": false,
 		"indentStyle": "space",
 		"lineWidth": 80
 	},
@@ -32,10 +34,6 @@
 	"linter": {
 		"enabled": true,
 		"ignore": [
-			"node_modules",
-			"module",
-			"*.json",
-			"doc",
 			"tests",
 			".dependency-cruiser.js"
 		],
