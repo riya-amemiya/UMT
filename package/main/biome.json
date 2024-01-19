@@ -70,18 +70,18 @@
 			"nursery": {
 				"noDuplicateJsonKeys": "error",
 				"noEmptyBlockStatements": "error",
-				"noUnusedImports": "error",
-				"noUnusedPrivateClassMembers": "error",
-				"useAwait": "error",
-				"useGroupedTypeImport": "error",
-				"useExportType": "error",
-				"useImportType": "error",
-				"noInvalidUseBeforeDeclaration": "error",
-				"noGlobalEval": "error",
 				"noGlobalAssign": "error",
+				"noGlobalEval": "error",
+				"noInvalidUseBeforeDeclaration": "error",
 				"noMisleadingCharacterClass": "off",
 				"noThenProperty": "error",
-				"noUselessTernary": "error"
+				"noUnusedImports": "error",
+				"noUnusedPrivateClassMembers": "error",
+				"noUselessTernary": "error",
+				"useAwait": "error",
+				"useExportType": "error",
+				"useGroupedTypeImport": "error",
+				"useImportType": "error"
 			},
 			"recommended": true,
 			"style": {
