@@ -1,4 +1,4 @@
-import { ValidateReturnType } from "@/Validate/type";
+import type { ValidateReturnType } from "@/Validate/type";
 
 export const uuid = (
   versions: (1 | 2 | 3 | 4 | 5)[] = [4],

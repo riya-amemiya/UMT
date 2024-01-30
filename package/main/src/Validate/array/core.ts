@@ -1,6 +1,10 @@
 import { isArray } from "@/Validate/isArray";
 import { isNotEmpty } from "@/Validate/isNotEmpty";
-import { Types, ValidateCoreReturnType, ValidateType } from "@/Validate/type";
+import type {
+  Types,
+  ValidateCoreReturnType,
+  ValidateType,
+} from "@/Validate/type";
 
 export const array = <
   A extends string | number | boolean,

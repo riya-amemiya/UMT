@@ -1,4 +1,4 @@
-import { string, length_ } from "@/Validate/string";
+import { length_, string } from "@/Validate/string";
 
 describe("length", () => {
   it("length with message", () => {

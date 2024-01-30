@@ -1,4 +1,4 @@
-import { BGreaterThanA, Length } from "./logicType";
+import type { BGreaterThanA, Length } from "./logicType";
 
 // 数値を配列に変換する
 export type NumberToArray<

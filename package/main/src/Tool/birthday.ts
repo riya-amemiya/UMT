@@ -1,5 +1,5 @@
-import { hoursTypeInt } from "$/clockType";
-import { dayTypeInt, monTypeInt } from "$/dateType";
+import type { hoursTypeInt } from "$/clockType";
+import type { dayTypeInt, monTypeInt } from "$/dateType";
 import { newDateInt } from "@/Date";
 import { now } from "@/Date/now";
 /**

@@ -1,4 +1,4 @@
-import { ValidateReturnType } from "@/Validate/type";
+import type { ValidateReturnType } from "@/Validate/type";
 
 export const minValue = (
   minValue: number,

@@ -1,5 +1,5 @@
 import { core } from "@/Validate/core";
-import { ValidateReturnType } from "@/Validate/type";
+import type { ValidateReturnType } from "@/Validate/type";
 
 export const number = <T extends ValidateReturnType<number>[]>(
   option?: T,

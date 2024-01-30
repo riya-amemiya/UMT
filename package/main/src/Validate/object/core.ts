@@ -1,5 +1,5 @@
 import { isObject } from "@/Validate/isObject";
-import { ValidateCoreReturnType, ValidateType } from "@/Validate/type";
+import type { ValidateCoreReturnType, ValidateType } from "@/Validate/type";
 
 export const object = <
   T extends {

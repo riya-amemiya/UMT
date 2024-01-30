@@ -14,4 +14,5 @@ export * from "./isNodeWebkit";
 export * from "./isNotEmpty";
 export * from "./isNumber";
 export * from "./isObject";
+export * from "./isPerfectSquare";
 export * from "./isPrimeNumber";

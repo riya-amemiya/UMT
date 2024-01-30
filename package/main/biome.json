@@ -1,14 +1,16 @@
 {
-	"$schema": "https://biomejs.dev/schemas/1.4.1/schema.json",
-	"formatter": {
-		"enabled": true,
-		"formatWithErrors": false,
+	"$schema": "https://biomejs.dev/schemas/1.5.3/schema.json",
+	"files": {
 		"ignore": [
 			"node_modules",
 			"module",
 			"*.json",
 			"doc"
-		],
+		]
+	},
+	"formatter": {
+		"enabled": true,
+		"formatWithErrors": false,
 		"indentStyle": "space",
 		"lineWidth": 80
 	},
@@ -24,13 +26,14 @@
 			"afterAll"
 		]
 	},
+	"json": {
+		"formatter": {
+			"enabled": false
+		}
+	},
 	"linter": {
 		"enabled": true,
 		"ignore": [
-			"node_modules",
-			"module",
-			"*.json",
-			"doc",
 			"tests",
 			".dependency-cruiser.js"
 		],
@@ -65,10 +68,18 @@
 			"nursery": {
 				"noDuplicateJsonKeys": "error",
 				"noEmptyBlockStatements": "error",
+				"noGlobalAssign": "error",
+				"noGlobalEval": "error",
+				"noInvalidUseBeforeDeclaration": "error",
+				"noMisleadingCharacterClass": "off",
+				"noThenProperty": "error",
 				"noUnusedImports": "error",
 				"noUnusedPrivateClassMembers": "error",
+				"noUselessTernary": "error",
 				"useAwait": "error",
-				"useGroupedTypeImport": "error"
+				"useExportType": "error",
+				"useGroupedTypeImport": "error",
+				"useImportType": "error"
 			},
 			"recommended": true,
 			"style": {

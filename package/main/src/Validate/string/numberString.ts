@@ -1,5 +1,5 @@
 import { isNumber } from "@/Validate/isNumber";
-import { ValidateReturnType } from "@/Validate/type";
+import type { ValidateReturnType } from "@/Validate/type";
 
 export const numberString = (message?: string): ValidateReturnType<string> => {
   return {

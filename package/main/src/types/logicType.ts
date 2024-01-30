@@ -1,4 +1,4 @@
-import { Subtract } from "./mathType";
+import type { Subtract } from "./mathType";
 
 // booleanに変換する型
 export type isBoolean<X> = X extends number

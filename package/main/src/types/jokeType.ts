@@ -1,4 +1,4 @@
-import { Add, Multiply, Subtract } from "./mathType";
+import type { Add, Multiply, Subtract } from "./mathType";
 
 export type ThreeStepsForwardTwoStepsBack<T extends number> = T extends 1
   ? 1

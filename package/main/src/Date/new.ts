@@ -1,4 +1,4 @@
-import {
+import type {
   hoursType,
   hoursTypeInt,
   millisecondsType,
@@ -8,7 +8,7 @@ import {
   secondsType,
   secondsTypeInt,
 } from "$/clockType";
-import { dayType, dayTypeInt, monTypeInt, monTypeZero } from "$/dateType";
+import type { dayType, dayTypeInt, monTypeInt, monTypeZero } from "$/dateType";
 
 /**
  * 日付を生成する
