@@ -16,7 +16,7 @@ jobs:
           run:
             working-directory: ./package/umtn_wasm
         steps:
-        - uses: actions/checkout@v3
+        - uses: actions/checkout@v4
         - uses: ./.github/actions/cache_cargo
         - name: build
           run: cargo build
@@ -27,7 +27,7 @@ jobs:
         run:
           working-directory: ./package/umtn_wasm
       steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: ./.github/actions/cache_cargo
       - name: test
         run: cargo test --all -- --nocapture
