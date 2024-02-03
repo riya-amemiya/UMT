@@ -16,6 +16,7 @@ jobs:
         env:
           OPENAI_KEY: ${{ secrets.OPENAI_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          github_action_config.auto_review: "true"
-          github_action_config.auto_describe: "true"
-          github_action_config.auto_improve: "true"
+          PR_REVIEWER.EXTRA_INSTRUCTIONS: "IMPORTANT: Entire response must be in the language with ISO code: ja-JP"
+          PR_DESCRIPTION.EXTRA_INSTRUCTIONS: "IMPORTANT: Entire response must be in the language with ISO code: ja-JP"
+          PR_CODE_SUGGESTIONS.EXTRA_INSTRUCTIONS: "IMPORTANT: Entire response must be in the language with ISO code: ja-JP"
+          CONFIG.MODEL: gpt-4-turbo-preview
