@@ -12,3 +12,4 @@ export * from "./shuffle";
 export * from "./shuffle2DArray";
 export * from "./sum";
 export * from "./timSort";
+export * from "./zip";
