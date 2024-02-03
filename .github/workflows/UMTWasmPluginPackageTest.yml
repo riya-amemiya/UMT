@@ -4,8 +4,12 @@ name: UMT Wasm Plugin Package Test
 # タイミングを指定
 on:
     pull_request:
-        paths:
-            - 'package/umtn_wasm/src/**'
+        branches:
+            - main
+            - develop
+    push:
+        branches:
+            - main
     workflow_dispatch:
 
 jobs:
