@@ -4,12 +4,8 @@ name: UMT Node Plugin Package Test
 # タイミングを指定
 on:
     pull_request:
-        branches:
-            - main
-            - develop
-    push:
-        branches:
-            - main
+        paths:
+            - 'package/umt_plugin_node/src/**'
     workflow_dispatch:
 
 jobs:
