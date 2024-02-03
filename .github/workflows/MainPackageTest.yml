@@ -4,12 +4,10 @@ name: Main Package Test
 # タイミングを指定
 on:
     pull_request:
-        branches:
-            - main
-            - develop
-    push:
-        branches:
-            - main
+        paths:
+            - 'package/main/src/**'
+            - 'tests/**'
+            - '.github/workflows/**'
     workflow_dispatch:
 permissions:
   pull-requests: write

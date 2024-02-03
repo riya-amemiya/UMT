@@ -4,12 +4,8 @@ name: UMT Wasm Plugin Package Test
 # タイミングを指定
 on:
     pull_request:
-        branches:
-            - main
-            - develop
-    push:
-        branches:
-            - main
+        paths:
+            - 'package/umt_wasm/src/**'
     workflow_dispatch:
 
 jobs:
@@ -18,7 +14,7 @@ jobs:
         runs-on: ubuntu-latest
         defaults:
           run:
-            working-directory: ./package/umtn_wasm
+            working-directory: ./package/umt_wasm
         steps:
         - uses: actions/checkout@v4
         - uses: ./.github/actions/cache_cargo
@@ -29,7 +25,7 @@ jobs:
       runs-on: ubuntu-latest
       defaults:
         run:
-          working-directory: ./package/umtn_wasm
+          working-directory: ./package/umt_wasm
       steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/cache_cargo
