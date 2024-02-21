@@ -6,6 +6,14 @@ on:
     pull_request:
         paths:
             - 'package/umt_wasm/src/**'
+        branches:
+            - main
+            - develop
+    push:
+        branches:
+            - main
+        paths:
+            - 'package/umt_wasm/src/**'
     workflow_dispatch:
 
 jobs:
