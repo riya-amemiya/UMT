@@ -3,8 +3,8 @@
  * @param {number} x
  * @param  {number} [radix=2] n進数
  * @returns string
- * @example toBinary(10); // "1010"
+ * @example toBaseN(10); // "1010"
  */
-export const toBinary = (x: number, radix = 2) => {
+export const toBaseN = (x: number, radix = 2) => {
   return x.toString(radix);
 };
