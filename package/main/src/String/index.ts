@@ -1,4 +1,5 @@
 export * from "./formatString";
+export * from "./fromBase64";
 export * from "./padEnd";
 export * from "./padStart";
 export * from "./randomString";
