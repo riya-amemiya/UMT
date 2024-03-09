@@ -8,7 +8,7 @@ export const getIpClass = (ip: string): string => {
     return "";
   }
   // IPアドレスの最初のオクテットを取得
-  const firstOctet = parseInt(ip.split(".")[0]);
+  const firstOctet = Number.parseInt(ip.split(".")[0]);
 
   if (firstOctet < 128) {
     return "A";

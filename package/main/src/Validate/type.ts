@@ -18,9 +18,7 @@ export interface ValidateReturnType<T> {
   message?: string;
 }
 
-export interface ValidateFunctionType<T> {
-  (value: T): boolean;
-}
+export type ValidateFunctionType<T> = (value: T) => boolean;
 
 export type ValidateType<T> = T extends "string"
   ? string

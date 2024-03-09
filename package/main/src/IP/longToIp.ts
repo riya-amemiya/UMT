@@ -6,6 +6,6 @@
 export const longToIp = (long: number): string => {
   const binary = long.toString(2).padStart(32, "0");
   return Array.from({ length: 4 }, (_, index) =>
-    parseInt(binary.slice(index * 8, (index + 1) * 8), 2),
+    Number.parseInt(binary.slice(index * 8, (index + 1) * 8), 2),
   ).join(".");
 };
