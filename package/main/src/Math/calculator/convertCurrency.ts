@@ -24,7 +24,7 @@ export const convertCurrency = <
   for (const currencySymbol in conversionRates) {
     if (inputString.startsWith(currencySymbol)) {
       const amountString = inputString.slice(currencySymbol.length);
-      const rate = conversionRates[currencySymbol];
+      const rate: string | number = conversionRates[currencySymbol];
 
       if (isNumber(rate)) {
         const amount = Number(amountString);
