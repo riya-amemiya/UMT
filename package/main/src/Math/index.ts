@@ -30,7 +30,7 @@ export * from "./roundOf";
 export * from "./solveEquation";
 export * from "./standardDeviation";
 export * from "./subtract";
-export * from "./toBinary";
+export * from "./toBaseN";
 export * from "./toCelsius";
 export * from "./toKelvin";
 export * from "./valueSwap";

@@ -6,6 +6,6 @@
 export const toBase64 = (char: string): string =>
   btoa(
     encodeURIComponent(char).replaceAll(/%([\dA-F]{2})/g, (_, p1) =>
-      String.fromCodePoint(parseInt(p1, 16)),
+      String.fromCodePoint(Number.parseInt(p1, 16)),
     ),
   );

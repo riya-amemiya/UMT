@@ -1,17 +1,15 @@
 import type { hoursTypeInt } from "$/clockType";
 import type { dayType, dayTypeInt, monType, monTypeInt } from "$/dateType";
 import { birthday } from "@/Tool/birthday";
-export interface BIRTHDAYSIMPLE {
-  <T extends monType>(
-    birthdays:
-      | Date
-      | `${number}-${T}-${dayType<T>}`
-      | `${number}:${T}:${dayType<T>}`
-      | `${number}/${T}/${dayType<T>}`
-      | { year: number; mon: number; day: number },
-    timeDifference?: hoursTypeInt,
-  ): number;
-}
+export type BIRTHDAYSIMPLE = <T extends monType>(
+  birthdays:
+    | Date
+    | `${number}-${T}-${dayType<T>}`
+    | `${number}:${T}:${dayType<T>}`
+    | `${number}/${T}/${dayType<T>}`
+    | { year: number; mon: number; day: number },
+  timeDifference?: hoursTypeInt,
+) => number;
 /**
  * 年齢を取得する
  * @param birthdays - 誕生日

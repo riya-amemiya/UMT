@@ -1,5 +1,5 @@
 {
-	"$schema": "https://biomejs.dev/schemas/1.5.3/schema.json",
+	"$schema": "https://biomejs.dev/schemas/1.6.0/schema.json",
 	"files": {
 		"ignore": [
 			"node_modules",
@@ -39,47 +39,28 @@
 		],
 		"rules": {
 			"a11y": {
-				"noSvgWithoutTitle": "warn",
-				"useKeyWithClickEvents": "off"
+				"noSvgWithoutTitle": "warn"
 			},
 			"complexity": {
-				"noBannedTypes": "error",
 				"noExcessiveCognitiveComplexity": "off",
-				"noForEach": "error",
-				"noStaticOnlyClass": "error",
-				"noUselessEmptyExport": "error",
-				"noUselessFragments": "warn",
-				"noUselessThisAlias": "error",
 				"noVoid": "error",
-				"useSimpleNumberKeys": "error",
 				"useSimplifiedLogicExpression": "error"
 			},
 			"correctness": {
-				"noConstantCondition": "error",
-				"noEmptyCharacterClassInRegex": "error",
-				"noInvalidNewBuiltin": "error",
-				"noNonoctalDecimalEscape": "error",
-				"noSelfAssign": "error",
 				"noUndeclaredVariables": "warn",
 				"noUnusedVariables": "warn",
-				"useExhaustiveDependencies": "off",
+				"useExhaustiveDependencies": "warn",
 				"useHookAtTopLevel": "error"
 			},
 			"nursery": {
 				"noDuplicateJsonKeys": "error",
-				"noEmptyBlockStatements": "error",
-				"noGlobalAssign": "error",
-				"noGlobalEval": "error",
-				"noInvalidUseBeforeDeclaration": "error",
-				"noMisleadingCharacterClass": "off",
-				"noThenProperty": "error",
-				"noUnusedImports": "error",
-				"noUnusedPrivateClassMembers": "error",
-				"noUselessTernary": "error",
-				"useAwait": "error",
-				"useExportType": "error",
-				"useGroupedTypeImport": "error",
-				"useImportType": "error"
+				"noDuplicateTestHooks": "error",
+				"noExcessiveNestedTestSuites": "error",
+				"noExportsInTest": "error",
+				"noFocusedTests": "error",
+				"noNamespaceImport": "error",
+				"noSkippedTests": "error",
+				"noUselessTernary": "error"
 			},
 			"recommended": true,
 			"style": {
@@ -89,9 +70,7 @@
 				"noParameterProperties": "off",
 				"noShoutyConstants": "warn",
 				"useBlockStatements": "error",
-				"useExponentiationOperator": "error",
 				"useFragmentSyntax": "error",
-				"useLiteralEnumMembers": "error",
 				"useNamingConvention": {
 					"level": "off",
 					"options": {
@@ -104,19 +83,7 @@
 				"useSingleCaseStatement": "error"
 			},
 			"suspicious": {
-				"noApproximativeNumericConstant": "error",
-				"noConfusingVoidType": "off",
-				"noConsoleLog": "warn",
-				"noControlCharactersInRegex": "error",
-				"noFallthroughSwitchClause": "error",
-				"noGlobalIsFinite": "error",
-				"noGlobalIsNan": "error",
-				"noMisleadingInstantiator": "error",
-				"noMisrefactoredShorthandAssign": "error",
-				"noRedundantUseStrict": "warn",
-				"noUnsafeDeclarationMerging": "error",
-				"useGetterReturn": "error",
-				"useIsArray": "error"
+				"noEmptyBlockStatements": "error"
 			}
 		}
 	}

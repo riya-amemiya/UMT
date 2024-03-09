@@ -27,7 +27,7 @@ export const calculatorCore = <T extends { [key: string]: string | number }>(
     // 括弧の処理
     if (containsParentheses(sanitizedExpression)) {
       const temporary = resolveParentheses(sanitizedExpression);
-      if (temporary === NaN.toString()) {
+      if (temporary === Number.NaN.toString()) {
         return sanitizedExpression;
       }
       sanitizedExpression = temporary;
@@ -36,7 +36,7 @@ export const calculatorCore = <T extends { [key: string]: string | number }>(
     // 乗算、べき乗の処理
     else if (containsMulExp(sanitizedExpression)) {
       const temporary = resolveMulExp(sanitizedExpression);
-      if (temporary === NaN.toString()) {
+      if (temporary === Number.NaN.toString()) {
         return sanitizedExpression;
       }
       sanitizedExpression = temporary;
@@ -45,7 +45,7 @@ export const calculatorCore = <T extends { [key: string]: string | number }>(
     // 除算の処理
     else if (containsDiv(sanitizedExpression)) {
       const temporary = resolveDiv(sanitizedExpression);
-      if (temporary === NaN.toString()) {
+      if (temporary === Number.NaN.toString()) {
         return sanitizedExpression;
       }
       sanitizedExpression = temporary;
@@ -57,7 +57,7 @@ export const calculatorCore = <T extends { [key: string]: string | number }>(
       !isNumber(sanitizedExpression)
     ) {
       const temporary = resolveAddSub(sanitizedExpression);
-      if (temporary === NaN.toString()) {
+      if (temporary === Number.NaN.toString()) {
         return sanitizedExpression;
       }
       sanitizedExpression = temporary;
@@ -108,7 +108,7 @@ const resolveParentheses = (expr: string): string => {
       calculatorCore(match[0].replaceAll(/\(|\)/g, "")),
     );
   }
-  return NaN.toString();
+  return Number.NaN.toString();
 };
 
 const containsMulExp = (expr: string): boolean => {
@@ -130,7 +130,7 @@ const resolveMulExp = (expr: string): string => {
         : multiplication(Number(operands[0]), Number(operands[2]));
     return `${match[1]}${result}`;
   }
-  return NaN.toString();
+  return Number.NaN.toString();
 };
 
 const resolveDiv = (expr: string): string => {
@@ -141,7 +141,7 @@ const resolveDiv = (expr: string): string => {
     const result = division(Number(operands[0]), Number(operands[2]));
     return expr.replace(match[0], String(result));
   }
-  return NaN.toString();
+  return Number.NaN.toString();
 };
 
 const containsAddSub = (expr: string): boolean => {
@@ -158,5 +158,5 @@ const resolveAddSub = (expr: string): string => {
         : subtract(Number(match[1]), Number(match[4]));
     return expr.replace(match[0], String(result));
   }
-  return NaN.toString();
+  return Number.NaN.toString();
 };
