@@ -14,7 +14,7 @@ export const rgbaToHsla = (rgba: {
   r: number;
   g: number;
   b: number;
-  a: number;
+  a?: number;
 }) => {
   const r = division(rgba.r, 255);
   const g = division(rgba.g, 255);
