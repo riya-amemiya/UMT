@@ -15,21 +15,23 @@ export const division = <T extends boolean = true>(
   y: number,
   isFloor: T = true as T,
 ): T extends true ? number : number[] => {
+  const sign = Math.sign(x) * Math.sign(y);
   const [decimalLengthX, decimalLengthY] = valueSwap(
-    getDecimalLength(x),
-    getDecimalLength(y),
+    getDecimalLength(Math.abs(x)),
+    getDecimalLength(Math.abs(y)),
   );
   const n =
     decimalLengthX === decimalLengthY
       ? 1
       : 10 ** (decimalLengthY - decimalLengthX);
-  x = +`${x}`.replace(".", "");
-  y = +`${y}`.replace(".", "");
+  x = +`${Math.abs(x)}`.replace(".", "");
+  y = +`${Math.abs(y)}`.replace(".", "");
   return (
     isFloor
-      ? x > y
-        ? x / y / n
-        : (x / y) * n
-      : [x > y ? (x - (x % y)) / y / n : ((x - (x % y)) / y) * n, x % y]
-  ) as T extends true ? number : number[];
+      ? sign * (x > y ? x / y / n : (x / y) * n) // 結果に符号を適用
+      : [
+          sign * (x > y ? (x - (x % y)) / y / n : ((x - (x % y)) / y) * n),
+          x % y,
+        ]
+  ) as T extends true ? number : number[]; // 結果に符号を適用
 };

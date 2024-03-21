@@ -28,5 +28,6 @@ describe("division function", () => {
   // 精度チェック
   it("should handle precision correctly", () => {
     expect(division(0.1, 0.2)).toBeCloseTo(0.5);
+    expect(division(-0.16, 0.2)).toBeCloseTo(-0.8);
   });
 });
