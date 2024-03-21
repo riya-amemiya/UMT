@@ -8,6 +8,7 @@ import { valueSwap } from "./valueSwap";
  * @param  {boolean} [isFloor=true]
  * @returns number
  * @example division(0.1, 0.2); // 0.5
+ * @example division(10, 3, false); // [3, 1]
  */
 export const division = <T extends boolean = true>(
   x: number,
