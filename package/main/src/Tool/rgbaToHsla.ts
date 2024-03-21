@@ -38,11 +38,11 @@ export const rgbaToHsla = (rgba: {
         break;
       }
       case g: {
-        h = (b - r) / diff + 2;
+        h = addition(division(subtract(b, r), diff), 2);
         break;
       }
       case b: {
-        h = (r - g) / diff + 4;
+        h = addition(division(subtract(r, g), diff), 4);
         break;
       }
     }
