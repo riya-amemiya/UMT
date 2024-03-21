@@ -1,11 +1,11 @@
 import { division } from "@/Math/division";
 /**
- * hexをrgbaに変換する
+ * hexaをrgbaに変換する
  * @param hex
  * @returns { r: number; g: number; b: number; a: number; }
- * @example hexToRgba("#000000"); // { r: 0, g: 0, b: 0, a: 1 }
+ * @example hexToRgba("#00000000") // { r: 0, g: 0, b: 0, a: 0 }
  */
-export function hexToRgba(hex: string): {
+export function hexaToRgba(hex: string): {
   r: number;
   g: number;
   b: number;

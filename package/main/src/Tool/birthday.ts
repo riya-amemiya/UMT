@@ -16,15 +16,15 @@ export const birthday = <T extends monTypeInt>(
   day: dayTypeInt<T>,
   timeDifference: hoursTypeInt = 9,
 ) => {
-  const Bday = new Date(newDateInt(year, mon, day));
+  const birthdayDate = new Date(newDateInt(year, mon, day));
   const nowTime = now(timeDifference);
-  const y = nowTime.getFullYear() - Bday.getFullYear();
+  const y = nowTime.getFullYear() - birthdayDate.getFullYear();
   const r =
     nowTime <
     newDateInt(
       nowTime.getFullYear(),
-      (Bday.getMonth() - 1) as monTypeInt,
-      Bday.getDay() as dayTypeInt<T>,
+      (birthdayDate.getMonth() - 1) as monTypeInt,
+      birthdayDate.getDay() as dayTypeInt<T>,
     )
       ? y - 1
       : y;
