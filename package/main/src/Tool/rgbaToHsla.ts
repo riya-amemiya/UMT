@@ -1,7 +1,7 @@
-import { division } from "@/Math/division";
 import { addition } from "@/Math/addition";
-import { subtract } from "@/Math/subtract";
+import { division } from "@/Math/division";
 import { multiplication } from "@/Math/multiplication";
+import { subtract } from "@/Math/subtract";
 import { roundOf } from "../Math/roundOf";
 
 /**
