@@ -1,9 +1,12 @@
 {
+  "name": "umt",
+  "version": "1.5.1",
   "author": "riya-amemiya",
-  "bugs": {
-    "url": "https://github.com/riya-amemiya/UMT/issues"
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/riya-amemiya/UMT.git"
   },
-  "description": "個人的に作った便利関数集 個人用途なので破壊的変更がある可能性があります。 Main Packageに依存関係はありません。 JavaScriptからの呼び出しに対応しています。",
+  "main": "module/index.js",
   "devDependencies": {
     "@biomejs/biome": "1.6.1",
     "@swc/core": "^1.4.8",
@@ -15,6 +18,7 @@
     "bun-types": "^1.0.33",
     "dependency-cruiser": "^16.2.4",
     "eslint": "^8.57.0",
+    "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-unicorn": "^51.0.1",
     "gh-pages": "^6.1.1",
     "jest": "^29.7.0",
@@ -25,26 +29,23 @@
     "typescript": "^5.4.3",
     "umt": "^1.5.1"
   },
+  "bugs": {
+    "url": "https://github.com/riya-amemiya/UMT/issues"
+  },
+  "description": "個人的に作った便利関数集 個人用途なので破壊的変更がある可能性があります。 Main Packageに依存関係はありません。 JavaScriptからの呼び出しに対応しています。",
   "directories": {
     "doc": "doc",
     "lib": "lib",
     "test": "tests"
   },
-  "homepage": "https://github.com/riya-amemiya/UMT#readme",
-  "keywords": [],
-  "license": "MIT",
-  "main": "module/index.js",
-  "types": "module/index.d.js",
   "files": [
     "module",
     "!module/tests",
     "!module/tsconfig.tsbuildinfo"
   ],
-  "name": "umt",
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/riya-amemiya/UMT.git"
-  },
+  "homepage": "https://github.com/riya-amemiya/UMT#readme",
+  "keywords": [],
+  "license": "MIT",
   "scripts": {
     "build": "tsc && tsc-alias -p tsconfig.json",
     "clean-build": "rm -rf module && yarn build",
@@ -56,5 +57,5 @@
     "format": "biome format . --write",
     "eslint": "eslint src"
   },
-  "version": "1.5.2"
+  "types": "module/index.d.js"
 }
