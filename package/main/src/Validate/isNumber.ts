@@ -7,15 +7,14 @@
  * isNumber("0.1"); // true
  * isNumber("0.1", false); // false
  */
-
-function isNumber<T extends boolean>(
+const isNumber = <T extends boolean>(
   number: unknown,
   loose: T = true as T,
-): number is T extends true ? number | string : number {
+): number is T extends true ? number | string : number => {
   return number !== null && typeof number !== "boolean" && loose
     ? // biome-ignore lint/suspicious/noGlobalIsFinite: <explanation>
       isFinite(number as number)
     : Number.isFinite(number as number);
-}
+};
 
 export { isNumber };

@@ -2,7 +2,7 @@ import { addition } from "@/Math/addition";
 import { division } from "@/Math/division";
 import { multiplication } from "@/Math/multiplication";
 import { subtract } from "@/Math/subtract";
-import { roundOf } from "../Math/roundOf";
+import { roundOf } from "@/Math/roundOf";
 
 /**
  * rgbaをhslaに変換する

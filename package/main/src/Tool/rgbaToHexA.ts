@@ -8,7 +8,7 @@ const hex = (x: number) => {
  * @returns {string} 16進数の色コード
  * @example rgbaToHexA({ r: 0, g: 0, b: 0, a: 1 }); // "#000000"
  */
-export function rgbaToHexA({
+export const rgbaToHexA = ({
   r,
   g,
   b,
@@ -18,7 +18,7 @@ export function rgbaToHexA({
   g: number;
   b: number;
   a?: number;
-}): string {
+}): string => {
   // rgba形式かどうかのチェック
   if (
     r < 0 ||
@@ -34,4 +34,4 @@ export function rgbaToHexA({
   }
 
   return `#${hex(r)}${hex(g)}${hex(b)}${hex(Math.round(a * 255))}`;
-}
+};
