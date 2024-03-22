@@ -1,9 +1,10 @@
+import { convertCurrency } from "./convertCurrency";
+
 import { addition } from "@/Math/addition";
 import { division } from "@/Math/division";
 import { multiplication } from "@/Math/multiplication";
 import { subtract } from "@/Math/subtract";
 import { isNumber } from "@/Validate/isNumber";
-import { convertCurrency } from "./convertCurrency";
 
 export const calculatorCore = <T extends { [key: string]: string | number }>(
   expression: string,
