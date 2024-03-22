@@ -7,10 +7,10 @@ import { compareFunctionDefault } from "./compareFunctionDefault";
  * @returns T[]
  * @example mergeSort([1, 3, 2, 4, 5], (a, b) => a - b); // [1, 2, 3, 4, 5]
  */
-export function mergeSort<T>(
+export const mergeSort = <T>(
   array: T[],
   compareFunction: (a: T, b: T) => number = compareFunctionDefault,
-): T[] {
+): T[] => {
   if (array.length <= 1) {
     return array;
   }
@@ -24,7 +24,7 @@ export function mergeSort<T>(
     mergeSort(right, compareFunction),
     compareFunction,
   );
-}
+};
 
 /**
  * 2つの配列をマージする関数

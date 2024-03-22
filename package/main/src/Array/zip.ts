@@ -5,7 +5,7 @@ import type { ZipArrayType } from "$/arrayType";
  * @param {T} arrays - 組み合わせる配列のリスト
  * @returns {ZipArrayType<T>} - 各配列の要素が組み合わされた新しい配列
  */
-export function zip<T extends unknown[][]>(...arrays: T): ZipArrayType<T> {
+export const zip = <T extends unknown[][]>(...arrays: T): ZipArrayType<T> => {
   if (arrays.length === 0) {
     return [] as unknown as ZipArrayType<T>;
   }
@@ -13,4 +13,4 @@ export function zip<T extends unknown[][]>(...arrays: T): ZipArrayType<T> {
   return Array.from({ length }, (_, index) => {
     return arrays.map((array) => array[index]);
   }) as unknown as ZipArrayType<T>;
-}
+};

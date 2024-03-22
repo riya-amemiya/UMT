@@ -14,12 +14,10 @@ interface DayList {
  * @returns langに応じた曜日
  * @example getDay(0); // "日"
  */
-function getDay(day: number, lang: "de"): ArrayToUnion<DayList["de"]>;
-function getDay(day: number, lang: "ko"): ArrayToUnion<DayList["ko"]>;
-function getDay(day: number, lang: "en"): ArrayToUnion<DayList["en"]>;
-function getDay(day: number, lang: "ja"): ArrayToUnion<DayList["ja"]>;
-function getDay(day: number): ArrayToUnion<DayList["ja"]>;
-function getDay(day: number, lang: "de" | "ko" | "en" | "ja" = "ja") {
+export const getDay = <T extends "de" | "ko" | "en" | "ja">(
+  day: number,
+  lang: T = "ja" as T,
+): ArrayToUnion<DayList[T]> => {
   const dayList: DayList = {
     de: ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"],
     ko: ["일", "월", "화", "수", "목", "금", "토"],
@@ -52,6 +50,4 @@ function getDay(day: number, lang: "de" | "ko" | "en" | "ja" = "ja") {
       return dayList[lang][0];
     }
   }
-}
-
-export { getDay };
+};
