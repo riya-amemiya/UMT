@@ -5,7 +5,7 @@
  * @returns 連続した数値の配列
  * @example range(5); // [0, 1, 2, 3, 4]
  */
-function range(start: number, end?: number) {
+const range = (start: number, end?: number) => {
   const array = [];
   if (end) {
     for (let index = start; index < end; index++) {
@@ -17,5 +17,5 @@ function range(start: number, end?: number) {
     }
   }
   return array;
-}
+};
 export { range };

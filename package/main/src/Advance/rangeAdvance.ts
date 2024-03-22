@@ -8,11 +8,11 @@ import { range } from "@/Array/range";
  * @returns 条件式を満たす数値の配列
  * @example rangeAdvance(1, 10, (number) => number % 2 === 0); // [2, 4, 6, 8]
  */
-function rangeAdvance(
+const rangeAdvance = (
   start: number,
   end?: number,
   conditionalExpression?: (number_: number) => boolean,
-): number[] {
+): number[] => {
   if (conditionalExpression) {
     const array = [];
     for (let index = start; index < (end as number); index++) {
@@ -21,5 +21,5 @@ function rangeAdvance(
     return array;
   }
   return range(start, end);
-}
+};
 export { rangeAdvance };

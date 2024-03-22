@@ -34,6 +34,14 @@ describe("rgbaToHsla", () => {
       { r: 173, g: 216, b: 230 },
       { h: 194.74, s: 53.27, l: 79.02, a: 1 },
     ],
+    [
+      { r: 255, g: 0, b: 100 },
+      { h: 336.47, s: 100, l: 50, a: 1 },
+    ],
+    [
+      { r: 100, g: 0, b: 255 },
+      { h: 263.53, s: 100, l: 50, a: 1 },
+    ],
   ])("RGB(%o)をHSLAに変換する", (input, expected) => {
     expect(rgbaToHsla(input)).toEqual(expected);
   });
