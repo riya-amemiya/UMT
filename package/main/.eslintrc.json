@@ -14,6 +14,7 @@
     },
     "plugins": [
         "unicorn",
+        "import",
         "@typescript-eslint"
     ],
     "rules": {
@@ -35,7 +36,24 @@
         "unicorn/prefer-module": "off",
         "unicorn/prefer-number-properties": "off",
         "unicorn/no-nested-ternary": "off",
-        "unicorn/number-literal-case": "off"
+        "unicorn/number-literal-case": "off",
+        "import/order": [
+            "error",
+            {
+                "groups": [
+                    "builtin",
+                    "external",
+                    "internal",
+                    "parent",
+                    "sibling",
+                    "index"
+                ],
+                "alphabetize": {
+                    "order": "asc"
+                },
+                "newlines-between": "always"
+            }
+        ]
     },
     "root": true
 }
