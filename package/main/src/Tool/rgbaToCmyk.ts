@@ -1,6 +1,6 @@
 import { division } from "@/Math/division";
-import { subtract } from "@/Math/subtract";
 import { roundOf } from "@/Math/roundOf";
+import { subtract } from "@/Math/subtract";
 
 /**
  * rgbaをcmykに変換する
