@@ -1,43 +1,32 @@
 import { addition } from "@/Math/addition";
 
 describe("addition", () => {
-  it("should add two positive integers", () => {
-    expect(addition(2, 3)).toBe(5);
-  });
+  const testCases = [
+    { args: [2, 3], expected: 5 },
+    { args: [-2, -3], expected: -5 },
+    { args: [2, -3], expected: -1 },
+    { args: [0.1, 0.2], expected: 0.3, closeTo: true },
+    { args: [-0.1, -0.2], expected: -0.3, closeTo: true },
+    { args: [0.1, -0.2], expected: -0.1, closeTo: true },
+    { args: [2, 0.3], expected: 2.3, closeTo: true },
+    { args: [-2, -0.3], expected: -2.3, closeTo: true },
+    { args: [2, -0.3], expected: 1.7, closeTo: true },
+    { args: [-2, 0.3], expected: -1.7, closeTo: true },
+    { args: [1, 2, 3], expected: 6 },
+    { args: [-1, -2, -3], expected: -6 },
+    { args: [0.1, 0.2, 0.3], expected: 0.6, closeTo: true },
+    { args: [2, -3, 1], expected: 0 },
+    { args: [-2, 0.5, 1.5], expected: 0, closeTo: true },
+  ];
 
-  it("should add two negative integers", () => {
-    expect(addition(-2, -3)).toBe(-5);
-  });
-
-  it("should add a positive and a negative integer", () => {
-    expect(addition(2, -3)).toBe(-1);
-  });
-
-  it("should add two positive decimal numbers", () => {
-    expect(addition(0.1, 0.2)).toBeCloseTo(0.3);
-  });
-
-  it("should add two negative decimal numbers", () => {
-    expect(addition(-0.1, -0.2)).toBeCloseTo(-0.3);
-  });
-
-  it("should add a positive and a negative decimal number", () => {
-    expect(addition(0.1, -0.2)).toBeCloseTo(-0.1);
-  });
-
-  it("should add a positive integer and a positive decimal number", () => {
-    expect(addition(2, 0.3)).toBeCloseTo(2.3);
-  });
-
-  it("should add a negative integer and a negative decimal number", () => {
-    expect(addition(-2, -0.3)).toBeCloseTo(-2.3);
-  });
-
-  it("should add a positive integer and a negative decimal number", () => {
-    expect(addition(2, -0.3)).toBeCloseTo(1.7);
-  });
-
-  it("should add a negative integer and a positive decimal number", () => {
-    expect(addition(-2, 0.3)).toBeCloseTo(-1.7);
+  testCases.forEach(({ args, expected, closeTo }) => {
+    it(`should add ${args.length} numbers: ${args.join(", ")}`, () => {
+      const result = addition(...args);
+      if (closeTo) {
+        expect(result).toBeCloseTo(expected);
+      } else {
+        expect(result).toBe(expected);
+      }
+    });
   });
 });
