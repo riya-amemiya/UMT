@@ -1,4 +1,5 @@
 export * from "./birthday";
+export * from "./cmykToRgba";
 export * from "./createPipeline";
 export * from "./dayOfWeek";
 export * from "./deleteSpace";
