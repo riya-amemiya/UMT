@@ -1,6 +1,6 @@
 {
   "name": "umt",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "author": "riya-amemiya",
   "repository": {
     "type": "git",
@@ -48,6 +48,7 @@
   "license": "MIT",
   "scripts": {
     "build": "tsc && tsc-alias -p tsconfig.json",
+    "build:clean": "rm -rf module && yarn build",
     "clean-build": "rm -rf module && yarn build",
     "deploy": "yarn typedoc && gh-pages -d doc",
     "test": "jest",
