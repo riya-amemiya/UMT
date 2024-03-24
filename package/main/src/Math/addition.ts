@@ -3,12 +3,13 @@ import { max } from "./max";
 import { multiplication } from "./multiplication";
 /**
  * 誤差のない足し算
- * @param  {number} x
- * @param  {number} y
+ * @param  {number[]} numbers
  * @returns number
  * @example addition(0.1, 0.2); // 0.3
  */
-export const addition = (x: number, y: number) => {
-  const z = 10 ** max(getDecimalLength(x), getDecimalLength(y));
-  return (multiplication(x, z) + multiplication(y, z)) / z;
+export const addition = (...numbers: number[]) => {
+  const z = 10 ** max(...numbers.map((element) => getDecimalLength(element)));
+  return (
+    numbers.reduce((sum, current) => sum + multiplication(current, z), 0) / z
+  );
 };

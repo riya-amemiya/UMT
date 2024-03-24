@@ -1,6 +1,13 @@
 import { multiplication } from "@/Math/multiplication";
-test("{multiplication}", () => {
-  expect(multiplication(1, 1)).toBe(1);
-  expect(multiplication(1, 2)).toBe(2);
-  expect(multiplication(1.1, 2.2)).toBe(2.42);
+describe("multiplication", () => {
+  test.each([
+    [[1, 1], 1],
+    [[1, 2], 2],
+    [[1.1, 2.2], 2.42],
+    [[1, 2, 3], 6],
+    [[2, 2, 2], 8],
+    [[0.5, 2, 2], 2],
+  ])("multiplication(%s) equals %s", (args, expected) => {
+    expect(multiplication(...args)).toBeCloseTo(expected);
+  });
 });
