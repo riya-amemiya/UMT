@@ -88,9 +88,9 @@ export const hslaToRgba = (
     b = hueToRgb(p, q, subtract(hue, division(1, 3)));
   }
 
-  const roundedR = roundOf(multiplication(r, 255));
-  const roundedG = roundOf(multiplication(g, 255));
-  const roundedB = roundOf(multiplication(b, 255));
+  const roundedR = roundOf(multiplication(r, 255), 2);
+  const roundedG = roundOf(multiplication(g, 255), 2);
+  const roundedB = roundOf(multiplication(b, 255), 2);
   const clampedA = max(0, min(1, a));
 
   return {
