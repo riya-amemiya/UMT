@@ -8,14 +8,14 @@
   },
   "main": "module/index.js",
   "devDependencies": {
-    "@biomejs/biome": "1.6.1",
-    "@swc/core": "^1.4.8",
+    "@biomejs/biome": "1.6.3",
+    "@swc/core": "^1.4.11",
     "@swc/jest": "^0.2.36",
     "@types/jest": "^29.5.12",
     "@types/node": "^20.11.30",
-    "@typescript-eslint/eslint-plugin": "^7.3.1",
-    "@typescript-eslint/parser": "^7.3.1",
-    "bun-types": "^1.0.33",
+    "@typescript-eslint/eslint-plugin": "^7.4.0",
+    "@typescript-eslint/parser": "^7.4.0",
+    "bun-types": "^1.0.35",
     "dependency-cruiser": "^16.2.4",
     "eslint": "^8.57.0",
     "eslint-plugin-import": "^2.29.1",
@@ -27,7 +27,7 @@
     "tsc-alias": "^1.8.8",
     "typedoc": "^0.25.12",
     "typescript": "^5.4.3",
-    "umt": "^1.5.1"
+    "umt": "^1.6.2"
   },
   "bugs": {
     "url": "https://github.com/riya-amemiya/UMT/issues"

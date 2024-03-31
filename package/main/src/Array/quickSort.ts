@@ -24,10 +24,12 @@ const medianOfThree = <T>(
 
 /**
  * 配列を高速にソート
+ * QuickSortとInsertionSortを組み合わせたアルゴリズムで配列を高速にソートします
  * @param  {T[]} array 配列
  * @param  {(a: T, b: T) => number} compareFn 比較関数
  * @param  {number} startID 開始インデックス
  * @param  {number} endID 終了インデックス
+ * @param  {number} insertionSortThreshold 挿入ソートの閾値
  * @returns T[]
  * @example quickSort([1, 3, 2, 4, 5], (a, b) => a - b); // [1, 2, 3, 4, 5]
  */
