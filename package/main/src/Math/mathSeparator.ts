@@ -8,21 +8,27 @@ import { isNumber } from "@/Validate/isNumber";
  */
 export const mathSeparator = (number: string | number): [number, number] => {
   let decimalPart = 0;
+
+  if (!isNumber(number)) {
+    return [0, 0];
+  }
+
   if (isDouble(number)) {
-    const splitNumber = String(number).split(".");
-    // 小数点部分を取得
-    decimalPart = Number(`0.${splitNumber[1]}`);
-    number = splitNumber[0];
+    const [integerPart, fractionalPart] = String(number).split(".");
+    decimalPart = Number(`0.${fractionalPart}`);
+    number = integerPart;
   }
-  if (isNumber(number)) {
-    const [n, x] =
-      typeof number === "string"
-        ? [number.length - 1, Number(number)]
-        : [String(number).length - 1, number];
-    if (n) {
-      return [10 ** n, x - 10 ** n + decimalPart];
-    }
-    return [Number(number), 0];
+
+  const numberString = String(number);
+  const numberOfDigits = numberString.length - 1;
+  const numericalValue = Number(numberString);
+
+  if (numberOfDigits === 0) {
+    return [numericalValue, 0];
   }
-  return [0, 0];
+
+  const primary = 10 ** numberOfDigits;
+  const remainder = numericalValue - primary + decimalPart;
+
+  return [primary, remainder];
 };
