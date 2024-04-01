@@ -142,7 +142,7 @@ jobs:
                   path: '**/module'
                   key: ${{ matrix.bun-version }}-${{ hashFiles('package/main/module/tsconfig.tsbuildinfo') }}
             - name: Run Test
-              run: bun test src
+              run: bun run test --coverage
             - name: Cache Save Build
               if: steps.cache-restore-prod.outputs.cache-hit != 'true'
               uses: actions/cache/save@v3
@@ -150,3 +150,20 @@ jobs:
                   enableCrossOsArchive: true
                   path: '**/module'
                   key: ${{ matrix.bun-version }}-${{ hashFiles('package/main/module/tsconfig.tsbuildinfo') }}
+    codecov:
+        name: Codecov
+        needs: javascriptTest
+        runs-on: ${{ matrix.os }}
+        strategy:
+          matrix:
+            bun-version: [latest]
+            os: [ubuntu-latest]
+        defaults:
+          run:
+            working-directory: ./package/main
+        steps:
+          - name: Upload coverage reports to Codecov
+            uses: codecov/codecov-action@v4.0.1
+            with:
+              token: ${{ secrets.CODECOV_TOKEN }}
+              slug: riya-amemiya/UMT
