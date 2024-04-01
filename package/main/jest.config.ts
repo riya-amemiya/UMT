@@ -15,8 +15,7 @@ const config: Config = {
     "<rootDir>/src/Date",
     "<rootDir>/src/Simple/Date",
   ],
-  coverageDirectory: "coverage_dir",
-  coverageReporters: ["text"],
+  coverageDirectory: "./coverage",
   moduleDirectories: ["node_modules", "src"],
   moduleNameMapper: {
     "@/(.*)": "<rootDir>/src/$1",
