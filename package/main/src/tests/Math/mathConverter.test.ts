@@ -34,4 +34,9 @@ describe("mathConverter関数のテスト", () => {
   test("無効な入力の場合", () => {
     expect(mathConverter("abc")).toBe("abc");
   });
+
+  // primaryがない場合のテスト
+  test("primaryがない場合", () => {
+    expect(mathConverter("0*0")).toBe("0*0");
+  });
 });
