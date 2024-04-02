@@ -7,6 +7,9 @@ describe("mathConverter関数のテスト", () => {
     expect(mathConverter("1350*1350")).toBe(
       "1700*1000+600*100+400*100+200*100+50*50",
     );
+    expect(mathConverter("1550*1550")).toBe(
+      "2100*1000+1000*100+800*100+600*100+400*100+200*100+50*50",
+    );
   });
 
   // 累乗のテスト
@@ -30,5 +33,10 @@ describe("mathConverter関数のテスト", () => {
   // 無効な入力のテスト
   test("無効な入力の場合", () => {
     expect(mathConverter("abc")).toBe("abc");
+  });
+
+  // primaryがない場合のテスト
+  test("primaryがない場合", () => {
+    expect(mathConverter("0*0")).toBe("0*0");
   });
 });

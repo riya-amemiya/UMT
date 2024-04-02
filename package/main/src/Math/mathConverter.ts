@@ -10,42 +10,32 @@ export const mathConverter = (equation: string): string => {
   let convertedEquation = equation;
 
   while (true) {
-    if (convertedEquation.includes("^") || convertedEquation.includes("*")) {
-      // 乗算と累乗の処理
-      const extractedData: [RegExpMatchArray | null, string[]] = [
-        convertedEquation.match(/\d+\.?(\d+)?(\*|\^)\d+\.?(\d+)?/),
-        [""],
-      ];
+    const multiplicationOrExponentiation = convertedEquation.match(
+      /\d+\.?(\d+)?(\*|\^)\d+\.?(\d+)?/,
+    );
 
-      if (extractedData[0]) {
-        extractedData[1] = extractedData[0][0]
-          .split(/(\d+\.\d+)|(\d+)/g)
-          .filter((number_) => {
-            return number_ !== undefined && number_ !== "";
-          });
-
-        if (
-          extractedData[1][0] === extractedData[1][2] ||
-          (extractedData[1][2] && extractedData[1][1] === "^")
-        ) {
-          const [primary, remainder] = mathSeparator(extractedData[1][0]);
-
-          if (primary) {
-            convertedEquation = `${
-              Number(extractedData[1][0]) + remainder
-            }*${primary}+`;
-
-            if (remainder <= 100) {
-              convertedEquation += `${remainder}*${remainder}`;
-            } else {
-              convertedEquation += mathConverter(`${remainder}*${remainder}`);
-              return convertedEquation;
-            }
-            return convertedEquation;
-          }
-        }
-      }
+    if (!multiplicationOrExponentiation) {
+      return convertedEquation;
     }
-    return convertedEquation;
+
+    const [operand1, operator, operand2] =
+      multiplicationOrExponentiation[0].split(/(\*|\^)/);
+
+    if (operand1 === operand2 || (operand2 && operator === "^")) {
+      const [primary, remainder] = mathSeparator(operand1);
+
+      if (!primary) {
+        return convertedEquation;
+      }
+
+      convertedEquation = `${Number(operand1) + remainder}*${primary}+`;
+
+      convertedEquation +=
+        remainder <= 100
+          ? `${remainder}*${remainder}`
+          : mathConverter(`${remainder}*${remainder}`);
+    } else {
+      return convertedEquation;
+    }
   }
 };
