@@ -6,14 +6,12 @@ const config: Config = {
   },
   testEnvironment: "node",
   roots: ["<rootDir>/src/tests"],
+  cacheDirectory: "./node_modules/.cache/jest",
   collectCoverage: true,
   collectCoverageFrom: [
-    "**/*.ts",
-    "!<rootDir>/**/{birthday,birthdaySimple,isNode,isNodeWebkit}.ts",
-  ],
-  coveragePathIgnorePatterns: [
-    "<rootDir>/src/Date",
-    "<rootDir>/src/Simple/Date",
+    "<rootDir>/src/**/*.ts",
+    "!<rootDir>/src/Date/**/*.ts",
+    "!<rootDir>/**/{isNode,isNodeWebkit}.ts",
   ],
   coverageDirectory: "./coverage",
   moduleDirectories: ["node_modules", "src"],
