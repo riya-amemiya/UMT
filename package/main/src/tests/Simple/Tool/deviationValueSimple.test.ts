@@ -1,4 +1,4 @@
-import { deviationValueSimple } from "@/Simple/Tool/deviationValueSimple";
+import { deviationValueSimple } from "@/Simple/Math/deviationValueSimple";
 
 test("deviationValueSimple", () => {
   expect(deviationValueSimple(100, 50, 10)).toBe(100);

@@ -1,4 +1,4 @@
-import { dayOfWeekSimple } from "@/Simple/Tool/dayOfWeekSimple";
+import { dayOfWeekSimple } from "@/Simple/Date/dayOfWeekSimple";
 describe("dayOfWeekSimple", () => {
   it("should return 0 for Sunday", () => {
     expect(dayOfWeekSimple("2022-01-02")).toBe(0);

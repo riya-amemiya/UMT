@@ -1,4 +1,4 @@
-import { deleteSpace } from "@/Tool/deleteSpace";
+import { deleteSpace } from "@/String/deleteSpace";
 
 describe("deleteSpace", () => {
   it("should remove all spaces from a string", () => {
