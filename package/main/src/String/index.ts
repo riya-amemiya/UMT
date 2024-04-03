@@ -1,4 +1,4 @@
-export * from "./deleteSpace";
+export * from "./deleteSpaces";
 export * from "./formatString";
 export * from "./fromBase64";
 export * from "./padEnd";

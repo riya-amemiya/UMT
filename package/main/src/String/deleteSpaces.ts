@@ -4,6 +4,6 @@
  * @returns string
  * @example deleteSpace("Hello World"); // "HelloWorld"
  */
-export const deleteSpace = (char: string) => {
-  return char.replaceAll(/\s/g, "");
+export const deleteSpaces = (string_: string) => {
+  return string_.replaceAll(/\s/g, "");
 };
