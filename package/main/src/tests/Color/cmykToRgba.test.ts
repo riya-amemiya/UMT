@@ -1,4 +1,4 @@
-import { cmykToRgba } from "@/Tool/cmykToRgba";
+import { cmykToRgba } from "@/Color/cmykToRgba";
 
 describe("cmykToRgba関数のテスト", () => {
   it.each([
