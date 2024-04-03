@@ -1,4 +1,4 @@
-import { rgbaToHsla } from "@/Tool/rgbaToHsla";
+import { rgbaToHsla } from "@/Color/rgbaToHsla";
 
 describe("rgbaToHsla", () => {
   it.each([

@@ -8,7 +8,7 @@ import type {
   dayType,
   dayTypeInt,
 } from "$/dateType";
-import { dayOfWeek } from "@/Tool/dayOfWeek";
+import { dayOfWeek } from "@/Date/dayOfWeek";
 /**
  * 曜日を取得する
  * @param properties - 年月日

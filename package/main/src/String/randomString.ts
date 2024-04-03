@@ -5,8 +5,8 @@
  * @returns ランダムな文字列
  */
 export const randomString = (
-  char = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
   size = 8,
+  char = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
 ) => {
   const length = char.length;
 

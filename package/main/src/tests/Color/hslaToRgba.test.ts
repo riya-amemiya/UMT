@@ -1,4 +1,4 @@
-import { hslaToRgba } from "@/Tool/hslaToRgba";
+import { hslaToRgba } from "@/Color/hslaToRgba";
 
 describe("hslaToRgba関数のテスト", () => {
   it.each([

@@ -8,5 +8,5 @@ import { randomString } from "./randomString";
 export const randomStringInitialization = (
   char = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
 ) => {
-  return (size: number) => randomString(char, size);
+  return (size: number) => randomString(size, char);
 };

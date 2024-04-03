@@ -1,4 +1,4 @@
-import { rgbaToCmyk } from "@/Tool/rgbaToCmyk";
+import { rgbaToCmyk } from "@/Color/rgbaToCmyk";
 
 describe("rgbaToCmyk", () => {
   it.each([
