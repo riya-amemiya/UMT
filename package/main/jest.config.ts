@@ -6,7 +6,7 @@ const config: Config = {
   },
   testEnvironment: "node",
   roots: ["<rootDir>/src/tests"],
-  cacheDirectory: "./node_modules/.cache/jest",
+  cacheDirectory: "<rootDir>/node_modules/.cache/jest",
   collectCoverage: true,
   collectCoverageFrom: [
     "<rootDir>/src/**/*.ts",
