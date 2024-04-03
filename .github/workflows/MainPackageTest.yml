@@ -9,10 +9,9 @@ on:
     branches:
       - main
       - develop
+      - feature/*
     paths:
       - 'package/main/src/**'
-      - 'tests/**'
-      - '.github/workflows/**'
   workflow_dispatch:
 permissions:
   pull-requests: write
