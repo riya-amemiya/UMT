@@ -15,6 +15,6 @@ export const result = <O, E = Error>(callback: () => O): Result<O, E> => {
   try {
     return okFunction<O>(callback());
   } catch (error) {
-    return errorFunction<E>(error);
+    return errorFunction<E>(error as E);
   }
 };
