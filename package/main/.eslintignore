@@ -1,4 +1,0 @@
-jest.config.ts
-tmp/
-src/tests/
-.dependency-cruiser.js
