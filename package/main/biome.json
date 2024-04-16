@@ -1,8 +1,5 @@
 {
-	"$schema": "https://biomejs.dev/schemas/1.6.0/schema.json",
-	"organizeImports": {
-		"enabled": false
-	},
+	"$schema": "https://biomejs.dev/schemas/1.7.0/schema.json",
 	"files": {
 		"ignore": [
 			"node_modules",
@@ -56,18 +53,18 @@
 				"useHookAtTopLevel": "error"
 			},
 			"nursery": {
+				"noConstantMathMinMaxClamp": "error",
+				"noDoneCallback": "error",
+				"noDuplicateElseIf": "error",
 				"noDuplicateJsonKeys": "error",
-				"noDuplicateTestHooks": "error",
-				"noExcessiveNestedTestSuites": "error",
-				"noExportsInTest": "error",
-				"noFocusedTests": "error",
-				"noNamespaceImport": "error",
-				"noSkippedTests": "error",
-				"noUselessTernary": "error"
+				"noEvolvingAny": "error",
+				"noFlatMapIdentity": "error",
+				"noMisplacedAssertion": "error"
 			},
 			"recommended": true,
 			"style": {
 				"noImplicitBoolean": "warn",
+				"noNamespaceImport": "error",
 				"noNegationElse": "error",
 				"noParameterAssign": "off",
 				"noParameterProperties": "off",
@@ -86,8 +83,12 @@
 				"useSingleCaseStatement": "error"
 			},
 			"suspicious": {
-				"noEmptyBlockStatements": "error"
+				"noEmptyBlockStatements": "error",
+				"noSkippedTests": "error"
 			}
 		}
+	},
+	"organizeImports": {
+		"enabled": false
 	}
 }
