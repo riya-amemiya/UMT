@@ -6,7 +6,7 @@
  * @example multiples(2, 5); // [2, 4, 6, 8, 10]
  */
 export const multiples = (x: number, n: number) => {
-  const result = [];
+  const result: number[] = [];
   for (let index = 1; index <= n; index++) {
     result.push(x * index);
   }

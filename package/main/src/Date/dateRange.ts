@@ -8,7 +8,7 @@ import { OneDayMs } from "@/Consts/clock";
  * @returns {Date[]} startDateからendDateまでの日付を含むDateオブジェクトの配列
  */
 export const dateRange = (startDate: Date, endDate: Date): Date[] => {
-  const dates = [];
+  const dates: Date[] = [];
   let currentDate = startDate;
   while (currentDate <= endDate) {
     dates.push(new Date(currentDate));

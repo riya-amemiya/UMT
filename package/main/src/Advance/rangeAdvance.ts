@@ -14,7 +14,7 @@ const rangeAdvance = (
   conditionalExpression?: (number_: number) => boolean,
 ): number[] => {
   if (conditionalExpression) {
-    const array = [];
+    const array: number[] = [];
     for (let index = start; index < (end as number); index++) {
       conditionalExpression(index) && array.push(index);
     }
