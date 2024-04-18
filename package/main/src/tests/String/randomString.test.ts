@@ -9,14 +9,14 @@ describe("randomString", () => {
 
   it("カスタムの文字列セットを使用してランダムな文字列を生成する", () => {
     const chars = "abc123";
-    const str = randomString(chars, 10);
+    const str = randomString(10, chars);
     expect(str).toHaveLength(10);
     expect(str).toMatch(/^[abc123]{10}$/);
   });
 
   it("指定された長さでランダムな文字列を生成する", () => {
     const size = 20;
-    const str = randomString(undefined, size);
+    const str = randomString(size, undefined);
     expect(str).toHaveLength(size);
   });
 });

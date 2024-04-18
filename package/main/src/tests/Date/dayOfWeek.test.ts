@@ -1,5 +1,5 @@
 import { now } from "@/Date";
-import { dayOfWeek } from "@/Tool/dayOfWeek";
+import { dayOfWeek } from "@/Date/dayOfWeek";
 
 describe("isArr", () => {
   it("dayOfWeek", () => {

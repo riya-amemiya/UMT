@@ -1,5 +1,6 @@
 export * from "./Advance";
 export * from "./Array";
+export * from "./Color";
 export * from "./Consts";
 export * from "./Date";
 export * from "./Error";

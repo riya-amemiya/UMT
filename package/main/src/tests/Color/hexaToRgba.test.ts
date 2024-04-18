@@ -1,4 +1,4 @@
-import { hexaToRgba } from "@/Tool/hexaToRgba";
+import { hexaToRgba } from "@/Color/hexaToRgba";
 
 describe("hexaToRgba", () => {
   it("should convert valid hex code to rgba", () => {

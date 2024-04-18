@@ -1,6 +1,6 @@
 import type { hoursTypeInt } from "$/clockType";
 import type { dayType, dayTypeInt, monType, monTypeInt } from "$/dateType";
-import { birthday } from "@/Tool/birthday";
+import { birthday } from "@/Date/birthday";
 export type BIRTHDAYSIMPLE = <T extends monType>(
   birthdays:
     | Date

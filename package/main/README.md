@@ -1,8 +1,11 @@
 # UMT Main Package
 
 Amemiya Riyaの便利関数集
+
 UMT = Useful My Tools
+
 アプデで破壊的変更がある可能性があります。
+
 Main Packageに依存関係はありません。
 
 ## 実装方針

@@ -8,6 +8,6 @@ UMT = Useful My Tools
 
 ## Doc
 
-[Main Package](./package/main/doc/index.md)
+[Main Package](https://umt-main.oshaburikitchin.com/)
 
-[Wasm Package](./package/main/doc/index.md)
+[Wasm Package](./package/umt_wasm/doc/index.md)

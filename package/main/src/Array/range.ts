@@ -6,7 +6,7 @@
  * @example range(5); // [0, 1, 2, 3, 4]
  */
 const range = (start: number, end?: number) => {
-  const array = [];
+  const array: number[] = [];
   if (end) {
     for (let index = start; index < end; index++) {
       array.push(index);
