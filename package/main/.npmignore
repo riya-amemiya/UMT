@@ -15,3 +15,4 @@ coverage_dir
 module/tests/
 tsconfig.tsbuildinfo
 tmp
+.plandex
