@@ -5,6 +5,7 @@ interface DayList {
   ko: ["일", "월", "화", "수", "목", "금", "토"];
   en: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   ja: ["日", "月", "火", "水", "木", "金", "土"];
+  fr: ["Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam"];
 }
 
 /**
@@ -14,7 +15,7 @@ interface DayList {
  * @returns langに応じた曜日
  * @example getDay(0); // "日"
  */
-export const getDay = <T extends "de" | "ko" | "en" | "ja">(
+export const getDay = <T extends keyof DayList>(
   day: number,
   lang: T = "ja" as T,
 ): ArrayToUnion<DayList[T]> => {
@@ -23,6 +24,7 @@ export const getDay = <T extends "de" | "ko" | "en" | "ja">(
     ko: ["일", "월", "화", "수", "목", "금", "토"],
     en: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
     ja: ["日", "月", "火", "水", "木", "金", "土"],
+    fr: ["Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam"],
   };
   switch (day) {
     case 0: {
