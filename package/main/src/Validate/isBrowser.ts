@@ -1,4 +1,10 @@
 /**
  * ブラウザかどうかを判定する
  */
-export const isBrowser = typeof window !== "undefined";
+let _isBrowser: boolean;
+try {
+  _isBrowser = typeof window !== "undefined";
+} catch {
+  _isBrowser = false;
+}
+export const isBrowser = _isBrowser;
