@@ -20,17 +20,20 @@ export const drop = <T>(
   }
 
   switch (direction) {
-    case "left":
+    case "left": {
       return array.slice(n);
-    case "right":
+    }
+    case "right": {
       return array.slice(0, array.length - n);
+    }
     case "between": {
       const mid = Math.floor(array.length / 2);
       const start = mid - Math.floor(n / 2);
       const end = mid + Math.ceil(n / 2);
       return [...array.slice(0, start), ...array.slice(end)];
     }
-    default:
+    default: {
       return array.slice(n);
+    }
   }
 };
