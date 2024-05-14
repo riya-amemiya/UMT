@@ -19,4 +19,4 @@ jobs:
           PR_REVIEWER.EXTRA_INSTRUCTIONS: "IMPORTANT: Entire response must be in the language with ISO code: ja-JP"
           PR_DESCRIPTION.EXTRA_INSTRUCTIONS: "IMPORTANT: Entire response must be in the language with ISO code: ja-JP"
           PR_CODE_SUGGESTIONS.EXTRA_INSTRUCTIONS: "IMPORTANT: Entire response must be in the language with ISO code: ja-JP"
-          CONFIG.MODEL: gpt-4-turbo-preview
+          CONFIG.MODEL: gpt-4o
