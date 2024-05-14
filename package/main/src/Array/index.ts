@@ -1,6 +1,7 @@
 export * from "./arraysJoin";
 export * from "./checkFlagAlignment";
 export * from "./chunk";
+export * from "./drop";
 export * from "./getArraysCommon";
 export * from "./getArraysDiff";
 export * from "./groupBy";
