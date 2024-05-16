@@ -9,4 +9,3 @@ try {
  * bun環境かどうかを判定します。
  */
 export const isBun = _isBun;
-console.log(isBun);
