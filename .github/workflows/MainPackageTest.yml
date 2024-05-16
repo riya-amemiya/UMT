@@ -117,7 +117,7 @@ jobs:
 
     javascriptTest:
         name: JavaScript Test on Ubuntu
-        needs: javascriptBuild
+        needs: javascriptSetup
         runs-on: ${{ matrix.os }}
         strategy:
           matrix:
@@ -137,12 +137,6 @@ jobs:
               with:
                   path: '**/node_modules'
                   key: dev-depends-${{ matrix.os }}-bun${{ matrix.bun-version }}-${{ hashFiles('package/main/package.json') }}
-            - uses: actions/cache/restore@v3
-              id: cache-restore-prod
-              with:
-                  enableCrossOsArchive: true
-                  path: '**/module'
-                  key: ${{ matrix.bun-version }}-${{ hashFiles('package/main/module/tsconfig.tsbuildinfo') }}
             - name: Run Test
               run: bun run test --coverage
             - name: Upload coverage reports to Codecov
@@ -150,11 +144,4 @@ jobs:
               with:
                 token: ${{ secrets.CODECOV_TOKEN }}
                 slug: riya-amemiya/UMT
-            - name: Cache Save Build
-              if: steps.cache-restore-prod.outputs.cache-hit != 'true'
-              uses: actions/cache/save@v3
-              with:
-                  enableCrossOsArchive: true
-                  path: '**/module'
-                  key: ${{ matrix.bun-version }}-${{ hashFiles('package/main/module/tsconfig.tsbuildinfo') }}
 
