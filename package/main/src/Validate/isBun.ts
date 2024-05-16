@@ -1,6 +1,6 @@
 let _isBun: boolean;
 try {
-  // @ts-ignore
+  // @ts-expect-error: Bun is only defined in Bun runtime
   _isBun = typeof Bun !== "undefined";
 } catch {
   _isBun = false;
