@@ -24,7 +24,8 @@
 			"test",
 			"beforeAll",
 			"afterEach",
-			"afterAll"
+			"afterAll",
+			"Bun"
 		]
 	},
 	"json": {
