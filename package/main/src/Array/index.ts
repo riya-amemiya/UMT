@@ -8,6 +8,7 @@ export * from "./groupBy";
 export * from "./insertionSort";
 export * from "./mergeSort";
 export * from "./quickSort";
+export * from "./randomSelect";
 export * from "./range";
 export * from "./shuffle";
 export * from "./shuffle2DArray";
