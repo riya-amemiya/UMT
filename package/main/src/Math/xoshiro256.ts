@@ -1,3 +1,5 @@
+import { bitwise } from "./bitwise";
+
 /**
  * Xoshiro256** 乱数生成器
  * @param seed 初期シード値 (4つの32ビット整数の配列)
@@ -9,10 +11,8 @@
 export const xoshiro256 = (seed: [number, number, number, number]) => {
   let [s0, s1, s2, s3] = seed;
 
-  const rotl = (x: number, k: number) => (x << k) | (x >>> (32 - k));
-
   return () => {
-    const result = rotl(s1 * 5, 7) * 9;
+    const result = bitwise(s1 * 5, 7) * 9;
 
     const t = s1 << 9;
 
@@ -23,7 +23,7 @@ export const xoshiro256 = (seed: [number, number, number, number]) => {
 
     s2 ^= t;
 
-    s3 = rotl(s3, 11);
+    s3 = bitwise(s3, 11);
 
     return (result >>> 0) / 2 ** 32;
   };

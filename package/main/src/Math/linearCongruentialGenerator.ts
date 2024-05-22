@@ -11,8 +11,8 @@
  */
 export const linearCongruentialGenerator = (
   seed: number,
-  a = 1664525,
-  c = 1013904223,
+  a = 1_664_525,
+  c = 1_013_904_223,
   m = 2 ** 32,
 ) => {
   let current = seed;

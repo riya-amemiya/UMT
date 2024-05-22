@@ -32,5 +32,5 @@ export const generateNumberArray = (
   }
 
   const step = (max - min) / (length - 1);
-  return Array.from({ length }, (_, i) => min + i * step);
+  return Array.from({ length }, (_, index) => min + index * step);
 };

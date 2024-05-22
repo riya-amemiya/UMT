@@ -1,5 +1,6 @@
 export * from "./addition";
 export * from "./average";
+export * from "./bitwise";
 export * from "./calculator";
 export * from "./degToRad";
 export * from "./deviationValue";
