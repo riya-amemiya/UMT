@@ -41,4 +41,10 @@ describe("randomSelect", () => {
       expect(array).toContain(item);
     });
   });
+
+  it("選択する要素の数がマイナスの場合、空の配列を返す", () => {
+    const array = [1, 2, 3, 4, 5];
+    const result = randomSelect(array, -1);
+    expect(result).toEqual([]);
+  });
 });
