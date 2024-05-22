@@ -13,7 +13,7 @@ export const linearCongruentialGenerator = (
   seed: number,
   a = 1_664_525,
   c = 1_013_904_223,
-  m = 2 ** 32,
+  m = 4_294_967_296, // 2 ** 32
 ) => {
   let current = seed;
   return () => {
