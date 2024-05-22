@@ -17,11 +17,14 @@ export const bitwise = (
 ): number => {
   k %= 32;
   switch (direction) {
-    case "left":
+    case "left": {
       return (x << k) | (x >>> (32 - k));
-    case "right":
+    }
+    case "right": {
       return (x >>> k) | (x << (32 - k));
-    default:
+    }
+    default: {
       throw new Error(`Invalid direction ${direction}`);
+    }
   }
 };

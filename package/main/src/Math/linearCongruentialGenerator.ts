@@ -7,7 +7,7 @@
  * @returns 乱数生成器関数
  * @example
  * const lcg = linearCongruentialGenerator(12345);
- * console.log(lcg()); // 乱数を生成
+ * console.log(lcg); // 乱数を生成
  */
 export const linearCongruentialGenerator = (
   seed: number,
@@ -16,8 +16,6 @@ export const linearCongruentialGenerator = (
   m = 4_294_967_296, // 2 ** 32
 ) => {
   let current = seed;
-  return () => {
-    current = (a * current + c) % m;
-    return current / m;
-  };
+  current = (a * current + c) % m;
+  return current / m;
 };
