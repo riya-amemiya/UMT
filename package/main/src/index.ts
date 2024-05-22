@@ -6,6 +6,7 @@ export * from "./Date";
 export * from "./Error";
 export * from "./IP";
 export * from "./Math";
+export * from "./Object";
 export * from "./Simple";
 export * from "./String";
 export * from "./Tool";

@@ -1,38 +1,31 @@
 {
-  "name": "umt",
-  "version": "1.7.1",
   "author": "riya-amemiya",
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/riya-amemiya/UMT.git"
-  },
-  "main": "module/index.js",
-  "devDependencies": {
-    "@biomejs/biome": "1.7.1",
-    "@swc/core": "^1.4.17",
-    "@swc/jest": "^0.2.36",
-    "@types/jest": "^29.5.12",
-    "@types/node": "^20.12.8",
-    "@typescript-eslint/eslint-plugin": "^7.8.0",
-    "@typescript-eslint/parser": "^7.8.0",
-    "bun-types": "^1.1.7",
-    "dependency-cruiser": "^16.3.1",
-    "eslint": "^9.2.0",
-    "eslint-plugin-import": "^2.29.1",
-    "eslint-plugin-unicorn": "^52.0.0",
-    "gh-pages": "^6.1.1",
-    "jest": "^29.7.0",
-    "ts-jest": "^29.1.2",
-    "ts-node": "^10.9.2",
-    "tsc-alias": "^1.8.8",
-    "typedoc": "^0.25.13",
-    "typescript": "^5.4.5",
-    "umt": "^1.7.0"
-  },
   "bugs": {
     "url": "https://github.com/riya-amemiya/UMT/issues"
   },
   "description": "個人的に作った便利関数集 個人用途なので破壊的変更がある可能性があります。 Main Packageに依存関係はありません。 JavaScriptからの呼び出しに対応しています。",
+  "devDependencies": {
+    "@biomejs/biome": "1.7.3",
+    "@swc/core": "^1.5.7",
+    "@swc/jest": "^0.2.36",
+    "@types/jest": "^29.5.12",
+    "@types/node": "^20.12.12",
+    "@typescript-eslint/eslint-plugin": "^7.9.0",
+    "@typescript-eslint/parser": "^7.9.0",
+    "bun-types": "^1.1.8",
+    "dependency-cruiser": "^16.3.2",
+    "eslint": "^9.2.0",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-unicorn": "^53.0.0",
+    "gh-pages": "^6.1.1",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.2",
+    "ts-node": "^10.9.2",
+    "tsc-alias": "^1.8.10",
+    "typedoc": "^0.25.13",
+    "typescript": "^5.4.5",
+    "umt": "^1.7.1"
+  },
   "directories": {
     "doc": "doc",
     "lib": "lib",
@@ -46,17 +39,25 @@
   "homepage": "https://github.com/riya-amemiya/UMT#readme",
   "keywords": [],
   "license": "MIT",
+  "main": "module/index.js",
+  "name": "umt",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/riya-amemiya/UMT.git"
+  },
   "scripts": {
     "build": "tsc && tsc-alias -p tsconfig.json",
     "build:clean": "rm -rf module && yarn build",
     "clean-build": "rm -rf module && yarn build",
     "deploy": "yarn typedoc && gh-pages -d doc",
+    "eslint": "eslint src",
+    "format": "biome format . --write",
+    "lint": "yarn eslint --fix && biome ci . && tsc",
     "test": "jest",
     "test-debug": "cd test && tsc",
-    "ts-node": "yarn build && ts-node --project tmp/tsconfig.json tmp/src/index.ts",
-    "lint": "yarn eslint --fix && biome ci . && tsc",
-    "format": "biome format . --write",
-    "eslint": "eslint src"
+    "ts-node": "yarn build && ts-node --project tmp/tsconfig.json tmp/src/index.ts"
   },
-  "types": "module/index.d.js"
+  "type": "module",
+  "types": "module/index.d.js",
+  "version": "1.7.2"
 }
