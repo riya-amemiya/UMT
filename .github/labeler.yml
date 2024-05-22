@@ -1,4 +1,7 @@
 main-package:
-  - package/main/**/*
+  - changed-files:
+    - any-glob-to-any-file: package/main/**/*
+
 typescript:
-  - /**/*.ts
+  - changed-files:
+    - any-glob-to-any-file: '**/*.ts'
