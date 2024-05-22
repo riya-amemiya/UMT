@@ -1,4 +1,4 @@
 main-package:
-- package/main/**/*
+  - package/main/**/*
 typescript:
-- /**/*.ts
+  - /**/*.ts
