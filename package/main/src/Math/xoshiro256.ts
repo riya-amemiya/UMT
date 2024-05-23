@@ -22,5 +22,5 @@ export const xoshiro256 = (seed: [number, number, number, number]) => {
 
   s3 = bitwise(s3, 11);
 
-  return (result >>> 0) / 2 ** 32;
+  return (result >>> 0) / 4_294_967_296;
 };
