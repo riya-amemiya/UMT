@@ -7,7 +7,6 @@
  * @returns 乱数生成器関数
  * @example
  * const lcg = linearCongruentialGenerator(12345);
- * console.log(lcg); // 乱数を生成
  */
 export const linearCongruentialGenerator = (
   seed: number,

@@ -6,7 +6,6 @@ import { bitwise } from "./bitwise";
  * @returns 乱数生成器関数
  * @example
  * const xoshiro = xoshiro256ss([1, 2, 3, 4]);
- * console.log(xoshiro); // 乱数を生成
  */
 export const xoshiro256 = (seed: [number, number, number, number]) => {
   let [s0, s1, s2, s3] = seed;
