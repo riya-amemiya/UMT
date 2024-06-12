@@ -1,4 +1,5 @@
 import { format } from "@/Date/format";
+import { getTimezoneOffsetString } from "@/Date/getTimezoneOffsetString";
 
 describe("format", () => {
   it("should format date correctly", () => {
@@ -8,17 +9,23 @@ describe("format", () => {
     expect(format(date, "YYYY-MM-DD HH:mm:ss.SSS")).toBe(
       "2023-06-10 15:30:45.123",
     );
+
     expect(format(date, "YYYY-MM-DD HH:mm:ss.SSS Z")).toBe(
-      "2023-06-10 15:30:45.123 +09:00",
+      `2023-06-10 15:30:45.123 ${getTimezoneOffsetString(date)}`,
     );
     expect(format(date, "YYYY-MM-DD HH:mm:ss.SSS ZZ")).toBe(
-      "2023-06-10 15:30:45.123 +0900",
+      `2023-06-10 15:30:45.123 ${getTimezoneOffsetString(date).replace(
+        ":",
+        "",
+      )}`,
     );
   });
 
   it("should use default format if format string is not provided", () => {
     const date = new Date(2023, 5, 10, 15, 30, 45, 123);
-    expect(format(date)).toBe("2023-06-10T15:30:45+09:00");
+    expect(format(date)).toBe(
+      `2023-06-10T15:30:45${getTimezoneOffsetString(date)}`,
+    );
   });
 
   it("should handle escaped characters", () => {
