@@ -1,4 +1,11 @@
-export type int = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
+export type intEven = 0 | 2 | 4 | 6 | 8;
+export type intOdd = 1 | 3 | 5 | 7 | 9;
+export type instWithOutZero = intEven | intOdd extends infer U
+  ? U extends 0
+    ? never
+    : U
+  : never;
+export type int = intEven | intOdd;
 
 export type upToTwenty = 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20;
 
