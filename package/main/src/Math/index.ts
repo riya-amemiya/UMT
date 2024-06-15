@@ -9,7 +9,6 @@ export * from "./factorial";
 export * from "./factorize";
 export * from "./gcd";
 export * from "./getDecimalLength";
-export * from "./isValueNaN";
 export * from "./lcm";
 export * from "./linearCongruentialGenerator";
 export * from "./mathConverter";

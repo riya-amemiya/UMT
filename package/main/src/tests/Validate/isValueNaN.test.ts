@@ -1,4 +1,4 @@
-import { isValueNaN } from "@/Math/isValueNaN";
+import { isValueNaN } from "@/Validate/isValueNaN";
 test("{isValueNaN}", () => {
   expect(isValueNaN(0)).toBe(false);
   expect(isValueNaN(0, true)).toBe(false);
