@@ -17,3 +17,4 @@ export * from "./isNumber";
 export * from "./isObject";
 export * from "./isPerfectSquare";
 export * from "./isPrimeNumber";
+export * from "./isValueNaN";
