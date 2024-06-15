@@ -15,7 +15,7 @@ describe("result function tests", () => {
     };
     const resultValue = safeExecute(errorOperation);
 
-    expect(resultValue).toHaveProperty("type", "err");
+    expect(resultValue).toHaveProperty("type", "error");
     expect(resultValue).toHaveProperty("error");
   });
 });

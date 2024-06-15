@@ -4,12 +4,12 @@ interface SuccessType<V> {
 }
 
 interface ErrorType<E> {
-  type: "err";
+  type: "error";
   error: E;
 }
 
 export type Result<V, E> = SuccessType<V> | ErrorType<E>;
-const errorFunction = <E>(error: E): ErrorType<E> => ({ type: "err", error });
+const errorFunction = <E>(error: E): ErrorType<E> => ({ type: "error", error });
 const successFunction = <V>(value: V): SuccessType<V> => ({
   type: "success",
   value,
