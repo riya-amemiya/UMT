@@ -25,4 +25,13 @@ describe("uuidv7", () => {
     const variant = uuid.split("-")[3][0];
     expect(["8", "9", "a", "b"]).toContain(variant);
   });
+
+  it("衝突しないUUID v7が生成される", () => {
+    const uuids = new Set<string>();
+    for (let index = 0; index < 1000; index++) {
+      const uuid = uuidv7();
+      expect(uuids.has(uuid)).toBe(false);
+      uuids.add(uuid);
+    }
+  });
 });
