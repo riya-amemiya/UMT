@@ -1,7 +1,12 @@
 import type { ValidateReturnType } from "@/Validate/type";
 
+/**
+ * 文字列がUUIDかどうかを検証するValidate関数
+ * @param  {number[]} versions バージョン (default: [4])
+ * @param  {string} message エラーメッセージ
+ */
 export const uuid = (
-  versions: (1 | 2 | 3 | 4 | 5)[] = [4],
+  versions: number[] = [4],
   message?: string,
 ): ValidateReturnType<string> => ({
   type: "string",
