@@ -8,13 +8,13 @@ import { random } from "./random";
 export const uuidv7 = (): string => {
   const DIGITS = "0123456789abcdef";
   const unixTsMs = Date.now();
-  const randA = random(0xfff);
-  const randBHi = random(0x3fffffff);
-  const randBLo = random(0xffffffff);
+  const randA = random(0xf_ff);
+  const randBHi = random(0x3f_ff_ff_ff);
+  const randBLo = random(0xff_ff_ff_ff);
 
   const bytes = new Uint8Array(16);
-  for (let i = 0; i < 6; i++) {
-    bytes[i] = (unixTsMs >>> ((5 - i) * 8)) & 0xff;
+  for (let index = 0; index < 6; index++) {
+    bytes[index] = (unixTsMs >>> ((5 - index) * 8)) & 0xff;
   }
   bytes[6] = 0x70 | (randA >>> 8);
   bytes[7] = randA & 0xff;
@@ -28,9 +28,9 @@ export const uuidv7 = (): string => {
   bytes[15] = randBLo & 0xff;
 
   let uuid = "";
-  for (let i = 0; i < bytes.length; i++) {
-    uuid += DIGITS[bytes[i] >>> 4] + DIGITS[bytes[i] & 0xf];
-    if (i === 3 || i === 5 || i === 7 || i === 9) {
+  for (const [index, byte] of bytes.entries()) {
+    uuid += DIGITS[byte >>> 4] + DIGITS[byte & 0xf];
+    if (index === 3 || index === 5 || index === 7 || index === 9) {
       uuid += "-";
     }
   }
