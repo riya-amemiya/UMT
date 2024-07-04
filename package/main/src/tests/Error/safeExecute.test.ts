@@ -1,11 +1,11 @@
-import { result } from "@/Error/result";
+import { safeExecute } from "@/Error/safeExecute";
 
 describe("result function tests", () => {
   it("should return OkType for successful operations", () => {
     const successfulOperation = () => "test";
-    const resultValue = result(successfulOperation);
+    const resultValue = safeExecute(successfulOperation);
 
-    expect(resultValue).toHaveProperty("type", "ok");
+    expect(resultValue).toHaveProperty("type", "success");
     expect(resultValue).toHaveProperty("value", "test");
   });
 
@@ -13,9 +13,9 @@ describe("result function tests", () => {
     const errorOperation = () => {
       throw new Error("test error");
     };
-    const resultValue = result(errorOperation);
+    const resultValue = safeExecute(errorOperation);
 
-    expect(resultValue).toHaveProperty("type", "err");
+    expect(resultValue).toHaveProperty("type", "error");
     expect(resultValue).toHaveProperty("error");
   });
 });

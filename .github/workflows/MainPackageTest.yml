@@ -72,7 +72,7 @@ jobs:
                   path: '**/node_modules'
                   key: dev-depends-${{ matrix.os }}-bun${{ matrix.bun-version }}-${{ hashFiles('package/main/package.json') }}
             - name: Lint
-              run: bun run lint
+              run: bun run lint:ci
 
     javascriptBuild:
           name: JavaScript Build on Ubuntu

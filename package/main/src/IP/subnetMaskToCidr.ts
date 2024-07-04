@@ -1,6 +1,6 @@
 import { ipToBinaryString } from "./ipToBinaryString";
 
-import { isValueNaN } from "@/Math/isValueNaN";
+import { isValueNaN } from "@/Validate/isValueNaN";
 
 /**
  * サブネットマスクからCIDRを取得します
