@@ -81,6 +81,11 @@ export type Pop<T extends unknown[]> = T extends [...infer R, unknown]
   ? R
   : never;
 
+// 配列の先頭を取得する型
+export type First<T extends unknown[]> = T extends [infer F, ...unknown[]]
+  ? F
+  : never;
+
 // 文字列の先頭を削除する型
 export type ShiftString<S extends string> = S extends `${string}${infer R}`
   ? R
