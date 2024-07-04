@@ -4,7 +4,7 @@ import { padStart } from "@/String/padStart";
 /**
  * 日時を指定されたフォーマットに従って文字列に変換します。
  * @param {Date} date - 対象の日時オブジェクト
- * @param {string} formatStr - フォーマット文字列
+ * @param {string} formatString - フォーマット文字列
  * @return {string} - フォーマットされた日時文字列
  */
 export const format = (
@@ -51,7 +51,7 @@ export const format = (
   };
 
   return formatString.replaceAll(
-    /\[([^\]]+)]|Y{1,4}|M{1,2}|D{1,2}|d{1,2}|H{1,2}|h{1,2}|a|A|m{1,2}|s{1,2}|Z{1,2}|SSS/g,
-    (match, $1) => $1 || matches[match],
+    /\[([^\]]+)]|(Y{1,4}|M{1,2}|D{1,2}|d{1,2}|H{1,2}|h{1,2}|a|A|m{1,2}|s{1,2}|Z{1,2}|SSS)/g,
+    (_match, $1, $2) => $1 || matches[$2],
   );
 };

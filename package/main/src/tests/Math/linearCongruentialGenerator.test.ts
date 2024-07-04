@@ -11,8 +11,6 @@ describe("linearCongruentialGenerator", () => {
     const result1 = linearCongruentialGenerator(12345);
     const result2 = linearCongruentialGenerator(12345);
     expect(result1).toBe(result2);
-    expect(result1).toBe(result2);
-    expect(result1).toBe(result2);
   });
 
   it("異なるシード値で異なる乱数列を生成する", () => {
