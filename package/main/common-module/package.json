@@ -23,8 +23,7 @@
     "ts-node": "^10.9.2",
     "tsc-alias": "^1.8.10",
     "typedoc": "^0.26.3",
-    "typescript": "^5.5.3",
-    "umt": "^1.7.2"
+    "typescript": "^5.5.3"
   },
   "directories": {
     "doc": "doc",
@@ -61,6 +60,6 @@
   },
   "type": "module",
   "types": "module/index.d.js",
-  "version": "1.8.0",
+  "version": "1.8.1",
   "packageManager": "yarn@1.22.19+sha1.4ba7fc5c6e704fce2066ecbfb0b0d8976fe62447"
 }
