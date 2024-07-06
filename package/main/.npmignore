@@ -16,3 +16,4 @@ module/tests/
 tsconfig.tsbuildinfo
 tmp
 .plandex
+common-module

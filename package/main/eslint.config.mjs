@@ -9,7 +9,13 @@ const compat = new FlatCompat();
 
 export default [
   {
-    ignores: ["jest.config.ts", "tmp/", "src/tests/", ".dependency-cruiser.js"],
+    ignores: [
+      "jest.config.ts",
+      "tmp/",
+      "src/tests/",
+      ".dependency-cruiser.js",
+      "cjs.build.mjs",
+    ],
   },
   js.configs.recommended,
   ...compat.extends(

@@ -1299,4 +1299,4 @@ export type tripleDigitInt =
   | upToNineHundredNinetyNine;
 export type tripleDigit = `${tripleDigitInt}`;
 
-export type fourDigit = `${int}${int}${int}${int}`;
+export type fourDigit = `${intWithoutZero}${int}${int}${int}`;
