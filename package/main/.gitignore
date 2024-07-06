@@ -85,6 +85,7 @@ build
 
 
 /module/*
+/common-module/*
 !/module/tsconfig.tsbuildinfo
 
 lib
