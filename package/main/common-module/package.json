@@ -40,7 +40,7 @@
   "keywords": [],
   "license": "MIT",
   "main": "module/index.js",
-  "name": "umt",
+  "name": "umt-common",
   "repository": {
     "type": "git",
     "url": "git://github.com/riya-amemiya/UMT.git"
