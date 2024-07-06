@@ -5,6 +5,8 @@ const packageJson = JSON.parse(readFileSync("package.json", "utf8"));
 
 // nameをumt-commonに変更
 packageJson.name = "umt-common";
+// typeをcommonjsに変更
+packageJson.type = "commonjs";
 
 // common-moduleにコピー
 writeFileSync(

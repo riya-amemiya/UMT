@@ -58,8 +58,8 @@
     "test-debug": "cd test && tsc",
     "ts-node": "yarn build && ts-node --project tmp/tsconfig.json tmp/src/index.ts"
   },
-  "type": "module",
+  "type": "commonjs",
   "types": "module/index.d.js",
-  "version": "1.8.1",
+  "version": "1.8.2",
   "packageManager": "yarn@1.22.19+sha1.4ba7fc5c6e704fce2066ecbfb0b0d8976fe62447"
 }
