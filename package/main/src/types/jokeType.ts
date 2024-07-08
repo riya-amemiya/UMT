@@ -1,4 +1,6 @@
-import type { Add, Multiply, Subtract } from "./mathType";
+import type { Add } from "$/math/add";
+import type { Subtract } from "$/math/subtract";
+import type { Multiply } from "$/mathType";
 
 export type ThreeStepsForwardTwoStepsBack<T extends number> = T extends 1
   ? 1
