@@ -1,44 +1,6 @@
-import type { BGreaterThanA, Length } from "./logicType";
-
-// 数値を配列に変換する
-export type NumberToArray<
-  T extends number,
-  U extends number[] = [],
-> = U["length"] extends T ? U : NumberToArray<T, [...U, U["length"]]>;
-
-// たし算
-export type Add<
-  X extends number,
-  Y extends number,
-> = `${X}` extends `-${infer N extends number}`
-  ? `${Y}` extends `-${infer M extends number}`
-    ? `-${Add<N, M>}` extends `${infer R extends number}`
-      ? R
-      : never
-    : Subtract<Y, N>
-  : `${Y}` extends `-${infer M extends number}`
-    ? Subtract<X, M>
-    : Length<[...NumberToArray<X>, ...NumberToArray<Y>]>;
-
-// 引き算
-export type Subtract<
-  A extends number,
-  B extends number,
-> = `${A}` extends `-${infer N extends number}`
-  ? `${B}` extends `-${infer M extends number}`
-    ? Subtract<M, N>
-    : `-${Add<N, B>}` extends `${infer R extends number}`
-      ? R
-      : never
-  : `${B}` extends `-${infer M extends number}`
-    ? Length<[...NumberToArray<A>, ...NumberToArray<M>]>
-    : NumberToArray<A> extends [...NumberToArray<B>, ...infer R]
-      ? Length<R>
-      : NumberToArray<B> extends [...NumberToArray<A>, ...infer R]
-        ? `-${Length<R>}` extends `${infer M extends number}`
-          ? M
-          : never
-        : never;
+import type { BGreaterThanA } from "./logicType";
+import type { Add } from "./math/add";
+import type { Subtract } from "./math/subtract";
 
 // 掛け算
 export type Multiply<A extends number, B extends number> = MultiHelper<A, B>;
