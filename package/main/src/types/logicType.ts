@@ -1,77 +1,10 @@
+import type { First8Chars } from "./logic/first8Chars";
 import type { Length } from "./logic/length";
 import type { LengthOfString } from "./logic/lengthOfString";
 import type { Shift } from "./logic/shift";
 import type { ShiftString } from "./logic/shiftString";
+import type { StringReverse } from "./logic/stringReverse";
 import type { Subtract } from "./math/subtract";
-
-// 文字列をUnion型に変換する型
-export type StringToUnion<S extends string> = S extends `${infer F}${infer R}`
-  ? F | StringToUnion<R>
-  : never;
-
-// any型かどうかを判定する型
-export type IsAny<T> = 0 extends 1 & T ? true : false;
-
-// floot型かどうかを判定する型
-export type IsFloat<T> = T extends number
-  ? `${T}` extends `${infer _}.${infer _2}`
-    ? true
-    : false
-  : false;
-
-// if文の型
-export type IF<C extends boolean, X, Y> = C extends true ? X : Y;
-
-// number型に変換する型
-export type ToNumber<S> = S extends `${infer N extends number}` ? N : never;
-
-// sliceの型
-export type Slice<
-  S extends string,
-  Start extends number,
-  End extends number,
-  A extends string = "",
-> = S extends `${infer F}${infer R}`
-  ? Start extends 0
-    ? End extends 0
-      ? A
-      : Slice<R, 0, Subtract<End, 1>, `${A}${F}`>
-    : Slice<R, Subtract<Start, 1>, Subtract<End, 1>, A>
-  : A;
-
-// 文字列を反転する型
-export type StringReverse<S extends string> = S extends `${infer F}${infer R}`
-  ? `${StringReverse<R>}${F}`
-  : "";
-
-// 配列を反転する型
-export type ArrayReverse<
-  S extends unknown[],
-  T extends unknown[] = [],
-> = S extends [infer F, ...infer R] ? ArrayReverse<R, [F, ...T]> : T;
-
-// 先頭から8文字を取得する型
-export type First8Chars<
-  S extends string,
-  T extends unknown[] = [],
-> = T["length"] extends 8
-  ? T extends [
-      infer C1,
-      infer C2,
-      infer C3,
-      infer C4,
-      infer C5,
-      infer C6,
-      infer C7,
-      infer C8,
-      ...unknown[],
-    ]
-    ? `${C1 & string}${C2 & string}${C3 & string}${C4 & string}${C5 &
-        string}${C6 & string}${C7 & string}${C8 & string}`
-    : never
-  : S extends `${infer Head}${infer Rest}`
-    ? First8Chars<Rest, [...T, Head]>
-    : never;
 
 export type FirstNChars<
   S extends string,
