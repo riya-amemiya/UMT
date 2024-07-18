@@ -1,4 +1,4 @@
-import type { First } from "$/logicType";
+import type { First } from "$/logic/first";
 
 /**
  * 配列の先頭の要素を返す
