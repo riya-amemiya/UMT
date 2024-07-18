@@ -1,7 +1,7 @@
 import type { Add } from "./add";
 import type { Subtract } from "./subtract";
 
-import type { BGreaterThanA } from "$/logicType";
+import type { BGreaterThanA } from "$/logic/bGreaterThanA";
 
 // 割り算
 export type Divide<A extends number, B extends number> = A extends 0

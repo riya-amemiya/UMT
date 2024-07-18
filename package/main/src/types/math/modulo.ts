@@ -1,6 +1,6 @@
 import type { Subtract } from "./subtract";
 
-import type { BGreaterThanA } from "$/logicType";
+import type { BGreaterThanA } from "$/logic/bGreaterThanA";
 
 // 余り
 export type Modulo<
