@@ -6,7 +6,7 @@ import type {
   hoursTypeInt,
   minutesType,
   minutesTypeInt,
-} from "@/types/clockType";
+} from "$/clockType";
 
 describe("clockType Hours", () => {
   it("hoursAmInt", () => {

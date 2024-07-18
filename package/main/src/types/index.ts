@@ -1,4 +1,4 @@
-export * from "./arrayType";
+export * from "./array";
 export * from "./clockType";
 export * from "./dateType";
 export * from "./int";

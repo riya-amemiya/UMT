@@ -1,4 +1,4 @@
-import type { ChunkArrayType } from "@/types/arrayType";
+import type { ChunkArrayType } from "$/array/chunk";
 
 describe("arrayType", () => {
   it("ChunkArrayType", () => {
