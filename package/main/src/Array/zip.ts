@@ -1,4 +1,4 @@
-import type { ZipArrayType } from "$/arrayType";
+import type { ZipArrayType } from "$/array/zip";
 
 /**
  * 複数の配列を受け取り、それらの配列の要素を組み合わせて新しい配列を作成します。
