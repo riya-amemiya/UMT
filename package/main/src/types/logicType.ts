@@ -1,28 +1,13 @@
+import type { Equal } from "./logic/equal";
 import type { First8Chars } from "./logic/first8Chars";
+import type { FirstNChars } from "./logic/firstNChars";
 import type { Length } from "./logic/length";
 import type { LengthOfString } from "./logic/lengthOfString";
 import type { Shift } from "./logic/shift";
 import type { ShiftString } from "./logic/shiftString";
 import type { StringReverse } from "./logic/stringReverse";
+import type { ZeroString } from "./logic/zeroString";
 import type { Subtract } from "./math/subtract";
-
-export type FirstNChars<
-  S extends string,
-  N extends number,
-  C extends unknown[] = [],
-  A extends string = "",
-> = C["length"] extends N
-  ? A
-  : S extends `${infer Head}${infer Rest}`
-    ? FirstNChars<Rest, N, [...C, Head], `${A}${Head}`>
-    : never;
-export type ZeroString<
-  N extends number,
-  A extends string = "",
-> = LengthOfString<A> extends N ? A : ZeroString<N, `${A}0`>;
-
-// XとYが等しいかどうかを判定する型
-export type Equal<X, Y> = X extends Y ? true : false;
 
 // AまたはBが0かどうか
 export type ZeroAorB<A extends number, B extends number> = Equal<
