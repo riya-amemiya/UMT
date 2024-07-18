@@ -1,7 +1,7 @@
 import type { Add } from "./add";
 import type { NumberToArray } from "./numberToArray";
 
-import type { Length } from "$/logicType";
+import type { Length } from "$/logic/length";
 
 // 引き算
 export type Subtract<
