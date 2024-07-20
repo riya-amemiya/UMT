@@ -1,5 +1,6 @@
 import type { hoursTypeInt } from "$/clockType";
-import type { dayTypeInt, monTypeInt } from "$/dateType";
+import type { DayTypeInt } from "$/date/dayTypeInt";
+import type { MonTypeInt } from "$/date/monTypeInt";
 import { newDateInt } from "@/Date/new";
 import { now } from "@/Date/now";
 /**
@@ -10,10 +11,10 @@ import { now } from "@/Date/now";
  * @returns number 年齢
  * @example birthday(2000, 1, 1); // 21
  */
-export const birthday = <T extends monTypeInt>(
+export const birthday = <T extends MonTypeInt>(
   year: number,
   mon: T,
-  day: dayTypeInt<T>,
+  day: DayTypeInt<T>,
   timeDifference: hoursTypeInt = 9,
 ) => {
   const birthdayDate = new Date(newDateInt(year, mon, day));
@@ -23,8 +24,8 @@ export const birthday = <T extends monTypeInt>(
     nowTime <
     newDateInt(
       nowTime.getFullYear(),
-      (birthdayDate.getMonth() - 1) as monTypeInt,
-      birthdayDate.getDay() as dayTypeInt<T>,
+      (birthdayDate.getMonth() - 1) as MonTypeInt,
+      birthdayDate.getDay() as DayTypeInt<T>,
     )
       ? y - 1
       : y;

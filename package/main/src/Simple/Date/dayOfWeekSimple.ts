@@ -1,13 +1,11 @@
 import type { hoursTypeInt } from "$/clockType";
-import type {
-  MonthsWith31Days,
-  MonthsWith31DaysInt,
-  MonthsWithout31Days,
-  MonthsWithout31DaysInt,
-  convertMonTypeZero,
-  dayType,
-  dayTypeInt,
-} from "$/dateType";
+import type { ConvertMonTypeZero } from "$/date/convertMonTypeZero";
+import type { DayType } from "$/date/dayType";
+import type { DayTypeInt } from "$/date/dayTypeInt";
+import type { MonthsWith31Days } from "$/date/monthsWith31Days";
+import type { MonthsWith31DaysInt } from "$/date/monthsWith31DaysInt";
+import type { MonthsWithout31Days } from "$/date/monthsWithout31Days";
+import type { MonthsWithout31DaysInt } from "$/date/monthsWithout31DaysInt";
 import { dayOfWeek } from "@/Date/dayOfWeek";
 /**
  * 曜日を取得する
@@ -26,15 +24,15 @@ function dayOfWeekSimple<
   properties?: {
     year?: number;
     mon?: T;
-    day?: dayTypeInt<T>;
+    day?: DayTypeInt<T>;
   },
   timeDifference?: hoursTypeInt,
 ): number;
 function dayOfWeekSimple<T extends MonthsWith31Days | MonthsWithout31Days>(
   properties?:
-    | `${number}-${convertMonTypeZero<T>}-${dayType<T>}`
-    | `${number}:${convertMonTypeZero<T>}:${dayType<T>}`
-    | `${number}/${convertMonTypeZero<T>}/${dayType<T>}`
+    | `${number}-${ConvertMonTypeZero<T>}-${DayType<T>}`
+    | `${number}:${ConvertMonTypeZero<T>}:${DayType<T>}`
+    | `${number}/${ConvertMonTypeZero<T>}/${DayType<T>}`
     | Date,
   timeDifference?: hoursTypeInt,
 ): number;
@@ -50,25 +48,25 @@ function dayOfWeekSimple<
         year?: number;
         mon?: T;
         day?: T extends MonthsWith31Days | MonthsWithout31Days
-          ? dayType<T>
+          ? DayType<T>
           : T extends MonthsWith31DaysInt | MonthsWithout31DaysInt
-            ? dayTypeInt<T>
+            ? DayTypeInt<T>
             : never;
       }
     | `${number}-${T}-${T extends MonthsWith31Days | MonthsWithout31Days
-        ? dayType<T>
+        ? DayType<T>
         : T extends MonthsWith31DaysInt | MonthsWithout31DaysInt
-          ? dayTypeInt<T>
+          ? DayTypeInt<T>
           : never}`
     | `${number}:${T}:${T extends MonthsWith31Days | MonthsWithout31Days
-        ? dayType<T>
+        ? DayType<T>
         : T extends MonthsWith31DaysInt | MonthsWithout31DaysInt
-          ? dayTypeInt<T>
+          ? DayTypeInt<T>
           : never}`
     | `${number}/${T}/${T extends MonthsWith31Days | MonthsWithout31Days
-        ? dayType<T>
+        ? DayType<T>
         : T extends MonthsWith31DaysInt | MonthsWithout31DaysInt
-          ? dayTypeInt<T>
+          ? DayTypeInt<T>
           : never}`
     | Date,
   timeDifference: hoursTypeInt = 9,
@@ -101,7 +99,7 @@ function dayOfWeekSimple<
         mon: (properties.getMonth() + 1) as
           | MonthsWithout31DaysInt
           | MonthsWith31DaysInt,
-        day: properties.getDate() as dayTypeInt<
+        day: properties.getDate() as DayTypeInt<
           MonthsWith31DaysInt | MonthsWithout31DaysInt
         >,
       },
@@ -112,7 +110,7 @@ function dayOfWeekSimple<
     properties as {
       year?: number;
       mon?: MonthsWithout31DaysInt | MonthsWith31DaysInt;
-      day?: dayTypeInt<MonthsWith31DaysInt | MonthsWithout31DaysInt>;
+      day?: DayTypeInt<MonthsWith31DaysInt | MonthsWithout31DaysInt>;
     },
     timeDifference,
   );
