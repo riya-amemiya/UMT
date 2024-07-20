@@ -8,7 +8,10 @@ import type {
   secondsType,
   secondsTypeInt,
 } from "$/clockType";
-import type { dayType, dayTypeInt, monTypeInt, monTypeZero } from "$/dateType";
+import type { DayType } from "$/date/dayType";
+import type { DayTypeInt } from "$/date/dayTypeInt";
+import type { MonTypeInt } from "$/date/monTypeInt";
+import type { MonTypeZero } from "$/date/monTypeZero";
 
 /**
  * 日付を生成する
@@ -22,10 +25,10 @@ import type { dayType, dayTypeInt, monTypeInt, monTypeZero } from "$/dateType";
  * @returns Date
  * @example newDateInt(2021, 1, 1); // 2021-01-01T00:00:00.000Z
  */
-export const newDateInt = <T extends monTypeInt>(
+export const newDateInt = <T extends MonTypeInt>(
   year: number,
   mon: T,
-  day: dayTypeInt<T>,
+  day: DayTypeInt<T>,
   hours: hoursTypeInt = (-new Date().getTimezoneOffset() / 60) as hoursTypeInt,
   minutes: minutesTypeInt = 0,
   seconds: secondsTypeInt = 0,
@@ -54,8 +57,8 @@ export const newDateInt = <T extends monTypeInt>(
  * @returns Date
  * @example newDateString("2021-01-01"); // 2021-01-01T00:00:00.000Z
  */
-export const newDateString = <T extends monTypeZero>(
-  date: `${number}-${T}-${dayType<T>}`,
+export const newDateString = <T extends MonTypeZero>(
+  date: `${number}-${T}-${DayType<T>}`,
   hours: hoursType = "00",
   minutes: minutesType = "00",
   seconds: secondsType = "00",
