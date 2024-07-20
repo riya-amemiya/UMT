@@ -1,4 +1,5 @@
-import type { doubleDigitInt, tripleDigitInt } from "./int";
+import type { tripleDigitInt } from "./int";
+import type { DoubleDigitInt } from "./int/doubleDigitInt";
 import type { Int } from "./int/int";
 import type { UpToFifty } from "./int/upToFifty";
 import type { UpToForty } from "./int/upToForty";
@@ -41,9 +42,9 @@ export type minutesType =
 export type secondsType = minutesType;
 export type secondsTypeInt = minutesTypeInt;
 
-export type millisecondsTypeInt = Int | doubleDigitInt | tripleDigitInt;
+export type millisecondsTypeInt = Int | DoubleDigitInt | tripleDigitInt;
 
 export type millisecondsType =
   | `00${Int}`
-  | `0${doubleDigitInt}`
+  | `0${DoubleDigitInt}`
   | `${tripleDigitInt}`;

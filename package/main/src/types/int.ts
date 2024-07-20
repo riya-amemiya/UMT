@@ -1,14 +1,5 @@
 import type { Int } from "./int/int";
 import type { IntWithoutZero } from "./int/intWithoutZero";
-import type { UpToEighty } from "./int/upToEighty";
-import type { UpToFifty } from "./int/upToFifty";
-import type { UpToForty } from "./int/upToForty";
-import type { UpToNinety } from "./int/upToNinety";
-import type { UpToNinetyNine } from "./int/upToNinetyNine";
-import type { UpToSeventy } from "./int/upToSeventy";
-import type { UpToSixty } from "./int/upToSixty";
-import type { UpToThirty } from "./int/upToThirty";
-import type { UpToTwenty } from "./int/upToTwenty";
 
 export type upToHundredTen =
   | 100
@@ -1182,18 +1173,6 @@ export type upToNineHundredNinetyNine =
   | 997
   | 998
   | 999;
-
-export type doubleDigitInt =
-  | UpToTwenty
-  | UpToThirty
-  | UpToForty
-  | UpToFifty
-  | UpToSixty
-  | UpToSeventy
-  | UpToEighty
-  | UpToNinety
-  | UpToNinetyNine;
-export type doubleDigit = `${doubleDigitInt}`;
 
 export type tripleDigitInt =
   | upToHundredTen
