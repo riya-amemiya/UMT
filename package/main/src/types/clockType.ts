@@ -1,16 +1,13 @@
-import type {
-  doubleDigitInt,
-  int,
-  tripleDigitInt,
-  upToFifty,
-  upToForty,
-  upToSixty,
-  upToThirty,
-  upToTwenty,
-} from "./int";
+import type { doubleDigitInt, tripleDigitInt } from "./int";
+import type { Int } from "./int/int";
+import type { UpToFifty } from "./int/upToFifty";
+import type { UpToForty } from "./int/upToForty";
+import type { UpToSixty } from "./int/upToSixty";
+import type { UpToThirty } from "./int/upToThirty";
+import type { UpToTwenty } from "./int/upToTwenty";
 
-export type hoursAmInt = int | 10 | 11 | 12;
-export type hoursAm = `0${int}` | `${10 | 11 | 12}`;
+export type hoursAmInt = Int | 10 | 11 | 12;
+export type hoursAm = `0${Int}` | `${10 | 11 | 12}`;
 
 export type hoursPmInt =
   | 12
@@ -31,22 +28,22 @@ export type hoursTypeInt = hoursAmInt | hoursPmInt;
 export type hoursType = hoursAm | hoursPm;
 
 export type minutesTypeInt =
-  | int
-  | upToTwenty
-  | upToThirty
-  | upToForty
-  | upToFifty
-  | upToSixty;
+  | Int
+  | UpToTwenty
+  | UpToThirty
+  | UpToForty
+  | UpToFifty
+  | UpToSixty;
 export type minutesType =
-  | `0${int}`
-  | `${upToTwenty | upToThirty | upToForty | upToFifty | upToSixty}`;
+  | `0${Int}`
+  | `${UpToTwenty | UpToThirty | UpToForty | UpToFifty | UpToSixty}`;
 
 export type secondsType = minutesType;
 export type secondsTypeInt = minutesTypeInt;
 
-export type millisecondsTypeInt = int | doubleDigitInt | tripleDigitInt;
+export type millisecondsTypeInt = Int | doubleDigitInt | tripleDigitInt;
 
 export type millisecondsType =
-  | `00${int}`
+  | `00${Int}`
   | `0${doubleDigitInt}`
   | `${tripleDigitInt}`;
