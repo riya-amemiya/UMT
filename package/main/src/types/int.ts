@@ -1,25 +1,14 @@
-export type intEven = 0 | 2 | 4 | 6 | 8;
-export type intOdd = 1 | 3 | 5 | 7 | 9;
-export type intWithoutZero = Exclude<intEven | intOdd, 0>;
-export type int = intEven | intOdd;
-
-export type upToTwenty = 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20;
-
-export type upToThirty = 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30;
-
-export type upToForty = 30 | 31 | 32 | 33 | 34 | 35 | 36 | 37 | 38 | 39 | 40;
-
-export type upToFifty = 40 | 41 | 42 | 43 | 44 | 45 | 46 | 47 | 48 | 49 | 50;
-
-export type upToSixty = 50 | 51 | 52 | 53 | 54 | 55 | 56 | 57 | 58 | 59 | 60;
-
-export type upToSeventy = 60 | 61 | 62 | 63 | 64 | 65 | 66 | 67 | 68 | 69 | 70;
-
-export type upToEighty = 70 | 71 | 72 | 73 | 74 | 75 | 76 | 77 | 78 | 79 | 80;
-
-export type upToNinety = 80 | 81 | 82 | 83 | 84 | 85 | 86 | 87 | 88 | 89 | 90;
-
-export type upToNinetyNine = 90 | 91 | 92 | 93 | 94 | 95 | 96 | 97 | 98 | 99;
+import type { Int } from "./int/int";
+import type { IntWithoutZero } from "./int/intWithoutZero";
+import type { UpToEighty } from "./int/upToEighty";
+import type { UpToFifty } from "./int/upToFifty";
+import type { UpToForty } from "./int/upToForty";
+import type { UpToNinety } from "./int/upToNinety";
+import type { UpToNinetyNine } from "./int/upToNinetyNine";
+import type { UpToSeventy } from "./int/upToSeventy";
+import type { UpToSixty } from "./int/upToSixty";
+import type { UpToThirty } from "./int/upToThirty";
+import type { UpToTwenty } from "./int/upToTwenty";
 
 export type upToHundredTen =
   | 100
@@ -1195,15 +1184,15 @@ export type upToNineHundredNinetyNine =
   | 999;
 
 export type doubleDigitInt =
-  | upToTwenty
-  | upToThirty
-  | upToForty
-  | upToFifty
-  | upToSixty
-  | upToSeventy
-  | upToEighty
-  | upToNinety
-  | upToNinetyNine;
+  | UpToTwenty
+  | UpToThirty
+  | UpToForty
+  | UpToFifty
+  | UpToSixty
+  | UpToSeventy
+  | UpToEighty
+  | UpToNinety
+  | UpToNinetyNine;
 export type doubleDigit = `${doubleDigitInt}`;
 
 export type tripleDigitInt =
@@ -1299,4 +1288,4 @@ export type tripleDigitInt =
   | upToNineHundredNinetyNine;
 export type tripleDigit = `${tripleDigitInt}`;
 
-export type fourDigit = `${intWithoutZero}${int}${int}${int}`;
+export type fourDigit = `${IntWithoutZero}${Int}${Int}${Int}`;
