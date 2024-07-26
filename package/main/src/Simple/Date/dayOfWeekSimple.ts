@@ -1,4 +1,4 @@
-import type { hoursTypeInt } from "$/clockType";
+import type { HoursTypeInt } from "$/clock/hoursTypeInt";
 import type { ConvertMonTypeZero } from "$/date/convertMonTypeZero";
 import type { DayType } from "$/date/dayType";
 import type { DayTypeInt } from "$/date/dayTypeInt";
@@ -26,7 +26,7 @@ function dayOfWeekSimple<
     mon?: T;
     day?: DayTypeInt<T>;
   },
-  timeDifference?: hoursTypeInt,
+  timeDifference?: HoursTypeInt,
 ): number;
 function dayOfWeekSimple<T extends MonthsWith31Days | MonthsWithout31Days>(
   properties?:
@@ -34,7 +34,7 @@ function dayOfWeekSimple<T extends MonthsWith31Days | MonthsWithout31Days>(
     | `${number}:${ConvertMonTypeZero<T>}:${DayType<T>}`
     | `${number}/${ConvertMonTypeZero<T>}/${DayType<T>}`
     | Date,
-  timeDifference?: hoursTypeInt,
+  timeDifference?: HoursTypeInt,
 ): number;
 function dayOfWeekSimple<
   T extends
@@ -69,7 +69,7 @@ function dayOfWeekSimple<
           ? DayTypeInt<T>
           : never}`
     | Date,
-  timeDifference: hoursTypeInt = 9,
+  timeDifference: HoursTypeInt = 9,
 ): number {
   if (typeof properties === "string") {
     if (properties.includes(":")) {
