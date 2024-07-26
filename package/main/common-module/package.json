@@ -49,6 +49,7 @@
     "build:clean": "rm -rf module && yarn build",
     "build:cjs": "tsc -p tsconfig.cjs.json && node cjs.build.mjs && cp LICENSE common-module/LICENSE && cp README.md common-module/README.md",
     "build:full": "yarn build && yarn build:cjs",
+    "build:clean:full": "rm -rf module && rm -rf common-module && yarn build:full",
     "clean-build": "rm -rf module && yarn build",
     "deploy": "yarn typedoc && gh-pages -d doc",
     "eslint": "eslint src",
