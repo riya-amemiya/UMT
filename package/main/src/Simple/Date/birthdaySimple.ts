@@ -1,4 +1,4 @@
-import type { hoursTypeInt } from "$/clockType";
+import type { HoursTypeInt } from "$/clock/hoursTypeInt";
 import type { DayType } from "$/date/dayType";
 import type { DayTypeInt } from "$/date/dayTypeInt";
 import type { MonType } from "$/date/monType";
@@ -11,7 +11,7 @@ export type BIRTHDAYSIMPLE = <T extends MonType>(
     | `${number}:${T}:${DayType<T>}`
     | `${number}/${T}/${DayType<T>}`
     | { year: number; mon: number; day: number },
-  timeDifference?: hoursTypeInt,
+  timeDifference?: HoursTypeInt,
 ) => number;
 /**
  * 年齢を取得する
@@ -31,7 +31,7 @@ export const birthdaySimple = (<T extends MonType>(
     | `${number}/${T}/${DayType<T>}`
     | Date
     | { year: number; mon: number; day: number },
-  timeDifference: hoursTypeInt = 9,
+  timeDifference: HoursTypeInt = 9,
 ) => {
   if (typeof birthdays === "string") {
     if (birthdays.includes(":")) {
