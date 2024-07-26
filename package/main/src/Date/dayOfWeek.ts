@@ -1,4 +1,4 @@
-import type { hoursTypeInt } from "$/clockType";
+import type { HoursTypeInt } from "$/clock/hoursTypeInt";
 import type { DayTypeInt } from "$/date/dayTypeInt";
 import type { MonTypeInt } from "$/date/monTypeInt";
 import { newDateInt } from "@/Date/new";
@@ -17,7 +17,7 @@ export const dayOfWeek = <T extends MonTypeInt>(
     mon?: T;
     day?: DayTypeInt<T>;
   },
-  timeDifference: hoursTypeInt = 9,
+  timeDifference: HoursTypeInt = 9,
 ) => {
   const nowTime = now(timeDifference);
   if (properties) {

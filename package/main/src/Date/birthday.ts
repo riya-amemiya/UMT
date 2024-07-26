@@ -1,4 +1,4 @@
-import type { hoursTypeInt } from "$/clockType";
+import type { HoursTypeInt } from "$/clock/hoursTypeInt";
 import type { DayTypeInt } from "$/date/dayTypeInt";
 import type { MonTypeInt } from "$/date/monTypeInt";
 import { newDateInt } from "@/Date/new";
@@ -15,7 +15,7 @@ export const birthday = <T extends MonTypeInt>(
   year: number,
   mon: T,
   day: DayTypeInt<T>,
-  timeDifference: hoursTypeInt = 9,
+  timeDifference: HoursTypeInt = 9,
 ) => {
   const birthdayDate = new Date(newDateInt(year, mon, day));
   const nowTime = now(timeDifference);

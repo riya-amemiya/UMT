@@ -1,5 +1,5 @@
 export * from "./array";
-export * from "./clockType";
+export * from "./clock";
 export * from "./date";
 export * from "./int";
 export * from "./joke";
