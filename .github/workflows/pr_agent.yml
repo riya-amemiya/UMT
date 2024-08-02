@@ -1,9 +1,13 @@
 on:
   pull_request:
-    types: [opened]
-  issue_comment:
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - ready_for_review
 jobs:
   pr_agent_job:
+    if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
     permissions:
       issues: write
