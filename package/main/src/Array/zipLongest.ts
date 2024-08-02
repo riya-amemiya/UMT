@@ -1,4 +1,4 @@
-import type { ZipArrayType } from "$/arrayType";
+import type { ZipArrayType } from "$/array/zip";
 
 /**
  * 異なる長さの配列を組み合わせて、最も長い配列の長さに合わせた配列を生成します。

@@ -1,14 +1,17 @@
-import type { hoursTypeInt } from "$/clockType";
-import type { dayType, dayTypeInt, monType, monTypeInt } from "$/dateType";
+import type { HoursTypeInt } from "$/clock/hoursTypeInt";
+import type { DayType } from "$/date/dayType";
+import type { DayTypeInt } from "$/date/dayTypeInt";
+import type { MonType } from "$/date/monType";
+import type { MonTypeInt } from "$/date/monTypeInt";
 import { birthday } from "@/Date/birthday";
-export type BIRTHDAYSIMPLE = <T extends monType>(
+export type BIRTHDAYSIMPLE = <T extends MonType>(
   birthdays:
     | Date
-    | `${number}-${T}-${dayType<T>}`
-    | `${number}:${T}:${dayType<T>}`
-    | `${number}/${T}/${dayType<T>}`
+    | `${number}-${T}-${DayType<T>}`
+    | `${number}:${T}:${DayType<T>}`
+    | `${number}/${T}/${DayType<T>}`
     | { year: number; mon: number; day: number },
-  timeDifference?: hoursTypeInt,
+  timeDifference?: HoursTypeInt,
 ) => number;
 /**
  * 年齢を取得する
@@ -21,51 +24,51 @@ export type BIRTHDAYSIMPLE = <T extends monType>(
  * birthdaySimple({ year: 2000, mon: 1, day: 1 });
  * birthdaySimple(new Date(2000, 0, 1));
  */
-export const birthdaySimple = (<T extends monType>(
+export const birthdaySimple = (<T extends MonType>(
   birthdays:
-    | `${number}-${T}-${dayType<T>}`
-    | `${number}:${T}:${dayType<T>}`
-    | `${number}/${T}/${dayType<T>}`
+    | `${number}-${T}-${DayType<T>}`
+    | `${number}:${T}:${DayType<T>}`
+    | `${number}/${T}/${DayType<T>}`
     | Date
     | { year: number; mon: number; day: number },
-  timeDifference: hoursTypeInt = 9,
+  timeDifference: HoursTypeInt = 9,
 ) => {
   if (typeof birthdays === "string") {
     if (birthdays.includes(":")) {
       const [year, mon, day] = birthdays.split(":").map(Number) as [
         number,
-        monTypeInt,
-        dayTypeInt<monTypeInt>,
+        MonTypeInt,
+        DayTypeInt<MonTypeInt>,
       ];
       return birthday(year, mon, day, timeDifference);
     }
     if (birthdays.includes("/")) {
       const [year, mon, day] = birthdays.split("/").map(Number) as [
         number,
-        monTypeInt,
-        dayTypeInt<monTypeInt>,
+        MonTypeInt,
+        DayTypeInt<MonTypeInt>,
       ];
       return birthday(year, mon, day, timeDifference);
     }
     const [year, mon, day] = birthdays.split("-").map(Number) as [
       number,
-      monTypeInt,
-      dayTypeInt<monTypeInt>,
+      MonTypeInt,
+      DayTypeInt<MonTypeInt>,
     ];
     return birthday(year, mon, day, timeDifference);
   }
   if (birthdays instanceof Date) {
     return birthday(
       birthdays.getFullYear(),
-      birthdays.getMonth() as monTypeInt,
-      birthdays.getDate() as dayTypeInt<monTypeInt>,
+      birthdays.getMonth() as MonTypeInt,
+      birthdays.getDate() as DayTypeInt<MonTypeInt>,
       timeDifference,
     );
   }
   return birthday(
     birthdays.year,
-    birthdays.mon as monTypeInt,
-    birthdays.day as dayTypeInt<monTypeInt>,
+    birthdays.mon as MonTypeInt,
+    birthdays.day as DayTypeInt<MonTypeInt>,
     timeDifference,
   );
 }) as BIRTHDAYSIMPLE;

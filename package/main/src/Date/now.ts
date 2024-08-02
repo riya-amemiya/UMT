@@ -1,4 +1,4 @@
-import type { hoursTypeInt } from "$/clockType";
+import type { HoursTypeInt } from "$/clock/hoursTypeInt";
 import { OneHourMs } from "@/Consts/clock";
 
 /**
@@ -7,6 +7,6 @@ import { OneHourMs } from "@/Consts/clock";
  * @returns {Date} 現在時刻
  * @example now(); // Date
  */
-export const now = (timeDifference: hoursTypeInt = 9): Date => {
+export const now = (timeDifference: HoursTypeInt = 9): Date => {
   return new Date(Date.now() + timeDifference * OneHourMs);
 };
