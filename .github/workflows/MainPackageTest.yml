@@ -11,7 +11,7 @@ on:
       - develop
       - feature/*
     paths:
-      - 'package/main/src/**'
+      - 'package/main/**'
   workflow_dispatch:
 permissions:
   pull-requests: write
