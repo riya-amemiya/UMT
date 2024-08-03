@@ -7,7 +7,11 @@ import { subtract } from "@/Math/subtract";
 
 /**
  * cmykをrgbaに変換する
- * @param cmyk
+ * @param {number} c
+ * @param {number} m
+ * @param {number} y
+ * @param {number} k
+ * @param {number} a
  * @returns { r: number; g: number; b: number; a: number; }
  * @example cmykToRgba(100, 100, 0, 60.78) // { r: 0, g: 0, b: 100, a: 1 }
  */

@@ -1,6 +1,6 @@
 /**
  * 最大値を返す
- * @param  {number[]} num
+ * @param {number[]} number_
  * @returns number
  * @example max(1, 2, 3); // 3
  */

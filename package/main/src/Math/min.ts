@@ -1,6 +1,6 @@
 /**
  * 最小値を返す
- * @param  {number[]} num
+ * @param {number[]} number_
  * @returns number
  * @example min(1, 2, 3); // 1
  */
