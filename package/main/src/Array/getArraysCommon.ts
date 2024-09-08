@@ -1,7 +1,7 @@
 /**
  * 共通の要素をとりだす
- * @param  {any[]} array
- * @param  {any[]} ...arrays
+ * @param  {T[]} array
+ * @param  {T[]} arrays
  * @returns unknown[]
  * @example getArraysCommon([1, 2, 3], [2, 3, 4]); // [2, 3]
  */

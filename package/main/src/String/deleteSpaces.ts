@@ -1,6 +1,6 @@
 /**
  * 文字列からスペースを削除する
- * @param char
+ * @param {string} string_
  * @returns string
  * @example deleteSpace("Hello World"); // "HelloWorld"
  */

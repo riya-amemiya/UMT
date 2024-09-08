@@ -1,6 +1,6 @@
 /**
  * Base64を文字列に変換する
- * @param char Base64
+ * @param {string} base64String - Base64文字列
  * @returns 文字列に変換されたBase64
  */
 export const fromBase64 = (base64String: string): string => {
