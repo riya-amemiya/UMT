@@ -1,5 +1,5 @@
 {
-	"$schema": "https://biomejs.dev/schemas/1.8.1/schema.json",
+	"$schema": "https://biomejs.dev/schemas/1.9.0/schema.json",
 	"files": {
 		"ignore": [
 			"node_modules",
@@ -56,11 +56,8 @@
 				"useHookAtTopLevel": "error"
 			},
 			"nursery": {
-				"noDoneCallback": "error",
 				"noDuplicateElseIf": "error",
-				"noDuplicateJsonKeys": "error",
-				"noEvolvingTypes": "error",
-				"noMisplacedAssertion": "error"
+				"noDuplicateJsonKeys": "error"
 			},
 			"recommended": true,
 			"style": {
@@ -81,11 +78,14 @@
 				},
 				"useShorthandArrayType": "error",
 				"useShorthandAssign": "error",
-				"useSingleCaseStatement": "error"
+				"useSingleCaseStatement": "error",
+				"noDoneCallback": "error"
 			},
 			"suspicious": {
 				"noEmptyBlockStatements": "error",
-				"noSkippedTests": "error"
+				"noSkippedTests": "error",
+				"noEvolvingTypes": "error",
+				"noMisplacedAssertion": "error"
 			}
 		}
 	},
