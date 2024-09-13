@@ -37,7 +37,9 @@
 		"enabled": true,
 		"ignore": [
 			"tests",
-			".dependency-cruiser.js"
+			".dependency-cruiser.js",
+			"eslint.config.mjs",
+			"jest.config.ts"
 		],
 		"rules": {
 			"a11y": {
@@ -45,6 +47,8 @@
 			},
 			"complexity": {
 				"noExcessiveCognitiveComplexity": "off",
+				"noUselessStringConcat": "error",
+				"noUselessUndefinedInitialization": "error",
 				"noVoid": "error",
 				"useDateNow": "error",
 				"useSimplifiedLogicExpression": "error"
@@ -54,26 +58,44 @@
 				"noInvalidNewBuiltin": "error",
 				"noNewSymbol": "error",
 				"noNodejsModules": "error",
-				"noUnusedFunctionParameters": "error",
 				"noUndeclaredVariables": "warn",
-				"noUnusedVariables": "warn",
+				"noUnusedFunctionParameters": "error",
 				"noUnusedImports": "error",
 				"noUnusedPrivateClassMembers": "error",
+				"noUnusedVariables": "warn",
 				"useExhaustiveDependencies": "warn",
 				"useHookAtTopLevel": "error"
 			},
 			"nursery": {
-				"noDuplicateElseIf": "error"
+				"noDuplicateElseIf": "error",
+				"noDynamicNamespaceImportAccess": "error",
+				"noEnum": "error",
+				"noExportedImports": "error",
+				"noIrregularWhitespace": "error",
+				"noSubstr": "error",
+				"noUselessEscapeInRegex": "error",
+				"useAdjacentOverloadSignatures": "error",
+				"useTrimStartEnd": "error"
 			},
 			"recommended": true,
 			"style": {
+				"noDefaultExport": "error",
+				"noDoneCallback": "error",
 				"noImplicitBoolean": "warn",
+				"noNamespace": "error",
 				"noNamespaceImport": "error",
 				"noNegationElse": "error",
-				"noParameterAssign": "off",
+				"noParameterAssign": "warn",
 				"noParameterProperties": "off",
 				"noShoutyConstants": "warn",
+				"noYodaExpression": "error",
 				"useBlockStatements": "error",
+				"useCollapsedElseIf": "error",
+				"useConsistentArrayType": "error",
+				"useConsistentBuiltinInstantiation": "error",
+				"useDefaultSwitchClause": "error",
+				"useExplicitLengthCheck": "error",
+				"useForOf": "error",
 				"useFragmentSyntax": "error",
 				"useNamingConvention": {
 					"level": "off",
@@ -82,16 +104,20 @@
 						"strictCase": true
 					}
 				},
+				"useNodeAssertStrict": "error",
 				"useShorthandArrayType": "error",
 				"useShorthandAssign": "error",
 				"useSingleCaseStatement": "error",
-				"noDoneCallback": "error"
+				"useThrowNewError": "error",
+				"useThrowOnlyError": "error"
 			},
 			"suspicious": {
 				"noEmptyBlockStatements": "error",
-				"noSkippedTests": "error",
 				"noEvolvingTypes": "error",
-				"noMisplacedAssertion": "error"
+				"noMisplacedAssertion": "error",
+				"noSkippedTests": "error",
+				"useErrorMessage": "error",
+				"useNumberToFixedDigitsArgument": "error"
 			}
 		}
 	},

@@ -53,6 +53,9 @@ export const rgbaToHsla = ({
         h = addition(division(subtract(rPrime, gPrime), diff), 4);
         break;
       }
+      default: {
+        break;
+      }
     }
     h = multiplication(h, 60);
   }
