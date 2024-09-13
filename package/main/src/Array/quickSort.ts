@@ -12,18 +12,22 @@ const medianOfThree = <T>(
   const ab = compareFunction(array[a], array[b]);
   if (ab < 0) {
     const bc = compareFunction(array[b], array[c]);
-    return bc < 0
-      ? array[b]
-      : compareFunction(array[a], array[c]) < 0
-        ? array[c]
-        : array[a];
+    if (bc < 0) {
+      return array[b];
+    }
+    if (compareFunction(array[a], array[c]) < 0) {
+      return array[c];
+    }
+    return array[a];
   }
   const ac = compareFunction(array[a], array[c]);
-  return ac < 0
-    ? array[a]
-    : compareFunction(array[b], array[c]) < 0
-      ? array[c]
-      : array[b];
+  if (ac < 0) {
+    return array[a];
+  }
+  if (compareFunction(array[b], array[c]) < 0) {
+    return array[c];
+  }
+  return array[b];
 };
 
 const partition = <T>(

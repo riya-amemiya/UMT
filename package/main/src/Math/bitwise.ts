@@ -15,7 +15,7 @@ export const bitwise = (
   k: number,
   direction: "left" | "right" = "left",
 ): number => {
-  const rotation = k % 32;
+  const rotation = ((k % 32) + 32) % 32;
   switch (direction) {
     case "left": {
       return (x << rotation) | (x >>> (32 - rotation));

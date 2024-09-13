@@ -6,7 +6,7 @@
  */
 export const factorize = (n: number): number[] => {
   const result: number[] = [];
-  let remaining = n;
+  let remaining = Math.abs(n);
 
   for (let factor = 2; factor * factor <= remaining; factor++) {
     while (remaining % factor === 0) {
