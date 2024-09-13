@@ -6,11 +6,18 @@
  */
 export const factorize = (n: number): number[] => {
   const result: number[] = [];
-  for (let index = 2; index <= n; index++) {
-    while (n % index === 0) {
-      result.push(index);
-      n /= index;
+  let remaining = Math.abs(n);
+
+  for (let factor = 2; factor * factor <= remaining; factor++) {
+    while (remaining % factor === 0) {
+      result.push(factor);
+      remaining /= factor;
     }
   }
+
+  if (remaining > 1) {
+    result.push(remaining);
+  }
+
   return result;
 };

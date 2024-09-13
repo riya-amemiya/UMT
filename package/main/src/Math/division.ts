@@ -24,14 +24,17 @@ export const division = <T extends boolean = true>(
     decimalLengthX === decimalLengthY
       ? 1
       : 10 ** (decimalLengthY - decimalLengthX);
-  x = +`${Math.abs(x)}`.replace(".", "");
-  y = +`${Math.abs(y)}`.replace(".", "");
+  const absX = +`${Math.abs(x)}`.replace(".", "");
+  const absY = +`${Math.abs(y)}`.replace(".", "");
   return (
     isFloor
-      ? sign * (x > y ? x / y / n : (x / y) * n) // 結果に符号を適用
+      ? sign * (absX > absY ? absX / absY / n : (absX / absY) * n) // 結果に符号を適用
       : [
-          sign * (x > y ? (x - (x % y)) / y / n : ((x - (x % y)) / y) * n),
-          x % y,
+          sign *
+            (absX > absY
+              ? (absX - (absX % absY)) / absY / n
+              : ((absX - (absX % absY)) / absY) * n),
+          absX % absY,
         ]
   ) as T extends true ? number : number[]; // 結果に符号を適用
 };

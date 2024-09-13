@@ -37,6 +37,7 @@ export const rgbaToHsla = ({
       : division(diff, subtract(1, Math.abs(subtract(addition(max, min), 1))));
 
   if (diff !== 0) {
+    // biome-ignore lint/style/useDefaultSwitchClause: <explanation>
     switch (max) {
       case rPrime: {
         h = addition(
