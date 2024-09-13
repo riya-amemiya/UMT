@@ -46,18 +46,24 @@
 			"complexity": {
 				"noExcessiveCognitiveComplexity": "off",
 				"noVoid": "error",
+				"useDateNow": "error",
 				"useSimplifiedLogicExpression": "error"
 			},
 			"correctness": {
 				"noConstantMathMinMaxClamp": "error",
+				"noInvalidNewBuiltin": "error",
+				"noNewSymbol": "error",
+				"noNodejsModules": "error",
+				"noUnusedFunctionParameters": "error",
 				"noUndeclaredVariables": "warn",
 				"noUnusedVariables": "warn",
+				"noUnusedImports": "error",
+				"noUnusedPrivateClassMembers": "error",
 				"useExhaustiveDependencies": "warn",
 				"useHookAtTopLevel": "error"
 			},
 			"nursery": {
-				"noDuplicateElseIf": "error",
-				"noDuplicateJsonKeys": "error"
+				"noDuplicateElseIf": "error"
 			},
 			"recommended": true,
 			"style": {
