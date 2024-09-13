@@ -16,11 +16,17 @@ export const quickSortSimple = <T>(
   startID = 0,
   endID: number = array.length - 1,
 ): T[] => {
-  if (startID < 0 || startID >= array.length || startID > endID) {
-    startID = 0;
+  let localStartID = startID;
+  let localEndID = endID;
+  if (
+    localStartID < 0 ||
+    localStartID >= array.length ||
+    localStartID > localEndID
+  ) {
+    localStartID = 0;
   }
-  if (endID < 0 || endID >= array.length) {
-    endID = array.length - 1;
+  if (localEndID < 0 || localEndID >= array.length) {
+    localEndID = array.length - 1;
   }
-  return quickSort(array, compareFunction, startID, endID);
+  return quickSort(array, compareFunction, localStartID, localEndID);
 };

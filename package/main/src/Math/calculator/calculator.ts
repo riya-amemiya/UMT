@@ -5,18 +5,17 @@ import { literalExpression } from "./literalExpression";
  * 電卓
  * ()や符号に対応
  * 一文字までの方程式に対応
- * @param  {string} x
+ * @param  {string} expression 計算式または方程式
  * @param  {object} exchange 為替
  * @returns 計算結果
  * @example calculator("1+2"); // 3
  */
-export const calculator = <T extends { [key: string]: string | number }>(
-  x: string,
+export const calculator = <T extends Record<string, string | number>>(
+  expression: string,
   exchange?: T,
 ) => {
-  x = x.replaceAll(/\s+/g, "");
-  if (x.includes("=")) {
-    return literalExpression(x);
-  }
-  return calculatorCore(x, exchange);
+  const cleanExpression = expression.replaceAll(/\s+/g, "");
+  return cleanExpression.includes("=")
+    ? literalExpression(cleanExpression)
+    : calculatorCore(cleanExpression, exchange);
 };

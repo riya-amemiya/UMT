@@ -1,30 +1,24 @@
-import { isDouble } from "@/Validate/isDouble";
 import { isNumber } from "@/Validate/isNumber";
+
 /**
  * 最大値の位で区切ります。
- * @param  {string|number} number
- * @returns string
+ * @param  {string|number} input
+ * @returns [number, number]
  * @example mathSeparator(1250); // [1000, 250]
  */
-export const mathSeparator = (number: string | number): [number, number] => {
-  let decimalPart = 0;
-
-  if (!isNumber(number)) {
+export const mathSeparator = (input: string | number): [number, number] => {
+  if (!isNumber(input)) {
     return [0, 0];
   }
 
-  if (isDouble(number)) {
-    const [integerPart, fractionalPart] = String(number).split(".");
-    decimalPart = Number(`0.${fractionalPart}`);
-    number = integerPart;
-  }
+  const [integerPart, fractionalPart] = String(input).split(".");
+  const decimalPart = fractionalPart ? Number(`0.${fractionalPart}`) : 0;
 
-  const numberString = String(number);
-  const numberOfDigits = numberString.length - 1;
-  const numericalValue = Number(numberString);
+  const numberOfDigits = integerPart.length - 1;
+  const numericalValue = Number(integerPart);
 
   if (numberOfDigits === 0) {
-    return [numericalValue, 0];
+    return [numericalValue, decimalPart];
   }
 
   const primary = 10 ** numberOfDigits;

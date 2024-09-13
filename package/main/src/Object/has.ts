@@ -11,12 +11,9 @@ export const has = <T extends { [key: string]: unknown }>(
   object: T,
   path: string | string[],
 ): boolean => {
-  if (typeof path === "string") {
-    path = path.split(".");
-  }
-
+  const localPath = typeof path === "string" ? path.split(".") : path;
   let current = { ...object };
-  for (const key of path) {
+  for (const key of localPath) {
     if (
       current == null ||
       !Object.prototype.hasOwnProperty.call(current, key)
