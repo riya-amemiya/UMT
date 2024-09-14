@@ -24,7 +24,7 @@ export * from "./binaryToHex";
 export * from "./binaryXnor";
 export * from "./binaryXor";
 export * from "./capitalize";
-export * from "./decimal1biteTobinary";
+export * from "./decimal1byteTobinary";
 export * from "./decimal4bitTobinary";
 export * from "./decimal4bitToHex";
 export * from "./equal";

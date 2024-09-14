@@ -1,5 +1,5 @@
 // 1bitの2進数を10進数に変換する型
-export type Decimal1biteTobinary<X extends string> = X extends "0"
+export type Decimal1byteTobinary<X extends string> = X extends "0"
   ? "00000000"
   : X extends "1"
     ? "00000001"
