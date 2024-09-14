@@ -41,6 +41,15 @@ export default [
       "@typescript-eslint/no-explicit-any": "off",
       "no-constant-condition": "off",
       "@typescript-eslint/no-unused-vars": "off",
+      "unicorn/filename-case": [
+        "error",
+        {
+          cases: {
+            camelCase: true,
+            pascalCase: true,
+          },
+        },
+      ],
       "unicorn/no-null": "off",
       "unicorn/prefer-spread": "off",
       "unicorn/no-array-reduce": "off",
