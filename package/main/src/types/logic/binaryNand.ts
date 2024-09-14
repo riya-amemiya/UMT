@@ -1,10 +1,10 @@
-// 2進数のNot XORを求める型
-export type BinaryXNOR<
+// 2進数のNot ANDを求める型
+export type BinaryNand<
   X extends `${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}`,
   Y extends `${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}`,
-> = BinaryXNORParser<X, Y>;
+> = BinaryNandParser<X, Y>;
 
-export type BinaryXNORParser<
+export type BinaryNandParser<
   X extends string,
   Y extends string,
   A extends string = "",
@@ -12,10 +12,8 @@ export type BinaryXNORParser<
   ? Y extends `${infer F2}${infer R2}`
     ? F extends "1"
       ? F2 extends "1"
-        ? BinaryXNORParser<R, R2, `${A}1`>
-        : BinaryXNORParser<R, R2, `${A}0`>
-      : F2 extends "1"
-        ? BinaryXNORParser<R, R2, `${A}0`>
-        : BinaryXNORParser<R, R2, `${A}1`>
+        ? BinaryNandParser<R, R2, `${A}0`>
+        : BinaryNandParser<R, R2, `${A}1`>
+      : BinaryNandParser<R, R2, `${A}1`>
     : A
   : A;

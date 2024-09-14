@@ -1,10 +1,10 @@
-// 2進数のXORを求める型
-export type BinaryXOR<
+// 2進数のANDを求める型
+export type BinaryAnd<
   X extends `${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}`,
   Y extends `${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}`,
-> = BinaryXORParser<X, Y>;
+> = BinaryAndParser<X, Y>;
 
-export type BinaryXORParser<
+export type BinaryAndParser<
   X extends string,
   Y extends string,
   A extends string = "",
@@ -12,10 +12,8 @@ export type BinaryXORParser<
   ? Y extends `${infer F2}${infer R2}`
     ? F extends "1"
       ? F2 extends "1"
-        ? BinaryXORParser<R, R2, `${A}0`>
-        : BinaryXORParser<R, R2, `${A}1`>
-      : F2 extends "1"
-        ? BinaryXORParser<R, R2, `${A}1`>
-        : BinaryXORParser<R, R2, `${A}0`>
+        ? BinaryAndParser<R, R2, `${A}1`>
+        : BinaryAndParser<R, R2, `${A}0`>
+      : BinaryAndParser<R, R2, `${A}0`>
     : A
   : A;

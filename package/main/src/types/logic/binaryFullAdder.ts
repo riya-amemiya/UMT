@@ -1,4 +1,4 @@
-import type { Binary1bitORParser } from "./binary1bitOR";
+import type { Binary1bitOrParser } from "./binary1bitOr";
 import type { BinaryHalfAdderParser } from "./binaryHalfAdder";
 import type { FirstNChars } from "./firstNChars";
 import type { LengthOfString } from "./lengthOfString";
@@ -34,7 +34,7 @@ type BinaryFullAdderParser<
   ? Y extends `${infer F2}${infer R2}`
     ? BinaryHalfAdderParser<F, F2> extends `${infer F3}${infer R3}`
       ? BinaryHalfAdderParser<R3, C> extends `${infer F4}${infer R4}`
-        ? BinaryFullAdderParser<R, R2, `${A}${R4}`, Binary1bitORParser<F3, F4>>
+        ? BinaryFullAdderParser<R, R2, `${A}${R4}`, Binary1bitOrParser<F3, F4>>
         : never
       : never
     : never

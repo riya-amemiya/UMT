@@ -1,5 +1,5 @@
-import type { Binary1bitANDParser } from "./binary1bitAND";
-import type { Binary1bitXORParser } from "./binary1bitXOR";
+import type { Binary1bitAndParser } from "./binary1bitAnd";
+import type { Binary1bitXorParser } from "./binary1bitXor";
 
 // 半加算器
 export type BinaryHalfAdder<
@@ -12,5 +12,5 @@ export type BinaryHalfAdderParser<
   Y extends string,
   C extends string = "",
 > = C extends ""
-  ? BinaryHalfAdderParser<X, Y, Binary1bitANDParser<X, Y>>
-  : `${C}${Binary1bitXORParser<X, Y>}`;
+  ? BinaryHalfAdderParser<X, Y, Binary1bitAndParser<X, Y>>
+  : `${C}${Binary1bitXorParser<X, Y>}`;

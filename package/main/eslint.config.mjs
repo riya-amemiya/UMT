@@ -57,7 +57,6 @@ export default [
       "unicorn/prefer-number-properties": "off",
       "unicorn/no-nested-ternary": "off",
       "unicorn/number-literal-case": "off",
-      "unicorn/filename-case": "off",
       "import/order": [
         "error",
         {
