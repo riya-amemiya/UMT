@@ -1,6 +1,6 @@
 import type { ChunkArrayType } from "$/array/chunk"; /**
  * 配列を指定した数で分割する
- * @param {T} arrary 配列
+ * @param {T} array 配列
  * @param {N} n 分割数
  * @returns 分割された配列
  * @example chunk([1, 2, 3, 4, 5, 6, 7, 8, 9], 3); // [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
