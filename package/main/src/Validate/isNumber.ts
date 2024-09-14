@@ -1,6 +1,6 @@
 /**
  * 数字を表すかどうかを判定する
- * @param  {unknown} x
+ * @param  {unknown} number
  * @param  {boolean} loose 文字列も対象にするかどうか (default: true)
  * @returns boolean
  * @example isNumber(0.1); // true

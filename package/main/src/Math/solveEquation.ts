@@ -5,7 +5,8 @@ import { roundOf } from "./roundOf";
 import { subtract } from "./subtract";
 /**
  * 連立一次方程式を解く
- * @param {Equation} equation - 連立一次方程式
+ * @param {number[][]} coefficients - 係数
+ * @param {number[]} constants - 定数
  * @returns {number[]} 解
  * @example
  * // x + y = 4

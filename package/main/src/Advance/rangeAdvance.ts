@@ -16,7 +16,9 @@ const rangeAdvance = (
   if (conditionalExpression) {
     const array: number[] = [];
     for (let index = start; index < (end as number); index++) {
-      conditionalExpression(index) && array.push(index);
+      if (conditionalExpression(index)) {
+        array.push(index);
+      }
     }
     return array;
   }

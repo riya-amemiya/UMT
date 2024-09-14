@@ -1,6 +1,6 @@
 /**
  * objectが空かどうかを確認する
- * @param obj
+ * @param {object} object - 空かどうかを確認するobject
  * @returns {boolean} true: 空でない, false: 空
  * @example isNotEmpty({}); // false
  * isNotEmpty({ a: 1 }); // true

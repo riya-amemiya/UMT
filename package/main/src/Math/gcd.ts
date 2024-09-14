@@ -2,7 +2,7 @@
  * 最大公約数
  * @param  {number} x
  * @param  {number} y
- * @param  {number} ...z
+ * @param  {number[]} z
  * @returns number
  * @example gcd(12, 18); // 6
  */

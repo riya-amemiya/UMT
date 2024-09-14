@@ -2,7 +2,7 @@
 	"compilerOptions": {
 		"allowJs": true,
 		"allowSyntheticDefaultImports": true,
-		"baseUrl": "./",
+		"baseUrl": "./src",
 		"declaration": true,
 		"declarationMap": false,
 		"emitDecoratorMetadata": true,
@@ -30,10 +30,10 @@
 		"outDir": "./module",
 		"paths": {
 			"$/*": [
-				"./src/types/*"
+				"./types/*"
 			],
 			"@/*": [
-				"./src/*"
+				"./*"
 			]
 		},
 		"preserveSymlinks": true,
@@ -50,6 +50,5 @@
 	"include": [
 		"src",
 		"types",
-		"src/Simple/Math/.is_file().ts"
 	]
 }

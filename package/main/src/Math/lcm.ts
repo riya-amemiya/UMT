@@ -13,6 +13,6 @@ export const lcm = (x: number, y: number) => {
   if (x === 0 || y === 0) {
     return 0;
   }
-  [x, y] = valueSwap(x, y);
-  return multiplication(division(x, gcd(x, y)), y);
+  const [newX, newY] = valueSwap(x, y);
+  return multiplication(division(newX, gcd(newX, newY)), newY);
 };

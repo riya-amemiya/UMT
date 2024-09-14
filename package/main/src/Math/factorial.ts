@@ -5,13 +5,12 @@
  * @example factorial(5); // 120
  */
 export const factorial = (x: number): number => {
+  const limit = Math.max(1, x);
   let result = 1;
 
-  if (x !== 0) {
-    while (x > 1) {
-      result *= x;
-      x--;
-    }
+  for (let index = 2; index <= limit; index++) {
+    result *= index;
   }
+
   return result;
 };

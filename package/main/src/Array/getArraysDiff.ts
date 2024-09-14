@@ -1,7 +1,7 @@
 /**
  * 共通しない要素をとりだす
- * @param  {unknown[]} array
- * @param  {unknown[]} ...arrays
+ * @param  {T[]} array
+ * @param  {T[]} arrays
  * @returns unknown[]
  * @example getArraysDiff([1, 2, 3], [2, 3, 4]); // [1, 4]
  */

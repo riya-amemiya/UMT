@@ -9,6 +9,7 @@ export * from "./getArraysDiff";
 export * from "./groupBy";
 export * from "./insertionSort";
 export * from "./mergeSort";
+export * from "./pop";
 export * from "./quickSort";
 export * from "./randomSelect";
 export * from "./range";

@@ -1,14 +1,15 @@
-import type {
-  hoursType,
-  hoursTypeInt,
-  millisecondsType,
-  millisecondsTypeInt,
-  minutesType,
-  minutesTypeInt,
-  secondsType,
-  secondsTypeInt,
-} from "$/clockType";
-import type { dayType, dayTypeInt, monTypeInt, monTypeZero } from "$/dateType";
+import type { HoursType } from "$/clock/hoursType";
+import type { HoursTypeInt } from "$/clock/hoursTypeInt";
+import type { MillisecondsType } from "$/clock/millisecondsType";
+import type { MillisecondsTypeInt } from "$/clock/millisecondsTypeInt";
+import type { MinutesType } from "$/clock/minutesType";
+import type { MinutesTypeInt } from "$/clock/minutesTypeInt";
+import type { SecondsType } from "$/clock/secondsType";
+import type { SecondsTypeInt } from "$/clock/secondsTypeInt";
+import type { DayType } from "$/date/dayType";
+import type { DayTypeInt } from "$/date/dayTypeInt";
+import type { MonTypeInt } from "$/date/monTypeInt";
+import type { MonTypeZero } from "$/date/monTypeZero";
 
 /**
  * 日付を生成する
@@ -22,14 +23,14 @@ import type { dayType, dayTypeInt, monTypeInt, monTypeZero } from "$/dateType";
  * @returns Date
  * @example newDateInt(2021, 1, 1); // 2021-01-01T00:00:00.000Z
  */
-export const newDateInt = <T extends monTypeInt>(
+export const newDateInt = <T extends MonTypeInt>(
   year: number,
   mon: T,
-  day: dayTypeInt<T>,
-  hours: hoursTypeInt = (-new Date().getTimezoneOffset() / 60) as hoursTypeInt,
-  minutes: minutesTypeInt = 0,
-  seconds: secondsTypeInt = 0,
-  milliseconds: millisecondsTypeInt = 0,
+  day: DayTypeInt<T>,
+  hours: HoursTypeInt = (-new Date().getTimezoneOffset() / 60) as HoursTypeInt,
+  minutes: MinutesTypeInt = 0,
+  seconds: SecondsTypeInt = 0,
+  milliseconds: MillisecondsTypeInt = 0,
 ): Date => {
   const date = new Date(
     year,
@@ -54,13 +55,13 @@ export const newDateInt = <T extends monTypeInt>(
  * @returns Date
  * @example newDateString("2021-01-01"); // 2021-01-01T00:00:00.000Z
  */
-export const newDateString = <T extends monTypeZero>(
-  date: `${number}-${T}-${dayType<T>}`,
-  hours: hoursType = "00",
-  minutes: minutesType = "00",
-  seconds: secondsType = "00",
-  miliSeconds: millisecondsType = "000",
-  timeDifference: hoursType = "00",
+export const newDateString = <T extends MonTypeZero>(
+  date: `${number}-${T}-${DayType<T>}`,
+  hours: HoursType = "00",
+  minutes: MinutesType = "00",
+  seconds: SecondsType = "00",
+  miliSeconds: MillisecondsType = "000",
+  timeDifference: HoursType = "00",
 ): Date => {
   return new Date(
     `${date}T${hours}:${minutes}:${seconds}.${miliSeconds}+${timeDifference}:00`,
