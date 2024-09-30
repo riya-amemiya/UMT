@@ -14,7 +14,7 @@ describe("Integration test for 'parseJson' and 'Validate' functions", () => {
     expect(isValid).toEqual(true);
   });
 
-  it("should parse JSON string with number values", () => {
+  it("should parse JSON string with boolean values", () => {
     const jsonString = '{"key": true}';
     const schema = object({
       key: boolean(),
