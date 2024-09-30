@@ -3,8 +3,8 @@ import { boolean } from "@/Validate/boolean";
 import { number } from "@/Validate/number";
 import { object } from "@/Validate/object";
 
-describe("parseJson", () => {
-  it("should parse JSON string with numbers", () => {
+describe("Integration test for 'parseJson' and 'Validate' functions", () => {
+  it("should parse JSON string with number values", () => {
     const jsonString = '{"key": 123}';
     const schema = object({
       key: number(),
@@ -14,7 +14,7 @@ describe("parseJson", () => {
     expect(isValid).toEqual(true);
   });
 
-  it("should parse JSON string with boolean values", () => {
+  it("should parse JSON string with number values", () => {
     const jsonString = '{"key": true}';
     const schema = object({
       key: boolean(),
