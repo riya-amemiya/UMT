@@ -1,8 +1,8 @@
-import type { SimplifiedUserAgentInfo } from "$/ua/simplifiedUserAgentInfo";
+import type { SimplifiedUserAgentInfoDevice } from "$/ua/simplifiedUserAgentInfoDevice";
 
 export const extractDeviceFromUserAgent = (
   ua: string,
-): SimplifiedUserAgentInfo["device"] => {
+): SimplifiedUserAgentInfoDevice => {
   if (/bot|googlebot|crawler|spider|robot|crawling/i.test(ua)) {
     return "bot";
   }
