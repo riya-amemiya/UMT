@@ -1,2 +1,2 @@
 export * from "./createPipeline";
-export * from "./json";
+export * from "./parseJson";
