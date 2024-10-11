@@ -1,6 +1,7 @@
 export * from "./arraysJoin";
 export * from "./checkFlagAlignment";
 export * from "./chunk";
+export * from "./compact";
 export * from "./drop";
 export * from "./first";
 export * from "./generateNumberArray";
