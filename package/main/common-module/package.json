@@ -5,6 +5,10 @@
   },
   "description": "個人的に作った便利関数集 個人用途なので破壊的変更がある可能性があります。 Main Packageに依存関係はありません。 JavaScriptからの呼び出しに対応しています。",
   "devDependencies": {
+    "@babel/cli": "^7.25.7",
+    "@babel/core": "^7.25.8",
+    "@babel/preset-env": "^7.25.8",
+    "@babel/preset-typescript": "^7.25.7",
     "@biomejs/biome": "1.9.3",
     "@swc/core": "^1.7.26",
     "@swc/jest": "^0.2.36",
@@ -23,7 +27,7 @@
     "ts-node": "^10.9.2",
     "tsc-alias": "^1.8.10",
     "typedoc": "^0.26.7",
-    "typescript": "^5.6.2"
+    "typescript": "^5.7.0-dev.20241008"
   },
   "directories": {
     "doc": "doc",
@@ -46,9 +50,11 @@
   },
   "scripts": {
     "build": "tsc && tsc-alias -p tsconfig.json",
-    "build:clean": "rm -rf module && yarn build",
     "build:cjs": "tsc -p tsconfig.cjs.json && node cjs.build.mjs && cp LICENSE common-module/LICENSE && cp README.md common-module/README.md",
-    "build:full": "yarn build && yarn build:cjs",
+    "build:babel": "babel src --extensions '.ts' --out-dir module/es5 && tsc --emitDeclarationOnly --outDir module/es5",
+    "build:cjs:babel": "babel src --extensions '.ts' --out-dir common-module/module/es5 && tsc --emitDeclarationOnly --outDir common-module/module/es5",
+    "build:full": "yarn build && yarn build:cjs && yarn build:babel && yarn build:cjs:babel",
+    "build:clean": "rm -rf module && yarn build",
     "build:clean:full": "rm -rf module && rm -rf common-module && yarn build:full",
     "clean-build": "rm -rf module && yarn build",
     "deploy": "yarn typedoc && gh-pages -d doc",
