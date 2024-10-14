@@ -1,6 +1,5 @@
-// chunkArray.test.ts
-
 import { chunk } from "@/Array/chunk";
+import _ from "lodash";
 
 describe("chunkArray function", () => {
   it("splits an array into chunks of size n", () => {
@@ -13,6 +12,8 @@ describe("chunkArray function", () => {
     ];
     const output = chunk(input, n);
     expect(output).toEqual(expected);
+    const lodashOutput = _.chunk(input, n);
+    expect(lodashOutput).toEqual(expected);
   });
 
   it("handles empty arrays", () => {
@@ -21,6 +22,8 @@ describe("chunkArray function", () => {
     const expected: number[][] = [];
     const output = chunk(input, n);
     expect(output).toEqual(expected);
+    const lodashOutput = _.chunk(input, n);
+    expect(lodashOutput).toEqual(expected);
   });
 
   it("handles n larger than array length", () => {
@@ -29,6 +32,8 @@ describe("chunkArray function", () => {
     const expected = [[0, 1, 2]];
     const output = chunk(input, n);
     expect(output).toEqual(expected);
+    const lodashOutput = _.chunk(input, n);
+    expect(lodashOutput).toEqual(expected);
   });
 
   it("type checks", () => {
@@ -40,7 +45,17 @@ describe("chunkArray function", () => {
       [3, 4, 5],
       [6, 7],
     ];
-
     expect(output).toEqual(expected);
+    const lodashOutput = _.chunk(input, n);
+    expect(lodashOutput).toEqual(expected);
+  });
+
+  it("does not mutate the input array", () => {
+    const input = [0, 1, 2, 3, 4, 5, 6, 7];
+    const n = 3;
+    chunk(input, n);
+    expect(input).toEqual([0, 1, 2, 3, 4, 5, 6, 7]);
+    _.chunk(input, n);
+    expect(input).toEqual([0, 1, 2, 3, 4, 5, 6, 7]);
   });
 });
