@@ -34,7 +34,7 @@ jobs:
                   bun-version: ${{ matrix.bun-version }}
             - name: Cache Restore devDependencies
               id: cache-restore-dev-depends
-              uses: actions/cache/restore@v3
+              uses: actions/cache/restore@v4
               with:
                   path: '**/node_modules'
                   key: dev-depends-${{ matrix.os }}-bun${{ matrix.bun-version }}-${{ hashFiles('package/main/package.json') }}
@@ -67,7 +67,7 @@ jobs:
                   bun-version: ${{ matrix.bun-version }}
             - name: Cache Restore devDependencies
               id: cache-restore-dev-depends
-              uses: actions/cache/restore@v3
+              uses: actions/cache/restore@v4
               with:
                   path: '**/node_modules'
                   key: dev-depends-${{ matrix.os }}-bun${{ matrix.bun-version }}-${{ hashFiles('package/main/package.json') }}
@@ -93,11 +93,11 @@ jobs:
                   bun-version: ${{ matrix.bun-version }}
             - name: Cache Restore devDependencies
               id: cache-restore-dev-depends
-              uses: actions/cache/restore@v3
+              uses: actions/cache/restore@v4
               with:
                   path: '**/node_modules'
                   key: dev-depends-${{ matrix.os }}-bun${{ matrix.bun-version }}-${{ hashFiles('package/main/package.json') }}
-            - uses: actions/cache/restore@v3
+            - uses: actions/cache/restore@v4
               id: cache-restore-prod
               with:
                   enableCrossOsArchive: true
@@ -133,14 +133,14 @@ jobs:
               with:
                 bun-version: ${{ matrix.bun-version }}
             - name: Cache Restore productionDependencies
-              uses: actions/cache/restore@v3
+              uses: actions/cache/restore@v4
               with:
                   path: '**/node_modules'
                   key: dev-depends-${{ matrix.os }}-bun${{ matrix.bun-version }}-${{ hashFiles('package/main/package.json') }}
             - name: Run Test
               run: bun run test --coverage
             - name: Upload coverage reports to Codecov
-              uses: codecov/codecov-action@v4.0.1
+              uses: codecov/codecov-action@v4
               with:
                 token: ${{ secrets.CODECOV_TOKEN }}
                 slug: riya-amemiya/UMT
