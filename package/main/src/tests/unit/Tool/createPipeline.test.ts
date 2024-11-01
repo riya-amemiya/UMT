@@ -85,4 +85,71 @@ describe("createPipeline", () => {
       { id: 2, name: "Jane Smith", age: 25 },
     ]);
   });
+
+  it("initialValueがnullの場合も正しく動作する", () => {
+    const pipeline = createPipeline(null);
+    expect(pipeline()).toBeNull();
+  });
+
+  it("initialValueがundefinedの場合も正しく動作する", () => {
+    const pipeline = createPipeline(undefined);
+    expect(pipeline()).toBeUndefined();
+  });
+
+  it("空文字列を正しく処理できる", () => {
+    const pipeline = createPipeline("");
+    const result = pipeline((x) => x + "test")((x) => x.toUpperCase())();
+    expect(result).toBe("TEST");
+  });
+
+  it("数値の0を正しく処理できる", () => {
+    const pipeline = createPipeline(0);
+    const result = pipeline((x) => x + 1)((x) => x * 2)();
+    expect(result).toBe(2);
+  });
+
+  it("真偽値の変換を正しく処理できる", () => {
+    const pipeline = createPipeline(true);
+    const result = pipeline((x) => !x)((x) => x.toString())();
+    expect(result).toBe("false");
+  });
+
+  it("配列の変換を正しく処理できる", () => {
+    const pipeline = createPipeline([1, 2, 3, 4, 5]);
+    const result = pipeline((arr) => arr.filter((x) => x % 2 === 0))((arr) =>
+      arr.map((x) => x * 2),
+    )();
+    expect(result).toEqual([4, 8]);
+  });
+
+  it("オブジェクトの複雑な変換を正しく処理できる", () => {
+    interface Data {
+      count: number;
+      items: string[];
+    }
+
+    const initial: Data = { count: 0, items: [] };
+    const pipeline = createPipeline(initial);
+
+    const result = pipeline((data) => ({ ...data, count: data.count + 1 }))(
+      (data) => ({
+        ...data,
+        items: [...data.items, `Item ${data.count}`],
+      }),
+    )();
+
+    expect(result).toEqual({
+      count: 1,
+      items: ["Item 1"],
+    });
+  });
+
+  it("複数の型変換を連鎖的に処理できる", () => {
+    const pipeline = createPipeline(123);
+    const result = pipeline((x: number) => x.toString())((x: string) =>
+      x.split(""),
+    )((arr: string[]) => arr.map(Number))();
+
+    expect(result).toEqual([1, 2, 3]);
+  });
 });
