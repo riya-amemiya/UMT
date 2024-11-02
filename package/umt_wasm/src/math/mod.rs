@@ -12,6 +12,8 @@ pub mod gcd;
 pub use gcd::*;
 pub mod get_decimal_length;
 pub use get_decimal_length::*;
+pub mod lcm;
+pub use lcm::*;
 pub mod ncr;
 pub use ncr::*;
 pub mod npr;
