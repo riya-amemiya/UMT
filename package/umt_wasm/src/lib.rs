@@ -57,6 +57,16 @@ pub fn lcm(a: i64, b: i64) -> i64 {
 }
 
 #[wasm_bindgen]
+pub fn linear_congruential_generator(
+    seed: i32,
+    max: Option<i32>,
+    multiplier: Option<i32>,
+    increment: Option<i32>,
+) -> i32 {
+    umt_linear_congruential_generator(seed, max, multiplier, increment)
+}
+
+#[wasm_bindgen]
 pub fn math_separator(x: i32) -> Vec<i32> {
     umt_math_separator(x)
 }
