@@ -6,7 +6,17 @@
  */
 export const groupBy = <T, K extends string | number>(
   array: T[],
-  iteratee: (value: T, index: number) => K,
-): Partial<Record<K, T[]>> => {
-  return Object.groupBy(array, iteratee);
+  iteratee: (value: T, index: number, array: T[]) => K,
+): Record<K, T[]> => {
+  return array.reduce(
+    (accumulator, value, index, array) => {
+      const key = iteratee(value, index, array);
+      if (!accumulator[key]) {
+        accumulator[key] = [];
+      }
+      accumulator[key].push(value);
+      return accumulator;
+    },
+    {} as Record<K, T[]>,
+  );
 };
