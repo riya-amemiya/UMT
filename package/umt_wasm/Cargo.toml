@@ -1,6 +1,6 @@
 [package]
 edition = "2021"
-name = "umtn_wasm"
+name = "umt-plugin-wasm"
 version = "0.2.0"
 [lib]
 crate-type = ["cdylib", "rlib"]
