@@ -5,13 +5,12 @@
  * @returns {O} 共通の要素を含む配列
  * @example getArraysCommon([1, 2, 3], [2, 3, 4], [2, 5, 3]); // [2, 3]
  */
-export const getArraysCommon = <O, T = unknown>(
-  array: T[],
-  ...arrays: T[][]
-): O =>
-  [
-    ...arrays.reduce(
-      (accumulator, current) => accumulator.intersection(new Set(current)),
-      new Set(array),
-    ),
-  ] as O;
+export const getArraysCommon = <O, T extends unknown[] = unknown[]>(
+  array: T,
+  ...arrays: T[]
+): O => {
+  const result = [array, ...arrays].reduce((previous, current) => {
+    return previous.filter((item: unknown) => current.includes(item)) as T;
+  });
+  return result as unknown as O;
+};

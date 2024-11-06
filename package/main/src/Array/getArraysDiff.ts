@@ -22,5 +22,7 @@ export const getArraysDiff = <O, T extends unknown[] = unknown[]>(
     }
   }
 
-  return [...allValues.difference(duplicates)] as O;
+  return [...allValues].filter(
+    (value) => !duplicates.has(value as T),
+  ) as unknown as O;
 };

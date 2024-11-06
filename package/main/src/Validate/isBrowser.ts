@@ -3,7 +3,7 @@
  */
 export const isBrowser = () => {
   try {
-    return typeof window !== "undefined";
+    return typeof globalThis !== "undefined";
   } catch {
     return false;
   }
