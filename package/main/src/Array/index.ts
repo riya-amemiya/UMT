@@ -1,4 +1,5 @@
 export * from "./arraysJoin";
+export * from "./binarySearch";
 export * from "./checkFlagAlignment";
 export * from "./chunk";
 export * from "./compact";
