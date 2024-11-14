@@ -10,3 +10,4 @@ export * from "./toBase64";
 export * from "./trimCharacters";
 export * from "./trimEndCharacters";
 export * from "./trimStartCharacters";
+export * from "./isOnlyEmoji";
