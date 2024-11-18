@@ -42,7 +42,7 @@ pub fn factorize(n: i32) -> Vec<i32> {
 }
 
 #[wasm_bindgen]
-pub fn gcd(a: i64, b: i64) -> i64 {
+pub fn gcd(a: i32, b: i32) -> i32 {
     umt_gcd(a, b)
 }
 
