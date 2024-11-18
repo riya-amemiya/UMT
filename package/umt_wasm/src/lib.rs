@@ -52,7 +52,7 @@ pub fn get_decimal_length(value: f64) -> usize {
 }
 
 #[wasm_bindgen]
-pub fn lcm(a: i64, b: i64) -> i64 {
+pub fn lcm(a: i32, b: i32) -> i32 {
     umt_lcm(a, b)
 }
 
