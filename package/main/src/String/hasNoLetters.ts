@@ -1,7 +1,7 @@
 /**
- * Check if the text contains only emojis
+ * Check if the string has no letters (only emojis, numbers, or special characters)
  * @param text
- * @returns [boolean] true if the text contains only emojis, false otherwise
+ * @returns boolean - true if the string has no letters
  */
 export const hasNoLetters = (text: string) => {
   // \p[L] = Unicode letter
