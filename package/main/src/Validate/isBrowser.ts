@@ -3,7 +3,8 @@
  */
 export const isBrowser = () => {
   try {
-    return typeof globalThis !== "undefined";
+    // eslint-disable-next-line unicorn/prefer-global-this
+    return typeof window !== "undefined" && typeof document !== "undefined";
   } catch {
     return false;
   }
