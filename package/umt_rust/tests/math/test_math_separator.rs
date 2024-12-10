@@ -1,7 +1,5 @@
 use umt_rust::math::umt_math_separator;
 
-
-
 #[test]
 fn test_math_separator() {
     assert_eq!(umt_math_separator(123), vec![100, 23]);

@@ -1,7 +1,5 @@
 use umt_rust::math::umt_factorial;
 
-
-
 #[test]
 fn test_factorial() {
     assert_eq!(umt_factorial(0), 1);

@@ -1,7 +1,5 @@
 use umt_rust::math::umt_ncr;
 
-
-
 #[test]
 fn test_ncr() {
     assert_eq!(umt_ncr(7, 3), 35);

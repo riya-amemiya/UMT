@@ -1,7 +1,5 @@
 use umt_rust::math::umt_gcd;
 
-
-
 #[test]
 fn test_gcd() {
     assert_eq!(umt_gcd(0, 0), 0);

@@ -1,6 +1,5 @@
 use umt_rust::math::umt_round_of;
 
-
 #[test]
 fn test_round_of() {
     assert_eq!(umt_round_of(3.14159, 2), 3.14);
