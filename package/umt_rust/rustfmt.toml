@@ -50,8 +50,8 @@ force_explicit_abi = true
 merge_derives = true
 
 # エディション設定
-edition = "2021"
-style_edition = "2021"
+edition = "2024"
+style_edition = "2024"
 
 # エラー処理
 error_on_line_overflow = false
