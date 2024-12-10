@@ -1,10 +1,6 @@
-mod array;
-mod math;
-
 extern crate wasm_bindgen;
 
-use array::*;
-use math::*;
+use umt_rust::{array::*, math::*};
 use wasm_bindgen::prelude::*;
 
 // array functions
