@@ -6,7 +6,7 @@ exclude = [".github", ".gitignore", "tests"]
 license = "MIT"
 name = "umt_rust"
 repository = "https://github.com/riya-amemiya/UMT"
-version = "0.1.0"
+version = "0.1.1"
 [lib]
 crate-type = ["lib"]
 name = "umt_rust"
