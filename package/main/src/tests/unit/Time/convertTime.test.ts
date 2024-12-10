@@ -4,6 +4,7 @@ describe("convertTime", () => {
   // 正常系のテスト
   test("1時間を秒に変換", () => {
     expect(convertTime("1", "hours", "seconds")).toBe(3600);
+    expect(convertTime(1, "hours", "seconds")).toBe(3600);
   });
 
   test("3600秒を時間に変換", () => {

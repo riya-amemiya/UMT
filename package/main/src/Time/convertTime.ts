@@ -19,11 +19,12 @@ const conversionRates: Record<TimeUnit, number> = {
  * @throws {Error} 無効な数値入力の場合
  */
 export const convertTime = (
-  value: string,
+  value: string | number,
   fromUnit: TimeUnit,
   toUnit: TimeUnit,
 ): number => {
-  const numericValue = Number.parseFloat(value);
+  const numericValue =
+    typeof value === "string" ? Number.parseFloat(value) : value;
 
   const milliseconds = numericValue * conversionRates[fromUnit];
   return milliseconds / conversionRates[toUnit];
