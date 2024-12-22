@@ -9,6 +9,7 @@ export * from "./Math";
 export * from "./Object";
 export * from "./Simple";
 export * from "./String";
+export * from "./Time";
 export * from "./Tool";
 export * from "./types";
 export * from "./UA";

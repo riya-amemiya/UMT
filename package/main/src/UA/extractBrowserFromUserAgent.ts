@@ -1,8 +1,8 @@
-import type { SimplifiedUserAgentInfo } from "$/ua/simplifiedUserAgentInfo";
+import type { SimplifiedUserAgentInfoBrowser } from "$/ua/simplifiedUserAgentInfoBrowser";
 
 export const extractBrowserFromUserAgent = (
   ua: string,
-): SimplifiedUserAgentInfo["browser"] => {
+): SimplifiedUserAgentInfoBrowser => {
   if (/edg(e)?/i.test(ua)) {
     return "edge";
   }

@@ -1,8 +1,8 @@
-import type { SimplifiedUserAgentInfo } from "$/ua/simplifiedUserAgentInfo";
+import type { SimplifiedUserAgentInfoOs } from "$/ua/simplifiedUserAgentInfoOs";
 
 export const extractOsFromUserAgent = (
   ua: string,
-): SimplifiedUserAgentInfo["os"] => {
+): SimplifiedUserAgentInfoOs => {
   if (/iphone|ipad|ipod/i.test(ua)) {
     return "ios";
   }

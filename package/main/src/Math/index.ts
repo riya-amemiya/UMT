@@ -7,6 +7,7 @@ export * from "./deviationValue";
 export * from "./division";
 export * from "./factorial";
 export * from "./factorize";
+export * from "./flexibleNumberConversion";
 export * from "./gcd";
 export * from "./getDecimalLength";
 export * from "./lcm";
