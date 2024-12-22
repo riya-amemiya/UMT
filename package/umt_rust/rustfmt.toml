@@ -1,0 +1,64 @@
+# 基本的なフォーマット設定
+indent_style = "Block"
+max_width = 100
+newline_style = "Auto"
+tab_spaces = 4
+use_small_heuristics = "Default"
+
+# 関数とコール関連
+attr_fn_like_width = 70
+fn_call_width = 60
+fn_params_layout = "Tall"
+
+# 構造体とリテラル関連
+array_width = 60
+chain_width = 60
+struct_lit_single_line = true
+struct_lit_width = 18
+struct_variant_width = 35
+
+# 条件式と制御フロー
+brace_style = "SameLineWhere"
+combine_control_expr = true
+control_brace_style = "AlwaysSameLine"
+match_arm_blocks = true
+match_arm_leading_pipes = "Never"
+single_line_if_else_max_width = 50
+
+# インポート関連
+group_imports = "Preserve"
+imports_granularity = "Preserve"
+imports_indent = "Block"
+imports_layout = "Mixed"
+reorder_imports = true
+reorder_modules = true
+
+# スペースとフォーマット
+binop_separator = "Front"
+match_block_trailing_comma = false
+space_after_colon = true
+space_before_colon = false
+spaces_around_ranges = false
+trailing_comma = "Vertical"
+trailing_semicolon = true
+type_punctuation_density = "Wide"
+
+# 空行と編集
+blank_lines_lower_bound = 0
+blank_lines_upper_bound = 1
+force_explicit_abi = true
+merge_derives = true
+
+# エディション設定
+edition = "2024"
+style_edition = "2024"
+
+# エラー処理
+error_on_line_overflow = false
+error_on_unformatted = false
+show_parse_errors = true
+
+# その他の設定
+color = "Auto"
+emit_mode = "Files"
+make_backup = false
