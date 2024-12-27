@@ -10,6 +10,7 @@ export * from "./isArray";
 export * from "./isBrowser";
 export * from "./isBun";
 export * from "./isDouble";
+export * from "./isEqual";
 export * from "./isNode";
 export * from "./isNodeWebkit";
 export * from "./isNotEmpty";
