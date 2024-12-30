@@ -1,4 +1,4 @@
-import { first } from "../../Array/first";
+import { first } from "@/Array/first";
 
 describe("first", () => {
   it("should return the first element of a non-empty array", () => {
