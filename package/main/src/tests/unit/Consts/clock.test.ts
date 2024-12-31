@@ -10,7 +10,7 @@ import {
   OneWeekMs,
   OneYearMs,
   OneYearMs366,
-} from "@/Consts";
+} from "@/Consts/clock";
 
 describe("時間定数のテスト", () => {
   it("1秒は1000ミリ秒", () => {
