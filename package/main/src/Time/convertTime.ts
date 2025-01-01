@@ -1,4 +1,6 @@
 import type { TimeUnit } from "$/time/timeUnit";
+import type { TimeUnitShort } from "$/time/timeUnitShort";
+import { normalizeTimeUnit } from "@/Time/normalizeTimeUnit";
 
 /**
  * 時間単位間の変換率を定義
@@ -20,12 +22,13 @@ const conversionRates: Record<TimeUnit, number> = {
  */
 export const convertTime = (
   value: string | number,
-  fromUnit: TimeUnit,
-  toUnit: TimeUnit,
+  fromUnit: TimeUnit | TimeUnitShort,
+  toUnit: TimeUnit | TimeUnitShort,
 ): number => {
   const numericValue =
     typeof value === "string" ? Number.parseFloat(value) : value;
-
-  const milliseconds = numericValue * conversionRates[fromUnit];
-  return milliseconds / conversionRates[toUnit];
+  const normalizedFromUnit = normalizeTimeUnit(fromUnit, "long");
+  const normalizedToUnit = normalizeTimeUnit(toUnit, "long");
+  const milliseconds = numericValue * conversionRates[normalizedFromUnit];
+  return milliseconds / conversionRates[normalizedToUnit];
 };
