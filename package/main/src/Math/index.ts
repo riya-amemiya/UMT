@@ -35,5 +35,6 @@ export * from "./subtract";
 export * from "./toBaseN";
 export * from "./toCelsius";
 export * from "./toKelvin";
+export * from "./uuidv7";
 export * from "./valueSwap";
 export * from "./xoshiro256";
