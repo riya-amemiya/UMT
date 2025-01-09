@@ -5,5 +5,6 @@ export * from "./getNetworkAddress";
 export * from "./ipToBinaryString";
 export * from "./ipToLong";
 export * from "./isInRange";
+export * from "./isPrivateIp";
 export * from "./longToIp";
 export * from "./subnetMaskToCidr";

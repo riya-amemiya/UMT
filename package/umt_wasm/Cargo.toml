@@ -1,10 +1,11 @@
 [package]
 edition = "2021"
-name = "umtn_wasm"
-version = "0.1.0"
+name = "umt-plugin-wasm"
+version = "0.2.0"
 [lib]
 crate-type = ["cdylib", "rlib"]
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-wasm-bindgen = "0.2.89"
+umt_rust = "0.1.1"
+wasm-bindgen = "0.2.99"

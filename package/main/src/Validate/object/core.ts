@@ -1,4 +1,4 @@
-import { isObject } from "@/Validate/isObject";
+import { isDictionaryObject } from "@/Validate/isDictionaryObject";
 import type { ValidateCoreReturnType, ValidateType } from "@/Validate/type";
 
 export const object = <
@@ -19,7 +19,7 @@ export const object = <
     message: string;
     type: { [key in keyof T]: ValidateType<ReturnType<T[key]>["type"]> };
   } => {
-    if (!isObject(value)) {
+    if (!isDictionaryObject(value)) {
       return {
         validate: false,
         message: message || "",
