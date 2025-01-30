@@ -1,5 +1,5 @@
 {
-  "name": "umt-supabase",
+  "name": "umt-supabase-common",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -53,5 +53,6 @@
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.7.0"
-  }
+  },
+  "type": "commonjs"
 }
