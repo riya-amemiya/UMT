@@ -83,7 +83,11 @@ api
 
 build
 
-module
+
+/module/*
+/common-module/*
+!/module/tsconfig.tsbuildinfo
+!/common-module/package.json
 
 lib
 
@@ -94,3 +98,7 @@ python/
 coverage_dir
 
 doc
+
+tmp/src
+
+dependency-graph.svg

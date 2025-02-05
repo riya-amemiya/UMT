@@ -43,6 +43,6 @@ export class UMT_i18n<
   public translate(key: keyof T[keyof T]) {
     const locale = this.data[this.locale];
     const out = locale[key];
-    return out ? out : this.data[this.defaultLocale][key];
+    return out || this.data[this.defaultLocale][key];
   }
 }

@@ -45,7 +45,7 @@
   "keywords": [],
   "license": "MIT",
   "main": "module/index.js",
-  "name": "umt-i18n",
+  "name": "umt-i18n-common",
   "repository": {
     "type": "git",
     "url": "git://github.com/riya-amemiya/UMT.git"
@@ -68,7 +68,7 @@
     "test-debug": "cd test && tsc",
     "ts-node": "yarn build && ts-node --project tmp/tsconfig.json tmp/src/index.ts"
   },
-  "type": "module",
+  "type": "commonjs",
   "types": "module/index.d.js",
   "version": "1.1.0",
   "packageManager": "yarn@1.22.22"

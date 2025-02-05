@@ -1,4 +1,4 @@
-import { UMT_i18n, UMT_i18nData } from "@/UMT_i18n";
+import { UMT_i18n, type UMT_i18nData } from "@/umtI18n";
 
 const data: UMT_i18nData<
   {
