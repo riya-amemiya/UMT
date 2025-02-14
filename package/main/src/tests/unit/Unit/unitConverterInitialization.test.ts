@@ -1,5 +1,10 @@
-import { convertWaterUnit } from "@/Unit/convertWaterUnit";
-
+import { unitConverterInitialization } from "@/Unit/unitConverterInitialization";
+const convertWaterUnit = unitConverterInitialization({
+  L: 1,
+  mL: 1000,
+  cup: 4.227,
+  m3: 0.001,
+});
 describe("convertWaterUnit", () => {
   it("should correctly convert between L and mL", () => {
     expect(convertWaterUnit(1, "L", "mL")).toBeCloseTo(1000);
