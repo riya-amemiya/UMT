@@ -13,4 +13,5 @@ export * from "./Time";
 export * from "./Tool";
 export * from "./types";
 export * from "./UA";
+export * from "./Unit";
 export * from "./Validate";
