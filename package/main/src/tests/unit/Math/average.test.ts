@@ -40,13 +40,15 @@ describe("average function", () => {
 
   describe("edge cases", () => {
     it("should handle large numbers", () => {
-      expect(average([Number.MAX_SAFE_INTEGER, Number.MAX_SAFE_INTEGER]))
-        .toBe(Number.MAX_SAFE_INTEGER);
+      expect(average([Number.MAX_SAFE_INTEGER, Number.MAX_SAFE_INTEGER])).toBe(
+        Number.MAX_SAFE_INTEGER,
+      );
     });
 
     it("should handle small numbers", () => {
-      expect(average([Number.MIN_SAFE_INTEGER, Number.MIN_SAFE_INTEGER]))
-        .toBe(Number.MIN_SAFE_INTEGER);
+      expect(average([Number.MIN_SAFE_INTEGER, Number.MIN_SAFE_INTEGER])).toBe(
+        Number.MIN_SAFE_INTEGER,
+      );
     });
 
     it("should handle large arrays", () => {
