@@ -115,15 +115,17 @@ const sortImpl = <T>(
 };
 
 /**
- * 配列を高速にソート
- * QuickSortとInsertionSortを組み合わせたアルゴリズムで配列を高速にソートします
- * @param {T[]} array 配列
- * @param {CompareFunction<T>} compareFunction 比較関数
- * @param {number} startIndex 開始インデックス
- * @param {number} endIndex 終了インデックス
- * @param {number} insertionSortThreshold 挿入ソートの閾値
- * @returns T[]
- * @example quickSort([1, 3, 2, 4, 5], (a, b) => a - b); // [1, 2, 3, 4, 5]
+ * Sorts an array using a hybrid algorithm combining QuickSort and InsertionSort
+ * @param {T[]} array Array to sort
+ * @param {CompareFunction<T>} compareFunction Comparison function that returns negative if a < b, zero if a = b, positive if a > b
+ * @param {number} startIndex Starting index for the sort range (default: 0)
+ * @param {number} endIndex Ending index for the sort range (default: array.length - 1)
+ * @param {number} insertionSortThreshold Threshold for switching to insertion sort (default: 10)
+ * @returns {T[]} Sorted array
+ * @example
+ * quickSort([1, 3, 2, 4, 5]); // [1, 2, 3, 4, 5]
+ * quickSort([1, 3, 2], (a, b) => b - a); // [3, 2, 1]
+ * quickSort(['b', 'a', 'c']); // ['a', 'b', 'c']
  */
 export const quickSort = <T>(
   array: T[],
@@ -132,7 +134,7 @@ export const quickSort = <T>(
   endIndex = array.length - 1,
   insertionSortThreshold = 10,
 ): T[] => {
-  // 有効な範囲内でのみソートを行う
+  // Only sort within valid range
   const validStartIndex = Math.max(0, Math.min(startIndex, array.length - 1));
   const validEndIndex = Math.max(
     validStartIndex,
