@@ -92,7 +92,7 @@ describe("quickSort", () => {
     it("should handle custom threshold", () => {
       const arr = Array.from({ length: 20 }, (_, i) => 20 - i);
       expect(quickSort(arr, undefined, 0, arr.length - 1, 5)).toEqual(
-        Array.from({ length: 20 }, (_, i) => i + 1)
+        Array.from({ length: 20 }, (_, i) => i + 1),
       );
     });
   });
@@ -100,8 +100,12 @@ describe("quickSort", () => {
   describe("boundary conditions", () => {
     it("should handle invalid index ranges", () => {
       // Out of bounds indices should be clamped to valid range
-      expect(quickSort([3, 1, 4, 1, 5], undefined, -1, 10)).toEqual([1, 1, 3, 4, 5]);
-      expect(quickSort([3, 1, 4, 1, 5], undefined, 10, -1)).toEqual([3, 1, 4, 1, 5]);
+      expect(quickSort([3, 1, 4, 1, 5], undefined, -1, 10)).toEqual([
+        1, 1, 3, 4, 5,
+      ]);
+      expect(quickSort([3, 1, 4, 1, 5], undefined, 10, -1)).toEqual([
+        3, 1, 4, 1, 5,
+      ]);
 
       // When startIndex > endIndex, array should remain unchanged
       const arr = [3, 1, 4, 1, 5];
