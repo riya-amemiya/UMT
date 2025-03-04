@@ -26,7 +26,7 @@ describe("rgbaToCmyk", () => {
       { r: 255, g: 255, b: 255 },
       { c: 0, m: 0, y: 0, k: 0, a: 1 },
     ],
-  ])("RGBA(%o)をCMYKに変換する", (input, expected) => {
+  ])("should convert RGBA(%o) to CMYK", (input, expected) => {
     expect(rgbaToCmyk(input)).toEqual(expected);
   });
 });
