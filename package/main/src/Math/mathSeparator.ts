@@ -1,10 +1,15 @@
 import { isNumber } from "@/Validate/isNumber";
 
 /**
- * 最大値の位で区切ります。
- * @param  {string|number} input
- * @returns [number, number]
+ * Separates a number at its highest place value
+ * @param  {string|number} input Value to separate
+ * @returns [number, number] [primary value (highest place), remainder]
  * @example mathSeparator(1250); // [1000, 250]
+ * @description
+ * This function takes a number and separates it into two parts:
+ * 1. The highest place value (e.g., 1000 for 1250)
+ * 2. The remainder (e.g., 250 for 1250)
+ * It also handles decimal numbers appropriately
  */
 export const mathSeparator = (input: string | number): [number, number] => {
   if (!isNumber(input)) {

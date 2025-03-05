@@ -1,9 +1,9 @@
 import { division } from "./division";
 import { multiplication } from "./multiplication";
 /**
- * 角度をラジアンに変換
- * @param  {number} x
- * @returns number
+ * Converts degrees to radians
+ * @param  {number} x Angle in degrees
+ * @returns number Angle in radians
  * @example degToRad(180); // 3.141592653589793
  */
 export const degToRad = (x: number) => {

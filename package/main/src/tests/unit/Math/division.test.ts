@@ -49,6 +49,17 @@ describe("division function", () => {
       expect(division(1.1, 2.2)).toBe(0.5);
       expect(division(0.01, 0.02)).toBe(0.5);
     });
+
+    it("should handle complex decimal combinations", () => {
+      expect(division(1.23456, 2.1)).toBeCloseTo(0.587885714);
+      expect(division(0.0001, 0.0003)).toBeCloseTo(0.333333333);
+      expect(division(123.456, 0.789)).toBeCloseTo(156.4715);
+    });
+
+    it("should handle decimal numbers with remainder", () => {
+      expect(division(1.5, 0.7, false)).toEqual([2, 1]);
+      expect(division(0.123, 0.0456, false)).toEqual([2, 123]);
+    });
   });
 
   describe("edge cases", () => {
@@ -56,6 +67,15 @@ describe("division function", () => {
       expect(division(1, 0)).toBe(Number.NaN);
       expect(division(-1, 0)).toBe(Number.NaN);
       expect(division(-1, 0, false)).toEqual([Number.NaN, Number.NaN]);
+      expect(division(0, 0)).toBe(Number.NaN);
+      expect(division(0, 0, false)).toEqual([Number.NaN, Number.NaN]);
+    });
+
+    it("should handle zero dividend", () => {
+      expect(division(0, 1)).toBe(0);
+      expect(division(0, -1)).toBe(-0);
+      expect(division(0, 2, false)).toEqual([0, 0]);
+      expect(division(0, -2, false)).toEqual([-0, 0]);
     });
 
     it("should handle negative numbers", () => {

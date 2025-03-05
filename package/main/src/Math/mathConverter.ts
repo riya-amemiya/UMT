@@ -1,10 +1,14 @@
 import { mathSeparator } from "./mathSeparator";
 
 /**
- * nの2乗を展開します
- * @param {string} equation - 変換する数学的な式
- * @returns {string} 変換後の式
+ * Expands square of n into a sum of simpler multiplications
+ * @param {string} equation - Mathematical expression to convert
+ * @returns {string} Converted expression
  * @example mathConverter("1250*1250"); // "1500*1000+400*100+200*100+50*50"
+ * @description
+ * This function converts expressions like n^2 or n*n into a sum of simpler multiplications
+ * using the distributive property. For example, 1250² is converted to
+ * (1000 + 200 + 50)² = 1500*1000 + 400*100 + 200*100 + 50*50
  */
 export const mathConverter = (equation: string): string => {
   let convertedEquation = equation;
