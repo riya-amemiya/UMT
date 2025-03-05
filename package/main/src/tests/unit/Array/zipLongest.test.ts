@@ -1,7 +1,7 @@
 import { zipLongest } from "@/Array/zipLongest";
 
-describe("zipLongest関数のテスト", () => {
-  it("異なる長さの配列を組み合わせる", () => {
+describe("zipLongest function", () => {
+  it("should combine arrays of different lengths with undefined padding", () => {
     const array1 = [1, 2];
     const array2 = ["one", "two", "three"];
     const array3 = [true, false, true, false];
@@ -14,7 +14,7 @@ describe("zipLongest関数のテスト", () => {
     ]);
   });
 
-  it("すべての配列が同じ長さの場合", () => {
+  it("should combine arrays of equal length", () => {
     const array1 = [1, 2, 3];
     const array2 = ["one", "two", "three"];
     const array3 = [true, false, true];
@@ -26,7 +26,7 @@ describe("zipLongest関数のテスト", () => {
     ]);
   });
 
-  it("空の配列を含む組み合わせ", () => {
+  it("should handle combination with empty arrays using undefined padding", () => {
     const array1 = [1, 2, 3];
     // @ts-ignore
     const array2 = [];
@@ -39,7 +39,7 @@ describe("zipLongest関数のテスト", () => {
     ]);
   });
 
-  it("引数がない場合は空の配列を返す", () => {
+  it("should return an empty array when no arguments are provided", () => {
     const result = zipLongest();
     expect(result).toEqual([]);
   });

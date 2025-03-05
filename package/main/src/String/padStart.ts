@@ -1,10 +1,11 @@
 /**
- * 指定された長さに達するまで、文字列の先頭に別の文字列を繰り返し追加します。
+ * Repeatedly adds another string to the beginning of a string until it reaches the specified length.
  *
- * @param string_ - パディングを追加する元の文字列。
- * @param targetLength - パディングを含めた後の目標の文字列長。
- * @param padString - 元の文字列の先頭に追加される文字列。
- * @returns パディングが追加された後の文字列。
+ * @param string_ - The original string to add padding to.
+ * @param targetLength - The desired length of the string after padding.
+ * @param padString - The string to add to the beginning of the original string.
+ * @returns The padded string.
+ * @throws {Error} If padString is empty.
  */
 export const padStart = (
   string_: string,
