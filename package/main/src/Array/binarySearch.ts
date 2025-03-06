@@ -1,7 +1,8 @@
 /**
- * 二分探索法
- * @param arr sortされたnumberの配列
- * @param target 探索する値
+ * Binary search implementation
+ * @param array A sorted array of numbers
+ * @param target The value to search for
+ * @returns The index of the target value in the array, or -1 if not found
  */
 export const binarySearch = (array: number[], target: number): number => {
   let left = 0;

@@ -2,6 +2,15 @@ import { compareFunctionDefault } from "./compareFunctionDefault";
 
 type CompareFunction<T> = (a: T, b: T) => number;
 
+/**
+ * Finds the median value among three elements in the array
+ * @param array The array containing the elements
+ * @param a Index of first element
+ * @param b Index of second element
+ * @param c Index of third element
+ * @param compareFunction Function to compare elements
+ * @returns The median value among the three elements
+ */
 const medianOfThree = <T>(
   array: T[],
   a: number,
@@ -30,6 +39,14 @@ const medianOfThree = <T>(
   return array[b];
 };
 
+/**
+ * Partitions the array around a pivot element using median-of-three strategy
+ * @param array Array to partition
+ * @param low Starting index of the partition range
+ * @param high Ending index of the partition range
+ * @param compareFunction Function to compare elements
+ * @returns Index of the partition point
+ */
 const partition = <T>(
   array: T[],
   low: number,
@@ -62,6 +79,13 @@ const partition = <T>(
   }
 };
 
+/**
+ * Sorts a portion of the array using insertion sort algorithm
+ * @param array Array to sort
+ * @param low Starting index of the range to sort
+ * @param high Ending index of the range to sort
+ * @param compareFunction Function to compare elements
+ */
 const insertionSort = <T>(
   array: T[],
   low: number,
@@ -82,6 +106,14 @@ const insertionSort = <T>(
   }
 };
 
+/**
+ * Internal implementation of the quicksort algorithm with tail-call optimization
+ * @param array Array to sort
+ * @param lowInit Initial low index of the range to sort
+ * @param highInit Initial high index of the range to sort
+ * @param compareFunction Function to compare elements
+ * @param insertionSortThreshold Size threshold for switching to insertion sort
+ */
 const sortImpl = <T>(
   array: T[],
   lowInit: number,
