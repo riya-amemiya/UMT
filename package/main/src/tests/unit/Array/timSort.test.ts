@@ -46,4 +46,76 @@ describe("timSort", () => {
       1, 2, 3, 5, 4,
     ]);
   });
+
+  it("should maintain stability when sorting objects", () => {
+    const array = [
+      { value: 2, order: 1 },
+      { value: 1, order: 2 },
+      { value: 2, order: 3 },
+      { value: 1, order: 4 },
+    ];
+    const result = timSort(array, (a, b) => a.value - b.value);
+    expect(result.map((x) => x.order)).toEqual([2, 4, 1, 3]); // original order within same values
+  });
+
+  it("should handle arrays just larger than MIN_RUN", () => {
+    const array = Array.from({ length: 33 }, (_, i) => 33 - i);
+    const result = timSort(array);
+    expect(result).toEqual(Array.from({ length: 33 }, (_, i) => i + 1));
+  });
+
+  it("should handle arrays with repeated elements near run boundaries", () => {
+    // Creates runs with repeated elements at boundaries
+    const array = [];
+    for (let i = 0; i < 64; i++) {
+      array.push(Math.floor(i / 16)); // Creates 4 values, each repeated 16 times
+    }
+    const shuffled = [...array].sort(() => Math.random() - 0.5);
+    expect(timSort(shuffled)).toEqual(array);
+  });
+
+  it("should handle arrays with all identical elements", () => {
+    const array = new Array(100).fill(1);
+    expect(timSort(array)).toEqual(array);
+  });
+
+  it("should handle strings and numbers separately", () => {
+    const strings = ["b", "a", "d", "c"];
+    const numbers = [3, 1, 4, 2];
+    expect(timSort(strings)).toEqual(["a", "b", "c", "d"]);
+    expect(timSort(numbers)).toEqual([1, 2, 3, 4]);
+  });
+
+  it("should handle booleans", () => {
+    const array = [true, false, true, false];
+    expect(timSort(array)).toEqual([false, false, true, true]);
+  });
+
+  it("should handle null and undefined", () => {
+    const array = [null, undefined, null, undefined];
+    const compareFunction = (a: any, b: any) => {
+      if (a === b) return 0;
+      if (a === null) return -1;
+      if (b === null) return 1;
+      if (a === undefined) return -1;
+      if (b === undefined) return 1;
+      return 0;
+    };
+    expect(timSort(array, compareFunction)).toEqual([
+      null,
+      null,
+      undefined,
+      undefined,
+    ]);
+  });
+
+  it("should handle custom comparison for mixed types", () => {
+    const array = ["b", 2, "a", 1];
+    const compareFunction = (a: any, b: any) => {
+      const aStr = String(a);
+      const bStr = String(b);
+      return aStr.localeCompare(bStr);
+    };
+    expect(timSort(array, compareFunction)).toEqual([1, 2, "a", "b"]);
+  });
 });

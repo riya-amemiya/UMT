@@ -1,6 +1,12 @@
 import { shuffle2DArray } from "@/Array/shuffle2DArray";
 
 describe("shuffle2DArray function", () => {
+  it("should handle single-element 2D array", () => {
+    const array = [[1]];
+    const shuffledArray = shuffle2DArray(array);
+    expect(shuffledArray).toEqual(array);
+  });
+
   it("should return empty 2D array unchanged", () => {
     const array: number[][] = [];
     const shuffledArray = shuffle2DArray(array);
@@ -49,5 +55,46 @@ describe("shuffle2DArray function", () => {
     expect(shuffledArray.map((subArray) => subArray.sort())).not.toEqual(
       array.map((subArray) => subArray.sort()),
     );
+  });
+
+  it("should handle subarrays of different lengths", () => {
+    const array = [[1], [2, 3], [4, 5, 6]];
+    const shuffledArray = shuffle2DArray(array);
+    expect(shuffledArray.length).toBe(array.length);
+    shuffledArray.forEach((subArray, index) => {
+      expect(subArray.length).toBe(array[index].length);
+    });
+    // Verify the total number of elements remains the same
+    const flatOriginal = array.flat();
+    const flatShuffled = shuffledArray.flat();
+    expect(flatShuffled.sort()).toEqual(flatOriginal.sort());
+  });
+
+  it("should not modify the original array", () => {
+    const array = [
+      [1, 2],
+      [3, 4],
+      [5, 6],
+    ];
+    const originalArray = array.map((subArray) => [...subArray]);
+    shuffle2DArray(array);
+    expect(array).toEqual(originalArray);
+  });
+
+  it("should maintain the total count of each unique element", () => {
+    const array = [
+      [1, 1],
+      [2, 2],
+      [1, 2],
+    ];
+    const shuffledArray = shuffle2DArray(array);
+    const countElements = (arr: number[][]) => {
+      const counts: Record<number, number> = {};
+      arr.flat().forEach((num) => {
+        counts[num] = (counts[num] || 0) + 1;
+      });
+      return counts;
+    };
+    expect(countElements(shuffledArray)).toEqual(countElements(array));
   });
 });

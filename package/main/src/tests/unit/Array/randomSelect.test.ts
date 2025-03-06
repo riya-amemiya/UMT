@@ -47,4 +47,10 @@ describe("randomSelect", () => {
     const result = randomSelect(array, -1);
     expect(result).toEqual([]);
   });
+
+  it("should return an empty array when count is zero", () => {
+    const array = [1, 2, 3, 4, 5];
+    const result = randomSelect(array, 0);
+    expect(result).toEqual([]);
+  });
 });

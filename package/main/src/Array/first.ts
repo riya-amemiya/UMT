@@ -1,9 +1,9 @@
 import type { First } from "$/logic/first";
 
 /**
- * 配列の先頭の要素を返す
- * @param array 配列
- * @returns 配列の先頭の要素
+ * Returns the first element of an array
+ * @param array The input array
+ * @returns The first element of the array, or undefined if the array is empty
  * @example first([1, 2, 3]); // 1
  */
 export const first = <T extends unknown[]>(
