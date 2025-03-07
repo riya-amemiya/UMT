@@ -7,13 +7,14 @@ import { roundOf } from "@/Math/roundOf";
 import { subtract } from "@/Math/subtract";
 
 /**
- * hslaをrgbaに変換する
- * @param h 色相 (0から360の範囲)
- * @param s 彩度 (0から100の範囲)
- * @param l 明度 (0から100の範囲)
- * @param a アルファ値 (0から1の範囲)
- * @returns { r: number; g: number; b: number; a: number; }
+ * Convert HSLA color values to RGBA color space
+ * @param h Hue angle in degrees (0-360)
+ * @param s Saturation percentage (0-100)
+ * @param l Lightness percentage (0-100)
+ * @param a Alpha value (0-1)
+ * @returns {Object} RGBA values (r, g, b as 0-255, a as 0-1)
  * @example hslaToRgba(120, 50, 50, 1) // { r: 64, g: 191, b: 64, a: 1 }
+ * @throws {Error} If any input values are out of their valid ranges
  */
 export const hslaToRgba = (
   h: number,
@@ -21,17 +22,18 @@ export const hslaToRgba = (
   l: number,
   a = 1,
 ): { r: number; g: number; b: number; a: number } => {
-  if (
-    h < 0 ||
-    h > 360 ||
-    s < 0 ||
-    s > 100 ||
-    l < 0 ||
-    l > 100 ||
-    a < 0 ||
-    a > 1
-  ) {
-    return { r: 0, g: 0, b: 0, a: 1 };
+  // Validate input ranges
+  if (h < 0 || h > 360) {
+    throw new Error("Hue must be between 0 and 360 degrees");
+  }
+  if (s < 0 || s > 100) {
+    throw new Error("Saturation must be between 0 and 100 percent");
+  }
+  if (l < 0 || l > 100) {
+    throw new Error("Lightness must be between 0 and 100 percent");
+  }
+  if (a < 0 || a > 1) {
+    throw new Error("Alpha must be between 0 and 1");
   }
 
   const hue = division(division(h, 360, false)[1], 360);
