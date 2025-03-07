@@ -5,10 +5,11 @@ import { roundOf } from "@/Math/roundOf";
 import { subtract } from "@/Math/subtract";
 
 /**
- * rgbaをhslaに変換する
- * @param rgba
- * @returns { h: number; s: number; l: number; a: number; }
+ * Convert RGBA color values to HSLA color space
+ * @param rgba Object containing r, g, b values (0-255) and optional a (0-1)
+ * @returns {Object} HSLA values (h as 0-360, s and l as 0-100, a as 0-1)
  * @example rgbaToHsla({ r: 100, g: 100, b: 100, a: 1 }); // { h: 0, s: 0, l: 39.22, a: 1 }
+ * @throws {Error} If any input values are out of their valid ranges
  */
 export const rgbaToHsla = ({
   r,
@@ -21,6 +22,20 @@ export const rgbaToHsla = ({
   b: number;
   a?: number;
 }): { h: number; s: number; l: number; a: number } => {
+  // Validate RGBA values
+  if (
+    r < 0 ||
+    r > 255 ||
+    g < 0 ||
+    g > 255 ||
+    b < 0 ||
+    b > 255 ||
+    a < 0 ||
+    a > 1
+  ) {
+    throw new Error("Invalid rgba value");
+  }
+
   const rPrime = division(r, 255);
   const gPrime = division(g, 255);
   const bPrime = division(b, 255);
