@@ -3,10 +3,10 @@ const hex = (x: number) => {
   return hexCode.length === 1 ? `0${hexCode}` : hexCode;
 };
 /**
- * rgbaを16進数に変換
- * @param rgba
- * @returns {string} 16進数の色コード
- * @example rgbaToHexA({ r: 0, g: 0, b: 0, a: 1 }); // "#000000"
+ * Convert RGBA color to hexadecimal color code
+ * @param rgba Object containing r, g, b values (0-255) and optional a (0-1)
+ * @returns {string} Hexadecimal color code including alpha channel
+ * @example rgbaToHexA({ r: 0, g: 0, b: 0, a: 1 }); // "#000000ff"
  */
 export const rgbaToHexA = ({
   r,
@@ -19,7 +19,7 @@ export const rgbaToHexA = ({
   b: number;
   a?: number;
 }): string => {
-  // rgba形式かどうかのチェック
+  // Validate RGBA values
   if (
     r < 0 ||
     r > 255 ||

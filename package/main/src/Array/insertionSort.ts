@@ -1,13 +1,13 @@
 import { compareFunctionDefault } from "./compareFunctionDefault";
 
 /**
- * 挿入ソートを使用して配列をソート
+ * Sort an array using insertion sort algorithm
  *
- * @param array ソートする配列
- * @param compareFunction 比較関数
- * @param start ソートを開始する配列のインデックス
- * @param end ソートを終了する配列のインデックス
- * @returns ソートされた配列
+ * @param array Array to sort
+ * @param compareFunction Function to compare two elements
+ * @param start Starting index for sorting (inclusive)
+ * @param end Ending index for sorting (inclusive)
+ * @returns Sorted array
  *
  * @example
  * const numbers = [4, 2, 7, 1, 3];

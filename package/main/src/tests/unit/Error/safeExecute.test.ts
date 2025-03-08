@@ -1,21 +1,77 @@
 import { safeExecute } from "@/Error/safeExecute";
 
-describe("result function tests", () => {
-  it("should return OkType for successful operations", () => {
-    const successfulOperation = () => "test";
-    const resultValue = safeExecute(successfulOperation);
+describe("safeExecute function", () => {
+  describe("successful operations", () => {
+    it("should return success type with string value", () => {
+      const successfulOperation = () => "test";
+      const result = safeExecute(successfulOperation);
 
-    expect(resultValue).toHaveProperty("type", "success");
-    expect(resultValue).toHaveProperty("value", "test");
+      expect(result).toEqual({
+        type: "success",
+        value: "test",
+      });
+    });
+
+    it("should return success type with number value", () => {
+      const successfulOperation = () => 42;
+      const result = safeExecute(successfulOperation);
+
+      expect(result).toEqual({
+        type: "success",
+        value: 42,
+      });
+    });
+
+    it("should return success type with object value", () => {
+      const testObject = { key: "value" };
+      const successfulOperation = () => testObject;
+      const result = safeExecute(successfulOperation);
+
+      expect(result).toEqual({
+        type: "success",
+        value: testObject,
+      });
+    });
   });
 
-  it("should return ErrorType for operations that throw", () => {
-    const errorOperation = () => {
-      throw new Error("test error");
-    };
-    const resultValue = safeExecute(errorOperation);
+  describe("error handling", () => {
+    it("should return error type with Error instance", () => {
+      const errorOperation = () => {
+        throw new Error("test error");
+      };
+      const result = safeExecute(errorOperation);
 
-    expect(resultValue).toHaveProperty("type", "error");
-    expect(resultValue).toHaveProperty("error");
+      expect(result.type).toBe("error");
+      if (result.type === "error") {
+        expect(result.error).toBeInstanceOf(Error);
+        expect(result.error.message).toBe("test error");
+      }
+    });
+
+    it("should return error type with custom error message", () => {
+      const customError = new TypeError("custom type error");
+      const errorOperation = () => {
+        throw customError;
+      };
+      const result = safeExecute(errorOperation);
+
+      expect(result.type).toBe("error");
+      if (result.type === "error") {
+        expect(result.error).toBe(customError);
+        expect(result.error.message).toBe("custom type error");
+      }
+    });
+
+    it("should handle non-Error thrown values", () => {
+      const errorOperation = () => {
+        throw "string error";
+      };
+      const result = safeExecute(errorOperation);
+
+      expect(result.type).toBe("error");
+      if (result.type === "error") {
+        expect(result.error).toBe("string error");
+      }
+    });
   });
 });

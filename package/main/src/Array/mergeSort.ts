@@ -1,10 +1,10 @@
 import { compareFunctionDefault } from "./compareFunctionDefault";
 
 /**
- * マージソート
- * @param  {T[]} array 配列
- * @param  {(a: T, b: T) => number} compareFunction 比較関数
- * @returns T[]
+ * Merge sort implementation
+ * @param  {T[]} array Array to sort
+ * @param  {(a: T, b: T) => number} compareFunction Comparison function
+ * @returns {T[]} Sorted array
  * @example mergeSort([1, 3, 2, 4, 5], (a, b) => a - b); // [1, 2, 3, 4, 5]
  */
 export const mergeSort = <T>(
@@ -27,11 +27,11 @@ export const mergeSort = <T>(
 };
 
 /**
- * 2つの配列をマージする関数
- * @param left - マージする左の配列
- * @param right - マージする右の配列
- * @param compareFunction - 比較関数
- * @returns マージされた新しい配列
+ * Helper function to merge two sorted arrays
+ * @param left Left array to merge
+ * @param right Right array to merge
+ * @param compareFunction Comparison function to determine order
+ * @returns New merged array in sorted order
  */
 function merge<T>(
   left: T[],

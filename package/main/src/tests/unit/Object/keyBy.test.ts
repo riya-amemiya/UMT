@@ -2,7 +2,7 @@ import { keyBy } from "@/Object/keyBy";
 import _ from "lodash";
 
 describe("keyBy", () => {
-  it("プロパティ名でオブジェクトを生成できる", () => {
+  it("should create an object using property name as key", () => {
     const input = [
       { id: "a1", name: "Alice" },
       { id: "b2", name: "Bob" },
@@ -19,7 +19,7 @@ describe("keyBy", () => {
     expect(lodashOutput).toEqual(result);
   });
 
-  it("カスタム関数でキーを生成できる", () => {
+  it("should generate keys using a custom function", () => {
     const input = [
       { dir: "left", code: 97 },
       { dir: "right", code: 100 },
@@ -36,7 +36,7 @@ describe("keyBy", () => {
     expect(lodashOutput).toEqual(result);
   });
 
-  it("空の配列の場合は空のオブジェクトを返す", () => {
+  it("should return an empty object for an empty array", () => {
     const result = {};
     const output = keyBy([], "id");
     const lodashOutput = _.keyBy([], "id");
@@ -44,7 +44,7 @@ describe("keyBy", () => {
     expect(lodashOutput).toEqual(result);
   });
 
-  it("重複するキーがある場合は後のものが優先される", () => {
+  it("should use later values when there are duplicate keys", () => {
     const input = [
       { id: "a1", name: "Alice" },
       { id: "a1", name: "Alex" },
@@ -60,7 +60,7 @@ describe("keyBy", () => {
     expect(lodashOutput).toEqual(result);
   });
 
-  it("オブジェクトを入力として受け付ける", () => {
+  it("should accept an object as input", () => {
     const input = {
       first: { id: "a1", name: "Alice" },
       second: { id: "b2", name: "Bob" },
@@ -76,7 +76,7 @@ describe("keyBy", () => {
     expect(output).toEqual(result);
     expect(lodashOutput).toEqual(result);
   });
-  it("iterateeが未指定の場合はidentity関数として動作する", () => {
+  it("should act as identity function when iteratee is not specified", () => {
     const input = ["a", "b"];
     const result = {
       a: "a",
