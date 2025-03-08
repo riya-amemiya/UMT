@@ -60,6 +60,8 @@ describe("shuffle function", () => {
       { id: 1, value: "one" },
       { id: 2, value: "two" },
       { id: 3, value: "three" },
+      { id: 4, value: "four" },
+      { id: 5, value: "five" },
     ];
     const shuffledArray = shuffle(array);
     expect(shuffledArray).not.toEqual(array);
