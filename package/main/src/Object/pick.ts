@@ -1,11 +1,11 @@
 /**
- * 指定されたキーを持つプロパティのみを抽出して新しいオブジェクトを作成します。
+ * Creates a new object with only the specified properties from the source object.
  *
- * @template T - 元のオブジェクトの型。
- * @template K - 抽出するキーの型（Tのキーのサブセット）。
- * @param {T} object - プロパティを抽出する元のオブジェクト。
- * @param {...K[]} keys - 抽出したいプロパティのキー。
- * @returns {Pick<T, K>} 指定されたキーを持つプロパティのみを含む新しいオブジェクト。
+ * @template T - Type of the source object.
+ * @template K - Type of the keys to extract (subset of T's keys).
+ * @param {T} object - The source object to extract properties from.
+ * @param {...K[]} keys - The property keys to extract.
+ * @returns {Pick<T, K>} A new object containing only the specified properties.
  *
  * @example
  * ```typescript
