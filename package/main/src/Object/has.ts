@@ -1,8 +1,8 @@
 /**
- * オブジェクトが指定されたパスを持っているかどうかを判定する
- * @param {T} object - 判定するオブジェクト
- * @param {string | string[]} path - 判定するパス
- * @returns {boolean} パスが存在すればtrue、そうでなければfalse
+ * Determines if an object has a specified path
+ * @param {T} object - Object to check
+ * @param {string | string[]} path - Path to check
+ * @returns {boolean} Returns true if path exists, false otherwise
  * @example has({ a: { b: 1 } }, "a.b"); // true
  * has({ a: { b: 1 } }, ["a", "b"]); // true
  * has({ a: { b: 1 } }, "a.c"); // false
