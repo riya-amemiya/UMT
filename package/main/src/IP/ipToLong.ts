@@ -1,9 +1,10 @@
 import { ipToBinaryString } from "./ipToBinaryString";
 
 /**
- * IPアドレスを32ビットの数値に変換します
- * @param {string} ip - 変換するIPアドレス
- * @returns {number} 32ビットの数値
+ * Converts an IPv4 address to a 32-bit number
+ * @param {string} ip - IPv4 address to convert (e.g., "192.168.1.1")
+ * @returns {number} 32-bit unsigned integer
+ * @throws {Error} If IP address is invalid
  */
 export const ipToLong = (ip: string): number =>
   Number.parseInt(ipToBinaryString(ip), 2) >>> 0;
