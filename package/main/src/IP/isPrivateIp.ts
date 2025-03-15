@@ -23,10 +23,6 @@ export const isPrivateIp = (ip: string): boolean => {
       isInRange(ip, range.network, range.cidr),
     );
   } catch (error) {
-    throw new Error(
-      `Invalid IP address: ${
-        error instanceof Error ? error.message : "unknown error"
-      }`,
-    );
+    throw new Error(`Invalid IP address: ${String(error)}`);
   }
 };
