@@ -1,29 +1,43 @@
 /**
- * IPクラスを取得します
- * @param {string} ip - IPアドレス
- * @returns {string} IPクラス（A, B, C, D, Eまたは空文字列）
+ * Gets the IP address class (A, B, C, D, or E)
+ * @param {string} ip - IPv4 address
+ * @returns {string} IP class ('A', 'B', 'C', 'D', 'E', or empty string for invalid IP)
  */
 export const getIpClass = (ip: string): string => {
   if (!ip) {
     return "";
   }
-  // IPアドレスの最初のオクテットを取得
-  const firstOctet = Number.parseInt(ip.split(".")[0]);
 
-  if (firstOctet < 128) {
-    return "A";
+  // Validate IP format
+  const parts = ip.split(".");
+  if (parts.length !== 4) {
+    return "";
   }
-  if (firstOctet < 192) {
-    return "B";
+
+  const firstOctet = Number.parseInt(parts[0]);
+  if (Number.isNaN(firstOctet) || firstOctet < 0 || firstOctet > 255) {
+    return "";
   }
-  if (firstOctet < 224) {
-    return "C";
+
+  // Check each class range
+  switch (true) {
+    case firstOctet === 0: {
+      return "";
+    } // Reserved
+    case firstOctet < 128: {
+      return "A";
+    } // 1-127
+    case firstOctet < 192: {
+      return "B";
+    } // 128-191
+    case firstOctet < 224: {
+      return "C";
+    } // 192-223
+    case firstOctet < 240: {
+      return "D";
+    } // 224-239
+    default: {
+      return "E";
+    } // 240-255
   }
-  if (firstOctet < 240) {
-    return "D";
-  }
-  if (firstOctet < 256) {
-    return "E";
-  }
-  return "";
 };
