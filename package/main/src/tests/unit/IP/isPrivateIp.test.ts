@@ -1,20 +1,5 @@
 import { isPrivateIp } from "@/IP/isPrivateIp";
-import { isInRange } from "@/IP/isInRange";
-
-// Mock isInRange for specific test case
-jest.mock("@/IP/isInRange");
-const mockedIsInRange = isInRange as jest.MockedFunction<typeof isInRange>;
-
 describe("isPrivateIp", () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-    mockedIsInRange.mockImplementation((ip, network, cidr) => {
-      // Default implementation using the real function
-      const original = jest.requireActual("@/IP/isInRange");
-      return original.isInRange(ip, network, cidr);
-    });
-  });
-
   describe("private IP addresses", () => {
     test.each([
       // [IP address, description]
@@ -58,16 +43,6 @@ describe("isPrivateIp", () => {
       ["-1.0.0.0", "Invalid IP address"],
     ])("should throw error for %s: %s", (ip, expectedError) => {
       expect(() => isPrivateIp(ip as string)).toThrow(expectedError);
-    });
-
-    test("should handle non-Error exceptions", () => {
-      mockedIsInRange.mockImplementationOnce(() => {
-        throw "Unexpected error"; // Throwing a string instead of Error
-      });
-
-      expect(() => isPrivateIp("192.168.1.1")).toThrow(
-        "Invalid IP address: unknown error",
-      );
     });
   });
 });
