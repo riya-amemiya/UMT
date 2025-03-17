@@ -1,16 +1,16 @@
 /**
- * テンプレート文字列内のプレースホルダーを指定された値で置換します。
- * プレースホルダーは {0}、{1}、{2}... の形式で、対応する値が配列で渡されます。
+ * Replaces placeholders in a template string with specified values.
+ * Placeholders are in the format {0}, {1}, {2}... and corresponding values are passed as an array.
  *
- * @param template - プレースホルダーを含むテンプレート文字列
- * @param values - テンプレート内のプレースホルダーに置換する値の配列
- * @returns プレースホルダーが値で置換された文字列
+ * @param template - Template string containing placeholders
+ * @param values - Array of values to replace the placeholders in the template
+ * @returns String with placeholders replaced with values
  *
  * @example
- * // "こんにちは、世界！" を返します
- * formatString("こんにちは、{0}！", "世界");
+ * // Returns "Hello, World!"
+ * formatString("Hello, {0}!", "World");
  */
-export const formatString = <T>(template: string, ...values: T[]) => {
+export const formatString = (template: string, ...values: unknown[]) => {
   return template.replaceAll(/{(\d+)}/g, (match, index) => {
     return values[index] === undefined ? match : String(values[index]);
   });
