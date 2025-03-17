@@ -1,35 +1,33 @@
 import { reverseString } from "@/String/reverseString";
-// テストを網羅的に10個書いて
-// 絵文字には対応してません
 describe("reverseString", () => {
-  test("reverseString('abc')", () => {
+  test("should reverse a three-character string", () => {
     expect(reverseString("abc")).toBe("cba");
   });
-  test("reverseString('')", () => {
+  test("should handle empty string", () => {
     expect(reverseString("")).toBe("");
   });
-  test("reverseString('a')", () => {
+  test("should handle single character", () => {
     expect(reverseString("a")).toBe("a");
   });
-  test("reverseString('ab')", () => {
+  test("should reverse a two-character string", () => {
     expect(reverseString("ab")).toBe("ba");
   });
-  test("reverseString('abc')", () => {
+  test("should reverse a three-character string (second test)", () => {
     expect(reverseString("abc")).toBe("cba");
   });
-  test("reverseString('abcd')", () => {
+  test("should reverse a four-character string", () => {
     expect(reverseString("abcd")).toBe("dcba");
   });
-  test("reverseString('abcde')", () => {
+  test("should reverse a five-character string", () => {
     expect(reverseString("abcde")).toBe("edcba");
   });
-  test("reverseString('abcdef')", () => {
+  test("should reverse a six-character string", () => {
     expect(reverseString("abcdef")).toBe("fedcba");
   });
-  test("reverseString('abcdefg')", () => {
+  test("should reverse a seven-character string", () => {
     expect(reverseString("abcdefg")).toBe("gfedcba");
   });
-  test("reverseString('abcdefgh')", () => {
+  test("should reverse an eight-character string", () => {
     expect(reverseString("abcdefgh")).toBe("hgfedcba");
   });
 });
