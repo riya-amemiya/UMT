@@ -1,0 +1,7 @@
+main-package:
+- changed-files:
+  - any-glob-to-any-file: 'package/main/**'
+
+typescript:
+- changed-files:
+  - any-glob-to-any-file: '**/*.ts'
