@@ -22,7 +22,8 @@ describe("isNotEmpty", () => {
     expect(isNotEmpty([])).toBe(false);
   });
 
-  it("should return true for a non-empty Map or Set", () => {
+  // Note: Map and Set are always considered empty by Object.keys()
+  it("should return false for Map and Set (regardless of content)", () => {
     expect(
       isNotEmpty(
         new Map([
@@ -32,9 +33,6 @@ describe("isNotEmpty", () => {
       ),
     ).toBe(false);
     expect(isNotEmpty(new Set([1, 2, 3]))).toBe(false);
-  });
-
-  it("should return false for an empty Map or Set", () => {
     expect(isNotEmpty(new Map())).toBe(false);
     expect(isNotEmpty(new Set())).toBe(false);
   });

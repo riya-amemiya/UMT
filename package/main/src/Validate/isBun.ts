@@ -1,5 +1,5 @@
 /**
- * bun環境かどうかを判定します。
+ * Determines if the current environment is Bun runtime
  */
 export const isBun = () => {
   try {

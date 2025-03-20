@@ -6,6 +6,16 @@ describe("isArray", () => {
     expect(isArray<string>(["a", "b", "c"])).toBe(true);
     expect(isArray<boolean>([true, false])).toBe(true);
     expect(isArray<object>([{ a: 1 }, { b: 2 }])).toBe(true);
+    expect(isArray<never>([])).toBe(true);
+  });
+
+  it("should work as a type guard", () => {
+    const value: unknown = [1, 2, 3];
+    if (isArray<number>(value)) {
+      // TypeScript should recognize value as number[] here
+      const sum = value.reduce((a, b) => a + b, 0);
+      expect(sum).toBe(6);
+    }
   });
 
   it("should return false for a non-array value", () => {

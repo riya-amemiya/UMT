@@ -1,6 +1,6 @@
 import { isBrowser } from "./isBrowser";
 import { isNode } from "./isNode";
 /**
- * node-webkit環境かどうかを判定します。
+ * Determines if the current environment is Node-Webkit
  */
 export const isNodeWebkit = () => isBrowser() && isNode();
