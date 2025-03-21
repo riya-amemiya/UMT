@@ -1,9 +1,9 @@
 /**
- * 最大公約数
- * @param  {number} x
- * @param  {number} y
- * @param  {number[]} z
- * @returns number
+ * Greatest Common Divisor (GCD)
+ * @param  {number} x First number
+ * @param  {number} y Second number
+ * @param  {number[]} z Additional numbers (optional)
+ * @returns number The GCD of all input numbers
  * @example gcd(12, 18); // 6
  */
 export const gcd = (x: number, y: number, ...z: number[]) => {
@@ -15,7 +15,7 @@ export const gcd = (x: number, y: number, ...z: number[]) => {
   }
   [copyX, copyY] = [Math.max(copyX, copyY), Math.min(copyX, copyY)];
 
-  /* ユークリッドの互除法 */
+  /* Euclidean algorithm */
   let r = copyY % copyX;
   while (r !== 0) {
     copyY = copyX;

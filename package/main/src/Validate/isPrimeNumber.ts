@@ -1,11 +1,15 @@
 /**
- * 素数判定
- * @param  {number} n
- * @returns boolean
+ * Determines if a number is prime
+ * @param  {number} n - Number to check (must be an integer)
+ * @returns {boolean} true if the number is prime, false otherwise
  * @example isPrimeNumber(2); // true
+ * isPrimeNumber(17); // true
+ * isPrimeNumber(4); // false
+ * isPrimeNumber(1); // false
+ * isPrimeNumber(-3); // false
  */
 export const isPrimeNumber = (n: number): boolean => {
-  if (n <= 1) {
+  if (n <= 1 || !Number.isInteger(n)) {
     return false;
   }
 

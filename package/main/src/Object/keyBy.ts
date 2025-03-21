@@ -3,9 +3,9 @@ type IterateeFunction<T> = (value: T) => PropertyName;
 type Iteratee<T> = IterateeFunction<T> | keyof T;
 
 /**
- * コレクションの要素をイテレータ関数の結果でキー化したオブジェクトを生成します
- * @param collection 処理対象のコレクション
- * @param iteratee キーを生成するイテレータ関数またはプロパティ名
+ * Creates an object composed of keys generated from the results of running each element of collection through iteratee
+ * @param collection The collection to iterate over
+ * @param iteratee The iteratee function or property name to generate the key
  */
 export function keyBy<T>(
   collection: T[] | Record<PropertyName, T>,
@@ -30,7 +30,7 @@ export function keyBy<T>(
 }
 
 /**
- * イテレータ関数の正規化
+ * Normalizes the iteratee function
  */
 function normalizeIteratee<T>(iteratee?: Iteratee<T>): IterateeFunction<T> {
   if (!iteratee) {

@@ -1,13 +1,13 @@
 /**
- * 2次元配列全体の配列をシャッフルします。
- * @param array シャッフルする2次元配列
- * @returns シャッフルされた2次元配列
+ * Shuffles all elements in a 2D array while maintaining the row lengths
+ * @param array The 2D array to shuffle
+ * @returns A new 2D array with shuffled elements
  * @example
  * shuffle2DArray([[1, 2], [3, 4], [5, 6]]);
- * // 例: [[1, 3], [6, 4], [2, 5]]
+ * // Result: [[1, 3], [6, 4], [2, 5]]
  */
 export const shuffle2DArray = <T>(array: T[][]): T[][] => {
-  // 2次元配列の要素を1次元配列に平坦化し、シャッフルする
+  // Flatten the 2D array into 1D and shuffle it
   const flatArray: T[] = [];
   for (const subArray of array) {
     flatArray.push(...subArray);
@@ -20,7 +20,7 @@ export const shuffle2DArray = <T>(array: T[][]): T[][] => {
     ];
   }
 
-  // シャッフルされた1次元配列を2次元配列に再構成する
+  // Reconstruct the 2D array from the shuffled flat array
   let rowIndex = 0;
   return array.map((subArray) => {
     const newRow = flatArray.slice(rowIndex, rowIndex + subArray.length);

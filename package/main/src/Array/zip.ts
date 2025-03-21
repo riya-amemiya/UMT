@@ -1,9 +1,12 @@
 import type { ZipArrayType } from "$/array/zip";
 
 /**
- * 複数の配列を受け取り、それらの配列の要素を組み合わせて新しい配列を作成します。
- * @param {T} arrays - 組み合わせる配列のリスト
- * @returns {ZipArrayType<T>} - 各配列の要素が組み合わされた新しい配列
+ * Creates a new array by combining elements from multiple arrays at corresponding positions
+ * @param {T} arrays List of arrays to combine
+ * @returns {ZipArrayType<T>} New array with combined elements from each input array
+ * @example
+ * zip([1, 2], ['a', 'b']); // [[1, 'a'], [2, 'b']]
+ * zip([1, 2, 3], ['a', 'b']); // [[1, 'a'], [2, 'b']]
  */
 export const zip = <T extends unknown[][]>(...arrays: T): ZipArrayType<T> => {
   if (arrays.length === 0) {

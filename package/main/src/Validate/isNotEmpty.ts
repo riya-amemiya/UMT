@@ -1,11 +1,11 @@
 /**
- * objectが空かどうかを確認する
- * @param {object} object - 空かどうかを確認するobject
- * @returns {boolean} true: 空でない, false: 空
+ * Checks if an object is not empty
+ * @param {object} object - The object to check
+ * @returns {boolean} true if the object is not empty, false if it is empty
  * @example isNotEmpty({}); // false
  * isNotEmpty({ a: 1 }); // true
  */
 export const isNotEmpty = (object: object): boolean => {
-  // objectが空かどうかを確認する
+  // Check if the object has any keys
   return Object.keys(object).length > 0;
 };

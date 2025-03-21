@@ -1,7 +1,7 @@
 /**
- * 配列かどうかを判定する
- * @param array
- * @returns boolean
+ * Determines if the value is an array
+ * @param array - Value to check
+ * @returns boolean - True if the value is an array, false otherwise
  * @example isArray([1, 2, 3]); // true
  * isArray({}); // false
  */

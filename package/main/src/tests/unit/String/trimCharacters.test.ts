@@ -1,19 +1,19 @@
 import { trimCharacters } from "@/String/trimCharacters";
 
 describe("trimCharacters", () => {
-  it("指定された文字を文字列の前後から削除する", () => {
+  it("should remove specified characters from both ends of string", () => {
     expect(trimCharacters("---Hello World---", "-")).toBe("Hello World");
   });
 
-  it("文字列の中間にある指定された文字は削除しない", () => {
+  it("should not remove specified characters from middle of string", () => {
     expect(trimCharacters("---Hello-World---", "-")).toBe("Hello-World");
   });
 
-  it("空の文字列を渡した場合、空の文字列を返す", () => {
+  it("should return empty string when input is empty", () => {
     expect(trimCharacters("", "-")).toBe("");
   });
 
-  it("削除する文字が指定されていない場合、元の文字列をそのまま返す", () => {
+  it("should return original string when no characters are specified to remove", () => {
     expect(trimCharacters("Hello World", "")).toBe("Hello World");
   });
 });

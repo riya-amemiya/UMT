@@ -1,7 +1,7 @@
 /**
- * 辞書型のオブジェクトかどうかを判定する
- * @param object
- * @returns {boolean} true: 辞書型オブジェクト, false: 辞書型オブジェクトでない
+ * Determines if the value is a dictionary-type object
+ * @param object - Value to check
+ * @returns {boolean} true if the value is a dictionary object, false otherwise
  * @example isDictionaryObject({}); // true
  * isDictionaryObject([]); // false
  */

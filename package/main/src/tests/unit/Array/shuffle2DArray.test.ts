@@ -1,19 +1,25 @@
 import { shuffle2DArray } from "@/Array/shuffle2DArray";
 
-describe("shuffle2DArray関数のテスト", () => {
-  it("空の2次元配列がそのまま返されること", () => {
+describe("shuffle2DArray function", () => {
+  it("should handle single-element 2D array", () => {
+    const array = [[1]];
+    const shuffledArray = shuffle2DArray(array);
+    expect(shuffledArray).toEqual(array);
+  });
+
+  it("should return empty 2D array unchanged", () => {
     const array: number[][] = [];
     const shuffledArray = shuffle2DArray(array);
     expect(shuffledArray).toEqual(array);
   });
 
-  it("サブ配列が空の場合もそのまま返されること", () => {
+  it("should return array with empty subarrays unchanged", () => {
     const array = [[], [], []];
     const shuffledArray = shuffle2DArray(array);
     expect(shuffledArray).toEqual(array);
   });
 
-  it("シャッフルされた2次元配列の長さが元の配列と同じであること", () => {
+  it("should maintain the same length of 2D array and subarrays after shuffling", () => {
     const array = [
       [1, 2],
       [3, 4],
@@ -26,28 +32,69 @@ describe("shuffle2DArray関数のテスト", () => {
     });
   });
 
-  it("異なる型を含む2次元配列がシャッフルされること", () => {
+  it("should shuffle 2D array with mixed types", () => {
     const array = [
       [1, "2"],
       ["3", 4],
       [5, "6"],
     ];
     const shuffledArray = shuffle2DArray(array);
-    // 全体の配列がシャッフルされているか確認
+    // Check if the entire array is shuffled
     expect(shuffledArray.map((subArray) => subArray.sort())).not.toEqual(
       array.map((subArray) => subArray.sort()),
     );
   });
 
-  it("長い配列の要素がシャッフルされること", () => {
+  it("should shuffle large 2D arrays", () => {
     const array = Array.from({ length: 1000 }, (_, index) => [
       index,
       index + 1,
     ]);
     const shuffledArray = shuffle2DArray(array);
-    // 全体の配列がシャッフルされているか確認
+    // Check if the entire array is shuffled
     expect(shuffledArray.map((subArray) => subArray.sort())).not.toEqual(
       array.map((subArray) => subArray.sort()),
     );
+  });
+
+  it("should handle subarrays of different lengths", () => {
+    const array = [[1], [2, 3], [4, 5, 6]];
+    const shuffledArray = shuffle2DArray(array);
+    expect(shuffledArray.length).toBe(array.length);
+    shuffledArray.forEach((subArray, index) => {
+      expect(subArray.length).toBe(array[index].length);
+    });
+    // Verify the total number of elements remains the same
+    const flatOriginal = array.flat();
+    const flatShuffled = shuffledArray.flat();
+    expect(flatShuffled.sort()).toEqual(flatOriginal.sort());
+  });
+
+  it("should not modify the original array", () => {
+    const array = [
+      [1, 2],
+      [3, 4],
+      [5, 6],
+    ];
+    const originalArray = array.map((subArray) => [...subArray]);
+    shuffle2DArray(array);
+    expect(array).toEqual(originalArray);
+  });
+
+  it("should maintain the total count of each unique element", () => {
+    const array = [
+      [1, 1],
+      [2, 2],
+      [1, 2],
+    ];
+    const shuffledArray = shuffle2DArray(array);
+    const countElements = (arr: number[][]) => {
+      const counts: Record<number, number> = {};
+      arr.flat().forEach((num) => {
+        counts[num] = (counts[num] || 0) + 1;
+      });
+      return counts;
+    };
+    expect(countElements(shuffledArray)).toEqual(countElements(array));
   });
 });

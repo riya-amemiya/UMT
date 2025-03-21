@@ -1,8 +1,8 @@
 import { getArraysDiff } from "@/Array/getArraysDiff";
 
-describe("getArraysDiff関数のテスト", () => {
-  // 通常のケース
-  test("通常の配列", () => {
+describe("getArraysDiff function", () => {
+  // Normal cases
+  test("should handle standard arrays", () => {
     expect(getArraysDiff([1, 2, 3], [2, 3, 4], [3, 4, 5])).toEqual([1, 5]);
     expect(getArraysDiff([-1, 0, 1], [0, 1, 2], [1, 2, 3])).toEqual([-1, 3]);
     expect(
@@ -22,8 +22,8 @@ describe("getArraysDiff関数のテスト", () => {
     ).toEqual([1, "a", 2, "b", false, 3, "c"]);
   });
 
-  // 空の配列があるケース
-  test("空の配列", () => {
+  // Cases with empty arrays
+  test("should handle empty arrays", () => {
     expect(getArraysDiff([], [1, 2], [2, 3])).toEqual([1, 3]);
     expect(getArraysDiff([1, 2], [], [2, 3])).toEqual([1, 3]);
     expect(getArraysDiff([1, 2], [2, 3], [])).toEqual([1, 3]);
@@ -52,8 +52,8 @@ describe("getArraysDiff関数のテスト", () => {
     expect(getArraysDiff([], [], [])).toEqual([]);
   });
 
-  // 重複要素がないケース
-  test("重複なし", () => {
+  // Cases with no duplicate elements
+  test("should handle arrays with no duplicates", () => {
     expect(getArraysDiff([1, 2], [3, 4], [5, 6])).toEqual([1, 2, 3, 4, 5, 6]);
     expect(getArraysDiff(["a", "b"], ["c", "d"], ["e", "f"])).toEqual([
       "a",
@@ -93,8 +93,8 @@ describe("getArraysDiff関数のテスト", () => {
     expect(getArraysDiff([/a/], [/b/], [/c/])).toEqual([/a/, /b/, /c/]);
   });
 
-  // 全ての配列が同じ要素を持つケース
-  test("全配列で重複", () => {
+  // Cases where all arrays have the same elements
+  test("should handle arrays with identical elements", () => {
     expect(getArraysDiff([1, 2, 3], [1, 2, 3], [1, 2, 3])).toEqual([]);
     expect(
       getArraysDiff(["a", "b", "c"], ["a", "b", "c"], ["a", "b", "c"]),
@@ -108,8 +108,8 @@ describe("getArraysDiff関数のテスト", () => {
     expect(getArraysDiff([0.1, 0.2], [0.1, 0.2], [0.1, 0.2])).toEqual([]);
   });
 
-  // 全ての配列が同じ要素を持っているが、順序が異なるケース
-  test("全配列で重複(順序異なる)", () => {
+  // Cases where all arrays have the same elements but in different order
+  test("should handle arrays with identical elements in different order", () => {
     expect(getArraysDiff([1, 2, 3], [3, 1, 2], [2, 3, 1])).toEqual([]);
     expect(
       getArraysDiff(["a", "b", "c"], ["c", "a", "b"], ["b", "c", "a"]),
@@ -129,8 +129,8 @@ describe("getArraysDiff関数のテスト", () => {
     ).toEqual([]);
   });
 
-  // 型が異なるケース
-  test("型が異なる", () => {
+  // Cases with different types
+  test("should handle arrays with different types", () => {
     expect(getArraysDiff([1, "a", true], [true, "a"], [1, 2])).toEqual([2]);
     expect(
       getArraysDiff(
@@ -142,14 +142,9 @@ describe("getArraysDiff関数のテスト", () => {
     expect(
       getArraysDiff([1, "2", true], ["1", 2, false], [true, "1", 2]),
     ).toEqual([1, "2", false]);
-    expect(getArraysDiff([0, ""], [false, null], [undefined, NaN])).toEqual([
-      0,
-      "",
-      false,
-      null,
-      undefined,
-      NaN,
-    ]);
+    expect(
+      getArraysDiff([0, ""], [false, null], [undefined, Number.NaN]),
+    ).toEqual([0, "", false, null, undefined, Number.NaN]);
     expect(getArraysDiff([1n, 2n], [BigInt(1), BigInt(2)], [1, 2])).toEqual([
       1, 2,
     ]);

@@ -2,19 +2,19 @@ import type { PickDeep } from "$/object/pickDeep";
 import type { PickDeepKey } from "$/object/pickDeepKey";
 
 /**
- * オブジェクトから指定されたキーに基づいて深くプロパティを選択し、新しいオブジェクトを作成します。
+ * Creates a new object by deeply selecting properties from the source object based on specified keys.
  *
- * @template T - 元のオブジェクトの型。
- * @template K - 選択するプロパティキーの型。PickDeepKey<T>のサブセット。
- * @param {T} object - プロパティを抽出する元のオブジェクト。
- * @param {...K[]} keys - 抽出したいプロパティのキー。ネストされたキーをドットで区切ることができます。
- * @returns {PickDeep<T>} 指定されたキーを持つプロパティのみを含む新しいオブジェクト。
+ * @template T - Type of the source object.
+ * @template K - Type of property keys to select. Must be a subset of PickDeepKey<T>.
+ * @param {T} object - The source object to extract properties from.
+ * @param {...K[]} keys - Property keys to extract. Can use dot notation for nested properties.
+ * @returns {PickDeep<T>} A new object containing only the specified properties.
  *
  * @example
  * ```typescript
  * const obj = { a: { b: { c: 1, d: 2 }, e: 3 }, f: 4 };
  * const picked = pickDeep(obj, 'a.b.c', 'f');
- * // picked は { a: { b: { c: 1 } }, f: 4 } となる
+ * // picked will be { a: { b: { c: 1 } }, f: 4 }
  * ```
  */
 export const pickDeep = <T extends object, K extends PickDeepKey<T>>(
