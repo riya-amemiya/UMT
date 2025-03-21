@@ -1,5 +1,7 @@
 import { compareFunctionDefault } from "./compareFunctionDefault";
 
+import type { CompareFunction } from "$/array/compareFunction";
+
 /**
  * Merge sort implementation
  * @param  {T[]} array Array to sort
@@ -9,7 +11,7 @@ import { compareFunctionDefault } from "./compareFunctionDefault";
  */
 export const mergeSort = <T>(
   array: T[],
-  compareFunction: (a: T, b: T) => number = compareFunctionDefault,
+  compareFunction: CompareFunction<T> = compareFunctionDefault,
 ): T[] => {
   if (array.length <= 1) {
     return array;

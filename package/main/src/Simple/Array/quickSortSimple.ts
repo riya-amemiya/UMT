@@ -1,3 +1,4 @@
+import type { CompareFunction } from "$/array/compareFunction";
 import { compareFunctionDefault } from "@/Array/compareFunctionDefault";
 import { quickSort } from "@/Array/quickSort";
 
@@ -12,7 +13,7 @@ import { quickSort } from "@/Array/quickSort";
  */
 export const quickSortSimple = <T>(
   array: T[],
-  compareFunction: (a: T, b: T) => number = compareFunctionDefault<T>,
+  compareFunction: CompareFunction<T> = compareFunctionDefault<T>,
   startID = 0,
   endID: number = array.length - 1,
 ): T[] => {

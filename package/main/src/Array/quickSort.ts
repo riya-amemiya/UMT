@@ -1,6 +1,6 @@
 import { compareFunctionDefault } from "./compareFunctionDefault";
 
-type CompareFunction<T> = (a: T, b: T) => number;
+import type { CompareFunction } from "$/array/compareFunction";
 
 /**
  * Finds the median value among three elements in the array

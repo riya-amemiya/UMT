@@ -1,5 +1,7 @@
 import { compareFunctionDefault } from "./compareFunctionDefault";
 
+import type { CompareFunction } from "$/array/compareFunction";
+
 /**
  * Sort an array using insertion sort algorithm
  *
@@ -23,7 +25,7 @@ import { compareFunctionDefault } from "./compareFunctionDefault";
  */
 export const insertionSort = <T>(
   array: T[],
-  compareFunction: (a: T, b: T) => number = compareFunctionDefault<T>,
+  compareFunction: CompareFunction<T> = compareFunctionDefault<T>,
   start = 0,
   end: number = array.length - 1,
 ): T[] => {
