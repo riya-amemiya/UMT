@@ -3,12 +3,13 @@ import { compareFunctionDefault } from "@/Array/compareFunctionDefault";
 import { quickSort } from "@/Array/quickSort";
 
 /**
- * 配列を高速にソート
- * @param {T[]} array 配列
- * @param {(a: T, b: T) => number} compareFunction 比較関数
- * @param {number} startID 開始インデックス
- * @param {number} endID 終了インデックス
- * @returns T[]
+ * Quick sort implementation for arrays
+ * @template T Type of array elements
+ * @param {T[]} array Input array to sort
+ * @param {(a: T, b: T) => number} compareFunction Function to determine sort order
+ * @param {number} startID Starting index for sorting
+ * @param {number} endID Ending index for sorting
+ * @returns {T[]} Sorted array
  * @example quickSort([1, 3, 2, 4, 5], (a, b) => a - b); // [1, 2, 3, 4, 5]
  */
 export const quickSortSimple = <T>(
