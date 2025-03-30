@@ -5,3 +5,11 @@ main-package:
 typescript:
 - changed-files:
   - any-glob-to-any-file: '**/*.ts'
+
+go:
+- changed-files:
+  - any-glob-to-any-file: '**/*.go'
+
+rust:
+- changed-files:
+  - any-glob-to-any-file: '**/*.rs'
