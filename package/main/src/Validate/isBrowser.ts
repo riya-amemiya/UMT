@@ -1,5 +1,5 @@
 /**
- * ブラウザかどうかを判定する
+ * Determines if the current environment is a browser
  */
 export const isBrowser = () => {
   try {

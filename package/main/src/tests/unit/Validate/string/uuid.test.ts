@@ -2,7 +2,7 @@ import { string } from "@/Validate";
 import { uuid } from "@/Validate/string/uuid";
 
 describe("uuid", () => {
-  it("有効なUUIDを検証する", () => {
+  it("should validate valid UUIDs", () => {
     const validateUUID = uuid();
     expect(validateUUID.validate("123e4567-e89b-42d3-a456-426614174000")).toBe(
       true,
@@ -42,7 +42,7 @@ describe("uuid", () => {
     );
   });
 
-  it("無効なUUIDを検証する", () => {
+  it("should reject invalid UUIDs", () => {
     const validateUUID = uuid();
     expect(validateUUID.validate("123e4567-e89b-42d3-a456-42661417400Z")).toBe(
       false,
@@ -52,30 +52,30 @@ describe("uuid", () => {
     );
   });
 
-  it("カスタムメッセージを持つ有効なUUIDを検証する", () => {
+  it("should validate valid UUID with custom message", () => {
     const validUUID = "123e4567-e89b-42d3-a456-426614174000";
-    const customMessage = "UUIDが無効です";
+    const customMessage = "Invalid UUID format";
     const validateUUID = string([uuid([4], customMessage)]);
     expect(validateUUID(validUUID).validate).toBe(true);
     expect(validateUUID(validUUID).message).toBe("");
   });
 
-  it("カスタムメッセージを持つ無効なUUIDを検証する", () => {
+  it("should reject invalid UUID with custom message", () => {
     const invalidUUID = "123e4567-e89b-12d3-a456-42661417400Z";
-    const customMessage = "UUIDが無効です";
+    const customMessage = "Invalid UUID format";
     const validateUUID = string([uuid([4], customMessage)]);
     expect(validateUUID(invalidUUID).validate).toBe(false);
     expect(validateUUID(invalidUUID).message).toBe(customMessage);
   });
 
-  it("大文字と小文字が混在する有効なUUIDを検証する", () => {
+  it("should validate UUIDs with mixed case letters", () => {
     const validateUUID = uuid();
     expect(validateUUID.validate("123e4567-E89b-42D3-a456-426614174000")).toBe(
       true,
     );
   });
 
-  it("UUIDのバージョンが異なる場合を検証する", () => {
+  it("should validate different UUID versions", () => {
     const validateUUID = uuid([1, 2, 3, 4, 5]);
     expect(validateUUID.validate("123e4567-e89b-12d3-a456-426614174000")).toBe(
       true,
@@ -91,30 +91,30 @@ describe("uuid", () => {
     );
   });
 
-  it("UUIDの形式が完全に異なる文字列を検証する", () => {
+  it("should reject completely invalid UUID formats", () => {
     const validateUUID = uuid();
     expect(validateUUID.validate("completely-invalid-format")).toBe(false);
   });
 
-  it("空文字列を検証する", () => {
+  it("should reject empty strings", () => {
     const validateUUID = uuid();
     expect(validateUUID.validate("")).toBe(false);
   });
 
-  it("nullを検証する", () => {
+  it("should reject null values", () => {
     const validateUUID = uuid();
     // @ts-ignore
     expect(validateUUID.validate(null)).toBe(false);
   });
 
-  it("UUIDの長さが不足している場合を検証する", () => {
+  it("should reject UUIDs with insufficient length", () => {
     const validateUUID = uuid();
     expect(validateUUID.validate("123e4567-e89b-42d3-a456-42661417400")).toBe(
       false,
     );
   });
 
-  it("UUIDの長さが超過している場合を検証する", () => {
+  it("should reject UUIDs with excessive length", () => {
     const validateUUID = uuid();
     expect(
       validateUUID.validate("123e4567-e89b-42d3-a456-4266141740001234"),

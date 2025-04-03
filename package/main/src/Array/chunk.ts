@@ -1,8 +1,8 @@
 import type { ChunkArrayType } from "$/array/chunk"; /**
- * 配列を指定した数で分割する
- * @param {T} array 配列
- * @param {N} n 分割数
- * @returns 分割された配列
+ * Split an array into smaller chunks of specified size
+ * @param {T} array The array to split
+ * @param {N} n The size of each chunk
+ * @returns Array of chunks
  * @example chunk([1, 2, 3, 4, 5, 6, 7, 8, 9], 3); // [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
  */
 export const chunk = <T extends unknown[], N extends number>(

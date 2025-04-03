@@ -2,12 +2,14 @@ import { multiplication } from "@/Math/multiplication";
 import { isNumber } from "@/Validate/isNumber";
 
 /**
- * 文字列内の通貨記号を利用して通貨を換算する。
+ * Converts currency amounts in a string using currency symbols.
  *
- * @param inputString - 換算する通貨額を含む文字列
- * @param conversionRates - 通貨記号と換算レートのオブジェクト
- * @returns 換算後の通貨額を文字列で返す。換算できない場合は元の文字列を返す。
+ * @param {string} inputString - String containing a currency amount to convert
+ * @param {object} conversionRates - Object mapping currency symbols to conversion rates
+ * @returns {string} Converted currency amount as a string, or the original string if conversion is not possible
  * @example convertCurrency("¥100", { "¥": 0.01 }); // "1"
+ * @example convertCurrency("$50", { "$": 1.2 }); // "60"
+ * @example convertCurrency("€200", { "€": 1.1 }); // "220"
  */
 export const convertCurrency = <
   T extends {

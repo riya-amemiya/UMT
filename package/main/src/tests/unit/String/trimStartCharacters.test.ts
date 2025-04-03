@@ -1,25 +1,38 @@
 import { trimStartCharacters } from "@/String/trimStartCharacters";
 
 describe("trimStartCharacters", () => {
-  it("指定された文字を文字列の先頭から取り除く", () => {
-    expect(trimStartCharacters("---Hello World---", "-")).toBe(
-      "Hello World---",
-    );
+  it("should remove specified characters from the start of string", () => {
+    expect(trimStartCharacters("---Hello", "-")).toBe("Hello");
+    expect(trimStartCharacters("!!!world", "!")).toBe("world");
   });
 
-  it("文字列に指定された文字が含まれていない場合、変更を加えずにそのまま返す", () => {
-    expect(trimStartCharacters("Hello World", "-")).toBe("Hello World");
+  it("should handle multiple different characters to trim", () => {
+    expect(trimStartCharacters("...123test", ".123")).toBe("test");
+    expect(trimStartCharacters("---...text", ".-")).toBe("text");
   });
 
-  it("空の文字列が与えられた場合、空の文字列を返す", () => {
-    expect(trimStartCharacters("", "-")).toBe("");
+  it("should return original string if no characters match", () => {
+    expect(trimStartCharacters("hello", "x")).toBe("hello");
+    expect(trimStartCharacters("test", "xyz")).toBe("test");
   });
 
-  it("すべての文字が取り除かれる場合、空の文字列を返す", () => {
-    expect(trimStartCharacters("---", "-")).toBe("");
+  it("should handle empty input string", () => {
+    expect(trimStartCharacters("", "x")).toBe("");
+    expect(trimStartCharacters("", "")).toBe("");
   });
 
-  it("複数の異なる文字を取り除く", () => {
-    expect(trimStartCharacters("abcHello World", "abc")).toBe("Hello World");
+  it("should return empty string if all characters are trimmed", () => {
+    expect(trimStartCharacters("xxxxx", "x")).toBe("");
+    expect(trimStartCharacters(".....", ".")).toBe("");
+  });
+
+  it("should return original string if trim characters is empty", () => {
+    expect(trimStartCharacters("hello", "")).toBe("hello");
+    expect(trimStartCharacters("123test", "")).toBe("123test");
+  });
+
+  it("should handle non-ascii characters", () => {
+    expect(trimStartCharacters("。。。こんにちは", "。")).toBe("こんにちは");
+    expect(trimStartCharacters("！！Hello", "！")).toBe("Hello");
   });
 });

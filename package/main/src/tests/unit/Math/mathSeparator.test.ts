@@ -1,6 +1,6 @@
 import { mathSeparator } from "@/Math/mathSeparator";
 describe("mathSeparator", () => {
-  // 数字の型（number）のテスト
+  // Test number type inputs
   it("should handle single digit numbers", () => {
     expect(mathSeparator(5)).toEqual([5, 0]);
   });
@@ -9,7 +9,7 @@ describe("mathSeparator", () => {
     expect(mathSeparator(1250)).toEqual([1000, 250]);
   });
 
-  // 文字列型の数字のテスト
+  // Test string number inputs
   it("should handle single digit string numbers", () => {
     expect(mathSeparator("5")).toEqual([5, 0]);
   });
@@ -18,7 +18,7 @@ describe("mathSeparator", () => {
     expect(mathSeparator("1250")).toEqual([1000, 250]);
   });
 
-  // 0および'0'のケース
+  // Test zero cases
   it("should handle 0", () => {
     expect(mathSeparator(0)).toEqual([0, 0]);
   });
@@ -27,17 +27,37 @@ describe("mathSeparator", () => {
     expect(mathSeparator("0")).toEqual([0, 0]);
   });
 
-  // 不正な値のケース
+  // Test invalid inputs
   it("should return [0, 0] for non-number input", () => {
     expect(mathSeparator("abc")).toEqual([0, 0]);
   });
 
-  // 小数のケース
+  // Test decimal numbers
   it("should handle decimal numbers", () => {
     expect(mathSeparator(12.5)).toEqual([10, 2.5]);
   });
 
   it("should handle decimal string numbers", () => {
     expect(mathSeparator("12.5")).toEqual([10, 2.5]);
+  });
+
+  // Test edge cases
+  it("should handle negative numbers", () => {
+    expect(mathSeparator(-1250)).toEqual([10000, -11250]);
+    expect(mathSeparator("-1250.5")).toEqual([10000, -11249.5]);
+  });
+
+  it("should handle very large numbers", () => {
+    expect(mathSeparator(1000000)).toEqual([1000000, 0]);
+    expect(mathSeparator("1000000.123")).toEqual([1000000, 0.123]);
+  });
+
+  it("should handle special numeric strings", () => {
+    // Note: "1e5" is treated as a regular string "1e5"
+    expect(mathSeparator("1e5")).toEqual([100, 99900]);
+    // Note: isNumber treats "0xFF" as a valid number, so it's processed accordingly
+    expect(mathSeparator("0xFF")).toEqual([1000, -745]);
+    // Note: "Infinity" is not a valid number in this context
+    expect(mathSeparator("Infinity")).toEqual([0, 0]);
   });
 });

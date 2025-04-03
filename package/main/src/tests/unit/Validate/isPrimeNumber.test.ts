@@ -31,12 +31,25 @@ describe("isPrimeNumber", () => {
     expect(isPrimeNumber(16)).toBe(false);
     expect(isPrimeNumber(18)).toBe(false);
   });
-  test("should return false for large non-prime number", () => {
-    const largeNonPrimeNumber = 10000000000000;
+  test("should return false for negative numbers", () => {
+    expect(isPrimeNumber(-2)).toBe(false);
+    expect(isPrimeNumber(-7)).toBe(false);
+    expect(isPrimeNumber(-11)).toBe(false);
+  });
+
+  test("should return false for non-integer numbers", () => {
+    expect(isPrimeNumber(2.5)).toBe(false);
+    expect(isPrimeNumber(3.14)).toBe(false);
+    expect(isPrimeNumber(7.0)).toBe(true); // 7.0 is treated as integer 7
+  });
+
+  test("should handle large non-prime numbers", () => {
+    const largeNonPrimeNumber = 10000000000000; // 10^13
     expect(isPrimeNumber(largeNonPrimeNumber)).toBe(false);
   });
-  test("should return true for large prime number", () => {
-    const largePrimeNumber = 982451653; // This is a known large prime number
+
+  test("should handle large prime numbers", () => {
+    const largePrimeNumber = 982451653; // 982,451,653 is a known prime number
     expect(isPrimeNumber(largePrimeNumber)).toBe(true);
   });
 });

@@ -1,24 +1,25 @@
 import type { TimeUnit } from "$/time/timeUnit";
 import type { TimeUnitShort } from "$/time/timeUnitShort";
+import { division, multiplication } from "@/Math";
 import { normalizeTimeUnit } from "@/Time/normalizeTimeUnit";
 
 /**
- * 時間単位間の変換率を定義
+ * Defines conversion rates between time units
  */
 const conversionRates: Record<TimeUnit, number> = {
   milliseconds: 1,
   seconds: 1000,
-  minutes: 60 * 1000,
-  hours: 60 * 60 * 1000,
+  minutes: 60_000,
+  hours: 3_600_000,
 };
 
 /**
- * 時間を変換する関数
- * @param value 変換する値（文字列）
- * @param fromUnit 変換元の単位
- * @param toUnit 変換先の単位
- * @returns 変換後の値（数値）
- * @throws {Error} 無効な数値入力の場合
+ * Converts time between different units
+ * @param value Value to convert (string or number)
+ * @param fromUnit Source time unit
+ * @param toUnit Target time unit
+ * @returns Converted value (number)
+ * @throws {Error} If the input value is invalid
  */
 export const convertTime = (
   value: string | number,
@@ -29,6 +30,9 @@ export const convertTime = (
     typeof value === "string" ? Number.parseFloat(value) : value;
   const normalizedFromUnit = normalizeTimeUnit(fromUnit, "long");
   const normalizedToUnit = normalizeTimeUnit(toUnit, "long");
-  const milliseconds = numericValue * conversionRates[normalizedFromUnit];
-  return milliseconds / conversionRates[normalizedToUnit];
+  const milliseconds = multiplication(
+    numericValue,
+    conversionRates[normalizedFromUnit],
+  );
+  return division(milliseconds, conversionRates[normalizedToUnit]);
 };

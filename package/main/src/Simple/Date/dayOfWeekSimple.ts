@@ -8,10 +8,10 @@ import type { MonthsWithout31Days } from "$/date/monthsWithout31Days";
 import type { MonthsWithout31DaysInt } from "$/date/monthsWithout31DaysInt";
 import { dayOfWeek } from "@/Date/dayOfWeek";
 /**
- * 曜日を取得する
- * @param properties - 年月日
- * @param timeDifference - 時差 (default: 9)
- * @returns number
+ * Get day of the week
+ * @param properties - Date in various formats (year, month, day)
+ * @param timeDifference - Time zone difference in hours (default: 9)
+ * @returns Day of the week (0-6, where 0 is Sunday)
  * @example dayOfWeekSimple("2000-01-01");
  * dayOfWeekSimple("2000:01:01");
  * dayOfWeekSimple("2000/01/01");

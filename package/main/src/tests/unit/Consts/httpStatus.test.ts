@@ -1,6 +1,23 @@
-import { HttpStatus } from "@/Consts/httpStatus";
+import {
+  HttpStatus,
+  HttpClientErrorStatus,
+  HttpInformationalStatus,
+  HttpRedirectionStatus,
+  HttpServerErrorStatus,
+  HttpSuccessStatus,
+} from "@/Consts/httpStatus";
 
 describe("HttpStatus", () => {
+  describe("Exports", () => {
+    it("should export all HTTP status types", () => {
+      expect(HttpClientErrorStatus).toBeDefined();
+      expect(HttpInformationalStatus).toBeDefined();
+      expect(HttpRedirectionStatus).toBeDefined();
+      expect(HttpServerErrorStatus).toBeDefined();
+      expect(HttpSuccessStatus).toBeDefined();
+    });
+  });
+
   describe("1xx Informational", () => {
     it("should have correct informational status codes", () => {
       expect(HttpStatus.CONTINUE).toBe(100);

@@ -1,10 +1,10 @@
 /**
- * 指定された要素数まで数値型の配列を生成する
- * @param length 配列の長さ
- * @param min 最小値 (デフォルト: 0)
- * @param max 最大値 (デフォルト: length - 1)
- * @param random ランダムな値を生成するかどうか (デフォルト: false)
- * @returns 数値型の配列
+ * Generates an array of numbers with the specified length
+ * @param length The length of the array
+ * @param min The minimum value (default: 0)
+ * @param max The maximum value (default: length - 1)
+ * @param random Whether to generate random values (default: false)
+ * @returns Array of numbers
  * @example generateNumberArray(5); // [0, 1, 2, 3, 4]
  * @example generateNumberArray(5, 10, 14); // [10, 11, 12, 13, 14]
  */

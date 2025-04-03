@@ -1,7 +1,7 @@
 /**
- * 文字列をBase64に変換する
- * @param char Base64に変換する文字列
- * @returns Base64に変換された文字列
+ * Convert string to Base64
+ * @param char String to convert to Base64
+ * @returns Base64 encoded string
  */
 export const toBase64 = (char: string): string =>
   btoa(

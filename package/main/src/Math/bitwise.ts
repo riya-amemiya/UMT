@@ -1,9 +1,9 @@
 /**
- * ビット回転を行う関数
- * @param x 回転させる32ビット整数
- * @param k 回転するビット数
- * @param direction 回転方向 ('left' または 'right')
- * @returns 指定された方向にkビット回転された結果
+ * Performs bit rotation on a number
+ * @param x 32-bit integer to rotate
+ * @param k Number of bits to rotate
+ * @param direction Direction of rotation ('left' or 'right')
+ * @returns The result after rotating k bits in the specified direction
  * @example
  * const resultLeft = bitwise(0x12345678, 8);
  * console.log(resultLeft.toString(16)); // '34567812'

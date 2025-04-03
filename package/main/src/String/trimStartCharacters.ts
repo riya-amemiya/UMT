@@ -1,9 +1,15 @@
 /**
- * 指定された文字列の先頭から、指定された文字を取り除きます。
+ * Removes specified characters from the start of a string
  *
- * @param {string} string_ - 処理対象の文字列。
- * @param {string} chars - 取り除く文字が含まれている文字列。
- * @returns {string} 先頭から指定された文字を取り除いた新しい文字列。
+ * @param {string} string_ - The input string to trim
+ * @param {string} chars - Characters to remove from the start
+ * @returns {string} A new string with specified characters removed from the start
+ * @example
+ * ```typescript
+ * trimStartCharacters("!!!hello", "!"); // Returns: "hello"
+ * trimStartCharacters("---123", "-");   // Returns: "123"
+ * trimStartCharacters("abc123", "xyz"); // Returns: "abc123"
+ * ```
  */
 export const trimStartCharacters = (string_: string, chars: string): string => {
   let startIndex = 0;

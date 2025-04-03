@@ -14,37 +14,37 @@ interface Post {
 }
 
 describe("createPipeline", () => {
-  it("引数なしで呼び出すと、初期値を返す", () => {
+  it("returns initial value when called without arguments", () => {
     const pipeline = createPipeline(1);
     expect(pipeline()).toBe(1);
   });
 
-  it("関数を引数として渡すと、新しいPipelineインスタンスを返す", () => {
+  it("returns a new Pipeline instance when passing a function as argument", () => {
     const pipeline = createPipeline(1);
     const newPipeline = pipeline((x) => x + 1);
     expect(newPipeline).toBeInstanceOf(Function);
   });
 
-  it("関数を引数として渡して呼び出すと、変換された値を返す", () => {
+  it("returns transformed value when called with a function argument", () => {
     const pipeline = createPipeline(1);
     const newPipeline = pipeline((x) => x + 1);
     expect(newPipeline()).toBe(2);
   });
 
-  it("複数の関数を連鎖して呼び出すことができる", () => {
+  it("can chain multiple function calls", () => {
     const pipeline = createPipeline(1);
     const result = pipeline((x) => x + 1)((x) => x * 2)((x) => x - 1)();
     expect(result).toBe(3);
   });
 
-  it("関数の型が正しく推論される", () => {
+  it("correctly infers function types", () => {
     const pipeline = createPipeline(1);
     const newPipeline = pipeline((x: number) => `${x}`);
     const result: string = newPipeline();
     expect(result).toBe("1");
   });
 
-  it("複雑な型の推論が正しく行われる", () => {
+  it("correctly handles complex type inference", () => {
     const user: User = {
       id: 1,
       name: "John Doe",
@@ -72,7 +72,7 @@ describe("createPipeline", () => {
     });
   });
 
-  it("ジェネリック型のネストが正しく推論される", () => {
+  it("correctly infers nested generic types", () => {
     const pipeline = createPipeline<User[]>([]);
 
     const users: User[] = pipeline((users: User[]) => [
@@ -86,35 +86,35 @@ describe("createPipeline", () => {
     ]);
   });
 
-  it("initialValueがnullの場合も正しく動作する", () => {
+  it("works correctly with null as initial value", () => {
     const pipeline = createPipeline(null);
     expect(pipeline()).toBeNull();
   });
 
-  it("initialValueがundefinedの場合も正しく動作する", () => {
+  it("works correctly with undefined as initial value", () => {
     const pipeline = createPipeline(undefined);
     expect(pipeline()).toBeUndefined();
   });
 
-  it("空文字列を正しく処理できる", () => {
+  it("can process empty strings correctly", () => {
     const pipeline = createPipeline("");
     const result = pipeline((x) => x + "test")((x) => x.toUpperCase())();
     expect(result).toBe("TEST");
   });
 
-  it("数値の0を正しく処理できる", () => {
+  it("can process numeric zero correctly", () => {
     const pipeline = createPipeline(0);
     const result = pipeline((x) => x + 1)((x) => x * 2)();
     expect(result).toBe(2);
   });
 
-  it("真偽値の変換を正しく処理できる", () => {
+  it("can process boolean transformations correctly", () => {
     const pipeline = createPipeline(true);
     const result = pipeline((x) => !x)((x) => x.toString())();
     expect(result).toBe("false");
   });
 
-  it("配列の変換を正しく処理できる", () => {
+  it("can process array transformations correctly", () => {
     const pipeline = createPipeline([1, 2, 3, 4, 5]);
     const result = pipeline((arr) => arr.filter((x) => x % 2 === 0))((arr) =>
       arr.map((x) => x * 2),
@@ -122,7 +122,7 @@ describe("createPipeline", () => {
     expect(result).toEqual([4, 8]);
   });
 
-  it("オブジェクトの複雑な変換を正しく処理できる", () => {
+  it("can process complex object transformations correctly", () => {
     interface Data {
       count: number;
       items: string[];
@@ -144,7 +144,7 @@ describe("createPipeline", () => {
     });
   });
 
-  it("複数の型変換を連鎖的に処理できる", () => {
+  it("can process multiple type transformations in chain", () => {
     const pipeline = createPipeline(123);
     const result = pipeline((x: number) => x.toString())((x: string) =>
       x.split(""),

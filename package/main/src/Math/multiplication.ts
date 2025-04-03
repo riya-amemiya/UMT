@@ -1,9 +1,9 @@
 import { getDecimalLength } from "./getDecimalLength";
 
 /**
- * 誤差のない掛け算を任意長の引数で行う
- * @param  {...number[]} numbers
- * @returns number
+ * Performs multiplication without floating point errors for any number of arguments
+ * @param  {...number[]} numbers Numbers to multiply
+ * @returns {number} Product of all numbers
  * @example multiplication(0.1, 0.2, 0.3); // 0.006
  */
 export const multiplication = (...numbers: number[]) => {

@@ -1,9 +1,11 @@
 import { division } from "./division";
 
 /**
- * ラジアンを角度に変換
- * @param  {number} x
- * @returns number
+ * Converts radians to degrees
+ * @param  {number} x Angle in radians
+ * @returns {number} Angle in degrees
  * @example radToDeg(Math.PI); // 180
+ * @description
+ * Uses the formula: degrees = radians * (180/π)
  */
 export const radToDeg = (x: number) => division(x, division(Math.PI, 180));

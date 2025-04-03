@@ -3,17 +3,19 @@ import { calculatorCore } from "./core";
 import { division } from "@/Math/division";
 import { gcd } from "@/Math/gcd";
 /**
- * 文字式の方程式を計算する
- * @param x 方程式の文字列
- * @returns 計算結果
+ * Solves literal equations with variables
+ * @param {string} x - Equation string
+ * @returns {string} Solution result
  * @example literalExpression("x+1=2"); // "1"
+ * @example literalExpression("2x=6"); // "3"
+ * @example literalExpression("3x+2=8"); // "2"
  */
 export const literalExpression = (x: string): string => {
-  // 方程式の数値と変数部分を格納
+  // Store numerical and variable parts of the equation
   let numericalPart = "";
   let variablePart: string[] = [];
 
-  // 等号で分割し、数値と変数部分を識別
+  // Split by equals sign and identify numerical and variable parts
   for (const part of x.split("=")) {
     if (/[A-Za-z]+/.test(part)) {
       variablePart = part
@@ -24,7 +26,7 @@ export const literalExpression = (x: string): string => {
     }
   }
 
-  // 変数部分の計算
+  // Calculate the variable part (and invert signs for moving to other side of equation)
   if (variablePart[1]) {
     variablePart[1] = calculatorCore(variablePart[1])
       .replaceAll("+", "plus")
@@ -33,22 +35,22 @@ export const literalExpression = (x: string): string => {
       .replaceAll("minus", "+");
   }
 
-  // 数値部分の計算
+  // Calculate the numerical part
   numericalPart = variablePart[1]
     ? calculatorCore(`${numericalPart}${variablePart[1]}`)
     : calculatorCore(numericalPart);
 
-  // 変数部分を再分割
+  // Split the variable part again to separate coefficient and variable
   variablePart = variablePart[0]
     .split(/(\d+)|([A-Za-z]+)/)
     .filter((n) => n && n !== undefined);
 
-  // 数値がない場合は計算結果を返す
+  // If there's no coefficient, return the numerical result
   if (Number.isNaN(Number(variablePart[0]))) {
     return numericalPart;
   }
 
-  // 最大公約数で簡約
+  // Simplify using greatest common divisor
   const commonGcd = gcd(Number(variablePart[0]), Number(numericalPart));
   if (commonGcd !== 1) {
     numericalPart = `${division(Number(numericalPart), commonGcd)}/${division(
