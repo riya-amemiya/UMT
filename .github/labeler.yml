@@ -1,0 +1,15 @@
+main-package:
+- changed-files:
+  - any-glob-to-any-file: 'package/main/**'
+
+typescript:
+- changed-files:
+  - any-glob-to-any-file: '**/*.ts'
+
+go:
+- changed-files:
+  - any-glob-to-any-file: '**/*.go'
+
+rust:
+- changed-files:
+  - any-glob-to-any-file: '**/*.rs'
