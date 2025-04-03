@@ -1,19 +1,22 @@
 /**
- * 素因数分解
- * @param  {number} x
- * @returns {number: number; count: number}[]
+ * Performs prime factorization of a number
+ * @param  {number} x Number to factorize
+ * @returns {Array<{number: number; count: number}>} Array of prime factors and their counts
  * @example primeFactorization(12); // [{number: 2, count: 2}, {number: 3, count: 1}]
+ * @description
+ * Returns an array of objects containing prime factors and their counts.
+ * For example, 12 = 2^2 * 3^1 is represented as [{number: 2, count: 2}, {number: 3, count: 1}]
  */
 export const primeFactorization = (x: number) => {
   let n = 0;
-  let cooyX = x;
+  let copyX = x;
   const out: { number: number; count: number }[] = [];
-  for (let index = 2; index <= cooyX; index++) {
-    if (cooyX % index === 0) {
+  for (let index = 2; index <= copyX; index++) {
+    if (copyX % index === 0) {
       n = 0;
-      while (cooyX % index === 0) {
+      while (copyX % index === 0) {
         n++;
-        cooyX /= index;
+        copyX /= index;
       }
       out.push({ number: index, count: n });
     }
