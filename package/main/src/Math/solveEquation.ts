@@ -4,22 +4,21 @@ import { multiplication } from "./multiplication";
 import { roundOf } from "./roundOf";
 import { subtract } from "./subtract";
 /**
- * 連立一次方程式を解く
- * @param {number[][]} coefficients - 係数
- * @param {number[]} constants - 定数
- * @returns {number[]} 解
+ * Solves a system of linear equations using Gaussian elimination
+ * @param {number[][]} coefficients Matrix of coefficients
+ * @param {number[]} constants Vector of constants
+ * @returns {number[]} Solution vector
  * @example
+ * // Solves the system:
  * // x + y = 4
  * // x + 2y = 10
- * solveEquation(
- * {
- * 	coefficients: [
- * 		[1, 1],
- * 		[1, 2],
- * 	],
- * 	constants: [4, 10],
- * },
- * ); // [-2, 6]
+ * solveEquation([
+ *   [1, 1],
+ *   [1, 2]
+ * ], [4, 10]); // returns [-2, 6]
+ * @description
+ * Uses Gaussian elimination with partial pivoting to solve a system of linear equations.
+ * The solution is rounded to 1 decimal place.
  */
 export const solveEquation = (
   coefficients: number[][],
@@ -27,21 +26,21 @@ export const solveEquation = (
 ): number[] => {
   const n = constants.length;
   for (let index = 0; index < n; index++) {
-    // Find the max element in the column
+    // Find the max element in the column (partial pivoting)
     let maxElement = Math.abs(coefficients[index][index]);
     let maxRow = index;
-    for (let index_ = index + 1; index_ < n; index_++) {
-      if (Math.abs(coefficients[index_][index]) > maxElement) {
-        maxElement = Math.abs(coefficients[index_][index]);
-        maxRow = index_;
+    for (let row = index + 1; row < n; row++) {
+      if (Math.abs(coefficients[row][index]) > maxElement) {
+        maxElement = Math.abs(coefficients[row][index]);
+        maxRow = row;
       }
     }
 
     // Swap the row with the max element to the top of the matrix
-    for (let index_ = index; index_ < n; index_++) {
-      const temporary_ = coefficients[maxRow][index_];
-      coefficients[maxRow][index_] = coefficients[index][index_];
-      coefficients[index][index_] = temporary_;
+    for (let col = index; col < n; col++) {
+      const temporary = coefficients[maxRow][col];
+      coefficients[maxRow][col] = coefficients[index][col];
+      coefficients[index][col] = temporary;
     }
 
     const temporary = constants[maxRow];
@@ -49,22 +48,21 @@ export const solveEquation = (
     constants[index] = temporary;
 
     // Perform elimination on the rows below
-    for (let index_ = index + 1; index_ < n; index_++) {
-      // const factor = coefficients[j][i] / coefficients[i][i];
+    for (let row = index + 1; row < n; row++) {
       const factor = division(
-        coefficients[index_][index],
+        coefficients[row][index],
         coefficients[index][index],
       );
-      // constants[j] -= factor * constants[i];
-      constants[index_] = subtract(
-        constants[index_],
+
+      constants[row] = subtract(
+        constants[row],
         multiplication(factor, constants[index]),
       );
-      for (let k = index; k < n; k++) {
-        // coefficients[j][k] -= factor * coefficients[i][k];
-        coefficients[index_][k] = subtract(
-          coefficients[index_][k],
-          multiplication(factor, coefficients[index][k]),
+
+      for (let col = index; col < n; col++) {
+        coefficients[row][col] = subtract(
+          coefficients[row][col],
+          multiplication(factor, coefficients[index][col]),
         );
       }
     }
@@ -72,22 +70,20 @@ export const solveEquation = (
   const solution: number[] = [];
 
   // Back substitute to find the solution
-  for (let index = n - 1; index >= 0; index--) {
+  for (let row = n - 1; row >= 0; row--) {
     let sum = 0;
-    for (let index_ = index + 1; index_ < n; index_++) {
-      // sum += coefficients[i][j] * solution[n - j - 1];
+    for (let col = row + 1; col < n; col++) {
       sum = addition(
         sum,
-        multiplication(
-          coefficients[index][index_],
-          solution[subtract(subtract(n, index_), 1)],
-        ),
+        multiplication(coefficients[row][col], solution[n - col - 1]),
       );
     }
-    // solution.push((constants[i] - sum) / coefficients[i][i]);
+
     solution.push(
-      division(subtract(constants[index], sum), coefficients[index][index]),
+      division(subtract(constants[row], sum), coefficients[row][row]),
     );
   }
-  return solution.reverse().map((x) => roundOf(x, 1));
+
+  // Return the solution vector with values rounded to 1 decimal place
+  return solution.reverse().map((value) => roundOf(value, 1));
 };

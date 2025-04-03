@@ -24,7 +24,8 @@
   - Use error messages
   - Throw only Error objects
 - **Documentation**: Include JSDoc comments for public functions
-- **Testing**: Write unit tests for new functionality
+- **Testing**: Write unit tests for new functionality. use Jest for unit tests
+- **Import rules**: typescript baseUrl is set to `src`, so imports should be relative to `src` directory. paths is set to `$/*` for types and `@/*` for other imports. Use `@/` for internal imports and `$` for types.
 
 ## Notes
 

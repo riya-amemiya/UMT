@@ -3,10 +3,16 @@ import { max } from "./max";
 import { multiplication } from "./multiplication";
 
 /**
- * 誤差のない引き算を任意長の引数で行う
- * @param  {number[]} numbers 引き算を行う数値の配列
- * @returns number
- * @example subtract([0.1, 0.2, 0.3]); // -0.4
+ * Performs subtraction with arbitrary number of arguments without floating point errors
+ * @param  {number[]} numbers Array of numbers to subtract
+ * @returns {number} The result of the subtraction
+ * @example subtract(0.1, 0.2); // -0.1
+ * @example subtract(1, 0.1, 0.2); // 0.7
+ * @description
+ * This function handles floating point precision issues by scaling the numbers
+ * to integers before performing subtraction, then scaling back to the original
+ * decimal places. The first argument is the minuend, and all subsequent arguments
+ * are subtracted from it.
  */
 
 export const subtract = (...numbers: number[]): number => {
@@ -14,10 +20,10 @@ export const subtract = (...numbers: number[]): number => {
     if (index === 0) {
       return current;
     }
-    // 10の何乗かを取得
+    // Get the power of 10 based on the maximum decimal places
     const z =
       10 ** max(getDecimalLength(accumulator), getDecimalLength(current));
-    // 小数点を揃えてから引き算
+    // Scale to integers, subtract, then scale back to original decimal places
     return (multiplication(accumulator, z) - multiplication(current, z)) / z;
   }, 0);
 };

@@ -1,9 +1,17 @@
 import { random } from "./random";
 
 /**
- * UUID v7を生成する
+ * Generates a UUID v7 (Universally Unique Identifier version 7)
+ * @returns {string} A UUID v7 string in the format xxxxxxxx-xxxx-7xxx-8xxx-xxxxxxxxxxxx
  * @example
- * const result = uuidv7()
+ * const id = uuidv7(); // e.g. "018d6e78-e1e5-7c3c-8bf9-ae5942f2ba1c"
+ * @description
+ * UUID v7 is time-ordered and contains:
+ * - 48 bits of Unix timestamp in milliseconds
+ * - 74 bits of random data
+ * - 4 bits of version (7)
+ * - 2 bits of variant (2)
+ * This implementation follows the UUID v7 draft specification.
  */
 export const uuidv7 = (): string => {
   const DIGITS = "0123456789abcdef";
