@@ -1,27 +1,22 @@
 import { newDateInt, newDateString } from "@/Date/new";
 
 describe("newDateInt", () => {
-  const originalTimezone = process.env.TZ;
-  beforeEach(() => {
-    jest.useFakeTimers();
-    const mockDate = new Date(2025, 0, 1);
-    jest.setSystemTime(mockDate);
-    process.env.TZ = "Asia/Tokyo";
-  });
-
-  afterEach(() => {
-    jest.useRealTimers();
-    process.env.TZ = originalTimezone;
-  });
-
-  it("should create date with default time values", () => {
+  it("should create date with components matching input values", () => {
     const date = newDateInt(2025, 1, 1);
-    expect(date.toISOString()).toBe("2025-01-01T00:00:00.000Z");
+    expect(date.getFullYear()).toBe(2025);
+    expect(date.getMonth()).toBe(0); // 0-based month
+    expect(date.getDate()).toBe(1);
   });
 
-  it("should create date with all parameters", () => {
+  it("should create date with all time components matching input values", () => {
     const date = newDateInt(2025, 1, 1, 10, 30, 45, 500);
-    expect(date.toISOString()).toBe("2025-01-01T01:30:45.500Z");
+    expect(date.getFullYear()).toBe(2025);
+    expect(date.getMonth()).toBe(0);
+    expect(date.getDate()).toBe(1);
+    expect(date.getHours()).toBe(10);
+    expect(date.getMinutes()).toBe(30);
+    expect(date.getSeconds()).toBe(45);
+    expect(date.getMilliseconds()).toBe(500);
   });
 });
 

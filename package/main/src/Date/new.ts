@@ -50,7 +50,7 @@ export const newDateInt = <T extends MonTypeInt>(
  * @param hours - Hours in "HH" format (00-23)
  * @param minutes - Minutes in "mm" format (00-59)
  * @param seconds - Seconds in "ss" format (00-59)
- * @param miliSeconds - Milliseconds in "mmm" format (000-999)
+ * @param milliseconds - Milliseconds in "mmm" format (000-999)
  * @param timeDifference - Timezone offset in "HH" format (e.g., "09" for UTC+9)
  * @returns Date object
  * @example newDateString("2021-01-01"); // Creates date for January 1, 2021 00:00:00
@@ -60,10 +60,10 @@ export const newDateString = <T extends MonTypeZero>(
   hours: HoursType = "00",
   minutes: MinutesType = "00",
   seconds: SecondsType = "00",
-  miliSeconds: MillisecondsType = "000",
+  milliseconds: MillisecondsType = "000",
   timeDifference: HoursType = "00",
 ): Date => {
   return new Date(
-    `${date}T${hours}:${minutes}:${seconds}.${miliSeconds}+${timeDifference}:00`,
+    `${date}T${hours}:${minutes}:${seconds}.${milliseconds}+${timeDifference}:00`,
   );
 };
