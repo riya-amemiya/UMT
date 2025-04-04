@@ -4,12 +4,13 @@ import type { MonTypeInt } from "$/date/monTypeInt";
 import { newDateInt } from "@/Date/new";
 import { now } from "@/Date/now";
 /**
- * @param  {number} year
- * @param  {number} mon
- * @param  {number} day
- * @param  {number} [timeDifference=9] 時差
- * @returns number 年齢
- * @example birthday(2000, 1, 1); // 21
+ * Calculate age based on birthdate
+ * @param  {number} year - Birth year
+ * @param  {number} mon - Birth month (1-12)
+ * @param  {number} day - Birth day
+ * @param  {number} [timeDifference=9] - Time difference from UTC in hours
+ * @returns {number} Age in years
+ * @example birthday(2000, 1, 1); // Returns age of someone born on Jan 1, 2000
  */
 export const birthday = <T extends MonTypeInt>(
   year: number,

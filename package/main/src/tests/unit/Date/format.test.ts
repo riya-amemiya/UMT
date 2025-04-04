@@ -41,4 +41,25 @@ describe("format", () => {
     expect(format(date, "hh:mm:ss A")).toBe("03:30:45 PM");
     expect(format(date, "h:m:s a")).toBe("3:30:45 pm");
   });
+
+  it("should handle day of week format", () => {
+    const date = new Date(2023, 5, 10); // June 10, 2023 was a Saturday
+    expect(format(date, "d")).toBe("6");
+    expect(format(date, "YYYY-MM-DD (d)")).toBe("2023-06-10 (6)");
+  });
+
+  it("should handle morning hours correctly", () => {
+    const date = new Date(2023, 5, 10, 9, 5, 8, 4);
+    expect(format(date, "HH:mm:ss")).toBe("09:05:08");
+    expect(format(date, "H:m:s")).toBe("9:5:8");
+    expect(format(date, "hh:mm A")).toBe("09:05 AM");
+    expect(format(date, "h:mm a")).toBe("9:05 am");
+  });
+
+  it("should handle invalid date", () => {
+    // @ts-expect-error Testing invalid input
+    expect(() => format("not a date")).toThrow("Invalid Date in format");
+    // @ts-expect-error Testing invalid input
+    expect(() => format(null)).toThrow("Invalid Date in format");
+  });
 });

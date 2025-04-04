@@ -2,10 +2,36 @@ import { getTimezoneOffsetString } from "@/Date/getTimezoneOffsetString";
 import { padStart } from "@/String/padStart";
 
 /**
- * 日時を指定されたフォーマットに従って文字列に変換します。
- * @param {Date} date - 対象の日時オブジェクト
- * @param {string} formatString - フォーマット文字列
- * @return {string} - フォーマットされた日時文字列
+ * Converts a date to a string according to the specified format pattern.
+ * @param {Date} date - The date object to format
+ * @param {string} formatString - The format pattern string (default: "YYYY-MM-DDTHH:mm:ssZ")
+ * @return {string} - The formatted date string
+ * @example
+ * format(new Date('2025-04-04'), 'YYYY-MM-DD') // Returns "2025-04-04"
+ * format(new Date('2025-04-04T15:30:00'), 'HH:mm') // Returns "15:30"
+ * format(new Date('2025-04-04'), 'MM/DD/YYYY') // Returns "04/04/2025"
+ *
+ * Available format tokens:
+ * - YYYY: Full year (e.g., 2025)
+ * - YY: Short year (e.g., 25)
+ * - MM: Month with leading zero (01-12)
+ * - M: Month without leading zero (1-12)
+ * - DD: Day with leading zero (01-31)
+ * - D: Day without leading zero (1-31)
+ * - d: Day of week (0-6)
+ * - HH: Hours with leading zero (00-23)
+ * - H: Hours without leading zero (0-23)
+ * - hh: Hours (12-hour) with leading zero (01-12)
+ * - h: Hours (12-hour) without leading zero (1-12)
+ * - mm: Minutes with leading zero (00-59)
+ * - m: Minutes without leading zero (0-59)
+ * - ss: Seconds with leading zero (00-59)
+ * - s: Seconds without leading zero (0-59)
+ * - SSS: Milliseconds with leading zeros (000-999)
+ * - A: AM/PM
+ * - a: am/pm
+ * - Z: Timezone offset (+09:00)
+ * - ZZ: Timezone offset without colon (+0900)
  */
 export const format = (
   date: Date,

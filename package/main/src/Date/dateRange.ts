@@ -1,11 +1,14 @@
 import { OneDayMs } from "@/Consts/clock";
 
 /**
- * 指定された開始日と終了日の範囲内の全ての日付を含む配列を生成します。
+ * Generate an array containing all dates between the specified start and end dates.
  *
- * @param {Date} startDate - 範囲の開始日
- * @param {Date} endDate - 範囲の終了日
- * @returns {Date[]} startDateからendDateまでの日付を含むDateオブジェクトの配列
+ * @param {Date} startDate - The start date of the range
+ * @param {Date} endDate - The end date of the range
+ * @returns {Date[]} An array of Date objects from startDate to endDate (inclusive)
+ * @example
+ * dateRange(new Date('2025-01-01'), new Date('2025-01-03'))
+ * // Returns array of dates: [2025-01-01, 2025-01-02, 2025-01-03]
  */
 export const dateRange = (startDate: Date, endDate: Date): Date[] => {
   const dates: Date[] = [];
