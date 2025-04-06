@@ -5,7 +5,7 @@ import type { LengthOfString } from "./lengthOfString";
 import type { ShiftString } from "./shiftString";
 import type { StringReverse } from "./stringReverse";
 
-// 全加算器
+// Type for full adder binary operation
 export type BinaryFullAdder<
   X extends string,
   Y extends string,
@@ -24,7 +24,7 @@ export type BinaryFullAdder<
     >
   : never;
 
-// 任意のバイト数の加算器
+// Type for multi-byte adder operation
 type BinaryFullAdderParser<
   X extends string,
   Y extends string,

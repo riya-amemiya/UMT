@@ -1,4 +1,4 @@
-// 1bitの2進数を10進数に変換する型
+// Type to convert 1-byte decimal to binary
 export type Decimal1byteTobinary<X extends string> = X extends "0"
   ? "00000000"
   : X extends "1"

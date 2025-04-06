@@ -1,4 +1,4 @@
-// 1bitの2進数のANDを求める型
+// Type to calculate AND operation on 1-bit binary numbers
 export type Binary1bitAnd<
   X extends `${0 | 1}`,
   Y extends `${0 | 1}`,

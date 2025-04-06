@@ -1,4 +1,4 @@
-// 1bitの2進数のORを求める型
+// Type to calculate OR operation on 1-bit binary numbers
 export type Binary1bitor<
   X extends `${0 | 1}`,
   Y extends `${0 | 1}`,

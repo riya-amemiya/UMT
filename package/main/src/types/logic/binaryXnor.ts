@@ -1,4 +1,4 @@
-// 2進数のNot XORを求める型
+// Type to calculate NOT XOR (XNOR) operation on binary numbers
 export type BinaryXnor<
   X extends `${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}`,
   Y extends `${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}`,

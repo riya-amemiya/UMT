@@ -1,4 +1,4 @@
-// 配列を反転する型
+// Type to reverse array elements
 export type ArrayReverse<
   S extends unknown[],
   T extends unknown[] = [],
