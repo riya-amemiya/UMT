@@ -1,10 +1,10 @@
 import type { Add } from "./add";
 import type { Subtract } from "./subtract";
 
-// 掛け算
+// Type for multiplication operation
 export type Multiply<A extends number, B extends number> = MultiHelper<A, B>;
 
-// 掛け算のヘルパー
+// Helper type for multiplication operation
 type MultiHelper<
   X extends number,
   Y extends number,

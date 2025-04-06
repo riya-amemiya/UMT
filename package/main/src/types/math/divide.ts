@@ -3,7 +3,7 @@ import type { Subtract } from "./subtract";
 
 import type { BGreaterThanA } from "$/logic/bGreaterThanA";
 
-// 割り算
+// Type for division operation
 export type Divide<A extends number, B extends number> = A extends 0
   ? never
   : B extends 0
@@ -20,7 +20,7 @@ export type Divide<A extends number, B extends number> = A extends 0
           : never
         : DivideHelper<A, B>;
 
-// 割り算のヘルパー
+// Helper type for division operation
 type DivideHelper<
   X extends number,
   Y extends number,

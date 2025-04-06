@@ -1,7 +1,7 @@
 import type { Binary1bitAndParser } from "./binary1bitAnd";
 import type { Binary1bitXorParser } from "./binary1bitXor";
 
-// 半加算器
+// Type for half adder binary operation
 export type BinaryHalfAdder<
   X extends `${0 | 1}`,
   Y extends `${0 | 1}`,

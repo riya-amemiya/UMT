@@ -1,4 +1,4 @@
-// 1bitの2進数のNot XORを求める型
+// Type to calculate NOT XOR (XNOR) of 1-bit binary numbers
 export type Binary1bitXnor<
   X extends `${0 | 1}`,
   Y extends `${0 | 1}`,

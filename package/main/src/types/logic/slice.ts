@@ -1,6 +1,6 @@
 import type { Subtract } from "$/math/subtract";
 
-// sliceの型
+// Type for array/string slice operation
 export type Slice<
   S extends string,
   Start extends number,
