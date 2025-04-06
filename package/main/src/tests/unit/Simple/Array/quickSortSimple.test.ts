@@ -1,19 +1,19 @@
 import { quickSortSimple } from "@/Simple/Array/quickSortSimple";
 
 describe("quickSortSimple", () => {
-  it("空の配列をソートすると空の配列が返される", () => {
+  it("returns empty array when sorting empty array", () => {
     expect(quickSortSimple([])).toEqual([]);
   });
-  it("startIDが配列の範囲外の場合", () => {
+  it("handles startID outside array bounds", () => {
     expect(quickSortSimple([3, 1, 4], undefined, -1, 2)).toEqual([1, 3, 4]);
     expect(quickSortSimple([3, 1, 4], undefined, 4, 2)).toEqual([1, 3, 4]);
   });
 
-  it("endIDが配列の範囲外の場合", () => {
+  it("handles endID outside array bounds", () => {
     expect(quickSortSimple([3, 1, 4], undefined, 0, 5)).toEqual([1, 3, 4]);
   });
 
-  it("startIDがendIDより大きい場合", () => {
+  it("handles startID greater than endID", () => {
     expect(quickSortSimple([3, 1, 4], undefined, 2, 1)).toEqual([1, 3, 4]);
   });
 });

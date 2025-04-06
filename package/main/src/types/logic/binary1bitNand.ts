@@ -1,4 +1,4 @@
-// 1bitの2進数のNot ANDを求める型
+// Type to calculate NOT AND (NAND) operation on 1-bit binary numbers
 export type Binary1bitNand<
   X extends `${0 | 1}`,
   Y extends `${0 | 1}`,

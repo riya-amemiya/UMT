@@ -1,10 +1,12 @@
 /**
- * 四捨五入
- * @param {number} number_ - 四捨五入する数値
- * @param {number} precision - 四捨五入する桁数
- * @returns number
+ * Rounds a number to specified decimal places
+ * @param {number} value - Number to round
+ * @param {number} precision - Number of decimal places (default: 0)
+ * @returns {number} Rounded number
  * @example roundOf(1.234, 2); // 1.23
+ * @example roundOf(1.235, 2); // 1.24
+ * @example roundOf(-1.234, 2); // -1.23
  */
-export const roundOf = (number_: number, precision = 0) => {
-  return Math.round(number_ * 10 ** precision) / 10 ** precision;
+export const roundOf = (value: number, precision = 0) => {
+  return Math.round(value * 10 ** precision) / 10 ** precision;
 };

@@ -14,10 +14,10 @@ export type BIRTHDAYSIMPLE = <T extends MonType>(
   timeDifference?: HoursTypeInt,
 ) => number;
 /**
- * 年齢を取得する
- * @param birthdays - 誕生日
- * @param timeDifference - 時差 (default: 9)
- * @returns number
+ * Calculate age from birthdate
+ * @param birthdays - Birthday date in various formats
+ * @param timeDifference - Time zone difference in hours (default: 9)
+ * @returns Age in years
  * @example birthdaySimple("2000-01-01");
  * birthdaySimple("2000:01:01");
  * birthdaySimple("2000/01/01");

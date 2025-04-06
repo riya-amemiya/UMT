@@ -16,7 +16,7 @@ export type BinaryToHexParser<
     : BinaryToHexParser<R, `${F}${C}`, A>
   : A;
 
-// 1バイトの2進数を16進数に変換する型
+// Type to convert 1-byte binary to hexadecimal
 export type BinaryToHex<
   X extends `${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}`,
 > = BinaryToHexParser<X>;

@@ -1,4 +1,4 @@
-// 2進数のXORを求める型
+// Type to calculate XOR operation on binary numbers
 export type BinaryXor<
   X extends `${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}`,
   Y extends `${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}`,

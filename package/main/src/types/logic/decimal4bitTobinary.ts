@@ -1,4 +1,4 @@
-// 4bitの10進数を2進数に変換する型
+// Type to convert 4-bit decimal to binary
 export type Decimal4bitTobinary<X extends string> = X extends "0"
   ? "0000"
   : X extends "1"

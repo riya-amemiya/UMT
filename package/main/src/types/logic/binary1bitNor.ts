@@ -1,4 +1,4 @@
-// 1bitの2進数のNot ORを求める型
+// Type to calculate NOT OR (NOR) of 1-bit binary numbers
 export type Binary1bitNor<
   X extends `${0 | 1}`,
   Y extends `${0 | 1}`,

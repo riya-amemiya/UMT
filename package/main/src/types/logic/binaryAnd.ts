@@ -1,4 +1,4 @@
-// 2進数のANDを求める型
+// Type to calculate AND operation on binary numbers
 export type BinaryAnd<
   X extends `${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}`,
   Y extends `${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}`,

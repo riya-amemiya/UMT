@@ -1,7 +1,7 @@
 import type { First8Chars } from "./first8Chars";
 import type { StringReverse } from "./stringReverse";
 
-// 1バイトまでの加算器
+// Type for binary addition (up to 1 byte)
 export type BinaryAddParser<
   A extends string,
   B extends string,

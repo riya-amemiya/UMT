@@ -1,11 +1,11 @@
 import { gcd } from "./gcd";
 import { nCr } from "./nCr";
 /**
- * 反復的な思考
- * @param  {number} n
- * @param  {number} r
- * @param  {{x:number;y:number}} p
- * @return {number[]}
+ * Calculate probability in repeated trials
+ * @param  {number} n Number of trials
+ * @param  {number} r Number of successes
+ * @param  {{x:number;y:number}} p Probability fraction (x/y)
+ * @returns {number[]} Array containing [numerator, denominator]
  * @example repeatedTrial(5, 2, {x: 1/3, y: 2/3}); // [10, 27]
  */
 export const repeatedTrial = (

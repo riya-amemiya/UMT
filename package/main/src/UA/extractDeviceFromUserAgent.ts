@@ -1,5 +1,17 @@
 import type { SimplifiedUserAgentInfoDevice } from "$/ua/simplifiedUserAgentInfoDevice";
 
+/**
+ * Extracts device type information from a User-Agent string
+ *
+ * @param ua - The User-Agent string to analyze
+ * @returns The detected device type ("bot", "mobile", "tablet", "desktop", or "other")
+ *
+ * @example
+ * ```ts
+ * const device = extractDeviceFromUserAgent(navigator.userAgent);
+ * // device: "desktop"
+ * ```
+ */
 export const extractDeviceFromUserAgent = (
   ua: string,
 ): SimplifiedUserAgentInfoDevice => {

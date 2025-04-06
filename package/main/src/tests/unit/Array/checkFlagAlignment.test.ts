@@ -1,7 +1,7 @@
 import { checkFlagAlignment } from "@/Array/checkFlagAlignment";
 
 describe("checkFlagAlignment", () => {
-  it("横", () => {
+  it("should detect horizontal alignment", () => {
     const matrix = [
       [
         { value: 10, flag: true },
@@ -22,7 +22,7 @@ describe("checkFlagAlignment", () => {
     expect(checkFlagAlignment(matrix)).toBe(true);
   });
 
-  it("縦", () => {
+  it("should detect vertical alignment", () => {
     const matrix = [
       [
         { value: 10, flag: false },
@@ -43,7 +43,7 @@ describe("checkFlagAlignment", () => {
     expect(checkFlagAlignment(matrix)).toBe(true);
   });
 
-  it("斜め(左上)", () => {
+  it("should detect diagonal alignment (top-left to bottom-right)", () => {
     const matrix = [
       [
         { value: 10, flag: true },
@@ -64,7 +64,7 @@ describe("checkFlagAlignment", () => {
     expect(checkFlagAlignment(matrix)).toBe(true);
   });
 
-  it("斜め(右上)", () => {
+  it("should detect diagonal alignment (top-right to bottom-left)", () => {
     const matrix = [
       [
         { value: 10, flag: false },
@@ -85,7 +85,7 @@ describe("checkFlagAlignment", () => {
     expect(checkFlagAlignment(matrix)).toBe(true);
   });
 
-  it("揃ってない時", () => {
+  it("should return false when no alignment is found", () => {
     const matrix = [
       [
         { value: 10, flag: false },
@@ -105,24 +105,24 @@ describe("checkFlagAlignment", () => {
     ];
     expect(checkFlagAlignment(matrix)).toBe(false);
   });
-  // 以下、大量データのテスト
-  it("横(大量)", () => {
+  // Tests with large datasets
+  it("should detect horizontal alignment with large dataset", () => {
     const row = Array(1000).fill({ flag: true, value: 1 });
     const matrix = Array(1000).fill(row);
     expect(checkFlagAlignment(matrix)).toBe(true);
   });
 
-  it("縦(大量)", () => {
+  it("should detect vertical alignment with large dataset", () => {
     const row = Array(1000).fill({ flag: false, value: 1 });
-    let matrix = Array(1000).fill(row);
+    const matrix = Array(1000).fill(row);
     for (let i = 0; i < matrix.length; i++) {
       matrix[i][0].flag = true;
     }
     expect(checkFlagAlignment(matrix)).toBe(true);
   });
 
-  it("斜め(大量)", () => {
-    let matrix = Array.from({ length: 1000 }, () =>
+  it("should detect diagonal alignment with large dataset", () => {
+    const matrix = Array.from({ length: 1000 }, () =>
       Array.from({ length: 1000 }, () => ({ flag: false, value: 1 })),
     );
     for (let i = 0; i < 1000; i++) {
@@ -131,7 +131,7 @@ describe("checkFlagAlignment", () => {
     expect(checkFlagAlignment(matrix)).toBe(true);
   });
 
-  it("揃ってない時(大量)", () => {
+  it("should return false when no alignment is found in large dataset", () => {
     const row = Array(1000).fill({ flag: false, value: 1 });
     const matrix = Array(1000).fill(row);
     expect(checkFlagAlignment(matrix)).toBe(false);

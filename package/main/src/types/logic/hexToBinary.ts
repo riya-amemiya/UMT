@@ -11,7 +11,7 @@ export type HexToBinaryParser<
     ? HexToBinaryParser<R, `${C}${Decimal4bitTobinary<Hex4bitToDecimal<F>>}`>
     : C;
 
-// 16進数を2進数に変換する型
+// Type to convert hexadecimal to binary
 export type HexToBinary<
   X extends `${
     | 0

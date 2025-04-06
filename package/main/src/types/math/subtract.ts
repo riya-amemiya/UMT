@@ -3,7 +3,7 @@ import type { NumberToArray } from "./numberToArray";
 
 import type { Length } from "$/logic/length";
 
-// 引き算
+// Type for subtraction operation
 export type Subtract<
   A extends number,
   B extends number,

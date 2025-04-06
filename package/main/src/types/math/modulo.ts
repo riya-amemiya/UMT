@@ -2,7 +2,7 @@ import type { Subtract } from "./subtract";
 
 import type { BGreaterThanA } from "$/logic/bGreaterThanA";
 
-// 余り
+// Type for modulo operation
 export type Modulo<
   A extends number,
   B extends number,

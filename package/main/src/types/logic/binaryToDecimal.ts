@@ -24,7 +24,7 @@ export type BinaryToDecimalParser<
     ? Length<A>
     : Length<Shift<A>>;
 
-// 2進数を10進数に変換する型
+// Type to convert binary to decimal
 export type BinaryToDecimal<
   X extends `${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}`,
 > = BinaryToDecimalParser<X>;

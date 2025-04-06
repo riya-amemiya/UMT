@@ -4,6 +4,7 @@ export * from "./checkFlagAlignment";
 export * from "./chunk";
 export * from "./compact";
 export * from "./drop";
+export * from "./dualPivotQuickSort";
 export * from "./first";
 export * from "./generateNumberArray";
 export * from "./getArraysCommon";

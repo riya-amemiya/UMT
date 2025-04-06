@@ -1,15 +1,23 @@
 /**
- * Base64を文字列に変換する
- * @param {string} base64String - Base64文字列
- * @returns 文字列に変換されたBase64
+ * Converts Base64 to string
+ * @param {string} base64String - Base64 encoded string
+ * @returns Decoded string from Base64
+ * @throws {Error} When input is not a valid Base64 string
  */
 export const fromBase64 = (base64String: string): string => {
-  // Base64文字列をバイト配列に変換
-  const bytes = Uint8Array.from(
-    atob(base64String)
-      .split("")
-      .map((c) => c.codePointAt(0) as number),
-  );
-  // UTF-8デコーダーを使用して文字列に変換
-  return new TextDecoder().decode(bytes);
+  if (base64String === "") {
+    return "";
+  }
+
+  try {
+    return new TextDecoder().decode(
+      Uint8Array.from(
+        atob(base64String)
+          .split("")
+          .map((c) => c.codePointAt(0) as number),
+      ),
+    );
+  } catch {
+    throw new Error("Invalid Base64 string");
+  }
 };
