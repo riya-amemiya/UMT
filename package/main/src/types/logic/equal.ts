@@ -1,2 +1,2 @@
-// XとYが等しいかどうかを判定する型
+// Type to check if X and Y are equal
 export type Equal<X, Y> = X extends Y ? true : false;

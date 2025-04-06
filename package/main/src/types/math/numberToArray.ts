@@ -1,4 +1,4 @@
-// 数値を配列に変換する
+// Type to convert number to array
 export type NumberToArray<
   T extends number,
   U extends number[] = [],

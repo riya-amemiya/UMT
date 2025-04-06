@@ -1,6 +1,6 @@
 import type { BinaryComplement } from "./binaryComplement";
 
-// 2進数の絶対値を求める型
+// Type to calculate absolute value of a binary number
 export type BinaryAbs<
   X extends `${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}`,
 > = X extends `${infer F}${infer _}`

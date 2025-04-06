@@ -3,7 +3,7 @@ import type { Subtract } from "./subtract";
 
 import type { Length } from "$/logic/length";
 
-// たし算
+// Type for addition operation
 export type Add<
   X extends number,
   Y extends number,

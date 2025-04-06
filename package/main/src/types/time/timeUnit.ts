@@ -1,4 +1,4 @@
 /**
- * 時間単位を表す型
+ * Type representing time units
  */
 export type TimeUnit = "milliseconds" | "seconds" | "minutes" | "hours";

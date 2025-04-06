@@ -1,4 +1,4 @@
-// 文字列を配列に変換する型
+// Type to convert string to array
 export type StringToArray<
   S extends string,
   T extends unknown[] = [],
