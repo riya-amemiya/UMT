@@ -1,9 +1,9 @@
 import { padStart } from "@/String/padStart";
 
 /**
- * タイムゾーンのオフセット文字列を取得します。
- * @param {Date} instance - 対象の日時オブジェクト
- * @return {string} - タイムゾーンのオフセット文字列
+ * Get timezone offset string in format "+HH:mm" or "-HH:mm"
+ * @param {Date} instance - The date object to get timezone offset from
+ * @return {string} - The timezone offset string (e.g. "+09:00" for JST)
  */
 export const getTimezoneOffsetString = (instance: Date): string => {
   const negMinutes = -instance.getTimezoneOffset();
