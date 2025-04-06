@@ -1,12 +1,16 @@
 import { range } from "@/Array/range";
 
 /**
- * 条件式を満たす数値の配列を返す
- * @param start 開始数値
- * @param end 終了数値
- * @param conditionalExpression 条件式
- * @returns 条件式を満たす数値の配列
- * @example rangeAdvance(1, 10, (number) => number % 2 === 0); // [2, 4, 6, 8]
+ * Returns an array of numbers that satisfy the conditional expression
+ * @param start - Starting number
+ * @param end - Ending number (exclusive)
+ * @param conditionalExpression - Function that determines which numbers to include
+ * @returns Array of numbers that satisfy the conditional expression
+ *
+ * @example
+ * ```ts
+ * rangeAdvance(1, 10, (number) => number % 2 === 0); // [2, 4, 6, 8]
+ * ```
  */
 const rangeAdvance = (
   start: number,
