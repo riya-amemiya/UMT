@@ -10,14 +10,6 @@ export class Pipe<T> {
   constructor(private readonly value: T) {}
 
   /**
-   * Returns the current value
-   * @returns Current value in the pipe
-   */
-  getValue(): T {
-    return this.value;
-  }
-
-  /**
    * Applies a transformation function and returns a new Pipe instance
    * @param fn Transformation function to apply
    * @returns New Pipe instance with transformed value
