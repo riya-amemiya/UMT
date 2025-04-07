@@ -13,6 +13,7 @@ lib
 python/
 coverage_dir
 module/tests/
+common-module/module/tests/
 tsconfig.tsbuildinfo
 tmp
 .plandex
