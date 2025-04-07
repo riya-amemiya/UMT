@@ -52,6 +52,19 @@ export class Pipe<T> {
   }
 
   /**
+   * Filters the value based on a predicate function
+   * Similar to when(), but narrows the type when condition is met
+   * @param predicate Condition function that determines if value should be filtered
+   * @returns New Pipe instance with filtered value and narrowed type
+   */
+  filter<U extends T>(predicate: (input: T) => input is U): Pipe<U> {
+    if (predicate(this.value)) {
+      return new Pipe(this.value);
+    }
+    throw new Error("Value did not match filter predicate");
+  }
+
+  /**
    * Terminates the pipeline and returns the final value
    * @returns Final result of the pipeline processing
    */
