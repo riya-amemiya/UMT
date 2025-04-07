@@ -1,4 +1,5 @@
 import { Pipe, pipe } from "@/Tool/pipe";
+import { isNumber, isString } from "@/Validate";
 
 interface User {
   id: number;
@@ -245,10 +246,85 @@ describe("Pipe", () => {
       .when(
         (x) => x < 5,
         (x) => x - 1,
-      ) // This condition is not met, so transformation is skipped
+      )
       .map((x) => x + 1)
       .end();
 
-    expect(result).toBe(15); // (5 + 2) * 2 + 1 = 15
+    expect(result).toBe(15);
+  });
+
+  describe("filter()", () => {
+    interface ValidUser extends User {
+      verified: boolean;
+    }
+    function isValidUser(user: User): user is ValidUser {
+      return "verified" in user;
+    }
+
+    it("filters and narrows type using type predicate", () => {
+      const result = pipe<unknown>(42)
+        .filter((x) => isNumber(x, false))
+        .map((x) => x + 1)
+        .end();
+      expect(result).toBe(43);
+    });
+
+    it("throws error when filter condition is not met", () => {
+      expect(() => {
+        pipe<unknown>("not a number").filter(isNumber).end();
+      }).toThrow("Value did not match filter predicate");
+    });
+
+    it("filters complex types with interface predicates", () => {
+      const user: ValidUser = {
+        id: 1,
+        name: "John",
+        age: 30,
+        verified: true,
+      };
+
+      const result = pipe<User>(user)
+        .filter(isValidUser)
+        .map((u) => u.verified)
+        .end();
+
+      expect(result).toBe(true);
+    });
+
+    it("combines filter with when and map operations", () => {
+      const result = pipe<unknown>(5)
+        .filter((x) => isNumber(x, false))
+        .map((x) => x + 2)
+        .when(
+          (x) => x > 5,
+          (x) => x * 2,
+        )
+        .end();
+
+      expect(result).toBe(14);
+    });
+
+    it("correctly handles type narrowing with string | number union types", () => {
+      const stringResult = pipe<string | number>("hello")
+        .filter(isString)
+        .map((x) => x + " world")
+        .end();
+      expect(stringResult).toBe("hello world");
+
+      const numberResult = pipe<string | number>(123)
+        .filter((x) => isNumber(x, false))
+        .map((x) => x * 2)
+        .end();
+      expect(numberResult).toBe(246);
+
+      const whenResult = pipe<string | number>(5)
+        .filter((x): x is number => isNumber(x, false))
+        .when(
+          (x) => x > 0,
+          (x) => x * 2,
+        )
+        .end();
+      expect(whenResult).toBe(10);
+    });
   });
 });
