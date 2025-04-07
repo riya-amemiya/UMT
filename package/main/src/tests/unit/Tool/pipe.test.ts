@@ -19,7 +19,7 @@ describe("Pipe", () => {
   it("creates an instance with the constructor", () => {
     const pipeLine = new Pipe(42);
     expect(pipeLine).toBeInstanceOf(Pipe);
-    expect(pipeLine.getValue()).toBe(42);
+    expect(pipeLine.end()).toBe(42);
   });
 
   // Extension test
@@ -27,14 +27,15 @@ describe("Pipe", () => {
     // Extended pipe class with additional functionality
     class ExtendedPipe<T> extends Pipe<T> {
       double(): ExtendedPipe<number> {
-        if (typeof this.getValue() === "number") {
-          return new ExtendedPipe((this.getValue() as number) * 2);
+        const currentValue = this.end();
+        if (typeof currentValue === "number") {
+          return new ExtendedPipe(currentValue * 2);
         }
         throw new Error("Value is not a number");
       }
 
       prefix(str: string): ExtendedPipe<string> {
-        return new ExtendedPipe(`${str}${this.getValue()}`);
+        return new ExtendedPipe(`${str}${this.end()}`);
       }
     }
 
@@ -58,11 +59,6 @@ describe("Pipe", () => {
   });
 
   // Basic functionality tests
-  it("returns initial value when calling getValue()", () => {
-    const result = pipe(1).getValue();
-    expect(result).toBe(1);
-  });
-
   it("returns initial value when calling end()", () => {
     const result = pipe(1).end();
     expect(result).toBe(1);
