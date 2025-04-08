@@ -249,7 +249,7 @@ describe("Pipe", () => {
     expect(result).toBe(15);
   });
 
-  describe("filter()", () => {
+  describe("filterStrict()", () => {
     interface ValidUser extends User {
       verified: boolean;
     }
@@ -259,7 +259,7 @@ describe("Pipe", () => {
 
     it("filters and narrows type using type predicate", () => {
       const result = pipe<unknown>(42)
-        .filter((x) => isNumber(x, false))
+        .filterStrict((x): x is number => isNumber(x, false))
         .map((x) => x + 1)
         .end();
       expect(result).toBe(43);
@@ -267,7 +267,7 @@ describe("Pipe", () => {
 
     it("throws error when filter condition is not met", () => {
       expect(() => {
-        pipe<unknown>("not a number").filter(isNumber).end();
+        pipe<unknown>("not a number").filterStrict(isNumber).end();
       }).toThrow("Value did not match filter predicate");
     });
 
@@ -280,16 +280,16 @@ describe("Pipe", () => {
       };
 
       const result = pipe<User>(user)
-        .filter(isValidUser)
+        .filterStrict(isValidUser)
         .map((u) => u.verified)
         .end();
 
       expect(result).toBe(true);
     });
 
-    it("combines filter with when and map operations", () => {
+    it("combines filterStrict with when and map operations", () => {
       const result = pipe<unknown>(5)
-        .filter((x) => isNumber(x, false))
+        .filterStrict((x): x is number => isNumber(x, false))
         .map((x) => x + 2)
         .when(
           (x) => x > 5,
@@ -302,25 +302,169 @@ describe("Pipe", () => {
 
     it("correctly handles type narrowing with string | number union types", () => {
       const stringResult = pipe<string | number>("hello")
-        .filter(isString)
+        .filterStrict(isString)
         .map((x) => x + " world")
         .end();
       expect(stringResult).toBe("hello world");
 
       const numberResult = pipe<string | number>(123)
-        .filter((x) => isNumber(x, false))
+        .filterStrict((x): x is number => isNumber(x, false))
         .map((x) => x * 2)
         .end();
       expect(numberResult).toBe(246);
 
       const whenResult = pipe<string | number>(5)
-        .filter((x): x is number => isNumber(x, false))
+        .filterStrict((x): x is number => isNumber(x, false))
         .when(
           (x) => x > 0,
           (x) => x * 2,
         )
         .end();
       expect(whenResult).toBe(10);
+    });
+  });
+
+  describe("filterWithDefault()", () => {
+    it("returns original value when predicate is true", () => {
+      const result = pipe<unknown>(42)
+        .filterWithDefault((x): x is number => isNumber(x, false), 0)
+        .map((x) => x + 1)
+        .end();
+      expect(result).toBe(43);
+    });
+
+    it("returns default value when predicate is false", () => {
+      const result = pipe<unknown>("not a number")
+        .filterWithDefault((x): x is number => isNumber(x, false), 0)
+        .map((x) => x + 1)
+        .end();
+      expect(result).toBe(1);
+    });
+
+    it("works with complex types", () => {
+      interface ValidUser extends User {
+        verified: boolean;
+      }
+      function isValidUser(user: User): user is ValidUser {
+        return "verified" in user;
+      }
+
+      const invalidUser: User = {
+        id: 1,
+        name: "John",
+        age: 30,
+      };
+
+      const defaultUser: ValidUser = {
+        id: 0,
+        name: "Default",
+        age: 0,
+        verified: false,
+      };
+
+      const result = pipe<User>(invalidUser)
+        .filterWithDefault(isValidUser, defaultUser)
+        .map((u) => u.verified)
+        .end();
+
+      expect(result).toBe(false);
+    });
+
+    it("maintains type narrowing in subsequent operations", () => {
+      const result = pipe<string | number>("hello")
+        .filterWithDefault((x): x is number => isNumber(x, false), 5)
+        .map((x) => x * 2) // x is definitely a number here
+        .end();
+      expect(result).toBe(10);
+    });
+  });
+
+  describe("filterResult()", () => {
+    it("returns success result when predicate is true", () => {
+      const result = pipe<unknown>(42)
+        .filterResult((x): x is number => isNumber(x, false))
+        .map((result) => {
+          if (result.type === "success") {
+            return result.value + 1;
+          }
+          return 0;
+        })
+        .end();
+      expect(result).toBe(43);
+    });
+
+    it("returns error result when predicate is false", () => {
+      const result = pipe<unknown>("not a number")
+        .filterResult((x): x is number => isNumber(x, false))
+        .map((result) => {
+          if (result.type === "error") {
+            return result.error.message;
+          }
+          return "";
+        })
+        .end();
+      expect(result).toBe("Value did not match filter predicate");
+    });
+
+    it("can be used with complex types", () => {
+      interface ValidUser extends User {
+        verified: boolean;
+      }
+      function isValidUser(user: User): user is ValidUser {
+        return "verified" in user;
+      }
+
+      const validUser: ValidUser = {
+        id: 1,
+        name: "John",
+        age: 30,
+        verified: true,
+      };
+
+      const result = pipe<User>(validUser)
+        .filterResult(isValidUser)
+        .map((result) => {
+          if (result.type === "success") {
+            return result.value.verified;
+          }
+          return false;
+        })
+        .end();
+
+      expect(result).toBe(true);
+    });
+
+    it("can be chained with other operations", () => {
+      const result = pipe<unknown>(5)
+        .filterResult((x): x is number => isNumber(x, false))
+        .map((result) => {
+          if (result.type === "success") {
+            return result.value * 2;
+          }
+          return 0;
+        })
+        .map((x) => x + 1)
+        .end();
+
+      expect(result).toBe(11);
+    });
+
+    it("handles error cases gracefully", () => {
+      const processValue = (value: unknown) => {
+        return pipe<unknown>(value)
+          .filterResult((x): x is number => isNumber(x, false))
+          .map((result): number => {
+            if (result.type === "success") {
+              return result.value * 2;
+            }
+            return 0; // Default value for error case
+          })
+          .end();
+      };
+
+      expect(processValue(10)).toBe(20);
+      expect(processValue("not a number")).toBe(0);
+      expect(processValue(null)).toBe(0);
     });
   });
 });

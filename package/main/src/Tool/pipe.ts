@@ -1,3 +1,5 @@
+import { safeExecute, type Result } from "@/Error/safeExecute";
+
 /**
  * A class to handle pipeline processing
  * Allows chaining transformations in a fluent interface
@@ -44,16 +46,52 @@ export class Pipe<T> {
   }
 
   /**
-   * Filters the value based on a predicate function
-   * Similar to when(), but narrows the type when condition is met
+   * Strictly filters the value based on a predicate function
+   * Throws an error if the predicate returns false
    * @param predicate Condition function that determines if value should be filtered
    * @returns New Pipe instance with filtered value and narrowed type
+   * @throws Error if the predicate returns false
    */
-  filter<U extends T>(predicate: (input: T) => input is U): Pipe<U> {
+  filterStrict<U extends T>(predicate: (input: T) => input is U): Pipe<U> {
     if (predicate(this.value)) {
       return new Pipe(this.value);
     }
     throw new Error("Value did not match filter predicate");
+  }
+
+  /**
+   * Filters the value based on a predicate function
+   * Returns a default value if the predicate returns false
+   * @param predicate Condition function that determines if value should be filtered
+   * @param defaultValue Default value to use if predicate returns false
+   * @returns New Pipe instance with filtered value or default value
+   */
+  filterWithDefault<U extends T>(
+    predicate: (input: T) => input is U,
+    defaultValue: U,
+  ): Pipe<U> {
+    return predicate(this.value)
+      ? new Pipe(this.value)
+      : new Pipe(defaultValue);
+  }
+
+  /**
+   * Filters the value based on a predicate function
+   * Returns a Result type containing either the filtered value or an error
+   * @param predicate Condition function that determines if value should be filtered
+   * @returns New Pipe instance with Result containing filtered value or error
+   */
+  filterResult<U extends T>(
+    predicate: (input: T) => input is U,
+  ): Pipe<Result<U, Error>> {
+    return new Pipe(
+      safeExecute<U, Error>(() => {
+        if (predicate(this.value)) {
+          return this.value;
+        }
+        throw new Error("Value did not match filter predicate");
+      }),
+    );
   }
 
   /**
