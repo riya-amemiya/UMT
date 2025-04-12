@@ -53,7 +53,7 @@
   },
   "scripts": {
     "build": "tsc && tsc-alias -p tsconfig.json",
-    "build:cjs": "tsc -p tsconfig.cjs.json && node cjs.build.mjs && cp LICENSE common-module/LICENSE && cp README.md common-module/README.md",
+    "build:cjs": "tsc -p tsconfig.cjs.json && node cjs.build.mjs && cp LICENSE common-module/LICENSE && cp README.md common-module/README.md && cp .npmignore common-module/.npmignore",
     "build:babel": "babel src --extensions '.ts' --out-dir module/es5 && tsc --emitDeclarationOnly --outDir module/es5",
     "build:cjs:babel": "babel src --extensions '.ts' --out-dir common-module/module/es5 && tsc --emitDeclarationOnly --outDir common-module/module/es5",
     "build:full": "yarn build && yarn build:cjs && yarn build:babel && yarn build:cjs:babel",
