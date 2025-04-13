@@ -8,6 +8,9 @@ import importPlugin from "eslint-plugin-import";
 const compat = new FlatCompat();
 
 export default [
+  js.configs.recommended,
+  unicornPlugin.configs.recommended,
+  ...compat.extends("plugin:@typescript-eslint/recommended"),
   {
     ignores: [
       "jest.config.ts",
@@ -18,11 +21,6 @@ export default [
       "eslint.config.mjs",
     ],
   },
-  js.configs.recommended,
-  ...compat.extends(
-    "plugin:@typescript-eslint/recommended",
-    "plugin:unicorn/recommended",
-  ),
   {
     languageOptions: {
       sourceType: "module",
@@ -33,7 +31,6 @@ export default [
       },
     },
     plugins: {
-      unicorn: unicornPlugin,
       import: importPlugin,
       "@typescript-eslint": typescriptEslintPlugin,
     },
