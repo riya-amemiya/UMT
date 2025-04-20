@@ -10,6 +10,8 @@ mod math {
     mod test_factorize;
     mod test_gcd;
     mod test_get_decimal_length;
+    mod test_lcm;
+    mod test_linear_congruential_generator;
     mod test_math_separator;
     mod test_ncr;
     mod test_npr;
