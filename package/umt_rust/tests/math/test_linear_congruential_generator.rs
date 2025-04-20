@@ -14,4 +14,16 @@ fn test_umt_linear_congruential_generator() {
         umt_linear_congruential_generator(1, Some(100), Some(2), Some(3)),
         5
     );
+    assert_eq!(
+        umt_linear_congruential_generator(1, Some(50), Some(2), Some(3)),
+        5
+    );
+    assert_eq!(
+        umt_linear_congruential_generator(1, Some(100), Some(5), Some(3)),
+        8
+    );
+    assert_eq!(
+        umt_linear_congruential_generator(1, Some(100), Some(2), Some(7)),
+        9
+    );
 }

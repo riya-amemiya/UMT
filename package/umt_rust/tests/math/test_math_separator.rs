@@ -5,6 +5,8 @@ fn test_math_separator() {
     assert_eq!(umt_math_separator(123), vec![100, 23]);
     assert_eq!(umt_math_separator(1234), vec![1000, 234]);
     assert_eq!(umt_math_separator(12345), vec![10000, 2345]);
+    assert_eq!(umt_math_separator(-12345), vec![10000, -22345]);
+    assert_eq!(umt_math_separator(123456789), vec![100000000, 23456789]);
 }
 
 #[test]
