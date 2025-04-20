@@ -10,3 +10,8 @@ fn test_umt_lcm() {
     assert_eq!(umt_lcm(12, -18), -36);
     assert_eq!(umt_lcm(-12, -18), 36);
 }
+
+#[test]
+fn test_umt_lcm_zero() {
+    assert_eq!(umt_lcm(0, 0), 0);
+}

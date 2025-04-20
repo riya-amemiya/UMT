@@ -24,3 +24,13 @@ fn test_ncr_n_less_than_r() {
 fn test_ncr_r_equals_zero() {
     assert_eq!(umt_ncr(5, 0), 1);
 }
+
+#[test]
+fn test_ncr_r_less_than_zero() {
+    assert_eq!(umt_ncr(5, -1), 0);
+}
+
+#[test]
+fn test_ncr_n_and_r_greater_than_12() {
+    assert_eq!(umt_ncr(13, 13), 0);
+}
