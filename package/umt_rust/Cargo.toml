@@ -1,12 +1,12 @@
 [package]
 authors = ["riya-amemiya"]
 description = "UMT is a collection of useful functions that I personally created."
-edition = "2021"
+edition = "2024"
 exclude = [".github", ".gitignore", "tests"]
 license = "MIT"
 name = "umt_rust"
 repository = "https://github.com/riya-amemiya/UMT"
-version = "0.1.1"
+version = "0.2.0"
 [lib]
 crate-type = ["lib"]
 name = "umt_rust"
