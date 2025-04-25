@@ -4,6 +4,7 @@ export * from "./Color";
 export * from "./Consts";
 export * from "./Date";
 export * from "./Error";
+export * from "./Function";
 export * from "./IP";
 export * from "./Math";
 export * from "./Object";
