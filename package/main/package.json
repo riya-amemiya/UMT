@@ -26,6 +26,7 @@
     "gh-pages": "^6.3.0",
     "jest": "^29.7.0",
     "lodash": "^4.17.21",
+    "mitata": "^1.0.34",
     "ts-jest": "^29.3.2",
     "ts-node": "^10.9.2",
     "tsc-alias": "^1.8.16",
@@ -67,7 +68,8 @@
     "lint:ci": "yarn eslint && biome ci . && tsc",
     "test": "jest",
     "test-debug": "cd test && tsc",
-    "ts-node": "yarn build && ts-node --project tmp/tsconfig.json tmp/src/index.ts"
+    "ts-node": "yarn build && ts-node --project tmp/tsconfig.json tmp/src/index.ts",
+    "benchmark": "bun run ./src/tests/benchmark/index.ts"
   },
   "type": "module",
   "types": "module/index.d.js",
