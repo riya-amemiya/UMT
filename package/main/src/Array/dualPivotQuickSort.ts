@@ -1,6 +1,6 @@
 import { compareFunctionDefault } from "./compareFunctionDefault";
-import { validateRange } from "./rangeValidator";
-import { applyInsertionSortIfNeeded } from "./sortingHelpers";
+import { applyInsertionSortIfNeeded } from "./sortingHelpers/applyInsertionSortIfNeeded";
+import { validateRange } from "./sortingHelpers/rangeValidator";
 
 import type { CompareFunction } from "$/array/compareFunction";
 
