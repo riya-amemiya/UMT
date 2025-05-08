@@ -1,6 +1,8 @@
 import { compareFunctionDefault } from "./compareFunctionDefault";
+import { validateRange } from "./rangeValidator";
+import { applyInsertionSortIfNeeded } from "./sortingHelpers";
 
-type CompareFunction<T> = (a: T, b: T) => number;
+import type { CompareFunction } from "$/array/compareFunction";
 
 interface PartitionResult {
   leftPivotIndex: number;
@@ -128,32 +130,6 @@ const partition = <T>(
 };
 
 /**
- * Sort small arrays using selection sort
- * @param array - Array to be sorted
- * @param start - Starting index
- * @param end - Ending index
- * @param compareFunction - Comparison function
- */
-const insertionSort = <T>(
-  array: T[],
-  start: number,
-  end: number,
-  compareFunction: CompareFunction<T>,
-): void => {
-  for (let index = start + 1; index <= end; index++) {
-    const current = array[index];
-    let index_ = index - 1;
-
-    while (index_ >= start && compareFunction(array[index_], current) > 0) {
-      array[index_ + 1] = array[index_];
-      index_--;
-    }
-
-    array[index_ + 1] = current;
-  }
-};
-
-/**
  * Internal implementation of dual-pivot quicksort
  * @param array - Array to be sorted
  * @param start - Starting index
@@ -168,9 +144,15 @@ const sortRange = <T>(
   compareFunction: CompareFunction<T>,
   insertionSortThreshold: number,
 ): void => {
-  // Use insertion sort for small arrays
-  if (end - start + 1 <= insertionSortThreshold) {
-    insertionSort(array, start, end, compareFunction);
+  if (
+    applyInsertionSortIfNeeded(
+      array,
+      start,
+      end,
+      compareFunction,
+      insertionSortThreshold,
+    )
+  ) {
     return;
   }
 
@@ -232,15 +214,13 @@ export const dualPivotQuickSort = <T>(
   endIndex = array.length - 1,
   insertionSortThreshold = 10,
 ): T[] => {
-  // Validate and adjust indices
-  const validStartIndex = Math.max(0, Math.min(startIndex, array.length - 1));
-  const validEndIndex = Math.max(
-    validStartIndex,
-    Math.min(endIndex, array.length - 1),
-  );
+  const {
+    startIndex: validStartIndex,
+    endIndex: validEndIndex,
+    shouldSort,
+  } = validateRange(array, startIndex, endIndex);
 
-  // Sort array if valid range exists
-  if (validEndIndex >= validStartIndex) {
+  if (shouldSort) {
     sortRange(
       array,
       validStartIndex,
@@ -249,6 +229,5 @@ export const dualPivotQuickSort = <T>(
       insertionSortThreshold,
     );
   }
-
   return array;
 };
