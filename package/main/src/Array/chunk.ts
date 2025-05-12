@@ -9,9 +9,13 @@ export const chunk = <T extends unknown[], N extends number>(
   array: T,
   n: N,
 ): ChunkArrayType<T, N> => {
-  const result: T[][] = [];
-  for (let index = 0; index < array.length; index += n) {
-    result.push(array.slice(index, index + n) as unknown as T[]);
+  const length = array.length;
+  // eslint-disable-next-line unicorn/no-new-array
+  const result = new Array(Math.ceil(length / n));
+
+  for (let index = 0, k = 0; index < length; index += n, k++) {
+    result[k] = array.slice(index, index + n) as unknown as T[];
   }
+
   return result as ChunkArrayType<T, N>;
 };
