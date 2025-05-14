@@ -1,0 +1,70 @@
+name: Main Package Benchmark
+
+on:
+  workflow_dispatch:
+    inputs:
+      runBenchmarkName:
+        type: choice
+        required: true
+        options:
+          - chunk
+          - sort
+
+jobs:
+    javascriptSetup:
+        name: JavaScript Check on Ubuntu
+        runs-on: ${{ matrix.os }}
+        strategy:
+            matrix:
+                bun-version: [latest]
+                os: [ubuntu-latest]
+        defaults:
+          run:
+            working-directory: ./package/main
+        steps:
+            - uses: actions/checkout@v4
+            - name: Use Bun ${{ matrix.bun-version }}
+              uses: oven-sh/setup-bun@v2
+              with:
+                  bun-version: ${{ matrix.bun-version }}
+            - name: Cache Restore devDependencies
+              id: cache-restore-dev-depends
+              uses: actions/cache/restore@v4
+              with:
+                  path: '**/node_modules'
+                  key: dev-depends-${{ matrix.os }}-bun${{ matrix.bun-version }}-${{ hashFiles('package/main/package.json') }}
+            - name: Install dependencies
+              if: steps.cache-restore-dev-depends.outputs.cache-hit != 'true'
+              run: bun i
+            - name: Cache Save devDependencies
+              if: steps.cache-restore-dev-depends.outputs.cache-hit != 'true'
+              id: cache-save-dev-depends
+              uses: actions/cache/save@v4
+              with:
+                  path: '**/node_modules'
+                  key: dev-depends-${{ matrix.os }}-bun${{ matrix.bun-version }}-${{ hashFiles('package/main/package.json') }}
+    runBenchmark:
+        name: JavaScript Benchmark on Ubuntu
+        needs: javascriptSetup
+        runs-on: ${{ matrix.os }}
+        strategy:
+            matrix:
+                bun-version: [latest]
+                os: [ubuntu-latest]
+        defaults:
+          run:
+            working-directory: ./package/main
+        steps:
+            - uses: actions/checkout@v4
+            - name: Use Bun ${{ matrix.bun-version }}
+              uses: oven-sh/setup-bun@v2
+              with:
+                  bun-version: ${{ matrix.bun-version }}
+            - name: Cache Restore devDependencies
+              id: cache-restore-dev-depends
+              uses: actions/cache/restore@v4
+              with:
+                  path: '**/node_modules'
+                  key: dev-depends-${{ matrix.os }}-bun${{ matrix.bun-version }}-${{ hashFiles('package/main/package.json') }}
+            - name: Lint
+              run: bun run ./src/tests/benchmark/${{ github.event.inputs.runBenchmarkName }}.ts
