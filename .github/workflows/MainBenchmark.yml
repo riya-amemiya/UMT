@@ -15,7 +15,7 @@ on:
 
 jobs:
     javascriptSetup:
-        name: JavaScript Check on Ubuntu
+        name: JavaScript Setup on ${{ matrix.os }} ${{ matrix.bun-version }}
         runs-on: ${{ matrix.os }}
         strategy:
             matrix:
@@ -47,7 +47,7 @@ jobs:
                   path: '**/node_modules'
                   key: dev-depends-${{ matrix.os }}-bun${{ matrix.bun-version }}-${{ hashFiles('package/main/package.json') }}
     runBenchmark:
-        name: JavaScript Benchmark on Ubuntu
+        name: JavaScript Benchmark on ${{ matrix.os }} ${{ matrix.bun-version }}
         needs: javascriptSetup
         runs-on: ${{ matrix.os }}
         strategy:
@@ -69,5 +69,5 @@ jobs:
               with:
                   path: '**/node_modules'
                   key: dev-depends-${{ matrix.os }}-bun${{ matrix.bun-version }}-${{ hashFiles('package/main/package.json') }}
-            - name: Lint
+            - name: Run Benchmark ${{ github.event.inputs.runBenchmarkName }}
               run: bun run ./src/tests/benchmark/${{ github.event.inputs.runBenchmarkName }}.ts
