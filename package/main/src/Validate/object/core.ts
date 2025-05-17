@@ -4,7 +4,11 @@
  */
 
 import { isDictionaryObject } from "@/Validate/isDictionaryObject";
-import type { ValidateCoreReturnType, ValidateType } from "@/Validate/type";
+import type {
+  Types,
+  ValidateCoreReturnType,
+  ValidateType,
+} from "@/Validate/type";
 
 /**
  * Creates an object validator with property-specific validation rules
@@ -23,14 +27,12 @@ export const object = <
   message?: string,
 ) => {
   return (
-    value: {
+    value: Types<{
       [key in keyof T]: ValidateType<ReturnType<T[key]>["type"]>;
-    },
-  ): {
-    validate: boolean;
-    message: string;
-    type: { [key in keyof T]: ValidateType<ReturnType<T[key]>["type"]> };
-  } => {
+    }>,
+  ): ValidateCoreReturnType<{
+    [key in keyof T]: ValidateType<ReturnType<T[key]>["type"]>;
+  }> => {
     if (!isDictionaryObject(value)) {
       return {
         validate: false,

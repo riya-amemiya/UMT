@@ -1,4 +1,6 @@
 import { compareFunctionDefault } from "./compareFunctionDefault";
+import { applyInsertionSortIfNeeded } from "./sortingHelpers/applyInsertionSortIfNeeded";
+import { validateRange } from "./sortingHelpers/rangeValidator";
 
 import type { CompareFunction } from "$/array/compareFunction";
 
@@ -80,33 +82,6 @@ const partition = <T>(
 };
 
 /**
- * Sorts a portion of the array using insertion sort algorithm
- * @param array Array to sort
- * @param low Starting index of the range to sort
- * @param high Ending index of the range to sort
- * @param compareFunction Function to compare elements
- */
-const insertionSort = <T>(
-  array: T[],
-  low: number,
-  high: number,
-  compareFunction: CompareFunction<T>,
-): void => {
-  for (let index = low + 1; index <= high; index++) {
-    const key = array[index];
-    let currentIndex = index - 1;
-    while (
-      currentIndex >= low &&
-      compareFunction(array[currentIndex], key) > 0
-    ) {
-      array[currentIndex + 1] = array[currentIndex];
-      currentIndex--;
-    }
-    array[currentIndex + 1] = key;
-  }
-};
-
-/**
  * Internal implementation of the quicksort algorithm with tail-call optimization
  * @param array Array to sort
  * @param lowInit Initial low index of the range to sort
@@ -125,8 +100,15 @@ const sortImpl = <T>(
   let high = highInit;
 
   while (low < high) {
-    if (high - low < insertionSortThreshold) {
-      insertionSort(array, low, high, compareFunction);
+    if (
+      applyInsertionSortIfNeeded(
+        array,
+        low,
+        high,
+        compareFunction,
+        insertionSortThreshold,
+      )
+    ) {
       return;
     }
     const pivotIndex = partition(array, low, high, compareFunction);
@@ -166,19 +148,20 @@ export const quickSort = <T>(
   endIndex = array.length - 1,
   insertionSortThreshold = 10,
 ): T[] => {
-  // Only sort within valid range
-  const validStartIndex = Math.max(0, Math.min(startIndex, array.length - 1));
-  const validEndIndex = Math.max(
-    validStartIndex,
-    Math.min(endIndex, array.length - 1),
-  );
+  const {
+    startIndex: validStartIndex,
+    endIndex: validEndIndex,
+    shouldSort,
+  } = validateRange(array, startIndex, endIndex);
 
-  sortImpl(
-    array,
-    validStartIndex,
-    validEndIndex,
-    compareFunction,
-    insertionSortThreshold,
-  );
+  if (shouldSort) {
+    sortImpl(
+      array,
+      validStartIndex,
+      validEndIndex,
+      compareFunction,
+      insertionSortThreshold,
+    );
+  }
   return array;
 };
