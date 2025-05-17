@@ -16,7 +16,6 @@ export interface ValidatedSortRange {
  *                               and a boolean indicating if the operation should proceed on the range.
  */
 export const validateRange = <T>(
-  // Renamed from validateSortRange for more general use
   array: T[],
   startIndex: number,
   endIndex: number,
