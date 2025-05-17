@@ -43,7 +43,8 @@
   "files": [
     "module",
     "!module/tests",
-    "!module/tsconfig.tsbuildinfo"
+    "!module/tsconfig.tsbuildinfo",
+    "!module/es5/tests"
   ],
   "homepage": "https://github.com/riya-amemiya/UMT#readme",
   "keywords": [],
@@ -74,6 +75,6 @@
   },
   "type": "module",
   "types": "module/index.d.js",
-  "version": "2.3.0",
+  "version": "2.4.0",
   "packageManager": "yarn@1.22.22"
 }
