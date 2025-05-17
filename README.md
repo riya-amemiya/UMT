@@ -9,4 +9,4 @@ UMT = Useful My Tools
 ## Implementation Policy
 
 - No dependencies
-- Implement only the minimum functionality necessary to ensure expandability
+- Implement only the minimum functionality necessary to ensure extensibility
