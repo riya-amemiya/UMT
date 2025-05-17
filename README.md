@@ -1,13 +1,12 @@
 # UMT
 
-Amemiya Riyaの便利関数集
+Amemiya Riya's useful functions collection
 
 UMT = Useful My Tools
 
-依存無しで実装されています。(wasmなどのどうしても依存が必要な場合を除く)
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/riya-amemiya/UMT)
 
-## Doc
+## Implementation Policy
 
-[Main Package](https://umt-main.oshaburikitchin.com/)
-
-[Wasm Package](./package/umt_wasm/doc/index.md)
+- No dependencies
+- Implement only the minimum functionality necessary to ensure expandability
