@@ -1,6 +1,6 @@
 from .random_string import random_string, DEFAULT_RANDOM_STRING_CHARS
 
-def random_string_initialization(char_pool: str = DEFAULT_RANDOM_STRING_CHARS):
+def random_string_initialization(char_pool: str = DEFAULT_RANDOM_STRING_CHARS) -> Callable[[int], str]:
     """
     Initializes a function that generates random strings with a specific character pool.
 
