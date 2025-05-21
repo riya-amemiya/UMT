@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"] # Added wheel as it's common for build systems
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "umt-string-utils"
+version = "0.1.0"
+authors = [
+  { name="UMT Project", email="contact@example.com" }, # Changed to UMT Project, placeholder email
+]
+description = "A collection of Python string utility functions, ported from UMT's TypeScript library."
+readme = "README.md"
+license = {text = "MIT License"}
+requires-python = ">=3.7"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Utilities",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/UniversalMacroTools/UMT"
+"Bug Tracker" = "https://github.com/UniversalMacroTools/UMT/issues"
+"Repository" = "https://github.com/UniversalMacroTools/UMT" # Added Repository URL for completeness
