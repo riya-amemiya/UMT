@@ -8,7 +8,6 @@ import {
 } from "mitata";
 import { quickSort } from "@/Array/quickSort";
 import { dualPivotQuickSort } from "@/Array/dualPivotQuickSort";
-import { ultraSort } from "@/Array/ultraSort";
 import { mergeSort } from "@/Array/mergeSort";
 import { timSort } from "@/Array/timSort";
 
@@ -19,7 +18,8 @@ interface Person {
   score: number;
 }
 
-const compareByName = (a: Person, b: Person): number => a.name.localeCompare(b.name);
+const compareByName = (a: Person, b: Person): number =>
+  a.name.localeCompare(b.name);
 
 const arraySizes = [10, 100, 1000, 10000, 50000];
 
@@ -36,32 +36,12 @@ const personArrays = new Map<number, Person[]>();
 for (const size of arraySizes) {
   personArrays.set(
     size,
-    Array.from({ length: size }, (_, i) => generatePerson(i))
+    Array.from({ length: size }, (_, i) => generatePerson(i)),
   );
 }
 
 summary(() => {
   lineplot(() => {
-    bench("ultraSort($size)", function* (state: k_state) {
-      const size = state.get("size") as number;
-      const original_array = personArrays.get(size);
-
-      if (!original_array) {
-        throw new Error(`No shared array found for size: ${size}`);
-      }
-
-      yield {
-        [0]() {
-          return [...original_array];
-        },
-        bench(arr: Person[]) {
-          do_not_optimize(ultraSort(arr, compareByName));
-        },
-      };
-    })
-      .args("size", arraySizes)
-      .gc("inner");
-
     bench("quickSort($size)", function* (state: k_state) {
       const size = state.get("size") as number;
       const original_array = personArrays.get(size);
