@@ -1,10 +1,10 @@
 import { compareFunctionDefault } from "./compareFunctionDefault";
 import { insertionSort } from "./insertionSort";
-import { heapsort } from "./sortingHelpers/heapsort";
-import { networkSort, medianOfThree } from "./sortingHelpers/networkSort";
+import { networkSort } from "./sortingHelpers/networkSort";
 import { partition3Way } from "./sortingHelpers/partition3Way";
 
 import type { CompareFunction } from "$/array/compareFunction";
+import { medianOfThree } from "@/Array/sortingHelpers/medianOfThree";
 
 // Constants for algorithm selection
 const INSERTION_SORT_THRESHOLD = 24;
@@ -66,11 +66,6 @@ const introsort = <T>(
   while (currentHigh > currentLow) {
     if (currentHigh - currentLow + 1 <= INSERTION_SORT_THRESHOLD) {
       insertionSort(array, compareFunction, currentLow, currentHigh);
-      return;
-    }
-
-    if (currentDepthLimit === 0) {
-      heapsort(array, currentLow, currentHigh, compareFunction);
       return;
     }
 
