@@ -11,5 +11,24 @@
  * compareFunctionDefault(1, 2); // -1
  * compareFunctionDefault(2, 2); // 0
  */
-export const compareFunctionDefault = <T>(a: T, b: T): number =>
-  a > b ? 1 : a < b ? -1 : 0;
+export const compareFunctionDefault = <T>(a: T, b: T): number => {
+  if (a === undefined && b === undefined) {
+    return 0;
+  }
+  if (a === undefined) {
+    return 1;
+  }
+  if (b === undefined) {
+    return -1;
+  }
+  if (a === null && b === null) {
+    return 0;
+  }
+  if (a === null) {
+    return 1;
+  }
+  if (b === null) {
+    return -1;
+  }
+  return a > b ? 1 : a < b ? -1 : 0;
+};
