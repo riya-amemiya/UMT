@@ -8,7 +8,6 @@ import {
 } from "mitata";
 import { quickSort } from "@/Array/quickSort";
 import { dualPivotQuickSort } from "@/Array/dualPivotQuickSort";
-import { ultraSort } from "@/Array/ultraSort";
 import { mergeSort } from "@/Array/mergeSort";
 import { timSort } from "@/Array/timSort";
 
@@ -44,26 +43,6 @@ for (const size of arraySizes) {
 
 summary(() => {
   lineplot(() => {
-    bench("ultraSort($size)", function* (state: k_state) {
-      const size = state.get("size") as number;
-      const original_array = duplicatePersonArrays.get(size);
-
-      if (!original_array) {
-        throw new Error(`No shared array found for size: ${size}`);
-      }
-
-      yield {
-        [0]() {
-          return [...original_array];
-        },
-        bench(arr: Person[]) {
-          do_not_optimize(ultraSort(arr, compareById));
-        },
-      };
-    })
-      .args("size", arraySizes)
-      .gc("inner");
-
     bench("quickSort($size)", function* (state: k_state) {
       const size = state.get("size") as number;
       const original_array = duplicatePersonArrays.get(size);

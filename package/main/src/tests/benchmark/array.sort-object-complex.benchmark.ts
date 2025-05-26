@@ -8,7 +8,6 @@ import {
 } from "mitata";
 import { quickSort } from "@/Array/quickSort";
 import { dualPivotQuickSort } from "@/Array/dualPivotQuickSort";
-import { ultraSort } from "@/Array/ultraSort";
 import { mergeSort } from "@/Array/mergeSort";
 import { timSort } from "@/Array/timSort";
 
@@ -35,7 +34,9 @@ const generateProduct = (): Product => ({
   id: Math.random().toString(36).substring(2, 9),
   name: `Product${Math.floor(Math.random() * 1000)}`,
   price: Math.floor(Math.random() * 1000) + 1,
-  category: ['Electronics', 'Clothing', 'Food', 'Books', 'Toys'][Math.floor(Math.random() * 5)],
+  category: ["Electronics", "Clothing", "Food", "Books", "Toys"][
+    Math.floor(Math.random() * 5)
+  ],
   stock: Math.floor(Math.random() * 100),
   rating: Math.floor(Math.random() * 50) / 10,
 });
@@ -45,32 +46,12 @@ const productArrays = new Map<number, Product[]>();
 for (const size of arraySizes) {
   productArrays.set(
     size,
-    Array.from({ length: size }, () => generateProduct())
+    Array.from({ length: size }, () => generateProduct()),
   );
 }
 
 summary(() => {
   lineplot(() => {
-    bench("ultraSort($size)", function* (state: k_state) {
-      const size = state.get("size") as number;
-      const original_array = productArrays.get(size);
-
-      if (!original_array) {
-        throw new Error(`No shared array found for size: ${size}`);
-      }
-
-      yield {
-        [0]() {
-          return [...original_array];
-        },
-        bench(arr: Product[]) {
-          do_not_optimize(ultraSort(arr, compareProductComplex));
-        },
-      };
-    })
-      .args("size", arraySizes)
-      .gc("inner");
-
     bench("quickSort($size)", function* (state: k_state) {
       const size = state.get("size") as number;
       const original_array = productArrays.get(size);

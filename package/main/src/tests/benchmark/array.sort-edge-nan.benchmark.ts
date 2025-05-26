@@ -8,7 +8,6 @@ import {
 } from "mitata";
 import { quickSort } from "@/Array/quickSort";
 import { dualPivotQuickSort } from "@/Array/dualPivotQuickSort";
-import { ultraSort } from "@/Array/ultraSort";
 import { ultraNumberSort } from "@/Array/ultraNumberSort";
 import { mergeSort } from "@/Array/mergeSort";
 import { timSort } from "@/Array/timSort";
@@ -24,7 +23,7 @@ for (const size of arraySizes) {
   const nanArray: number[] = [];
   for (let i = 0; i < size; i++) {
     if (i % 10 === 0) {
-      nanArray.push(NaN);
+      nanArray.push(Number.NaN);
     } else {
       nanArray.push(Math.random() * 100);
     }
@@ -48,26 +47,6 @@ summary(() => {
         },
         bench(arr: number[]) {
           do_not_optimize(ultraNumberSort(arr));
-        },
-      };
-    })
-      .args("size", arraySizes)
-      .gc("inner");
-
-    bench("ultraSort($size)", function* (state: k_state) {
-      const size = state.get("size") as number;
-      const original_array = nanArrays.get(size);
-
-      if (!original_array) {
-        throw new Error(`No shared array found for size: ${size}`);
-      }
-
-      yield {
-        [0]() {
-          return [...original_array];
-        },
-        bench(arr: number[]) {
-          do_not_optimize(ultraSort(arr, compareFunction));
         },
       };
     })

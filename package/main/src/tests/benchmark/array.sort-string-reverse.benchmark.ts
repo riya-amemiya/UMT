@@ -8,7 +8,6 @@ import {
 } from "mitata";
 import { quickSort } from "@/Array/quickSort";
 import { dualPivotQuickSort } from "@/Array/dualPivotQuickSort";
-import { ultraSort } from "@/Array/ultraSort";
 import { timSort } from "@/Array/timSort";
 import { mergeSort } from "@/Array/mergeSort";
 
@@ -18,8 +17,9 @@ const arraySizes = [10, 100, 1000, 10000, 100000];
 
 // Generate random strings
 const generateRandomString = (length: number): string => {
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  let result = '';
+  const chars =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let result = "";
   for (let i = 0; i < length; i++) {
     result += chars.charAt(Math.floor(Math.random() * chars.length));
   }
@@ -30,32 +30,14 @@ const generateRandomString = (length: number): string => {
 const reverseSortedArrays = new Map<number, string[]>();
 
 for (const size of arraySizes) {
-  const sorted = Array.from({ length: size }, () => generateRandomString(10)).sort(compareFunction);
+  const sorted = Array.from({ length: size }, () =>
+    generateRandomString(10),
+  ).sort(compareFunction);
   reverseSortedArrays.set(size, sorted.reverse());
 }
 
 summary(() => {
   lineplot(() => {
-    bench("ultraSort($size)", function* (state: k_state) {
-      const size = state.get("size") as number;
-      const original_array = reverseSortedArrays.get(size);
-      
-      if (!original_array) {
-        throw new Error(`No shared array found for size: ${size}`);
-      }
-
-      yield {
-        [0]() {
-          return [...original_array];
-        },
-        bench(arr: string[]) {
-          do_not_optimize(ultraSort(arr, compareFunction));
-        },
-      };
-    })
-      .args("size", arraySizes)
-      .gc("inner");
-
     bench("quickSort($size)", function* (state: k_state) {
       const size = state.get("size") as number;
       const original_array = reverseSortedArrays.get(size);
@@ -79,7 +61,7 @@ summary(() => {
     bench("dualPivotQuickSort($size)", function* (state: k_state) {
       const size = state.get("size") as number;
       const original_array = reverseSortedArrays.get(size);
-      
+
       if (!original_array) {
         throw new Error(`No shared array found for size: ${size}`);
       }
@@ -99,7 +81,7 @@ summary(() => {
     bench("timSort($size)", function* (state: k_state) {
       const size = state.get("size") as number;
       const original_array = reverseSortedArrays.get(size);
-      
+
       if (!original_array) {
         throw new Error(`No shared array found for size: ${size}`);
       }
@@ -139,7 +121,7 @@ summary(() => {
     bench("Array.sort($size)", function* (state: k_state) {
       const size = state.get("size") as number;
       const original_array = reverseSortedArrays.get(size);
-      
+
       if (!original_array) {
         throw new Error(`No shared array found for size: ${size}`);
       }

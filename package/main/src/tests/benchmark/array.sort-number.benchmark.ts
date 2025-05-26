@@ -9,7 +9,6 @@ import {
 import { quickSort } from "@/Array/quickSort";
 import { dualPivotQuickSort } from "@/Array/dualPivotQuickSort";
 import { sort } from "fast-sort";
-import { ultraSort } from "@/Array/ultraSort";
 import { ultraNumberSort } from "@/Array/ultraNumberSort";
 
 const compareFunction = (a: number, b: number): number => a - b;
@@ -112,25 +111,6 @@ summary(() => {
       .args("size", arraySizes)
       .gc("inner");
 
-    bench("ultraSort($size)", function* ultraSortBench(state: k_state) {
-      const size = state.get("size") as number;
-      const original_array = sharedRandomArrays.get(size);
-
-      if (!original_array) {
-        throw new Error(`No shared array found for size: ${size}`);
-      }
-
-      yield {
-        [0]() {
-          return [...original_array];
-        },
-        bench(arr: number[]) {
-          do_not_optimize(ultraSort(arr, compareFunction));
-        },
-      };
-    })
-      .args("size", arraySizes)
-      .gc("inner");
     bench(
       "ultraNumberSort($size)",
       function* ultraNumberSortBench(state: k_state) {
