@@ -73,57 +73,35 @@ export const ultraNumberSort = (
  * Inline sort for 3 elements
  */
 const inlineSort3 = (array: number[], ascending: boolean): void => {
-  const a = array[0];
-  const b = array[1];
-  const c = array[2];
+  let a = array[0];
+  let b = array[1];
+  let c = array[2];
 
   if (ascending) {
-    if (a <= b) {
-      if (b <= c) {
-        return;
+    if (a > b) {
+      [a, b] = [b, a];
+    }
+    if (b > c) {
+      [b, c] = [c, b];
+      if (a > b) {
+        [a, b] = [b, a];
       }
-      if (a <= c) {
-        array[1] = c;
-        array[2] = b;
-      } else {
-        array[0] = b;
-        array[1] = c;
-        array[2] = a;
-      }
-    } else if (a <= c) {
-      array[0] = b;
-      array[1] = a;
-    } else if (b <= c) {
-      array[0] = b;
-      array[1] = c;
-      array[2] = a;
-    } else {
-      array[0] = c;
-      array[2] = a;
     }
-  } else if (a >= b) {
-    if (b >= c) {
-      return;
-    }
-    if (a >= c) {
-      array[1] = c;
-      array[2] = b;
-    } else {
-      array[0] = b;
-      array[1] = c;
-      array[2] = a;
-    }
-  } else if (a >= c) {
-    array[0] = b;
-    array[1] = a;
-  } else if (b >= c) {
-    array[0] = b;
-    array[1] = c;
-    array[2] = a;
   } else {
-    array[0] = c;
-    array[2] = a;
+    if (a < b) {
+      [a, b] = [b, a];
+    }
+    if (b < c) {
+      [b, c] = [c, b];
+      if (a < b) {
+        [a, b] = [b, a];
+      }
+    }
   }
+
+  array[0] = a;
+  array[1] = b;
+  array[2] = c;
 };
 
 /**

@@ -9,7 +9,6 @@ import type { CompareFunction } from "$/array/compareFunction";
 // Constants for algorithm selection
 const INSERTION_SORT_THRESHOLD = 24;
 const NINTHER_THRESHOLD = 128;
-const PARTIAL_INSERTION_SORT_LIMIT = 8;
 
 /**
  * Ultra-fast hybrid sorting algorithm optimized for maximum performance
@@ -39,16 +38,6 @@ export const ultraSort = <T>(
     return array;
   }
 
-  // Check if array might be sorted or reverse sorted
-  const presortedness = checkPresortedness(array, compareFunction);
-  if (presortedness === 1) {
-    return array; // Already sorted
-  }
-  if (presortedness === -1) {
-    reverseArray(array);
-    return array;
-  }
-
   // For larger arrays, use introsort with optimizations
   introsort(
     array,
@@ -58,54 +47,6 @@ export const ultraSort = <T>(
     2 * Math.floor(Math.log2(length)),
   );
   return array;
-};
-
-/**
- * Check if array is already sorted or reverse sorted
- * @returns 1 if sorted, -1 if reverse sorted, 0 otherwise
- */
-const checkPresortedness = <T>(
-  array: T[],
-  compareFunction: CompareFunction<T>,
-): number => {
-  const length = array.length;
-  if (length < 2) {
-    return 1;
-  }
-
-  let ascending = 0;
-  let descending = 0;
-  const limit = Math.min(length - 1, PARTIAL_INSERTION_SORT_LIMIT);
-
-  for (let index = 0; index < limit; index++) {
-    const cmp = compareFunction(array[index], array[index + 1]);
-    if (cmp < 0) {
-      ascending++;
-    } else if (cmp > 0) {
-      descending++;
-    }
-  }
-
-  if (descending === limit) {
-    return -1;
-  }
-  if (ascending === limit) {
-    return 1;
-  }
-  return 0;
-};
-
-/**
- * Reverse array in-place
- */
-const reverseArray = <T>(array: T[]): void => {
-  let left = 0;
-  let right = array.length - 1;
-  while (left < right) {
-    [array[left], array[right]] = [array[right], array[left]];
-    left++;
-    right--;
-  }
 };
 
 /**

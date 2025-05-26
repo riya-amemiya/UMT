@@ -61,26 +61,26 @@ export const networkSort = <T>(
     if (compareFunction(array[low + 3], array[high]) > 0) {
       [array[low + 3], array[high]] = [array[high], array[low + 3]];
     }
-    if (compareFunction(array[low + 2], array[low + 3]) > 0) {
-      [array[low + 2], array[low + 3]] = [array[low + 3], array[low + 2]];
-    }
-    if (compareFunction(array[low], array[low + 2]) > 0) {
-      [array[low], array[low + 2]] = [array[low + 2], array[low]];
+    if (compareFunction(array[low], array[low + 3]) > 0) {
+      [array[low], array[low + 3]] = [array[low + 3], array[low]];
     }
     if (compareFunction(array[low + 1], array[high]) > 0) {
       [array[low + 1], array[high]] = [array[high], array[low + 1]];
     }
+    if (compareFunction(array[low + 1], array[low + 2]) > 0) {
+      [array[low + 1], array[low + 2]] = [array[low + 2], array[low + 1]];
+    }
     if (compareFunction(array[low], array[low + 1]) > 0) {
       [array[low], array[low + 1]] = [array[low + 1], array[low]];
-    }
-    if (compareFunction(array[low + 3], array[high]) > 0) {
-      [array[low + 3], array[high]] = [array[high], array[low + 3]];
     }
     if (compareFunction(array[low + 2], array[low + 3]) > 0) {
       [array[low + 2], array[low + 3]] = [array[low + 3], array[low + 2]];
     }
     if (compareFunction(array[low + 1], array[low + 2]) > 0) {
       [array[low + 1], array[low + 2]] = [array[low + 2], array[low + 1]];
+    }
+    if (compareFunction(array[low + 3], array[high]) > 0) {
+      [array[low + 3], array[high]] = [array[high], array[low + 3]];
     }
   }
 };
