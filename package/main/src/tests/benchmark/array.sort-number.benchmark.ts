@@ -10,6 +10,8 @@ import { quickSort } from "@/Array/quickSort";
 import { dualPivotQuickSort } from "@/Array/dualPivotQuickSort";
 import { sort } from "fast-sort";
 import { ultraNumberSort } from "@/Array/ultraNumberSort";
+import { timSort } from "@/Array/timSort";
+import { mergeSort } from "@/Array/mergeSort";
 
 const compareFunction = (a: number, b: number): number => a - b;
 
@@ -25,26 +27,6 @@ for (const size of arraySizes) {
 
 summary(() => {
   lineplot(() => {
-    bench("quickSort($size)", function* quickSortBench(state: k_state) {
-      const size = state.get("size") as number;
-      const original_array = sharedRandomArrays.get(size);
-
-      if (!original_array) {
-        throw new Error(`No shared array found for size: ${size}`);
-      }
-
-      yield {
-        [0]() {
-          return [...original_array];
-        },
-        bench(arr: number[]) {
-          do_not_optimize(quickSort(arr, compareFunction));
-        },
-      };
-    })
-      .args("size", arraySizes)
-      .gc("inner");
-
     bench(
       "Array.prototype.sort($size)",
       function* nativeSortBench(state: k_state) {
@@ -65,6 +47,46 @@ summary(() => {
         };
       },
     )
+      .args("size", arraySizes)
+      .gc("inner");
+
+    bench("fast-sort($size)", function* fastSortBench(state: k_state) {
+      const size = state.get("size") as number;
+      const original_array = sharedRandomArrays.get(size);
+
+      if (!original_array) {
+        throw new Error(`No shared array found for size: ${size}`);
+      }
+
+      yield {
+        [0]() {
+          return [...original_array];
+        },
+        bench(arr: number[]) {
+          do_not_optimize(sort(arr).asc());
+        },
+      };
+    })
+      .args("size", arraySizes)
+      .gc("inner");
+
+    bench("quickSort($size)", function* quickSortBench(state: k_state) {
+      const size = state.get("size") as number;
+      const original_array = sharedRandomArrays.get(size);
+
+      if (!original_array) {
+        throw new Error(`No shared array found for size: ${size}`);
+      }
+
+      yield {
+        [0]() {
+          return [...original_array];
+        },
+        bench(arr: number[]) {
+          do_not_optimize(quickSort(arr, compareFunction));
+        },
+      };
+    })
       .args("size", arraySizes)
       .gc("inner");
 
@@ -91,7 +113,7 @@ summary(() => {
       .args("size", arraySizes)
       .gc("inner");
 
-    bench("fast-sort($size)", function* fastSortBench(state: k_state) {
+    bench("timSort($size)", function* timSortBench(state: k_state) {
       const size = state.get("size") as number;
       const original_array = sharedRandomArrays.get(size);
 
@@ -104,7 +126,27 @@ summary(() => {
           return [...original_array];
         },
         bench(arr: number[]) {
-          do_not_optimize(sort(arr).asc());
+          do_not_optimize(timSort(arr, compareFunction));
+        },
+      };
+    })
+      .args("size", arraySizes)
+      .gc("inner");
+
+    bench("mergeSort($size)", function* mergeSortBench(state: k_state) {
+      const size = state.get("size") as number;
+      const original_array = sharedRandomArrays.get(size);
+
+      if (!original_array) {
+        throw new Error(`No shared array found for size: ${size}`);
+      }
+
+      yield {
+        [0]() {
+          return [...original_array];
+        },
+        bench(arr: number[]) {
+          do_not_optimize(mergeSort(arr, compareFunction));
         },
       };
     })
