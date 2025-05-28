@@ -35,7 +35,8 @@ export const ultraNumberSort = (
 
   for (let index = 0; index < length; index++) {
     const value = array[index];
-    if (Number.isNaN(value)) {
+    // biome-ignore lint/suspicious/noSelfCompare: <explanation>
+    if (value !== value) {
       hasNaN = true;
       break;
     }
@@ -112,10 +113,11 @@ const handleNaNSort = (array: number[], ascending: boolean): number[] => {
   let nanCount = 0;
 
   for (const element of array) {
-    if (Number.isNaN(element)) {
-      nanCount++;
-    } else {
+    // biome-ignore lint/suspicious/noSelfCompare: <explanation>
+    if (element === element) {
       valid.push(element);
+    } else {
+      nanCount++;
     }
   }
 
