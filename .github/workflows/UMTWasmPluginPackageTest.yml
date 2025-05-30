@@ -1,5 +1,7 @@
 # アクション名
 name: UMT Wasm Plugin Package Test
+permissions:
+  contents: read
 
 # タイミングを指定
 on:
