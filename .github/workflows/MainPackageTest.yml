@@ -3,8 +3,6 @@ name: Main Package Test
 
 # タイミングを指定
 on:
-  schedule:
-    - cron: '0 20 * * *'
   pull_request:
     branches:
       - main
