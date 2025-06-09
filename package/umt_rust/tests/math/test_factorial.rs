@@ -6,4 +6,5 @@ fn test_factorial() {
     assert_eq!(umt_factorial(1), 1);
     assert_eq!(umt_factorial(2), 2);
     assert_eq!(umt_factorial(3), 6);
+    assert_eq!(umt_factorial(10), 3628800);
 }
