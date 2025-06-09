@@ -54,6 +54,7 @@ bun add umt
 | shuffle2DArray | `<T>(array: T[][]) => T[][]` | Shuffles all elements in a 2D array while maintaining the row lengths | `shuffle2DArray([[1, 2], [3, 4], [5, 6]]); // [[1, 3], [6, 4], [2, 5]]` |
 | sum | `(x: number[]) => number` | Returns the sum of an array of numbers | `sum([1, 2, 3]); // 6` |
 | timSort | `<T>(array: T[], compareFunction?: CompareFunction<T>, start?: number, end?: number) => T[]` | Implementation of the TimSort algorithm | `timSort([3, 1, 4, 1, 5]); // [1, 1, 3, 4, 5]` |
+| ultraNumberSort | `(array: number[], ascending?: boolean) => number[]` | Ultra-fast sorting specifically optimized for number arrays | `ultraNumberSort([3, 1, 4, 1, 5, 9, 2, 6, 5, 3]); // [1, 1, 2, 3, 3, 4, 5, 5, 6, 9]` |
 | zip | `<T extends unknown[][]>(...arrays: T) => ZipArrayType<T>` | Creates a new array by combining elements from multiple arrays at corresponding positions | `zip([1, 2], ['a', 'b']); // [[1, 'a'], [2, 'b']]` |
 | zipLongest | `<T extends unknown[][]>(...arrays: T) => ZipArrayType<T>` | Combines arrays of different lengths by padding shorter arrays with undefined values | `zipLongest([1, 2], ['a']); // [[1, 'a'], [2, undefined]]` |
 
