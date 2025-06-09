@@ -2,6 +2,7 @@ import { parseJson } from "@/Tool/parseJson";
 import { boolean } from "@/Validate/boolean";
 import { number } from "@/Validate/number";
 import { object } from "@/Validate/object";
+import type { SchemaToInterface } from "@/Validate/type";
 
 /**
  * Integration tests for JSON parsing and validation
@@ -19,7 +20,7 @@ describe("Integration test for 'parseJson' and 'Validate' functions", () => {
       const schema = object({
         key: number(),
       });
-      const result = parseJson<ReturnType<typeof schema>["type"]>(jsonString);
+      const result = parseJson<SchemaToInterface<typeof schema>>(jsonString);
       const isValid = schema(result).validate;
       expect(isValid).toEqual(true);
       expect(result.key).toBe(123);
@@ -30,7 +31,7 @@ describe("Integration test for 'parseJson' and 'Validate' functions", () => {
       const schema = object({
         key: boolean(),
       });
-      const result = parseJson<ReturnType<typeof schema>["type"]>(jsonString);
+      const result = parseJson<SchemaToInterface<typeof schema>>(jsonString);
       const isValid = schema(result).validate;
       expect(isValid).toEqual(true);
       expect(result.key).toBe(true);
@@ -44,7 +45,7 @@ describe("Integration test for 'parseJson' and 'Validate' functions", () => {
           active: boolean(),
         }),
       });
-      const result = parseJson<ReturnType<typeof schema>["type"]>(jsonString);
+      const result = parseJson<SchemaToInterface<typeof schema>>(jsonString);
       const isValid = schema(result).validate;
       expect(isValid).toEqual(true);
       expect(result.user.id).toBe(1);
@@ -63,7 +64,7 @@ describe("Integration test for 'parseJson' and 'Validate' functions", () => {
       const schema = object({
         key: number(),
       });
-      const result = parseJson<ReturnType<typeof schema>["type"]>(jsonString);
+      const result = parseJson<SchemaToInterface<typeof schema>>(jsonString);
       const isValid = schema(result).validate;
       expect(isValid).toEqual(false);
     });
@@ -74,7 +75,7 @@ describe("Integration test for 'parseJson' and 'Validate' functions", () => {
         id: number(),
         active: boolean(),
       });
-      const result = parseJson<ReturnType<typeof schema>["type"]>(jsonString);
+      const result = parseJson<SchemaToInterface<typeof schema>>(jsonString);
       const isValid = schema(result).validate;
       expect(isValid).toEqual(false);
     });
