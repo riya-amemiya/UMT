@@ -81,11 +81,11 @@ export class Pipe<T> {
    * @param predicate Condition function that determines if value should be filtered
    * @returns New Pipe instance with Result containing filtered value or error
    */
-  filterResult<U extends T>(
+  filterResult<U extends T, E extends Error = Error>(
     predicate: (input: T) => input is U,
-  ): Pipe<Result<U, Error>> {
+  ): Pipe<Result<U, E>> {
     return new Pipe(
-      safeExecute<U, Error>(() => {
+      safeExecute<U, E>(() => {
         if (predicate(this.value)) {
           return this.value;
         }
