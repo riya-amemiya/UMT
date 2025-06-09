@@ -259,7 +259,7 @@ describe("Pipe", () => {
 
     it("filters and narrows type using type predicate", () => {
       const result = pipe<unknown>(42)
-        .filterStrict((x): x is number => isNumber(x, false))
+        .filterStrict((x) => isNumber(x, false))
         .map((x) => x + 1)
         .end();
       expect(result).toBe(43);
@@ -289,7 +289,7 @@ describe("Pipe", () => {
 
     it("combines filterStrict with when and map operations", () => {
       const result = pipe<unknown>(5)
-        .filterStrict((x): x is number => isNumber(x, false))
+        .filterStrict((x) => isNumber(x, false))
         .map((x) => x + 2)
         .when(
           (x) => x > 5,
@@ -308,13 +308,13 @@ describe("Pipe", () => {
       expect(stringResult).toBe("hello world");
 
       const numberResult = pipe<string | number>(123)
-        .filterStrict((x): x is number => isNumber(x, false))
+        .filterStrict((x) => isNumber(x, false))
         .map((x) => x * 2)
         .end();
       expect(numberResult).toBe(246);
 
       const whenResult = pipe<string | number>(5)
-        .filterStrict((x): x is number => isNumber(x, false))
+        .filterStrict((x) => isNumber(x, false))
         .when(
           (x) => x > 0,
           (x) => x * 2,
@@ -327,7 +327,7 @@ describe("Pipe", () => {
   describe("filterWithDefault()", () => {
     it("returns original value when predicate is true", () => {
       const result = pipe<unknown>(42)
-        .filterWithDefault((x): x is number => isNumber(x, false), 0)
+        .filterWithDefault((x) => isNumber(x, false), 0)
         .map((x) => x + 1)
         .end();
       expect(result).toBe(43);
@@ -335,7 +335,7 @@ describe("Pipe", () => {
 
     it("returns default value when predicate is false", () => {
       const result = pipe<unknown>("not a number")
-        .filterWithDefault((x): x is number => isNumber(x, false), 0)
+        .filterWithDefault((x) => isNumber(x, false), 0)
         .map((x) => x + 1)
         .end();
       expect(result).toBe(1);
@@ -372,8 +372,8 @@ describe("Pipe", () => {
 
     it("maintains type narrowing in subsequent operations", () => {
       const result = pipe<string | number>("hello")
-        .filterWithDefault((x): x is number => isNumber(x, false), 5)
-        .map((x) => x * 2) // x is definitely a number here
+        .filterWithDefault((x) => isNumber(x, false), 5)
+        .map((x) => x * 2)
         .end();
       expect(result).toBe(10);
     });
@@ -382,7 +382,7 @@ describe("Pipe", () => {
   describe("filterResult()", () => {
     it("returns success result when predicate is true", () => {
       const result = pipe<unknown>(42)
-        .filterResult((x): x is number => isNumber(x, false))
+        .filterResult((x) => isNumber(x, false))
         .map((result) => {
           if (result.type === "success") {
             return result.value + 1;
@@ -395,7 +395,7 @@ describe("Pipe", () => {
 
     it("returns error result when predicate is false", () => {
       const result = pipe<unknown>("not a number")
-        .filterResult((x): x is number => isNumber(x, false))
+        .filterResult((x) => isNumber(x, false))
         .map((result) => {
           if (result.type === "error") {
             return result.error.message;
@@ -436,7 +436,7 @@ describe("Pipe", () => {
 
     it("can be chained with other operations", () => {
       const result = pipe<unknown>(5)
-        .filterResult((x): x is number => isNumber(x, false))
+        .filterResult((x) => isNumber(x, false))
         .map((result) => {
           if (result.type === "success") {
             return result.value * 2;
@@ -452,12 +452,12 @@ describe("Pipe", () => {
     it("handles error cases gracefully", () => {
       const processValue = (value: unknown) => {
         return pipe<unknown>(value)
-          .filterResult((x): x is number => isNumber(x, false))
-          .map((result): number => {
+          .filterResult((x) => isNumber(x, false))
+          .map((result) => {
             if (result.type === "success") {
               return result.value * 2;
             }
-            return 0; // Default value for error case
+            return 0;
           })
           .end();
       };

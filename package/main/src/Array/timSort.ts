@@ -1,35 +1,9 @@
 import { compareFunctionDefault } from "./compareFunctionDefault";
 
 import type { CompareFunction } from "$/array/compareFunction";
+import { insertionSort } from "@/Array/insertionSort";
 
 const MIN_RUN = 32;
-
-/**
- * Sorts a portion of the array using insertion sort algorithm
- * @param array Array to sort
- * @param start Starting index of the range to sort
- * @param end Ending index of the range to sort
- * @param compareFunction Function to compare elements
- */
-const insertionSort = <T>(
-  array: T[],
-  start: number,
-  end: number,
-  compareFunction: CompareFunction<T>,
-): void => {
-  for (let index = start + 1; index <= end; index++) {
-    const temporary = array[index];
-    let currentIndex = index - 1;
-    while (
-      currentIndex >= start &&
-      compareFunction(array[currentIndex], temporary) > 0
-    ) {
-      array[currentIndex + 1] = array[currentIndex];
-      currentIndex--;
-    }
-    array[currentIndex + 1] = temporary;
-  }
-};
 
 /**
  * Merges two sorted portions of the array
@@ -119,9 +93,9 @@ export const timSort = <T>(
   for (let index = start; index <= end; index += minRun) {
     insertionSort(
       array,
+      compareFunction,
       index,
       Math.min(index + MIN_RUN - 1, end),
-      compareFunction,
     );
   }
 
