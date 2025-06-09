@@ -27,5 +27,5 @@ where
     let multiplier = multiplier.into().unwrap_or(1_664_525);
     let increment = increment.into().unwrap_or(1_013_904_223);
 
-    (multiplier * seed + increment) % max
+    (multiplier.wrapping_mul(seed).wrapping_add(increment)) % max
 }
