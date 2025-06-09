@@ -1,5 +1,6 @@
 mod array {
     mod test_range;
+    mod test_ultra_number_sort;
 }
 
 mod math {

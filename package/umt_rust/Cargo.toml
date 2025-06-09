@@ -11,3 +11,11 @@ version = "0.2.0"
 crate-type = ["lib"]
 name = "umt_rust"
 path = "src/lib.rs"
+
+[dev-dependencies]
+criterion = "0.6.0"
+rand = "0.9.1"
+
+[[bench]]
+harness = false
+name = "benchmark"
