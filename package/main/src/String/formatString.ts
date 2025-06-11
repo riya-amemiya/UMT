@@ -108,7 +108,7 @@ export function formatString(
   optionsOrSecondValue?: FormatOptions | FormatValue,
   ...restValues: FormatValue[]
 ): string {
-  const escaped = template
+const escapedTemplate = template
     .replaceAll("{{", "\u0000")
     .replaceAll("}}", "\u0001");
 
