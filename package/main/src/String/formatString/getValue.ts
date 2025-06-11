@@ -42,7 +42,7 @@ export function getValue(object: unknown, path: string): unknown {
   let current = object;
 
   for (const segment of segments) {
-    if (current == null || typeof current !== "object") {
+    if (typeof current !== "object" || current == null) {
       return undefined;
     }
 
