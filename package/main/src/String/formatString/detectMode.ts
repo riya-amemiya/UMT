@@ -22,9 +22,9 @@ import type { FormatValue } from "$/string/formatValue";
  * detectMode("first", "second") // → { data: ["first", "second"], options: {} }
  */
 export function detectMode(
+  dataOrFirstValue: FormatData | FormatValue | undefined,
+  optionsOrSecondValue: FormatOptions | FormatValue | undefined,
   restValues: FormatValue[],
-  dataOrFirstValue?: FormatData | FormatValue,
-  optionsOrSecondValue?: FormatOptions | FormatValue,
 ): {
   data: unknown;
   options: FormatOptions;
