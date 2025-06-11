@@ -121,9 +121,9 @@ const escapedTemplate = template
   const formatters = { ...defaultFormatters, ...options.formatters };
 
   const result = escaped.replaceAll(/{([^}]+)}/g, (match, content: string) => {
-    const [pathAndFormatter, defaultValue] = content
+const [pathAndFormatter, defaultValue] = content
       .split("|")
-      .map((s) => s.trim());
+      .map((part) => part.trim());
     const [path, ...formatterParts] = pathAndFormatter.split(":");
     const formatterString = formatterParts.join(":");
 
