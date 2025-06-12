@@ -1,4 +1,4 @@
-import type { Formatter } from "$/string/formatter";
+import type { Formatter } from "$/string/formatString/formatter";
 
 /**
  * Applies a formatter function to a value with optional arguments.

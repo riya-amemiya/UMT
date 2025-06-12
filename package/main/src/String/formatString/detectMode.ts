@@ -1,6 +1,6 @@
-import type { FormatData } from "$/string/formatData";
-import type { FormatOptions } from "$/string/formatOptions";
-import type { FormatValue } from "$/string/formatValue";
+import type { FormatData } from "$/string/formatString/formatData";
+import type { FormatOptions } from "$/string/formatString/formatOptions";
+import type { FormatValue } from "$/string/formatString/formatValue";
 
 /**
  * Detects whether formatString should use indexed or named mode based on arguments.
