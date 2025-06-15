@@ -53,6 +53,7 @@ export * from "./stringReverse";
 export * from "./stringToArray";
 export * from "./stringToUnion";
 export * from "./toNumber";
+export * from "./unionToIntersection";
 export * from "./xnor";
 export * from "./xor";
 export * from "./zeroAorB";
