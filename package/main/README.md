@@ -186,11 +186,13 @@ bun add umt
 | formatString | `(template: string, ...values: unknown[]) => string` | Replaces placeholders in a template string with specified values | `formatString("Hello, {0}!", "World"); // "Hello, World!"` |
 | fromBase64 | `(base64String: string) => string` | Converts Base64 to string | `fromBase64("SGVsbG8="); // "Hello"` |
 | hasNoLetters | `(text: string) => boolean` | Checks if the string contains no letters (contains only emojis, numbers, or special characters) | `hasNoLetters("123"); // true` |
+| levenshteinDistance | `(string1: string, string2: string) => number` | Calculates the Levenshtein distance between two strings (minimum number of single-character edits) | `levenshteinDistance("kitten", "sitting"); // 3` |
 | padEnd | `(string_: string, targetLength: number, padString: string) => string` | Adds the specified string to the end of the string until it reaches the specified length | `padEnd("123", 5, "0"); // "12300"` |
 | padStart | `(string_: string, targetLength: number, padString: string) => string` | Pads the start of a string with another string until the target length is reached | `padStart("123", 5, "0"); // "00123"` |
 | randomString | `(size?: number, char?: string) => string` | Generates a random string | `randomString(8); // "aB3dEf9h"` |
 | randomStringInitialization | `(char?: string) => (size: number) => string` | Initializes a function that generates random strings | `const gen = randomStringInitialization("ABC"); gen(5); // "ABCAB"` |
 | reverseString | `(char: string) => string` | Reverses a string | `reverseString("Hello"); // "olleH"` |
+| stringSimilarity | `(string1: string, string2: string) => number` | Calculates the similarity between two strings as a percentage (0-1) using Levenshtein distance | `stringSimilarity("hello", "hallo"); // 0.8` |
 | toBase64 | `(char: string) => string` | Convert string to Base64 | `toBase64("Hello"); // "SGVsbG8="` |
 | toHalfWidth | `(str: string) => string` | Convert full-width characters to half-width characters | `toHalfWidth("１２３ＡＢＣ"); // "123ABC"` |
 | trimCharacters | `(string_: string, chars: string) => string` | Removes specified characters from both ends of a string | `trimCharacters("!!!hello!!!", "!"); // "hello"` |
