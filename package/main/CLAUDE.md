@@ -57,4 +57,3 @@ UMT (Utility Module Toolkit) is a TypeScript utility library organized into func
 - **No dependencies**: Main package is dependency-free (dev dependencies only)
 - **Testing framework**: Jest with SWC transformer for fast TypeScript compilation
 - **Coverage**: Enabled by default, excludes environment detection utilities
-- **Language**: Please respond in Japanese
