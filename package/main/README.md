@@ -55,6 +55,8 @@ bun add umt
 | sum | `(x: number[]) => number` | Returns the sum of an array of numbers | `sum([1, 2, 3]); // 6` |
 | timSort | `<T>(array: T[], compareFunction?: CompareFunction<T>, start?: number, end?: number) => T[]` | Implementation of the TimSort algorithm | `timSort([3, 1, 4, 1, 5]); // [1, 1, 3, 4, 5]` |
 | ultraNumberSort | `(array: number[], ascending?: boolean) => number[]` | Ultra-fast sorting specifically optimized for number arrays | `ultraNumberSort([3, 1, 4, 1, 5, 9, 2, 6, 5, 3]); // [1, 1, 2, 3, 3, 4, 5, 5, 6, 9]` |
+| uniqBy | `<T, K>(array: T[], selector: (item: T) => K) => T[]` | Removes duplicate values from an array based on a selector function | `uniqBy([{id: 1}, {id: 2}, {id: 1}], item => item.id); // [{id: 1}, {id: 2}]` |
+| unique | `<T>(array: T[]) => T[]` | Removes duplicate values from an array | `unique([1, 2, 2, 3, 3]); // [1, 2, 3]` |
 | zip | `<T extends unknown[][]>(...arrays: T) => ZipArrayType<T>` | Creates a new array by combining elements from multiple arrays at corresponding positions | `zip([1, 2], ['a', 'b']); // [[1, 'a'], [2, 'b']]` |
 | zipLongest | `<T extends unknown[][]>(...arrays: T) => ZipArrayType<T>` | Combines arrays of different lengths by padding shorter arrays with undefined values | `zipLongest([1, 2], ['a']); // [[1, 'a'], [2, undefined]]` |
 
@@ -164,7 +166,11 @@ bun add umt
 | name | type | description | example |
 |------|------|-------------|---------|
 | has | `<T extends { [key: string]: unknown }>(object: T, path: string \| string[]) => boolean` | Determines if an object has a specified path | `has({ a: { b: 1 } }, "a.b"); // true` |
+| isEmpty | `(object: Record<string, unknown>) => boolean` | Checks if an object is empty (has no own properties) | `isEmpty({}); // true` |
 | keyBy | `<T>(collection: T[] \| Record<PropertyName, T>, iteratee?: Iteratee<T>) => Record<PropertyName, T>` | Creates an object composed of keys generated from the results of running each element of collection through iteratee | `keyBy([{id: 1, name: 'a'}, {id: 2, name: 'b'}], 'id'); // {1: {id: 1, name: 'a'}, 2: {id: 2, name: 'b'}}` |
+| merge | `<T extends Record<string, unknown>>(target: T, ...sources: Partial<T>[]) => T` | Merges multiple objects into a single object (shallow merge) | `merge({a: 1}, {b: 2}); // {a: 1, b: 2}` |
+| mergeDeep | `<T extends Record<string, unknown>>(target: T, ...sources: Partial<T>[]) => T` | Deeply merges multiple objects into a single object | `mergeDeep({a: {b: 1}}, {a: {c: 2}}); // {a: {b: 1, c: 2}}` |
+| omit | `<T extends Record<string, unknown>, K extends keyof T>(object: T, ...keys: K[]) => Omit<T, K>` | Creates an object without the specified keys | `omit({a: 1, b: 2, c: 3}, 'b'); // {a: 1, c: 3}` |
 | pick | `<T extends object, K extends keyof T>(object: T, ...keys: K[]) => Pick<T, K>` | Creates a new object with only the specified properties from the source object | `pick({ id: 1, name: 'Alice', age: 30 }, 'id', 'name'); // { id: 1, name: 'Alice' }` |
 | pickDeep | `<T extends object, K extends PickDeepKey<T>>(object: T, ...keys: K[]) => PickDeep<T>` | Creates a new object by deeply selecting properties from the source object based on specified keys | `pickDeep({ a: { b: { c: 1, d: 2 }, e: 3 }, f: 4 }, 'a.b.c', 'f'); // { a: { b: { c: 1 } }, f: 4 }` |
 
@@ -182,10 +188,13 @@ bun add umt
 
 | name | type | description | example |
 |------|------|-------------|---------|
+| camelCase | `(str: string) => string` | Converts a string to camelCase | `camelCase("hello-world"); // "helloWorld"` |
 | deleteSpaces | `(string_: string) => string` | Removes all whitespace characters from a string | `deleteSpaces("Hello World"); // "HelloWorld"` |
+| escapeHtml | `(str: string) => string` | Escapes HTML special characters in a string | `escapeHtml("<script>alert('XSS')</script>"); // "&lt;script&gt;alert(&#39;XSS&#39;)&lt;/script&gt;"` |
 | formatString | `(template: string, ...values: unknown[]) => string` | Replaces placeholders in a template string with specified values | `formatString("Hello, {0}!", "World"); // "Hello, World!"` |
 | fromBase64 | `(base64String: string) => string` | Converts Base64 to string | `fromBase64("SGVsbG8="); // "Hello"` |
 | hasNoLetters | `(text: string) => boolean` | Checks if the string contains no letters (contains only emojis, numbers, or special characters) | `hasNoLetters("123"); // true` |
+| kebabCase | `(str: string) => string` | Converts a string to kebab-case | `kebabCase("helloWorld"); // "hello-world"` |
 | levenshteinDistance | `(string1: string, string2: string) => number` | Calculates the Levenshtein distance between two strings (minimum number of single-character edits) | `levenshteinDistance("kitten", "sitting"); // 3` |
 | padEnd | `(string_: string, targetLength: number, padString: string) => string` | Adds the specified string to the end of the string until it reaches the specified length | `padEnd("123", 5, "0"); // "12300"` |
 | padStart | `(string_: string, targetLength: number, padString: string) => string` | Pads the start of a string with another string until the target length is reached | `padStart("123", 5, "0"); // "00123"` |
