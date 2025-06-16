@@ -40,11 +40,48 @@ export function applyFormatter(
     return String(value);
   }
 
-  const arguments_ = argumentsString
-    ? argumentsString
-        .split(",")
-        .map((argument) => argument.trim().replaceAll(/^["']|["']$/g, ""))
-    : [];
+  const arguments_ = argumentsString ? parseArguments(argumentsString) : [];
 
   return formatter(value, ...arguments_);
+}
+
+/**
+ * Parses comma-separated arguments while preserving quoted strings
+ * @param argumentsString - String containing comma-separated arguments
+ * @returns Array of parsed arguments
+ */
+function parseArguments(argumentsString: string): string[] {
+  const arguments_: string[] = [];
+  let current = "";
+  let inQuotes = false;
+  let quoteChar = "";
+
+  for (const char of argumentsString) {
+    if (!inQuotes && (char === '"' || char === "'")) {
+      inQuotes = true;
+      quoteChar = char;
+      continue;
+    }
+
+    if (inQuotes && char === quoteChar) {
+      inQuotes = false;
+      quoteChar = "";
+      continue;
+    }
+
+    if (!inQuotes && char === ",") {
+      const trimmed = current.trim();
+      arguments_.push(trimmed === "" ? " " : trimmed);
+      current = "";
+      continue;
+    }
+
+    current += char;
+  }
+
+  // Handle last argument
+  const trimmed = current.trim();
+  arguments_.push(trimmed === "" ? " " : trimmed);
+
+  return arguments_;
 }
