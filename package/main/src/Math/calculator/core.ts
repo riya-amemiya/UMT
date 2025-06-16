@@ -133,7 +133,7 @@ const containsDiv = (expr: string): boolean => {
 
 const resolveMulExp = (expr: string): string => {
   // Logic for multiplication and exponentiation
-  const match = expr.match(/(.*?)(\d+(?:\.\d+)?)([*^])(\d+(?:\.\d+)?)$/);
+  const match = expr.match(/(.*?)(-?\d+(?:\.\d+)?)([*^])(-?\d+(?:\.\d+)?)$/);
   if (match) {
     const result =
       match[3] === "^"
