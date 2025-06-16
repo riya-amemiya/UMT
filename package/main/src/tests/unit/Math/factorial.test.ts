@@ -32,9 +32,6 @@ describe("factorial", () => {
     expect(factorial(11)).toBe(39916800);
     expect(factorial(12)).toBe(479001600);
     expect(factorial(13)).toBe(6227020800);
-  });
-
-  test("should handle larger numbers", () => {
     expect(factorial(13)).toBe(6227020800);
     expect(factorial(14)).toBe(87178291200);
   });
