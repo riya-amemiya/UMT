@@ -1,3 +1,9 @@
+export interface RetryOptions {
+  retries?: number;
+  delay?: number;
+  shouldRetry?: (error: unknown) => boolean;
+}
+
 /**
  * Retries a given async function with configurable retry logic
  *
@@ -31,11 +37,7 @@
  */
 export const retry = <T>(
   function_: () => Promise<T>,
-  options: {
-    retries?: number;
-    delay?: number;
-    shouldRetry?: (error: unknown) => boolean;
-  } = {},
+  options: RetryOptions = {},
 ): Promise<T> => {
   const { retries = 3, delay = 1000, shouldRetry = () => true } = options;
   const attempt = async (remainingAttempts: number): Promise<T> => {
@@ -50,6 +52,5 @@ export const retry = <T>(
       );
     }
   };
-
   return attempt(retries);
 };
