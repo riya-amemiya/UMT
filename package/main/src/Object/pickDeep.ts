@@ -8,7 +8,7 @@ import type { PickDeepKey } from "$/object/pickDeepKey";
  * @template K - Type of property keys to select. Must be a subset of PickDeepKey<T>.
  * @param {T} object - The source object to extract properties from.
  * @param {...K[]} keys - Property keys to extract. Can use dot notation for nested properties.
- * @returns {PickDeep<T>} A new object containing only the specified properties.
+ * @returns {PickDeep<T, K>} A new object containing only the specified properties.
  *
  * @example
  * ```typescript
@@ -17,10 +17,13 @@ import type { PickDeepKey } from "$/object/pickDeepKey";
  * // picked will be { a: { b: { c: 1 } }, f: 4 }
  * ```
  */
-export const pickDeep = <T extends object, K extends PickDeepKey<T>>(
+export const pickDeep = <
+  T extends object,
+  const K extends readonly PickDeepKey<T>[],
+>(
   object: T,
-  ...keys: K[]
-): PickDeep<T> => {
+  ...keys: K
+): PickDeep<T, K> => {
   // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   const result: any = {};
 

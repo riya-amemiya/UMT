@@ -13,6 +13,7 @@ UMT (Utility Module Toolkit) is a TypeScript utility library organized into func
 - Test all: `bun run test` (Jest with SWC transform)
 - Test single file: `bun run test src/tests/unit/path/to/test.test.ts`
 - Format: `bun run format` (Biome formatter)
+- JS Run: `bun run <fileName.js>` (Run JavaScript files directly with Bun)
 
 ## Architecture & Module Organization
 
