@@ -13,7 +13,7 @@ import type { ValidateReturnType } from "@/Validate/type";
 export const email = (message?: string): ValidateReturnType<string> => {
   // Regular expression for email address validation
   const emailRegex =
-    /^[a-zA-Z0-9]([a-zA-Z0-9._+-]*[a-zA-Z0-9])?@[a-zA-Z0-9]([a-zA-Z0-9.-]*[a-zA-Z0-9])?\.[a-zA-Z]{2,6}$/;
+    /^[a-zA-Z0-9]([a-zA-Z0-9._+-]*[a-zA-Z0-9])?@[a-zA-Z0-9]([a-zA-Z0-9.-]*[a-zA-Z0-9])?\.[a-zA-Z]{2,}$/;
   return {
     type: "string",
     message,
