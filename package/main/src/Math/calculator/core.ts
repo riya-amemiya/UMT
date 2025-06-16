@@ -146,7 +146,7 @@ const resolveMulExp = (expr: string): string => {
 
 const resolveDiv = (expr: string): string => {
   // Logic for division
-  const match = expr.match(/(\d+(?:\.\d+)?)\/(\d+(?:\.\d+)?)/);
+  const match = expr.match(/(-?\d+(?:\.\d+)?)\/(-?\d+(?:\.\d+)?)/);
   if (match) {
     const result = division(Number(match[1]), Number(match[2]));
     return expr.replace(match[0], String(result));
