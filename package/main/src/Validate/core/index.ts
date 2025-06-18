@@ -23,7 +23,6 @@ export const core =
     option: O = [] as unknown as O,
     message?: string,
   ): ValidateCoreReturnType<T> => {
-    // biome-ignore lint/suspicious/useValidTypeof: Type parameter is a string literal type from Types<T>
     if (typeof value !== type) {
       return {
         validate: false,
