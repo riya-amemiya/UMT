@@ -24,14 +24,14 @@ export const pickDeep = <
   object: T,
   ...keys: K
 ): PickDeep<T, K> => {
-  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+  // biome-ignore lint/suspicious/noExplicitAny: ignore
   const result: any = {};
 
   for (const key of keys) {
     const parts = (key as string).split(".");
-    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+    // biome-ignore lint/suspicious/noExplicitAny: ignore
     let current: any = { ...object };
-    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+    // biome-ignore lint/suspicious/noExplicitAny: ignore
     let target: any = result;
 
     for (const [index, part] of parts.entries()) {

@@ -9,7 +9,7 @@
     "@babel/core": "^7.27.4",
     "@babel/preset-env": "^7.27.2",
     "@babel/preset-typescript": "^7.27.1",
-    "@biomejs/biome": "1.9.4",
+    "@biomejs/biome": "2.0.0",
     "@swc/core": "^1.11.31",
     "@swc/jest": "^0.2.38",
     "@types/bun": "^1.2.15",
