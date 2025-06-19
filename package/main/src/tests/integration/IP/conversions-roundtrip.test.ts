@@ -227,7 +227,7 @@ describe("Integration test for IP address conversions", () => {
       expect(isPrivateIp(reconstructed)).toBe(isPrivate);
 
       expect(binary).toHaveLength(32);
-      expect(parseInt(binary, 2)).toBe(longValue);
+      expect(Number.parseInt(binary, 2)).toBe(longValue);
     });
   });
 });

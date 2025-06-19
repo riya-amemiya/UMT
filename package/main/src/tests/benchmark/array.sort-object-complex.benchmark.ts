@@ -22,9 +22,13 @@ interface Product {
 
 const compareProductComplex = (a: Product, b: Product): number => {
   const catComp = a.category.localeCompare(b.category);
-  if (catComp !== 0) return catComp;
+  if (catComp !== 0) {
+    return catComp;
+  }
   const ratingComp = b.rating - a.rating; // Descending
-  if (ratingComp !== 0) return ratingComp;
+  if (ratingComp !== 0) {
+    return ratingComp;
+  }
   return a.price - b.price;
 };
 
@@ -61,7 +65,7 @@ summary(() => {
       }
 
       yield {
-        [0]() {
+        0() {
           return [...original_array];
         },
         bench(arr: Product[]) {
@@ -81,7 +85,7 @@ summary(() => {
       }
 
       yield {
-        [0]() {
+        0() {
           return [...original_array];
         },
         bench(arr: Product[]) {
@@ -101,7 +105,7 @@ summary(() => {
       }
 
       yield {
-        [0]() {
+        0() {
           return [...original_array];
         },
         bench(arr: Product[]) {
@@ -121,7 +125,7 @@ summary(() => {
       }
 
       yield {
-        [0]() {
+        0() {
           return [...original_array];
         },
         bench(arr: Product[]) {
@@ -141,7 +145,7 @@ summary(() => {
       }
 
       yield {
-        [0]() {
+        0() {
           return [...original_array];
         },
         bench(arr: Product[]) {

@@ -1,150 +1,150 @@
 {
-	"$schema": "https://biomejs.dev/schemas/2.0.0/schema.json",
-	"files": {
-		"includes": [
-			"**",
-			"!**/node_modules/**",
-			"!**/module/**",
-			"!**/*.json",
-			"!**/doc/**",
-			"!**/coverage/**"
-		]
-	},
-	"formatter": {
-		"enabled": true,
-		"formatWithErrors": false,
-		"indentStyle": "space",
-		"lineWidth": 80
-	},
-	"javascript": {
-		"globals": [
-			"describe",
-			"beforeEach",
-			"it",
-			"expect",
-			"test",
-			"beforeAll",
-			"afterEach",
-			"afterAll",
-			"Bun"
-		]
-	},
-	"json": {
-		"formatter": {
-			"enabled": false
-		}
-	},
-	"linter": {
-		"enabled": true,
-		"includes": [
-			"**",
-			"!**/tests/**",
-			"!**/.dependency-cruiser.js",
-			"!**/eslint.config.mjs",
-			"!**/jest.config.ts"
-		],
-		"rules": {
-			"a11y": {
-				"noSvgWithoutTitle": "warn"
-			},
-			"complexity": {
-				"noExcessiveCognitiveComplexity": "off",
-				"noUselessStringConcat": "error",
-				"noUselessUndefinedInitialization": "error",
-				"noVoid": "error",
-				"useDateNow": "error",
-				"useSimplifiedLogicExpression": "error",
-				"noUselessEscapeInRegex": "error"
-			},
-			"correctness": {
-				"noConstantMathMinMaxClamp": "error",
-				"noNodejsModules": "error",
-				"noUndeclaredVariables": "warn",
-				"noUnusedFunctionParameters": "error",
-				"noUnusedImports": "error",
-				"noUnusedPrivateClassMembers": "error",
-				"noUnusedVariables": "warn",
-				"useExhaustiveDependencies": "warn",
-				"useHookAtTopLevel": "error",
-				"noInvalidBuiltinInstantiation": "error",
-				"noSwitchDeclarations": "error"
-			},
-			"nursery": {},
-			"recommended": true,
-			"style": {
-				"noDefaultExport": "error",
-				"noDoneCallback": "error",
-				"noImplicitBoolean": "warn",
-				"noNamespace": "error",
-				"noNegationElse": "error",
-				"noParameterAssign": "warn",
-				"noParameterProperties": "off",
-				"noShoutyConstants": "warn",
-				"noYodaExpression": "error",
-				"useBlockStatements": "error",
-				"useCollapsedElseIf": "error",
-				"useConsistentArrayType": "error",
-				"useConsistentBuiltinInstantiation": "error",
-				"useDefaultSwitchClause": "error",
-				"useExplicitLengthCheck": "error",
-				"useForOf": "error",
-				"useFragmentSyntax": "error",
-				"useNamingConvention": {
-					"level": "off",
-					"options": {
-						"conventions": [
-							{
-								"selector": {
-									"kind": "enumMember"
-								},
-								"formats": [
-									"CONSTANT_CASE"
-								]
-							}
-						],
-						"strictCase": true
-					}
-				},
-				"useNodeAssertStrict": "error",
-				"useShorthandAssign": "error",
-				"useThrowNewError": "error",
-				"useThrowOnlyError": "error",
-				"useAsConstAssertion": "error",
-				"useDefaultParameterLast": "error",
-				"useEnumInitializers": "error",
-				"useSelfClosingElements": "error",
-				"useSingleVarDeclarator": "error",
-				"noUnusedTemplateLiteral": "error",
-				"useNumberNamespace": "error",
-				"noInferrableTypes": "error",
-				"noUselessElse": "error",
-				"noEnum": "error",
-				"noExportedImports": "error",
-				"noSubstr": "error",
-				"useTrimStartEnd": "error"
-			},
-			"suspicious": {
-				"noEmptyBlockStatements": "error",
-				"noEvolvingTypes": "error",
-				"noMisplacedAssertion": "error",
-				"noSkippedTests": "error",
-				"useErrorMessage": "error",
-				"useNumberToFixedDigitsArgument": "error",
-				"noDuplicateElseIf": "error",
-				"noIrregularWhitespace": "error",
-				"useAdjacentOverloadSignatures": "error"
-			},
-			"performance": {
-				"noDynamicNamespaceImportAccess": "error",
-				"noNamespaceImport": "error"
-			}
-		}
-	},
-	"assist": {
-		"actions": {
-			"source": {
-				"organizeImports": "off"
-			}
-		}
-	}
+  "$schema": "https://biomejs.dev/schemas/2.0.0/schema.json",
+  "files": {
+    "includes": [
+      "**",
+      "!**/node_modules/**",
+      "!**/module/**",
+      "!**/*.json",
+      "!**/doc/**",
+      "!**/coverage/**"
+    ]
+  },
+  "formatter": {
+    "enabled": true,
+    "formatWithErrors": false,
+    "indentStyle": "space",
+    "lineWidth": 80
+  },
+  "javascript": {
+    "globals": [
+      "describe",
+      "beforeEach",
+      "it",
+      "expect",
+      "test",
+      "beforeAll",
+      "afterEach",
+      "afterAll",
+      "Bun",
+      "jest"
+    ]
+  },
+  "json": {
+    "formatter": {
+      "enabled": true
+    }
+  },
+  "linter": {
+    "enabled": true,
+    "includes": [
+      "**",
+      "!**/.dependency-cruiser.js",
+      "!**/eslint.config.mjs",
+      "!**/jest.config.ts"
+    ],
+    "rules": {
+      "a11y": {
+        "noSvgWithoutTitle": "warn"
+      },
+      "complexity": {
+        "noExcessiveCognitiveComplexity": "off",
+        "noExcessiveNestedTestSuites": "error",
+        "noUselessStringConcat": "error",
+        "noUselessUndefinedInitialization": "error",
+        "noVoid": "error",
+        "useDateNow": "error",
+        "useSimplifiedLogicExpression": "error",
+        "noUselessEscapeInRegex": "error"
+      },
+      "correctness": {
+        "noConstantMathMinMaxClamp": "error",
+        "noNodejsModules": "error",
+        "noUndeclaredVariables": "warn",
+        "noUnusedFunctionParameters": "error",
+        "noUnusedImports": "error",
+        "noUnusedPrivateClassMembers": "error",
+        "noUnusedVariables": "warn",
+        "useExhaustiveDependencies": "warn",
+        "useHookAtTopLevel": "error",
+        "noInvalidBuiltinInstantiation": "error",
+        "noSwitchDeclarations": "error"
+      },
+      "nursery": {},
+      "recommended": true,
+      "style": {
+        "noDefaultExport": "error",
+        "noDoneCallback": "error",
+        "noImplicitBoolean": "warn",
+        "noNamespace": "error",
+        "noNegationElse": "error",
+        "noParameterAssign": "warn",
+        "noParameterProperties": "off",
+        "noShoutyConstants": "warn",
+        "noYodaExpression": "error",
+        "useBlockStatements": "error",
+        "useCollapsedElseIf": "error",
+        "useConsistentArrayType": "error",
+        "useConsistentBuiltinInstantiation": "error",
+        "useDefaultSwitchClause": "error",
+        "useExplicitLengthCheck": "error",
+        "useForOf": "error",
+        "useFragmentSyntax": "error",
+        "useNamingConvention": {
+          "level": "off",
+          "options": {
+            "conventions": [
+              {
+                "selector": {
+                  "kind": "enumMember"
+                },
+                "formats": ["CONSTANT_CASE"]
+              }
+            ],
+            "strictCase": true
+          }
+        },
+        "useNodeAssertStrict": "error",
+        "useShorthandAssign": "error",
+        "useThrowNewError": "error",
+        "useThrowOnlyError": "error",
+        "useAsConstAssertion": "error",
+        "useDefaultParameterLast": "error",
+        "useEnumInitializers": "error",
+        "useSelfClosingElements": "error",
+        "useSingleVarDeclarator": "error",
+        "noUnusedTemplateLiteral": "error",
+        "useNumberNamespace": "error",
+        "noInferrableTypes": "error",
+        "noUselessElse": "error",
+        "noEnum": "error",
+        "noExportedImports": "error",
+        "noSubstr": "error",
+        "useTrimStartEnd": "error"
+      },
+      "suspicious": {
+        "noExplicitAny": "error",
+        "noEmptyBlockStatements": "error",
+        "noEvolvingTypes": "error",
+        "noMisplacedAssertion": "error",
+        "noSkippedTests": "error",
+        "useErrorMessage": "error",
+        "useNumberToFixedDigitsArgument": "error",
+        "noDuplicateElseIf": "error",
+        "noIrregularWhitespace": "error",
+        "useAdjacentOverloadSignatures": "error"
+      },
+      "performance": {
+        "noDynamicNamespaceImportAccess": "error",
+        "noNamespaceImport": "error"
+      }
+    }
+  },
+  "assist": {
+    "actions": {
+      "source": {
+        "organizeImports": "off"
+      }
+    }
+  }
 }

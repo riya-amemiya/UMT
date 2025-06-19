@@ -42,7 +42,7 @@ summary(() => {
       }
 
       yield {
-        [0]() {
+        0() {
           return [...original_array];
         },
         bench(arr: number[]) {
@@ -62,7 +62,7 @@ summary(() => {
       }
 
       yield {
-        [0]() {
+        0() {
           return [...original_array];
         },
         bench(arr: number[]) {
@@ -82,7 +82,7 @@ summary(() => {
       }
 
       yield {
-        [0]() {
+        0() {
           return [...original_array];
         },
         bench(arr: number[]) {
@@ -102,7 +102,7 @@ summary(() => {
       }
 
       yield {
-        [0]() {
+        0() {
           return [...original_array];
         },
         bench(arr: number[]) {
@@ -122,7 +122,7 @@ summary(() => {
       }
 
       yield {
-        [0]() {
+        0() {
           return [...original_array];
         },
         bench(arr: number[]) {
@@ -142,7 +142,7 @@ summary(() => {
       }
 
       yield {
-        [0]() {
+        0() {
           return [...original_array];
         },
         bench(arr: number[]) {

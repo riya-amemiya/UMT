@@ -67,6 +67,7 @@ describe("bitwise", () => {
   });
 
   it("should throw error for invalid direction", () => {
+    // biome-ignore lint/suspicious/noExplicitAny: ignore
     expect(() => bitwise(0x12345678, 8, "invalid" as any)).toThrowError(
       "Invalid direction",
     );

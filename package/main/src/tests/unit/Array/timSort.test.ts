@@ -66,7 +66,7 @@ describe("timSort", () => {
 
   it("should handle arrays with repeated elements near run boundaries", () => {
     // Creates runs with repeated elements at boundaries
-    const array = [];
+    const array: number[] = [];
     for (let i = 0; i < 64; i++) {
       array.push(Math.floor(i / 16)); // Creates 4 values, each repeated 16 times
     }
@@ -93,12 +93,23 @@ describe("timSort", () => {
 
   it("should handle null and undefined", () => {
     const array = [null, undefined, null, undefined];
+    // biome-ignore lint/suspicious/noExplicitAny: ignore
     const compareFunction = (a: any, b: any) => {
-      if (a === b) return 0;
-      if (a === null) return -1;
-      if (b === null) return 1;
-      if (a === undefined) return -1;
-      if (b === undefined) return 1;
+      if (a === b) {
+        return 0;
+      }
+      if (a === null) {
+        return -1;
+      }
+      if (b === null) {
+        return 1;
+      }
+      if (a === undefined) {
+        return -1;
+      }
+      if (b === undefined) {
+        return 1;
+      }
       return 0;
     };
     expect(timSort(array, compareFunction)).toEqual([
@@ -111,6 +122,7 @@ describe("timSort", () => {
 
   it("should handle custom comparison for mixed types", () => {
     const array = ["b", 2, "a", 1];
+    // biome-ignore lint/suspicious/noExplicitAny: ignore
     const compareFunction = (a: any, b: any) => {
       const aStr = String(a);
       const bStr = String(b);

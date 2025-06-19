@@ -212,19 +212,19 @@ describe("ultraNumberSort", () => {
   });
 
   it("should handle radixSort with only zeros and length > 100", () => {
-    const arr = Array(101).fill(0);
+    const arr = new Array(101).fill(0);
     expect(ultraNumberSort([...arr])).toEqual(arr);
     expect(ultraNumberSort([...arr], false)).toEqual(arr);
   });
 
   it("should handle radixSortPositive with single element array via ultraNumberSort", () => {
-    const arrWithOnePositive = Array(101).fill(0).concat([5]);
+    const arrWithOnePositive = new Array(101).fill(0).concat([5]);
     expect(ultraNumberSort([...arrWithOnePositive])).toEqual(
-      Array(101).fill(0).concat([5]),
+      new Array(101).fill(0).concat([5]),
     );
-    const arrWithOneNegative = Array(101).fill(0).concat([-5]);
+    const arrWithOneNegative = new Array(101).fill(0).concat([-5]);
     expect(ultraNumberSort([...arrWithOneNegative])).toEqual(
-      [-5].concat(Array(101).fill(0)),
+      [-5].concat(new Array(101).fill(0)),
     );
   });
 
@@ -273,7 +273,7 @@ describe("ultraNumberSort", () => {
     const arr2 = Array.from(
       { length: 60 },
       () => Math.floor(Math.random() * 100) + 1,
-    ).concat(Array(60).fill(0));
+    ).concat(new Array(60).fill(0));
     const sortedArr2Asc = [...arr2].sort((a, b) => a - b);
     const sortedArr2Desc = [...arr2].sort((a, b) => b - a);
     expect(ultraNumberSort([...arr2])).toEqual(sortedArr2Asc);
@@ -282,7 +282,7 @@ describe("ultraNumberSort", () => {
     const arr3 = Array.from(
       { length: 60 },
       () => Math.floor(Math.random() * -100) - 1,
-    ).concat(Array(60).fill(0));
+    ).concat(new Array(60).fill(0));
     const sortedArr3Asc = [...arr3].sort((a, b) => a - b);
     const sortedArr3Desc = [...arr3].sort((a, b) => b - a);
     expect(ultraNumberSort([...arr3])).toEqual(sortedArr3Asc);

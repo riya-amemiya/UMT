@@ -131,6 +131,7 @@ describe("mergeDeep", () => {
   });
 
   it("should handle when target is not a plain object", () => {
+    // biome-ignore lint/suspicious/noExplicitAny: ignore
     const target = null as any;
     const source = { a: 1 };
 

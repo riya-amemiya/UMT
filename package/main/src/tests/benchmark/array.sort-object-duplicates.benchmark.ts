@@ -52,7 +52,7 @@ summary(() => {
       }
 
       yield {
-        [0]() {
+        0() {
           return [...original_array];
         },
         bench(arr: Person[]) {
@@ -72,7 +72,7 @@ summary(() => {
       }
 
       yield {
-        [0]() {
+        0() {
           return [...original_array];
         },
         bench(arr: Person[]) {
@@ -92,7 +92,7 @@ summary(() => {
       }
 
       yield {
-        [0]() {
+        0() {
           return [...original_array];
         },
         bench(arr: Person[]) {
@@ -112,7 +112,7 @@ summary(() => {
       }
 
       yield {
-        [0]() {
+        0() {
           return [...original_array];
         },
         bench(arr: Person[]) {
@@ -132,7 +132,7 @@ summary(() => {
       }
 
       yield {
-        [0]() {
+        0() {
           return [...original_array];
         },
         bench(arr: Person[]) {

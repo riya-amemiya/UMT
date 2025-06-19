@@ -141,7 +141,7 @@ describe("email", () => {
     const shortLocal = "a@example.com";
     expect(validateEmail(shortLocal).validate).toBeTruthy();
 
-    const longLocal = "a".repeat(50) + "@example.com";
+    const longLocal = `${"a".repeat(50)}@example.com`;
     expect(validateEmail(longLocal).validate).toBeTruthy();
   });
 });

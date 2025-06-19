@@ -23,7 +23,8 @@ describe("escapeHtml", () => {
 
   it("should escape all special characters", () => {
     const input = `<script>alert("XSS & 'injection'");</script>`;
-    const expected = `&lt;script&gt;alert(&quot;XSS &amp; &#39;injection&#39;&quot;);&lt;/script&gt;`;
+    const expected =
+      "&lt;script&gt;alert(&quot;XSS &amp; &#39;injection&#39;&quot;);&lt;/script&gt;";
 
     expect(escapeHtml(input)).toBe(expected);
   });
@@ -55,14 +56,16 @@ describe("escapeHtml", () => {
 
   it("should handle HTML attributes", () => {
     const input = `<img src="test.jpg" alt="Tom & Jerry's picture">`;
-    const expected = `&lt;img src=&quot;test.jpg&quot; alt=&quot;Tom &amp; Jerry&#39;s picture&quot;&gt;`;
+    const expected =
+      "&lt;img src=&quot;test.jpg&quot; alt=&quot;Tom &amp; Jerry&#39;s picture&quot;&gt;";
 
     expect(escapeHtml(input)).toBe(expected);
   });
 
   it("should handle JavaScript code", () => {
     const input = `if (x < 5 && y > 3) { alert("Hello 'World'"); }`;
-    const expected = `if (x &lt; 5 &amp;&amp; y &gt; 3) { alert(&quot;Hello &#39;World&#39;&quot;); }`;
+    const expected =
+      "if (x &lt; 5 &amp;&amp; y &gt; 3) { alert(&quot;Hello &#39;World&#39;&quot;); }";
 
     expect(escapeHtml(input)).toBe(expected);
   });

@@ -249,8 +249,8 @@ describe("Integration test for deep object operations", () => {
     const nonUserPermissions = omit(merged.permissions, "user");
 
     expect(merged.users.length).toBe(3);
-    expect(usersByRole["admin"].name).toBe("Charlie");
-    expect(adminPermissions["admin"]).toEqual(["read", "write", "delete"]);
+    expect(usersByRole.admin.name).toBe("Charlie");
+    expect(adminPermissions.admin).toEqual(["read", "write", "delete"]);
     expect(has(nonUserPermissions, "user")).toBe(false);
     expect(has(nonUserPermissions, "moderator")).toBe(true);
   });

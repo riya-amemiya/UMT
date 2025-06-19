@@ -15,6 +15,7 @@ describe("Integration test for function composition", () => {
   it("should combine curry with pipe for data transformations", () => {
     const add = (a: number, b: number) => a + b;
     const multiply = (a: number, b: number) => a * b;
+    // biome-ignore lint/suspicious/noShadowRestrictedNames: ignore
     const toString = (n: number) => n.toString();
 
     const curriedAdd = curry(add);
@@ -127,8 +128,8 @@ describe("Integration test for function composition", () => {
   it("should combine currying with error-safe operations", () => {
     const safeDivide = (a: number, b: number) => (b === 0 ? null : a / b);
     const safeParseNumber = (str: string) => {
-      const num = parseFloat(str);
-      return isNaN(num) ? null : num;
+      const num = Number.parseFloat(str);
+      return Number.isNaN(num) ? null : num;
     };
 
     const curriedSafeDivide = curry(safeDivide);

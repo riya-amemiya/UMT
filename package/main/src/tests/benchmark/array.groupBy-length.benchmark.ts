@@ -29,7 +29,7 @@ const byLength = (item: string): number => item.length;
 summary(() => {
   lineplot(() => {
     bench(
-      `customGroupBy strings by length (size: $size)`,
+      "customGroupBy strings by length (size: $size)",
       function* (state: k_state) {
         const size = state.get("size") as number;
         const originalArray = sharedRandomStringsArraysByLength.get(size);
@@ -37,7 +37,7 @@ summary(() => {
           throw new Error(`No shared array found for size: ${size}`);
         }
         yield {
-          [0]() {
+          0() {
             return [...originalArray];
           },
           bench(arr: string[]) {
@@ -50,7 +50,7 @@ summary(() => {
       .gc("inner");
 
     bench(
-      `lodashGroupBy strings by length (size: $size)`,
+      "lodashGroupBy strings by length (size: $size)",
       function* (state: k_state) {
         const size = state.get("size") as number;
         const originalArray = sharedRandomStringsArraysByLength.get(size);
@@ -58,7 +58,7 @@ summary(() => {
           throw new Error(`No shared array found for size: ${size}`);
         }
         yield {
-          [0]() {
+          0() {
             return [...originalArray];
           },
           bench(arr: string[]) {
@@ -71,7 +71,7 @@ summary(() => {
       .gc("inner");
 
     bench(
-      `esToolkitGroupBy strings by length (size: $size)`,
+      "esToolkitGroupBy strings by length (size: $size)",
       function* (state: k_state) {
         const size = state.get("size") as number;
         const originalArray = sharedRandomStringsArraysByLength.get(size);
@@ -79,7 +79,7 @@ summary(() => {
           throw new Error(`No shared array found for size: ${size}`);
         }
         yield {
-          [0]() {
+          0() {
             return [...originalArray];
           },
           bench(arr: string[]) {
@@ -92,7 +92,7 @@ summary(() => {
       .gc("inner");
 
     bench(
-      `Object.groupBy strings by length (size: $size)`,
+      "Object.groupBy strings by length (size: $size)",
       function* (state: k_state) {
         const size = state.get("size") as number;
         const originalArray = sharedRandomStringsArraysByLength.get(size);
@@ -100,7 +100,7 @@ summary(() => {
           throw new Error(`No shared array found for size: ${size}`);
         }
         yield {
-          [0]() {
+          0() {
             return [...originalArray];
           },
           bench(arr: string[]) {

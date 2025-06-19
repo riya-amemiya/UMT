@@ -24,7 +24,7 @@ for (const size of arraySizes) {
 summary(() => {
   lineplot(() => {
     bench(
-      `customChunk(size: $size, chunkSize: $chunkSize)`,
+      "customChunk(size: $size, chunkSize: $chunkSize)",
       function* customChunkBench(state: k_state) {
         const size = state.get("size") as number;
         const currentChunkSize = state.get("chunkSize") as number;
@@ -35,7 +35,7 @@ summary(() => {
         }
 
         yield {
-          [0]() {
+          0() {
             return [...original_array];
           },
           bench(arr: number[]) {
@@ -48,7 +48,7 @@ summary(() => {
       .gc("inner");
 
     bench(
-      `lodashChunk(size: $size, chunkSize: $chunkSize)`,
+      "lodashChunk(size: $size, chunkSize: $chunkSize)",
       function* lodashChunkBench(state: k_state) {
         const size = state.get("size") as number;
         const currentChunkSize = state.get("chunkSize") as number;
@@ -59,7 +59,7 @@ summary(() => {
         }
 
         yield {
-          [0]() {
+          0() {
             return [...original_array];
           },
           bench(arr: number[]) {
@@ -72,7 +72,7 @@ summary(() => {
       .gc("inner");
 
     bench(
-      `esToolkitChunk(size: $size, chunkSize: $chunkSize)`,
+      "esToolkitChunk(size: $size, chunkSize: $chunkSize)",
       function* esToolkitChunkBench(state: k_state) {
         const size = state.get("size") as number;
         const currentChunkSize = state.get("chunkSize") as number;
@@ -83,7 +83,7 @@ summary(() => {
         }
 
         yield {
-          [0]() {
+          0() {
             return [...original_array];
           },
           bench(arr: number[]) {

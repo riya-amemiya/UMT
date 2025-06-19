@@ -2,7 +2,7 @@ import { standardDeviation } from "@/Math/standardDeviation";
 
 describe("standardDeviation function", () => {
   it("should calculate standard deviation of sequential integers", () => {
-    expect(standardDeviation([1, 2, 3, 4, 5])).toBe(1.4142135623730951);
+    expect(standardDeviation([1, 2, 3, 4, 5])).toBe(Math.SQRT2);
     expect(standardDeviation([1, 2, 3])).toBe(0.816496580927726);
   });
 
