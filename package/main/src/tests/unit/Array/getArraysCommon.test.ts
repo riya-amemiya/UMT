@@ -67,6 +67,10 @@ describe("getArraysCommon", () => {
       Number.NaN,
       1,
     ]);
+
+    expect(
+      getArraysCommon([Number.NaN, Number.NaN, 1], [Number.NaN, Number.NaN, 1]),
+    ).toEqual([Number.NaN, 1]);
   });
 
   it("should handle arrays with duplicate elements", () => {
