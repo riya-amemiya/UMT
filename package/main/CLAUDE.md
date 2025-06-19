@@ -2,6 +2,8 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+**Don't use Node.js**: This project is built with Bun, a modern JavaScript runtime. Do not use Node.js for development or testing.
+
 ## Project Overview
 
 UMT (Utility Module Toolkit) is a TypeScript utility library organized into functional modules. It's a zero-dependency library that exports individual utility functions grouped by category (Array, Math, String, Date, etc.).
