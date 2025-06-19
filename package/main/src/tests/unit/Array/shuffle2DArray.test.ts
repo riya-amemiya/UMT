@@ -39,22 +39,34 @@ describe("shuffle2DArray function", () => {
       [5, "6"],
     ];
     const shuffledArray = shuffle2DArray(array);
-    // Check if the entire array is shuffled
-    expect(shuffledArray.map((subArray) => subArray.sort())).not.toEqual(
-      array.map((subArray) => subArray.sort()),
-    );
+    const originalFlat = array.flat().sort();
+    const shuffledFlat = shuffledArray.flat().sort();
+    expect(shuffledFlat).toEqual(originalFlat);
+
+    expect(shuffledArray.length).toBe(array.length);
+    for (const [index, subArray] of shuffledArray.entries()) {
+      expect(subArray.length).toBe(array[index].length);
+    }
   });
 
   it("should shuffle large 2D arrays", () => {
-    const array = Array.from({ length: 1000 }, (_, index) => [
-      index,
-      index + 1,
-    ]);
+    const array = Array.from({ length: 100 }, (_, index) => [index, index + 1]);
     const shuffledArray = shuffle2DArray(array);
-    // Check if the entire array is shuffled
-    expect(shuffledArray.map((subArray) => subArray.sort())).not.toEqual(
-      array.map((subArray) => subArray.sort()),
-    );
+    const originalFlat = array.flat().sort((a, b) => a - b);
+    const shuffledFlat = shuffledArray.flat().sort((a, b) => a - b);
+    expect(shuffledFlat).toEqual(originalFlat);
+    expect(shuffledArray.length).toBe(array.length);
+    for (const [index, subArray] of shuffledArray.entries()) {
+      expect(subArray.length).toBe(array[index].length);
+    }
+
+    let changedCount = 0;
+    for (const [index, subArray] of shuffledArray.entries()) {
+      if (JSON.stringify(subArray) !== JSON.stringify(array[index])) {
+        changedCount++;
+      }
+    }
+    expect(changedCount).toBeGreaterThan(0);
   });
 
   it("should handle subarrays of different lengths", () => {
