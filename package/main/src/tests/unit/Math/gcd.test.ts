@@ -39,8 +39,8 @@ describe("gcd function", () => {
   });
 
   test("handles large numbers", () => {
-    expect(gcd(1000000, 500000)).toBe(500000);
-    expect(gcd(123456789, 987654321)).toBe(9);
+    expect(gcd(1_000_000, 500_000)).toBe(500_000);
+    expect(gcd(123_456_789, 987_654_321)).toBe(9);
     expect(gcd(Number.MAX_SAFE_INTEGER, 999)).toBe(1);
   });
 

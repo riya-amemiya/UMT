@@ -202,7 +202,7 @@ describe("validateRange function", () => {
 
   describe("performance considerations", () => {
     test("should handle large arrays efficiently", () => {
-      const array = new Array(10000).fill(0).map((_, i) => i);
+      const array = new Array(10_000).fill(0).map((_, i) => i);
       const result = validateRange(array, 100, 500);
 
       expect(result).toEqual({
@@ -243,12 +243,12 @@ describe("validateRange function", () => {
         { array: [1, 2, 3, 4, 5], start: 2, end: 1 },
       ];
 
-      testCases.forEach(({ array, start, end }) => {
+      for (const { array, start, end } of testCases) {
         const result = validateRange(array, start, end);
         expect(typeof result.startIndex).toBe("number");
         expect(typeof result.endIndex).toBe("number");
         expect(typeof result.shouldSort).toBe("boolean");
-      });
+      }
     });
   });
 });

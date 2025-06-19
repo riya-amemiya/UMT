@@ -54,10 +54,10 @@ describe("stringSimilarity", () => {
       ["similar", "similarity"],
     ];
 
-    testCases.forEach(([str1, str2]) => {
+    for (const [str1, str2] of testCases) {
       const similarity = stringSimilarity(str1, str2);
       expect(similarity).toBeGreaterThanOrEqual(0);
       expect(similarity).toBeLessThanOrEqual(1);
-    });
+    }
   });
 });

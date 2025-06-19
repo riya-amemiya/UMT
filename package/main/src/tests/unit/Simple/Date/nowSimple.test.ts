@@ -52,10 +52,10 @@ describe("nowSimple", () => {
       21, 22, 23,
     ];
 
-    validHours.forEach((hour) => {
+    for (const hour of validHours) {
       const result = nowSimple(hour);
       expect(result).toBeInstanceOf(Date);
-    });
+    }
   });
 
   test("should handle all valid HoursType string values", () => {
@@ -86,10 +86,10 @@ describe("nowSimple", () => {
       "23",
     ];
 
-    validStringHours.forEach((hour) => {
+    for (const hour of validStringHours) {
       const result = nowSimple(hour);
       expect(result).toBeInstanceOf(Date);
-    });
+    }
   });
 
   test("should handle edge cases with valid types", () => {

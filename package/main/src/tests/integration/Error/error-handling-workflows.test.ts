@@ -91,18 +91,20 @@ describe("Integration test for error handling workflows", () => {
 
       const emailValidation = string([email()])(userEmail);
       const scoreResult = safeExecute(() => {
-        const num = parseFloat(scoreStr);
-        if (isNaN(num)) throw new Error("Invalid score");
+        const num = Number.parseFloat(scoreStr);
+        if (Number.isNaN(num)) {
+          throw new Error("Invalid score");
+        }
         return num;
       });
 
       return {
         success: emailValidation.validate && scoreResult.type === "success",
-        error: !emailValidation.validate
-          ? "Invalid email"
-          : scoreResult.type === "error"
+        error: emailValidation.validate
+          ? scoreResult.type === "error"
             ? "Invalid score"
-            : null,
+            : null
+          : "Invalid email",
         data: {
           email: userEmail,
           score: scoreResult.type === "success" ? scoreResult.value : 0,
@@ -127,10 +129,7 @@ describe("Integration test for error handling workflows", () => {
   });
 
   it("should handle mathematical operations with fallback values", () => {
-    const calculateWithFallback = (
-      expression: string,
-      fallback: number = 0,
-    ) => {
+    const calculateWithFallback = (expression: string, fallback = 0) => {
       const calcResult = safeExecute(() => {
         if (expression === "invalid") {
           throw new Error("Invalid expression");
@@ -144,8 +143,8 @@ describe("Integration test for error handling workflows", () => {
 
       const value = calcResult.value;
       return {
-        value: isNaN(value) ? fallback : value,
-        fromFallback: isNaN(value),
+        value: Number.isNaN(value) ? fallback : value,
+        fromFallback: Number.isNaN(value),
       };
     };
 
@@ -177,14 +176,19 @@ describe("Integration test for error handling workflows", () => {
           return result.type === "success" ? result.value : null;
         })
         .map((data) => {
-          if (!data) return null;
+          if (!data) {
+            return null;
+          }
 
           const { operation, values } = data;
-          if (!Array.isArray(values) || values.length === 0) return null;
+          if (!Array.isArray(values) || values.length === 0) {
+            return null;
+          }
 
           if (operation === "sum") {
             return values.reduce((a, b) => a + b, 0);
-          } else if (operation === "product") {
+          }
+          if (operation === "product") {
             return values.reduce((a, b) => a * b, 1);
           }
 
@@ -211,6 +215,7 @@ describe("Integration test for error handling workflows", () => {
   });
 
   it("should handle validation errors gracefully in data processing", () => {
+    // biome-ignore lint/suspicious/noExplicitAny: ignore
     const validateAndProcess = (userData: any[]) => {
       return userData.map((user) => {
         const parseResult = safeExecute(() => {
@@ -229,7 +234,7 @@ describe("Integration test for error handling workflows", () => {
         const emailValidation = string([email()])(userEmail || "");
         const ageResult = safeExecute(() => {
           const ageNum = Number(age);
-          if (isNaN(ageNum) || ageNum < 0 || ageNum > 150) {
+          if (Number.isNaN(ageNum) || ageNum < 0 || ageNum > 150) {
             throw new Error("Invalid age");
           }
           return ageNum;
@@ -237,11 +242,11 @@ describe("Integration test for error handling workflows", () => {
 
         return {
           valid: emailValidation.validate && ageResult.type === "success",
-          error: !emailValidation.validate
-            ? "Invalid email"
-            : ageResult.type === "error"
+          error: emailValidation.validate
+            ? ageResult.type === "error"
               ? "Invalid age"
-              : null,
+              : null
+            : "Invalid email",
           data: {
             name: name || "Unknown",
             email: userEmail || "",
@@ -273,7 +278,8 @@ describe("Integration test for error handling workflows", () => {
   });
 
   it("should provide error recovery mechanisms", () => {
-    const processWithRetry = (operation: () => any, maxRetries: number = 2) => {
+    // biome-ignore lint/suspicious/noExplicitAny: ignore
+    const processWithRetry = (operation: () => any, maxRetries = 2) => {
       let attempts = 0;
       let lastError: Error | null = null;
 

@@ -16,7 +16,7 @@ describe("convertTime", () => {
   });
 
   test("converts 1 hour to milliseconds", () => {
-    expect(convertTime("1", "hours", "milliseconds")).toBe(3600000);
+    expect(convertTime("1", "hours", "milliseconds")).toBe(3_600_000);
   });
 
   test("converts 0.5 seconds to milliseconds", () => {
@@ -41,7 +41,7 @@ describe("convertTime", () => {
 
   test("converts very large numbers", () => {
     expect(convertTime("1e9", "milliseconds", "hours")).toBe(
-      1000000000 / (60 * 60 * 1000),
+      1_000_000_000 / (60 * 60 * 1000),
     );
   });
 
@@ -59,7 +59,7 @@ describe("convertTime", () => {
   });
 
   test("converts 1 hour to milliseconds (short format)", () => {
-    expect(convertTime("1", "h", "ms")).toBe(3600000);
+    expect(convertTime("1", "h", "ms")).toBe(3_600_000);
   });
 
   test("converts 0.5 seconds to milliseconds (short format)", () => {
@@ -83,7 +83,9 @@ describe("convertTime", () => {
   });
 
   test("converts very large numbers (short format)", () => {
-    expect(convertTime("1e9", "ms", "h")).toBe(1000000000 / (60 * 60 * 1000));
+    expect(convertTime("1e9", "ms", "h")).toBe(
+      1_000_000_000 / (60 * 60 * 1000),
+    );
   });
 
   // long format to short format
@@ -101,7 +103,7 @@ describe("convertTime", () => {
   });
 
   test("converts 1 hour to milliseconds (long to short)", () => {
-    expect(convertTime("1", "hours", "ms")).toBe(3600000);
+    expect(convertTime("1", "hours", "ms")).toBe(3_600_000);
   });
 
   test("converts 0.5 seconds to milliseconds (long to short)", () => {
@@ -126,7 +128,7 @@ describe("convertTime", () => {
 
   test("converts very large numbers (long to short)", () => {
     expect(convertTime("1e9", "milliseconds", "h")).toBe(
-      1000000000 / (60 * 60 * 1000),
+      1_000_000_000 / (60 * 60 * 1000),
     );
   });
 
@@ -145,7 +147,7 @@ describe("convertTime", () => {
   });
 
   test("converts 1 hour to milliseconds (short to long)", () => {
-    expect(convertTime("1", "h", "milliseconds")).toBe(3600000);
+    expect(convertTime("1", "h", "milliseconds")).toBe(3_600_000);
   });
 
   test("converts 0.5 seconds to milliseconds (short to long)", () => {
@@ -170,7 +172,7 @@ describe("convertTime", () => {
 
   test("converts very large numbers (short to long)", () => {
     expect(convertTime("1e9", "ms", "hours")).toBe(
-      1000000000 / (60 * 60 * 1000),
+      1_000_000_000 / (60 * 60 * 1000),
     );
   });
 });

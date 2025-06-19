@@ -137,6 +137,7 @@ describe("detectMode function", () => {
     test("should recognize valid options object", () => {
       const options = {
         formatters: {
+          // biome-ignore lint/suspicious/noExplicitAny: ignore
           custom: (value: any) => String(value),
           upper: (s: string) => s.toUpperCase(),
         },

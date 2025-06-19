@@ -27,9 +27,9 @@ describe("shuffle2DArray function", () => {
     ];
     const shuffledArray = shuffle2DArray(array);
     expect(shuffledArray.length).toBe(array.length);
-    shuffledArray.forEach((subArray, index) => {
+    for (const [index, subArray] of shuffledArray.entries()) {
       expect(subArray.length).toBe(array[index].length);
-    });
+    }
   });
 
   it("should shuffle 2D array with mixed types", () => {
@@ -61,9 +61,9 @@ describe("shuffle2DArray function", () => {
     const array = [[1], [2, 3], [4, 5, 6]];
     const shuffledArray = shuffle2DArray(array);
     expect(shuffledArray.length).toBe(array.length);
-    shuffledArray.forEach((subArray, index) => {
+    for (const [index, subArray] of shuffledArray.entries()) {
       expect(subArray.length).toBe(array[index].length);
-    });
+    }
     // Verify the total number of elements remains the same
     const flatOriginal = array.flat();
     const flatShuffled = shuffledArray.flat();
@@ -90,9 +90,9 @@ describe("shuffle2DArray function", () => {
     const shuffledArray = shuffle2DArray(array);
     const countElements = (arr: number[][]) => {
       const counts: Record<number, number> = {};
-      arr.flat().forEach((num) => {
+      for (const num of arr.flat()) {
         counts[num] = (counts[num] || 0) + 1;
-      });
+      }
       return counts;
     };
     expect(countElements(shuffledArray)).toEqual(countElements(array));

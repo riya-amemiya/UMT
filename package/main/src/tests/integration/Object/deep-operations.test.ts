@@ -249,8 +249,9 @@ describe("Integration test for deep object operations", () => {
     const nonUserPermissions = omit(merged.permissions, "user");
 
     expect(merged.users.length).toBe(3);
+    // biome-ignore lint/complexity/useLiteralKeys: ignore
     expect(usersByRole["admin"].name).toBe("Charlie");
-    expect(adminPermissions["admin"]).toEqual(["read", "write", "delete"]);
+    expect(adminPermissions.admin).toEqual(["read", "write", "delete"]);
     expect(has(nonUserPermissions, "user")).toBe(false);
     expect(has(nonUserPermissions, "moderator")).toBe(true);
   });

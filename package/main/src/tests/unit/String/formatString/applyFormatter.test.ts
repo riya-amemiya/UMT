@@ -9,7 +9,7 @@ describe("applyFormatter function", () => {
     currency: (value: unknown, locale: string, currency: string) =>
       new Intl.NumberFormat(locale, {
         style: "currency",
-        currency: currency,
+        currency,
       }).format(Number(value)),
     multiply: (value: unknown, factor: string) =>
       String(Number(value) * Number(factor)),

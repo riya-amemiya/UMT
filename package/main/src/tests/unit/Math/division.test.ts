@@ -9,7 +9,7 @@ describe("division function", () => {
 
     it("should handle large number divided by small number", () => {
       expect(division(1000, 10)).toBe(100);
-      expect(division(10000, 100)).toBe(100);
+      expect(division(10_000, 100)).toBe(100);
     });
 
     it("should handle small number divided by large number", () => {
@@ -32,7 +32,7 @@ describe("division function", () => {
 
     it("should handle large numbers with remainder", () => {
       expect(division(1000, 3, false)).toEqual([333, 1]);
-      expect(division(10000, 7, false)).toEqual([1428, 4]);
+      expect(division(10_000, 7, false)).toEqual([1428, 4]);
     });
   });
 
@@ -51,8 +51,8 @@ describe("division function", () => {
     });
 
     it("should handle complex decimal combinations", () => {
-      expect(division(1.23456, 2.1)).toBeCloseTo(0.587885714);
-      expect(division(0.0001, 0.0003)).toBeCloseTo(0.333333333);
+      expect(division(1.234_56, 2.1)).toBeCloseTo(0.587_885_714);
+      expect(division(0.0001, 0.0003)).toBeCloseTo(0.333_333_333);
       expect(division(123.456, 0.789)).toBeCloseTo(156.4715);
     });
 

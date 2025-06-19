@@ -30,9 +30,9 @@ describe("generateNumberArray", () => {
   it("should generate an array with random values", () => {
     const result = generateNumberArray(5, 10, 14, true);
     expect(result).toHaveLength(5);
-    result.forEach((item) => {
+    for (const item of result) {
       expect(item).toBeGreaterThanOrEqual(10);
       expect(item).toBeLessThanOrEqual(14);
-    });
+    }
   });
 });

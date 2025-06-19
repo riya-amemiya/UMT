@@ -43,14 +43,14 @@ export function getValue(object: unknown, path: string): unknown {
 
   for (const segment of segments) {
     if (typeof current !== "object" || current == null) {
-      return undefined;
+      return;
     }
 
     current = (current as Record<string, unknown>)[segment.key];
 
     if (segment.index !== undefined) {
       if (!Array.isArray(current)) {
-        return undefined;
+        return;
       }
       const index = segment.index;
       current = index < 0 ? current[current.length + index] : current[index];

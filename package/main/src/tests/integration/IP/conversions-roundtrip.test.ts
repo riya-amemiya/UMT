@@ -29,23 +29,23 @@ describe("Integration test for IP address conversions", () => {
       "0.0.0.0",
     ];
 
-    testIps.forEach((originalIp) => {
+    for (const originalIp of testIps) {
       const longValue = ipToLong(originalIp);
       const convertedIp = longToIp(longValue);
 
       expect(convertedIp).toBe(originalIp);
-    });
+    }
   });
 
   it("should perform round-trip conversion: CIDR → Subnet Mask → CIDR", () => {
     const cidrValues = [8, 16, 24, 30, 32];
 
-    cidrValues.forEach((originalCidr) => {
+    for (const originalCidr of cidrValues) {
       const subnetMask = cidrToSubnetMask(originalCidr);
       const convertedCidr = subnetMaskToCidr(subnetMask);
 
       expect(convertedCidr).toBe(originalCidr);
-    });
+    }
   });
 
   it("should convert IP to binary and validate network calculations", () => {
@@ -70,7 +70,7 @@ describe("Integration test for IP address conversions", () => {
       },
     ];
 
-    testCases.forEach(({ ip, subnet, cidr, expectedNetwork }) => {
+    for (const { ip, subnet, cidr, expectedNetwork } of testCases) {
       const binaryString = ipToBinaryString(ip);
       expect(binaryString).toHaveLength(32);
 
@@ -81,7 +81,7 @@ describe("Integration test for IP address conversions", () => {
       expect(convertedSubnet).toBe(subnet);
 
       expect(isInRange(ip, expectedNetwork, cidr)).toBe(true);
-    });
+    }
   });
 
   it("should validate private IP ranges with conversions", () => {
@@ -93,7 +93,7 @@ describe("Integration test for IP address conversions", () => {
       { ip: "1.1.1.1", isPrivate: false, class: "A" },
     ];
 
-    ipRangeTests.forEach(({ ip, isPrivate, class: expectedClass }) => {
+    for (const { ip, isPrivate, class: expectedClass } of ipRangeTests) {
       expect(isPrivateIp(ip)).toBe(isPrivate);
       expect(getIpClass(ip)).toBe(expectedClass);
 
@@ -101,7 +101,7 @@ describe("Integration test for IP address conversions", () => {
       const convertedIp = longToIp(longValue);
       expect(isPrivateIp(convertedIp)).toBe(isPrivate);
       expect(getIpClass(convertedIp)).toBe(expectedClass);
-    });
+    }
   });
 
   it("should handle complex network range validations", () => {
@@ -127,19 +127,19 @@ describe("Integration test for IP address conversions", () => {
       },
     ];
 
-    networkTests.forEach(({ network, cidr, testIps }) => {
+    for (const { network, cidr, testIps } of networkTests) {
       const subnetMask = cidrToSubnetMask(cidr);
       const convertedCidr = subnetMaskToCidr(subnetMask);
       expect(convertedCidr).toBe(cidr);
 
-      testIps.forEach(({ ip, inRange }) => {
+      for (const { ip, inRange } of testIps) {
         expect(isInRange(ip, network, cidr)).toBe(inRange);
 
         const networkLong = getNetworkAddress(network, subnetMask);
         const networkIpFromLong = longToIp(networkLong);
         expect(isInRange(ip, networkIpFromLong, cidr)).toBe(inRange);
-      });
-    });
+      }
+    }
   });
 
   it("should perform binary string conversions with network analysis", () => {
@@ -158,7 +158,7 @@ describe("Integration test for IP address conversions", () => {
       },
     ];
 
-    testCases.forEach(({ ip, expectedBinary }) => {
+    for (const { ip, expectedBinary } of testCases) {
       const binaryString = ipToBinaryString(ip);
       expect(binaryString).toBe(expectedBinary);
 
@@ -168,7 +168,7 @@ describe("Integration test for IP address conversions", () => {
 
       const ipFromLong = longToIp(longValue);
       expect(ipFromLong).toBe(ip);
-    });
+    }
   });
 
   it("should handle subnet calculations with multiple conversion methods", () => {
@@ -183,11 +183,11 @@ describe("Integration test for IP address conversions", () => {
         network: "10.0.0.0",
         cidr: 12,
         expectedMask: "255.240.0.0",
-        expectedHosts: 1048574,
+        expectedHosts: 1_048_574,
       },
     ];
 
-    subnets.forEach(({ network, cidr, expectedMask }) => {
+    for (const { network, cidr, expectedMask } of subnets) {
       const mask = cidrToSubnetMask(cidr);
       expect(mask).toBe(expectedMask);
 
@@ -207,7 +207,7 @@ describe("Integration test for IP address conversions", () => {
 
       const maskOnes = binaryMask.split("1").length - 1;
       expect(maskOnes).toBe(cidr);
-    });
+    }
   });
 
   it("should validate edge cases in IP conversions", () => {
@@ -217,7 +217,7 @@ describe("Integration test for IP address conversions", () => {
       { ip: "192.168.0.1", class: "C", isPrivate: true },
     ];
 
-    edgeCases.forEach(({ ip, class: expectedClass, isPrivate }) => {
+    for (const { ip, class: expectedClass, isPrivate } of edgeCases) {
       const longValue = ipToLong(ip);
       const binary = ipToBinaryString(ip);
       const reconstructed = longToIp(longValue);
@@ -227,7 +227,7 @@ describe("Integration test for IP address conversions", () => {
       expect(isPrivateIp(reconstructed)).toBe(isPrivate);
 
       expect(binary).toHaveLength(32);
-      expect(parseInt(binary, 2)).toBe(longValue);
-    });
+      expect(Number.parseInt(binary, 2)).toBe(longValue);
+    }
   });
 });

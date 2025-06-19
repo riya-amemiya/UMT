@@ -59,7 +59,7 @@ describe("omit", () => {
       array: [1, 2, 3],
       object: { nested: true },
       null: null,
-      undefined: undefined,
+      undefined,
     };
 
     const result = omit(object, "string", "array", "null");
@@ -68,7 +68,7 @@ describe("omit", () => {
       number: 42,
       boolean: true,
       object: { nested: true },
-      undefined: undefined,
+      undefined,
     });
   });
 

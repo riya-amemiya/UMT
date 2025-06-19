@@ -14,13 +14,13 @@ import { timSort } from "@/Array/timSort";
 
 const compareFunction = (a: number, b: number): number => a - b;
 
-const arraySizes = [10, 100, 1000, 10000, 100000];
+const arraySizes = [10, 100, 1000, 10_000, 100_000];
 
 // All same values
 const sameValueArrays = new Map<number, number[]>();
 
 for (const size of arraySizes) {
-  sameValueArrays.set(size, Array(size).fill(42));
+  sameValueArrays.set(size, new Array(size).fill(42));
 }
 
 summary(() => {
@@ -34,7 +34,7 @@ summary(() => {
       }
 
       yield {
-        [0]() {
+        0() {
           return [...original_array];
         },
         bench(arr: number[]) {
@@ -54,7 +54,7 @@ summary(() => {
       }
 
       yield {
-        [0]() {
+        0() {
           return [...original_array];
         },
         bench(arr: number[]) {
@@ -74,7 +74,7 @@ summary(() => {
       }
 
       yield {
-        [0]() {
+        0() {
           return [...original_array];
         },
         bench(arr: number[]) {
@@ -94,7 +94,7 @@ summary(() => {
       }
 
       yield {
-        [0]() {
+        0() {
           return [...original_array];
         },
         bench(arr: number[]) {
@@ -114,7 +114,7 @@ summary(() => {
       }
 
       yield {
-        [0]() {
+        0() {
           return [...original_array];
         },
         bench(arr: number[]) {
@@ -134,7 +134,7 @@ summary(() => {
       }
 
       yield {
-        [0]() {
+        0() {
           return [...original_array];
         },
         bench(arr: number[]) {
