@@ -32,7 +32,7 @@ describe("Integration test for calculator and statistical functions", () => {
     const stdDev = standardDeviation(scores);
 
     expect(avg).toBe(83);
-    expect(stdDev).toBeCloseTo(7.483314773547883, 5);
+    expect(stdDev).toBeCloseTo(7.483_314_773_547_883, 5);
   });
 
   it("should calculate deviation values for test scores", () => {

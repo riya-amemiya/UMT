@@ -40,9 +40,9 @@ describe("email", () => {
       "test.email+tag+sorting@example.com",
     ];
 
-    validEmails.forEach((email) => {
+    for (const email of validEmails) {
       expect(validateEmail(email).validate).toBeTruthy();
-    });
+    }
   });
 
   it("rejects various invalid email formats", () => {
@@ -64,9 +64,9 @@ describe("email", () => {
       "user@example.c",
     ];
 
-    invalidEmails.forEach((email) => {
+    for (const email of invalidEmails) {
       expect(validateEmail(email).validate).toBeFalsy();
-    });
+    }
   });
 
   it("documents regex limitations as bugs", () => {
@@ -81,9 +81,9 @@ describe("email", () => {
       "user@example.com.",
     ];
 
-    buggyEmails.forEach((email) => {
+    for (const email of buggyEmails) {
       expect(validateEmail(email).validate).toBeFalsy();
-    });
+    }
   });
 
   it("handles edge cases and special characters", () => {
@@ -112,9 +112,9 @@ describe("email", () => {
       { email: "user~@example.com", valid: false },
     ];
 
-    edgeCases.forEach(({ email, valid }) => {
+    for (const { email, valid } of edgeCases) {
       expect(validateEmail(email).validate).toBe(valid);
-    });
+    }
   });
 
   it("validates different TLD formats", () => {
@@ -129,9 +129,9 @@ describe("email", () => {
       { email: "user@example.info", valid: true },
     ];
 
-    tldEmails.forEach(({ email, valid }) => {
+    for (const { email, valid } of tldEmails) {
       expect(validateEmail(email).validate).toBe(valid);
-    });
+    }
   });
 
   it("handles boundary length cases", () => {

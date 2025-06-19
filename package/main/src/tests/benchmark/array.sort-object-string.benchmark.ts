@@ -21,7 +21,7 @@ interface Person {
 const compareByName = (a: Person, b: Person): number =>
   a.name.localeCompare(b.name);
 
-const arraySizes = [10, 100, 1000, 10000, 50000];
+const arraySizes = [10, 100, 1000, 10_000, 50_000];
 
 // Generate random data
 const generatePerson = (id: number): Person => ({

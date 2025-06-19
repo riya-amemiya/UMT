@@ -16,9 +16,9 @@ describe("factorial", () => {
     expect(factorial(5)).toBe(120);
     expect(factorial(6)).toBe(720);
     expect(factorial(7)).toBe(5040);
-    expect(factorial(8)).toBe(40320);
-    expect(factorial(9)).toBe(362880);
-    expect(factorial(10)).toBe(3628800);
+    expect(factorial(8)).toBe(40_320);
+    expect(factorial(9)).toBe(362_880);
+    expect(factorial(10)).toBe(3_628_800);
   });
 
   test("should return 1 for negative numbers", () => {
@@ -29,11 +29,11 @@ describe("factorial", () => {
   });
 
   test("should handle larger numbers", () => {
-    expect(factorial(11)).toBe(39916800);
-    expect(factorial(12)).toBe(479001600);
-    expect(factorial(13)).toBe(6227020800);
-    expect(factorial(13)).toBe(6227020800);
-    expect(factorial(14)).toBe(87178291200);
+    expect(factorial(11)).toBe(39_916_800);
+    expect(factorial(12)).toBe(479_001_600);
+    expect(factorial(13)).toBe(6_227_020_800);
+    expect(factorial(13)).toBe(6_227_020_800);
+    expect(factorial(14)).toBe(87_178_291_200);
   });
 
   test("should handle decimal numbers by using Math.max logic", () => {

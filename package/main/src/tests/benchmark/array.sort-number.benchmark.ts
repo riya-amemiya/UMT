@@ -15,7 +15,7 @@ import { mergeSort } from "@/Array/mergeSort";
 
 const compareFunction = (a: number, b: number): number => a - b;
 
-const arraySizes = [10, 100, 1000, 10000, 100000, 1000000, 10000000];
+const arraySizes = [10, 100, 1000, 10_000, 100_000, 1_000_000, 10_000_000];
 
 const sharedRandomArrays = new Map<number, number[]>();
 for (const size of arraySizes) {

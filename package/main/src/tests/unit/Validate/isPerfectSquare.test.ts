@@ -18,8 +18,8 @@ describe("isPerfectSquare", () => {
   });
 
   it("should handle large numbers", () => {
-    expect(isPerfectSquare(100000000)).toBe(true);
-    expect(isPerfectSquare(100000002)).toBe(false);
+    expect(isPerfectSquare(100_000_000)).toBe(true);
+    expect(isPerfectSquare(100_000_002)).toBe(false);
   });
 
   it("should handle non-integer numbers", () => {

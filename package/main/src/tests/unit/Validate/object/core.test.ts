@@ -11,7 +11,6 @@ describe("object validation", () => {
       name: "John Doe",
       age: "thirty",
     };
-    // @ts-ignore
     const result = validateObject(invalidData);
     expect(result.validate).toBe(true);
   });
@@ -44,7 +43,7 @@ describe("object validation", () => {
     };
     expect(validateObject(validData).message).toBe("");
     expect(validateObject(validData).validate).toBe(true);
-    // @ts-ignore
+    // @ts-expect-error
     expect(validateObject(invalidData).validate).toBe(false);
   });
 
@@ -59,7 +58,7 @@ describe("object validation", () => {
       name: "John Doe",
       age: "thirty",
     };
-    // @ts-ignore
+    // @ts-expect-error
     const result = validateObject(invalidData);
     expect(result.validate).toBe(false);
     expect(result.message).toBe(customMessage);
@@ -76,7 +75,7 @@ describe("object validation", () => {
     );
 
     const invalidData = "John Doe";
-    // @ts-ignore
+    // @ts-expect-error
     const result = validateObject(invalidData);
     expect(result.validate).toBe(false);
     expect(result.message).toBe(customMessage);
@@ -89,7 +88,7 @@ describe("object validation", () => {
     });
 
     const invalidData = "John Doe";
-    // @ts-ignore
+    // @ts-expect-error
     const result = validateObject(invalidData);
     expect(result.validate).toBe(false);
     expect(result.message).toBe("");

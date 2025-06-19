@@ -24,8 +24,8 @@ describe("timSort", () => {
   });
 
   it("should correctly sort an array with large number of elements", () => {
-    const largeArray = Array.from({ length: 10000 }, () =>
-      Math.floor(Math.random() * 10000),
+    const largeArray = Array.from({ length: 10_000 }, () =>
+      Math.floor(Math.random() * 10_000),
     );
     const sortedArray = [...largeArray].sort((a, b) => a - b);
     expect(timSort(largeArray)).toEqual(sortedArray);

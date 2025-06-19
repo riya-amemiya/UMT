@@ -139,9 +139,9 @@ describe("Integration test for string transformation and validation", () => {
       validated: string([regexMatch(/^[a-z][a-zA-Z0-9]*$/)])(camelCase(key)),
     }));
 
-    transformedKeys.forEach(({ original, camel, validated }) => {
+    for (const { original, camel, validated } of transformedKeys) {
       expect(validated.validate).toBe(true);
       expect(kebabCase(camel)).toBe(original);
-    });
+    }
   });
 });

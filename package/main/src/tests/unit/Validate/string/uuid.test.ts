@@ -103,7 +103,7 @@ describe("uuid", () => {
 
   it("should reject null values", () => {
     const validateUUID = uuid();
-    // @ts-ignore
+    // @ts-expect-error
     expect(validateUUID.validate(null)).toBe(false);
   });
 

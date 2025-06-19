@@ -28,8 +28,8 @@ describe("lcm function", () => {
 
   test("should handle large numbers", () => {
     expect(lcm(1000, 2000)).toBe(2000);
-    expect(lcm(12345, 67890)).toBe(55873470);
-    expect(lcm(999, 1001)).toBe(999999);
+    expect(lcm(12_345, 67_890)).toBe(55_873_470);
+    expect(lcm(999, 1001)).toBe(999_999);
   });
 
   test("should handle negative numbers", () => {

@@ -58,7 +58,7 @@ describe("isLeapYear", () => {
     expect(isLeapYear(4000)).toBe(true);
     expect(isLeapYear(8000)).toBe(true);
     expect(isLeapYear(9999)).toBe(false);
-    expect(isLeapYear(10000)).toBe(true);
+    expect(isLeapYear(10_000)).toBe(true);
   });
 
   it("should verify leap year pattern", () => {
@@ -68,12 +68,12 @@ describe("isLeapYear", () => {
       2013, 2014, 2015, 2017, 2018, 2019, 2021, 2022, 2023,
     ];
 
-    recentLeapYears.forEach((year) => {
+    for (const year of recentLeapYears) {
       expect(isLeapYear(year)).toBe(true);
-    });
+    }
 
-    recentNonLeapYears.forEach((year) => {
+    for (const year of recentNonLeapYears) {
       expect(isLeapYear(year)).toBe(false);
-    });
+    }
   });
 });

@@ -25,7 +25,7 @@ describe("Integration test for color space conversions", () => {
       { r: 255, g: 255, b: 255, a: 0.8 }, // White with alpha
     ];
 
-    testColors.forEach((original) => {
+    for (const original of testColors) {
       const hsla = rgbaToHsla(original);
       const converted = hslaToRgba(hsla.h, hsla.s, hsla.l, hsla.a);
 
@@ -33,7 +33,7 @@ describe("Integration test for color space conversions", () => {
       expect(converted.g).toBeCloseTo(original.g, 0);
       expect(converted.b).toBeCloseTo(original.b, 0);
       expect(converted.a).toBeCloseTo(original.a, 2);
-    });
+    }
   });
 
   it("should perform round-trip conversion: RGBA → CMYK → RGBA", () => {
@@ -44,7 +44,7 @@ describe("Integration test for color space conversions", () => {
       { r: 100, g: 150, b: 200, a: 0.7 }, // Custom color with alpha
     ];
 
-    testColors.forEach((original) => {
+    for (const original of testColors) {
       const cmyk = rgbaToCmyk(original);
       const converted = cmykToRgba(cmyk.c, cmyk.m, cmyk.y, cmyk.k, cmyk.a);
 
@@ -52,7 +52,7 @@ describe("Integration test for color space conversions", () => {
       expect(converted.g).toBeCloseTo(original.g, 0);
       expect(converted.b).toBeCloseTo(original.b, 0);
       expect(converted.a).toBeCloseTo(original.a, 2);
-    });
+    }
   });
 
   it("should perform round-trip conversion: RGBA → HEX → RGBA", () => {
@@ -62,7 +62,7 @@ describe("Integration test for color space conversions", () => {
       { r: 128, g: 64, b: 192, a: 0.75 }, // Purple with alpha
     ];
 
-    testColors.forEach((original) => {
+    for (const original of testColors) {
       const hex = rgbaToHexA(original);
       const converted = hexaToRgba(hex);
 
@@ -70,7 +70,7 @@ describe("Integration test for color space conversions", () => {
       expect(converted.g).toBe(original.g);
       expect(converted.b).toBe(original.b);
       expect(converted.a).toBeCloseTo(original.a, 2);
-    });
+    }
   });
 
   it("should handle multi-step color transformations", () => {
@@ -99,7 +99,7 @@ describe("Integration test for color space conversions", () => {
   it("should handle grayscale conversions across color spaces", () => {
     const grayLevels = [0, 64, 128, 192, 255];
 
-    grayLevels.forEach((gray) => {
+    for (const gray of grayLevels) {
       const rgba = { r: gray, g: gray, b: gray, a: 1 };
 
       // Test HSLA conversion
@@ -117,14 +117,14 @@ describe("Integration test for color space conversions", () => {
       expect(rgbaFromCmyk.r).toBeCloseTo(gray, 0);
       expect(rgbaFromCmyk.g).toBeCloseTo(gray, 0);
       expect(rgbaFromCmyk.b).toBeCloseTo(gray, 0);
-    });
+    }
   });
 
   it("should preserve alpha channel through conversions", () => {
     const alphaValues = [0, 0.25, 0.5, 0.75, 1];
     const baseColor = { r: 100, g: 150, b: 200 };
 
-    alphaValues.forEach((alpha) => {
+    for (const alpha of alphaValues) {
       const rgba = { ...baseColor, a: alpha };
 
       // Test through HSLA
@@ -139,7 +139,7 @@ describe("Integration test for color space conversions", () => {
       const hex = rgbaToHexA(rgba);
       const rgbaFromHex = hexaToRgba(hex);
       expect(rgbaFromHex.a).toBeCloseTo(alpha, 2);
-    });
+    }
   });
 
   it("should handle edge cases in color conversions", () => {
@@ -149,7 +149,7 @@ describe("Integration test for color space conversions", () => {
       { r: 255, g: 0, b: 255, a: 0 }, // Magenta with 0 alpha
     ];
 
-    edgeCases.forEach((color) => {
+    for (const color of edgeCases) {
       // Test all conversion paths
       const hsla = rgbaToHsla(color);
       const cmyk = rgbaToCmyk(color);
@@ -160,13 +160,13 @@ describe("Integration test for color space conversions", () => {
       const fromHex = hexaToRgba(hex);
 
       // All conversions should yield similar results
-      [fromHsla, fromCmyk, fromHex].forEach((converted) => {
+      for (const converted of [fromHsla, fromCmyk, fromHex]) {
         expect(converted.r).toBeCloseTo(color.r, 0);
         expect(converted.g).toBeCloseTo(color.g, 0);
         expect(converted.b).toBeCloseTo(color.b, 0);
         expect(converted.a).toBeCloseTo(color.a, 2);
-      });
-    });
+      }
+    }
   });
 
   it("should handle color mixing through conversions", () => {

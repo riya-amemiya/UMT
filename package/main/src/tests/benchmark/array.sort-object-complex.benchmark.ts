@@ -32,7 +32,7 @@ const compareProductComplex = (a: Product, b: Product): number => {
   return a.price - b.price;
 };
 
-const arraySizes = [10, 100, 1000, 10000, 50000];
+const arraySizes = [10, 100, 1000, 10_000, 50_000];
 
 const generateProduct = (): Product => ({
   id: Math.random().toString(36).substring(2, 9),

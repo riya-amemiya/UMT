@@ -70,9 +70,9 @@ describe("Integration test for date operations and formatting", () => {
     }));
 
     expect(formattedWeekdays.length).toBe(23);
-    formattedWeekdays.forEach(({ day }) => {
+    for (const { day } of formattedWeekdays) {
       expect(["Mon", "Tue", "Wed", "Thu", "Fri"]).toContain(day);
-    });
+    }
   });
 
   it("should handle leap year dates correctly", () => {
@@ -91,15 +91,15 @@ describe("Integration test for date operations and formatting", () => {
       };
     });
 
-    leapYearFebruaryDates.forEach(({ year, isLeap, febDays, lastDay }) => {
+    for (const { year, isLeap, febDays, lastDay } of leapYearFebruaryDates) {
       expect(isLeap).toBe(true);
       expect(febDays).toBe(29);
       expect(lastDay).toBe(`${year}-02-29`);
-    });
+    }
 
-    nonLeapYears.forEach((year) => {
+    for (const year of nonLeapYears) {
       expect(isLeapYear(year)).toBe(false);
-    });
+    }
   });
 
   it("should create calendar view with formatted dates and day names", () => {

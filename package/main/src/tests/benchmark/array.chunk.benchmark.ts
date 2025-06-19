@@ -10,7 +10,7 @@ import { chunk as customChunk } from "@/Array/chunk";
 import { chunk as lodashChunk } from "lodash";
 import { chunk as esToolkitChunk } from "es-toolkit";
 
-const arraySizes = [1000, 10000, 100000, 1000000, 10000000];
+const arraySizes = [1000, 10_000, 100_000, 1_000_000, 10_000_000];
 const chunkSizes = [2, 5, 10, 20, 50, 100];
 
 const sharedRandomArrays = new Map<number, number[]>();

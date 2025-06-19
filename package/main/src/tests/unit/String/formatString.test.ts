@@ -322,7 +322,7 @@ describe("formatString", () => {
 
       it("should handle number formatter with custom precision", () => {
         const template = "Value: {num:number(en-US,3,5)}";
-        const result = formatString(template, { num: 123.456789 });
+        const result = formatString(template, { num: 123.456_789 });
         expect(result).toBe("Value: 123.45679");
       });
 

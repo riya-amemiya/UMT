@@ -55,8 +55,8 @@ describe("odd", () => {
 
   it("should handle large numbers", () => {
     const validateOdd = odd();
-    expect(validateOdd.validate(999999)).toBe(true);
-    expect(validateOdd.validate(1000000)).toBe(false);
+    expect(validateOdd.validate(999_999)).toBe(true);
+    expect(validateOdd.validate(1_000_000)).toBe(false);
     expect(validateOdd.validate(Number.MAX_SAFE_INTEGER)).toBe(true);
     expect(validateOdd.validate(Number.MAX_SAFE_INTEGER - 1)).toBe(false);
   });

@@ -112,7 +112,7 @@ describe("flexibleNumberConversion", () => {
         Number.MAX_SAFE_INTEGER,
       );
       expect(flexibleNumberConversion("9007199254740991")).toBe(
-        9007199254740991,
+        9_007_199_254_740_991,
       );
       expect(flexibleNumberConversion("1e308")).toBe(1e308);
     });

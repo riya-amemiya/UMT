@@ -14,7 +14,7 @@ import { timSort } from "@/Array/timSort";
 
 const compareFunction = (a: number, b: number): number => a - b;
 
-const arraySizes = [10, 100, 1000, 10000];
+const arraySizes = [10, 100, 1000, 10_000];
 
 // Arrays with NaN values
 const nanArrays = new Map<number, number[]>();

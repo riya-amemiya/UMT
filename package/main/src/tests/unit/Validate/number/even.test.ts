@@ -55,8 +55,8 @@ describe("even", () => {
 
   it("should handle large numbers", () => {
     const validateEven = even();
-    expect(validateEven.validate(1000000)).toBe(true);
-    expect(validateEven.validate(999999)).toBe(false);
+    expect(validateEven.validate(1_000_000)).toBe(true);
+    expect(validateEven.validate(999_999)).toBe(false);
     expect(validateEven.validate(Number.MAX_SAFE_INTEGER - 1)).toBe(true);
     expect(validateEven.validate(Number.MAX_SAFE_INTEGER)).toBe(false);
   });

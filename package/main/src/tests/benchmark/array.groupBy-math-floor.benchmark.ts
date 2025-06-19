@@ -10,7 +10,7 @@ import { groupBy as customGroupBy } from "@/Array/groupBy";
 import { groupBy as lodashGroupBy } from "lodash";
 import { groupBy as esToolkitGroupBy } from "es-toolkit";
 
-const arraySizes = [1000, 10000, 100000, 1000000, 10000000];
+const arraySizes = [1000, 10_000, 100_000, 1_000_000, 10_000_000];
 
 const sharedRandomNumbersArrays = new Map<number, number[]>();
 

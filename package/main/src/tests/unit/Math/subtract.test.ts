@@ -21,8 +21,8 @@ describe("subtract function", () => {
     });
 
     it("should handle multiple decimal places", () => {
-      expect(subtract(0.12345, 0.00001)).toBe(0.12344);
-      expect(subtract(1.23456, 0.00001, 0.00002)).toBe(1.23453);
+      expect(subtract(0.123_45, 0.000_01)).toBe(0.123_44);
+      expect(subtract(1.234_56, 0.000_01, 0.000_02)).toBe(1.234_53);
     });
   });
 });
