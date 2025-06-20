@@ -32,4 +32,3 @@
 - Import order is enforced with separate groups and alphabetical sorting
 - Ensure all commands are run using `bun`
 - Follow the code style guidelines outlined above
-- Please respond in Japanese
