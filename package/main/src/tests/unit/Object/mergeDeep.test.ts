@@ -139,4 +139,17 @@ describe("mergeDeep", () => {
 
     expect(result).toEqual({ a: 1 });
   });
+
+  it("should exclude inherited properties from source objects", () => {
+    const parent = { inherited: "value" };
+    const child = Object.create(parent);
+    child.own = "child";
+
+    const target = { a: 1 };
+
+    const result = mergeDeep(target, child);
+
+    expect(result).toEqual({ a: 1, own: "child" });
+    expect(result).not.toHaveProperty("inherited");
+  });
 });

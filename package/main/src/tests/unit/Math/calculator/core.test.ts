@@ -162,4 +162,10 @@ describe("calculatorCore function", () => {
       expect(calculatorCore("123456789*2")).toBe("246913578");
     });
   });
+
+  describe("currency conversion", () => {
+    test("should return original expression when currency has no numbers", () => {
+      expect(calculatorCore("Q*2", { Q: 3 })).toBe("Q*2");
+    });
+  });
 });

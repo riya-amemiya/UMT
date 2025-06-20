@@ -25,7 +25,7 @@ export const literalExpression = (x: string): string => {
   for (const part of sides) {
     if (/[A-Za-z]+/.test(part)) {
       variablePart = part
-        .split(/(\d+[A-Za-z]+)|([^A-Za-z]+)/)
+        .split(/([-+]?\d*[A-Za-z]+)|([-+]?\d+)/)
         .filter((n) => n && n !== undefined);
     } else {
       numericalPart = part;
@@ -72,8 +72,7 @@ export const literalExpression = (x: string): string => {
     if (/(-?)\d+\/1/.test(numericalPart)) {
       return numericalPart.replace(/\/1/, "");
     }
-  }
-  if (variablePart[0] !== "1") {
+  } else if (variablePart[0] !== "1") {
     numericalPart = `${numericalPart}/${variablePart[0]}`;
   }
 
