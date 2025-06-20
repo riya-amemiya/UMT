@@ -3,7 +3,7 @@
   "bugs": {
     "url": "https://github.com/riya-amemiya/UMT/issues"
   },
-  "description": "個人的に作った便利関数集 個人用途なので破壊的変更がある可能性があります。 Main Packageに依存関係はありません。 JavaScriptからの呼び出しに対応しています。",
+  "description": "UMT Main Package is written in TypeScript and is a collection of useful functions for various tasks.",
   "devDependencies": {
     "@babel/cli": "^7.27.2",
     "@babel/core": "^7.27.4",
@@ -15,7 +15,7 @@
     "@types/bun": "^1.2.15",
     "@types/jest": "^29.5.14",
     "@types/lodash": "^4.17.17",
-    "@types/node": "^22.15.30",
+    "@types/node": "^24.0.3",
     "@typescript-eslint/eslint-plugin": "^8.33.1",
     "@typescript-eslint/parser": "^8.33.1",
     "bun-types": "^1.2.15",
@@ -75,6 +75,5 @@
   },
   "type": "module",
   "types": "module/index.d.js",
-  "version": "2.5.0",
-  "packageManager": "yarn@1.22.22"
+  "version": "2.5.0"
 }
