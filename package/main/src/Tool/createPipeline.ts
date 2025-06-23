@@ -1,7 +1,8 @@
 /**
- * パイプラインを表すインターフェース。
- * 無引数で呼び出された場合、ストアされている値を返す。
- * 関数が引数として与えられた場合、その関数を適用して新しいPipeインスタンスを生成する。
+ * Interface representing a pipeline.
+ * When called without arguments, returns the stored value.
+ * When called with a function argument, applies the function and generates a new Pipeline instance.
+ * @template T The type of value being processed in the pipeline
  */
 export interface Pipeline<T> {
   (): T;
@@ -9,9 +10,10 @@ export interface Pipeline<T> {
 }
 
 /**
- * Pipelineインスタンスを生成する関数
- * @param initialValue 初期値
- * @returns Pipelineインスタンス
+ * Function that creates a Pipeline instance
+ * @template T The type of value being processed in the pipeline
+ * @param initialValue Initial value to start the pipeline
+ * @returns Pipeline instance
  * @example const pipeline = createPipeline(1);
  * pipeline(); // 1
  * pipeline((x) => x + 1)(); // 2
@@ -19,8 +21,8 @@ export interface Pipeline<T> {
 export const createPipeline: <T>(initialValue: T) => Pipeline<T> = <T>(
   initialValue: T,
 ) =>
-  // 引数として変換関数（transformer）を受け取り、新しいPipelineを返す。
-  // 引数が無い場合、ストアされた値（initialValue）を返す。
+  // Accepts a transformer function as an argument and returns a new Pipeline.
+  // If no argument is provided, returns the stored value (initialValue).
   (<U>(transformer?: (input: T) => U) =>
     transformer
       ? createPipeline(transformer(initialValue))

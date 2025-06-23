@@ -1,4 +1,4 @@
-// 4bitの10進数を16進数に変換する型
+// Type to convert 4-bit decimal to hexadecimal
 export type Decimal4bitToHex<X extends string> = X extends "10"
   ? "A"
   : X extends "11"

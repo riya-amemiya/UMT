@@ -2,13 +2,15 @@ import { calculatorCore } from "./core";
 import { literalExpression } from "./literalExpression";
 
 /**
- * 電卓
- * ()や符号に対応
- * 一文字までの方程式に対応
- * @param  {string} expression 計算式または方程式
- * @param  {object} exchange 為替
- * @returns 計算結果
- * @example calculator("1+2"); // 3
+ * Calculator function that handles mathematical expressions and simple equations
+ * Supports parentheses, signs, and currency conversion
+ * Handles simple equations with single-character variables
+ * @param {string} expression - Mathematical expression or equation
+ * @param {object} exchange - Exchange rates for currency conversion
+ * @returns {string} Calculation result
+ * @example calculator("1+2"); // "3"
+ * @example calculator("(2+3)*4"); // "20"
+ * @example calculator("x=5"); // "x=5"
  */
 export const calculator = <T extends Record<string, string | number>>(
   expression: string,

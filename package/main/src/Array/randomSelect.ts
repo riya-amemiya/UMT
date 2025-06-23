@@ -1,9 +1,9 @@
 /**
- * 配列から指定された数の要素をランダムに選択する
- * @param array 元の配列
- * @param count 選択する要素の数
- * @param allowDuplicates 重複を許すかどうか (デフォルトは false)
- * @returns ランダムに選択された要素の配列
+ * Randomly selects a specified number of elements from an array
+ * @param array Source array
+ * @param count Number of elements to select
+ * @param allowDuplicates Whether to allow duplicate selections (default: false)
+ * @returns Array of randomly selected elements
  * @example randomSelect([1, 2, 3, 4, 5], 2); // [3, 1]
  */
 export const randomSelect = <T>(

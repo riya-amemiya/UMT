@@ -1,9 +1,15 @@
 /**
- * 指定された文字列の末尾から、指定された文字をすべて取り除きます。
+ * Removes specified characters from the end of a string
  *
- * @param {string} string_ - トリム処理を行う元の文字列。
- * @param {string} chars - 除去する文字のセット。
- * @returns {string} 末尾から指定された文字が取り除かれた新しい文字列。
+ * @param {string} string_ - The input string to trim
+ * @param {string} chars - Characters to remove from the end
+ * @returns {string} A new string with specified characters removed from the end
+ * @example
+ * ```typescript
+ * trimEndCharacters("hello!!!", "!"); // Returns: "hello"
+ * trimEndCharacters("123---", "-");   // Returns: "123"
+ * trimEndCharacters("abc123", "xyz"); // Returns: "abc123"
+ * ```
  */
 export const trimEndCharacters = (string_: string, chars: string): string => {
   let endIndex = string_.length - 1;

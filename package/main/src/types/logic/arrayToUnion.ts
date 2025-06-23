@@ -1,2 +1,2 @@
-// Array型をUnion型に変換する型
+// Type to convert Array type to Union type
 export type ArrayToUnion<X extends unknown[]> = X[number];

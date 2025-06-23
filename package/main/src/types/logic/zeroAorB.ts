@@ -1,6 +1,6 @@
 import type { Equal } from "./equal";
 
-// AまたはBが0かどうか
+// Type to check if either A or B is zero
 export type ZeroAorB<A extends number, B extends number> = Equal<
   A,
   0

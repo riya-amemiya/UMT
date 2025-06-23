@@ -1,7 +1,18 @@
 import { compareFunctionDefault } from "./compareFunctionDefault";
+import { applyInsertionSortIfNeeded } from "./sortingHelpers/applyInsertionSortIfNeeded";
+import { validateRange } from "./sortingHelpers/rangeValidator";
 
-type CompareFunction<T> = (a: T, b: T) => number;
+import type { CompareFunction } from "$/array/compareFunction";
 
+/**
+ * Finds the median value among three elements in the array
+ * @param array The array containing the elements
+ * @param a Index of first element
+ * @param b Index of second element
+ * @param c Index of third element
+ * @param compareFunction Function to compare elements
+ * @returns The median value among the three elements
+ */
 const medianOfThree = <T>(
   array: T[],
   a: number,
@@ -30,6 +41,14 @@ const medianOfThree = <T>(
   return array[b];
 };
 
+/**
+ * Partitions the array around a pivot element using median-of-three strategy
+ * @param array Array to partition
+ * @param low Starting index of the partition range
+ * @param high Ending index of the partition range
+ * @param compareFunction Function to compare elements
+ * @returns Index of the partition point
+ */
 const partition = <T>(
   array: T[],
   low: number,
@@ -62,26 +81,14 @@ const partition = <T>(
   }
 };
 
-const insertionSort = <T>(
-  array: T[],
-  low: number,
-  high: number,
-  compareFunction: CompareFunction<T>,
-): void => {
-  for (let index = low + 1; index <= high; index++) {
-    const key = array[index];
-    let currentIndex = index - 1;
-    while (
-      currentIndex >= low &&
-      compareFunction(array[currentIndex], key) > 0
-    ) {
-      array[currentIndex + 1] = array[currentIndex];
-      currentIndex--;
-    }
-    array[currentIndex + 1] = key;
-  }
-};
-
+/**
+ * Internal implementation of the quicksort algorithm with tail-call optimization
+ * @param array Array to sort
+ * @param lowInit Initial low index of the range to sort
+ * @param highInit Initial high index of the range to sort
+ * @param compareFunction Function to compare elements
+ * @param insertionSortThreshold Size threshold for switching to insertion sort
+ */
 const sortImpl = <T>(
   array: T[],
   lowInit: number,
@@ -93,8 +100,15 @@ const sortImpl = <T>(
   let high = highInit;
 
   while (low < high) {
-    if (high - low < insertionSortThreshold) {
-      insertionSort(array, low, high, compareFunction);
+    if (
+      applyInsertionSortIfNeeded(
+        array,
+        low,
+        high,
+        compareFunction,
+        insertionSortThreshold,
+      )
+    ) {
       return;
     }
     const pivotIndex = partition(array, low, high, compareFunction);
@@ -115,15 +129,17 @@ const sortImpl = <T>(
 };
 
 /**
- * 配列を高速にソート
- * QuickSortとInsertionSortを組み合わせたアルゴリズムで配列を高速にソートします
- * @param {T[]} array 配列
- * @param {CompareFunction<T>} compareFunction 比較関数
- * @param {number} startIndex 開始インデックス
- * @param {number} endIndex 終了インデックス
- * @param {number} insertionSortThreshold 挿入ソートの閾値
- * @returns T[]
- * @example quickSort([1, 3, 2, 4, 5], (a, b) => a - b); // [1, 2, 3, 4, 5]
+ * Sorts an array using a hybrid algorithm combining QuickSort and InsertionSort
+ * @param {T[]} array Array to sort
+ * @param {CompareFunction<T>} compareFunction Comparison function that returns negative if a < b, zero if a = b, positive if a > b
+ * @param {number} startIndex Starting index for the sort range (default: 0)
+ * @param {number} endIndex Ending index for the sort range (default: array.length - 1)
+ * @param {number} insertionSortThreshold Threshold for switching to insertion sort (default: 10)
+ * @returns {T[]} Sorted array
+ * @example
+ * quickSort([1, 3, 2, 4, 5]); // [1, 2, 3, 4, 5]
+ * quickSort([1, 3, 2], (a, b) => b - a); // [3, 2, 1]
+ * quickSort(['b', 'a', 'c']); // ['a', 'b', 'c']
  */
 export const quickSort = <T>(
   array: T[],
@@ -132,19 +148,20 @@ export const quickSort = <T>(
   endIndex = array.length - 1,
   insertionSortThreshold = 10,
 ): T[] => {
-  // 有効な範囲内でのみソートを行う
-  const validStartIndex = Math.max(0, Math.min(startIndex, array.length - 1));
-  const validEndIndex = Math.max(
-    validStartIndex,
-    Math.min(endIndex, array.length - 1),
-  );
+  const {
+    startIndex: validStartIndex,
+    endIndex: validEndIndex,
+    shouldSort,
+  } = validateRange(array, startIndex, endIndex);
 
-  sortImpl(
-    array,
-    validStartIndex,
-    validEndIndex,
-    compareFunction,
-    insertionSortThreshold,
-  );
+  if (shouldSort) {
+    sortImpl(
+      array,
+      validStartIndex,
+      validEndIndex,
+      compareFunction,
+      insertionSortThreshold,
+    );
+  }
   return array;
 };

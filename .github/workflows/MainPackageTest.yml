@@ -3,8 +3,6 @@ name: Main Package Test
 
 # タイミングを指定
 on:
-  schedule:
-    - cron: '0 20 * * *'
   pull_request:
     branches:
       - main
@@ -44,7 +42,7 @@ jobs:
             - name: Cache Save devDependencies
               if: steps.cache-restore-dev-depends.outputs.cache-hit != 'true'
               id: cache-save-dev-depends
-              uses: actions/cache/save@v3
+              uses: actions/cache/save@v4
               with:
                   path: '**/node_modules'
                   key: dev-depends-${{ matrix.os }}-bun${{ matrix.bun-version }}-${{ hashFiles('package/main/package.json') }}
@@ -109,7 +107,7 @@ jobs:
             - run: ls module
             - name: Cache Save Build
               if: steps.cache-restore-prod.outputs.cache-hit != 'true'
-              uses: actions/cache/save@v3
+              uses: actions/cache/save@v4
               with:
                   enableCrossOsArchive: true
                   path: '**/module'

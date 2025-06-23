@@ -12,12 +12,12 @@ export const calculatorCore = <T extends { [key: string]: string | number }>(
 ): string => {
   let sanitizedExpression = expression;
 
-  // 符号の処理
+  // Handle signs
   sanitizedExpression = sanitizeSigns(sanitizedExpression);
 
-  // 主要な計算ループ
+  // Main calculation loop
   while (true) {
-    // 通貨計算
+    // Currency conversion
     if (currencyExchange) {
       sanitizedExpression = applyCurrencyExchange(
         sanitizedExpression,
@@ -25,7 +25,7 @@ export const calculatorCore = <T extends { [key: string]: string | number }>(
       );
     }
 
-    // 括弧の処理
+    // Handle parentheses
     if (containsParentheses(sanitizedExpression)) {
       const temporary = resolveParentheses(sanitizedExpression);
       if (temporary === Number.NaN.toString()) {
@@ -34,7 +34,7 @@ export const calculatorCore = <T extends { [key: string]: string | number }>(
       sanitizedExpression = temporary;
     }
 
-    // 乗算、べき乗の処理
+    // Handle multiplication and exponentiation
     else if (containsMulExp(sanitizedExpression)) {
       const temporary = resolveMulExp(sanitizedExpression);
       if (temporary === Number.NaN.toString()) {
@@ -43,7 +43,7 @@ export const calculatorCore = <T extends { [key: string]: string | number }>(
       sanitizedExpression = temporary;
     }
 
-    // 除算の処理
+    // Handle division
     else if (containsDiv(sanitizedExpression)) {
       const temporary = resolveDiv(sanitizedExpression);
       if (temporary === Number.NaN.toString()) {
@@ -52,7 +52,7 @@ export const calculatorCore = <T extends { [key: string]: string | number }>(
       sanitizedExpression = temporary;
     }
 
-    // 加算と減算の処理
+    // Handle addition and subtraction
     else if (
       containsAddSub(sanitizedExpression) &&
       !isNumber(sanitizedExpression)
@@ -64,7 +64,7 @@ export const calculatorCore = <T extends { [key: string]: string | number }>(
       sanitizedExpression = temporary;
     }
 
-    // もう計算するものがなければ結果を返す
+    // Return result if no more calculations needed
     else {
       return sanitizedExpression;
     }
@@ -84,7 +84,7 @@ const applyCurrencyExchange = <T extends { [key: string]: string | number }>(
   rates: T,
 ): string => {
   let returnExpr = expr;
-  // 通貨の交換ロジック
+  // Currency exchange logic
   for (const index in rates) {
     if (returnExpr.includes(index)) {
       const $ = returnExpr.match(new RegExp(`\\${index}([0-9]+)`));
@@ -101,7 +101,7 @@ const containsParentheses = (expr: string): boolean => {
 };
 
 const resolveParentheses = (expr: string): string => {
-  // 括弧内の計算ロジック
+  // Logic for calculations inside parentheses
   const match = expr.match(/\(\d+\.?(\d+)?([*+/-])\d+\.?(\d+)?\)/);
   if (match) {
     return expr.replace(
@@ -121,7 +121,7 @@ const containsDiv = (expr: string): boolean => {
 };
 
 const resolveMulExp = (expr: string): string => {
-  // 乗算、べき乗の計算ロジック
+  // Logic for multiplication and exponentiation
   const match = expr.match(/(.*?)(\d+\.?(\d+)?([*^])\d+\.?(\d+)?$)/);
   if (match) {
     const operands = match[2].split(/([*/^])/);
@@ -135,7 +135,7 @@ const resolveMulExp = (expr: string): string => {
 };
 
 const resolveDiv = (expr: string): string => {
-  // 除算の計算ロジック
+  // Logic for division
   const match = expr.match(/\d+\.?(\d+)?(\/)\d+\.?(\d+)?/);
   if (match) {
     const operands = match[0].split(/(\/)/);
@@ -150,7 +150,7 @@ const containsAddSub = (expr: string): boolean => {
 };
 
 const resolveAddSub = (expr: string): string => {
-  // 加算、減算の計算ロジック
+  // Logic for addition and subtraction
   const match = expr.match(/(-?\d+)\.?(\d+)?(\+|-)(-?\d+)\.?(\d+)?/);
   if (match) {
     const result =

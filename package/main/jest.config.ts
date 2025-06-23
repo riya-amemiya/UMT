@@ -10,8 +10,8 @@ const config: Config = {
   collectCoverage: true,
   collectCoverageFrom: [
     "<rootDir>/src/**/*.ts",
-    "!<rootDir>/src/Date/**/*.ts",
     "!<rootDir>/**/{isBrowser,isNode,isNodeWebkit,isBun}.ts",
+    "!<rootDir>/src/tests/benchmark/**/*.ts",
   ],
   coverageDirectory: "./coverage",
   moduleDirectories: ["node_modules", "src"],

@@ -1,29 +1,18 @@
 import { compareFunctionDefault } from "./compareFunctionDefault";
 
-type CompareFunction<T> = (a: T, b: T) => number;
+import type { CompareFunction } from "$/array/compareFunction";
+import { insertionSort } from "@/Array/insertionSort";
 
 const MIN_RUN = 32;
 
-const insertionSort = <T>(
-  array: T[],
-  start: number,
-  end: number,
-  compareFunction: CompareFunction<T>,
-): void => {
-  for (let index = start + 1; index <= end; index++) {
-    const temporary = array[index];
-    let currentIndex = index - 1;
-    while (
-      currentIndex >= start &&
-      compareFunction(array[currentIndex], temporary) > 0
-    ) {
-      array[currentIndex + 1] = array[currentIndex];
-      currentIndex--;
-    }
-    array[currentIndex + 1] = temporary;
-  }
-};
-
+/**
+ * Merges two sorted portions of the array
+ * @param array Array containing the portions to merge
+ * @param start Starting index of the first portion
+ * @param mid Middle index separating the two portions
+ * @param end Ending index of the second portion
+ * @param compareFunction Function to compare elements
+ */
 const merge = <T>(
   array: T[],
   start: number,
@@ -61,6 +50,12 @@ const merge = <T>(
   }
 };
 
+/**
+ * Calculates the minimum length of a run for the given input size
+ * This is used to determine the size of runs for the initial insertion sort phase
+ * @param input Size of the array to be sorted
+ * @returns Minimum length of a run
+ */
 const getMinRunLength = (input: number): number => {
   let n = input;
   let r = 0;
@@ -72,16 +67,19 @@ const getMinRunLength = (input: number): number => {
 };
 
 /**
- * TimSortアルゴリズムを実装した関数です。
- * 挿入ソートとマージソートの良い特性を組み合わせたソートアルゴリズムで、
- * 安定なソートを提供し、最悪のケースでもO(n log n)の時間複雑度を持ちます。
+ * Implementation of the TimSort algorithm, which combines the best features of
+ * insertion sort and merge sort. It provides a stable sort with O(n log n)
+ * worst-case time complexity.
  *
- * @param {T[]} array - ソートする配列
- * @param {CompareFunction<T>} [compareFunction=compareFunctionDefault<T>] -
- *        要素比較のための関数
- * @param {number} [start=0] - ソートを開始する配列のインデックス
- * @param {number} [end=array.length - 1] - ソートを終了する配列のインデックス
- * @returns {T[]} - ソートされた配列
+ * @param {T[]} array Array to sort
+ * @param {CompareFunction<T>} [compareFunction=compareFunctionDefault<T>]
+ *        Function to compare elements
+ * @param {number} [start=0] Starting index for the sort range
+ * @param {number} [end=array.length - 1] Ending index for the sort range
+ * @returns {T[]} Sorted array
+ * @example
+ * timSort([3, 1, 4, 1, 5]); // [1, 1, 3, 4, 5]
+ * timSort(['b', 'a', 'c']); // ['a', 'b', 'c']
  */
 export const timSort = <T>(
   array: T[],
@@ -95,9 +93,9 @@ export const timSort = <T>(
   for (let index = start; index <= end; index += minRun) {
     insertionSort(
       array,
+      compareFunction,
       index,
       Math.min(index + MIN_RUN - 1, end),
-      compareFunction,
     );
   }
 

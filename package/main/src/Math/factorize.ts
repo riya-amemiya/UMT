@@ -1,7 +1,7 @@
 /**
- * 因数分解
- * @param  {number} n
- * @returns number[]
+ * Prime factorization of a number
+ * @param  {number} n Number to factorize
+ * @returns number[] Array of prime factors
  * @example factorize(12); // [2, 2, 3]
  */
 export const factorize = (n: number): number[] => {

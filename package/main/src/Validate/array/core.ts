@@ -1,3 +1,8 @@
+/**
+ * Array validation core module
+ * Provides functionality to validate arrays with type-specific validation rules
+ */
+
 import { isArray } from "@/Validate/isArray";
 import { isNotEmpty } from "@/Validate/isNotEmpty";
 import type {
@@ -6,6 +11,14 @@ import type {
   ValidateType,
 } from "@/Validate/type";
 
+/**
+ * Creates an array validator with type-specific validation rules
+ * @template A - Type of array elements (string | number | boolean)
+ * @template O - Object containing validation functions for each type
+ * @param {O} option - Validation functions for each type
+ * @param {string} [message] - Custom error message for array type validation
+ * @returns {Function} - Validator function for arrays
+ */
 export const array = <
   A extends string | number | boolean,
   O extends {
@@ -31,11 +44,11 @@ export const array = <
     }
     if (isNotEmpty(option)) {
       for (const value of values) {
-        const validater = option[typeof value as Types<A>];
-        if (!validater?.(value as never).validate) {
+        const validator = option[typeof value as Types<A>];
+        if (!validator?.(value as never).validate) {
           return {
             validate: false,
-            message: validater?.(value as never).message || "",
+            message: validator?.(value as never).message || "",
             type: values,
           };
         }

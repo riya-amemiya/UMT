@@ -1,8 +1,8 @@
 /**
- * ランダムな文字列を生成します。
- * @param char ランダムな文字列を生成するための文字列
- * @param size ランダムな文字列の長さ
- * @returns ランダムな文字列
+ * Generates a random string.
+ * @param char String of characters to use for generating random string
+ * @param size Length of the random string
+ * @returns Random string
  */
 export const randomString = (
   size = 8,

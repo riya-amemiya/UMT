@@ -12,48 +12,86 @@ import {
   OneYearMs366,
 } from "@/Consts/clock";
 
-describe("時間定数のテスト", () => {
-  it("1秒は1000ミリ秒", () => {
-    expect(OneSecondMs).toBe(1000);
+describe("Time constants", () => {
+  describe("Basic time unit values", () => {
+    it("should define one second as 1000 milliseconds", () => {
+      expect(OneSecondMs).toBe(1000);
+    });
+
+    it("should define one minute as 60000 milliseconds", () => {
+      expect(OneMinuteMs).toBe(60000);
+    });
+
+    it("should define one hour as 3600000 milliseconds", () => {
+      expect(OneHourMs).toBe(3600000);
+    });
+
+    it("should define one day as 86400000 milliseconds", () => {
+      expect(OneDayMs).toBe(86400000);
+    });
+
+    it("should define one week as 604800000 milliseconds", () => {
+      expect(OneWeekMs).toBe(604800000);
+    });
   });
 
-  it("1分は60000ミリ秒", () => {
-    expect(OneMinuteMs).toBe(60000);
+  describe("Time unit relationships", () => {
+    it("should maintain correct relationships between units", () => {
+      expect(OneMinuteMs).toBe(OneSecondMs * 60);
+      expect(OneHourMs).toBe(OneMinuteMs * 60);
+      expect(OneDayMs).toBe(OneHourMs * 24);
+      expect(OneWeekMs).toBe(OneDayMs * 7);
+    });
   });
 
-  it("1時間は3600000ミリ秒", () => {
-    expect(OneHourMs).toBe(3600000);
+  describe("Month variations", () => {
+    it("should define correct relationships for different month lengths", () => {
+      expect(OneMonthMs28).toBe(OneDayMs * 28);
+      expect(OneMonthMs29).toBe(OneDayMs * 29);
+      expect(OneMonthMs).toBe(OneDayMs * 30);
+      expect(OneMonthMs31).toBe(OneDayMs * 31);
+    });
+
+    it("should maintain correct order of month lengths", () => {
+      expect(OneMonthMs28).toBeLessThan(OneMonthMs29);
+      expect(OneMonthMs29).toBeLessThan(OneMonthMs);
+      expect(OneMonthMs).toBeLessThan(OneMonthMs31);
+    });
   });
 
-  it("1日は86400000ミリ秒", () => {
-    expect(OneDayMs).toBe(86400000);
+  describe("Year variations", () => {
+    it("should define correct relationships for different year lengths", () => {
+      expect(OneYearMs).toBe(OneDayMs * 365);
+      expect(OneYearMs366).toBe(OneDayMs * 366);
+    });
+
+    it("should maintain correct relationship between regular and leap years", () => {
+      expect(OneYearMs).toBeLessThan(OneYearMs366);
+      expect(OneYearMs366 - OneYearMs).toBe(OneDayMs);
+    });
   });
 
-  it("1週間は604800000ミリ秒", () => {
-    expect(OneWeekMs).toBe(604800000);
-  });
-
-  it("1ヶ月（28日として）は2419200000ミリ秒", () => {
+  it("should define one month (28 days) as 2419200000 milliseconds", () => {
     expect(OneMonthMs28).toBe(2419200000);
   });
 
-  it("1ヶ月（29日として）は2505600000ミリ秒", () => {
+  it("should define one month (29 days) as 2505600000 milliseconds", () => {
     expect(OneMonthMs29).toBe(2505600000);
   });
 
-  it("1ヶ月（30日として）は2592000000ミリ秒", () => {
+  it("should define one month (30 days) as 2592000000 milliseconds", () => {
     expect(OneMonthMs).toBe(2592000000);
   });
 
-  it("1ヶ月（31日として）は2678400000ミリ秒", () => {
+  it("should define one month (31 days) as 2678400000 milliseconds", () => {
     expect(OneMonthMs31).toBe(2678400000);
   });
 
-  it("1年（365日として）は31536000000ミリ秒", () => {
+  it("should define one year (365 days) as 31536000000 milliseconds", () => {
     expect(OneYearMs).toBe(31536000000);
   });
 
-  it("1年（366日として）は31622400000ミリ秒", () => {
+  it("should define one year (366 days) as 31622400000 milliseconds", () => {
     expect(OneYearMs366).toBe(31622400000);
   });
 });

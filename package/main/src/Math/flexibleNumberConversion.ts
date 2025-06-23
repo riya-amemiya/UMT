@@ -1,19 +1,19 @@
 import { isValueNaN } from "@/Validate/isValueNaN";
 /**
- * 様々な入力を可能な限り数値に変換する柔軟な関数
+ * Flexible function to convert various inputs to numbers whenever possible
  *
- * @param value - 変換する値（任意の型）
- * @returns 変換された数値、または変換できない場合はNaN
+ * @param value - Value to convert (any type)
+ * @returns Converted number, or NaN if conversion is not possible
  *
  * @description
- * この関数は以下の特徴を持ちます：
- * 1. null、undefined、空文字列は0に変換します
- * 2. すでに数値型の場合はそのまま返します
- * 3. 無限大（Infinity, -Infinity）を適切に処理します
- * 4. 16進数（0x）、8進数（0o）、2進数（0b）の文字列表記に対応します
- * 5. 浮動小数点数の文字列を適切に解析します
- * 6. 数値で始まる文字列から可能な限り数値を抽出します
- * 7. 上記のいずれにも当てはまらない場合はNaNを返します
+ * This function has the following features:
+ * 1. Converts null, undefined, and empty string to 0
+ * 2. Returns numbers as-is if already a number type
+ * 3. Properly handles infinity (Infinity, -Infinity)
+ * 4. Supports string representations of hexadecimal (0x), octal (0o), and binary (0b)
+ * 5. Properly parses floating-point number strings
+ * 6. Extracts numbers from strings that start with numbers when possible
+ * 7. Returns NaN if none of the above conditions are met
  *
  * @example
  * flexibleNumberConversion(123)        // 123
@@ -26,25 +26,25 @@ import { isValueNaN } from "@/Validate/isValueNaN";
  * flexibleNumberConversion("not a number") // NaN
  */
 export const flexibleNumberConversion = (value: unknown): number => {
-  // オブジェクトの場合はNaNを返す
+  // Return NaN for objects
   if (typeof value === "object" && value !== null) {
     return Number.NaN;
   }
 
-  // 特殊なケースの処理
+  // Handle special cases
   if (value === null || value === undefined || value === "") {
     return 0;
   }
 
-  // すでに数値型の場合
+  // Handle values already of type number
   if (typeof value === "number" && !isValueNaN(value)) {
     return value;
   }
 
-  // 文字列に変換して処理
+  // Convert to string and process
   const stringValue = String(value).trim().toLowerCase();
 
-  // 無限大の処理
+  // Handle infinity
   if (stringValue === "infinity" || stringValue === "+infinity") {
     return Number.POSITIVE_INFINITY;
   }
@@ -52,7 +52,7 @@ export const flexibleNumberConversion = (value: unknown): number => {
     return Number.NEGATIVE_INFINITY;
   }
 
-  // 特殊な基数表記の処理（16進数、8進数、2進数）
+  // Handle special base notations (hex, octal, binary)
   if (
     stringValue.startsWith("0x") ||
     stringValue.startsWith("0o") ||
@@ -61,12 +61,12 @@ export const flexibleNumberConversion = (value: unknown): number => {
     return Number(stringValue);
   }
 
-  // 浮動小数点数としての解析
+  // Parse as floating point number
   const floatValue = Number.parseFloat(stringValue);
   if (!isValueNaN(floatValue)) {
     return floatValue;
   }
 
-  // 数値に変換できない場合
+  // When conversion is not possible
   return Number.NaN;
 };
