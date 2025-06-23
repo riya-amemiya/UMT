@@ -1,9 +1,9 @@
 /**
- * 偏差値を計算する
- * @param  {number} value - 現在のセンサー値
- * @param  {number} averageValue - センサー値の平均値
- * @param  {number} standardDeviationValue - センサー値の標準偏差
- * @returns {number} 偏差値
+ * Calculate standard score (deviation value)
+ * @param  {number} value - Current value
+ * @param  {number} averageValue - Mean value
+ * @param  {number} standardDeviationValue - Standard deviation
+ * @returns {number} Standard score (where 50 is average, each standard deviation is worth 10 points)
  * @example deviationValue(10, 5, 2); // 75
  */
 export const deviationValue = (

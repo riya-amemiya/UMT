@@ -3,7 +3,7 @@ import type { ZeroAorB } from "./zeroAorB";
 
 import type { Subtract } from "$/math/subtract";
 
-// 比較 (A < B)
+// Type to compare if B is greater than A
 export type BGreaterThanA<
   A extends number,
   B extends number,

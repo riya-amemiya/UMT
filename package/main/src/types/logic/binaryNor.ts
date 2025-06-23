@@ -1,4 +1,4 @@
-// 2進数のNot ORを求める型
+// Type to calculate NOT OR (NOR) operation on binary numbers
 export type BinaryNor<
   X extends `${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}`,
   Y extends `${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}`,

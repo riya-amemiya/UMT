@@ -1,4 +1,4 @@
-// 2進数のORを求める型
+// Type to calculate OR operation on binary numbers
 export type BinaryOr<
   X extends `${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}`,
   Y extends `${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}`,

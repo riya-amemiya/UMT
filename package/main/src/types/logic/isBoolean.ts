@@ -1,4 +1,4 @@
-// booleanに変換する型
+// Type to convert to boolean
 export type isBoolean<X> = X extends number
   ? X extends 0
     ? false

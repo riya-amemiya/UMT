@@ -1,4 +1,4 @@
-// 先頭から8文字を取得する型
+// Type to get first 8 characters from string
 export type First8Chars<
   S extends string,
   T extends unknown[] = [],

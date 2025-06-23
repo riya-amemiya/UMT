@@ -1,5 +1,5 @@
 /**
- * node環境かどうかを判定します。
+ * Determines if the current environment is Node.js
  */
 export const isNode = () => {
   try {

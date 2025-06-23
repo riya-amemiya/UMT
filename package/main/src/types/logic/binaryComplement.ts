@@ -8,7 +8,7 @@ export type BinaryComplementParser<X extends string> =
       : `0${BinaryComplementParser<R>}`
     : "";
 
-// 1バイトの2の補数を求める型
+// Type to calculate two's complement of a 1-byte binary number
 export type BinaryComplement<
   X extends `${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}${0 | 1}`,
 > = First8Chars<BinaryAdd<BinaryComplementParser<X>, "00000001">>;

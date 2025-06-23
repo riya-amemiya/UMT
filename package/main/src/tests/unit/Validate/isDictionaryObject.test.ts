@@ -1,8 +1,21 @@
 import { isDictionaryObject } from "@/Validate/isDictionaryObject";
 
-describe("isObj", () => {
+describe("isDictionaryObject", () => {
+  it("should return true for an empty object", () => {
+    expect(isDictionaryObject({})).toBe(true);
+  });
+
   it("should return true for an object with string properties", () => {
     expect(isDictionaryObject({ foo: "bar", baz: "qux" })).toBe(true);
+  });
+
+  it("should work as a type guard", () => {
+    const value: unknown = { x: 1, y: 2 };
+    if (isDictionaryObject<{ x: number; y: number }>(value)) {
+      // TypeScript should recognize value as { x: number; y: number }
+      const sum = value.x + value.y;
+      expect(sum).toBe(3);
+    }
   });
 
   it("should return true for an object with number properties", () => {

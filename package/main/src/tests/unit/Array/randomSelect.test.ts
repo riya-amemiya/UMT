@@ -1,7 +1,7 @@
 import { randomSelect } from "@/Array/randomSelect";
 
 describe("randomSelect", () => {
-  it("指定された数の要素をランダムに選択する", () => {
+  it("should randomly select the specified number of elements", () => {
     const array = [1, 2, 3, 4, 5];
     const result = randomSelect(array, 2);
     expect(result).toHaveLength(2);
@@ -10,7 +10,7 @@ describe("randomSelect", () => {
     });
   });
 
-  it("選択する要素の数が配列の長さを超える場合、元の配列の長さと同じ数の要素を返す", () => {
+  it("should return elements equal to array length when count exceeds array length", () => {
     const array = [1, 2, 3];
     const result = randomSelect(array, 5);
     expect(result).toHaveLength(3);
@@ -19,12 +19,12 @@ describe("randomSelect", () => {
     });
   });
 
-  it("空の配列を渡した場合、空の配列を返す", () => {
+  it("should return an empty array when given an empty array", () => {
     const result = randomSelect([], 3);
     expect(result).toEqual([]);
   });
 
-  it("重複を許す場合、指定された数の要素を返す", () => {
+  it("should return specified count with duplicates when allowDuplicates is true", () => {
     const array = [1, 2, 3];
     const result = randomSelect(array, 5, true);
     expect(result).toHaveLength(5);
@@ -33,7 +33,7 @@ describe("randomSelect", () => {
     });
   });
 
-  it("重複を許さない場合、指定された数の要素を返す", () => {
+  it("should return specified count without duplicates when allowDuplicates is false", () => {
     const array = [1, 2, 3, 4, 5];
     const result = randomSelect(array, 3, false);
     expect(result).toHaveLength(3);
@@ -42,9 +42,15 @@ describe("randomSelect", () => {
     });
   });
 
-  it("選択する要素の数がマイナスの場合、空の配列を返す", () => {
+  it("should return an empty array when count is negative", () => {
     const array = [1, 2, 3, 4, 5];
     const result = randomSelect(array, -1);
+    expect(result).toEqual([]);
+  });
+
+  it("should return an empty array when count is zero", () => {
+    const array = [1, 2, 3, 4, 5];
+    const result = randomSelect(array, 0);
     expect(result).toEqual([]);
   });
 });

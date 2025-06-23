@@ -1,11 +1,14 @@
 import { nPr } from "./nPr";
 
 /**
- * n個からr個を選ぶ組み合わせ（nCr）を計算します。
- * @param n - 選ぶ元となる全体の数
- * @param r - 選ぶ個数
- * @returns 組み合わせの結果、または引数が無効な場合はNaN
+ * Calculates combinations (nCr) - number of ways to choose r items from n items
+ * @param n - Total number of items
+ * @param r - Number of items to choose
+ * @returns {number} Number of combinations, or NaN for invalid arguments
  * @example nCr(5, 2); // 10
+ * @description
+ * Calculates the number of ways to choose r items from a set of n items,
+ * where the order doesn't matter. Uses the formula nCr = nPr / r!
  */
 export const nCr = (n: number, r: number): number => {
   if (n === 0 || r === 0 || n < r) {
