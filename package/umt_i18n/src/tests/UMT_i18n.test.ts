@@ -322,10 +322,7 @@ describe("UMT_i18n Advanced Features", () => {
 
   test("addTranslations to new locale", () => {
     type TestData = { en: { hello: string }; de?: Record<string, string> };
-    const testI18n = new UMT_i18n<TestData>(
-      { en: { hello: "Hello" } },
-      "en",
-    );
+    const testI18n = new UMT_i18n<TestData>({ en: { hello: "Hello" } }, "en");
     testI18n.addTranslations("de" as keyof TestData, {
       hello: "Hallo",
       world: "Welt",
