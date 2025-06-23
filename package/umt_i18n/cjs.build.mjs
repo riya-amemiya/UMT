@@ -1,4 +1,4 @@
-// biome-ignore lint/correctness/noNodejsModules: <explanation>
+// biome-ignore lint/correctness/noNodejsModules: ignore
 import { readFileSync, writeFileSync } from "node:fs";
 
 // package.jsonを読み込む

@@ -1,7 +1,8 @@
-/** @type {import('ts-jest').JestConfigWithTsJest} */
-module.exports = {
+import type { Config } from "jest";
+
+const config: Config = {
   transform: {
-    "^.+\\.(t|j)sx?$": ["@swc/jest"],
+    "^.+\\.(t|j)sx?$": "@swc/jest",
   },
   testEnvironment: "node",
   roots: ["<rootDir>/src/tests"],
@@ -14,3 +15,5 @@ module.exports = {
   coverageDirectory: "coverage_dir",
   coverageReporters: ["text"],
 };
+
+export default config;
