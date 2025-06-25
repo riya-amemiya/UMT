@@ -64,6 +64,7 @@ describe("safeExecute function", () => {
 
     it("should handle non-Error thrown values", () => {
       const errorOperation = () => {
+        // biome-ignore lint/style/useThrowOnlyError: ignore
         throw "string error";
       };
       const result = safeExecute(errorOperation);

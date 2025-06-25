@@ -10,7 +10,7 @@ describe("isValueNaN function", () => {
 
     it("should return true for NaN", () => {
       expect(isValueNaN(Number.NaN)).toBe(true);
-      expect(isValueNaN(Number.parseInt("not a number"))).toBe(true);
+      expect(isValueNaN(Number.parseInt("not a number", 10))).toBe(true);
     });
 
     it("should return false for string values", () => {
@@ -39,7 +39,7 @@ describe("isValueNaN function", () => {
     it("should return true for NaN and NaN strings", () => {
       expect(isValueNaN(Number.NaN, true)).toBe(true);
       expect(isValueNaN("NaN", true)).toBe(true);
-      expect(isValueNaN(Number.parseInt("not a number"), true)).toBe(true);
+      expect(isValueNaN(Number.parseInt("not a number", 10), true)).toBe(true);
     });
 
     it("should handle non-numeric strings correctly", () => {

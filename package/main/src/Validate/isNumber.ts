@@ -18,7 +18,7 @@ const isNumber = <T extends boolean>(
     return false;
   }
   return number !== null && typeof number !== "boolean" && loose
-    ? // biome-ignore lint/suspicious/noGlobalIsFinite: <explanation>
+    ? // biome-ignore lint/suspicious/noGlobalIsFinite: ignore
       isFinite(number as number)
     : Number.isFinite(number as number);
 };
