@@ -87,10 +87,12 @@ describe("UMT_i18n Basic Tests", () => {
 
   test("Translation with defaultValue", () => {
     const i18nBasic = new UMT_i18n(data, "en");
-    expect(i18nBasic.translate("notExist", { defaultValue: "Default" })).toBe(
-      "Default",
-    );
-    expect(i18nBasic.translate("notExist")).toBe("notExist");
+    expect(
+      // biome-ignore lint/suspicious/noExplicitAny: ignore this for testing purposes
+      i18nBasic.translate("notExist" as any, { defaultValue: "Default" }),
+    ).toBe("Default");
+    // biome-ignore lint/suspicious/noExplicitAny: ignore this for testing purposes
+    expect(i18nBasic.translate("notExist" as any)).toBe("notExist");
   });
 
   test("t() alias", () => {
@@ -156,7 +158,6 @@ describe("UMT_i18n Advanced Features", () => {
     expect(advI18n.getFallbackLocales()).toEqual(["ja", "en"]);
   });
 
-
   test("Custom formatter in constructor", () => {
     const customI18n = new UMT_i18n(advancedData, "en", {
       formatters: {
@@ -192,7 +193,8 @@ describe("UMT_i18n Advanced Features", () => {
   test("hasTranslation", () => {
     advI18n.setLocale("en");
     expect(advI18n.hasTranslation("greeting")).toBe(true);
-    expect(advI18n.hasTranslation("notExist")).toBe(false);
+    // biome-ignore lint/suspicious/noExplicitAny: ignore this for testing purposes
+    expect(advI18n.hasTranslation("notExist" as any)).toBe(false);
     expect(advI18n.hasTranslation("nested.deep.message")).toBe(true);
   });
 
@@ -255,8 +257,6 @@ describe("UMT_i18n Advanced Features", () => {
       "Hello John {{age}}!",
     );
   });
-
-
 
   test("supports deeply nested objects with partial properties", () => {
     type NestedData = {

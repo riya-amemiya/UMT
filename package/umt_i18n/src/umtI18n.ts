@@ -1,8 +1,38 @@
-export type DeepPartial<T> = T extends object
+type DeepPartial<T> = T extends object
   ? {
       [P in keyof T]?: DeepPartial<T[P]>;
     }
   : T;
+type NestedObject = {
+  [key: string]: string | NestedObject;
+};
+
+type UnionToIntersection<U> = (
+  U extends unknown
+    ? (k: U) => void
+    : never
+) extends (k: infer I) => void
+  ? I
+  : never;
+
+type ShallowObjectValue<T> = T extends Record<PropertyKey, infer U>
+  ? UnionToIntersection<U>
+  : never;
+type PickDeepKey<T extends object> = keyof T extends infer K
+  ? K extends keyof T
+    ? T[K] extends object
+      ? K extends string
+        ? PickDeepKey<T[K]> extends string
+          ? K | `${K}.${PickDeepKey<T[K]>}`
+          : K
+        : never
+      : K
+    : never
+  : never;
+
+type DeepRequired<T> = {
+  [P in keyof T]-?: DeepRequired<T[P]>;
+};
 
 export type UMT_i18nData<
   T extends { [key: string]: string | NestedObject },
@@ -17,17 +47,25 @@ export type TranslateOptions = {
   defaultValue?: string;
 };
 
-export type NestedObject = {
-  [key: string]: string | NestedObject;
-};
-
 export type FlattenedData<T> = {
   [K in keyof T]: Record<string, string>;
 };
-export type FormatterFunction = (value: unknown, locale: string) => string;
+export type FormatterFunction<
+  T extends {
+    [key: string]: {
+      [k: string]: string | NestedObject;
+    };
+  },
+> = (value: unknown, locale: keyof T) => string;
 
-export type UMT_i18nOptions = {
-  formatters?: Record<string, FormatterFunction>;
+export type UMT_i18nOptions<
+  T extends {
+    [key: string]: {
+      [k: string]: string | NestedObject;
+    };
+  },
+> = {
+  formatters?: Record<string, FormatterFunction<T>>;
 };
 
 export class UMT_i18n<
@@ -42,9 +80,9 @@ export class UMT_i18n<
   private locale: keyof T;
   private defaultLocale: keyof T;
   private fallbackLocales: (keyof T)[] = [];
-  private formatters: Map<string, FormatterFunction>;
+  private formatters: Map<string, FormatterFunction<T>>;
 
-  constructor(data: T, locale: keyof T, options?: UMT_i18nOptions) {
+  constructor(data: T, locale: keyof T, options?: UMT_i18nOptions<T>) {
     this.data = data;
     this.flattenedData = this.flattenAllLocales(data);
     this.locale = locale;
@@ -72,13 +110,16 @@ export class UMT_i18n<
     return this;
   }
 
-  public translate(key: string, options?: TranslateOptions): string {
+  public translate(
+    key: PickDeepKey<DeepRequired<ShallowObjectValue<T>>>,
+    options?: TranslateOptions,
+  ): string {
     const { params, count, defaultValue } = options || {};
 
     let translation = this.getTranslation(key, count);
 
     if (!translation) {
-      return defaultValue || key;
+      return defaultValue || (key as string);
     }
 
     if (params) {
@@ -88,12 +129,19 @@ export class UMT_i18n<
     return translation;
   }
 
-  public t(key: string, options?: TranslateOptions): string {
+  public t(
+    key: PickDeepKey<DeepRequired<ShallowObjectValue<T>>>,
+    options?: TranslateOptions,
+  ): string {
     return this.translate(key, options);
   }
 
-  private getTranslation(key: string, count?: number): string | undefined {
-    const actualKey = count === undefined ? key : this.getPluralKey(key, count);
+  private getTranslation(
+    key: PickDeepKey<DeepRequired<ShallowObjectValue<T>>>,
+    count?: number,
+  ): string | undefined {
+    const actualKey =
+      count === undefined ? (key as string) : this.getPluralKey(key, count);
 
     let translation = this.flattenedData[this.locale]?.[actualKey];
 
@@ -113,10 +161,13 @@ export class UMT_i18n<
     return translation;
   }
 
-  private getPluralKey(key: string, count: number): string {
+  private getPluralKey(
+    key: PickDeepKey<DeepRequired<ShallowObjectValue<T>>>,
+    count: number,
+  ): string {
     const locale = String(this.locale);
     const pluralSuffix = this.getPluralSuffix(count, locale);
-    return `${key}${pluralSuffix}`;
+    return `${key as string}${pluralSuffix}`;
   }
 
   private getPluralSuffix(count: number, locale: string): string {
@@ -186,7 +237,6 @@ export class UMT_i18n<
     return flattened;
   }
 
-
   public setFallbackLocales(locales: (keyof T)[]): this {
     this.fallbackLocales = locales;
     return this;
@@ -196,7 +246,9 @@ export class UMT_i18n<
     return this.fallbackLocales;
   }
 
-  public hasTranslation(key: string): boolean {
+  public hasTranslation(
+    key: PickDeepKey<DeepRequired<ShallowObjectValue<T>>>,
+  ): boolean {
     return this.getTranslation(key) !== undefined;
   }
 
