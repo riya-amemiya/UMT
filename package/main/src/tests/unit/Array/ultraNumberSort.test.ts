@@ -388,4 +388,15 @@ describe("ultraNumberSort", () => {
       sortedArrNegativeEmptyTriggerRadixAsc,
     );
   });
+
+  it("should sort array with twenty floating point numbers", () => {
+    const arr = [
+      3.14, 2.71, 1.41, 1.73, 2.23, 3.16, 2.65, 1.61, 2.44, 3.32, 1.19, 2.82,
+      3.05, 1.91, 2.12, 3.46, 1.38, 2.98, 3.24, 1.68,
+    ];
+    const sortedAsc = [...arr].sort((a, b) => a - b);
+    const sortedDesc = [...arr].sort((a, b) => b - a);
+    expect(ultraNumberSort([...arr])).toEqual(sortedAsc);
+    expect(ultraNumberSort([...arr], false)).toEqual(sortedDesc);
+  });
 });
