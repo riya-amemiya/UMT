@@ -27,6 +27,8 @@ export * from "./capitalize";
 export * from "./decimal1byteTobinary";
 export * from "./decimal4bitTobinary";
 export * from "./decimal4bitToHex";
+export * from "./deepPartial";
+export * from "./deepRequired";
 export * from "./equal";
 export * from "./first";
 export * from "./first8Chars";
