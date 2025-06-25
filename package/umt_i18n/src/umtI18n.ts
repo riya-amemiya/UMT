@@ -1,8 +1,14 @@
+export type DeepPartial<T> = T extends object
+  ? {
+      [P in keyof T]?: DeepPartial<T[P]>;
+    }
+  : T;
+
 export type UMT_i18nData<
-  T extends { [key: string]: string },
+  T extends { [key: string]: string | NestedObject },
   L extends string,
 > = {
-  [key in L]: Partial<T>;
+  [key in L]: DeepPartial<T>;
 };
 
 export type TranslateOptions = {
@@ -18,6 +24,12 @@ export type NestedObject = {
 export type FlattenedData<T> = {
   [K in keyof T]: Record<string, string>;
 };
+export type FormatterFunction = (value: unknown, locale: string) => string;
+
+export type UMT_i18nOptions = {
+  formatters?: Record<string, FormatterFunction>;
+};
+
 export class UMT_i18n<
   T extends {
     [key: string]: {
@@ -30,15 +42,14 @@ export class UMT_i18n<
   private locale: keyof T;
   private defaultLocale: keyof T;
   private fallbackLocales: (keyof T)[] = [];
-  private formatters: Map<string, (value: unknown, locale: string) => string> =
-    new Map();
+  private formatters: Map<string, FormatterFunction>;
 
-  constructor(data: T, locale: keyof T) {
+  constructor(data: T, locale: keyof T, options?: UMT_i18nOptions) {
     this.data = data;
     this.flattenedData = this.flattenAllLocales(data);
     this.locale = locale;
     this.defaultLocale = locale;
-    this.initializeDefaultFormatters();
+    this.formatters = new Map(Object.entries(options?.formatters ?? {}));
   }
   public getLocale() {
     return this.locale;
@@ -175,46 +186,6 @@ export class UMT_i18n<
     return flattened;
   }
 
-  private initializeDefaultFormatters(): void {
-    this.formatters.set("date", (value, locale) => {
-      if (value instanceof Date) {
-        return value.toLocaleDateString(locale);
-      }
-      return String(value);
-    });
-
-    this.formatters.set("time", (value, locale) => {
-      if (value instanceof Date) {
-        return value.toLocaleTimeString(locale);
-      }
-      return String(value);
-    });
-
-    this.formatters.set("number", (value, locale) => {
-      if (typeof value === "number") {
-        return value.toLocaleString(locale);
-      }
-      return String(value);
-    });
-
-    this.formatters.set("currency", (value, locale) => {
-      if (typeof value === "number") {
-        const currencyMap: Record<string, string> = {
-          en: "USD",
-          ja: "JPY",
-          zh: "CNY",
-          de: "EUR",
-          fr: "EUR",
-        };
-        const currency = currencyMap[locale] || "USD";
-        return new Intl.NumberFormat(locale, {
-          style: "currency",
-          currency,
-        }).format(value);
-      }
-      return String(value);
-    });
-  }
 
   public setFallbackLocales(locales: (keyof T)[]): this {
     this.fallbackLocales = locales;
@@ -225,14 +196,6 @@ export class UMT_i18n<
     return this.fallbackLocales;
   }
 
-  public addFormatter(
-    key: string,
-    formatter: (value: unknown, locale: string) => string,
-  ): this {
-    this.formatters.set(key, formatter);
-    return this;
-  }
-
   public hasTranslation(key: string): boolean {
     return this.getTranslation(key) !== undefined;
   }
@@ -240,26 +203,5 @@ export class UMT_i18n<
   public getAllTranslations(locale?: keyof T): Record<string, string> {
     const targetLocale = locale || this.locale;
     return this.flattenedData[targetLocale] || {};
-  }
-
-  public addTranslations(
-    locale: keyof T,
-    translations: Record<string, string | NestedObject>,
-  ): this {
-    if (!this.data[locale]) {
-      this.data[locale] = {} as T[keyof T];
-    }
-
-    Object.assign(this.data[locale], translations);
-    this.flattenedData = this.flattenAllLocales(this.data);
-    return this;
-  }
-
-  public removeTranslation(locale: keyof T, key: string): this {
-    if (this.data[locale]) {
-      delete (this.data[locale] as Record<string, string | NestedObject>)[key];
-      this.flattenedData = this.flattenAllLocales(this.data);
-    }
-    return this;
   }
 }
