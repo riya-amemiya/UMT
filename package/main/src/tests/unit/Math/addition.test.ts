@@ -19,7 +19,7 @@ describe("addition", () => {
     { args: [-2, 0.5, 1.5], expected: 0, closeTo: true },
   ];
 
-  testCases.forEach(({ args, expected, closeTo }) => {
+  for (const { args, expected, closeTo } of testCases) {
     it(`should add ${args.length} numbers: ${args.join(", ")}`, () => {
       const result = addition(...args);
       if (closeTo) {
@@ -28,5 +28,5 @@ describe("addition", () => {
         expect(result).toBe(expected);
       }
     });
-  });
+  }
 });

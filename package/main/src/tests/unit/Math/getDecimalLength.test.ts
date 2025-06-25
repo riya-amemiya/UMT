@@ -24,7 +24,7 @@ describe("getDecimalLength function", () => {
     it("should handle leading zeros in decimals", () => {
       expect(getDecimalLength(1.01)).toBe(2);
       expect(getDecimalLength(1.001)).toBe(3);
-      expect(getDecimalLength(1.000001)).toBe(6);
+      expect(getDecimalLength(1.000_001)).toBe(6);
     });
 
     it("should handle negative numbers with decimals", () => {
@@ -41,8 +41,8 @@ describe("getDecimalLength function", () => {
     });
 
     it("should handle large decimal numbers", () => {
-      expect(getDecimalLength(123456.789)).toBe(3);
-      expect(getDecimalLength(-987654.321)).toBe(3);
+      expect(getDecimalLength(123_456.789)).toBe(3);
+      expect(getDecimalLength(-987_654.321)).toBe(3);
     });
   });
 });

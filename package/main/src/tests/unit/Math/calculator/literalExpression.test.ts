@@ -43,6 +43,10 @@ describe("literalExpression function", () => {
     expect(literalExpression("8=2x")).toBe("4");
   });
 
+  test("should handle fractions that cannot be simplified to denominator 1", () => {
+    expect(literalExpression("6x=4")).toBe("2/3");
+  });
+
   // Invalid equations
   test("should handle invalid equations", () => {
     expect(literalExpression("x=x")).toBe("");

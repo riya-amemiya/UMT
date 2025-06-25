@@ -2,6 +2,8 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+**Don't use Node.js**: This project is built with Bun, a modern JavaScript runtime. Do not use Node.js for development or testing.
+
 ## Project Overview
 
 UMT (Utility Module Toolkit) is a TypeScript utility library organized into functional modules. It's a zero-dependency library that exports individual utility functions grouped by category (Array, Math, String, Date, etc.).
@@ -13,6 +15,7 @@ UMT (Utility Module Toolkit) is a TypeScript utility library organized into func
 - Test all: `bun run test` (Jest with SWC transform)
 - Test single file: `bun run test src/tests/unit/path/to/test.test.ts`
 - Format: `bun run format` (Biome formatter)
+- JS Run: `bun run <fileName.js>` (Run JavaScript files directly with Bun)
 
 ## Architecture & Module Organization
 
@@ -57,4 +60,3 @@ UMT (Utility Module Toolkit) is a TypeScript utility library organized into func
 - **No dependencies**: Main package is dependency-free (dev dependencies only)
 - **Testing framework**: Jest with SWC transformer for fast TypeScript compilation
 - **Coverage**: Enabled by default, excludes environment detection utilities
-- **Language**: Please respond in Japanese

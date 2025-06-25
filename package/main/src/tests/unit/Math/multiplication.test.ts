@@ -47,8 +47,8 @@ describe("multiplication function", () => {
     });
 
     it("should handle very small numbers", () => {
-      expect(multiplication(0.0001, 0.0001)).toBeCloseTo(0.00000001);
-      expect(multiplication(0.00001, 0.00001)).toBeCloseTo(0.0000000001);
+      expect(multiplication(0.0001, 0.0001)).toBeCloseTo(0.000_000_01);
+      expect(multiplication(0.000_01, 0.000_01)).toBeCloseTo(0.000_000_000_1);
     });
   });
 });

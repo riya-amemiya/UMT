@@ -116,7 +116,7 @@ describe("curry", () => {
   test("should preserve the original 'this' context", () => {
     const obj = {
       multiplier: 2,
-      multiply: function (a: number, b: number) {
+      multiply(a: number, b: number) {
         return a * b * this.multiplier;
       },
     };

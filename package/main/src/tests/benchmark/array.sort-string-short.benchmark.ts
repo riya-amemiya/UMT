@@ -14,7 +14,7 @@ import { insertionSort } from "@/Array/insertionSort";
 
 const compareFunction = (a: string, b: string): number => a.localeCompare(b);
 
-const arraySizes = [10, 100, 1000, 10000, 100000];
+const arraySizes = [10, 100, 1000, 10_000, 100_000];
 
 // Generate random strings
 const generateRandomString = (length: number): string => {
@@ -50,7 +50,7 @@ summary(() => {
       }
 
       yield {
-        [0]() {
+        0() {
           return [...original_array];
         },
         bench(arr: string[]) {
@@ -70,7 +70,7 @@ summary(() => {
       }
 
       yield {
-        [0]() {
+        0() {
           return [...original_array];
         },
         bench(arr: string[]) {
@@ -90,7 +90,7 @@ summary(() => {
       }
 
       yield {
-        [0]() {
+        0() {
           return [...original_array];
         },
         bench(arr: string[]) {
@@ -110,7 +110,7 @@ summary(() => {
       }
 
       yield {
-        [0]() {
+        0() {
           return [...original_array];
         },
         bench(arr: string[]) {
@@ -130,7 +130,7 @@ summary(() => {
       }
 
       yield {
-        [0]() {
+        0() {
           return [...original_array];
         },
         bench(arr: string[]) {
@@ -150,7 +150,7 @@ summary(() => {
       }
 
       yield {
-        [0]() {
+        0() {
           return [...original_array];
         },
         bench(arr: string[]) {

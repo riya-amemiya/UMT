@@ -20,15 +20,26 @@ export const birthday = <T extends MonTypeInt>(
 ) => {
   const birthdayDate = new Date(newDateInt(year, mon, day));
   const nowTime = now(timeDifference);
-  const y = nowTime.getFullYear() - birthdayDate.getFullYear();
-  const r =
-    nowTime <
-    newDateInt(
-      nowTime.getFullYear(),
-      (birthdayDate.getMonth() - 1) as MonTypeInt,
-      birthdayDate.getDay() as DayTypeInt<T>,
-    )
-      ? y - 1
-      : y;
-  return year < 100 ? 1900 + y : r;
+  const currentYear = nowTime.getFullYear();
+  const birthYear = birthdayDate.getFullYear();
+
+  // Calculate base age
+  let age = currentYear - birthYear;
+
+  // Check if birthday hasn't occurred this year yet
+  const thisYearBirthday = new Date(
+    currentYear,
+    birthdayDate.getMonth(),
+    birthdayDate.getDate(),
+  );
+  if (nowTime < thisYearBirthday) {
+    age -= 1;
+  }
+
+  // Handle future birthdays (should return 0 or non-negative)
+  if (age < 0) {
+    return 0;
+  }
+
+  return age;
 };

@@ -98,7 +98,7 @@ describe("createPipeline", () => {
 
   it("can process empty strings correctly", () => {
     const pipeline = createPipeline("");
-    const result = pipeline((x) => x + "test")((x) => x.toUpperCase())();
+    const result = pipeline((x) => `${x}test`)((x) => x.toUpperCase())();
     expect(result).toBe("TEST");
   });
 

@@ -34,7 +34,7 @@ describe("reduce function", () => {
 
     it("should handle larger numbers", () => {
       expect(reduce(1000, 2500)).toEqual({ x: 2, y: 5, gcd: 500 });
-      expect(reduce(24680, 12340)).toEqual({ x: 2, y: 1, gcd: 12340 });
+      expect(reduce(24_680, 12_340)).toEqual({ x: 2, y: 1, gcd: 12_340 });
     });
   });
 });
