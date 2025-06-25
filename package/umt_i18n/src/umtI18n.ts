@@ -1,37 +1,12 @@
-type DeepPartial<T> = T extends object
-  ? {
-      [P in keyof T]?: DeepPartial<T[P]>;
-    }
-  : T;
+import type {
+  DeepPartial,
+  DeepRequired,
+  PickDeepKey,
+  ShallowObjectValue,
+} from "umt/module/types";
+
 type NestedObject = {
   [key: string]: string | NestedObject;
-};
-
-type UnionToIntersection<U> = (
-  U extends unknown
-    ? (k: U) => void
-    : never
-) extends (k: infer I) => void
-  ? I
-  : never;
-
-type ShallowObjectValue<T> = T extends Record<PropertyKey, infer U>
-  ? UnionToIntersection<U>
-  : never;
-type PickDeepKey<T extends object> = keyof T extends infer K
-  ? K extends keyof T
-    ? T[K] extends object
-      ? K extends string
-        ? PickDeepKey<T[K]> extends string
-          ? K | `${K}.${PickDeepKey<T[K]>}`
-          : K
-        : never
-      : K
-    : never
-  : never;
-
-type DeepRequired<T> = {
-  [P in keyof T]-?: DeepRequired<T[P]>;
 };
 
 export type UMT_i18nData<
