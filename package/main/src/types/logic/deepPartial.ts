@@ -32,7 +32,9 @@
  * // }
  * ```
  */
-export type DeepPartial<T> = T extends object
+
+// biome-ignore lint/suspicious/noExplicitAny: ignore
+export type DeepPartial<T> = T extends Record<PropertyKey, any>
   ? {
       [P in keyof T]?: DeepPartial<T[P]>;
     }

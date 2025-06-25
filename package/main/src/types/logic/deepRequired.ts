@@ -32,6 +32,7 @@
  * // }
  * ```
  */
-export type DeepRequired<T> = T extends object
+// biome-ignore lint/suspicious/noExplicitAny: ignore
+export type DeepRequired<T> = T extends Record<PropertyKey, any>
   ? { [P in keyof T]-?: DeepRequired<T[P]> }
   : T;
