@@ -2,9 +2,9 @@
  * Recursively makes all properties in T required, including nested objects.
  * Unlike TypeScript's built-in Required<T> which only affects top-level properties,
  * DeepRequired<T> removes the optional modifier from all levels of nested objects.
- * 
+ *
  * @template T - The type to make deeply required
- * 
+ *
  * @example
  * ```typescript
  * interface User {
@@ -17,7 +17,7 @@
  *     };
  *   };
  * }
- * 
+ *
  * type RequiredUser = DeepRequired<User>;
  * // Result:
  * // {
