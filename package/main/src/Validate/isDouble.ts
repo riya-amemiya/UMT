@@ -14,7 +14,7 @@ const isDouble = <T extends boolean = true>(
 ): x is T extends true ? number | string : number => {
   if (loose) {
     return (
-      // biome-ignore lint/suspicious/noGlobalIsFinite: <explanation>
+      // biome-ignore lint/suspicious/noGlobalIsFinite: ignore
       isFinite(x as number) &&
       !Number.isNaN(x) &&
       Number.isFinite(Number(x)) &&

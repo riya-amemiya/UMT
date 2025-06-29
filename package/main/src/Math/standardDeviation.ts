@@ -1,5 +1,8 @@
 import { average } from "./average";
 
+import { multiplication } from "@/Math/multiplication";
+import { subtract } from "@/Math/subtract";
+
 /**
  * Calculates the standard deviation of a set of values
  * @param {number[]} values Array of numeric values
@@ -16,8 +19,8 @@ export const standardDeviation = (values: number[]): number => {
 
   // Calculate the squared differences from the mean
   const squareDiffs = values.map((value) => {
-    const diff = value - avg;
-    return diff * diff;
+    const diff = subtract(value, avg);
+    return multiplication(diff, diff);
   });
 
   // Calculate the mean of the squared differences

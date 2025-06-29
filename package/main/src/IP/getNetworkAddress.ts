@@ -22,7 +22,7 @@ export const getNetworkAddress = (ip: string, subnetMask: string): number => {
   if (
     ipParts.length !== 4 ||
     !ipParts.every((part) => {
-      const number_ = Number.parseInt(part);
+      const number_ = Number.parseInt(part, 10);
       return !Number.isNaN(number_) && number_ >= 0 && number_ <= 255;
     })
   ) {
@@ -34,7 +34,7 @@ export const getNetworkAddress = (ip: string, subnetMask: string): number => {
   if (
     maskParts.length !== 4 ||
     !maskParts.every((part) => {
-      const number_ = Number.parseInt(part);
+      const number_ = Number.parseInt(part, 10);
       return !Number.isNaN(number_) && number_ >= 0 && number_ <= 255;
     })
   ) {

@@ -19,19 +19,19 @@ describe("Time constants", () => {
     });
 
     it("should define one minute as 60000 milliseconds", () => {
-      expect(OneMinuteMs).toBe(60000);
+      expect(OneMinuteMs).toBe(60_000);
     });
 
     it("should define one hour as 3600000 milliseconds", () => {
-      expect(OneHourMs).toBe(3600000);
+      expect(OneHourMs).toBe(3_600_000);
     });
 
     it("should define one day as 86400000 milliseconds", () => {
-      expect(OneDayMs).toBe(86400000);
+      expect(OneDayMs).toBe(86_400_000);
     });
 
     it("should define one week as 604800000 milliseconds", () => {
-      expect(OneWeekMs).toBe(604800000);
+      expect(OneWeekMs).toBe(604_800_000);
     });
   });
 
@@ -72,26 +72,26 @@ describe("Time constants", () => {
   });
 
   it("should define one month (28 days) as 2419200000 milliseconds", () => {
-    expect(OneMonthMs28).toBe(2419200000);
+    expect(OneMonthMs28).toBe(2_419_200_000);
   });
 
   it("should define one month (29 days) as 2505600000 milliseconds", () => {
-    expect(OneMonthMs29).toBe(2505600000);
+    expect(OneMonthMs29).toBe(2_505_600_000);
   });
 
   it("should define one month (30 days) as 2592000000 milliseconds", () => {
-    expect(OneMonthMs).toBe(2592000000);
+    expect(OneMonthMs).toBe(2_592_000_000);
   });
 
   it("should define one month (31 days) as 2678400000 milliseconds", () => {
-    expect(OneMonthMs31).toBe(2678400000);
+    expect(OneMonthMs31).toBe(2_678_400_000);
   });
 
   it("should define one year (365 days) as 31536000000 milliseconds", () => {
-    expect(OneYearMs).toBe(31536000000);
+    expect(OneYearMs).toBe(31_536_000_000);
   });
 
   it("should define one year (366 days) as 31622400000 milliseconds", () => {
-    expect(OneYearMs366).toBe(31622400000);
+    expect(OneYearMs366).toBe(31_622_400_000);
   });
 });

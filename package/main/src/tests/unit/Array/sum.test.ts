@@ -19,12 +19,12 @@ describe("sum function", () => {
   });
 
   it("should handle large numbers", () => {
-    const largeNum = 1000000000; // 10^9
+    const largeNum = 1_000_000_000; // 10^9
     expect(sum([largeNum, largeNum])).toBe(2 * largeNum);
     expect(sum([largeNum, -largeNum])).toBe(0);
     expect(sum([largeNum, 1, -1])).toBe(largeNum);
 
-    const mediumNum = 1000000; // 10^6
+    const mediumNum = 1_000_000; // 10^6
     const count = 1000;
     const arr = new Array(count).fill(mediumNum);
     expect(sum(arr)).toBe(mediumNum * count);
@@ -44,6 +44,6 @@ describe("sum function", () => {
 
   it("should maintain precision for many decimal places", () => {
     expect(sum([0.0001, 0.0002, 0.0003])).toBe(0.0006);
-    expect(sum([1.23456, 2.34567, 3.45678])).toBeCloseTo(7.03701, 5);
+    expect(sum([1.234_56, 2.345_67, 3.456_78])).toBeCloseTo(7.037_01, 5);
   });
 });
