@@ -1,32 +1,37 @@
 [build-system]
-requires = ["setuptools>=61.0", "wheel"] # Added wheel as it's common for build systems
 build-backend = "setuptools.build_meta"
+requires = ["setuptools>=61.0", "wheel"]
 
 [project]
-name = "umt-string-utils"
-version = "0.1.0"
 authors = [
-  { name="UMT Project", email="contact@example.com" }, # Changed to UMT Project, placeholder email
+  {name = "riya-amemiya", email = "riyaamemiya@gmail.com"},
 ]
-description = "A collection of Python string utility functions, ported from UMT's TypeScript library."
-readme = "README.md"
-license = {text = "MIT License"}
-requires-python = ">=3.7"
 classifiers = [
-    "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.7",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
-    "Programming Language :: Python :: 3.12",
-    "License :: OSI Approved :: MIT License",
-    "Operating System :: OS Independent",
-    "Topic :: Software Development :: Libraries :: Python Modules",
-    "Topic :: Utilities",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+  "Topic :: Utilities",
 ]
+description = "A collection of useful utility functions for various tasks in Python, focusing on string manipulation and formatting."
+license = {text = "MIT License"}
+name = "umt_python"
+readme = "README.md"
+requires-python = ">=3.9"
+version = "0.1.0"
 
 [project.urls]
-"Homepage" = "https://github.com/UniversalMacroTools/UMT"
-"Bug Tracker" = "https://github.com/UniversalMacroTools/UMT/issues"
-"Repository" = "https://github.com/UniversalMacroTools/UMT" # Added Repository URL for completeness
+"Bug Tracker" = "https://github.com/riya-amemiya/UMT/issues"
+"Homepage" = "https://github.com/riya-amemiya/UMT"
+"Repository" = "https://github.com/riya-amemiya/UMT"
+
+[dependency-groups]
+dev = [
+  "pyright>=1.1.402",
+  "pytest>=8.4.1",
+  "ruff>=0.12.1",
+]
