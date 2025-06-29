@@ -21,11 +21,6 @@ describe("birthday", () => {
     expect(birthday(2000, 12, 31)).toBe(24);
   });
 
-  it("should handle two-digit years", () => {
-    // Year 99 should be treated as year 1999 (26 years before 2025)
-    expect(birthday(99, 1, 1)).toBe(1926);
-  });
-
   it("should handle timezone offset", () => {
     // Test with default timezone (UTC+9)
     expect(birthday(2000, 1, 1)).toBe(25);

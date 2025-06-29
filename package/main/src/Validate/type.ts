@@ -51,6 +51,6 @@ export type ValidateType<T> = T extends "string"
       : T;
 
 export type SchemaToInterface<
-  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+  // biome-ignore lint/suspicious/noExplicitAny: ignore
   T extends (value: any) => ValidateCoreReturnType<any>,
 > = ReturnType<T>["type"];

@@ -10,7 +10,7 @@ import { groupBy as customGroupBy } from "@/Array/groupBy";
 import { groupBy as lodashGroupBy } from "lodash";
 import { groupBy as esToolkitGroupBy } from "es-toolkit";
 
-const arraySizes = [1000, 10000, 100000, 1000000, 10000000];
+const arraySizes = [1000, 10_000, 100_000, 1_000_000, 10_000_000];
 
 const sharedRandomNumbersArrays = new Map<number, number[]>();
 
@@ -26,7 +26,7 @@ const byMathFloor = (item: number): number => Math.floor(item);
 summary(() => {
   lineplot(() => {
     bench(
-      `customGroupBy numbers by Math.floor (size: $size)`,
+      "customGroupBy numbers by Math.floor (size: $size)",
       function* (state: k_state) {
         const size = state.get("size") as number;
         const originalArray = sharedRandomNumbersArrays.get(size);
@@ -34,7 +34,7 @@ summary(() => {
           throw new Error(`No shared array found for size: ${size}`);
         }
         yield {
-          [0]() {
+          0() {
             return [...originalArray];
           },
           bench(arr: number[]) {
@@ -47,7 +47,7 @@ summary(() => {
       .gc("inner");
 
     bench(
-      `lodashGroupBy numbers by Math.floor (size: $size)`,
+      "lodashGroupBy numbers by Math.floor (size: $size)",
       function* (state: k_state) {
         const size = state.get("size") as number;
         const originalArray = sharedRandomNumbersArrays.get(size);
@@ -55,7 +55,7 @@ summary(() => {
           throw new Error(`No shared array found for size: ${size}`);
         }
         yield {
-          [0]() {
+          0() {
             return [...originalArray];
           },
           bench(arr: number[]) {
@@ -68,7 +68,7 @@ summary(() => {
       .gc("inner");
 
     bench(
-      `esToolkitGroupBy numbers by Math.floor (size: $size)`,
+      "esToolkitGroupBy numbers by Math.floor (size: $size)",
       function* (state: k_state) {
         const size = state.get("size") as number;
         const originalArray = sharedRandomNumbersArrays.get(size);
@@ -76,7 +76,7 @@ summary(() => {
           throw new Error(`No shared array found for size: ${size}`);
         }
         yield {
-          [0]() {
+          0() {
             return [...originalArray];
           },
           bench(arr: number[]) {
@@ -89,7 +89,7 @@ summary(() => {
       .gc("inner");
 
     bench(
-      `Object.groupBy numbers by Math.floor (size: $size)`,
+      "Object.groupBy numbers by Math.floor (size: $size)",
       function* (state: k_state) {
         const size = state.get("size") as number;
         const originalArray = sharedRandomNumbersArrays.get(size);
@@ -97,7 +97,7 @@ summary(() => {
           throw new Error(`No shared array found for size: ${size}`);
         }
         yield {
-          [0]() {
+          0() {
             return [...originalArray];
           },
           bench(arr: number[]) {

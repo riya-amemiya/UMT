@@ -12,9 +12,9 @@ describe("Array core validation", () => {
   // Test for null and undefined
   it("should fail validation for null and undefined", () => {
     const validateArray = array();
-    // @ts-ignore
+    // @ts-expect-error
     expect(validateArray(null).validate).toBe(false);
-    // @ts-ignore
+    // @ts-expect-error
     expect(validateArray(undefined).validate).toBe(false);
   });
 
@@ -26,7 +26,7 @@ describe("Array core validation", () => {
   it("should validate an array of strings with validation", () => {
     const validateArray = array<string>({ string: string() });
     expect(validateArray(["apple", "banana", "cherry"]).validate).toBe(true);
-    // @ts-ignore
+    // @ts-expect-error
     expect(validateArray(["apple", 1, true]).validate).toBe(false);
   });
 
@@ -36,7 +36,7 @@ describe("Array core validation", () => {
     });
     expect(validateArray([1, 2, 3]).validate).toBe(true);
     expect(validateArray([1, 2, 3, 11]).validate).toBe(false);
-    // @ts-ignore
+    // @ts-expect-error
     expect(validateArray([1, "2", 3]).validate).toBe(false);
   });
 
@@ -54,7 +54,7 @@ describe("Array core validation", () => {
   it("should return a custom message on array type validation failure", () => {
     const customMessage = "Array validation failed";
     const validateArray = array<string>({ string: string() }, customMessage);
-    // @ts-ignore
+    // @ts-expect-error
     const result = validateArray("not an array");
     expect(result.validate).toBe(false);
     expect(result.message).toBe(customMessage);
@@ -71,7 +71,7 @@ describe("Array core validation", () => {
 
   it("should return an empty message when no custom message is provided", () => {
     const validateArray = array<string>({ string: string() });
-    // @ts-ignore
+    // @ts-expect-error
     const result = validateArray("not an array");
     expect(result.validate).toBe(false);
     expect(result.message).toBe("");

@@ -37,6 +37,7 @@ describe("flexibleNumberConversion", () => {
 
     test("should properly convert decimal strings", () => {
       expect(flexibleNumberConversion("3.14")).toBe(3.14);
+      // biome-ignore lint/suspicious/noApproximativeNumericConstant: false detection
       expect(flexibleNumberConversion("-2.718")).toBe(-2.718);
       expect(flexibleNumberConversion("0.001")).toBe(0.001);
     });
@@ -111,7 +112,7 @@ describe("flexibleNumberConversion", () => {
         Number.MAX_SAFE_INTEGER,
       );
       expect(flexibleNumberConversion("9007199254740991")).toBe(
-        9007199254740991,
+        9_007_199_254_740_991,
       );
       expect(flexibleNumberConversion("1e308")).toBe(1e308);
     });
@@ -145,9 +146,12 @@ describe("flexibleNumberConversion", () => {
     });
 
     test("should return NaN for functions", () => {
+      // biome-ignore lint/suspicious/noEmptyBlockStatements: ignore
       const func = () => {};
       expect(flexibleNumberConversion(func)).toBe(Number.NaN);
+      // biome-ignore lint/suspicious/noEmptyBlockStatements: ignore
       expect(flexibleNumberConversion(() => {})).toBe(Number.NaN);
+      // biome-ignore lint/suspicious/noEmptyBlockStatements: ignore
       expect(flexibleNumberConversion(() => {})).toBe(Number.NaN);
     });
 

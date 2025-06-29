@@ -17,7 +17,7 @@ export const subnetMaskToCidr = (subnetMask: string): number => {
 
   // Validate each octet
   const binaryOctets = octets.map((octet) => {
-    const number_ = Number.parseInt(octet);
+    const number_ = Number.parseInt(octet, 10);
     if (Number.isNaN(number_) || number_ < 0 || number_ > 255) {
       throw new Error("Invalid subnet mask format");
     }

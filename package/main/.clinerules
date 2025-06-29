@@ -13,16 +13,16 @@
 - **File naming**: `camelCase` or `PascalCase` (enforced by ESLint)
 - **Imports**: Ordered by builtin → external → internal → parent → sibling → index
 - **Formatting**:
-  - Indentation: 2 spaces
-  - Line width: 80 characters
-  - No default exports (use named exports)
+- Indentation: 2 spaces
+- Line width: 80 characters
+- No default exports (use named exports)
 - **TypeScript**:
-  - Strict typing preferred
-  - Avoid explicit `any` unless necessary
-  - Use consistent array type notation
+- Strict typing preferred
+- Avoid explicit `any` unless necessary
+- Use consistent array type notation
 - **Error handling**:
-  - Use error messages
-  - Throw only Error objects
+- Use error messages
+- Throw only Error objects
 - **Documentation**: Include JSDoc comments for public functions
 - **Testing**: Write unit tests for new functionality. use Jest for unit tests
 - **Import rules**: typescript baseUrl is set to `src`, so imports should be relative to `src` directory. paths is set to `$/*` for types and `@/*` for other imports. Use `@/` for internal imports and `$` for types.
@@ -33,4 +33,4 @@
 - Import order is enforced with separate groups and alphabetical sorting
 - Ensure all commands are run using `bun`
 - Follow the code style guidelines outlined above
-- Please respond in Japanese
+

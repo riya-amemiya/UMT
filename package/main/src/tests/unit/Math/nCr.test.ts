@@ -18,7 +18,7 @@ describe("nCr function", () => {
     });
 
     it("should calculate larger combinations", () => {
-      expect(nCr(20, 10)).toBe(184756); // 20C10 = 184,756
+      expect(nCr(20, 10)).toBe(184_756); // 20C10 = 184,756
       expect(nCr(15, 7)).toBe(6435); // 15C7 = 6,435
     });
   });

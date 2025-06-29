@@ -44,12 +44,12 @@ describe("isPrimeNumber", () => {
   });
 
   test("should handle large non-prime numbers", () => {
-    const largeNonPrimeNumber = 10000000000000; // 10^13
+    const largeNonPrimeNumber = 10_000_000_000_000; // 10^13
     expect(isPrimeNumber(largeNonPrimeNumber)).toBe(false);
   });
 
   test("should handle large prime numbers", () => {
-    const largePrimeNumber = 982451653; // 982,451,653 is a known prime number
+    const largePrimeNumber = 982_451_653; // 982,451,653 is a known prime number
     expect(isPrimeNumber(largePrimeNumber)).toBe(true);
   });
 });

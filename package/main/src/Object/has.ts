@@ -14,10 +14,7 @@ export const has = <T extends { [key: string]: unknown }>(
   const localPath = typeof path === "string" ? path.split(".") : path;
   let current = { ...object };
   for (const key of localPath) {
-    if (
-      current == null ||
-      !Object.prototype.hasOwnProperty.call(current, key)
-    ) {
+    if (current == null || !Object.hasOwn(current, key)) {
       return false;
     }
     current = current[key] as T;

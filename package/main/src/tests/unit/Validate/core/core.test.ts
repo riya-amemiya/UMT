@@ -6,20 +6,20 @@ describe("Core validation", () => {
   it("should validate type correctly", () => {
     const validateString = core("string");
     expect(validateString("test").validate).toBe(true);
-    // @ts-ignore
+    // @ts-expect-error
     expect(validateString(123).validate).toBe(false);
   });
 
   it("should respect custom message for type validation", () => {
     const message = "Not a string";
     const validateString = core("string");
-    // @ts-ignore
+    // @ts-expect-error
     expect(validateString(123, [], message).message).toBe(message);
   });
 
   it("should return empty message when no message provided", () => {
     const validateString = core("string");
-    // @ts-ignore
+    // @ts-expect-error
     expect(validateString(123).message).toBe("");
   });
 
@@ -46,7 +46,7 @@ describe("Core validation", () => {
   it("should validate numbers", () => {
     const validateNumber = core<number>("number");
     expect(validateNumber(123).validate).toBe(true);
-    // @ts-ignore
+    // @ts-expect-error
     expect(validateNumber("123").validate).toBe(false);
   });
 
@@ -54,7 +54,7 @@ describe("Core validation", () => {
     const validateBoolean = core<boolean>("boolean");
     expect(validateBoolean(true).validate).toBe(true);
     expect(validateBoolean(false).validate).toBe(true);
-    // @ts-ignore
+    // @ts-expect-error
     expect(validateBoolean("true").validate).toBe(false);
   });
 

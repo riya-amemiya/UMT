@@ -1,10 +1,10 @@
-import { HoursAm } from "$/clock/hoursAm";
-import { HoursAmInt } from "$/clock/hoursAmInt";
-import { HoursPm } from "$/clock/hoursPm";
-import { HoursPmInt } from "$/clock/hoursPmInt";
-import { HoursTypeInt } from "$/clock/hoursTypeInt";
-import { MinutesType } from "$/clock/minutesType";
-import { MinutesTypeInt } from "$/clock/minutesTypeInt";
+import type { HoursAm } from "$/clock/hoursAm";
+import type { HoursAmInt } from "$/clock/hoursAmInt";
+import type { HoursPm } from "$/clock/hoursPm";
+import type { HoursPmInt } from "$/clock/hoursPmInt";
+import type { HoursTypeInt } from "$/clock/hoursTypeInt";
+import type { MinutesType } from "$/clock/minutesType";
+import type { MinutesTypeInt } from "$/clock/minutesTypeInt";
 
 describe("clockType Hours", () => {
   it("hoursAmInt", () => {

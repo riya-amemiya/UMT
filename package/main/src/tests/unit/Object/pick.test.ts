@@ -15,14 +15,14 @@ describe("pick function", () => {
 
   test("should handle non-existent keys", () => {
     const obj = { a: 1, b: 2 };
-    // @ts-ignore
+    // @ts-expect-error
     const result = pick(obj, "c");
     expect(result).toEqual({});
   });
 
   test("should handle empty objects", () => {
     const obj = {};
-    // @ts-ignore
+    // @ts-expect-error
     const result = pick(obj, "a");
     expect(result).toEqual({});
   });

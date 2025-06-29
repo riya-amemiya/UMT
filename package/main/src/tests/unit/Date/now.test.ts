@@ -1,7 +1,7 @@
 import { now } from "@/Date/now";
 
 describe("now", () => {
-  const FIXED_TIME = 1712192400000; // 2024-04-04T01:00:00.000Z (confirmed with Date object)
+  const FIXED_TIME = 1_712_192_400_000; // 2024-04-04T01:00:00.000Z (confirmed with Date object)
 
   beforeEach(() => {
     // Mock Date.now() to return a fixed timestamp

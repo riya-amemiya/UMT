@@ -42,8 +42,11 @@ describe("degToRad", () => {
 
   // Invalid inputs
   test("degToRad: Invalid Inputs", () => {
+    // biome-ignore lint/suspicious/noExplicitAny: ignore
     expect(degToRad("90" as any)).toBeCloseTo(Math.PI / 2);
+    // biome-ignore lint/suspicious/noExplicitAny: ignore
     expect(degToRad([90] as any)).toBeCloseTo(Math.PI / 2);
+    // biome-ignore lint/suspicious/noExplicitAny: ignore
     expect(degToRad({} as any)).toBe(Number.NaN);
   });
 });

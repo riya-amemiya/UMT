@@ -1,36 +1,78 @@
 {
-  "name": "umt_i18n",
-  "version": "1.0.0",
-  "description": "",
+  "author": "riya-amemiya",
+  "bugs": {
+    "url": "https://github.com/riya-amemiya/UMT/issues"
+  },
+  "description": "個人的に作った便利関数集 個人用途なので破壊的変更がある可能性があります。 Main Packageに依存関係はありません。 JavaScriptからの呼び出しに対応しています。",
+  "devDependencies": {
+    "@babel/cli": "7.27.2",
+    "@babel/core": "7.27.4",
+    "@babel/preset-env": "7.27.2",
+    "@babel/preset-typescript": "7.27.1",
+    "@biomejs/biome": "2.0.4",
+    "@swc/core": "1.12.5",
+    "@swc/jest": "0.2.38",
+    "@types/jest": "30.0.0",
+    "@types/lodash": "4.17.18",
+    "@types/node": "24.0.3",
+    "@typescript-eslint/eslint-plugin": "8.34.1",
+    "@typescript-eslint/parser": "8.34.1",
+    "bun-types": "1.2.17",
+    "dependency-cruiser": "16.10.3",
+    "eslint": "9.29.0",
+    "eslint-plugin-import": "2.32.0",
+    "eslint-plugin-unicorn": "59.0.1",
+    "gh-pages": "6.3.0",
+    "jest": "30.0.2",
+    "lodash": "4.17.21",
+    "ts-jest": "29.4.0",
+    "ts-node": "10.9.2",
+    "tsc-alias": "1.8.16",
+    "typedoc": "0.28.5",
+    "typescript": "5.8.3"
+  },
+  "directories": {
+    "doc": "doc",
+    "lib": "lib",
+    "test": "tests"
+  },
+  "files": [
+    "module",
+    "!module/tests",
+    "!module/tsconfig.tsbuildinfo"
+  ],
+  "homepage": "https://github.com/riya-amemiya/UMT#readme",
+  "keywords": [],
   "license": "MIT",
   "main": "module/index.js",
-  "types": "module/index.d.js",
-  "files": [
-    "module"
-  ],
+  "name": "umt-i18n",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/riya-amemiya/UMT.git"
+  },
   "scripts": {
     "build": "tsc && tsc-alias -p tsconfig.json",
+    "build:cjs": "tsc -p tsconfig.cjs.json && node cjs.build.mjs && cp LICENSE common-module/LICENSE && cp README.md common-module/README.md",
+    "build:babel": "babel src --extensions '.ts' --out-dir module/es5 && tsc --emitDeclarationOnly --outDir module/es5",
+    "build:cjs:babel": "babel src --extensions '.ts' --out-dir common-module/module/es5 && tsc --emitDeclarationOnly --outDir common-module/module/es5",
+    "build:full": "yarn build && yarn build:cjs && yarn build:babel && yarn build:cjs:babel",
+    "build:clean": "rm -rf module && yarn build",
+    "build:clean:full": "rm -rf module && rm -rf common-module && yarn build:full",
+    "clean-build": "rm -rf module && yarn build",
     "deploy": "yarn typedoc && gh-pages -d doc",
+    "eslint": "eslint src",
+    "format": "biome format . --write",
+    "lint": "yarn eslint --fix && biome check . --write && tsc",
+    "lint:ci": "yarn eslint && biome ci . && tsc",
     "test": "jest",
     "test-debug": "cd test && tsc",
-    "ts-node": "ts-node --project test/tsconfig.json test/src/index.ts",
-    "lint": "rome check .",
-    "format": "rome format . --write"
+    "ts-node": "yarn build && ts-node --project tmp/tsconfig.json tmp/src/index.ts"
   },
-  "keywords": [],
-  "author": "riya-amemiya",
-  "devDependencies": {
-    "@swc/core": "^1.3.62",
-    "@swc/jest": "^0.2.24",
-    "@types/jest": "^29.5.2",
-    "@types/node": "^20.2.6",
-    "gh-pages": "^5.0.0",
-    "jest": "^29.3.1",
-    "rome": "^12.1.3",
-    "ts-node": "^10.9.1",
-    "tsc-alias": "^1.8.6",
-    "typedoc": "^0.24.8",
-    "typescript": "^5.1.3",
-    "umt": "^1.1.4"
+  "type": "module",
+  "types": "module/index.d.js",
+  "version": "1.1.0",
+  "packageManager": "yarn@1.22.22",
+  "dependencies": {
+    "umt": "2.6.0"
   }
 }

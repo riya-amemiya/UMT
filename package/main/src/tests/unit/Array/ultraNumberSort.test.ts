@@ -212,19 +212,19 @@ describe("ultraNumberSort", () => {
   });
 
   it("should handle radixSort with only zeros and length > 100", () => {
-    const arr = Array(101).fill(0);
+    const arr = new Array(101).fill(0);
     expect(ultraNumberSort([...arr])).toEqual(arr);
     expect(ultraNumberSort([...arr], false)).toEqual(arr);
   });
 
   it("should handle radixSortPositive with single element array via ultraNumberSort", () => {
-    const arrWithOnePositive = Array(101).fill(0).concat([5]);
+    const arrWithOnePositive = new Array(101).fill(0).concat([5]);
     expect(ultraNumberSort([...arrWithOnePositive])).toEqual(
-      Array(101).fill(0).concat([5]),
+      new Array(101).fill(0).concat([5]),
     );
-    const arrWithOneNegative = Array(101).fill(0).concat([-5]);
+    const arrWithOneNegative = new Array(101).fill(0).concat([-5]);
     expect(ultraNumberSort([...arrWithOneNegative])).toEqual(
-      [-5].concat(Array(101).fill(0)),
+      [-5].concat(new Array(101).fill(0)),
     );
   });
 
@@ -273,7 +273,7 @@ describe("ultraNumberSort", () => {
     const arr2 = Array.from(
       { length: 60 },
       () => Math.floor(Math.random() * 100) + 1,
-    ).concat(Array(60).fill(0));
+    ).concat(new Array(60).fill(0));
     const sortedArr2Asc = [...arr2].sort((a, b) => a - b);
     const sortedArr2Desc = [...arr2].sort((a, b) => b - a);
     expect(ultraNumberSort([...arr2])).toEqual(sortedArr2Asc);
@@ -282,7 +282,7 @@ describe("ultraNumberSort", () => {
     const arr3 = Array.from(
       { length: 60 },
       () => Math.floor(Math.random() * -100) - 1,
-    ).concat(Array(60).fill(0));
+    ).concat(new Array(60).fill(0));
     const sortedArr3Asc = [...arr3].sort((a, b) => a - b);
     const sortedArr3Desc = [...arr3].sort((a, b) => b - a);
     expect(ultraNumberSort([...arr3])).toEqual(sortedArr3Asc);
@@ -295,7 +295,7 @@ describe("ultraNumberSort", () => {
 
     const arrWithZerosAndLargeRangeForRadix = [
       0,
-      1000000,
+      1_000_000,
       ...makeArr(99, () => 0),
     ];
     const sortedArrWithZerosAndLargeRangeForRadixAsc = [
@@ -311,7 +311,7 @@ describe("ultraNumberSort", () => {
       ultraNumberSort([...arrWithZerosAndLargeRangeForRadix], false),
     ).toEqual(sortedArrWithZerosAndLargeRangeForRadixDesc);
 
-    const arrPositiveOneZeroMany = [500000, ...makeArr(100, () => 0)];
+    const arrPositiveOneZeroMany = [500_000, ...makeArr(100, () => 0)];
     const sortedArrPositiveOneZeroManyAsc = [...arrPositiveOneZeroMany].sort(
       (a, b) => a - b,
     );
@@ -325,7 +325,7 @@ describe("ultraNumberSort", () => {
       sortedArrPositiveOneZeroManyDesc,
     );
 
-    const arrNegativeOneZeroMany = [-500000, ...makeArr(100, () => 0)];
+    const arrNegativeOneZeroMany = [-500_000, ...makeArr(100, () => 0)];
     const sortedArrNegativeOneZeroManyAsc = [...arrNegativeOneZeroMany].sort(
       (a, b) => a - b,
     );
@@ -340,8 +340,8 @@ describe("ultraNumberSort", () => {
     );
 
     const arrNoZerosTriggerRadix = [
-      ...makeArr(51, (i) => 200000 + i),
-      ...makeArr(50, (i) => -(200000 + i)),
+      ...makeArr(51, (i) => 200_000 + i),
+      ...makeArr(50, (i) => -(200_000 + i)),
     ];
     const sortedArrNoZerosTriggerRadixAsc = [...arrNoZerosTriggerRadix].sort(
       (a, b) => a - b,
@@ -356,7 +356,7 @@ describe("ultraNumberSort", () => {
       sortedArrNoZerosTriggerRadixDesc,
     );
 
-    const arrOnlyPositiveTriggerRadix = makeArr(101, (i) => 200000 + i);
+    const arrOnlyPositiveTriggerRadix = makeArr(101, (i) => 200_000 + i);
     const sortedArrOnlyPositiveTriggerRadixAsc = [
       ...arrOnlyPositiveTriggerRadix,
     ].sort((a, b) => a - b);
@@ -364,7 +364,7 @@ describe("ultraNumberSort", () => {
       sortedArrOnlyPositiveTriggerRadixAsc,
     );
 
-    const arrOnlyNegativeTriggerRadix = makeArr(101, (i) => -(200000 + i));
+    const arrOnlyNegativeTriggerRadix = makeArr(101, (i) => -(200_000 + i));
     const sortedArrOnlyNegativeTriggerRadixAsc = [
       ...arrOnlyNegativeTriggerRadix,
     ].sort((a, b) => a - b);
@@ -372,7 +372,7 @@ describe("ultraNumberSort", () => {
       sortedArrOnlyNegativeTriggerRadixAsc,
     );
 
-    const arrPositiveEmptyTriggerRadix = [...makeArr(101, () => -200000)];
+    const arrPositiveEmptyTriggerRadix = [...makeArr(101, () => -200_000)];
     const sortedArrPositiveEmptyTriggerRadixAsc = [
       ...arrPositiveEmptyTriggerRadix,
     ].sort((a, b) => a - b);
@@ -380,12 +380,23 @@ describe("ultraNumberSort", () => {
       sortedArrPositiveEmptyTriggerRadixAsc,
     );
 
-    const arrNegativeEmptyTriggerRadix = [...makeArr(101, () => 200000)];
+    const arrNegativeEmptyTriggerRadix = [...makeArr(101, () => 200_000)];
     const sortedArrNegativeEmptyTriggerRadixAsc = [
       ...arrNegativeEmptyTriggerRadix,
     ].sort((a, b) => a - b);
     expect(ultraNumberSort([...arrNegativeEmptyTriggerRadix])).toEqual(
       sortedArrNegativeEmptyTriggerRadixAsc,
     );
+  });
+
+  it("should sort array with twenty floating point numbers", () => {
+    const arr = [
+      3.14, 2.71, 1.41, 1.73, 2.23, 3.16, 2.65, 1.61, 2.44, 3.32, 1.19, 2.82,
+      3.05, 1.91, 2.12, 3.46, 1.38, 2.98, 3.24, 1.68,
+    ];
+    const sortedAsc = [...arr].sort((a, b) => a - b);
+    const sortedDesc = [...arr].sort((a, b) => b - a);
+    expect(ultraNumberSort([...arr])).toEqual(sortedAsc);
+    expect(ultraNumberSort([...arr], false)).toEqual(sortedDesc);
   });
 });

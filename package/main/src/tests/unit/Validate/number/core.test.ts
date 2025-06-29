@@ -6,7 +6,7 @@ describe("number function", () => {
   it("should validate number with no additional options", () => {
     const validateNumber = number();
     expect(validateNumber(5).validate).toBeTruthy();
-    // @ts-ignore
+    // @ts-expect-error
     expect(validateNumber("5").validate).toBeFalsy();
   });
 

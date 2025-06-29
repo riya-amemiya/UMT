@@ -171,7 +171,7 @@ describe("Pipe", () => {
 
   it("processes empty strings correctly", () => {
     const result = pipe("")
-      .map((x) => x + "test")
+      .map((x) => `${x}test`)
       .map((x) => x.toUpperCase())
       .end();
     expect(result).toBe("TEST");
@@ -303,7 +303,7 @@ describe("Pipe", () => {
     it("correctly handles type narrowing with string | number union types", () => {
       const stringResult = pipe<string | number>("hello")
         .filterStrict(isString)
-        .map((x) => x + " world")
+        .map((x) => `${x} world`)
         .end();
       expect(stringResult).toBe("hello world");
 

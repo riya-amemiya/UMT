@@ -20,7 +20,7 @@ interface Person {
 
 const compareById = (a: Person, b: Person): number => a.id - b.id;
 
-const arraySizes = [10, 100, 1000, 10000, 50000];
+const arraySizes = [10, 100, 1000, 10_000, 50_000];
 
 // Generate random data
 const generatePerson = (id: number): Person => ({
@@ -50,7 +50,7 @@ summary(() => {
       }
 
       yield {
-        [0]() {
+        0() {
           return [...original_array];
         },
         bench(arr: Person[]) {
@@ -70,7 +70,7 @@ summary(() => {
       }
 
       yield {
-        [0]() {
+        0() {
           return [...original_array];
         },
         bench(arr: Person[]) {
@@ -90,7 +90,7 @@ summary(() => {
       }
 
       yield {
-        [0]() {
+        0() {
           return [...original_array];
         },
         bench(arr: Person[]) {
@@ -110,7 +110,7 @@ summary(() => {
       }
 
       yield {
-        [0]() {
+        0() {
           return [...original_array];
         },
         bench(arr: Person[]) {
@@ -130,7 +130,7 @@ summary(() => {
       }
 
       yield {
-        [0]() {
+        0() {
           return [...original_array];
         },
         bench(arr: Person[]) {

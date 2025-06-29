@@ -26,7 +26,7 @@ export const ipToBinaryString = (ip: string): string => {
       throw new Error("Invalid IP address format");
     }
 
-    const number = Number.parseInt(octet);
+    const number = Number.parseInt(octet, 10);
     if (Number.isNaN(number) || number < 0 || number > 255) {
       throw new Error("Invalid IP address format");
     }
@@ -34,6 +34,6 @@ export const ipToBinaryString = (ip: string): string => {
 
   // Convert to binary
   return parts
-    .map((octet) => Number.parseInt(octet).toString(2).padStart(8, "0"))
+    .map((octet) => Number.parseInt(octet, 10).toString(2).padStart(8, "0"))
     .join("");
 };

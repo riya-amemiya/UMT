@@ -43,18 +43,18 @@ describe("mathSeparator", () => {
 
   // Test edge cases
   it("should handle negative numbers", () => {
-    expect(mathSeparator(-1250)).toEqual([10000, -11250]);
-    expect(mathSeparator("-1250.5")).toEqual([10000, -11249.5]);
+    expect(mathSeparator(-1250)).toEqual([10_000, -11_250]);
+    expect(mathSeparator("-1250.5")).toEqual([10_000, -11_249.5]);
   });
 
   it("should handle very large numbers", () => {
-    expect(mathSeparator(1000000)).toEqual([1000000, 0]);
-    expect(mathSeparator("1000000.123")).toEqual([1000000, 0.123]);
+    expect(mathSeparator(1_000_000)).toEqual([1_000_000, 0]);
+    expect(mathSeparator("1000000.123")).toEqual([1_000_000, 0.123]);
   });
 
   it("should handle special numeric strings", () => {
     // Note: "1e5" is treated as a regular string "1e5"
-    expect(mathSeparator("1e5")).toEqual([100, 99900]);
+    expect(mathSeparator("1e5")).toEqual([100, 99_900]);
     // Note: isNumber treats "0xFF" as a valid number, so it's processed accordingly
     expect(mathSeparator("0xFF")).toEqual([1000, -745]);
     // Note: "Infinity" is not a valid number in this context

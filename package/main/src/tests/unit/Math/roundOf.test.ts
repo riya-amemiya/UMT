@@ -3,24 +3,24 @@ import { roundOf } from "@/Math/roundOf";
 describe("roundOf function", () => {
   describe("basic rounding", () => {
     it("should round to default precision (0)", () => {
-      expect(roundOf(1.111111111111)).toBe(1);
-      expect(roundOf(1.555555555555)).toBe(2);
-      expect(roundOf(1.499999999999)).toBe(1);
+      expect(roundOf(1.111_111_111_111)).toBe(1);
+      expect(roundOf(1.555_555_555_555)).toBe(2);
+      expect(roundOf(1.499_999_999_999)).toBe(1);
     });
 
     it("should round to specified decimal places", () => {
-      expect(roundOf(1.111111111111, 2)).toBe(1.11);
-      expect(roundOf(1.555555555555, 2)).toBe(1.56);
-      expect(roundOf(1.499999999999, 2)).toBe(1.5);
+      expect(roundOf(1.111_111_111_111, 2)).toBe(1.11);
+      expect(roundOf(1.555_555_555_555, 2)).toBe(1.56);
+      expect(roundOf(1.499_999_999_999, 2)).toBe(1.5);
     });
 
     it("should handle increasing precision", () => {
-      const value = 1.111111111111;
+      const value = 1.111_111_111_111;
       expect(roundOf(value, 1)).toBe(1.1);
       expect(roundOf(value, 2)).toBe(1.11);
       expect(roundOf(value, 3)).toBe(1.111);
       expect(roundOf(value, 4)).toBe(1.1111);
-      expect(roundOf(value, 5)).toBe(1.11111);
+      expect(roundOf(value, 5)).toBe(1.111_11);
     });
   });
 

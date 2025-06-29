@@ -13,10 +13,28 @@ import type { ValidateReturnType } from "@/Validate/type";
 export const email = (message?: string): ValidateReturnType<string> => {
   // Regular expression for email address validation
   const emailRegex =
-    /^[\w+-]+(?:\.[\w+-]+)*@[\da-z]+(?:[.-][\da-z]+)*\.[a-z]{2,}$/iu;
+    /^[a-zA-Z0-9]([a-zA-Z0-9._+-]*[a-zA-Z0-9])?@[a-zA-Z0-9]([a-zA-Z0-9.-]*[a-zA-Z0-9])?\.[a-zA-Z]{2,}$/;
   return {
     type: "string",
     message,
-    validate: (value) => emailRegex.test(value),
+    validate: (value) => {
+      // Check for consecutive dots
+      if (value.includes("..")) {
+        return false;
+      }
+      // Check for leading/trailing dots in local part
+      const [localPart, domainPart] = value.split("@");
+      if (!(localPart && domainPart)) {
+        return false;
+      }
+      if (localPart.startsWith(".") || localPart.endsWith(".")) {
+        return false;
+      }
+      if (domainPart.startsWith(".") || domainPart.endsWith(".")) {
+        return false;
+      }
+      // Use regex for final validation
+      return emailRegex.test(value);
+    },
   };
 };

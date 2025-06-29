@@ -9,5 +9,9 @@
  * isLeapYear(2023); // Returns false (not divisible by 4)
  */
 export const isLeapYear = (year: number): boolean => {
+  if (!Number.isInteger(year)) {
+    return false;
+  }
+
   return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
 };

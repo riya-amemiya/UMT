@@ -107,16 +107,16 @@ describe("checkFlagAlignment", () => {
   });
   // Tests with large datasets
   it("should detect horizontal alignment with large dataset", () => {
-    const row = Array(1000).fill({ flag: true, value: 1 });
-    const matrix = Array(1000).fill(row);
+    const row = new Array(1000).fill({ flag: true, value: 1 });
+    const matrix = new Array(1000).fill(row);
     expect(checkFlagAlignment(matrix)).toBe(true);
   });
 
   it("should detect vertical alignment with large dataset", () => {
-    const row = Array(1000).fill({ flag: false, value: 1 });
-    const matrix = Array(1000).fill(row);
-    for (let i = 0; i < matrix.length; i++) {
-      matrix[i][0].flag = true;
+    const row = new Array(1000).fill({ flag: false, value: 1 });
+    const matrix = new Array(1000).fill(row);
+    for (const [_, row] of matrix.entries()) {
+      row[0].flag = true;
     }
     expect(checkFlagAlignment(matrix)).toBe(true);
   });
@@ -132,8 +132,8 @@ describe("checkFlagAlignment", () => {
   });
 
   it("should return false when no alignment is found in large dataset", () => {
-    const row = Array(1000).fill({ flag: false, value: 1 });
-    const matrix = Array(1000).fill(row);
+    const row = new Array(1000).fill({ flag: false, value: 1 });
+    const matrix = new Array(1000).fill(row);
     expect(checkFlagAlignment(matrix)).toBe(false);
   });
 });

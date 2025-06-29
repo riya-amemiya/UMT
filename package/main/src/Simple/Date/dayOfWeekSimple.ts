@@ -75,20 +75,20 @@ function dayOfWeekSimple<
     if (properties.includes(":")) {
       const [year, mon, day] = properties
         .split(":")
-        // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+        // biome-ignore lint/suspicious/noExplicitAny: ignore
         .map(Number) as any;
       return dayOfWeek({ year, mon, day }, timeDifference);
     }
     if (properties.includes("/")) {
       const [year, mon, day] = properties
         .split("/")
-        // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+        // biome-ignore lint/suspicious/noExplicitAny: ignore
         .map(Number) as any;
       return dayOfWeek({ year, mon, day }, timeDifference);
     }
     const [year, mon, day] = properties
       .split("-")
-      // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+      // biome-ignore lint/suspicious/noExplicitAny: ignore
       .map(Number) as any;
     return dayOfWeek({ year, mon, day }, timeDifference);
   }

@@ -10,7 +10,7 @@ import { groupBy as customGroupBy } from "@/Array/groupBy";
 import { groupBy as lodashGroupBy } from "lodash";
 import { groupBy as esToolkitGroupBy } from "es-toolkit";
 
-const arraySizes = [1000, 10000, 100000, 1000000, 10000000];
+const arraySizes = [1000, 10_000, 100_000, 1_000_000, 10_000_000];
 
 const sharedRandomStringsArraysByFirstChar = new Map<number, string[]>();
 
@@ -32,7 +32,7 @@ const byFirstChar = (item: string): string => item[0];
 summary(() => {
   lineplot(() => {
     bench(
-      `customGroupBy strings by first char (size: $size)`,
+      "customGroupBy strings by first char (size: $size)",
       function* (state: k_state) {
         const size = state.get("size") as number;
         const originalArray = sharedRandomStringsArraysByFirstChar.get(size);
@@ -40,7 +40,7 @@ summary(() => {
           throw new Error(`No shared array found for size: ${size}`);
         }
         yield {
-          [0]() {
+          0() {
             return [...originalArray];
           },
           bench(arr: string[]) {
@@ -53,7 +53,7 @@ summary(() => {
       .gc("inner");
 
     bench(
-      `lodashGroupBy strings by first char (size: $size)`,
+      "lodashGroupBy strings by first char (size: $size)",
       function* (state: k_state) {
         const size = state.get("size") as number;
         const originalArray = sharedRandomStringsArraysByFirstChar.get(size);
@@ -61,7 +61,7 @@ summary(() => {
           throw new Error(`No shared array found for size: ${size}`);
         }
         yield {
-          [0]() {
+          0() {
             return [...originalArray];
           },
           bench(arr: string[]) {
@@ -74,7 +74,7 @@ summary(() => {
       .gc("inner");
 
     bench(
-      `esToolkitGroupBy strings by first char (size: $size)`,
+      "esToolkitGroupBy strings by first char (size: $size)",
       function* (state: k_state) {
         const size = state.get("size") as number;
         const originalArray = sharedRandomStringsArraysByFirstChar.get(size);
@@ -82,7 +82,7 @@ summary(() => {
           throw new Error(`No shared array found for size: ${size}`);
         }
         yield {
-          [0]() {
+          0() {
             return [...originalArray];
           },
           bench(arr: string[]) {
@@ -95,7 +95,7 @@ summary(() => {
       .gc("inner");
 
     bench(
-      `Object.groupBy strings by first char (size: $size)`,
+      "Object.groupBy strings by first char (size: $size)",
       function* (state: k_state) {
         const size = state.get("size") as number;
         const originalArray = sharedRandomStringsArraysByFirstChar.get(size);
@@ -103,7 +103,7 @@ summary(() => {
           throw new Error(`No shared array found for size: ${size}`);
         }
         yield {
-          [0]() {
+          0() {
             return [...originalArray];
           },
           bench(arr: string[]) {

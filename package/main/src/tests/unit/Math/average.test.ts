@@ -52,7 +52,7 @@ describe("average function", () => {
     });
 
     it("should handle large arrays", () => {
-      const largeArray = new Array(10000).fill(1);
+      const largeArray = new Array(10_000).fill(1);
       expect(average(largeArray)).toBe(1);
     });
   });

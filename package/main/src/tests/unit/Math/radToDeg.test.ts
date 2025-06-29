@@ -46,8 +46,11 @@ describe("radToDeg", () => {
 
   describe("invalid inputs", () => {
     it("should handle invalid inputs appropriately", () => {
+      // biome-ignore lint/suspicious/noExplicitAny: ignore
       expect(radToDeg("1.57" as any)).toBeCloseTo(89.95);
+      // biome-ignore lint/suspicious/noExplicitAny: ignore
       expect(radToDeg([1.57] as any)).toBeCloseTo(89.95);
+      // biome-ignore lint/suspicious/noExplicitAny: ignore
       expect(radToDeg({} as any)).toBe(Number.NaN);
     });
   });

@@ -28,4 +28,19 @@ describe("normalizeTimeUnit", () => {
     expect(normalizeTimeUnit("m", "short")).toBe("m");
     expect(normalizeTimeUnit("h", "short")).toBe("h");
   });
+
+  test("handles all supported units comprehensively", () => {
+    const longUnits = ["milliseconds", "seconds", "minutes", "hours"] as const;
+    const shortUnits = ["ms", "s", "m", "h"] as const;
+
+    longUnits.forEach((unit, index) => {
+      expect(normalizeTimeUnit(unit, "short")).toBe(shortUnits[index]);
+      expect(normalizeTimeUnit(unit, "long")).toBe(unit);
+    });
+
+    shortUnits.forEach((unit, index) => {
+      expect(normalizeTimeUnit(unit, "long")).toBe(longUnits[index]);
+      expect(normalizeTimeUnit(unit, "short")).toBe(unit);
+    });
+  });
 });
