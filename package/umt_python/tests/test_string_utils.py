@@ -1,5 +1,5 @@
 import unittest
-from package.umt_python.src import (
+from src import (
     delete_spaces,
     format_string,
     from_base64,
@@ -14,42 +14,65 @@ from package.umt_python.src import (
     to_half_width,
     trim_characters,
     trim_end_characters,
-    trim_start_characters
+    trim_start_characters,
 )
+
 
 class TestDeleteSpaces(unittest.TestCase):
     def test_basic_cases(self):
         self.assertEqual(delete_spaces("Hello World"), "HelloWorld")
-        self.assertEqual(delete_spaces("  leading and trailing spaces  "), "leadingandtrailingspaces")
+        self.assertEqual(
+            delete_spaces("  leading and trailing spaces  "), "leadingandtrailingspaces"
+        )
         self.assertEqual(delete_spaces("no_spaces"), "no_spaces")
 
     def test_edge_cases(self):
         self.assertEqual(delete_spaces(""), "")
         self.assertEqual(delete_spaces("   "), "")
-        self.assertEqual(delete_spaces("\t\n\r\f\v"), "") # All standard whitespace
+        self.assertEqual(delete_spaces("\t\n\r\f\v"), "")  # All standard whitespace
 
     def test_docstring_example(self):
         self.assertEqual(delete_spaces("Hello World"), "HelloWorld")
         self.assertEqual(delete_spaces("  tab\t space "), "tabspace")
 
+
 class TestFormatString(unittest.TestCase):
     def test_basic_cases(self):
         self.assertEqual(format_string("Hello, {0}!", "World"), "Hello, World!")
-        self.assertEqual(format_string("My name is {0} and I am {1} years old.", "Alice", 30), "My name is Alice and I am 30 years old.")
+        self.assertEqual(
+            format_string("My name is {0} and I am {1} years old.", "Alice", 30),
+            "My name is Alice and I am 30 years old.",
+        )
         self.assertEqual(format_string("{0}{1}{0}", "A", "B"), "ABA")
 
     def test_edge_cases(self):
-        self.assertEqual(format_string("No placeholders here.", "value"), "No placeholders here.")
-        self.assertEqual(format_string("Empty values: {0}{1}", "", ""), "Empty values: ")
-        self.assertEqual(format_string("Not enough values: {0} {1}", "val1"), "Not enough values: val1 {1}") # Python's format behavior
-        self.assertEqual(format_string("Too many values: {0}", "val1", "val2"), "Too many values: val1")
+        self.assertEqual(
+            format_string("No placeholders here.", "value"), "No placeholders here."
+        )
+        self.assertEqual(
+            format_string("Empty values: {0}{1}", "", ""), "Empty values: "
+        )
+        self.assertEqual(
+            format_string("Not enough values: {0} {1}", "val1"),
+            "Not enough values: val1 {1}",
+        )  # Python's format behavior
+        self.assertEqual(
+            format_string("Too many values: {0}", "val1", "val2"),
+            "Too many values: val1",
+        )
 
     def test_docstring_example(self):
         self.assertEqual(format_string("Hello, {0}!", "World"), "Hello, World!")
-        self.assertEqual(format_string("The sum of {0} and {1} is {2}.", 1, 2, 3), "The sum of 1 and 2 is 3.")
+        self.assertEqual(
+            format_string("The sum of {0} and {1} is {2}.", 1, 2, 3),
+            "The sum of 1 and 2 is 3.",
+        )
 
     def test_different_types(self):
-        self.assertEqual(format_string("Number: {0}, Boolean: {1}", 123, True), "Number: 123, Boolean: True")
+        self.assertEqual(
+            format_string("Number: {0}, Boolean: {1}", 123, True),
+            "Number: 123, Boolean: True",
+        )
 
 
 class TestToBase64(unittest.TestCase):
@@ -63,7 +86,10 @@ class TestToBase64(unittest.TestCase):
 
     def test_special_characters(self):
         self.assertEqual(to_base64("!@#$%^&*()_+"), "IUAjJCVeJiooKV8r")
-        self.assertEqual(to_base64("Hello World! This is a test."), "SGVsbG8gV29ybGQhIFRoaXMgaXMgYSB0ZXN0Lg==")
+        self.assertEqual(
+            to_base64("Hello World! This is a test."),
+            "SGVsbG8gV29ybGQhIFRoaXMgaXMgYSB0ZXN0Lg==",
+        )
 
     def test_unicode_characters(self):
         self.assertEqual(to_base64("こんにちは世界"), "44GT44KT44Gr44Gh44Gv5LiW55WM")
@@ -71,6 +97,7 @@ class TestToBase64(unittest.TestCase):
 
     def test_docstring_example(self):
         self.assertEqual(to_base64("Hello World"), "SGVsbG8gV29ybGQ=")
+
 
 class TestFromBase64(unittest.TestCase):
     def test_basic_cases(self):
@@ -83,11 +110,14 @@ class TestFromBase64(unittest.TestCase):
         with self.assertRaises(ValueError):
             from_base64("Invalid Base64")
         with self.assertRaises(ValueError):
-            from_base64("SGVsbG8gV29ybGQ") 
+            from_base64("SGVsbG8gV29ybGQ")
 
     def test_special_characters(self):
         self.assertEqual(from_base64("IUAjJCVeJiooKV8r"), "!@#$%^&*()_+")
-        self.assertEqual(from_base64("SGVsbG8gV29ybGQhIFRoaXMgaXMgYSB0ZXN0Lg=="), "Hello World! This is a test.")
+        self.assertEqual(
+            from_base64("SGVsbG8gV29ybGQhIFRoaXMgaXMgYSB0ZXN0Lg=="),
+            "Hello World! This is a test.",
+        )
 
     def test_unicode_characters(self):
         self.assertEqual(from_base64("44GT44KT44Gr44Gh44Gv5LiW55WM"), "こんにちは世界")
@@ -95,6 +125,7 @@ class TestFromBase64(unittest.TestCase):
 
     def test_docstring_example(self):
         self.assertEqual(from_base64("SGVsbG8gV29ybGQ="), "Hello World")
+
 
 class TestHasNoLetters(unittest.TestCase):
     def test_basic_cases(self):
@@ -110,19 +141,20 @@ class TestHasNoLetters(unittest.TestCase):
         self.assertTrue(has_no_letters("123 !@#"))
 
     def test_unicode_characters(self):
-        self.assertTrue(has_no_letters("🌟123#")) 
-        self.assertFalse(has_no_letters("你好世界")) 
-        self.assertFalse(has_no_letters("Привет"))  
-        self.assertFalse(has_no_letters("مرحبا"))   
-        self.assertTrue(has_no_letters("😊👍🎉"))    
+        self.assertTrue(has_no_letters("🌟123#"))
+        self.assertFalse(has_no_letters("你好世界"))
+        self.assertFalse(has_no_letters("Привет"))
+        self.assertFalse(has_no_letters("مرحبا"))
+        self.assertTrue(has_no_letters("😊👍🎉"))
 
     def test_edge_cases(self):
-        self.assertTrue(has_no_letters("")) 
+        self.assertTrue(has_no_letters(""))
 
     def test_docstring_examples(self):
         self.assertTrue(has_no_letters("123"))
         self.assertTrue(has_no_letters("🌟123#"))
         self.assertFalse(has_no_letters("abc123"))
+
 
 class TestPadEnd(unittest.TestCase):
     def test_basic_padding(self):
@@ -142,13 +174,14 @@ class TestPadEnd(unittest.TestCase):
         self.assertEqual(pad_end("", 3, "x"), "xxx")
 
     def test_target_length_is_zero(self):
-        self.assertEqual(pad_end("abc", 0, "0"), "abc") # String length is already > 0
+        self.assertEqual(pad_end("abc", 0, "0"), "abc")  # String length is already > 0
 
     def test_docstring_examples(self):
         self.assertEqual(pad_end("abc", 5, "0"), "abc00")
         self.assertEqual(pad_end("hello", 8, "123"), "hello123")
         self.assertEqual(pad_end("world", 3, "!"), "world")
         self.assertEqual(pad_end("test", 6, ""), "test")
+
 
 class TestPadStart(unittest.TestCase):
     def test_basic_padding(self):
@@ -167,7 +200,7 @@ class TestPadStart(unittest.TestCase):
 
     def test_empty_string(self):
         self.assertEqual(pad_start("", 3, "x"), "xxx")
-    
+
     def test_target_length_is_zero(self):
         self.assertEqual(pad_start("abc", 0, "0"), "abc")
 
@@ -205,7 +238,7 @@ class TestRandomString(unittest.TestCase):
         # random.choice will raise IndexError if char_pool is empty
         with self.assertRaises(IndexError):
             random_string(char_pool="")
-            
+
     def test_size_zero(self):
         s = random_string(size=0)
         self.assertEqual(s, "")
@@ -213,7 +246,8 @@ class TestRandomString(unittest.TestCase):
     def test_docstring_examples(self):
         self.assertEqual(len(random_string()), 8)
         self.assertEqual(len(random_string(10)), 10)
-        self.assertTrue(all(c in 'abc' for c in random_string(5, 'abc')))
+        self.assertTrue(all(c in "abc" for c in random_string(5, "abc")))
+
 
 class TestRandomStringInitialization(unittest.TestCase):
     def test_returns_callable(self):
@@ -222,7 +256,7 @@ class TestRandomStringInitialization(unittest.TestCase):
 
     def test_callable_generates_string_default_pool(self):
         generator = random_string_initialization()
-        s = generator(size=6)
+        s = generator(6)
         self.assertEqual(len(s), 6)
         self.assertTrue(all(c in DEFAULT_RANDOM_STRING_CHARS for c in s))
         self.assertIsInstance(s, str)
@@ -230,20 +264,20 @@ class TestRandomStringInitialization(unittest.TestCase):
     def test_callable_generates_string_custom_pool(self):
         custom_chars = "xyz789"
         generator = random_string_initialization(char_pool=custom_chars)
-        s = generator(size=7)
+        s = generator(7)
         self.assertEqual(len(s), 7)
         self.assertTrue(all(c in custom_chars for c in s))
 
     def test_callable_with_size_zero(self):
         generator = random_string_initialization()
-        s = generator(size=0)
+        s = generator(0)
         self.assertEqual(s, "")
 
     def test_callable_with_empty_pool_raises_error(self):
         generator = random_string_initialization(char_pool="")
         with self.assertRaises(IndexError):
-            generator(size=5)
-            
+            generator(5)
+
     def test_docstring_example(self):
         custom_random = random_string_initialization("xyz")
         r_string = custom_random(3)
@@ -267,7 +301,7 @@ class TestReverseString(unittest.TestCase):
 
     def test_string_with_numbers_and_symbols(self):
         self.assertEqual(reverse_string("123!@#"), "#@!321")
-        
+
     def test_unicode_string(self):
         self.assertEqual(reverse_string("こんにちは"), "はちにんこ")
 
@@ -275,28 +309,38 @@ class TestReverseString(unittest.TestCase):
         self.assertEqual(reverse_string("Hello"), "olleH")
         self.assertEqual(reverse_string("madam"), "madam")
 
+
 class TestToHalfWidth(unittest.TestCase):
     def test_full_width_alphanumeric(self):
-        self.assertEqual(to_half_width("Ｈｅｌｌｏ Ｗｏｒｌｄ １２３"), "Hello World 123")
+        self.assertEqual(
+            to_half_width("Ｈｅｌｌｏ Ｗｏｒｌｄ １２３"), "Hello World 123"
+        )
         self.assertEqual(to_half_width("ＡＢＣｄｅｆ０１２３"), "ABCdef0123")
 
     def test_string_with_no_full_width_chars(self):
         self.assertEqual(to_half_width("Hello World 123"), "Hello World 123")
 
     def test_string_with_mixed_chars(self):
-        self.assertEqual(to_half_width("Ｈello Ｗorld １２３ and abc"), "Hello World 123 and abc")
+        self.assertEqual(
+            to_half_width("Ｈello Ｗorld １２３ and abc"), "Hello World 123 and abc"
+        )
 
     def test_full_width_symbols_and_space(self):
         # Note: Current implementation only handles U+FF01 to U+FF5E and U+3000 (full-width space)
-        self.assertEqual(to_half_width("！＂＃＄％＆＇（）＊＋，－．／"), "!\"#$%&'()*+,-./") # subset of symbols
-        self.assertEqual(to_half_width("　"), " ") # Full-width space
+        self.assertEqual(
+            to_half_width("！＂＃＄％＆＇（）＊＋，－．／"), "!\"#$%&'()*+,-./"
+        )  # subset of symbols
+        self.assertEqual(to_half_width("　"), " ")  # Full-width space
 
     def test_empty_string(self):
         self.assertEqual(to_half_width(""), "")
 
     def test_docstring_examples(self):
-        self.assertEqual(to_half_width("Ｈｅｌｌｏ Ｗｏｒｌｄ １２３"), "Hello World 123")
+        self.assertEqual(
+            to_half_width("Ｈｅｌｌｏ Ｗｏｒｌｄ １２３"), "Hello World 123"
+        )
         self.assertEqual(to_half_width("ＡＢＣｄｅｆ"), "ABCdef")
+
 
 class TestTrimStartCharacters(unittest.TestCase):
     def test_basic_trim(self):
@@ -317,7 +361,7 @@ class TestTrimStartCharacters(unittest.TestCase):
 
     def test_empty_trim_chars(self):
         self.assertEqual(trim_start_characters("hello", ""), "hello")
-        
+
     def test_trim_chars_not_at_start(self):
         self.assertEqual(trim_start_characters("hello---", "-"), "hello---")
 
@@ -325,6 +369,7 @@ class TestTrimStartCharacters(unittest.TestCase):
         self.assertEqual(trim_start_characters("!!!hello", "!"), "hello")
         self.assertEqual(trim_start_characters("---123", "-"), "123")
         self.assertEqual(trim_start_characters("abc123", "xyz"), "abc123")
+
 
 class TestTrimEndCharacters(unittest.TestCase):
     def test_basic_trim(self):
@@ -354,6 +399,7 @@ class TestTrimEndCharacters(unittest.TestCase):
         self.assertEqual(trim_end_characters("123---", "-"), "123")
         self.assertEqual(trim_end_characters("abc123", "xyz"), "abc123")
 
+
 class TestTrimCharacters(unittest.TestCase):
     def test_trim_from_both_ends(self):
         self.assertEqual(trim_characters("-.-hello-.-", "-."), "hello")
@@ -376,7 +422,7 @@ class TestTrimCharacters(unittest.TestCase):
 
     def test_empty_trim_chars(self):
         self.assertEqual(trim_characters("hello", ""), "hello")
-        
+
     def test_interspersed_chars(self):
         self.assertEqual(trim_characters("-h-e-l-l-o-", "-"), "h-e-l-l-o")
 
@@ -384,5 +430,6 @@ class TestTrimCharacters(unittest.TestCase):
         self.assertEqual(trim_characters("-.-hello-.-", "-."), "hello")
         self.assertEqual(trim_characters("123abc123", "123"), "abc")
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     unittest.main()
