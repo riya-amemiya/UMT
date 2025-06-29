@@ -86,7 +86,6 @@ build
 
 /module/*
 /common-module/*
-!/module/tsconfig.tsbuildinfo
 !/common-module/package.json
 
 lib
