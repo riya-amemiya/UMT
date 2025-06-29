@@ -20,7 +20,23 @@ const data: UMT_i18nData<
   },
 };
 
-const advancedData = {
+const advancedData: UMT_i18nData<
+  {
+    greeting: string;
+    items: string;
+    items_zero: string;
+    items_one: string;
+    items_other: string;
+    nested: {
+      deep: {
+        message: string;
+      };
+    };
+    date: string;
+    price: string;
+  },
+  "en" | "ja" | "fr"
+> = {
   en: {
     greeting: "Hello {{name}}!",
     items_zero: "No items",
@@ -71,10 +87,12 @@ describe("UMT_i18n Basic Tests", () => {
 
   test("Translation with defaultValue", () => {
     const i18nBasic = new UMT_i18n(data, "en");
-    expect(i18nBasic.translate("notExist", { defaultValue: "Default" })).toBe(
-      "Default",
-    );
-    expect(i18nBasic.translate("notExist")).toBe("notExist");
+    expect(
+      // biome-ignore lint/suspicious/noExplicitAny: ignore this for testing purposes
+      i18nBasic.translate("notExist" as any, { defaultValue: "Default" }),
+    ).toBe("Default");
+    // biome-ignore lint/suspicious/noExplicitAny: ignore this for testing purposes
+    expect(i18nBasic.translate("notExist" as any)).toBe("notExist");
   });
 
   test("t() alias", () => {
@@ -140,37 +158,43 @@ describe("UMT_i18n Advanced Features", () => {
     expect(advI18n.getFallbackLocales()).toEqual(["ja", "en"]);
   });
 
-  test("Format functions", () => {
-    advI18n.setLocale("en");
-    const date = new Date("2024-01-01");
-    expect(advI18n.translate("date", { params: { date } })).toBe(
-      "Today is 1/1/2024",
-    );
+  test("Custom formatter in constructor", () => {
+    const customI18n = new UMT_i18n(advancedData, "en", {
+      formatters: {
+        uppercase: (value) => String(value).toUpperCase(),
+        lowercase: (value) => String(value).toLowerCase(),
+      },
+    });
 
-    const price = 1000;
-    expect(advI18n.translate("price", { params: { currency: price } })).toBe(
-      "Price: $1,000.00",
-    );
+    customI18n.setLocale("en");
+    const customData = {
+      ...advancedData,
+      en: {
+        ...advancedData.en,
+        customUpper: "Hello {{uppercase}}!",
+        customLower: "Hello {{lowercase}}!",
+      },
+    };
+    const testI18n = new UMT_i18n(customData, "en", {
+      formatters: {
+        uppercase: (value) => String(value).toUpperCase(),
+        lowercase: (value) => String(value).toLowerCase(),
+      },
+    });
 
-    advI18n.setLocale("ja");
-    expect(advI18n.translate("price", { params: { currency: price } })).toBe(
-      "価格: ￥1,000",
-    );
-  });
-
-  test("Custom formatter", () => {
-    advI18n.addFormatter("uppercase", (value) => String(value).toUpperCase());
-    advI18n.setLocale("en");
-    advI18n.addTranslations("en", { custom: "Hello {{uppercase}}!" });
     expect(
-      advI18n.translate("custom", { params: { uppercase: "world" } }),
+      testI18n.translate("customUpper", { params: { uppercase: "world" } }),
     ).toBe("Hello WORLD!");
+    expect(
+      testI18n.translate("customLower", { params: { lowercase: "WORLD" } }),
+    ).toBe("Hello world!");
   });
 
   test("hasTranslation", () => {
     advI18n.setLocale("en");
     expect(advI18n.hasTranslation("greeting")).toBe(true);
-    expect(advI18n.hasTranslation("notExist")).toBe(false);
+    // biome-ignore lint/suspicious/noExplicitAny: ignore this for testing purposes
+    expect(advI18n.hasTranslation("notExist" as any)).toBe(false);
     expect(advI18n.hasTranslation("nested.deep.message")).toBe(true);
   });
 
@@ -185,105 +209,6 @@ describe("UMT_i18n Advanced Features", () => {
     const frTranslations = advI18n.getAllTranslations("fr");
     // biome-ignore lint/complexity/useLiteralKeys: TypeScript requires bracket notation for index signatures
     expect(frTranslations["greeting"]).toBe("Bonjour {{name}}!");
-  });
-
-  test("addTranslations", () => {
-    advI18n.addTranslations("en", {
-      newKey: "New translation",
-      another: {
-        nested: "Another nested",
-      },
-    });
-
-    expect(advI18n.translate("newKey")).toBe("New translation");
-    expect(advI18n.translate("another.nested")).toBe("Another nested");
-  });
-
-  test("removeTranslation", () => {
-    advI18n.setLocale("en");
-    advI18n.addTranslations("en", { toRemove: "Will be removed" });
-    expect(advI18n.hasTranslation("toRemove")).toBe(true);
-
-    advI18n.removeTranslation("en", "toRemove");
-    expect(advI18n.hasTranslation("toRemove")).toBe(false);
-  });
-
-  test("Edge cases for formatters", () => {
-    advI18n.setLocale("en");
-
-    advI18n.addTranslations("en", { dateTest: "Date: {{date}}" });
-    expect(
-      advI18n.translate("dateTest", { params: { date: "2024-01-01" } }),
-    ).toBe("Date: 2024-01-01");
-
-    advI18n.addTranslations("en", { timeTest: "Time: {{time}}" });
-    expect(advI18n.translate("timeTest", { params: { time: "12:00" } })).toBe(
-      "Time: 12:00",
-    );
-
-    advI18n.addTranslations("en", { numberTest: "Number: {{number}}" });
-    expect(
-      advI18n.translate("numberTest", { params: { number: "1000" } }),
-    ).toBe("Number: 1000");
-
-    advI18n.addTranslations("en", { currencyTest: "Currency: {{currency}}" });
-    expect(
-      advI18n.translate("currencyTest", { params: { currency: "$1000" } }),
-    ).toBe("Currency: $1000");
-  });
-
-  test("Formatter without registered handler", () => {
-    advI18n.setLocale("en");
-    advI18n.addTranslations("en", { test: "Value: {{unknownFormatter}}" });
-    expect(
-      advI18n.translate("test", { params: { unknownFormatter: "value" } }),
-    ).toBe("Value: value");
-  });
-
-  test("removeTranslation with non-existent locale", () => {
-    const testI18n = new UMT_i18n({ en: { test: "test" } }, "en");
-    testI18n.removeTranslation("fr" as keyof { en: { test: string } }, "test");
-    expect(testI18n.hasTranslation("test")).toBe(true);
-  });
-
-  test("Currency formatter with unknown locale", () => {
-    const testI18n = new UMT_i18n({ unknown: {} }, "unknown");
-    testI18n.addTranslations("unknown", { price: "Price: {{currency}}" });
-    const price = 1000;
-    expect(
-      testI18n.translate("price", { params: { currency: price } }),
-    ).toMatch(/1,000/);
-  });
-
-  test("Placeholder with undefined value", () => {
-    advI18n.setLocale("en");
-    advI18n.addTranslations("en", { test: "Hello {{name}}!" });
-    expect(advI18n.translate("test", { params: {} })).toBe("Hello {{name}}!");
-  });
-
-  test("Date formatter with actual Date objects", () => {
-    advI18n.setLocale("en");
-    advI18n.addTranslations("en", {
-      dateFormat: "Date: {{date}}",
-      timeFormat: "Time: {{time}}",
-    });
-
-    const testDate = new Date("2024-01-15T10:30:00");
-    expect(
-      advI18n.translate("dateFormat", { params: { date: testDate } }),
-    ).toBe("Date: 1/15/2024");
-    expect(
-      advI18n.translate("timeFormat", { params: { time: testDate } }),
-    ).toMatch(/Time: \d{1,2}:\d{2}:\d{2}/);
-  });
-
-  test("Number formatter with actual numbers", () => {
-    advI18n.setLocale("en");
-    advI18n.addTranslations("en", { numberFormat: "Number: {{number}}" });
-
-    expect(
-      advI18n.translate("numberFormat", { params: { number: 1234.56 } }),
-    ).toBe("Number: 1,234.56");
   });
 
   test("Nested object with null values", () => {
@@ -320,15 +245,64 @@ describe("UMT_i18n Advanced Features", () => {
     expect(result["items"]).toBe("{{count}}個のアイテム");
   });
 
-  test("addTranslations to new locale", () => {
-    type TestData = { en: { hello: string }; de?: Record<string, string> };
-    const testI18n = new UMT_i18n<TestData>({ en: { hello: "Hello" } }, "en");
-    testI18n.addTranslations("de" as keyof TestData, {
-      hello: "Hallo",
-      world: "Welt",
-    });
-    testI18n.setLocale("de" as keyof TestData);
-    expect(testI18n.translate("hello")).toBe("Hallo");
-    expect(testI18n.translate("world")).toBe("Welt");
+  test("Placeholder with undefined parameter key", () => {
+    advI18n.setLocale("en");
+    const testData = {
+      en: {
+        test: "Hello {{name}} {{age}}!",
+      },
+    };
+    const testI18n = new UMT_i18n(testData, "en");
+    expect(testI18n.translate("test", { params: { name: "John" } })).toBe(
+      "Hello John {{age}}!",
+    );
+  });
+
+  test("supports deeply nested objects with partial properties", () => {
+    type NestedData = {
+      menu: {
+        file: {
+          new: string;
+          open: string;
+          save: string;
+        };
+        edit: {
+          cut: string;
+          copy: string;
+          paste: string;
+        };
+      };
+    };
+
+    const nestedData: UMT_i18nData<NestedData, "en" | "ja"> = {
+      en: {
+        menu: {
+          file: {
+            new: "New",
+          },
+        },
+      },
+      ja: {
+        menu: {
+          file: {
+            new: "新規",
+            open: "開く",
+          },
+          edit: {
+            cut: "切り取り",
+          },
+        },
+      },
+    };
+
+    const i18n = new UMT_i18n(nestedData, "en");
+    expect(i18n.translate("menu.file.new")).toBe("New");
+    expect(i18n.translate("menu.file.open")).toBe("menu.file.open");
+
+    i18n.setLocale("ja");
+    expect(i18n.translate("menu.file.new")).toBe("新規");
+    expect(i18n.translate("menu.file.open")).toBe("開く");
+    expect(i18n.translate("menu.edit.cut")).toBe("切り取り");
+    expect(i18n.translate("menu.edit.copy")).toBe("menu.edit.copy");
   });
 });

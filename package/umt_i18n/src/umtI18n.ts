@@ -1,8 +1,19 @@
+import type {
+  DeepPartial,
+  DeepRequired,
+  PickDeepKey,
+  ShallowObjectValue,
+} from "umt/module/types";
+
+type NestedObject = {
+  [key: string]: string | NestedObject;
+};
+
 export type UMT_i18nData<
-  T extends { [key: string]: string },
+  T extends { [key: string]: string | NestedObject },
   L extends string,
 > = {
-  [key in L]: Partial<T>;
+  [key in L]: DeepPartial<T>;
 };
 
 export type TranslateOptions = {
@@ -11,13 +22,27 @@ export type TranslateOptions = {
   defaultValue?: string;
 };
 
-export type NestedObject = {
-  [key: string]: string | NestedObject;
-};
-
 export type FlattenedData<T> = {
   [K in keyof T]: Record<string, string>;
 };
+export type FormatterFunction<
+  T extends {
+    [key: string]: {
+      [k: string]: string | NestedObject;
+    };
+  },
+> = (value: unknown, locale: keyof T) => string;
+
+export type UMT_i18nOptions<
+  T extends {
+    [key: string]: {
+      [k: string]: string | NestedObject;
+    };
+  },
+> = {
+  formatters?: Record<string, FormatterFunction<T>>;
+};
+
 export class UMT_i18n<
   T extends {
     [key: string]: {
@@ -30,15 +55,14 @@ export class UMT_i18n<
   private locale: keyof T;
   private defaultLocale: keyof T;
   private fallbackLocales: (keyof T)[] = [];
-  private formatters: Map<string, (value: unknown, locale: string) => string> =
-    new Map();
+  private formatters: Map<string, FormatterFunction<T>>;
 
-  constructor(data: T, locale: keyof T) {
+  constructor(data: T, locale: keyof T, options?: UMT_i18nOptions<T>) {
     this.data = data;
     this.flattenedData = this.flattenAllLocales(data);
     this.locale = locale;
     this.defaultLocale = locale;
-    this.initializeDefaultFormatters();
+    this.formatters = new Map(Object.entries(options?.formatters ?? {}));
   }
   public getLocale() {
     return this.locale;
@@ -61,13 +85,16 @@ export class UMT_i18n<
     return this;
   }
 
-  public translate(key: string, options?: TranslateOptions): string {
+  public translate(
+    key: PickDeepKey<DeepRequired<ShallowObjectValue<T>>>,
+    options?: TranslateOptions,
+  ): string {
     const { params, count, defaultValue } = options || {};
 
     let translation = this.getTranslation(key, count);
 
     if (!translation) {
-      return defaultValue || key;
+      return defaultValue || (key as string);
     }
 
     if (params) {
@@ -77,12 +104,19 @@ export class UMT_i18n<
     return translation;
   }
 
-  public t(key: string, options?: TranslateOptions): string {
+  public t(
+    key: PickDeepKey<DeepRequired<ShallowObjectValue<T>>>,
+    options?: TranslateOptions,
+  ): string {
     return this.translate(key, options);
   }
 
-  private getTranslation(key: string, count?: number): string | undefined {
-    const actualKey = count === undefined ? key : this.getPluralKey(key, count);
+  private getTranslation(
+    key: PickDeepKey<DeepRequired<ShallowObjectValue<T>>>,
+    count?: number,
+  ): string | undefined {
+    const actualKey =
+      count === undefined ? (key as string) : this.getPluralKey(key, count);
 
     let translation = this.flattenedData[this.locale]?.[actualKey];
 
@@ -102,10 +136,13 @@ export class UMT_i18n<
     return translation;
   }
 
-  private getPluralKey(key: string, count: number): string {
+  private getPluralKey(
+    key: PickDeepKey<DeepRequired<ShallowObjectValue<T>>>,
+    count: number,
+  ): string {
     const locale = String(this.locale);
     const pluralSuffix = this.getPluralSuffix(count, locale);
-    return `${key}${pluralSuffix}`;
+    return `${key as string}${pluralSuffix}`;
   }
 
   private getPluralSuffix(count: number, locale: string): string {
@@ -175,47 +212,6 @@ export class UMT_i18n<
     return flattened;
   }
 
-  private initializeDefaultFormatters(): void {
-    this.formatters.set("date", (value, locale) => {
-      if (value instanceof Date) {
-        return value.toLocaleDateString(locale);
-      }
-      return String(value);
-    });
-
-    this.formatters.set("time", (value, locale) => {
-      if (value instanceof Date) {
-        return value.toLocaleTimeString(locale);
-      }
-      return String(value);
-    });
-
-    this.formatters.set("number", (value, locale) => {
-      if (typeof value === "number") {
-        return value.toLocaleString(locale);
-      }
-      return String(value);
-    });
-
-    this.formatters.set("currency", (value, locale) => {
-      if (typeof value === "number") {
-        const currencyMap: Record<string, string> = {
-          en: "USD",
-          ja: "JPY",
-          zh: "CNY",
-          de: "EUR",
-          fr: "EUR",
-        };
-        const currency = currencyMap[locale] || "USD";
-        return new Intl.NumberFormat(locale, {
-          style: "currency",
-          currency,
-        }).format(value);
-      }
-      return String(value);
-    });
-  }
-
   public setFallbackLocales(locales: (keyof T)[]): this {
     this.fallbackLocales = locales;
     return this;
@@ -225,41 +221,14 @@ export class UMT_i18n<
     return this.fallbackLocales;
   }
 
-  public addFormatter(
-    key: string,
-    formatter: (value: unknown, locale: string) => string,
-  ): this {
-    this.formatters.set(key, formatter);
-    return this;
-  }
-
-  public hasTranslation(key: string): boolean {
+  public hasTranslation(
+    key: PickDeepKey<DeepRequired<ShallowObjectValue<T>>>,
+  ): boolean {
     return this.getTranslation(key) !== undefined;
   }
 
   public getAllTranslations(locale?: keyof T): Record<string, string> {
     const targetLocale = locale || this.locale;
     return this.flattenedData[targetLocale] || {};
-  }
-
-  public addTranslations(
-    locale: keyof T,
-    translations: Record<string, string | NestedObject>,
-  ): this {
-    if (!this.data[locale]) {
-      this.data[locale] = {} as T[keyof T];
-    }
-
-    Object.assign(this.data[locale], translations);
-    this.flattenedData = this.flattenAllLocales(this.data);
-    return this;
-  }
-
-  public removeTranslation(locale: keyof T, key: string): this {
-    if (this.data[locale]) {
-      delete (this.data[locale] as Record<string, string | NestedObject>)[key];
-      this.flattenedData = this.flattenAllLocales(this.data);
-    }
-    return this;
   }
 }
