@@ -5,18 +5,18 @@ describe("randomSelect", () => {
     const array = [1, 2, 3, 4, 5];
     const result = randomSelect(array, 2);
     expect(result).toHaveLength(2);
-    result.forEach((item) => {
+    for (const item of result) {
       expect(array).toContain(item);
-    });
+    }
   });
 
   it("should return elements equal to array length when count exceeds array length", () => {
     const array = [1, 2, 3];
     const result = randomSelect(array, 5);
     expect(result).toHaveLength(3);
-    result.forEach((item) => {
+    for (const item of result) {
       expect(array).toContain(item);
-    });
+    }
   });
 
   it("should return an empty array when given an empty array", () => {
@@ -28,18 +28,18 @@ describe("randomSelect", () => {
     const array = [1, 2, 3];
     const result = randomSelect(array, 5, true);
     expect(result).toHaveLength(5);
-    result.forEach((item) => {
+    for (const item of result) {
       expect(array).toContain(item);
-    });
+    }
   });
 
   it("should return specified count without duplicates when allowDuplicates is false", () => {
     const array = [1, 2, 3, 4, 5];
     const result = randomSelect(array, 3, false);
     expect(result).toHaveLength(3);
-    result.forEach((item) => {
+    for (const item of result) {
       expect(array).toContain(item);
-    });
+    }
   });
 
   it("should return an empty array when count is negative", () => {

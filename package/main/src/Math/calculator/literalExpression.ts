@@ -11,15 +11,21 @@ import { gcd } from "@/Math/gcd";
  * @example literalExpression("3x+2=8"); // "2"
  */
 export const literalExpression = (x: string): string => {
+  // Handle invalid equations like x=x
+  const sides = x.split("=");
+  if (sides.length === 2 && sides[0] === sides[1]) {
+    return "";
+  }
+
   // Store numerical and variable parts of the equation
   let numericalPart = "";
   let variablePart: string[] = [];
 
   // Split by equals sign and identify numerical and variable parts
-  for (const part of x.split("=")) {
+  for (const part of sides) {
     if (/[A-Za-z]+/.test(part)) {
       variablePart = part
-        .split(/(\d+[A-Za-z]+)|([^A-Za-z]+)/)
+        .split(/([-+]?\d*[A-Za-z]+)|([-+]?\d+)/)
         .filter((n) => n && n !== undefined);
     } else {
       numericalPart = part;
@@ -28,17 +34,23 @@ export const literalExpression = (x: string): string => {
 
   // Calculate the variable part (and invert signs for moving to other side of equation)
   if (variablePart[1]) {
-    variablePart[1] = calculatorCore(variablePart[1])
+    // Invert signs before calculating
+    const invertedPart = variablePart[1]
       .replaceAll("+", "plus")
       .replaceAll("-", "minus")
       .replaceAll("plus", "-")
       .replaceAll("minus", "+");
+    variablePart[1] = calculatorCore(invertedPart);
   }
 
   // Calculate the numerical part
-  numericalPart = variablePart[1]
-    ? calculatorCore(`${numericalPart}${variablePart[1]}`)
-    : calculatorCore(numericalPart);
+  if (variablePart[1]) {
+    // Ensure proper sign handling when combining
+    const sign = variablePart[1].startsWith("-") ? "" : "+";
+    numericalPart = calculatorCore(`${numericalPart}${sign}${variablePart[1]}`);
+  } else {
+    numericalPart = calculatorCore(numericalPart);
+  }
 
   // Split the variable part again to separate coefficient and variable
   variablePart = variablePart[0]
@@ -60,8 +72,7 @@ export const literalExpression = (x: string): string => {
     if (/(-?)\d+\/1/.test(numericalPart)) {
       return numericalPart.replace(/\/1/, "");
     }
-  }
-  if (variablePart[0] !== "1") {
+  } else if (variablePart[0] !== "1") {
     numericalPart = `${numericalPart}/${variablePart[0]}`;
   }
 

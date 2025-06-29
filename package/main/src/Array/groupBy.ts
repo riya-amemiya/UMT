@@ -12,15 +12,13 @@ export const groupBy = <T, K extends string | number>(
   array: T[],
   iteratee: (value: T, index: number, array: T[]) => K,
 ): Record<K, T[]> => {
-  return array.reduce(
-    (accumulator, value, index, array) => {
-      const key = iteratee(value, index, array);
-      if (!accumulator[key]) {
-        accumulator[key] = [];
-      }
-      accumulator[key].push(value);
-      return accumulator;
-    },
-    {} as Record<K, T[]>,
-  );
+  const result = Object.create(null);
+  const length = array.length;
+  for (let index = 0; index < length; index++) {
+    const value = array[index];
+    const key = iteratee(value, index, array);
+    // biome-ignore lint/suspicious/noAssignInExpressions: ignore
+    (result[key] || (result[key] = [])).push(value);
+  }
+  return result;
 };

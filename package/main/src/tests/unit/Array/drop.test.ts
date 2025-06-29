@@ -84,7 +84,7 @@ describe("drop function", () => {
   });
 
   it("should treat as 'left' when an invalid direction is passed", () => {
-    // @ts-ignore
+    // @ts-expect-error
     expect(drop([1, 2, 3], 1, "invalid")).toEqual([2, 3]);
   });
 });

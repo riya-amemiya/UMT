@@ -15,7 +15,7 @@ export const division = <T extends boolean = true>(
   isFloor: T = true as T,
 ): T extends true ? number : number[] => {
   if (y === 0) {
-    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+    // biome-ignore lint/suspicious/noExplicitAny: ignore
     return isFloor ? (Number.NaN as any) : ([Number.NaN, Number.NaN] as any);
   }
 
@@ -39,12 +39,12 @@ export const division = <T extends boolean = true>(
 
   if (isFloor) {
     // Apply sign to result
-    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+    // biome-ignore lint/suspicious/noExplicitAny: ignore
     return (sign * divisionResult) as any;
   }
   // When isFloor is false, calculate quotient and remainder
   const intQuotient = Math.floor(divisionResult);
   const remainder = xInt % yInt;
-  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+  // biome-ignore lint/suspicious/noExplicitAny: ignore
   return [sign * intQuotient, remainder] as any;
 };

@@ -48,8 +48,9 @@ describe("groupBy", () => {
 
   it("should group all elements under undefined key when iterator returns undefined", () => {
     const array = [1, 2, 3, 4, 5];
-    // @ts-ignore
-    const result = groupBy(array, () => undefined);
+    // @ts-expect-error
+    // biome-ignore lint/suspicious/noEmptyBlockStatements: ignore
+    const result = groupBy(array, () => {});
     expect(result).toEqual({ undefined: [1, 2, 3, 4, 5] });
   });
 

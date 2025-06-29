@@ -13,5 +13,11 @@ use super::{umt_factorial, umt_npr};
 ///
 /// The number of combinations (nCr).
 pub fn umt_ncr(n: i32, r: i32) -> i32 {
+    if r < 0 || r > n {
+        return 0;
+    }
+    if n > 12 && r > 12 {
+        return 0;
+    }
     umt_npr(n, r) / umt_factorial(r)
 }

@@ -14,7 +14,7 @@ export const getIpClass = (ip: string): string => {
     return "";
   }
 
-  const firstOctet = Number.parseInt(parts[0]);
+  const firstOctet = Number.parseInt(parts[0], 10);
   if (Number.isNaN(firstOctet) || firstOctet < 0 || firstOctet > 255) {
     return "";
   }

@@ -1,3 +1,8 @@
+import { addition } from "@/Math/addition";
+import { division } from "@/Math/division";
+import { multiplication } from "@/Math/multiplication";
+import { subtract } from "@/Math/subtract";
+
 /**
  * Generates an array of numbers with the specified length
  * @param length The length of the array
@@ -11,26 +16,34 @@
 export const generateNumberArray = (
   length: number,
   min = 0,
-  max = length - 1,
+  max?: number,
   random = false,
 ): number[] => {
-  if (length <= 0) {
+  const actualLength = Math.floor(length);
+  const actualMax = max ?? actualLength - 1;
+  if (actualLength <= 0) {
     return [];
   }
-  if (min > max) {
+  if (min > actualMax) {
     throw new Error("min should be less than or equal to max");
   }
-  if (length === 1) {
+  if (actualLength === 1) {
     return [min];
   }
 
   if (random) {
-    return Array.from(
-      { length },
-      () => Math.floor(Math.random() * (max - min + 1)) + min,
+    return Array.from({ length: actualLength }, () =>
+      addition(
+        Math.floor(
+          multiplication(Math.random(), addition(subtract(actualMax, min), 1)),
+        ),
+        min,
+      ),
     );
   }
 
-  const step = (max - min) / (length - 1);
-  return Array.from({ length }, (_, index) => min + index * step);
+  const step = division(subtract(actualMax, min), subtract(actualLength, 1));
+  return Array.from({ length: actualLength }, (_, index) =>
+    addition(min, multiplication(index, step)),
+  );
 };

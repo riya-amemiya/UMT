@@ -20,5 +20,8 @@ export * from "./shuffle";
 export * from "./shuffle2DArray";
 export * from "./sum";
 export * from "./timSort";
+export * from "./ultraNumberSort";
+export * from "./uniqBy";
+export * from "./unique";
 export * from "./zip";
 export * from "./zipLongest";
