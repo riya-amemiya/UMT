@@ -84,7 +84,7 @@ print(encoded)  # "SGVsbG8gV29ybGQ="
 
 ## Requirements
 
-- Python 3.12 or higher
+- Python 3.9 or higher
 
 ## Development
 
