@@ -1,0 +1,165 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.0.4/schema.json",
+  "assist": {
+    "actions": {
+      "source": {
+        "organizeImports": "off"
+      }
+    }
+  },
+  "files": {
+    "includes": [
+      "**",
+      "!**/node_modules/**",
+      "!**/module/**",
+      "!**/*.json",
+      "!**/doc/**",
+      "!**/coverage/**"
+    ]
+  },
+  "formatter": {
+    "enabled": true,
+    "formatWithErrors": false,
+    "indentStyle": "space",
+    "lineWidth": 80
+  },
+  "javascript": {
+    "globals": [
+      "describe",
+      "beforeEach",
+      "it",
+      "expect",
+      "test",
+      "beforeAll",
+      "afterEach",
+      "afterAll",
+      "Bun",
+      "jest"
+    ]
+  },
+  "json": {
+    "formatter": {
+      "enabled": true
+    }
+  },
+  "linter": {
+    "enabled": true,
+    "includes": [
+      "**",
+      "!**/.dependency-cruiser.js",
+      "!**/eslint.config.mjs",
+      "!**/jest.config.ts"
+    ],
+    "rules": {
+      "a11y": {
+        "noSvgWithoutTitle": "warn"
+      },
+      "complexity": {
+        "noExcessiveCognitiveComplexity": "off",
+        "noExcessiveNestedTestSuites": "error",
+        "noForEach": "error",
+        "noUselessStringConcat": "error",
+        "noVoid": "error",
+        "useSimplifiedLogicExpression": "error",
+        "useWhile": "error"
+      },
+      "correctness": {
+        "noNodejsModules": "error",
+        "noUndeclaredVariables": "warn",
+        "noUnusedVariables": "warn",
+        "useExhaustiveDependencies": "warn",
+        "useHookAtTopLevel": "error"
+      },
+      "nursery": {
+        "noAwaitInLoop": "error",
+        "noConstantBinaryExpression": "error",
+        "noGlobalDirnameFilename": "error",
+        "noProcessGlobal": "error",
+        "noTsIgnore": "error",
+        "noUselessBackrefInRegex": "error",
+        "noUselessEscapeInString": "error",
+        "noUselessUndefined": "error",
+        "useAdjacentGetterSetter": "error",
+        "useConsistentObjectDefinition": "error",
+        "useExhaustiveSwitchCases": "error",
+        "useIterableCallbackReturn": "error",
+        "useNumericSeparators": "error",
+        "useObjectSpread": "warn",
+        "useParseIntRadix": "error",
+        "useSingleJsDocAsterisk": "error",
+        "useSymbolDescription": "error"
+      },
+      "performance": {
+        "noDelete": "error",
+        "noNamespaceImport": "error"
+      },
+      "recommended": true,
+      "style": {
+        "noCommonJs": "error",
+        "noDefaultExport": "error",
+        "noDoneCallback": "error",
+        "noEnum": "error",
+        "noExportedImports": "error",
+        "noImplicitBoolean": "warn",
+        "noInferrableTypes": "error",
+        "noNamespace": "error",
+        "noNegationElse": "error",
+        "noParameterAssign": "warn",
+        "noParameterProperties": "off",
+        "noProcessEnv": "error",
+        "noShoutyConstants": "warn",
+        "noSubstr": "error",
+        "noUnusedTemplateLiteral": "error",
+        "noUselessElse": "error",
+        "noYodaExpression": "error",
+        "useAsConstAssertion": "error",
+        "useBlockStatements": "error",
+        "useCollapsedElseIf": "error",
+        "useConsistentArrayType": "error",
+        "useConsistentBuiltinInstantiation": "error",
+        "useDefaultParameterLast": "error",
+        "useDefaultSwitchClause": "error",
+        "useEnumInitializers": "error",
+        "useExplicitLengthCheck": "error",
+        "useForOf": "error",
+        "useFragmentSyntax": "error",
+        "useNamingConvention": {
+          "level": "off",
+          "options": {
+            "conventions": [
+              {
+                "formats": ["CONSTANT_CASE"],
+                "selector": {
+                  "kind": "enumMember"
+                }
+              }
+            ],
+            "strictCase": true
+          }
+        },
+        "useNodeAssertStrict": "error",
+        "useNumberNamespace": "error",
+        "useSelfClosingElements": "error",
+        "useShorthandAssign": "error",
+        "useSingleVarDeclarator": "error",
+        "useThrowNewError": "error",
+        "useThrowOnlyError": "error",
+        "useTrimStartEnd": "error"
+      },
+      "suspicious": {
+        "noDuplicateTestHooks": "error",
+        "noEmptyBlockStatements": "error",
+        "noEvolvingTypes": "error",
+        "noExportsInTest": "error",
+        "noFocusedTests": "error",
+        "noMisplacedAssertion": "error",
+        "noSkippedTests": "error",
+        "noVar": "error",
+        "useAwait": "error",
+        "useErrorMessage": "error",
+        "useGuardForIn": "error",
+        "useNumberToFixedDigitsArgument": "error"
+      }
+    }
+  }
+}

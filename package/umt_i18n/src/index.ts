@@ -1,4 +1,1 @@
-import { UMT_i18n, UMT_i18nData } from "./UMT_i18n";
-
-export { UMT_i18n };
-export type { UMT_i18nData };
+export { UMT_i18n, type UMT_i18nData } from "./umtI18n";
