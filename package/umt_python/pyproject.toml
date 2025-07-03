@@ -12,13 +12,12 @@ classifiers = [
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
-  "License :: OSI Approved :: MIT License",
   "Operating System :: OS Independent",
   "Topic :: Software Development :: Libraries :: Python Modules",
   "Topic :: Utilities",
 ]
 description = "A collection of useful utility functions for various tasks in Python, focusing on string manipulation and formatting."
-license = {text = "MIT License"}
+license = "MIT"
 name = "umt_python"
 readme = "README.md"
 requires-python = ">=3.9"
