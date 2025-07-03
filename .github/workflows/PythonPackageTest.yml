@@ -1,0 +1,93 @@
+name: Python Package Test
+
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+      - feature/*
+    paths:
+      - 'package/umt_python/**'
+  workflow_dispatch:
+permissions:
+  pull-requests: write
+jobs:
+    pythonFormat:
+        name: Python Format Check
+        runs-on: ${{ matrix.os }}
+        strategy:
+            matrix:
+                python-version: ['3.9', '3.10', '3.11', '3.12']
+                os: [ubuntu-latest]
+        defaults:
+          run:
+            working-directory: ./package/umt_python
+        steps:
+            - uses: actions/checkout@v4
+            - name: Install uv
+              uses: astral-sh/setup-uv@v6
+              with:
+                  enable-cache: true
+                  python-version: ${{ matrix.python-version }}
+            - name: Format Check
+              run: make format
+
+    pythonLint:
+        name: Python Lint
+        runs-on: ${{ matrix.os }}
+        strategy:
+            matrix:
+                python-version: ['3.9', '3.10', '3.11', '3.12']
+                os: [ubuntu-latest]
+        defaults:
+          run:
+            working-directory: ./package/umt_python
+        steps:
+            - uses: actions/checkout@v4
+            - name: Install uv
+              uses: astral-sh/setup-uv@v6
+              with:
+                  enable-cache: true
+                  python-version: ${{ matrix.python-version }}
+            - name: Lint
+              run: make lint
+
+    pythonTypecheck:
+        name: Python Type Check
+        runs-on: ${{ matrix.os }}
+        strategy:
+            matrix:
+                python-version: ['3.9', '3.10', '3.11', '3.12']
+                os: [ubuntu-latest]
+        defaults:
+          run:
+            working-directory: ./package/umt_python
+        steps:
+            - uses: actions/checkout@v4
+            - name: Install uv
+              uses: astral-sh/setup-uv@v6
+              with:
+                  enable-cache: true
+                  python-version: ${{ matrix.python-version }}
+            - name: Type Check
+              run: make typecheck
+
+    pythonTest:
+        name: Python Test
+        runs-on: ${{ matrix.os }}
+        strategy:
+          matrix:
+            python-version: ['3.9', '3.10', '3.11', '3.12']
+            os: [ubuntu-latest]
+        defaults:
+          run:
+            working-directory: ./package/umt_python
+        steps:
+            - uses: actions/checkout@v4
+            - name: Install uv
+              uses: astral-sh/setup-uv@v6
+              with:
+                  enable-cache: true
+                  python-version: ${{ matrix.python-version }}
+            - name: Run Test
+              run: make test

@@ -1,0 +1,36 @@
+[build-system]
+build-backend = "setuptools.build_meta"
+requires = ["setuptools>=61.0", "wheel"]
+
+[project]
+authors = [
+  {name = "riya-amemiya", email = "riyaamemiya@gmail.com"},
+]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Operating System :: OS Independent",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+  "Topic :: Utilities",
+]
+description = "A collection of useful utility functions for various tasks in Python, focusing on string manipulation and formatting."
+license = "MIT"
+name = "umt_python"
+readme = "README.md"
+requires-python = ">=3.9"
+version = "0.1.0"
+
+[project.urls]
+"Bug Tracker" = "https://github.com/riya-amemiya/UMT/issues"
+"Homepage" = "https://github.com/riya-amemiya/UMT"
+"Repository" = "https://github.com/riya-amemiya/UMT"
+
+[dependency-groups]
+dev = [
+  "pyright>=1.1.402",
+  "pytest>=8.4.1",
+  "ruff>=0.12.1",
+]
