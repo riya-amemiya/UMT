@@ -2,6 +2,8 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+**Don't use pip, use uv.**
+
 ## Project Overview
 
 UMT Python Package is a collection of utility functions for string manipulation and formatting. The project follows a modular architecture where each function is implemented in its own module file.

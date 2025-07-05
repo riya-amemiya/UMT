@@ -32,5 +32,5 @@ def pad_start(string_: str, target_length: int, pad_string: str) -> str:
 
     while len(padding) < padding_length:
         padding += pad_string
-    
+
     return padding[:padding_length] + string_

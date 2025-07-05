@@ -1,5 +1,6 @@
 import base64
 
+
 def to_base64(char: str) -> str:
     """
     Convert string to Base64.
@@ -14,4 +15,4 @@ def to_base64(char: str) -> str:
         >>> to_base64("Hello World")
         'SGVsbG8gV29ybGQ='
     """
-    return base64.b64encode(char.encode('utf-8')).decode('utf-8')
+    return base64.b64encode(char.encode("utf-8")).decode("utf-8")

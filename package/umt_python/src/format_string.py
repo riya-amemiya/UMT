@@ -1,5 +1,6 @@
 import re
 
+
 def format_string(template: str, *values: object) -> str:
     """
     Replaces placeholders in a template string with specified values.
@@ -21,10 +22,11 @@ def format_string(template: str, *values: object) -> str:
         >>> format_string("Not enough values: {0} {1}", "val1") # Mimics TS behavior
         'Not enough values: val1 {1}'
     """
+
     def replace(match):
         index = int(match.group(1))
         if index < len(values):
             return str(values[index])
-        return match.group(0) # Return the original placeholder if value not found
+        return match.group(0)  # Return the original placeholder if value not found
 
-    return re.sub(r'{(\d+)}', replace, template)
+    return re.sub(r"{(\d+)}", replace, template)

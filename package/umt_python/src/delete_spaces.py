@@ -1,5 +1,6 @@
 import re
 
+
 def delete_spaces(string_: str) -> str:
     """
     Removes all whitespace characters from a string.
@@ -16,4 +17,4 @@ def delete_spaces(string_: str) -> str:
         >>> delete_spaces("  tab\\t space ")
         'tabspace'
     """
-    return re.sub(r'\s', '', string_)
+    return re.sub(r"\s", "", string_)
