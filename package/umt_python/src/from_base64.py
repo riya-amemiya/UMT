@@ -1,4 +1,5 @@
 import base64
+import binascii
 
 
 def from_base64(base64_string: str) -> str:
@@ -21,5 +22,6 @@ def from_base64(base64_string: str) -> str:
     if not base64_string:
         return ""
     try:
+        return base64.b64decode(base64_string.encode("utf-8")).decode("utf-8")
     except binascii.Error as e:
         raise ValueError("Invalid Base64 string") from e
