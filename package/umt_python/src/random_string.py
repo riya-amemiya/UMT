@@ -3,6 +3,7 @@ import string
 
 DEFAULT_RANDOM_STRING_CHARS = string.ascii_letters + string.digits
 
+
 def random_string(size: int = 8, char_pool: str = DEFAULT_RANDOM_STRING_CHARS) -> str:
     """
     Generates a random string.
@@ -27,4 +28,4 @@ def random_string(size: int = 8, char_pool: str = DEFAULT_RANDOM_STRING_CHARS) -
         return ""
     # When char_pool is empty and size > 0, random.choice will raise IndexError.
     # This is the expected behavior for the tests.
-    return ''.join(random.choice(char_pool) for _ in range(size))
+    return "".join(random.choice(char_pool) for _ in range(size))

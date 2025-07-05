@@ -30,7 +30,7 @@ version = "0.1.0"
 
 [dependency-groups]
 dev = [
-  "pyright>=1.1.402",
-  "pytest>=8.4.1",
-  "ruff>=0.12.1",
+  "pyright==1.1.402",
+  "pytest==8.4.1",
+  "ruff==0.12.2",
 ]
