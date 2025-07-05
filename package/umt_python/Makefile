@@ -13,10 +13,12 @@ format:
 
 # Run lint check
 lint:
+	uv run ruff format --check
 	uv run ruff check
 
 # Auto-fix lint issues
 lint-fix:
+	uv run ruff format
 	uv run ruff check --fix
 
 # Run type check
@@ -28,7 +30,7 @@ test:
 	uv run pytest
 
 # Build package
-build: clean
+build: clean lint
 	uv run --with build python -m build
 
 # Clean build artifacts

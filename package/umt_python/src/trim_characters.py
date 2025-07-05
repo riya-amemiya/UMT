@@ -1,6 +1,7 @@
 from .trim_start_characters import trim_start_characters
 from .trim_end_characters import trim_end_characters
 
+
 def trim_characters(string_: str, chars: str) -> str:
     """
     Removes specified characters from both ends of a string.

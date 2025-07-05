@@ -25,8 +25,8 @@ def to_half_width(string_: str) -> str:
     # The difference is 0xFEE0 (65248)
     # Full-width space U+3000 -> Half-width space U+0020
     translation_table = {}
-    for i in range(0xFF01, 0xFF5F): # Covers full-width '！' to '～'
+    for i in range(0xFF01, 0xFF5F):  # Covers full-width '！' to '～'
         translation_table[i] = i - 0xFEE0
-    translation_table[0x3000] = 0x0020 # Full-width space to half-width space
-    
+    translation_table[0x3000] = 0x0020  # Full-width space to half-width space
+
     return string_.translate(translation_table)
