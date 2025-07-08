@@ -130,6 +130,7 @@ bun add umt
 |------|------|-------------|---------|
 | addition | `(...numbers: number[]) => number` | Addition without floating point errors | `addition(0.1, 0.2); // 0.3` |
 | average | `(numbers: number[]) => number` | Calculates the arithmetic mean of an array of numbers | `average([1, 2, 3]); // 2` |
+| correlationCoefficient | `(x: number[], y: number[]) => number` | Calculate the Pearson correlation coefficient between two arrays | `correlationCoefficient([1, 2, 3, 4, 5], [2, 4, 6, 8, 10]); // 1` |
 | bitwise | `(x: number, k: number, direction?: "left" \| "right") => number` | Performs bit rotation on a number | `bitwise(0x12345678, 8); // 0x34567812` |
 | calculator | `<T extends Record<string, string \| number>>(expression: string, exchange?: T) => string` | Calculator function that handles mathematical expressions and simple equations | `calculator("1+2"); // "3"` |
 | calculatorInitialization | `<T extends { [key: string]: string \| number }>(exchange: T) => (x: string) => string` | Initializes a calculator function with exchange rates | `calculatorInitialization({ $: 100 })("$1"); // "100"` |
@@ -150,11 +151,13 @@ bun add umt
 | max | `(...number_: number[]) => number` | Returns the maximum value from the input numbers | `max(1, 2, 3); // 3` |
 | median | `(array: number[]) => number` | Calculate the median of an array of numbers | `median([1, 3, 3, 6, 7, 8, 9]); // 6` |
 | min | `(...number_: number[]) => number` | Returns the minimum value from the input numbers | `min(1, 2, 3); // 1` |
+| mode | `(array: number[]) => number[]` | Finds the most frequently occurring value(s) in an array | `mode([1, 2, 2, 3, 3, 3]); // [3]` |
 | multiples | `(x: number, n: number) => number[]` | Generate an array of multiples of a number | `multiples(2, 5); // [2, 4, 6, 8, 10]` |
 | multiplication | `(...numbers: number[]) => number` | Performs multiplication without floating point errors for any number of arguments | `multiplication(0.1, 0.2, 0.3); // 0.006` |
 | nCr | `(n: number, r: number) => number` | Calculates combinations (nCr) - number of ways to choose r items from n items | `nCr(5, 2); // 10` |
 | nHr | `(n: number, r: number) => number` | Calculates combinations with repetition (nHr) | `nHr(5, 2); // 15` |
 | nPr | `(n: number, r: number) => number` | Calculates permutations (nPr) - number of ways to arrange r items from n items | `nPr(5, 2); // 20` |
+| percentile | `(array: number[], percentile: number) => number` | Calculate the nth percentile of values in an array | `percentile([1, 2, 3, 4, 5], 50); // 3` |
 | primeFactorization | `(x: number) => Array<{number: number; count: number}>` | Performs prime factorization of a number | `primeFactorization(12); // [{number: 2, count: 2}, {number: 3, count: 1}]` |
 | quotient | `(x: number, y: number) => number[]` | Computes quotient and remainder of division | `quotient(5, 2); // [2, 1]` |
 | radToDeg | `(x: number) => number` | Converts radians to degrees | `radToDeg(Math.PI); // 180` |
@@ -203,6 +206,7 @@ bun add umt
 | deleteSpaces | `(string_: string) => string` | Removes all whitespace characters from a string | `deleteSpaces("Hello World"); // "HelloWorld"` |
 | escapeHtml | `(str: string) => string` | Escapes HTML special characters in a string | `escapeHtml("<script>alert('XSS')</script>"); // "&lt;script&gt;alert(&#39;XSS&#39;)&lt;/script&gt;"` |
 | formatString | `(template: string, ...values: unknown[]) => string` | Replaces placeholders in a template string with specified values | `formatString("Hello, {0}!", "World"); // "Hello, World!"` |
+| fuzzySearch | `(query: string, items: string[], threshold?: number) => Array<{ item: string; score: number }>` | Perform fuzzy string matching on an array of strings | `fuzzySearch("hello", ["hello", "world", "helo", "help"]); // [{ item: "hello", score: 1 }, { item: "helo", score: 0.8 }, { item: "help", score: 0.6 }]` |
 | fromBase64 | `(base64String: string) => string` | Converts Base64 to string | `fromBase64("SGVsbG8="); // "Hello"` |
 | hasNoLetters | `(text: string) => boolean` | Checks if the string contains no letters (contains only emojis, numbers, or special characters) | `hasNoLetters("123"); // true` |
 | kebabCase | `(str: string) => string` | Converts a string to kebab-case | `kebabCase("helloWorld"); // "hello-world"` |
@@ -212,12 +216,14 @@ bun add umt
 | randomString | `(size?: number, char?: string) => string` | Generates a random string | `randomString(8); // "aB3dEf9h"` |
 | randomStringInitialization | `(char?: string) => (size: number) => string` | Initializes a function that generates random strings | `const gen = randomStringInitialization("ABC"); gen(5); // "ABCAB"` |
 | reverseString | `(char: string) => string` | Reverses a string | `reverseString("Hello"); // "olleH"` |
+| slugify | `(str: string) => string` | Convert a string to a URL-friendly slug | `slugify("Hello World!"); // "hello-world"` |
 | stringSimilarity | `(string1: string, string2: string) => number` | Calculates the similarity between two strings as a percentage (0-1) using Levenshtein distance | `stringSimilarity("hello", "hallo"); // 0.8` |
 | toBase64 | `(char: string) => string` | Convert string to Base64 | `toBase64("Hello"); // "SGVsbG8="` |
 | toHalfWidth | `(str: string) => string` | Convert full-width characters to half-width characters | `toHalfWidth("１２３ＡＢＣ"); // "123ABC"` |
 | trimCharacters | `(string_: string, chars: string) => string` | Removes specified characters from both ends of a string | `trimCharacters("!!!hello!!!", "!"); // "hello"` |
 | trimEndCharacters | `(string_: string, chars: string) => string` | Removes specified characters from the end of a string | `trimEndCharacters("hello!!!", "!"); // "hello"` |
 | trimStartCharacters | `(string_: string, chars: string) => string` | Removes specified characters from the start of a string | `trimStartCharacters("!!!hello", "!"); // "hello"` |
+| truncate | `(str: string, length: number, suffix?: string) => string` | Truncate a string to a specified length | `truncate("Hello World", 5); // "Hello..."` |
 
 ### Time
 
