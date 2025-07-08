@@ -19,7 +19,7 @@ export const percentile = (array: number[], percentile: number): number => {
     throw new Error("Percentile must be between 0 and 100");
   }
 
-  const sortedArray = quickSort(array);
+  const sortedArray = quickSort([...array]);
   const index = (percentile / 100) * (sortedArray.length - 1);
   const lowerIndex = Math.floor(index);
   const upperIndex = Math.ceil(index);
