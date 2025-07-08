@@ -19,6 +19,12 @@ describe("PriorityQueue", () => {
       expect(queue.size).toBe(3);
       expect(queue.peek()).toBe("high");
     });
+
+    it("should create a queue with empty initial elements", () => {
+      const queue = new PriorityQueue<string>([]);
+      expect(queue.size).toBe(0);
+      expect(queue.isEmpty).toBe(true);
+    });
   });
 
   describe("enqueue", () => {

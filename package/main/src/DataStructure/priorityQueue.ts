@@ -16,6 +16,7 @@
  *
  * ## Time Complexity
  * - enqueue: O(log n)
+ * - enqueueBack: O(log n)
  * - dequeue: O(log n)
  * - peek: O(1)
  * - peekPriority: O(1)
@@ -49,6 +50,7 @@
  */
 export class PriorityQueue<T> {
   private heap: Array<{ value: T; priority: number }> = [];
+  private minPriority = 0;
 
   /**
    * Creates a new PriorityQueue instance.
@@ -66,6 +68,7 @@ export class PriorityQueue<T> {
   constructor(initialElements?: Array<{ value: T; priority: number }>) {
     if (initialElements) {
       this.heap = [...initialElements];
+      this.updateMinPriority();
       this.buildHeap();
     }
   }
@@ -115,12 +118,14 @@ export class PriorityQueue<T> {
    */
   enqueue(value: T, priority: number): void {
     this.heap.push({ value, priority });
+    this.updateMinPriorityOnAdd(priority);
     this.heapifyUp(this.heap.length - 1);
   }
 
   /**
    * Adds an element to the end of the queue with lowest priority.
    * This element will be dequeued last (FIFO for equal lowest priority).
+   *
    * @param value - The value to add
    * @example
    * ```typescript
@@ -136,9 +141,9 @@ export class PriorityQueue<T> {
    * ```
    */
   enqueueBack(value: T): void {
-    const lowestPriority = this.getLowestPriority();
-    const newPriority = lowestPriority - 1;
+    const newPriority = this.minPriority - 1;
     this.heap.push({ value, priority: newPriority });
+    this.minPriority = newPriority;
     this.heapifyUp(this.heap.length - 1);
   }
 
@@ -164,7 +169,9 @@ export class PriorityQueue<T> {
       return this.heap.pop()?.value;
     }
 
-    const { value: result } = this.heap[0];
+    const result = this.heap[0].value;
+    // biome-ignore lint/style/noNonNullAssertion: pop() cannot return undefined when heap.length > 1
+    this.heap[0] = this.heap.pop()!;
     this.heapifyDown(0);
     return result;
   }
@@ -215,6 +222,7 @@ export class PriorityQueue<T> {
    */
   clear(): void {
     this.heap = [];
+    this.minPriority = 0;
   }
 
   /**
@@ -252,14 +260,24 @@ export class PriorityQueue<T> {
   }
 
   /**
-   * Gets the lowest priority value in the queue.
-   * @returns The lowest priority value, or 0 if queue is empty
+   * Updates the minimum priority when adding elements.
+   * @param priority - The priority being added
    */
-  private getLowestPriority(): number {
-    if (this.heap.length === 0) {
-      return 0;
+  private updateMinPriorityOnAdd(priority: number): void {
+    if (this.heap.length === 1 || priority < this.minPriority) {
+      this.minPriority = priority;
     }
-    return Math.min(...this.heap.map((item) => item.priority));
+  }
+
+  /**
+   * Updates the minimum priority from all elements (used in constructor).
+   */
+  private updateMinPriority(): void {
+    if (this.heap.length === 0) {
+      this.minPriority = 0;
+      return;
+    }
+    this.minPriority = Math.min(...this.heap.map((item) => item.priority));
   }
 
   /**
