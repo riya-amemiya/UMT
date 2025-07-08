@@ -1,20 +1,11 @@
-// biome-ignore lint/correctness/noNodejsModules: ignore
-import { readFileSync, writeFileSync } from "node:fs";
+import { $, write } from "bun";
 
-// package.jsonを読み込む
-const packageJson = JSON.parse(readFileSync("package.json", "utf8"));
-
-// nameをumt-commonに変更
+const packageJson = await $`cat ./package.json`.json();
 packageJson.name = "umt-common";
-// typeをcommonjsに変更
 packageJson.type = "commonjs";
 
-// common-moduleにコピー
-writeFileSync(
-  "common-module/package.json",
-  JSON.stringify(packageJson, null, 2),
-);
+await write("common-module/package.json", JSON.stringify(packageJson, null, 2));
 
 console.log(
-  "package.jsonのnameをumt-commonに変更し、common-moduleにコピーしました。",
+  "Changed package.json name to 'umt-common' and copied to common-module.",
 );
