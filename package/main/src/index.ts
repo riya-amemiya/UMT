@@ -3,6 +3,7 @@ export * from "./Array";
 export * from "./Color";
 export * from "./Consts";
 export * from "./Crypto";
+export * from "./DataStructure";
 export * from "./Date";
 export * from "./Error";
 export * from "./Function";

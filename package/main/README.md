@@ -60,6 +60,12 @@ bun add umt
 | zip | `<T extends unknown[][]>(...arrays: T) => ZipArrayType<T>` | Creates a new array by combining elements from multiple arrays at corresponding positions | `zip([1, 2], ['a', 'b']); // [[1, 'a'], [2, 'b']]` |
 | zipLongest | `<T extends unknown[][]>(...arrays: T) => ZipArrayType<T>` | Combines arrays of different lengths by padding shorter arrays with undefined values | `zipLongest([1, 2], ['a']); // [[1, 'a'], [2, undefined]]` |
 
+### DataStructure
+
+| name | type | description | example |
+|------|------|-------------|---------|
+| PriorityQueue | `class PriorityQueue<T>` | A priority queue implementation using a binary heap. Higher priority values are dequeued first. | `const queue = new PriorityQueue<string>(); queue.enqueue("low", 1); queue.enqueue("high", 3); queue.enqueueBack("back"); queue.dequeue(); // "high"` |
+
 ### Color
 
 | name | type | description | example |
