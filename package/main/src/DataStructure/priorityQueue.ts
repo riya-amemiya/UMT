@@ -164,9 +164,7 @@ export class PriorityQueue<T> {
       return this.heap.pop()?.value;
     }
 
-    const result = this.heap[0].value;
-    // biome-ignore lint/style/noNonNullAssertion: pop() cannot return undefined when heap.length > 1
-    this.heap[0] = this.heap.pop()!;
+    const { value: result } = this.heap[0];
     this.heapifyDown(0);
     return result;
   }
