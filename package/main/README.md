@@ -75,8 +75,8 @@ bun add umt
 
 | name | type | description | example |
 |------|------|-------------|---------|
-| decodeBase32 | `(input: string) => Uint8Array` | Decodes a Base32 string to Uint8Array | `decodeBase32("JBSWY3DP"); // Uint8Array for "Hello"` |
-| decodeBase32ToString | `(input: string) => string` | Decodes a Base32 string to a UTF-8 string | `decodeBase32ToString("JBSWY3DP"); // "Hello"` |
+| decodeBase32 | `(input: string) => Uint8Array` | Decodes an uppercase Base32 string to Uint8Array. Does not validate padding placement. | `decodeBase32("JBSWY3DP"); // Uint8Array for "Hello"` |
+| decodeBase32ToString | `(input: string) => string` | Decodes an uppercase Base32 string to a UTF-8 string. Does not validate padding placement. | `decodeBase32ToString("JBSWY3DP"); // "Hello"` |
 | decodeBase58 | `(input: string) => Uint8Array` | Decodes a Base58 string to Uint8Array | `decodeBase58("9Ajdvzr"); // Uint8Array for "Hello"` |
 | decodeBase58ToString | `(input: string) => string` | Decodes a Base58 string to a UTF-8 string | `decodeBase58ToString("9Ajdvzr"); // "Hello"` |
 | encodeBase32 | `(input: string \| Uint8Array) => string` | Encodes a string or Uint8Array to Base32 format | `encodeBase32("Hello"); // "JBSWY3DP"` |
