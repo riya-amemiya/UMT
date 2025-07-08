@@ -382,9 +382,30 @@ describe("PriorityQueue", () => {
       const queue = new PriorityQueue<Task>();
       const now = new Date();
 
-      queue.enqueue({ name: "urgent", priority: 10, deadline: new Date(now.getTime() + 3_600_000) }, 10);
-      queue.enqueue({ name: "normal", priority: 5, deadline: new Date(now.getTime() + 7_200_000) }, 5);
-      queue.enqueue({ name: "low", priority: 1, deadline: new Date(now.getTime() + 10_800_000) }, 1);
+      queue.enqueue(
+        {
+          name: "urgent",
+          priority: 10,
+          deadline: new Date(now.getTime() + 3_600_000),
+        },
+        10,
+      );
+      queue.enqueue(
+        {
+          name: "normal",
+          priority: 5,
+          deadline: new Date(now.getTime() + 7_200_000),
+        },
+        5,
+      );
+      queue.enqueue(
+        {
+          name: "low",
+          priority: 1,
+          deadline: new Date(now.getTime() + 10_800_000),
+        },
+        1,
+      );
 
       const firstTask = queue.dequeue();
       expect(firstTask?.name).toBe("urgent");
@@ -399,9 +420,9 @@ describe("PriorityQueue", () => {
 
       const task = queue.dequeue();
       expect(task).toBe("task3");
-      
+
       queue.enqueue("task3", 0.5);
-      
+
       expect(queue.dequeue()).toBe("task2");
       expect(queue.dequeue()).toBe("task1");
       expect(queue.dequeue()).toBe("task3");

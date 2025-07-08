@@ -1,7 +1,7 @@
 /**
  * A priority queue implementation using a binary heap.
  * Higher priority values are dequeued first.
- * 
+ *
  * ## Features
  * - **enqueue(value, priority)**: Add element with priority
  * - **enqueueBack(value)**: Add element to the back with lowest priority
@@ -13,25 +13,25 @@
  * - **clear()**: Remove all elements
  * - **toArray()**: Get all elements as array
  * - **toArrayWithPriorities()**: Get all elements with priorities
- * 
+ *
  * ## Time Complexity
  * - enqueue: O(log n)
  * - dequeue: O(log n)
  * - peek: O(1)
  * - peekPriority: O(1)
- * 
+ *
  * @example
  * ```typescript
  * const queue = new PriorityQueue<string>();
  * queue.enqueue("low", 1);
  * queue.enqueue("high", 3);
  * queue.enqueue("medium", 2);
- * 
+ *
  * console.log(queue.dequeue()); // "high"
  * console.log(queue.dequeue()); // "medium"
  * console.log(queue.dequeue()); // "low"
  * ```
- * 
+ *
  * @example
  * ```typescript
  * // Initialize with elements
@@ -40,11 +40,11 @@
  *   { value: "task2", priority: 3 },
  *   { value: "task3", priority: 2 }
  * ]);
- * 
+ *
  * console.log(queue.peek()); // "task2"
  * console.log(queue.peekPriority()); // 3
  * ```
- * 
+ *
  * @template T - The type of elements stored in the queue
  */
 export class PriorityQueue<T> {
@@ -245,7 +245,7 @@ export class PriorityQueue<T> {
    * const queue = new PriorityQueue<string>();
    * queue.enqueue("low", 1);
    * queue.enqueue("high", 10);
-   * console.log(queue.toArrayWithPriorities()); 
+   * console.log(queue.toArrayWithPriorities());
    * // [{ value: "high", priority: 10 }, { value: "low", priority: 1 }] (order may vary)
    * ```
    */
@@ -261,7 +261,7 @@ export class PriorityQueue<T> {
     if (this.heap.length === 0) {
       return 0;
     }
-    return Math.min(...this.heap.map(item => item.priority));
+    return Math.min(...this.heap.map((item) => item.priority));
   }
 
   /**
