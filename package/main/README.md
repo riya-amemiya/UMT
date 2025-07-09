@@ -273,6 +273,7 @@ bun add umt
 | isArray | `<T>(array: unknown) => array is T[]` | Determines if the value is an array | `isArray([1, 2, 3]); // true` |
 | isBrowser | `() => boolean` | Determines if the current environment is a browser | `isBrowser(); // true in browser` |
 | isBun | `() => boolean` | Determines if the current environment is Bun runtime | `isBun(); // true in Bun` |
+| isDeepEqual | `(a: unknown, b: unknown, options?: IsDeepEqualOptions) => boolean` | Performs deep equality comparison between two values with support for nested objects, arrays, Sets, Maps, and circular references | `isDeepEqual({ a: 1, b: [2, 3] }, { b: [2, 3], a: 1 }); // true` |
 | isDictionaryObject | `<T extends { [key: string]: unknown }>(object: unknown) => object is T` | Determines if the value is a dictionary-type object | `isDictionaryObject({}); // true` |
 | isDouble | `<T extends boolean = true>(x: unknown, loose?: T) => x is T extends true ? number \| string : number` | Determines if the value is a decimal number | `isDouble(0.1); // true` |
 | isEqual | `(a: unknown, b: unknown) => boolean` | Evaluates true strict equality | `isEqual(1, 1); // true` |
