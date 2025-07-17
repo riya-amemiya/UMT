@@ -18,7 +18,7 @@ jobs:
         strategy:
             matrix:
                 python-version: ['3.9', '3.10', '3.11', '3.12']
-                os: [ubuntu-latest]
+                os: [blacksmith-4vcpu-ubuntu-2404]
         defaults:
           run:
             working-directory: ./package/umt_python
@@ -38,7 +38,7 @@ jobs:
         strategy:
             matrix:
                 python-version: ['3.9', '3.10', '3.11', '3.12']
-                os: [ubuntu-latest]
+                os: [blacksmith-4vcpu-ubuntu-2404]
         defaults:
           run:
             working-directory: ./package/umt_python
@@ -58,7 +58,7 @@ jobs:
         strategy:
             matrix:
                 python-version: ['3.9', '3.10', '3.11', '3.12']
-                os: [ubuntu-latest]
+                os: [blacksmith-4vcpu-ubuntu-2404]
         defaults:
           run:
             working-directory: ./package/umt_python
@@ -78,7 +78,7 @@ jobs:
         strategy:
           matrix:
             python-version: ['3.9', '3.10', '3.11', '3.12']
-            os: [ubuntu-latest]
+            os: [blacksmith-4vcpu-ubuntu-2404]
         defaults:
           run:
             working-directory: ./package/umt_python

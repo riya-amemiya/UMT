@@ -17,7 +17,7 @@ on:
 jobs:
     build:
         name: UMT Node Plugin Package Test on Ubuntu
-        runs-on: ubuntu-latest
+        runs-on: blacksmith-4vcpu-ubuntu-2404
         strategy:
           matrix:
             node-version: [20.x]

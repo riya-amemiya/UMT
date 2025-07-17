@@ -20,7 +20,7 @@ jobs:
         strategy:
             matrix:
                 bun-version: [latest]
-                os: [ubuntu-latest]
+                os: [blacksmith-4vcpu-ubuntu-2404]
         defaults:
           run:
             working-directory: ./package/main
@@ -53,7 +53,7 @@ jobs:
         strategy:
             matrix:
                 bun-version: [latest]
-                os: [ubuntu-latest]
+                os: [blacksmith-4vcpu-ubuntu-2404]
         defaults:
           run:
             working-directory: ./package/main
