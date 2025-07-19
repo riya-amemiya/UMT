@@ -30,21 +30,18 @@ const htmlUnescapeMap: Record<string, string> = {
  * ```
  */
 export const unescapeHtml = (string_: string): string => {
-  let result = string_;
+  const entityRegex =
+    /&(?:amp|lt|gt|quot|#39|#x27|#x2F|#x60|#x3D|test);|&#(\d*);|&#x([0-9a-fA-F]*);/g;
 
-  for (const [entity, character] of Object.entries(htmlUnescapeMap)) {
-    result = result.replaceAll(entity, character);
-  }
-
-  result = result.replaceAll(/&#(\d+);/g, (_, code) => {
-    const codePoint = Number.parseInt(code, 10);
-    return Number.isNaN(codePoint) ? _ : String.fromCodePoint(codePoint);
+  return string_.replaceAll(entityRegex, (match, dec, hex) => {
+    if (dec !== undefined) {
+      const codePoint = Number.parseInt(dec, 10);
+      return Number.isNaN(codePoint) ? match : String.fromCodePoint(codePoint);
+    }
+    if (hex !== undefined) {
+      const codePoint = Number.parseInt(hex, 16);
+      return Number.isNaN(codePoint) ? match : String.fromCodePoint(codePoint);
+    }
+    return htmlUnescapeMap[match] || match;
   });
-
-  result = result.replaceAll(/&#x([0-9a-fA-F]+);/g, (_, code) => {
-    const codePoint = Number.parseInt(code, 16);
-    return Number.isNaN(codePoint) ? _ : String.fromCodePoint(codePoint);
-  });
-
-  return result;
 };

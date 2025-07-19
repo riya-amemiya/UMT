@@ -106,9 +106,12 @@ describe("unescapeHtml", () => {
   });
 
   it("should handle malformed entities", () => {
-    expect(unescapeHtml("&lt")).toBe("&lt"); // Missing semicolon
-    expect(unescapeHtml("&unknown;")).toBe("&unknown;"); // Unknown entity
-    expect(unescapeHtml("&#")).toBe("&#"); // Incomplete
+    expect(unescapeHtml("&lt")).toBe("&lt");
+    expect(unescapeHtml("&unknown;")).toBe("&unknown;");
+    expect(unescapeHtml("&#")).toBe("&#");
+    expect(unescapeHtml("&nonexistent;")).toBe("&nonexistent;");
+    expect(unescapeHtml("&notinmap;")).toBe("&notinmap;");
+    expect(unescapeHtml("&test;")).toBe("&test;");
   });
 
   it("should handle complex HTML document", () => {
@@ -156,10 +159,10 @@ describe("unescapeHtml", () => {
   });
 
   it("should handle Unicode characters in numeric references", () => {
-    expect(unescapeHtml("&#12354;")).toBe("あ"); // Japanese hiragana
-    expect(unescapeHtml("&#x3042;")).toBe("あ"); // Same character in hex
-    expect(unescapeHtml("&#8226;")).toBe("•"); // Bullet point
-    expect(unescapeHtml("&#x2022;")).toBe("•"); // Same in hex
+    expect(unescapeHtml("&#12354;")).toBe("あ");
+    expect(unescapeHtml("&#x3042;")).toBe("あ");
+    expect(unescapeHtml("&#8226;")).toBe("•");
+    expect(unescapeHtml("&#x2022;")).toBe("•");
   });
 
   it("should preserve already unescaped content", () => {
