@@ -15,7 +15,7 @@ const htmlUnescapeMap: Record<string, string> = {
 
 /**
  * Unescapes HTML entities in a string
- * @param str - The string to unescape
+ * @param string_ - The string to unescape
  * @returns The unescaped string with HTML entities converted back to their original characters
  * @example
  * ```typescript
