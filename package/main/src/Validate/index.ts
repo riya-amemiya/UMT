@@ -6,6 +6,7 @@ export * from "./object";
 export * from "./string";
 
 // Other Validate
+export * from "./isDeepEqual";
 export * from "./isArray";
 export * from "./isBrowser";
 export * from "./isBun";
