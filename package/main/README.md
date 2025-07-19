@@ -230,6 +230,7 @@ bun add umt
 | trimEndCharacters | `(string_: string, chars: string) => string` | Removes specified characters from the end of a string | `trimEndCharacters("hello!!!", "!"); // "hello"` |
 | trimStartCharacters | `(string_: string, chars: string) => string` | Removes specified characters from the start of a string | `trimStartCharacters("!!!hello", "!"); // "hello"` |
 | truncate | `(str: string, length: number, suffix?: string) => string` | Truncate a string to a specified length | `truncate("Hello World", 5); // "Hello..."` |
+| unescapeHtml | `(str: string) => string` | Unescapes HTML entities in a string | `unescapeHtml("&lt;script&gt;alert(&quot;Hello&quot;);&lt;/script&gt;"); // "<script>alert("Hello");</script>"` |
 
 ### Time
 
