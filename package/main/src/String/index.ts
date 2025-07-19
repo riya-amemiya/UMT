@@ -20,3 +20,4 @@ export * from "./trimCharacters";
 export * from "./trimEndCharacters";
 export * from "./trimStartCharacters";
 export * from "./truncate";
+export * from "./unescapeHtml";
