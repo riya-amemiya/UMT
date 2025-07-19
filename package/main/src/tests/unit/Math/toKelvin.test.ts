@@ -14,6 +14,9 @@ describe("toKelvin function", () => {
 
   it("should handle extreme temperatures", () => {
     expect(toKelvin(1000)).toBe(1273.15);
-    expect(toKelvin(-300)).toBe(-26.85); // Below absolute zero (physically impossible)
+    expect(toKelvin(-300)).toBe(-26.85);
+  });
+  it("should handle decimal values", () => {
+    expect(toKelvin(25.5)).toBe(298.65);
   });
 });

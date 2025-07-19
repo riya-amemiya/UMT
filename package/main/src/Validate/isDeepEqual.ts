@@ -32,16 +32,11 @@ export function isDeepEqual(
   options: IsDeepEqualOptions = {},
 ): boolean {
   const { strictOrder = true } = options;
-  const stack = [{ x: a, y: b }];
+  const visited = new WeakSet<object>();
 
-  while (stack.length > 0) {
-    // biome-ignore lint/style/noNonNullAssertion: stack.length > 0 ensures pop() returns a value
-    const current = stack.pop()!;
-
-    const { x, y } = current;
-
+  function compare(x: unknown, y: unknown): boolean {
     if (Object.is(x, y)) {
-      continue;
+      return true;
     }
 
     if (x == null || y == null) {
@@ -56,27 +51,24 @@ export function isDeepEqual(
       return false;
     }
 
-    const objectX = x;
-    const objectY = y;
+    if (visited.has(x as object) || visited.has(y as object)) {
+      return true;
+    }
+    visited.add(x as object);
+    visited.add(y as object);
 
-    const ctorX = objectX.constructor;
-    const ctorY = objectY.constructor;
+    const ctorX = (x as object).constructor;
+    const ctorY = (y as object).constructor;
     if (ctorX !== ctorY) {
       return false;
     }
 
     if (x instanceof Date && y instanceof Date) {
-      if (x.getTime() !== y.getTime()) {
-        return false;
-      }
-      continue;
+      return x.getTime() === y.getTime();
     }
 
     if (x instanceof RegExp && y instanceof RegExp) {
-      if (x.toString() !== y.toString()) {
-        return false;
-      }
-      continue;
+      return x.toString() === y.toString();
     }
 
     if (Array.isArray(x) && Array.isArray(y)) {
@@ -85,13 +77,29 @@ export function isDeepEqual(
       }
 
       if (strictOrder) {
-        for (let index = x.length - 1; index >= 0; index--) {
-          stack.push({ x: x[index], y: y[index] });
+        for (const [index, element] of x.entries()) {
+          if (!compare(element, y[index])) {
+            return false;
+          }
         }
       } else {
-        return false;
+        const yCopy = [...y];
+        for (const itemX of x) {
+          let found = false;
+          for (let index = 0; index < yCopy.length; index++) {
+            if (compare(itemX, yCopy[index])) {
+              yCopy.splice(index, 1);
+              found = true;
+              break;
+            }
+          }
+          if (!found) {
+            return false;
+          }
+        }
+        return yCopy.length === 0;
       }
-      continue;
+      return true;
     }
 
     if (x instanceof Set && y instanceof Set) {
@@ -99,15 +107,10 @@ export function isDeepEqual(
         return false;
       }
 
-      const arrayX = Array.from(x);
-      const arrayY = Array.from(y);
-
-      for (const itemX of arrayX) {
+      for (const item of x) {
         let found = false;
-        for (let index = 0; index < arrayY.length; index++) {
-          const itemY = arrayY[index];
-          if (Object.is(itemX, itemY)) {
-            arrayY.splice(index, 1);
+        for (const otherItem of y) {
+          if (compare(item, otherItem)) {
             found = true;
             break;
           }
@@ -116,7 +119,7 @@ export function isDeepEqual(
           return false;
         }
       }
-      continue;
+      return true;
     }
 
     if (x instanceof Map && y instanceof Map) {
@@ -124,15 +127,10 @@ export function isDeepEqual(
         return false;
       }
 
-      const entriesX = Array.from(x.entries());
-      const entriesY = Array.from(y.entries());
-
-      for (const [keyX, valueX] of entriesX) {
+      for (const [key, value] of x) {
         let found = false;
-        for (let index = 0; index < entriesY.length; index++) {
-          const [keyY, valueY] = entriesY[index];
-          if (Object.is(keyX, keyY) && Object.is(valueX, valueY)) {
-            entriesY.splice(index, 1);
+        for (const [otherKey, otherValue] of y) {
+          if (compare(key, otherKey) && compare(value, otherValue)) {
             found = true;
             break;
           }
@@ -141,7 +139,7 @@ export function isDeepEqual(
           return false;
         }
       }
-      continue;
+      return true;
     }
 
     if (ArrayBuffer.isView(x) && ArrayBuffer.isView(y)) {
@@ -155,30 +153,35 @@ export function isDeepEqual(
           return false;
         }
       }
-      continue;
+      return true;
     }
 
-    const keysX = Object.keys(objectX);
-    const keysY = Object.keys(objectY);
+    const keysX = Object.keys(x);
+    const keysY = Object.keys(y);
 
     if (keysX.length !== keysY.length) {
       return false;
     }
 
     for (const key of keysX) {
-      if (!(key in objectY)) {
+      if (!(key in y)) {
         return false;
       }
     }
 
-    for (let index = keysX.length - 1; index >= 0; index--) {
-      const key = keysX[index];
-      stack.push({
-        x: objectX[key as keyof typeof objectX],
-        y: objectY[key as keyof typeof objectY],
-      });
+    for (const key of keysX) {
+      if (
+        !compare(
+          (x as Record<string, unknown>)[key],
+          (y as Record<string, unknown>)[key],
+        )
+      ) {
+        return false;
+      }
     }
+
+    return true;
   }
 
-  return true;
+  return compare(a, b);
 }

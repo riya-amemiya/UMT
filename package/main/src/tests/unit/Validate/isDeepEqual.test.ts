@@ -47,7 +47,7 @@ describe("isDeepEqual", () => {
         false,
       );
       expect(isDeepEqual([1, 2, 3], [3, 2, 1], { strictOrder: false })).toBe(
-        false,
+        true,
       );
     });
 
@@ -242,6 +242,22 @@ describe("isDeepEqual", () => {
       const obj1 = { a: 1, b: 2 };
       const obj2 = { a: 1, c: 2 };
       expect(isDeepEqual(obj1, obj2)).toBe(false);
+    });
+
+    it("should handle circular references", () => {
+      const obj1: { a: number; circular?: unknown } = { a: 1 };
+      obj1.circular = obj1;
+
+      const obj2: { a: number; circular?: unknown } = { a: 1 };
+      obj2.circular = obj2;
+
+      expect(isDeepEqual(obj1, obj2)).toBe(true);
+    });
+
+    it("should handle unordered array comparison with no match", () => {
+      expect(isDeepEqual([1, 2, 3], [1, 2, 4], { strictOrder: false })).toBe(
+        false,
+      );
     });
   });
 });
