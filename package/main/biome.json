@@ -104,6 +104,7 @@
         "noInferrableTypes": "error",
         "noNamespace": "error",
         "noNegationElse": "error",
+        "noNonNullAssertion": "error",
         "noParameterAssign": "warn",
         "noParameterProperties": "off",
         "noProcessEnv": "error",
