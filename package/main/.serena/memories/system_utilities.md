@@ -17,4 +17,4 @@ feat: support new things                  # OK
 feat support new things                   # NG
 ```
 
-Available scopes: all, ci, docs, backend, be, cash-register, cr, dashboard, etc.
+Available scopes: all, ci, docs, backend, cash-register, dashboard, etc.
