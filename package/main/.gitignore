@@ -101,3 +101,7 @@ doc
 tmp/src
 
 dependency-graph.svg
+
+/.serena/*
+!/.serena/project.yml
+!/.serena/memories/
