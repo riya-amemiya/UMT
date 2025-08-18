@@ -5,5 +5,5 @@
  * @example reverseString("Hello"); // "olleH"
  */
 export const reverseString = (char: string): string => {
-  return char.split("").reverse().join("");
+  return char.split("").toReversed().join("");
 };
