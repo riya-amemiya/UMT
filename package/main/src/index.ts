@@ -7,7 +7,6 @@ export * from "./DataStructure";
 export * from "./Date";
 export * from "./Error";
 export * from "./Function";
-export * from "./Graph";
 export * from "./IP";
 export * from "./Math";
 export * from "./Object";
