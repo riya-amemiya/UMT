@@ -6,7 +6,12 @@ on:
   pull_request:
     branches:
       - main
-      - develop
+      - feature/*
+    paths:
+      - 'package/main/**'
+  push:
+    branches:
+      - main
       - feature/*
     paths:
       - 'package/main/**'
