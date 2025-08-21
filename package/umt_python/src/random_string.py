@@ -32,5 +32,5 @@ def random_string(size: int = 8, char_pool: str = DEFAULT_RANDOM_STRING_CHARS) -
     if size == 0:
         return ""
     if not char_pool:
-        raise ValueError("char_pool cannot be empty")
+        raise ValueError("char_pool cannot be empty when size > 0")
     return "".join(random.choice(char_pool) for _ in range(size))
