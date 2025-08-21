@@ -24,7 +24,7 @@ jobs:
             matrix:
                 bun-version: [latest]
                 os: [ubuntu-latest]
-                node-version: [18.x, 20.x, 22.x]
+                node-version: [20.x, 22.x, 24.x]
         defaults:
           run:
             working-directory: ./package/main
