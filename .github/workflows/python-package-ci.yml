@@ -1,4 +1,4 @@
-name: Python Package Test
+name: Python Package CI
 
 on:
   pull_request:
@@ -12,8 +12,8 @@ on:
 permissions:
   pull-requests: write
 jobs:
-    pythonFormat:
-        name: Python Format Check
+    format:
+        name: Run Format Check
         runs-on: ${{ matrix.os }}
         strategy:
             matrix:
@@ -23,17 +23,17 @@ jobs:
           run:
             working-directory: ./package/umt_python
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
             - name: Install uv
-              uses: astral-sh/setup-uv@v6
+              uses: astral-sh/setup-uv@4959332f0f014c5280e7eac8b70c90cb574c9f9b # v6.6.0
               with:
                   enable-cache: true
                   python-version: ${{ matrix.python-version }}
-            - name: Format Check
+            - name: Run Format Check
               run: make format
 
-    pythonLint:
-        name: Python Lint
+    lint:
+        name: Run Lint
         runs-on: ${{ matrix.os }}
         strategy:
             matrix:
@@ -43,17 +43,17 @@ jobs:
           run:
             working-directory: ./package/umt_python
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
             - name: Install uv
-              uses: astral-sh/setup-uv@v6
+              uses: astral-sh/setup-uv@4959332f0f014c5280e7eac8b70c90cb574c9f9b # v6.6.0
               with:
                   enable-cache: true
                   python-version: ${{ matrix.python-version }}
-            - name: Lint
+            - name: Run Lint
               run: make lint
 
-    pythonTypecheck:
-        name: Python Type Check
+    typecheck:
+        name: Run Type Check
         runs-on: ${{ matrix.os }}
         strategy:
             matrix:
@@ -63,17 +63,17 @@ jobs:
           run:
             working-directory: ./package/umt_python
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
             - name: Install uv
-              uses: astral-sh/setup-uv@v6
+              uses: astral-sh/setup-uv@4959332f0f014c5280e7eac8b70c90cb574c9f9b # v6.6.0
               with:
                   enable-cache: true
                   python-version: ${{ matrix.python-version }}
-            - name: Type Check
+            - name: Run Type Check
               run: make typecheck
 
-    pythonTest:
-        name: Python Test
+    test:
+        name: Run Tests
         runs-on: ${{ matrix.os }}
         strategy:
           matrix:
@@ -83,11 +83,11 @@ jobs:
           run:
             working-directory: ./package/umt_python
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
             - name: Install uv
-              uses: astral-sh/setup-uv@v6
+              uses: astral-sh/setup-uv@4959332f0f014c5280e7eac8b70c90cb574c9f9b # v6.6.0
               with:
                   enable-cache: true
                   python-version: ${{ matrix.python-version }}
-            - name: Run Test
+            - name: Run Tests
               run: make test
