@@ -235,9 +235,12 @@ class TestRandomString(unittest.TestCase):
         self.assertTrue(all(c in custom_chars for c in s))
 
     def test_empty_char_pool(self):
-        # random.choice will raise IndexError if char_pool is empty
-        with self.assertRaises(IndexError):
+        with self.assertRaises(ValueError):
             random_string(char_pool="")
+
+    def test_negative_size(self):
+        with self.assertRaises(ValueError):
+            random_string(size=-1)
 
     def test_size_zero(self):
         s = random_string(size=0)
@@ -275,7 +278,7 @@ class TestRandomStringInitialization(unittest.TestCase):
 
     def test_callable_with_empty_pool_raises_error(self):
         generator = random_string_initialization(char_pool="")
-        with self.assertRaises(IndexError):
+        with self.assertRaises(ValueError):
             generator(5)
 
     def test_docstring_example(self):
