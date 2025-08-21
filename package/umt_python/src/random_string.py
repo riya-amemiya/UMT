@@ -15,7 +15,7 @@ def random_string(size: int = 8, char_pool: str = DEFAULT_RANDOM_STRING_CHARS) -
 
     Returns:
         Random string.
-    
+
     Raises:
         ValueError: If size is negative or char_pool is empty (when size > 0).
 
