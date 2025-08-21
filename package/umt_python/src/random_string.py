@@ -15,6 +15,9 @@ def random_string(size: int = 8, char_pool: str = DEFAULT_RANDOM_STRING_CHARS) -
 
     Returns:
         Random string.
+    
+    Raises:
+        ValueError: If size is negative or char_pool is empty (when size > 0).
 
     Example:
         >>> len(random_string()) == 8
@@ -24,8 +27,10 @@ def random_string(size: int = 8, char_pool: str = DEFAULT_RANDOM_STRING_CHARS) -
         >>> all(c in 'abc' for c in random_string(5, 'abc'))
         True
     """
+    if size < 0:
+        raise ValueError("size must be non-negative")
     if size == 0:
         return ""
-    # When char_pool is empty and size > 0, random.choice will raise IndexError.
-    # This is the expected behavior for the tests.
+    if not char_pool:
+        raise ValueError("char_pool cannot be empty")
     return "".join(random.choice(char_pool) for _ in range(size))
