@@ -1,9 +1,7 @@
-# アクション名
-name: UMT Node Plugin Package Test
+name: Node Plugin CI
 permissions:
   contents: read
 
-# タイミングを指定
 on:
     pull_request:
       branches:
@@ -15,8 +13,8 @@ on:
     workflow_dispatch:
 
 jobs:
-    build:
-        name: UMT Node Plugin Package Test on Ubuntu
+    ci:
+        name: Node Plugin CI
         runs-on: ubuntu-latest
         strategy:
           matrix:
@@ -25,14 +23,14 @@ jobs:
           run:
             working-directory: ./package/umt_plugin_node
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
             - name: Use Node.js ${{ matrix.node-version }}
-              uses: actions/setup-node@v4
+              uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # 4.4.0
               with:
                 node-version: ${{ matrix.node-version }}
-            - name: yarn install
+            - name: Install Dependencies
               run: yarn
-            - name: Run Build
+            - name: Build Package
               run: yarn build
-            - name: Run Test
+            - name: Run Tests
               run: yarn test

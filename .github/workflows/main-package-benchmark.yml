@@ -1,4 +1,4 @@
-name: Main Package Benchmark
+name: Main Package CI (Benchmark)
 
 permissions:
   contents: read
@@ -14,8 +14,8 @@ on:
           - sort
 
 jobs:
-    javascriptSetup:
-        name: JavaScript Setup on ${{ matrix.os }} ${{ matrix.bun-version }}
+    setup:
+        name: Setup Dependencies
         runs-on: ${{ matrix.os }}
         strategy:
             matrix:
@@ -25,30 +25,30 @@ jobs:
           run:
             working-directory: ./package/main
         steps:
-            - uses: actions/checkout@v4
-            - name: Use Bun ${{ matrix.bun-version }}
-              uses: oven-sh/setup-bun@v2
+            - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+            - name: Setup Bun ${{ matrix.bun-version }}
+              uses: oven-sh/setup-bun@735343b667d3e6f658f44d0eca948eb6282f2b76 # v2.0.2
               with:
                   bun-version: ${{ matrix.bun-version }}
-            - name: Cache Restore devDependencies
+            - name: Restore Dependencies Cache
               id: cache-restore-dev-depends
-              uses: actions/cache/restore@v4
+              uses: actions/cache/restore@0400d5f644dc74513175e3cd8d07132dd4860809 # v4.2.4
               with:
                   path: '**/node_modules'
                   key: dev-depends-${{ matrix.os }}-bun${{ matrix.bun-version }}-${{ hashFiles('package/main/package.json') }}
-            - name: Install dependencies
+            - name: Install Dependencies
               if: steps.cache-restore-dev-depends.outputs.cache-hit != 'true'
               run: bun i
-            - name: Cache Save devDependencies
+            - name: Save Dependencies Cache
               if: steps.cache-restore-dev-depends.outputs.cache-hit != 'true'
               id: cache-save-dev-depends
-              uses: actions/cache/save@v4
+              uses: actions/cache/save@0400d5f644dc74513175e3cd8d07132dd4860809 # v4.2.4
               with:
                   path: '**/node_modules'
                   key: dev-depends-${{ matrix.os }}-bun${{ matrix.bun-version }}-${{ hashFiles('package/main/package.json') }}
-    runBenchmark:
-        name: JavaScript Benchmark on ${{ matrix.os }} ${{ matrix.bun-version }}
-        needs: javascriptSetup
+    benchmark:
+        name: Run Benchmark
+        needs: setup
         runs-on: ${{ matrix.os }}
         strategy:
             matrix:
@@ -58,14 +58,14 @@ jobs:
           run:
             working-directory: ./package/main
         steps:
-            - uses: actions/checkout@v4
-            - name: Use Bun ${{ matrix.bun-version }}
-              uses: oven-sh/setup-bun@v2
+            - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+            - name: Setup Bun ${{ matrix.bun-version }}
+              uses: oven-sh/setup-bun@735343b667d3e6f658f44d0eca948eb6282f2b76 # v2.0.2
               with:
                   bun-version: ${{ matrix.bun-version }}
-            - name: Cache Restore devDependencies
+            - name: Restore Dependencies Cache
               id: cache-restore-dev-depends
-              uses: actions/cache/restore@v4
+              uses: actions/cache/restore@0400d5f644dc74513175e3cd8d07132dd4860809 # v4.2.4
               with:
                   path: '**/node_modules'
                   key: dev-depends-${{ matrix.os }}-bun${{ matrix.bun-version }}-${{ hashFiles('package/main/package.json') }}
