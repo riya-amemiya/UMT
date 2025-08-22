@@ -18,6 +18,11 @@ export const email = (message?: string): ValidateReturnType<string> => {
     type: "string",
     message,
     validate: (value) => {
+      // RFC 5322 length limitations
+      if (value.length > 998) {
+        return false;
+      }
+
       // Check for consecutive dots
       if (value.includes("..")) {
         return false;
@@ -27,6 +32,12 @@ export const email = (message?: string): ValidateReturnType<string> => {
       if (!(localPart && domainPart)) {
         return false;
       }
+
+      // RFC 5321 length limits: local part max 64 chars, domain part max 253 chars
+      if (localPart.length > 64 || domainPart.length > 253) {
+        return false;
+      }
+
       if (localPart.startsWith(".") || localPart.endsWith(".")) {
         return false;
       }
