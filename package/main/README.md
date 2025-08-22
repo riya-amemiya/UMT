@@ -115,21 +115,6 @@ bun add umt
 |------|------|-------------|---------|
 | curry | `(func: (...args: unknown[]) => unknown) => Function` | Curries a function | `const add = (a, b, c) => a + b + c; curry(add)(1)(2)(3); // 6` |
 
-### Graph
-
-| name | type | description | example |
-|------|------|-------------|---------|
-| createGraph | `<T>(options?: GraphOptions) => Graph<T>` | Creates a new empty graph with specified options | `createGraph<string>({ directed: true }) // Creates a directed graph for string vertices` |
-| addEdge | `<T>(graph: Graph<T>, from: T, to: T, weight?: number) => Graph<T>` | Adds a weighted edge between two vertices in the graph | `addEdge(graph, "A", "B", 5) // Adds edge A -> B with weight 5` |
-| removeEdge | `<T>(graph: Graph<T>, from: T, to: T) => Graph<T>` | Removes an edge between two vertices in the graph | `removeEdge(graph, "A", "B") // Removes edge A -> B` |
-| bfs | `<T>(graph: Graph<T>, start: T, options?: GraphTraversalOptions<T>) => T[]` | Performs breadth-first search traversal on the graph | `bfs(graph, "A") // Returns vertices reachable from A in BFS order` |
-| dfs | `<T>(graph: Graph<T>, start: T, options?: GraphTraversalOptions<T>) => T[]` | Performs depth-first search traversal on the graph | `dfs(graph, "A") // Returns vertices reachable from A in DFS order` |
-| dijkstra | `<T>(graph: Graph<T>, start: T, goal: T) => PathResult<T>` | Finds the shortest path between two vertices using Dijkstra's algorithm | `dijkstra(graph, "A", "D") // Returns shortest path from A to D` |
-| aStar | `<T>(graph: Graph<T>, start: T, goal: T, heuristic: HeuristicFunction<T>) => PathResult<T>` | Finds the shortest path between two vertices using A* algorithm | `aStar(graph, "A", "D", (from, to) => manhattanDistance(from, to))` |
-| topoSort | `<T>(graph: Graph<T>) => T[]` | Performs topological sorting on a directed acyclic graph (DAG) | `topoSort(dagGraph) // Returns vertices in dependency order` |
-| connectedComponents | `<T>(graph: Graph<T>) => T[][]` | Finds all connected components in an undirected graph | `connectedComponents(graph) // Returns [[A, B], [C, D]] for two components` |
-| hasCycle | `<T>(graph: Graph<T>) => boolean` | Detects if the graph contains a cycle | `hasCycle(graph) // Returns true if graph has cycles` |
-
 ### IP
 
 | name | type | description | example |
