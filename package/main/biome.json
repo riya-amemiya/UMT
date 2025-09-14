@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.1.2/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.2.0/schema.json",
   "assist": {
     "actions": {
       "source": {
@@ -10,11 +10,11 @@
   "files": {
     "includes": [
       "**",
-      "!**/node_modules/**",
-      "!**/module/**",
+      "!**/node_modules",
+      "!**/module",
       "!**/*.json",
-      "!**/doc/**",
-      "!**/coverage/**"
+      "!**/doc",
+      "!**/coverage"
     ]
   },
   "formatter": {
@@ -64,32 +64,22 @@
         "useWhile": "error"
       },
       "correctness": {
+        "noGlobalDirnameFilename": "error",
         "noNodejsModules": "error",
+        "noProcessGlobal": "error",
         "noUndeclaredVariables": "warn",
         "noUnusedVariables": "warn",
         "useExhaustiveDependencies": "warn",
-        "useHookAtTopLevel": "error"
+        "useHookAtTopLevel": "error",
+        "useParseIntRadix": "error",
+        "useSingleJsDocAsterisk": "error"
       },
       "nursery": {
-        "noAwaitInLoop": "error",
-        "noConstantBinaryExpression": "error",
-        "noGlobalDirnameFilename": "error",
-        "noProcessGlobal": "error",
-        "noTsIgnore": "error",
-        "noUselessBackrefInRegex": "error",
-        "noUselessEscapeInString": "error",
         "noUselessUndefined": "error",
-        "useAdjacentGetterSetter": "error",
-        "useConsistentObjectDefinition": "error",
-        "useExhaustiveSwitchCases": "error",
-        "useIterableCallbackReturn": "error",
-        "useNumericSeparators": "error",
-        "useObjectSpread": "warn",
-        "useParseIntRadix": "error",
-        "useSingleJsDocAsterisk": "error",
-        "useSymbolDescription": "error"
+        "useExhaustiveSwitchCases": "error"
       },
       "performance": {
+        "noAwaitInLoops": "error",
         "noDelete": "error",
         "noNamespaceImport": "error"
       },
@@ -104,6 +94,7 @@
         "noInferrableTypes": "error",
         "noNamespace": "error",
         "noNegationElse": "error",
+        "noNonNullAssertion": "error",
         "noParameterAssign": "warn",
         "noParameterProperties": "off",
         "noProcessEnv": "error",
@@ -117,12 +108,14 @@
         "useCollapsedElseIf": "error",
         "useConsistentArrayType": "error",
         "useConsistentBuiltinInstantiation": "error",
+        "useConsistentObjectDefinitions": "error",
         "useDefaultParameterLast": "error",
         "useDefaultSwitchClause": "error",
         "useEnumInitializers": "error",
         "useExplicitLengthCheck": "error",
         "useForOf": "error",
         "useFragmentSyntax": "error",
+        "useGroupedAccessorPairs": "error",
         "useNamingConvention": {
           "level": "off",
           "options": {
@@ -139,14 +132,18 @@
         },
         "useNodeAssertStrict": "error",
         "useNumberNamespace": "error",
+        "useNumericSeparators": "error",
+        "useObjectSpread": "warn",
         "useSelfClosingElements": "error",
         "useShorthandAssign": "error",
         "useSingleVarDeclarator": "error",
+        "useSymbolDescription": "error",
         "useThrowNewError": "error",
         "useThrowOnlyError": "error",
         "useTrimStartEnd": "error"
       },
       "suspicious": {
+        "noConstantBinaryExpressions": "error",
         "noDuplicateTestHooks": "error",
         "noEmptyBlockStatements": "error",
         "noEvolvingTypes": "error",
@@ -154,10 +151,14 @@
         "noFocusedTests": "error",
         "noMisplacedAssertion": "error",
         "noSkippedTests": "error",
+        "noTsIgnore": "error",
+        "noUselessEscapeInString": "error",
+        "noUselessRegexBackrefs": "error",
         "noVar": "error",
         "useAwait": "error",
         "useErrorMessage": "error",
         "useGuardForIn": "error",
+        "useIterableCallbackReturn": "error",
         "useNumberToFixedDigitsArgument": "error"
       }
     }

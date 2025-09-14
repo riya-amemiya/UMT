@@ -1,6 +1,4 @@
-# CLAUDE.md
-
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+# AGENTS.md
 
 **Don't use Node.js**: This project is built with Bun, a modern JavaScript runtime. Do not use Node.js for development or testing.
 

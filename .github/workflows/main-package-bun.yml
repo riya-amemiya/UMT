@@ -1,0 +1,150 @@
+name: Main Package CI (Bun)
+
+on:
+  pull_request:
+    branches:
+      - main
+      - feature/*
+    paths:
+      - 'package/main/**'
+  push:
+    branches:
+      - main
+      - feature/*
+    paths:
+      - 'package/main/**'
+  workflow_dispatch:
+
+permissions:
+  pull-requests: write
+
+jobs:
+  setup:
+    name: Setup Dependencies
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        bun-version: [latest]
+        os: [ubuntu-latest]
+    defaults:
+      run:
+        working-directory: ./package/main
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - name: Setup Bun ${{ matrix.bun-version }}
+        uses: oven-sh/setup-bun@735343b667d3e6f658f44d0eca948eb6282f2b76 # v2.0.2
+        with:
+          bun-version: ${{ matrix.bun-version }}
+      - name: Restore Dependencies Cache
+        id: cache-restore-dev-depends
+        uses: actions/cache/restore@0400d5f644dc74513175e3cd8d07132dd4860809 # v4.2.4
+        with:
+          path: '**/node_modules'
+          key: dev-depends-${{ matrix.os }}-bun${{ matrix.bun-version }}-${{ hashFiles('package/main/package.json') }}
+      - name: Install Dependencies
+        if: steps.cache-restore-dev-depends.outputs.cache-hit != 'true'
+        run: bun i
+      - name: Save Dependencies Cache
+        if: steps.cache-restore-dev-depends.outputs.cache-hit != 'true'
+        id: cache-save-dev-depends
+        uses: actions/cache/save@0400d5f644dc74513175e3cd8d07132dd4860809 # v4.2.4
+        with:
+          path: '**/node_modules'
+          key: dev-depends-${{ matrix.os }}-bun${{ matrix.bun-version }}-${{ hashFiles('package/main/package.json') }}
+
+  lint:
+    name: Run Lint
+    needs: setup
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        bun-version: [latest]
+        os: [ubuntu-latest]
+    defaults:
+      run:
+        working-directory: ./package/main
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - name: Setup Bun ${{ matrix.bun-version }}
+        uses: oven-sh/setup-bun@735343b667d3e6f658f44d0eca948eb6282f2b76 # v2.0.2
+        with:
+          bun-version: ${{ matrix.bun-version }}
+      - name: Restore Dependencies Cache
+        uses: actions/cache/restore@0400d5f644dc74513175e3cd8d07132dd4860809 # v4.2.4
+        with:
+          path: '**/node_modules'
+          key: dev-depends-${{ matrix.os }}-bun${{ matrix.bun-version }}-${{ hashFiles('package/main/package.json') }}
+      - name: Run Lint
+        run: bun run lint:ci
+
+  build:
+    name: Build Package
+    needs: setup
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        bun-version: [latest]
+        os: [ubuntu-latest]
+    defaults:
+      run:
+        working-directory: ./package/main
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - name: Setup Bun ${{ matrix.bun-version }}
+        uses: oven-sh/setup-bun@735343b667d3e6f658f44d0eca948eb6282f2b76 # v2.0.2
+        with:
+          bun-version: ${{ matrix.bun-version }}
+      - name: Restore Dependencies Cache
+        uses: actions/cache/restore@0400d5f644dc74513175e3cd8d07132dd4860809 # v4.2.4
+        with:
+          path: '**/node_modules'
+          key: dev-depends-${{ matrix.os }}-bun${{ matrix.bun-version }}-${{ hashFiles('package/main/package.json') }}
+      - name: Restore Build Cache
+        id: cache-restore-prod
+        uses: actions/cache/restore@0400d5f644dc74513175e3cd8d07132dd4860809 # v4.2.4
+        with:
+          enableCrossOsArchive: true
+          path: '**/module'
+          key: ${{ matrix.bun-version }}-${{ hashFiles('package/main/module/tsconfig.tsbuildinfo') }}
+      - name: Build Package
+        if: steps.cache-restore-prod.outputs.cache-hit != 'true'
+        run: bun run build
+      - name: List Module Directory
+        run: ls module
+      - name: Save Build Cache
+        if: steps.cache-restore-prod.outputs.cache-hit != 'true'
+        uses: actions/cache/save@0400d5f644dc74513175e3cd8d07132dd4860809 # v4.2.4
+        with:
+          enableCrossOsArchive: true
+          path: '**/module'
+          key: ${{ matrix.bun-version }}-${{ hashFiles('package/main/module/tsconfig.tsbuildinfo') }}
+
+  test:
+    name: Run Tests
+    needs: setup
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        bun-version: [latest]
+        os: [ubuntu-latest]
+    defaults:
+      run:
+        working-directory: ./package/main
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - name: Setup Bun ${{ matrix.bun-version }}
+        uses: oven-sh/setup-bun@735343b667d3e6f658f44d0eca948eb6282f2b76 # v2.0.2
+        with:
+          bun-version: ${{ matrix.bun-version }}
+      - name: Restore Dependencies Cache
+        uses: actions/cache/restore@0400d5f644dc74513175e3cd8d07132dd4860809 # v4.2.4
+        with:
+          path: '**/node_modules'
+          key: dev-depends-${{ matrix.os }}-bun${{ matrix.bun-version }}-${{ hashFiles('package/main/package.json') }}
+      - name: Run Tests with Coverage
+        run: bun run test --coverage
+      - name: Upload Coverage to Codecov
+        uses: codecov/codecov-action@fdcc8476540edceab3de004e990f80d881c6cc00 # v5.5.0
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: riya-amemiya/UMT
