@@ -10,7 +10,7 @@
     "@babel/preset-env": "7.28.3",
     "@babel/preset-typescript": "7.27.1",
     "@biomejs/biome": "2.2.0",
-    "@swc/core": "1.13.4",
+    "@swc/core": "1.13.5",
     "@swc/jest": "0.2.39",
     "@types/bun": "1.2.20",
     "@types/jest": "30.0.0",
