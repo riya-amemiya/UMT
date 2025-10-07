@@ -28,6 +28,7 @@ updates:
   - package-ecosystem: "uv"
     directory: "package/umt_python"
     schedule:
+      interval: "weekly"
   - package-ecosystem: "cargo"
     directory: "package/umt_wasm"
     schedule:
