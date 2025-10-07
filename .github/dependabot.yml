@@ -25,8 +25,8 @@ updates:
     directory: "package/umt_rust"
     schedule:
       interval: "weekly"
-  - package-ecosystem: "uv"
-    directory: "package/umt_python"
+  - package-ecosystem: "bun"
+    directory: "package/umt_wasm"
     schedule:
       interval: "weekly"
   - package-ecosystem: "cargo"
