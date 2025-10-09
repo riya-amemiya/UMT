@@ -81,5 +81,5 @@
   },
   "type": "module",
   "types": "module/index.d.js",
-  "version": "2.8.0"
+  "version": "2.9.0"
 }
