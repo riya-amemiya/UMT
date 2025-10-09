@@ -3,8 +3,8 @@
   "description": "個人的に作った便利関数集 個人用途なので破壊的変更がある可能性があります。 Main Packageに依存関係はありません。 JavaScriptからの呼び出しに対応しています。",
   "devDependencies": {
     "@types/jest": "^29.2.3",
-    "@types/node": "^18.17.15",
-    "gh-pages": "^4.0.0",
+    "@types/node": "^24.7.0",
+    "gh-pages": "^6.3.0",
     "jest": "^29.3.1",
     "ts-jest": "^29.0.3",
     "ts-node": "^10.9.1",
