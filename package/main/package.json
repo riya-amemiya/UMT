@@ -40,6 +40,9 @@
     "lib": "lib",
     "test": "tests"
   },
+  "exports": {
+    ".": "./module/index.js"
+	},
   "files": [
     "module",
     "!module/tests",
