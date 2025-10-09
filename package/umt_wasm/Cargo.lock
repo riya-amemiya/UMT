@@ -74,9 +74,9 @@ dependencies = [
 
 [[package]]
 name = "umt_rust"
-version = "0.1.1"
+version = "0.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "625167307f20e00a6b1c9b6ae75f73bcd307326137e5b8e1d0cdbd300c7573e7"
+checksum = "53cbb0af8d28eba1792c7602445a1f7d8d68ecd03dc765f2c1f3edb5734858e1"
 
 [[package]]
 name = "unicode-ident"
