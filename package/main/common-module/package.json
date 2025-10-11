@@ -81,5 +81,5 @@
   },
   "type": "commonjs",
   "types": "module/index.d.ts",
-  "version": "2.9.1"
+  "version": "2.10.0"
 }
