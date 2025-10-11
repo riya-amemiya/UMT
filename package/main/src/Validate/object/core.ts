@@ -3,9 +3,10 @@
  * Provides validation functionality for objects with type-specific validation rules for each property
  */
 
+import type { PickPartial } from "$/object";
 import { isDictionaryObject } from "@/Validate/isDictionaryObject";
 import type {
-  Types,
+  OptionalKeys,
   ValidateCoreReturnType,
   ValidateType,
 } from "@/Validate/type";
@@ -22,30 +23,43 @@ export const object = <
     // biome-ignore lint/suspicious/noExplicitAny: Required for flexible object property validation
     [key: string]: (value: any) => ValidateCoreReturnType<any>;
   },
+  U = {
+    [key in keyof T]: ValidateType<ReturnType<T[key]>["type"]>;
+  },
 >(
   option: T = {} as T,
   message?: string,
 ) => {
   return (
-    value: Types<{
-      [key in keyof T]: ValidateType<ReturnType<T[key]>["type"]>;
-    }>,
+    value: {
+      [key in keyof PickPartial<U, OptionalKeys<U>>]: PickPartial<
+        U,
+        OptionalKeys<U>
+      >[key];
+    },
   ): ValidateCoreReturnType<{
-    [key in keyof T]: ValidateType<ReturnType<T[key]>["type"]>;
+    [key in keyof PickPartial<U, OptionalKeys<U>>]: PickPartial<
+      U,
+      OptionalKeys<U>
+    >[key];
   }> => {
     if (!isDictionaryObject(value)) {
       return {
         validate: false,
         message: message || "",
-        type: value,
+        // biome-ignore lint/suspicious/noExplicitAny: Type assertion needed for return type compatibility
+        type: value as any,
       };
     }
     for (const validate in option) {
-      if (!option[validate](value[validate]).validate) {
+      // biome-ignore lint/suspicious/noExplicitAny: Index access requires any cast
+      if (!option[validate]((value as any)[validate]).validate) {
         return {
           validate: false,
-          message: option[validate](value).message,
-          type: value,
+          // biome-ignore lint/suspicious/noExplicitAny: Index access requires any cast
+          message: option[validate](value as any).message,
+          // biome-ignore lint/suspicious/noExplicitAny: Type assertion needed for return type compatibility
+          type: value as any,
         };
       }
     }
@@ -53,7 +67,8 @@ export const object = <
     return {
       validate: true,
       message: "",
-      type: value,
+      // biome-ignore lint/suspicious/noExplicitAny: Type assertion needed for return type compatibility
+      type: value as any,
     };
   };
 };
