@@ -44,6 +44,86 @@
     ".": {
       "import": "./module/index.js",
       "types": "./module/index.d.ts"
+    },
+    "./Advance": {
+      "import": "./module/Advance/index.js",
+      "types": "./module/Advance/index.d.ts"
+    },
+    "./Array": {
+      "import": "./module/Array/index.js",
+      "types": "./module/Array/index.d.ts"
+    },
+    "./Color": {
+      "import": "./module/Color/index.js",
+      "types": "./module/Color/index.d.ts"
+    },
+    "./Consts": {
+      "import": "./module/Consts/index.js",
+      "types": "./module/Consts/index.d.ts"
+    },
+    "./Crypto": {
+      "import": "./module/Crypto/index.js",
+      "types": "./module/Crypto/index.d.ts"
+    },
+    "./DataStructure": {
+      "import": "./module/DataStructure/index.js",
+      "types": "./module/DataStructure/index.d.ts"
+    },
+    "./Date": {
+      "import": "./module/Date/index.js",
+      "types": "./module/Date/index.d.ts"
+    },
+    "./Error": {
+      "import": "./module/Error/index.js",
+      "types": "./module/Error/index.d.ts"
+    },
+    "./Function": {
+      "import": "./module/Function/index.js",
+      "types": "./module/Function/index.d.ts"
+    },
+    "./IP": {
+      "import": "./module/IP/index.js",
+      "types": "./module/IP/index.d.ts"
+    },
+    "./Math": {
+      "import": "./module/Math/index.js",
+      "types": "./module/Math/index.d.ts"
+    },
+    "./Object": {
+      "import": "./module/Object/index.js",
+      "types": "./module/Object/index.d.ts"
+    },
+    "./Simple": {
+      "import": "./module/Simple/index.js",
+      "types": "./module/Simple/index.d.ts"
+    },
+    "./String": {
+      "import": "./module/String/index.js",
+      "types": "./module/String/index.d.ts"
+    },
+    "./Time": {
+      "import": "./module/Time/index.js",
+      "types": "./module/Time/index.d.ts"
+    },
+    "./Tool": {
+      "import": "./module/Tool/index.js",
+      "types": "./module/Tool/index.d.ts"
+    },
+    "./types": {
+      "import": "./module/types/index.js",
+      "types": "./module/types/index.d.ts"
+    },
+    "./UA": {
+      "import": "./module/UA/index.js",
+      "types": "./module/UA/index.d.ts"
+    },
+    "./Unit": {
+      "import": "./module/Unit/index.js",
+      "types": "./module/Unit/index.d.ts"
+    },
+    "./Validate": {
+      "import": "./module/Validate/index.js",
+      "types": "./module/Validate/index.d.ts"
     }
   },
   "files": [
@@ -81,5 +161,5 @@
   },
   "type": "module",
   "types": "module/index.d.ts",
-  "version": "2.10.0"
+  "version": "2.10.1"
 }
