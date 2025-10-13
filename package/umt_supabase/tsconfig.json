@@ -1,11 +1,7 @@
 {
 	"compilerOptions": {
 		"target": "ES6",
-		"lib": [
-			"dom",
-			"dom.iterable",
-			"esnext"
-		],
+		"lib": ["dom", "dom.iterable", "esnext"],
 		"allowJs": true,
 		"skipLibCheck": true,
 		"esModuleInterop": true,
@@ -34,17 +30,11 @@
 		"preserveSymlinks": true,
 		"jsx": "preserve",
 		"isolatedModules": true,
-		"typeRoots": [
-			"node_modules/@types"
-		],
+		"typeRoots": ["node_modules/@types"],
 		"importHelpers": false,
 		"strictBindCallApply": true,
 		"noUnusedLocals": true,
-		"noUnusedParameters": true,
+		"noUnusedParameters": true
 	},
-	"include": [
-		"src",
-		"types",
-		"src/Simple/Math/.is_file().ts"
-	]
+	"include": ["src", "types", "src/Simple/Math/.is_file().ts"]
 }

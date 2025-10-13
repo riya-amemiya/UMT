@@ -10,16 +10,16 @@ export const encodeBase58 = (input: string | Uint8Array): string => {
     typeof input === "string" ? new TextEncoder().encode(input) : input;
 
   let encoded = "";
-  let bigNumber = BigInt(0);
+  let bigNumber = 0n;
 
   for (const byte of bytes) {
-    bigNumber = bigNumber * BigInt(256) + BigInt(byte);
+    bigNumber = bigNumber * 256n + BigInt(byte);
   }
 
   while (bigNumber > 0) {
-    const remainder = Number(bigNumber % BigInt(58));
+    const remainder = Number(bigNumber % 58n);
     encoded = alphabet[remainder] + encoded;
-    bigNumber /= BigInt(58);
+    bigNumber /= 58n;
   }
 
   let leadingZeros = 0;

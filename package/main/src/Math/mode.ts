@@ -1,3 +1,5 @@
+import { ultraNumberSort } from "@/Array/ultraNumberSort";
+
 /**
  * Finds the most frequently occurring value(s) in an array
  * @param array - Array of numbers to find mode for
@@ -30,5 +32,5 @@ export const mode = (array: number[]): number[] => {
     }
   }
 
-  return modes.sort((a, b) => a - b);
+  return ultraNumberSort(modes);
 };
