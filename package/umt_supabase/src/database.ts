@@ -1,4 +1,4 @@
-import { createClient } from "@supabase/supabase-js";
+import type { createClient } from "@supabase/supabase-js";
 
 const database = async <T>({
 	supabase,
@@ -8,11 +8,8 @@ const database = async <T>({
 	type: string;
 }) => {
 	if (type === "fetch") {
-		return async ({
-			from,
-		}: {
-			from: string;
-		}) => await supabase.from(from).select("*");
+		return async ({ from }: { from: string }) =>
+			await supabase.from(from).select("*");
 	}
 	return null;
 };

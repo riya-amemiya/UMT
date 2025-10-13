@@ -1,5 +1,7 @@
 import { levenshteinDistance } from "./levenshteinDistance";
 
+import { quickSort } from "@/Array/quickSort";
+
 /**
  * Perform fuzzy string matching on an array of strings
  * @param query - The search query
@@ -34,5 +36,5 @@ export const fuzzySearch = (
     }
   }
 
-  return results.sort((a, b) => b.score - a.score);
+  return quickSort(results, (a, b) => b.score - a.score);
 };

@@ -6,20 +6,20 @@
  */
 export const decodeBase58 = (input: string): Uint8Array => {
   const alphabet = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
-  let bigNumber = BigInt(0);
+  let bigNumber = 0n;
 
   for (const char of input) {
     const value = alphabet.indexOf(char);
     if (value === -1) {
       throw new Error(`Invalid base58 character: ${char}`);
     }
-    bigNumber = bigNumber * BigInt(58) + BigInt(value);
+    bigNumber = bigNumber * 58n + BigInt(value);
   }
 
   const bytes: number[] = [];
   while (bigNumber > 0) {
-    bytes.unshift(Number(bigNumber % BigInt(256)));
-    bigNumber /= BigInt(256);
+    bytes.unshift(Number(bigNumber % 256n));
+    bigNumber /= 256n;
   }
 
   let leadingOnes = 0;
