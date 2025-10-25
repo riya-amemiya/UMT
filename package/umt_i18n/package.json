@@ -11,7 +11,7 @@
     "@babel/preset-typescript": "7.27.1",
     "@biomejs/biome": "2.0.4",
     "@swc/core": "1.12.5",
-    "@swc/jest": "0.2.38",
+    "@swc/jest": "0.2.39",
     "@types/jest": "30.0.0",
     "@types/lodash": "4.17.20",
     "@types/node": "24.8.1",
