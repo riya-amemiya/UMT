@@ -33,3 +33,7 @@ updates:
     directory: "package/umt_wasm"
     schedule:
       interval: "weekly"
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
