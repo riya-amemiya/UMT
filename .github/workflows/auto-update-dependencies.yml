@@ -106,10 +106,7 @@ jobs:
 
           git switch -c "$BRANCH_NAME"
 
-          git add package/*/package.json package/*/bun.lockb
-          git add package/*/Cargo.toml package/*/Cargo.lock
-          git add package/umt_python/uv.lock
-          git add package/umt_go/go.mod package/umt_go/go.sum
+          git add .
 
           git commit -m "$(cat <<'EOF'
           chore(deps): update dependencies across all packages
