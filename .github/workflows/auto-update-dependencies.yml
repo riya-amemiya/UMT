@@ -1,0 +1,157 @@
+name: Auto Update Dependencies
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update-dependencies:
+    name: Update All Package Dependencies
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@735343b667d3e6f658f44d0eca948eb6282f2b76 # v2.0.2
+        with:
+          bun-version: latest
+
+      - name: Setup Node.js
+        uses: actions/setup-node@2028fbc5c25fe9cf00d9f06a71cc4710d4507903 # v6.0.0
+        with:
+          node-version: 24.x
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Setup Python and uv
+        uses: astral-sh/setup-uv@2ddd2b9cb38ad8efd50337e8ab201519a34c9f24 # v7.1.1
+        with:
+          enable-cache: true
+
+      - name: Setup Go
+        uses: actions/setup-go@3041bf56c941b39c61721a86cd11f3bb1338122a # v6.0.0
+        with:
+          go-version: stable
+
+      - name: Update Node.js packages
+        run: |
+          echo "Updating Node.js packages..."
+          for dir in package/main package/umt_i18n package/umt_plugin_node package/umt_supabase package/umt_wasm; do
+            if [ -f "$dir/package.json" ]; then
+              echo "Updating $dir"
+              cd "$dir"
+              bun install
+              cd - > /dev/null
+            fi
+          done
+
+      - name: Update Rust packages
+        run: |
+          echo "Updating Rust packages..."
+          for dir in package/umt_rust package/umt_wasm; do
+            if [ -f "$dir/Cargo.toml" ]; then
+              echo "Updating $dir"
+              cd "$dir"
+              cargo update
+              cd - > /dev/null
+            fi
+          done
+
+      - name: Update Python packages
+        run: |
+          echo "Updating Python packages..."
+          if [ -f "package/umt_python/pyproject.toml" ]; then
+            echo "Updating package/umt_python"
+            cd package/umt_python
+            uv lock --upgrade
+            cd - > /dev/null
+          fi
+
+      - name: Update Go packages
+        run: |
+          echo "Updating Go packages..."
+          if [ -f "package/umt_go/go.mod" ]; then
+            echo "Updating package/umt_go"
+            cd package/umt_go
+            go get -u ./...
+            go mod tidy
+            cd - > /dev/null
+          fi
+
+      - name: Check for changes
+        id: check_changes
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "has_changes=true" >> "$GITHUB_OUTPUT"
+            echo "Changes detected in lock files"
+          else
+            echo "has_changes=false" >> "$GITHUB_OUTPUT"
+            echo "No changes detected"
+          fi
+
+      - name: Create Pull Request
+        if: steps.check_changes.outputs.has_changes == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          BRANCH_NAME="riya-amemiya/auto-update-dependencies-$(date +%Y%m%d-%H%M%S)"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git switch -c "$BRANCH_NAME"
+
+          git add package/*/package.json package/*/bun.lockb
+          git add package/*/Cargo.toml package/*/Cargo.lock
+          git add package/umt_python/uv.lock
+          git add package/umt_go/go.mod package/umt_go/go.sum
+
+          git commit -m "$(cat <<'EOF'
+          chore(deps): update dependencies across all packages
+
+          Automated dependency updates for:
+          - Node.js packages (main, umt_i18n, umt_plugin_node, umt_supabase, umt_wasm)
+          - Rust packages (umt_rust, umt_wasm)
+          - Python package (umt_python)
+          - Go package (umt_go)
+          EOF
+          )"
+
+          git push origin "$BRANCH_NAME"
+
+          gh pr create \
+            --title "chore(deps): update dependencies across all packages" \
+            --body "$(cat <<'EOF'
+          ## Summary
+
+          Automated dependency updates for all packages in the repository.
+
+          ### Updated Packages
+
+          - Node.js packages: main, umt_i18n, umt_plugin_node, umt_supabase, umt_wasm
+          - Rust packages: umt_rust, umt_wasm
+          - Python package: umt_python
+          - Go package: umt_go
+
+          ### Changes
+
+          This PR includes updates to lock files across all package managers:
+          - `bun.lockb` for Node.js packages
+          - `Cargo.lock` for Rust packages
+          - `uv.lock` for Python package
+          - `go.sum` for Go package
+
+          ## Test Plan
+
+          - [ ] Verify all package lock files are updated
+          - [ ] Run CI tests to ensure compatibility
+          - [ ] Check for any breaking changes in updated dependencies
+          EOF
+          )" \
+            --base main \
+            --head "$BRANCH_NAME"
