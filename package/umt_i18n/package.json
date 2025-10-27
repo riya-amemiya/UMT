@@ -6,7 +6,7 @@
   "description": "個人的に作った便利関数集 個人用途なので破壊的変更がある可能性があります。 Main Packageに依存関係はありません。 JavaScriptからの呼び出しに対応しています。",
   "devDependencies": {
     "@babel/cli": "7.28.3",
-    "@babel/core": "7.27.4",
+    "@babel/core": "7.28.5",
     "@babel/preset-env": "7.28.3",
     "@babel/preset-typescript": "7.27.1",
     "@biomejs/biome": "2.0.4",
