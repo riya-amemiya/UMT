@@ -299,8 +299,7 @@ const numericQuickSort = (
   high: number,
   ascending: boolean,
 ): number[] => {
-  const stack: number[] = [];
-  stack.push(low, high);
+  const stack: number[] = [low, high];
 
   while (stack.length > 0) {
     const h = stack.pop();
