@@ -21,7 +21,7 @@ export const uuid = (
     return versions.some((version) => {
       // Regular expression for specific UUID version
       const versionRegex = new RegExp(
-        `^[\\da-f]{8}-?[\\da-f]{4}-?${version}[\\da-f]{3}-?[89ab][\\da-f]{3}-?[\\da-f]{12}$`,
+        String.raw`^[\da-f]{8}-?[\da-f]{4}-?${version}[\da-f]{3}-?[89ab][\da-f]{3}-?[\da-f]{12}$`,
         "i",
       );
       return versionRegex.test(value);
