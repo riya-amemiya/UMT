@@ -41,7 +41,7 @@ jobs:
       - name: Update Node.js packages
         run: |
           echo "Updating Node.js packages..."
-          for dir in package/main package/umt_i18n package/umt_plugin_node package/umt_supabase package/umt_wasm; do
+          for dir in package/main package/umt_i18n package/umt_wasm; do
             if [ -f "$dir/package.json" ]; then
               echo "Updating $dir"
               cd "$dir"
@@ -112,7 +112,7 @@ jobs:
           chore(deps): update dependencies across all packages
 
           Automated dependency updates for:
-          - Node.js packages (main, umt_i18n, umt_plugin_node, umt_supabase, umt_wasm)
+          - Node.js packages (main, umt_i18n, umt_wasm)
           - Rust packages (umt_rust, umt_wasm)
           - Python package (umt_python)
           - Go package (umt_go)
@@ -130,7 +130,7 @@ jobs:
 
           ### Updated Packages
 
-          - Node.js packages: main, umt_i18n, umt_plugin_node, umt_supabase, umt_wasm
+          - Node.js packages: main, umt_i18n, umt_wasm
           - Rust packages: umt_rust, umt_wasm
           - Python package: umt_python
           - Go package: umt_go

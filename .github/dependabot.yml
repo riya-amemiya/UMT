@@ -13,10 +13,6 @@ updates:
     directory: "package/umt_i18n"
     schedule:
       interval: "weekly"
-  - package-ecosystem: "bun"
-    directory: "package/umt_plugin_node"
-    schedule:
-      interval: "weekly"
   - package-ecosystem: "uv"
     directory: "package/umt_python"
     schedule:
