@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.0.4/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.3.3/schema.json",
   "assist": {
     "actions": {
       "source": {
@@ -68,26 +68,17 @@
         "noUndeclaredVariables": "warn",
         "noUnusedVariables": "warn",
         "useExhaustiveDependencies": "warn",
-        "useHookAtTopLevel": "error"
+        "useHookAtTopLevel": "error",
+        "noGlobalDirnameFilename": "error",
+        "noProcessGlobal": "error",
+        "useParseIntRadix": "error",
+        "useSingleJsDocAsterisk": "error"
       },
       "nursery": {
         "noAwaitInLoop": "error",
-        "noConstantBinaryExpression": "error",
-        "noGlobalDirnameFilename": "error",
-        "noProcessGlobal": "error",
-        "noTsIgnore": "error",
         "noUselessBackrefInRegex": "error",
-        "noUselessEscapeInString": "error",
         "noUselessUndefined": "error",
-        "useAdjacentGetterSetter": "error",
-        "useConsistentObjectDefinition": "error",
-        "useExhaustiveSwitchCases": "error",
-        "useIterableCallbackReturn": "error",
-        "useNumericSeparators": "error",
-        "useObjectSpread": "warn",
-        "useParseIntRadix": "error",
-        "useSingleJsDocAsterisk": "error",
-        "useSymbolDescription": "error"
+        "useExhaustiveSwitchCases": "error"
       },
       "performance": {
         "noDelete": "error",
@@ -144,7 +135,12 @@
         "useSingleVarDeclarator": "error",
         "useThrowNewError": "error",
         "useThrowOnlyError": "error",
-        "useTrimStartEnd": "error"
+        "useTrimStartEnd": "error",
+        "useGroupedAccessorPairs": "error",
+        "useConsistentObjectDefinitions": "error",
+        "useNumericSeparators": "error",
+        "useObjectSpread": "warn",
+        "useSymbolDescription": "error"
       },
       "suspicious": {
         "noDuplicateTestHooks": "error",
@@ -158,7 +154,11 @@
         "useAwait": "error",
         "useErrorMessage": "error",
         "useGuardForIn": "error",
-        "useNumberToFixedDigitsArgument": "error"
+        "useNumberToFixedDigitsArgument": "error",
+        "noConstantBinaryExpressions": "error",
+        "noTsIgnore": "error",
+        "noUselessEscapeInString": "error",
+        "useIterableCallbackReturn": "error"
       }
     }
   }
