@@ -46,6 +46,7 @@ jobs:
               echo "Updating $dir"
               cd "$dir"
               bun install
+              bunx @biomejs/biome migrate --write
               cd - > /dev/null
             fi
           done
