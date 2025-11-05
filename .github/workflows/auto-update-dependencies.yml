@@ -29,12 +29,12 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
 
       - name: Setup Python and uv
-        uses: astral-sh/setup-uv@2ddd2b9cb38ad8efd50337e8ab201519a34c9f24 # v7.1.1
+        uses: astral-sh/setup-uv@85856786d1ce8acfbcc2f13a5f3fbd6b938f9f41 # v7.1.2
         with:
           enable-cache: true
 
       - name: Setup Go
-        uses: actions/setup-go@3041bf56c941b39c61721a86cd11f3bb1338122a # v6.0.0
+        uses: actions/setup-go@44694675825211faa026b3c33043df3e48a5fa00 # v6.0.0
         with:
           go-version: stable
 
