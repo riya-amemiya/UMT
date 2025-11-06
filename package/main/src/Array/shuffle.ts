@@ -17,15 +17,18 @@ export const shuffle = <T>(array: T[]): T[] => {
 
   if (shuffledArray.length >= 2) {
     let isSame = true;
-    for (let i = 0; i < array.length; i++) {
-      if (shuffledArray[i] !== array[i]) {
+    for (const [index, element] of array.entries()) {
+      if (shuffledArray[index] !== element) {
         isSame = false;
         break;
       }
     }
 
     if (isSame) {
-      [shuffledArray[0], shuffledArray[1]] = [shuffledArray[1], shuffledArray[0]];
+      [shuffledArray[0], shuffledArray[1]] = [
+        shuffledArray[1],
+        shuffledArray[0],
+      ];
     }
   }
 
