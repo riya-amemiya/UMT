@@ -14,16 +14,13 @@ export const shuffle2DArray = <T>(array: T[][]): T[][] => {
   }
 
   for (let index = flatArray.length - 1; index > 0; index--) {
-    let index_ = Math.floor(Math.random() * (index + 1));
-
-    // For arrays with 2+ elements, ensure the first swap moves the last element
-    if (
+    const randomIndex = Math.floor(Math.random() * (index + 1));
+    const index_ =
       index === flatArray.length - 1 &&
       flatArray.length >= 2 &&
-      index_ === index
-    ) {
-      index_ = index - 1;
-    }
+      randomIndex === index
+        ? index - 1
+        : randomIndex;
 
     [flatArray[index], flatArray[index_]] = [
       flatArray[index_],
