@@ -71,7 +71,7 @@ bun add umt
 | name | type | description | example |
 |------|------|-------------|---------|
 | cmykToRgba | `(c: number, m: number, y: number, k: number, a?: number) => { r: number; g: number; b: number; a: number }` | Convert CMYK color values to RGBA color space | `cmykToRgba(100, 100, 0, 60.78) // { r: 0, g: 0, b: 100, a: 1 }` |
-| hexaToRgba | `(hex: string) => { r: number; g: number; b: number; a: number }` | Convert hexadecimal color code to RGBA color values | `hexToRgba("#00000000") // { r: 0, g: 0, b: 0, a: 0 }` |
+| hexaToRgba | `(hex: string) => { r: number; g: number; b: number; a: number }` | Convert hexadecimal color code to RGBA color values | `hexaToRgba("#00000000") // { r: 0, g: 0, b: 0, a: 0 }` |
 | hslaToRgba | `(h: number, s: number, l: number, a?: number) => { r: number; g: number; b: number; a: number }` | Convert HSLA color values to RGBA color space | `hslaToRgba(120, 50, 50, 1) // { r: 64, g: 191, b: 64, a: 1 }` |
 | rgbaToCmyk | `(rgba: { r: number; g: number; b: number; a?: number }) => { c: number; m: number; y: number; k: number; a: number }` | Convert RGBA color to CMYK color model | `rgbaToCmyk({ r: 0, g: 0, b: 0, a: 1 }); // { c: 0, m: 0, y: 0, k: 100, a: 1 }` |
 | rgbaToHexA | `(rgba: { r: number; g: number; b: number; a?: number }) => string` | Convert RGBA color to hexadecimal color code | `rgbaToHexA({ r: 0, g: 0, b: 0, a: 1 }); // "#000000ff"` |
