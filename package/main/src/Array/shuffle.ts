@@ -8,28 +8,21 @@ export const shuffle = <T>(array: T[]): T[] => {
   const shuffledArray = [...array];
 
   for (let index = shuffledArray.length - 1; index > 0; index--) {
-    const index_ = Math.floor(Math.random() * (index + 1));
+    let index_ = Math.floor(Math.random() * (index + 1));
+
+    // For arrays with 2+ elements, ensure the first swap moves the last element
+    if (
+      index === shuffledArray.length - 1 &&
+      shuffledArray.length >= 2 &&
+      index_ === index
+    ) {
+      index_ = index - 1;
+    }
+
     [shuffledArray[index], shuffledArray[index_]] = [
       shuffledArray[index_],
       shuffledArray[index],
     ];
-  }
-
-  if (shuffledArray.length >= 2) {
-    let isSame = true;
-    for (const [index, element] of array.entries()) {
-      if (shuffledArray[index] !== element) {
-        isSame = false;
-        break;
-      }
-    }
-
-    if (isSame) {
-      [shuffledArray[0], shuffledArray[1]] = [
-        shuffledArray[1],
-        shuffledArray[0],
-      ];
-    }
   }
 
   return shuffledArray;

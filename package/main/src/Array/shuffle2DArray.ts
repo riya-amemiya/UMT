@@ -9,32 +9,26 @@
 export const shuffle2DArray = <T>(array: T[][]): T[][] => {
   // Flatten the 2D array into 1D and shuffle it
   const flatArray: T[] = [];
-  const originalFlat: T[] = [];
   for (const subArray of array) {
     flatArray.push(...subArray);
-    originalFlat.push(...subArray);
   }
 
   for (let index = flatArray.length - 1; index > 0; index--) {
-    const index_ = Math.floor(Math.random() * (index + 1));
+    let index_ = Math.floor(Math.random() * (index + 1));
+
+    // For arrays with 2+ elements, ensure the first swap moves the last element
+    if (
+      index === flatArray.length - 1 &&
+      flatArray.length >= 2 &&
+      index_ === index
+    ) {
+      index_ = index - 1;
+    }
+
     [flatArray[index], flatArray[index_]] = [
       flatArray[index_],
       flatArray[index],
     ];
-  }
-
-  if (flatArray.length >= 2) {
-    let isSame = true;
-    for (const [index, element] of originalFlat.entries()) {
-      if (flatArray[index] !== element) {
-        isSame = false;
-        break;
-      }
-    }
-
-    if (isSame) {
-      [flatArray[0], flatArray[1]] = [flatArray[1], flatArray[0]];
-    }
   }
 
   // Reconstruct the 2D array from the shuffled flat array
