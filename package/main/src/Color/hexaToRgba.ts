@@ -4,7 +4,7 @@ import { roundOf } from "@/Math/roundOf";
  * Convert hexadecimal color code to RGBA color values
  * @param hex Hexadecimal color code (3, 6, or 8 digits with #)
  * @returns {Object} RGBA values (r, g, b as 0-255, a as 0-1)
- * @example hexToRgba("#00000000") // { r: 0, g: 0, b: 0, a: 0 }
+ * @example hexaToRgba("#00000000") // { r: 0, g: 0, b: 0, a: 0 }
  * @throws {Error} If the hex code format is invalid
  */
 export const hexaToRgba = (
