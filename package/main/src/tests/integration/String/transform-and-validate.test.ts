@@ -4,7 +4,7 @@ import { trimCharacters } from "@/String/trimCharacters";
 import { camelCase, kebabCase } from "@/String";
 import { string } from "@/Validate/string";
 import {
-  email,
+  validateEmail,
   regexMatch,
   minLength,
   maxLength,
@@ -40,7 +40,7 @@ describe("Integration test for string transformation and validation", () => {
       "com",
     );
 
-    const emailValidator = string([email()]);
+    const emailValidator = string([validateEmail()]);
     const result = emailValidator(generatedEmail);
 
     expect(result.validate).toBe(true);
@@ -97,7 +97,7 @@ describe("Integration test for string transformation and validation", () => {
     const trimmed = userData.raw.trim();
     const lowercased = trimmed.toLowerCase();
 
-    const emailValidator = string([email()]);
+    const emailValidator = string([validateEmail()]);
     const emailResult = emailValidator(lowercased);
 
     if (emailResult.validate) {

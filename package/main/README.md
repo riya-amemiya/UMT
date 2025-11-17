@@ -286,6 +286,7 @@ bun add umt
 | isPrimeNumber | `(n: number) => boolean` | Determines if a number is prime | `isPrimeNumber(17); // true` |
 | isString | `(value: unknown) => value is string` | Determines if the value is a string | `isString("test"); // true` |
 | isValueNaN | `(value: unknown, loose?: boolean) => boolean` | Determines if a value is NaN | `isValueNaN(parseInt("not a number")); // true` |
+| parseEmail | `(email: string, options: ParseEmailOptions) => { valid: boolean; parts?: { local: string; domain: string } }` | Parses an email address into its local and domain parts | `parseEmail("test@example.com", { level: "basic" }); // { valid: true, parts: { local: "test", domain: "example.com" } }` |
 
 #### Validate Number Options
 
@@ -302,7 +303,7 @@ bun add umt
 
 | name | type | description | example |
 |------|------|-------------|---------|
-| email | `(message?: string) => ValidateReturnType<string>` | Creates a validator for checking if a string is a valid email address | `string([email()])("test@example.com"); // valid` |
+| validateEmail | `(message?: string, options?: ParseEmailOptions) => ValidateReturnType<string>` | Creates a validator for checking if a string is a valid email address | `string([validateEmail()])("test@example.com"); // valid` |
 | length_ | `(length: number, message?: string) => ValidateReturnType<string>` | Creates a validator for checking if a string has an exact length | `string([length_(5)])("hello"); // valid` |
 | maxLength | `(maxLength: number, message?: string) => ValidateReturnType<string>` | Creates a validator for checking if a string's length is less than or equal to a maximum value | `string([maxLength(10)])("hello"); // valid` |
 | minLength | `(minLength: number, message?: string) => ValidateReturnType<string>` | Creates a validator for checking if a string's length is greater than or equal to a minimum value | `string([minLength(3)])("hello"); // valid` |
