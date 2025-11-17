@@ -3,7 +3,7 @@ import { calculator } from "@/Math/calculator";
 import { parseJson } from "@/Tool/parseJson";
 import { pipe } from "@/Tool/pipe";
 import { string } from "@/Validate/string";
-import { email } from "@/Validate/string";
+import { validateEmail } from "@/Validate/string/validateEmail";
 
 /**
  * Integration tests for Error handling with other modules
@@ -89,7 +89,7 @@ describe("Integration test for error handling workflows", () => {
 
       const { email: userEmail, score: scoreStr } = parseResult.value;
 
-      const emailValidation = string([email()])(userEmail);
+      const emailValidation = string([validateEmail()])(userEmail);
       const scoreResult = safeExecute(() => {
         const num = Number.parseFloat(scoreStr);
         if (Number.isNaN(num)) {
@@ -231,7 +231,7 @@ describe("Integration test for error handling workflows", () => {
 
         const { email: userEmail, name, age } = parseResult.value;
 
-        const emailValidation = string([email()])(userEmail || "");
+        const emailValidation = string([validateEmail()])(userEmail || "");
         const ageResult = safeExecute(() => {
           const ageNum = Number(age);
           if (Number.isNaN(ageNum) || ageNum < 0 || ageNum > 150) {

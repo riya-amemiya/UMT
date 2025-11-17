@@ -22,3 +22,4 @@ export * from "./isPerfectSquare";
 export * from "./isPrimeNumber";
 export * from "./isString";
 export * from "./isValueNaN";
+export * from "./parseEmail";
