@@ -214,20 +214,21 @@ export const dualPivotQuickSort = <T>(
   endIndex = array.length - 1,
   insertionSortThreshold = 10,
 ): T[] => {
+  const result = [...array];
   const {
     startIndex: validStartIndex,
     endIndex: validEndIndex,
     shouldSort,
-  } = validateRange(array, startIndex, endIndex);
+  } = validateRange(result, startIndex, endIndex);
 
   if (shouldSort) {
     sortRange(
-      array,
+      result,
       validStartIndex,
       validEndIndex,
       compareFunction,
       insertionSortThreshold,
     );
   }
-  return array;
+  return result;
 };

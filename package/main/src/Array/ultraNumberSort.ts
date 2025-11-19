@@ -8,33 +8,34 @@ export const ultraNumberSort = (
   array: number[],
   ascending = true,
 ): number[] => {
-  const length = array.length;
+  const result = [...array];
+  const length = result.length;
 
   if (length <= 1) {
-    return array;
+    return result;
   }
 
   // For tiny arrays, use optimized inline sort
   if (length === 2) {
-    if (array[0] > array[1] === ascending) {
-      [array[0], array[1]] = [array[1], array[0]];
+    if (result[0] > result[1] === ascending) {
+      [result[0], result[1]] = [result[1], result[0]];
     }
-    return array;
+    return result;
   }
 
   if (length === 3) {
-    inlineSort3(array, ascending);
-    return array;
+    inlineSort3(result, ascending);
+    return result;
   }
 
   // Check if all numbers are integers and find range
   let allIntegers = true;
-  let min = array[0];
-  let max = array[0];
+  let min = result[0];
+  let max = result[0];
   let hasNaN = false;
 
   for (let index = 0; index < length; index++) {
-    const value = array[index];
+    const value = result[index];
     // biome-ignore lint/suspicious/noSelfCompare: ignore
     if (value !== value) {
       hasNaN = true;
@@ -53,21 +54,21 @@ export const ultraNumberSort = (
 
   // Handle NaN values
   if (hasNaN) {
-    return handleNaNSort(array, ascending);
+    return handleNaNSort(result, ascending);
   }
 
   // For small integer ranges, use counting sort
   if (allIntegers && max - min < length * 2 && max - min < 1_000_000) {
-    return countingSort(array, min, max, ascending);
+    return countingSort(result, min, max, ascending);
   }
 
   // For larger arrays, use radix sort if applicable
   if (allIntegers && length > 100) {
-    return radixSort(array, ascending);
+    return radixSort(result, ascending);
   }
 
   // Fall back to optimized quicksort for floating point
-  return numericQuickSort(array, 0, length - 1, ascending);
+  return numericQuickSort(result, 0, length - 1, ascending);
 };
 
 /**

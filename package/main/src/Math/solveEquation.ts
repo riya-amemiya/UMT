@@ -85,5 +85,5 @@ export const solveEquation = (
   }
 
   // Return the solution vector with values rounded to 1 decimal place
-  return solution.toReversed().map((value) => roundOf(value, 1));
+  return [...solution].reverse().map((value) => roundOf(value, 1));
 };

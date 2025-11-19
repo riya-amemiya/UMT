@@ -4,6 +4,7 @@ import typescriptEslintPlugin from "@typescript-eslint/eslint-plugin";
 import typescriptEslintParser from "@typescript-eslint/parser";
 import unicornPlugin from "eslint-plugin-unicorn";
 import importPlugin from "eslint-plugin-import";
+import baselineJs, { BASELINE } from "eslint-plugin-baseline-js";
 
 const compat = new FlatCompat();
 
@@ -11,6 +12,9 @@ export default [
   js.configs.recommended,
   unicornPlugin.configs.recommended,
   ...compat.extends("plugin:@typescript-eslint/recommended"),
+  baselineJs.configs["recommended-ts"]({
+    available: BASELINE.WIDELY,
+  }),
   {
     ignores: [
       "jest.config.ts",
@@ -31,6 +35,7 @@ export default [
       },
     },
     plugins: {
+      "baseline-js": baselineJs,
       import: importPlugin,
       "@typescript-eslint": typescriptEslintPlugin,
     },
@@ -54,6 +59,7 @@ export default [
       "unicorn/prefer-number-properties": "off",
       "unicorn/no-nested-ternary": "off",
       "unicorn/number-literal-case": "off",
+      "unicorn/no-array-reverse": "off",
       "import/order": [
         "error",
         {

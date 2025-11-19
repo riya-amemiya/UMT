@@ -1,7 +1,7 @@
 import { compareFunctionDefault } from "./compareFunctionDefault";
+import { insertionSortRange } from "./sortingHelpers/insertionSortRange";
 
 import type { CompareFunction } from "$/array/compareFunction";
-import { insertionSort } from "@/Array/insertionSort";
 
 const MIN_RUN = 32;
 
@@ -87,16 +87,13 @@ export const timSort = <T>(
   start = 0,
   end: number = array.length - 1,
 ): T[] => {
+  const result = [...array];
   const n = end - start + 1;
   const minRun = getMinRunLength(n);
 
-  for (let index = start; index <= end; index += minRun) {
-    insertionSort(
-      array,
-      compareFunction,
-      index,
-      Math.min(index + MIN_RUN - 1, end),
-    );
+  for (let runStart = start; runStart <= end; runStart += minRun) {
+    const runEnd = Math.min(runStart + MIN_RUN - 1, end);
+    insertionSortRange(result, compareFunction, runStart, runEnd);
   }
 
   for (let size = minRun; size < n; size *= 2) {
@@ -105,10 +102,10 @@ export const timSort = <T>(
       const right = Math.min(left + 2 * size - 1, end);
 
       if (mid < right) {
-        merge(array, left, mid, right, compareFunction);
+        merge(result, left, mid, right, compareFunction);
       }
     }
   }
 
-  return array;
+  return result;
 };

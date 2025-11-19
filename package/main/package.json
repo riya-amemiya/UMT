@@ -22,6 +22,7 @@
     "dependency-cruiser": "17.2.0",
     "es-toolkit": "1.41.0",
     "eslint": "9.39.1",
+    "eslint-plugin-baseline-js": "^0.4.0",
     "eslint-plugin-import": "2.32.0",
     "eslint-plugin-unicorn": "62.0.0",
     "fast-sort": "3.4.1",
