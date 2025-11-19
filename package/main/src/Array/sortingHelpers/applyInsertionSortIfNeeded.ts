@@ -1,5 +1,6 @@
+import { insertionSortRange } from "./insertionSortRange";
+
 import type { CompareFunction } from "$/array/compareFunction";
-import { insertionSort } from "@/Array/insertionSort";
 
 /**
  * Checks if a partition is small enough to apply insertion sort and applies it if so.
@@ -20,7 +21,7 @@ export const applyInsertionSortIfNeeded = <T>(
   insertionSortThreshold: number,
 ): boolean => {
   if (high - low + 1 <= insertionSortThreshold) {
-    insertionSort(array, compareFunction, low, high);
+    insertionSortRange(array, compareFunction, low, high);
     return true;
   }
   return false;
