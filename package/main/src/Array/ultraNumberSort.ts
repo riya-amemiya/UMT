@@ -160,7 +160,7 @@ const countingSort = (
     for (let index_ = 0; index_ < range; index_++) {
       const cnt = count[index_];
       const value = index_ + min;
-      for (let i = 0; i < cnt; i++) {
+      for (let index_ = 0; index_ < cnt; index_++) {
         array[index++] = value;
       }
     }
@@ -168,7 +168,7 @@ const countingSort = (
     for (let index_ = range - 1; index_ >= 0; index_--) {
       const cnt = count[index_];
       const value = index_ + min;
-      for (let i = 0; i < cnt; i++) {
+      for (let index_ = 0; index_ < cnt; index_++) {
         array[index++] = value;
       }
     }

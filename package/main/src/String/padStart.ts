@@ -5,7 +5,6 @@
  * @param {number} targetLength - The target length after padding
  * @param {string} padString - The string to use for padding
  * @returns {string} The padded string
- * @throws {Error} If padString is empty
  * @example
  * ```typescript
  * padStart("123", 5, "0");     // Returns: "00123"
@@ -18,7 +17,7 @@ export const padStart = (
   padString: string,
 ): string => {
   if (padString === "") {
-    throw new Error("padString cannot be empty");
+    return string_;
   }
 
   // Return original string if it's longer than target length

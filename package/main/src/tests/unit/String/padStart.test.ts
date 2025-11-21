@@ -36,8 +36,8 @@ describe("padStart", () => {
   });
 
   describe("error handling", () => {
-    it("should throw error on empty padding string", () => {
-      expect(() => padStart("abc", 5, "")).toThrow("padString cannot be empty");
+    it("should return original string if padding string is empty", () => {
+      expect(padStart("abc", 5, "")).toBe("abc");
     });
   });
 });

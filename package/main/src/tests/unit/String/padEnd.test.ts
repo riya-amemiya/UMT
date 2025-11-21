@@ -19,7 +19,7 @@ describe("padEnd function", () => {
     expect(padEnd("abc", 2, " ")).toBe("abc");
   });
 
-  test("should throw error on empty padding string", () => {
-    expect(() => padEnd("abc", 5, "")).toThrow("padString cannot be empty");
+  test("should return original string if padding string is empty", () => {
+    expect(padEnd("abc", 5, "")).toBe("abc");
   });
 });

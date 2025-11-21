@@ -5,7 +5,6 @@
  * @param targetLength - The target length after padding
  * @param padString - The string to use for padding
  * @returns The string after padding has been applied
- * @throws {Error} If padString is empty
  */
 export const padEnd = (
   string_: string,
@@ -13,7 +12,7 @@ export const padEnd = (
   padString: string,
 ): string => {
   if (padString === "") {
-    throw new Error("padString cannot be empty");
+    return string_;
   }
   let result = string_;
   while (result.length < targetLength) {
