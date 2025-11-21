@@ -13,10 +13,13 @@ interface DayList {
  * @param day Number representing the day (0-6, where 0 is Sunday)
  * @param lang Language code ('de', 'ko', 'en', 'ja', 'fr')
  * @returns Day of the week string in the specified language
+ * @note If day is outside the range 0-6, it defaults to Sunday (0)
  * @example
  * getDay(0); // Returns "日" (default is Japanese)
  * getDay(0, "en"); // Returns "Sun"
  * getDay(1, "fr"); // Returns "Lun"
+ * getDay(-1); // Returns "日" (defaults to Sunday)
+ * getDay(7); // Returns "日" (defaults to Sunday)
  */
 export const getDay = <T extends keyof DayList>(
   day: number,

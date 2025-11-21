@@ -11,6 +11,11 @@
 export const checkFlagAlignment = <T extends { flag: boolean }>(
   matrix: T[][],
 ): boolean => {
+  // Check for empty matrix
+  if (matrix.length === 0) {
+    return false;
+  }
+
   const rows = matrix.length;
   const cols = matrix[0].length;
 
@@ -28,14 +33,17 @@ export const checkFlagAlignment = <T extends { flag: boolean }>(
     }
   }
 
-  // Check diagonal alignment (top-left to bottom-right)
-  if (matrix.every((row, index) => row[index].flag)) {
-    return true;
-  }
+  // Check diagonal alignment only for square matrices
+  if (rows === cols) {
+    // Check diagonal alignment (top-left to bottom-right)
+    if (matrix.every((row, index) => row[index].flag)) {
+      return true;
+    }
 
-  // Check diagonal alignment (bottom-left to top-right)
-  if (matrix.every((row, index) => row[cols - index - 1].flag)) {
-    return true;
+    // Check diagonal alignment (bottom-left to top-right)
+    if (matrix.every((row, index) => row[cols - index - 1].flag)) {
+      return true;
+    }
   }
 
   return false;
