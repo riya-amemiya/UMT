@@ -2,7 +2,7 @@ import { rangeAdvance } from "@/Advance/rangeAdvance";
 
 describe("rangeAdvance", () => {
   it("returns an array of numbers from 0 to start when only start is provided", () => {
-    expect(rangeAdvance(5)).toEqual([0, 1, 2, 3, 4]);
+    expect(rangeAdvance(0, 5)).toEqual([0, 1, 2, 3, 4]);
   });
 
   it("returns an array of numbers from start to end when both start and end are provided", () => {

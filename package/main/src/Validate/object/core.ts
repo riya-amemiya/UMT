@@ -46,7 +46,7 @@ export const object = <
     if (!isDictionaryObject(value)) {
       return {
         validate: false,
-        message: message || "",
+        message: message ?? "",
         // biome-ignore lint/suspicious/noExplicitAny: Type assertion needed for return type compatibility
         type: value as any,
       };

@@ -30,7 +30,7 @@ export function getValue(object: unknown, path: string): unknown {
   const parts = path.split(".");
 
   for (const part of parts) {
-    const arrayMatch = part.match(/^(.+?)\[(-?\d+)\]$/);
+    const arrayMatch = /^(.+?)\[(-?\d+)\]$/.exec(part);
     if (arrayMatch) {
       const [, key, indexString] = arrayMatch;
       segments.push({ key, index: Number(indexString) });

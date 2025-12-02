@@ -22,7 +22,7 @@ export const ipToBinaryString = (ip: string): string => {
   // Validate each octet
   for (const octet of parts) {
     // Check for empty octet or leading zeros
-    if (!octet || (octet.length > 1 && octet[0] === "0")) {
+    if (!octet || (octet.length > 1 && octet.startsWith("0"))) {
       throw new Error("Invalid IP address format");
     }
 

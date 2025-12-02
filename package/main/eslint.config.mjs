@@ -11,7 +11,7 @@ const compat = new FlatCompat();
 export default defineConfig(
   eslint.configs.recommended,
   tseslint.configs.strict,
-  tseslint.configs.stylistic,
+  tseslint.configs.stylisticTypeChecked,
   unicornPlugin.configs.recommended,
   ...compat.extends("plugin:@typescript-eslint/recommended"),
   baselineJs.configs["recommended-ts"]({

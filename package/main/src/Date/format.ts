@@ -78,6 +78,6 @@ export const format = (
 
   return formatString.replaceAll(
     /\[([^\]]+)]|(Y{1,4}|M{1,2}|D{1,2}|d{1,2}|H{1,2}|h{1,2}|a|A|m{1,2}|s{1,2}|Z{1,2}|SSS)/g,
-    (_match, $1, $2) => $1 || matches[$2],
+    (_match, $1, $2) => $1 ?? matches[$2],
   );
 };

@@ -38,7 +38,7 @@ export const array = <
     if (!isArray(values)) {
       return {
         validate: false,
-        message: message || "",
+        message: message ?? "",
         type: values,
       };
     }

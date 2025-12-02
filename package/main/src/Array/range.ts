@@ -16,7 +16,7 @@ const range = (start: number, end?: number, step = 1) => {
   }
 
   const actualStart = end === undefined ? 0 : start;
-  const actualEnd = end === undefined ? start : end;
+  const actualEnd = end ?? start;
 
   // Return empty array if invalid range
   if (

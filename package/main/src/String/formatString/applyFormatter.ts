@@ -28,7 +28,7 @@ export function applyFormatter(
   formatterString: string,
   formatters: Record<string, Formatter>,
 ): string {
-  const match = formatterString.match(/^(\w+)(?:\(([^)]*)\))?$/);
+  const match = /^(\w+)(?:\(([^)]*)\))?$/.exec(formatterString);
   if (!match) {
     return String(value);
   }

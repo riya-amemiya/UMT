@@ -14,12 +14,12 @@ import { range } from "@/Array/range";
  */
 const rangeAdvance = (
   start: number,
-  end?: number,
+  end: number,
   conditionalExpression?: (number_: number) => boolean,
 ): number[] => {
   if (conditionalExpression) {
     const array: number[] = [];
-    for (let index = start; index < (end as number); index++) {
+    for (let index = start; index < end; index++) {
       if (conditionalExpression(index)) {
         array.push(index);
       }

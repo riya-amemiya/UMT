@@ -22,9 +22,9 @@ export const dayOfWeek = <T extends MonTypeInt>(
   const nowTime = now(timeDifference);
   if (properties) {
     return newDateInt(
-      properties.year || nowTime.getFullYear(),
-      properties.mon || ((nowTime.getMonth() + 1) as MonTypeInt),
-      properties.day || (nowTime.getDate() as DayTypeInt<T>),
+      properties.year ?? nowTime.getFullYear(),
+      properties.mon ?? ((nowTime.getMonth() + 1) as MonTypeInt),
+      properties.day ?? (nowTime.getDate() as DayTypeInt<T>),
     ).getDay();
   }
   return nowTime.getDay();

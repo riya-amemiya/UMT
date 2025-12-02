@@ -26,7 +26,7 @@ export const subnetMaskToCidr = (subnetMask: string): number => {
 
   // Join octets and count consecutive 1s
   const binaryString = binaryOctets.join("");
-  const match = binaryString.match(/^1*0*$/);
+  const match = /^1*0*$/.exec(binaryString);
   if (!match) {
     throw new Error(
       "Invalid subnet mask: must be consecutive 1s followed by 0s",

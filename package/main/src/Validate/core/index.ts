@@ -26,7 +26,7 @@ export const core =
     if (typeof value !== type) {
       return {
         validate: false,
-        message: message || "",
+        message: message ?? "",
         type,
       };
     }
@@ -34,7 +34,7 @@ export const core =
       if (!validate.validate(value)) {
         return {
           validate: false,
-          message: validate.message || "",
+          message: validate.message ?? "",
           type,
         };
       }
