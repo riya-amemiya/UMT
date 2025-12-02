@@ -14,9 +14,8 @@ export const mathConverter = (equation: string): string => {
   let convertedEquation = equation;
 
   while (true) {
-    const multiplicationOrExponentiation = convertedEquation.match(
-      /\d+\.?(\d+)?(\*|\^)\d+\.?(\d+)?/,
-    );
+    const multiplicationOrExponentiation =
+      /\d+\.?(\d+)?(\*|\^)\d+\.?(\d+)?/.exec(convertedEquation);
 
     if (!multiplicationOrExponentiation) {
       return convertedEquation;

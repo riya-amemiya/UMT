@@ -98,7 +98,7 @@ const applyCurrencyExchange = <T extends { [key: string]: string | number }>(
   // Currency exchange logic
   for (const index in rates) {
     if (returnExpr.includes(index)) {
-      const $ = returnExpr.match(new RegExp(`\\${index}([0-9]+)`));
+      const $ = new RegExp(`\\${index}([0-9]+)`).exec(returnExpr);
       if ($) {
         returnExpr = returnExpr.replace($[0], convertCurrency($[0], rates));
       }
@@ -113,7 +113,7 @@ const containsParentheses = (expr: string): boolean => {
 
 const resolveParentheses = (expr: string): string => {
   // Logic for calculations inside parentheses
-  const match = expr.match(/\((-?\d+(?:\.\d+)?)([*+/-])(-?\d+(?:\.\d+)?)\)/);
+  const match = /\((-?\d+(?:\.\d+)?)([*+/-])(-?\d+(?:\.\d+)?)\)/.exec(expr);
   if (match) {
     return expr.replace(
       match[0],
@@ -133,7 +133,7 @@ const containsDiv = (expr: string): boolean => {
 
 const resolveMulExp = (expr: string): string => {
   // Logic for multiplication and exponentiation
-  const match = expr.match(/(.*?)(-?\d+(?:\.\d+)?)([*^])(-?\d+(?:\.\d+)?)$/);
+  const match = /(.*?)(-?\d+(?:\.\d+)?)([*^])(-?\d+(?:\.\d+)?)$/.exec(expr);
   if (match) {
     const result =
       match[3] === "^"
@@ -146,7 +146,7 @@ const resolveMulExp = (expr: string): string => {
 
 const resolveDiv = (expr: string): string => {
   // Logic for division
-  const match = expr.match(/(-?\d+(?:\.\d+)?)\/(-?\d+(?:\.\d+)?)/);
+  const match = /(-?\d+(?:\.\d+)?)\/(-?\d+(?:\.\d+)?)/.exec(expr);
   if (match) {
     const result = division(Number(match[1]), Number(match[2]));
     return expr.replace(match[0], String(result));
@@ -160,7 +160,7 @@ const containsAddSub = (expr: string): boolean => {
 
 const resolveAddSub = (expr: string): string => {
   // Logic for addition and subtraction
-  const match = expr.match(/(-?\d+(?:\.\d+)?)(\+|-)(-?\d+(?:\.\d+)?)/);
+  const match = /(-?\d+(?:\.\d+)?)(\+|-)(-?\d+(?:\.\d+)?)/.exec(expr);
   if (match) {
     const result =
       match[2] === "+"

@@ -14,7 +14,8 @@ export const fromBase64 = (base64String: string): string => {
       Uint8Array.from(
         atob(base64String)
           .split("")
-          .map((c) => c.codePointAt(0) as number),
+          // biome-ignore lint/style/noNonNullAssertion: it will never be null
+          .map((c) => c.codePointAt(0)!),
       ),
     );
   } catch {

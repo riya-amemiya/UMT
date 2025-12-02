@@ -49,7 +49,7 @@
  * @template T - The type of elements stored in the queue
  */
 export class PriorityQueue<T> {
-  private heap: Array<{ value: T; priority: number }> = [];
+  private heap: { value: T; priority: number }[] = [];
   private minPriority = 0;
 
   /**
@@ -65,7 +65,7 @@ export class PriorityQueue<T> {
    * ]);
    * ```
    */
-  constructor(initialElements?: Array<{ value: T; priority: number }>) {
+  constructor(initialElements?: { value: T; priority: number }[]) {
     if (initialElements) {
       this.heap = [...initialElements];
       this.updateMinPriority();
@@ -255,7 +255,7 @@ export class PriorityQueue<T> {
    * // [{ value: "high", priority: 10 }, { value: "low", priority: 1 }] (order may vary)
    * ```
    */
-  toArrayWithPriorities(): Array<{ value: T; priority: number }> {
+  toArrayWithPriorities(): { value: T; priority: number }[] {
     return [...this.heap];
   }
 

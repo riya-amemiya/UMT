@@ -41,10 +41,7 @@ export const mergeDeep = <
 
         (result as Record<string, unknown>)[key] =
           isPlainObject(targetValue) && isPlainObject(sourceValue)
-            ? mergeDeep(
-                targetValue as Record<string, unknown>,
-                sourceValue as Record<string, unknown>,
-              )
+            ? mergeDeep(targetValue, sourceValue)
             : sourceValue;
       }
     }

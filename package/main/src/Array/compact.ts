@@ -6,4 +6,4 @@
  * compact([0, 1, false, 2, '', 3]); // [1, 2, 3]
  * compact([null, undefined, NaN, 0, false, '']); // []
  */
-export const compact = <T>(array: T[]): T[] => array.filter(Boolean) as T[];
+export const compact = <T>(array: T[]): T[] => array.filter(Boolean);

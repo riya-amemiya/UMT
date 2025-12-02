@@ -1,7 +1,7 @@
 /**
  * Number of milliseconds in one second
  */
-export const OneSecondMs = 1000 as const;
+export const OneSecondMs = 1000;
 
 /**
  * Number of milliseconds in one minute

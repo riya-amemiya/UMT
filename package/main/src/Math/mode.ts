@@ -19,7 +19,7 @@ export const mode = (array: number[]): number[] => {
 
   // Count frequencies
   for (const value of array) {
-    const count = (frequency.get(value) || 0) + 1;
+    const count = (frequency.get(value) ?? 0) + 1;
     frequency.set(value, count);
     maxFrequency = Math.max(maxFrequency, count);
   }

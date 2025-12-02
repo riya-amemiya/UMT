@@ -16,12 +16,12 @@ export const fuzzySearch = (
   query: string,
   items: string[],
   threshold = 0.6,
-): Array<{ item: string; score: number }> => {
+): { item: string; score: number }[] => {
   if (query.length === 0) {
     return [];
   }
 
-  const results: Array<{ item: string; score: number }> = [];
+  const results: { item: string; score: number }[] = [];
 
   for (const item of items) {
     const distance = levenshteinDistance(

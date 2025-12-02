@@ -21,7 +21,7 @@ export const validateEmail = (
     validate: (value) => {
       return parseEmail({
         email: value,
-        options: options || { level: "basic" },
+        options: options ?? { level: "basic" },
       }).valid;
     },
   };

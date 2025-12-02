@@ -25,12 +25,12 @@
  * getValue({ users: [{ name: "Alice" }] }, "users[0].name") // → "Alice"
  */
 export function getValue(object: unknown, path: string): unknown {
-  const segments: Array<{ key: string; index?: number }> = [];
+  const segments: { key: string; index?: number }[] = [];
 
   const parts = path.split(".");
 
   for (const part of parts) {
-    const arrayMatch = part.match(/^(.+?)\[(-?\d+)\]$/);
+    const arrayMatch = /^(.+?)\[(-?\d+)\]$/.exec(part);
     if (arrayMatch) {
       const [, key, indexString] = arrayMatch;
       segments.push({ key, index: Number(indexString) });

@@ -39,7 +39,7 @@ export const pickDeep = <
         if (index === parts.length - 1) {
           target[part] = current[part];
         } else {
-          target[part] = target[part] || {};
+          target[part] = target[part] ?? {};
           current = current[part];
           target = target[part];
         }

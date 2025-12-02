@@ -18,7 +18,7 @@ export const groupBy = <T, K extends string | number>(
     const value = array[index];
     const key = iteratee(value, index, array);
     // biome-ignore lint/suspicious/noAssignInExpressions: ignore
-    (result[key] || (result[key] = [])).push(value);
+    (result[key] ?? (result[key] = [])).push(value);
   }
   return result;
 };
