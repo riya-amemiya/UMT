@@ -7,6 +7,5 @@ import type { UnionToIntersection } from "$/logic/unionToIntersection";
  * type Input = { a: { b: { c: {} } } }
  * type Output = ShallowObjectValue<Input> // { b: { c: {} } }
  */
-export type ShallowObjectValue<T> = T extends Record<PropertyKey, infer U>
-  ? UnionToIntersection<U>
-  : never;
+export type ShallowObjectValue<T> =
+  T extends Record<PropertyKey, infer U> ? UnionToIntersection<U> : never;

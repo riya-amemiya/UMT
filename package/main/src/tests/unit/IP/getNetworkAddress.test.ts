@@ -12,12 +12,9 @@ describe("getNetworkAddress", () => {
       ["0.0.0.0", "255.255.255.0", 0x00_00_00_00], // All bits zero
       ["192.168.1.1", "255.255.255.252", 0xc0_a8_01_00], // Small subnet (/30)
       ["10.10.10.10", "255.255.255.240", 0x0a_0a_0a_00], // Subnet mask with /28
-    ])(
-      "should calculate network address for %s with mask %s",
-      (ip, mask, expected) => {
-        expect(getNetworkAddress(ip, mask)).toBe(expected);
-      },
-    );
+    ])("should calculate network address for %s with mask %s", (ip, mask, expected) => {
+      expect(getNetworkAddress(ip, mask)).toBe(expected);
+    });
   });
 
   describe("invalid inputs", () => {

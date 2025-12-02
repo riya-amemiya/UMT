@@ -17,12 +17,9 @@ describe("isInRange", () => {
       ["192.168.1.4", "192.168.1.0", 30, false], // Outside small subnet
       ["0.0.0.1", "0.0.0.0", 0, true], // All IPs in range (CIDR 0)
       ["255.255.255.255", "0.0.0.0", 0, true], // All IPs in range (CIDR 0)
-    ])(
-      "should evaluate if %s is in network %s/%i => %s",
-      (remoteIp, networkIp, cidr, expected) => {
-        expect(isInRange(remoteIp, networkIp, cidr)).toBe(expected);
-      },
-    );
+    ])("should evaluate if %s is in network %s/%i => %s", (remoteIp, networkIp, cidr, expected) => {
+      expect(isInRange(remoteIp, networkIp, cidr)).toBe(expected);
+    });
 
     test.each([
       // [remoteIp, networkIp, cidr, description]
@@ -77,14 +74,11 @@ describe("isInRange", () => {
         1.5,
         "CIDR must be an integer between 0 and 32",
       ],
-    ])(
-      "should throw error for remoteIp=%s, networkIp=%s, cidr=%s",
-      (remoteIp, networkIp, cidr, expectedError) => {
-        expect(() =>
-          isInRange(remoteIp as string, networkIp as string, cidr as number),
-        ).toThrow(expectedError);
-      },
-    );
+    ])("should throw error for remoteIp=%s, networkIp=%s, cidr=%s", (remoteIp, networkIp, cidr, expectedError) => {
+      expect(() =>
+        isInRange(remoteIp as string, networkIp as string, cidr as number),
+      ).toThrow(expectedError);
+    });
   });
 
   describe("invalid IP formats", () => {
@@ -96,14 +90,11 @@ describe("isInRange", () => {
       ["192.168.1.1.1", "192.168.1.0", 24],
       ["192.168.-1.1", "192.168.1.0", 24],
       ["192.168.1", "192.168.1.0", 24],
-    ])(
-      "should throw for invalid IP format: %s",
-      (remoteIp, networkIp, cidr) => {
-        expect(() => isInRange(remoteIp, networkIp, cidr)).toThrow(
-          "Invalid IP address format",
-        );
-      },
-    );
+    ])("should throw for invalid IP format: %s", (remoteIp, networkIp, cidr) => {
+      expect(() => isInRange(remoteIp, networkIp, cidr)).toThrow(
+        "Invalid IP address format",
+      );
+    });
   });
 
   describe("error message formatting", () => {
