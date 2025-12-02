@@ -51,14 +51,14 @@ export function isDeepEqual(
       return false;
     }
 
-    if (visited.has(x as object) || visited.has(y as object)) {
+    if (visited.has(x) || visited.has(y)) {
       return true;
     }
-    visited.add(x as object);
-    visited.add(y as object);
+    visited.add(x);
+    visited.add(y);
 
-    const ctorX = (x as object).constructor;
-    const ctorY = (y as object).constructor;
+    const ctorX = x.constructor;
+    const ctorY = y.constructor;
     if (ctorX !== ctorY) {
       return false;
     }

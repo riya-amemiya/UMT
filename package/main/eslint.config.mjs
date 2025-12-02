@@ -1,15 +1,17 @@
 import { FlatCompat } from "@eslint/eslintrc";
-import js from "@eslint/js";
-import typescriptEslintPlugin from "@typescript-eslint/eslint-plugin";
-import typescriptEslintParser from "@typescript-eslint/parser";
+import eslint from "@eslint/js";
+import tseslint from "typescript-eslint";
 import unicornPlugin from "eslint-plugin-unicorn";
 import importPlugin from "eslint-plugin-import";
 import baselineJs, { BASELINE } from "eslint-plugin-baseline-js";
+import { defineConfig } from "eslint/config";
 
 const compat = new FlatCompat();
 
-export default [
-  js.configs.recommended,
+export default defineConfig(
+  eslint.configs.recommended,
+  tseslint.configs.strict,
+  tseslint.configs.stylistic,
   unicornPlugin.configs.recommended,
   ...compat.extends("plugin:@typescript-eslint/recommended"),
   baselineJs.configs["recommended-ts"]({
@@ -29,7 +31,6 @@ export default [
     languageOptions: {
       sourceType: "module",
       ecmaVersion: 2024,
-      parser: typescriptEslintParser,
       parserOptions: {
         project: "./tsconfig.json",
       },
@@ -37,12 +38,18 @@ export default [
     plugins: {
       "baseline-js": baselineJs,
       import: importPlugin,
-      "@typescript-eslint": typescriptEslintPlugin,
     },
     rules: {
       "@typescript-eslint/no-explicit-any": "off",
-      "no-constant-condition": "off",
       "@typescript-eslint/no-unused-vars": "off",
+      "@typescript-eslint/no-non-null-assertion": "off",
+      "@typescript-eslint/unified-signatures": "off",
+      "@typescript-eslint/consistent-indexed-object-style": "off",
+      "@typescript-eslint/no-unnecessary-type-assertion": [
+        "error",
+        { checkLiteralConstAssertions: true },
+      ],
+      "no-constant-condition": "off",
       "unicorn/filename-case": [
         "error",
         {
@@ -79,4 +86,4 @@ export default [
       ],
     },
   },
-];
+);
