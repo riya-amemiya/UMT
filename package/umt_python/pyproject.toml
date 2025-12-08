@@ -36,5 +36,5 @@ version = "0.1.1"
 dev = [
   "pyright==1.1.407",
   "pytest==8.4.2",
-  "ruff==0.14.7",
+  "ruff==0.14.8",
 ]
