@@ -1,3 +1,5 @@
+import { unwrap } from "@/Tool/unwrap";
+
 /**
  * A priority queue implementation using a binary heap.
  * Higher priority values are dequeued first.
@@ -170,8 +172,8 @@ export class PriorityQueue<T> {
     }
 
     const result = this.heap[0].value;
-    // biome-ignore lint/style/noNonNullAssertion: pop() cannot return undefined when heap.length > 1
-    this.heap[0] = this.heap.pop()!;
+    // pop() cannot return undefined when heap.length > 1
+    this.heap[0] = unwrap(this.heap.pop(), "panic: heap is empty");
     this.heapifyDown(0);
     return result;
   }
