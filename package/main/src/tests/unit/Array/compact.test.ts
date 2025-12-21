@@ -86,4 +86,18 @@ describe("compact function", () => {
     expect(lodashResult).toEqual([1, 2]);
     expect(lodashOriginal).toEqual([0, 1, false, 2]);
   });
+
+  test("should treat -0 as falsy", () => {
+    expect(compact([-0, 1, 2])).toEqual([1, 2]);
+    expect(_.compact([-0, 1, 2])).toEqual([1, 2]);
+  });
+
+  test("should handle Infinity as truthy", () => {
+    expect(
+      compact([0, Number.POSITIVE_INFINITY, Number.NEGATIVE_INFINITY]),
+    ).toEqual([Number.POSITIVE_INFINITY, Number.NEGATIVE_INFINITY]);
+    expect(
+      _.compact([0, Number.POSITIVE_INFINITY, Number.NEGATIVE_INFINITY]),
+    ).toEqual([Number.POSITIVE_INFINITY, Number.NEGATIVE_INFINITY]);
+  });
 });

@@ -20,4 +20,28 @@ describe("max function", () => {
     expect(max(1.5, 2.5, 1.1)).toBe(2.5);
     expect(max(-1.5, -2.5, -1.1)).toBe(-1.1);
   });
+
+  describe("special number values", () => {
+    it("should return NaN if any argument is NaN", () => {
+      expect(max(1, Number.NaN, 3)).toBe(Number.NaN);
+      expect(max(Number.NaN)).toBe(Number.NaN);
+    });
+
+    it("should handle Infinity", () => {
+      expect(max(1, Number.POSITIVE_INFINITY, 3)).toBe(
+        Number.POSITIVE_INFINITY,
+      );
+      expect(max(Number.NEGATIVE_INFINITY, 0, 1)).toBe(1);
+    });
+
+    it("should handle -Infinity", () => {
+      expect(max(Number.NEGATIVE_INFINITY, Number.NEGATIVE_INFINITY)).toBe(
+        Number.NEGATIVE_INFINITY,
+      );
+    });
+
+    it("should return -Infinity for empty arguments", () => {
+      expect(max()).toBe(Number.NEGATIVE_INFINITY);
+    });
+  });
 });

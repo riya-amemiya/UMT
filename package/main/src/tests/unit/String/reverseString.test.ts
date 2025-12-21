@@ -30,4 +30,24 @@ describe("reverseString", () => {
   test("should reverse an eight-character string", () => {
     expect(reverseString("abcdefgh")).toBe("hgfedcba");
   });
+
+  test("should handle whitespace", () => {
+    expect(reverseString("hello world")).toBe("dlrow olleh");
+    expect(reverseString("  ")).toBe("  ");
+  });
+
+  test("should handle special characters", () => {
+    expect(reverseString("!@#$%")).toBe("%$#@!");
+    expect(reverseString("a-b-c")).toBe("c-b-a");
+  });
+
+  test("should handle numbers in string", () => {
+    expect(reverseString("12345")).toBe("54321");
+    expect(reverseString("a1b2c3")).toBe("3c2b1a");
+  });
+
+  test("should handle unicode characters", () => {
+    expect(reverseString("あいう")).toBe("ういあ");
+    expect(reverseString("日本語")).toBe("語本日");
+  });
 });
