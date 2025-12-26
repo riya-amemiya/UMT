@@ -111,6 +111,8 @@ jobs:
         run: bun run build
       - name: List Module Directory
         run: ls module
+      - name: Upload Bundle Analysis to Codecov
+        run: bunx @codecov/bundle-analyzer ./module --bundle-name=umt --upload-token=${{ secrets.CODECOV_TOKEN }}
       - name: Save Build Cache
         if: steps.cache-restore-prod.outputs.cache-hit != 'true'
         uses: actions/cache/save@9255dc7a253b0ccc959486e2bca901246202afeb # v5.0.1
@@ -142,9 +144,15 @@ jobs:
           path: '**/node_modules'
           key: dev-depends-${{ matrix.os }}-bun${{ matrix.bun-version }}-${{ hashFiles('package/main/package.json') }}
       - name: Run Tests with Coverage
-        run: bun run test --coverage
+        run: JEST_JUNIT_CLASSNAME="{filepath}" bun run test --coverage --reporters=default --reporters=jest-junit
       - name: Upload Coverage to Codecov
         uses: codecov/codecov-action@671740ac38dd9b0130fbe1cec585b89eea48d3de # v5.5.2
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           slug: riya-amemiya/UMT
+      - name: Upload Test Results to Codecov
+        if: ${{ !cancelled() }}
+        uses: codecov/codecov-action@671740ac38dd9b0130fbe1cec585b89eea48d3de # v5.5.2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          report_type: test_results
