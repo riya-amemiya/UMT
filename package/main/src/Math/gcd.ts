@@ -49,8 +49,11 @@ const gcdInteger = (x: number, y: number, ...z: number[]) => {
   let copyY = Math.abs(Math.round(y));
   const copyZ = z.map((element) => Math.abs(Math.round(element)));
 
-  if (copyX === 0 || copyY === 0) {
-    return 0;
+  if (copyX === 0) {
+    return copyY;
+  }
+  if (copyY === 0) {
+    return copyX;
   }
 
   [copyX, copyY] = [Math.max(copyX, copyY), Math.min(copyX, copyY)];

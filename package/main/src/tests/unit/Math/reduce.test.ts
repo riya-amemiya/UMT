@@ -21,7 +21,7 @@ describe("reduce function", () => {
 
   describe("edge cases", () => {
     it("should handle zero in numerator or denominator", () => {
-      expect(reduce(0, 5)).toEqual({ x: Number.NaN, y: Number.NaN });
+      expect(reduce(0, 5)).toEqual({ x: 0, y: 1, gcd: 5 });
       expect(reduce(5, 0)).toEqual({ x: Number.NaN, y: Number.NaN });
       expect(reduce(0, 0)).toEqual({ x: Number.NaN, y: Number.NaN });
     });

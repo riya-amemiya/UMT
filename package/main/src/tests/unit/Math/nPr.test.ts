@@ -24,15 +24,18 @@ describe("nPr function", () => {
   });
 
   describe("edge cases", () => {
-    it("should return NaN when n or r is 0", () => {
-      expect(nPr(0, 5)).toBeNaN();
-      expect(nPr(5, 0)).toBeNaN();
-      expect(nPr(0, 0)).toBeNaN();
+    it("should return 1 when r is 0 (arranging nothing)", () => {
+      expect(nPr(5, 0)).toBe(1);
+      expect(nPr(10, 0)).toBe(1);
+      expect(nPr(0, 0)).toBe(1);
     });
 
-    it("should return NaN when n is less than r", () => {
+    it("should return NaN for invalid inputs", () => {
+      expect(nPr(0, 5)).toBeNaN();
       expect(nPr(2, 5)).toBeNaN();
       expect(nPr(3, 4)).toBeNaN();
+      expect(nPr(-1, 2)).toBeNaN();
+      expect(nPr(5, -1)).toBeNaN();
     });
 
     it("should calculate correctly when n equals r", () => {

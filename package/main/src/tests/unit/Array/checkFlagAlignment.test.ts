@@ -1,6 +1,14 @@
 import { checkFlagAlignment } from "@/Array/checkFlagAlignment";
 
 describe("checkFlagAlignment", () => {
+  it("should return false for empty matrix", () => {
+    expect(checkFlagAlignment([])).toBe(false);
+  });
+
+  it("should return false for matrix with empty rows", () => {
+    expect(checkFlagAlignment([[]])).toBe(false);
+  });
+
   it("should detect horizontal alignment", () => {
     const matrix = [
       [

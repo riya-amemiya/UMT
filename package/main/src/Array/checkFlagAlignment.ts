@@ -12,6 +12,9 @@ export const checkFlagAlignment = <T extends { flag: boolean }>(
   matrix: T[][],
 ): boolean => {
   const rows = matrix.length;
+  if (rows === 0 || matrix[0].length === 0) {
+    return false;
+  }
   const cols = matrix[0].length;
 
   // Check horizontal alignment
