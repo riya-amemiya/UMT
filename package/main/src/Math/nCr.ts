@@ -11,8 +11,11 @@ import { nPr } from "./nPr";
  * where the order doesn't matter. Uses the formula nCr = nPr / r!
  */
 export const nCr = (n: number, r: number): number => {
-  if (n === 0 || r === 0 || n < r) {
+  if (n < r || n < 0 || r < 0) {
     return Number.NaN;
+  }
+  if (r === 0 || n === r) {
+    return 1;
   }
 
   const numerator = nPr(n, r);
