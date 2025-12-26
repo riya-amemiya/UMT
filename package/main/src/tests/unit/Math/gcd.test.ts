@@ -14,8 +14,8 @@ describe("gcd function", () => {
   });
 
   test("contains zero", () => {
-    expect(gcd(56, 0)).toBe(0);
-    expect(gcd(0, 56)).toBe(0);
+    expect(gcd(56, 0)).toBe(56);
+    expect(gcd(0, 56)).toBe(56);
     expect(gcd(0, 0)).toBe(0);
   });
 

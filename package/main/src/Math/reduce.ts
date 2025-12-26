@@ -12,8 +12,11 @@ import { gcd } from "./gcd";
  * - gcd: greatest common divisor used for reduction
  */
 export const reduce = (x: number, y: number) => {
-  if (x === 0 || y === 0) {
+  if (y === 0) {
     return { x: Number.NaN, y: Number.NaN };
+  }
+  if (x === 0) {
+    return { x: 0, y: 1, gcd: Math.abs(y) };
   }
   const gcdValue = gcd(Math.abs(x), Math.abs(y));
   const sign = y < 0 ? -1 : 1;

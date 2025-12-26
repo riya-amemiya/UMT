@@ -24,15 +24,21 @@ describe("nCr function", () => {
   });
 
   describe("edge cases", () => {
-    it("should return NaN when n or r is 0", () => {
-      expect(nCr(0, 5)).toBeNaN();
-      expect(nCr(5, 0)).toBeNaN();
-      expect(nCr(0, 0)).toBeNaN();
+    it("should return 1 when r is 0 (choosing nothing)", () => {
+      expect(nCr(5, 0)).toBe(1);
+      expect(nCr(10, 0)).toBe(1);
     });
 
-    it("should return NaN when n is less than r", () => {
+    it("should return NaN for invalid inputs", () => {
+      expect(nCr(0, 5)).toBeNaN();
       expect(nCr(2, 5)).toBeNaN();
       expect(nCr(3, 4)).toBeNaN();
+      expect(nCr(-1, 2)).toBeNaN();
+      expect(nCr(5, -1)).toBeNaN();
+    });
+
+    it("should return 1 when n equals 0 and r equals 0", () => {
+      expect(nCr(0, 0)).toBe(1);
     });
   });
 });
