@@ -1,0 +1,59 @@
+{
+  "$schema":  "https://raw.githubusercontent.com/jetify-com/devbox/0.16.0/.schema/devbox.schema.json",
+  "packages": ["bun@latest"],
+  "shell": {
+    "init_hook": [
+      "echo 'Welcome to devbox!' > /dev/null"
+    ],
+    "scripts": {
+      "build": [
+        "bun run build"
+      ],
+      "build:cjs": [
+        "bun run build:cjs"
+      ],
+      "build:babel": [
+        "bun run build:babel"
+      ],
+      "build:cjs:babel": [
+        "bun run build:cjs:babel"
+      ],
+      "build:full": [
+        "bun run build:full"
+      ],
+      "build:clean": [
+        "bun run build:clean"
+      ],
+      "build:clean:full": [
+        "bun run build:clean:full"
+      ],
+      "clean-build": [
+        "bun run clean-build"
+      ],
+      "deploy": [
+        "bun run deploy"
+      ],
+      "eslint": [
+        "bun run eslint"
+      ],
+      "format": [
+        "bun run format"
+      ],
+      "lint": [
+        "bun run lint"
+      ],
+      "lint:ci": [
+        "bun run lint:ci"
+      ],
+      "test": [
+        "bun run test"
+      ],
+      "test-debug": [
+        "bun run test-debug"
+      ],
+      "ts-node": [
+        "bun run ts-node"
+      ]
+    }
+  }
+}
