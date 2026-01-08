@@ -69,7 +69,7 @@ pub fn umt_ultra_number_sort(array: &mut Vec<f64>, ascending: bool) -> &mut Vec<
 }
 
 /// Inline sort for 3 elements
-fn inline_sort3(array: &mut Vec<f64>, ascending: bool) {
+fn inline_sort3(array: &mut [f64], ascending: bool) {
     let mut a = array[0];
     let mut b = array[1];
     let mut c = array[2];
@@ -140,8 +140,7 @@ fn counting_sort(array: &mut Vec<f64>, min: f64, max: f64, ascending: bool) -> &
     // Reconstruct array
     let mut index = 0;
     if ascending {
-        for i in 0..range {
-            let cnt = count[i];
+        for (i, &cnt) in count.iter().enumerate().take(range) {
             let value = i as f64 + min;
             for _ in 0..cnt {
                 array[index] = value;
@@ -221,7 +220,7 @@ fn radix_sort(array: &mut Vec<f64>, ascending: bool) -> &mut Vec<f64> {
 }
 
 /// Radix sort for positive integers
-fn radix_sort_positive(array: &mut Vec<f64>) {
+fn radix_sort_positive(array: &mut [f64]) {
     let length = array.len();
     if length <= 1 {
         return;
@@ -266,7 +265,7 @@ fn radix_sort_positive(array: &mut Vec<f64>) {
 }
 
 /// Optimized quicksort for numbers
-fn numeric_quick_sort(array: &mut Vec<f64>, low: isize, high: isize, ascending: bool) {
+fn numeric_quick_sort(array: &mut [f64], low: isize, high: isize, ascending: bool) {
     let mut stack = Vec::new();
     stack.push((low, high));
 
@@ -296,7 +295,7 @@ fn numeric_quick_sort(array: &mut Vec<f64>, low: isize, high: isize, ascending: 
 }
 
 /// Numeric insertion sort
-fn numeric_insertion_sort(array: &mut Vec<f64>, low: usize, high: usize, ascending: bool) {
+fn numeric_insertion_sort(array: &mut [f64], low: usize, high: usize, ascending: bool) {
     if ascending {
         for i in (low + 1)..=high {
             let key = array[i];
@@ -321,7 +320,7 @@ fn numeric_insertion_sort(array: &mut Vec<f64>, low: usize, high: usize, ascendi
 }
 
 /// Numeric partition with median-of-three pivot
-fn numeric_partition(array: &mut Vec<f64>, low: usize, high: usize, ascending: bool) -> usize {
+fn numeric_partition(array: &mut [f64], low: usize, high: usize, ascending: bool) -> usize {
     // Median-of-three pivot selection
     let mid = low + ((high - low) >> 1);
 

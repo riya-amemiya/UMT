@@ -14,6 +14,6 @@ use super::umt_gcd;
 /// The least common multiple of the two input integers.
 pub fn umt_lcm(a: i32, b: i32) -> i32 {
     let gcd = umt_gcd(a, b);
-    let result = if gcd == 0 { 0 } else { a / gcd * b };
-    result
+
+    if gcd == 0 { 0 } else { a / gcd * b }
 }

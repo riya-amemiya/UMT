@@ -17,5 +17,5 @@ pub fn umt_factorial(mut x: i32) -> i32 {
             x -= 1;
         }
     }
-    return result;
+    result
 }
