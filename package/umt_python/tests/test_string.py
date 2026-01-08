@@ -82,7 +82,9 @@ class TestUnescapeHtml(unittest.TestCase):
             '<script>alert("Hello");</script>',
         )
         self.assertEqual(unescape_html("Tom &amp; Jerry"), "Tom & Jerry")
-        self.assertEqual(unescape_html("5 &lt; 10 &amp;&amp; 10 &gt; 5"), "5 < 10 && 10 > 5")
+        self.assertEqual(
+            unescape_html("5 &lt; 10 &amp;&amp; 10 &gt; 5"), "5 < 10 && 10 > 5"
+        )
 
     def test_edge_cases(self):
         self.assertEqual(unescape_html(""), "")

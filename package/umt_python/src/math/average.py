@@ -1,8 +1,10 @@
+from collections.abc import Sequence
+
 from .addition import addition
 from .division import division
 
 
-def average(numbers: list[float]) -> float:
+def average(numbers: Sequence[float]) -> float:
     """
     Calculates the arithmetic mean of an array of numbers.
 

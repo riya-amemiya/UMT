@@ -1,9 +1,10 @@
 import math
+from collections.abc import Sequence
 
 from .average import average
 
 
-def correlation_coefficient(x: list[float], y: list[float]) -> float:
+def correlation_coefficient(x: Sequence[float], y: Sequence[float]) -> float:
     """
     Calculate the Pearson correlation coefficient between two arrays.
 

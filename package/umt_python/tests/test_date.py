@@ -1,6 +1,5 @@
 import unittest
-from datetime import datetime, timezone, timedelta
-from unittest.mock import patch
+from datetime import datetime, timedelta
 
 from src.date import (
     birthday,
@@ -81,7 +80,11 @@ class TestDateNow(unittest.TestCase):
     def test_timezone_offset(self):
         result_jst = date_now(9)
         result_utc = date_now(0)
-        diff = result_jst.utcoffset() - result_utc.utcoffset()
+        offset_jst = result_jst.utcoffset()
+        offset_utc = result_utc.utcoffset()
+        assert offset_jst is not None
+        assert offset_utc is not None
+        diff = offset_jst - offset_utc
         self.assertEqual(diff, timedelta(hours=9))
 
 

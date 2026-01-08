@@ -1,5 +1,3 @@
-
-
 def n_pr(n: int, r: int) -> float:
     """
     Calculates permutations (nPr) - number of ways to arrange r items from n items.

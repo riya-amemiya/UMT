@@ -1,15 +1,15 @@
 import math
-from typing import overload
+from typing import Literal, overload
 
 from .get_decimal_length import get_decimal_length
 
 
 @overload
-def division(x: float, y: float, is_floor: bool = True) -> float: ...
+def division(x: float, y: float, is_floor: Literal[True] = ...) -> float: ...
 
 
 @overload
-def division(x: float, y: float, is_floor: bool = False) -> list[float]: ...
+def division(x: float, y: float, is_floor: Literal[False]) -> list[float]: ...
 
 
 def division(x: float, y: float, is_floor: bool = True) -> float | list[float]:

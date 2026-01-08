@@ -116,15 +116,13 @@ class TestGroupBy(unittest.TestCase):
         self.assertEqual(result[5], ["three"])
 
     def test_by_first_char(self):
-        result = group_by(
-            ["apple", "banana", "carrot"], lambda x, i, arr: x[0]
-        )
+        result = group_by(["apple", "banana", "carrot"], lambda x, i, arr: x[0])
         self.assertEqual(result["a"], ["apple"])
         self.assertEqual(result["b"], ["banana"])
         self.assertEqual(result["c"], ["carrot"])
 
     def test_edge_cases(self):
-        self.assertEqual(group_by([], lambda x, i, arr: x), {})
+        self.assertEqual(group_by([], lambda x, i, arr: 0), {})
 
     def test_docstring_example(self):
         result = group_by([6.1, 4.2, 6.3], lambda x, i, arr: int(x))

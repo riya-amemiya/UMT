@@ -1,4 +1,4 @@
-def is_leap_year(year: int) -> bool:
+def is_leap_year(year: int | float) -> bool:
     """
     Determine if a given year is a leap year.
 

@@ -35,7 +35,7 @@ def object_merge_deep(
         for key, source_value in source.items():
             target_value = result.get(key)
 
-            if _is_plain_object(target_value) and _is_plain_object(source_value):
+            if isinstance(target_value, dict) and isinstance(source_value, dict):
                 result[key] = object_merge_deep(target_value, source_value)
             else:
                 result[key] = source_value

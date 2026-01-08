@@ -1,7 +1,8 @@
 import math
+from collections.abc import Sequence
 
 
-def percentile(array: list[float], pct: float) -> float:
+def percentile(array: Sequence[float], pct: float) -> float:
     """
     Calculate the nth percentile of values in an array.
 

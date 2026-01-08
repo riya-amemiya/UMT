@@ -3,7 +3,6 @@ HTTP status code constants.
 """
 
 
-
 class HttpInformationalStatus:
     """HTTP 1xx Informational Status Codes."""
 

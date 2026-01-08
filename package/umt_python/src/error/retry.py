@@ -30,6 +30,7 @@ async def retry(
         ...     return await fetch_data()
         >>> result = await retry(risky_operation, retries=5, delay=2.0)
     """
+
     def _always_retry(_: Exception) -> bool:
         return True
 

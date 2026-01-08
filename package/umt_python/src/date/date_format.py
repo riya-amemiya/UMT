@@ -79,12 +79,12 @@ def date_format(date: datetime, format_string: str = "YYYY-MM-DDTHH:mm:ssZ") -> 
         "ZZ": timezone_offset_string.replace(":", ""),
     }
 
-    def replacer(match: re.Match) -> str:
+    def replacer(match: re.Match[str]) -> str:
         escaped = match.group(1)
         token = match.group(2)
         if escaped:
             return escaped
-        return matches.get(token, match.group(0))
+        return matches.get(token) or match.group(0)
 
     pattern = r"\[([^\]]+)]|(Y{1,4}|M{1,2}|D{1,2}|d{1,2}|H{1,2}|h{1,2}|a|A|m{1,2}|s{1,2}|Z{1,2}|SSS)"
     return re.sub(pattern, replacer, format_string)

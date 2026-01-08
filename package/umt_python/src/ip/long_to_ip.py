@@ -1,7 +1,7 @@
 import math
 
 
-def long_to_ip(long: int) -> str:
+def long_to_ip(long: int | float) -> str:
     """
     Converts a 32-bit number to an IPv4 address.
 
