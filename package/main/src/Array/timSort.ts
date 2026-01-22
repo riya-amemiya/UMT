@@ -92,7 +92,7 @@ export const timSort = <T>(
   const minRun = getMinRunLength(n);
 
   for (let runStart = start; runStart <= end; runStart += minRun) {
-    const runEnd = Math.min(runStart + MIN_RUN - 1, end);
+    const runEnd = Math.min(runStart + minRun - 1, end);
     insertionSortRange(result, compareFunction, runStart, runEnd);
   }
 
