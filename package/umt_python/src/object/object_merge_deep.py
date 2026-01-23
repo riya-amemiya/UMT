@@ -1,12 +1,9 @@
-from typing import Any
-
-
-def _is_plain_object(value: Any) -> bool:
+def _is_plain_object(value: object) -> bool:
     """Checks if a value is a plain dictionary."""
     return isinstance(value, dict)
 
 
-def object_merge_deep(target: Any, *sources: Any) -> Any:
+def object_merge_deep(target: object, *sources: object) -> object:
     """
     Deeply merges multiple objects into a single object.
 

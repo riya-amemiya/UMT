@@ -1,5 +1,7 @@
-from typing import TypeVar, Callable, Generic, Union
-from ..error.safe_execute import safe_execute, Result
+from collections.abc import Callable
+from typing import Generic, TypeVar
+
+from ..error.safe_execute import Result, safe_execute
 
 T = TypeVar("T")
 U = TypeVar("U")
@@ -11,7 +13,7 @@ class Pipe(Generic[T]):
     Allows chaining transformations in a fluent interface.
     """
 
-    def __init__(self, value: T):
+    def __init__(self, value: T) -> None:
         self._value = value
 
     def map(self, fn: Callable[[T], U]) -> "Pipe[U]":
@@ -28,7 +30,7 @@ class Pipe(Generic[T]):
 
     def when(
         self, predicate: Callable[[T], bool], fn: Callable[[T], U]
-    ) -> "Pipe[Union[T, U]]":
+    ) -> "Pipe[T | U]":
         """
         Applies a transformation function only if the condition is met.
 
@@ -106,7 +108,7 @@ class Pipe(Generic[T]):
             New Pipe instance with Result containing filtered value or error
         """
 
-        def check():
+        def check() -> T:
             if predicate(self._value):
                 return self._value
             raise ValueError("Value did not match filter predicate")

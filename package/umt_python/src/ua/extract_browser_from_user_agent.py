@@ -1,7 +1,6 @@
 import re
 from typing import Literal
 
-
 BrowserType = Literal["edge", "chrome", "firefox", "safari", "ie", "other"]
 
 

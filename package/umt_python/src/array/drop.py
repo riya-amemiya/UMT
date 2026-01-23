@@ -34,10 +34,9 @@ def drop(
 
     if direction == "left":
         return array[n:]
-    elif direction == "right":
+    if direction == "right":
         return array[: len(array) - n]
-    else:
-        mid = len(array) // 2
-        start = mid - n // 2
-        end = mid + (n + 1) // 2
-        return array[:start] + array[end:]
+    mid = len(array) // 2
+    start = mid - n // 2
+    end = mid + (n + 1) // 2
+    return array[:start] + array[end:]

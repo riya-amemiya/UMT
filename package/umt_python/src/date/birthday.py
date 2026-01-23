@@ -1,4 +1,4 @@
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timedelta, timezone
 
 
 def birthday(year: int, mon: int, day: int, time_difference: int = 9) -> int:
@@ -17,8 +17,8 @@ def birthday(year: int, mon: int, day: int, time_difference: int = 9) -> int:
     Example:
         >>> birthday(2000, 1, 1)  # Returns age of someone born on Jan 1, 2000
     """
-    birthday_date = datetime(year, mon, day)
     target_tz = timezone(timedelta(hours=time_difference))
+    birthday_date = datetime(year, mon, day, tzinfo=target_tz)
     now_time = datetime.now(target_tz)
 
     current_year = now_time.year

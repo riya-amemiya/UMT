@@ -1,5 +1,6 @@
-from typing import TypeVar, Callable, Union, Generic
+from collections.abc import Callable
 from dataclasses import dataclass
+from typing import Generic, TypeVar
 
 V = TypeVar("V")
 E = TypeVar("E", bound=Exception)
@@ -23,7 +24,7 @@ class Error(Generic[E]):
     value: None = None
 
 
-Result = Union[Success[V], Error[E]]
+Result = Success[V] | Error[E]
 
 
 def safe_execute(callback: Callable[[], V]) -> Result[V, Exception]:

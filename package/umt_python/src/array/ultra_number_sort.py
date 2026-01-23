@@ -30,15 +30,14 @@ def _handle_nan_sort(array: list[float], ascending: bool) -> list[float]:
     nan_count = 0
 
     for element in array:
-        if element == element:
+        if not math.isnan(element):
             valid.append(element)
         else:
             nan_count += 1
 
     _numeric_quick_sort(valid, 0, len(valid) - 1, ascending)
 
-    for _ in range(nan_count):
-        valid.append(float("nan"))
+    valid.extend(float("nan") for _ in range(nan_count))
 
     for i in range(len(array)):
         array[i] = valid[i]
@@ -302,13 +301,11 @@ def ultra_number_sort(
 
     for i in range(length):
         value = result[i]
-        if value != value:
+        if math.isnan(value):
             has_nan = True
             break
-        if value < min_val:
-            min_val = value
-        if value > max_val:
-            max_val = value
+        min_val = min(min_val, value)
+        max_val = max(max_val, value)
         if all_integers and value != math.floor(value):
             all_integers = False
 

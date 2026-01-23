@@ -23,10 +23,10 @@ def format_string(template: str, *values: object) -> str:
         'Not enough values: val1 {1}'
     """
 
-    def replace(match):
+    def replace(match: re.Match[str]) -> str:
         index = int(match.group(1))
         if index < len(values):
             return str(values[index])
-        return match.group(0)  # Return the original placeholder if value not found
+        return match.group(0)
 
     return re.sub(r"{(\d+)}", replace, template)

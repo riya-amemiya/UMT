@@ -39,4 +39,4 @@ def ip_to_binary_string(ip: str) -> str:
         if num < 0 or num > 255:
             raise ValueError("Invalid IP address format")
 
-    return "".join(bin(int(octet))[2:].zfill(8) for octet in parts)
+    return "".join(f"{int(octet):08b}" for octet in parts)

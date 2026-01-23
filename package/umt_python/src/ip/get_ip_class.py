@@ -33,13 +33,12 @@ def get_ip_class(ip: str) -> str:
 
     if first_octet == 0:
         return ""
-    elif first_octet < 128:
+    if first_octet < 128:
         return "A"
-    elif first_octet < 192:
+    if first_octet < 192:
         return "B"
-    elif first_octet < 224:
+    if first_octet < 224:
         return "C"
-    elif first_octet < 240:
+    if first_octet < 240:
         return "D"
-    else:
-        return "E"
+    return "E"

@@ -1,4 +1,4 @@
-from typing import Literal, Union, overload
+from typing import Literal, overload
 
 TimeUnit = Literal["milliseconds", "seconds", "minutes", "hours"]
 TimeUnitShort = Literal["ms", "s", "m", "h"]
@@ -17,19 +17,19 @@ TIME_UNIT_MAP = {
 
 @overload
 def normalize_time_unit(
-    unit: Union[TimeUnit, TimeUnitShort], to: Literal["long"]
+    unit: TimeUnit | TimeUnitShort, to: Literal["long"]
 ) -> TimeUnit: ...
 
 
 @overload
 def normalize_time_unit(
-    unit: Union[TimeUnit, TimeUnitShort], to: Literal["short"]
+    unit: TimeUnit | TimeUnitShort, to: Literal["short"]
 ) -> TimeUnitShort: ...
 
 
 def normalize_time_unit(
-    unit: Union[TimeUnit, TimeUnitShort], to: Literal["long", "short"]
-) -> Union[TimeUnit, TimeUnitShort]:
+    unit: TimeUnit | TimeUnitShort, to: Literal["long", "short"]
+) -> TimeUnit | TimeUnitShort:
     """
     Normalize time unit.
 

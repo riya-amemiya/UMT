@@ -27,5 +27,4 @@ def slugify(string_: str) -> str:
     result = re.sub(r"\s+", "-", result)
     result = re.sub(r"_+", "-", result)
     result = re.sub(r"-+", "-", result)
-    result = re.sub(r"^-+|-+$", "", result)
-    return result
+    return re.sub(r"^-+|-+$", "", result)

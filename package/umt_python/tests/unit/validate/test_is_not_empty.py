@@ -19,7 +19,7 @@ class TestIsNotEmpty(unittest.TestCase):
         self.assertFalse(is_not_empty([]))
         self.assertFalse(is_not_empty(""))
         self.assertFalse(is_not_empty(set()))
-        self.assertFalse(is_not_empty(tuple()))
+        self.assertFalse(is_not_empty(()))
 
     def test_docstring_example(self):
         self.assertFalse(is_not_empty({}))

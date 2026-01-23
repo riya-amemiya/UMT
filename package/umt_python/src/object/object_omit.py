@@ -1,9 +1,9 @@
-from typing import Dict, TypeVar
+from typing import TypeVar
 
 T = TypeVar("T")
 
 
-def object_omit(obj: Dict[str, T], *keys: str) -> Dict[str, T]:
+def object_omit(obj: dict[str, T], *keys: str) -> dict[str, T]:
     """
     Creates an object without the specified keys.
 

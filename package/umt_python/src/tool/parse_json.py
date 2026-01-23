@@ -1,10 +1,7 @@
 import json
-from typing import Any, TypeVar
-
-T = TypeVar("T")
 
 
-def parse_json(json_str: str) -> Any:
+def parse_json(json_str: str) -> object:
     """
     Parses a JSON string into a Python value.
 

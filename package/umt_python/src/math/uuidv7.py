@@ -16,7 +16,7 @@ def uuidv7() -> str:
         >>> bool(re.match(pattern, uuidv7()))
         True
     """
-    DIGITS = "0123456789abcdef"
+    digits = "0123456789abcdef"
     unix_ts_ms = int(time.time() * 1000)
     rand_a = random_int(0xFFF)
     rand_b_hi = random_int(0x3FFFFFFF)
@@ -40,7 +40,7 @@ def uuidv7() -> str:
 
     uuid = ""
     for index, byte in enumerate(bytes_arr):
-        uuid += DIGITS[byte >> 4] + DIGITS[byte & 0xF]
+        uuid += digits[byte >> 4] + digits[byte & 0xF]
         if index in (3, 5, 7, 9):
             uuid += "-"
 

@@ -1,7 +1,4 @@
-from typing import Any
-
-
-def is_dictionary_object(value: Any) -> bool:
+def is_dictionary_object(value: object) -> bool:
     """
     Determines if the value is a dictionary-type object.
 

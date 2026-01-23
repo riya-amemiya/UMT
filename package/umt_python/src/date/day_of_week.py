@@ -1,11 +1,10 @@
-from datetime import datetime, timezone, timedelta
-from typing import Optional
+from datetime import datetime, timedelta, timezone
 
 
 def day_of_week(
-    year: Optional[int] = None,
-    mon: Optional[int] = None,
-    day: Optional[int] = None,
+    year: int | None = None,
+    mon: int | None = None,
+    day: int | None = None,
     time_difference: int = 9,
 ) -> int:
     """

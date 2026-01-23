@@ -1,10 +1,11 @@
 from typing import TypedDict
+
 from .extract_browser_from_user_agent import (
-    extract_browser_from_user_agent,
     BrowserType,
+    extract_browser_from_user_agent,
 )
-from .extract_device_from_user_agent import extract_device_from_user_agent, DeviceType
-from .extract_os_from_user_agent import extract_os_from_user_agent, OsType
+from .extract_device_from_user_agent import DeviceType, extract_device_from_user_agent
+from .extract_os_from_user_agent import OsType, extract_os_from_user_agent
 
 
 class UserAgentInfo(TypedDict):

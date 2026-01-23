@@ -1,8 +1,7 @@
-from typing import Any
 import math
 
 
-def is_equal(a: Any, b: Any) -> bool:
+def is_equal(a: object, b: object) -> bool:
     """
     Evaluates true strict equality.
 

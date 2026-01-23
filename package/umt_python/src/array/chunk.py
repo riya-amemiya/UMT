@@ -20,7 +20,4 @@ def chunk(array: list[T], n: int) -> list[list[T]]:
         >>> chunk([1, 2, 3, 4, 5], 2)
         [[1, 2], [3, 4], [5]]
     """
-    result: list[list[T]] = []
-    for i in range(0, len(array), n):
-        result.append(array[i : i + n])
-    return result
+    return [array[i : i + n] for i in range(0, len(array), n)]

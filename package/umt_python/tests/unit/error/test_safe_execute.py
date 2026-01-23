@@ -1,6 +1,6 @@
 import unittest
 
-from src.error import safe_execute, Success, Error
+from src.error import Error, Success, safe_execute
 
 
 class TestSafeExecute(unittest.TestCase):

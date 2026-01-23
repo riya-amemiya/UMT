@@ -1,7 +1,7 @@
-from typing import Dict, Any
+from typing import Any
 
 
-def object_is_empty(obj: Dict[str, Any]) -> bool:
+def object_is_empty(obj: dict[str, Any]) -> bool:
     """
     Checks if an object is empty (has no own properties).
 

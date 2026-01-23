@@ -1,5 +1,5 @@
 import unittest
-from datetime import datetime, timezone, timedelta, tzinfo
+from datetime import datetime, timedelta, timezone, tzinfo
 
 from src.date import get_timezone_offset_string
 
@@ -29,7 +29,7 @@ class TestGetTimezoneOffsetString(unittest.TestCase):
         self.assertEqual(get_timezone_offset_string(dt), "-03:30")
 
     def test_naive_datetime(self):
-        dt = datetime(2021, 1, 1)
+        dt = datetime(2021, 1, 1, tzinfo=timezone.utc)
         result = get_timezone_offset_string(dt)
 
         self.assertRegex(result, r"^[+-]\d{2}:\d{2}$")

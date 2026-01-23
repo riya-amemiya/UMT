@@ -1,8 +1,8 @@
-from typing import Callable, Any
 import functools
+from collections.abc import Callable
 
 
-def curry(fn: Callable) -> Callable:
+def curry(fn: Callable[..., object]) -> Callable[..., object]:
     """
     Curries a function.
 
@@ -25,7 +25,7 @@ def curry(fn: Callable) -> Callable:
     """
 
     @functools.wraps(fn)
-    def curried(*args: Any) -> Any:
+    def curried(*args: object) -> object:
         if len(args) >= fn.__code__.co_argcount:
             return fn(*args)
         return lambda *more_args: curried(*args, *more_args)

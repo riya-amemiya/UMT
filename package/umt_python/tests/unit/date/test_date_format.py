@@ -1,5 +1,5 @@
 import unittest
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timedelta, timezone
 
 from src.date import date_format
 
@@ -147,7 +147,10 @@ class TestDateFormat(unittest.TestCase):
         self.assertIn("12:30:45", result)
 
     def test_docstring_example(self):
-        self.assertEqual(date_format(datetime(2025, 4, 4), "YYYY-MM-DD"), "2025-04-04")
+        self.assertEqual(
+            date_format(datetime(2025, 4, 4, tzinfo=timezone.utc), "YYYY-MM-DD"),
+            "2025-04-04",
+        )
 
 
 if __name__ == "__main__":

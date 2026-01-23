@@ -27,11 +27,12 @@ from .tim_sort import tim_sort
 from .ultra_number_sort import ultra_number_sort
 from .uniq_by import uniq_by
 from .unique import unique
-from .validate_range import validate_range, ValidatedSortRange
+from .validate_range import ValidatedSortRange, validate_range
 from .zip_arrays import zip_arrays
 from .zip_longest import zip_longest
 
 __all__ = [
+    "ValidatedSortRange",
     "apply_insertion_sort_if_needed",
     "array_sum",
     "arrays_join",
@@ -62,7 +63,6 @@ __all__ = [
     "uniq_by",
     "unique",
     "validate_range",
-    "ValidatedSortRange",
     "zip_arrays",
     "zip_longest",
 ]

@@ -1,7 +1,7 @@
-from typing import Dict, Any, Union, List
+from typing import Any
 
 
-def object_has(obj: Dict[str, Any], path: Union[str, List[str]]) -> bool:
+def object_has(obj: dict[str, Any], path: str | list[str]) -> bool:
     """
     Determines if an object has a specified path.
 

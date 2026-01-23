@@ -26,8 +26,4 @@ def is_prime_number(n: int) -> bool:
     if n <= 1 or not isinstance(n, int):
         return False
 
-    for index in range(2, int(math.sqrt(n)) + 1):
-        if n % index == 0:
-            return False
-
-    return True
+    return all(n % index != 0 for index in range(2, int(math.sqrt(n)) + 1))

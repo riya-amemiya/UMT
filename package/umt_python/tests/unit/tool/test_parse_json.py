@@ -1,5 +1,5 @@
-import unittest
 import json
+import unittest
 
 from src.tool import parse_json
 

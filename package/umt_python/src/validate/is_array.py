@@ -1,7 +1,4 @@
-from typing import Any
-
-
-def is_array(value: Any) -> bool:
+def is_array(value: object) -> bool:
     """
     Determines if the value is a list.
 

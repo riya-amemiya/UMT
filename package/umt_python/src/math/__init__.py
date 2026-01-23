@@ -27,12 +27,12 @@ from .n_cr import n_cr
 from .n_hr import n_hr
 from .n_pr import n_pr
 from .percentile import percentile
-from .prime_factorization import prime_factorization, PrimeFactor
+from .prime_factorization import PrimeFactor, prime_factorization
 from .quotient import quotient
 from .rad_to_deg import rad_to_deg
 from .random_int import random_int
-from .reduce_fraction import reduce_fraction, ReducedFraction
-from .repeated_trial import repeated_trial, ProbabilityFraction
+from .reduce_fraction import ReducedFraction, reduce_fraction
+from .repeated_trial import ProbabilityFraction, repeated_trial
 from .round_of import round_of
 from .solve_equation import solve_equation
 from .standard_deviation import standard_deviation
@@ -43,6 +43,9 @@ from .value_swap import value_swap
 from .xoshiro256 import xoshiro256
 
 __all__ = [
+    "PrimeFactor",
+    "ProbabilityFraction",
+    "ReducedFraction",
     "addition",
     "average",
     "bitwise",
@@ -73,14 +76,11 @@ __all__ = [
     "n_pr",
     "percentile",
     "prime_factorization",
-    "PrimeFactor",
     "quotient",
     "rad_to_deg",
     "random_int",
     "reduce_fraction",
-    "ReducedFraction",
     "repeated_trial",
-    "ProbabilityFraction",
     "round_of",
     "solve_equation",
     "standard_deviation",

@@ -1,7 +1,4 @@
-from typing import Any
-
-
-def is_string(value: Any) -> bool:
+def is_string(value: object) -> bool:
     """
     Determines if the value is a string.
 

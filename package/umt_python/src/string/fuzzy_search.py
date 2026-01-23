@@ -1,7 +1,7 @@
 from typing import TypedDict
 
-from .levenshtein_distance import levenshtein_distance
 from ..array import quick_sort
+from .levenshtein_distance import levenshtein_distance
 
 
 class FuzzySearchResult(TypedDict):

@@ -83,7 +83,7 @@ def flexible_number_conversion(value: object) -> float:
         else:
             break
 
-    if result and result != "-" and result != ".":
+    if result and result not in {"-", "."}:
         try:
             return float(result)
         except ValueError:

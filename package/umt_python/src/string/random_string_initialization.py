@@ -1,5 +1,6 @@
-from typing import Callable
-from .random_string import random_string, DEFAULT_RANDOM_STRING_CHARS
+from collections.abc import Callable
+
+from .random_string import DEFAULT_RANDOM_STRING_CHARS, random_string
 
 
 def random_string_initialization(

@@ -1,7 +1,6 @@
 import re
 from typing import Literal
 
-
 DeviceType = Literal["bot", "mobile", "tablet", "desktop", "other"]
 
 

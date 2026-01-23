@@ -1,5 +1,5 @@
-from typing import Any
 import math
+from typing import Any
 
 
 def get_arrays_common(array: list[Any], *arrays: list[Any]) -> list[Any]:

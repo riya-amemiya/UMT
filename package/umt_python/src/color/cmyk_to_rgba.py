@@ -1,9 +1,6 @@
-from typing import Dict
-
-
 def cmyk_to_rgba(
     c: float, m: float, y: float, k: float, a: float = 1.0
-) -> Dict[str, float]:
+) -> dict[str, float]:
     """
     Convert CMYK color values to RGBA color space.
 

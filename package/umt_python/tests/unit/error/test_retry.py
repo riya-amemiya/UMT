@@ -1,5 +1,5 @@
-import unittest
 import asyncio
+import unittest
 
 from src.error import retry
 
@@ -86,7 +86,7 @@ class TestRetry(unittest.TestCase):
             attempts[0] += 1
             if attempts[0] == 1:
                 raise ValueError("First error")
-            elif attempts[0] == 2:
+            if attempts[0] == 2:
                 raise TypeError("Second error")
             return "done"
 

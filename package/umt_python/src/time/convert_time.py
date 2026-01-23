@@ -1,4 +1,5 @@
-from typing import Literal, Union
+from typing import Literal
+
 from .normalize_time_unit import normalize_time_unit
 
 TimeUnit = Literal["milliseconds", "seconds", "minutes", "hours"]
@@ -13,9 +14,9 @@ CONVERSION_RATES = {
 
 
 def convert_time(
-    value: Union[str, int, float],
-    from_unit: Union[TimeUnit, TimeUnitShort],
-    to_unit: Union[TimeUnit, TimeUnitShort],
+    value: str | int | float,
+    from_unit: TimeUnit | TimeUnitShort,
+    to_unit: TimeUnit | TimeUnitShort,
 ) -> float:
     """
     Converts time between different units.

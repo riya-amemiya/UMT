@@ -1,7 +1,7 @@
-from typing import Dict, Any
+from typing import Any
 
 
-def object_merge(target: Dict[str, Any], *sources: Dict[str, Any]) -> Dict[str, Any]:
+def object_merge(target: dict[str, Any], *sources: dict[str, Any]) -> dict[str, Any]:
     """
     Merges multiple objects into a single object (shallow merge).
 
