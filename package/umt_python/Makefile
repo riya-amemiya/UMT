@@ -25,9 +25,9 @@ lint-fix:
 typecheck:
 	uv run pyright
 
-# Run tests (parallel execution with pytest-xdist)
+# Run tests
 test:
-	uv run pytest -n auto
+	uv run pytest
 
 # Build package
 build: clean lint
