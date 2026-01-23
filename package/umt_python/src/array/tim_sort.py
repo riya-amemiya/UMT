@@ -116,7 +116,7 @@ def tim_sort(
 
     run_start = start
     while run_start <= end:
-        run_end = min(run_start + MIN_RUN - 1, end)
+        run_end = min(run_start + min_run - 1, end)
         _insertion_sort_range(result, run_start, run_end, compare_function)
         run_start += min_run
 

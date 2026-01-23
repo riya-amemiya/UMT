@@ -51,5 +51,5 @@ def division(x: float, y: float, is_floor: bool = True) -> float | list[float]:
         return sign * division_result
 
     int_quotient = math.floor(division_result)
-    remainder = x_int % y_int
+    remainder = (x_int % y_int) / (10**decimal_length_x)
     return [sign * int_quotient, remainder]
