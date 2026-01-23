@@ -17,6 +17,11 @@ class TestIsPrivateIp(unittest.TestCase):
         with self.assertRaises(ValueError):
             is_private_ip("")
 
+    def test_invalid_ip_format_raises_error(self):
+        with self.assertRaises(ValueError) as context:
+            is_private_ip("invalid.ip")
+        self.assertIn("Invalid IP address", str(context.exception))
+
     def test_docstring_example(self):
         self.assertTrue(is_private_ip("192.168.1.1"))
         self.assertFalse(is_private_ip("8.8.8.8"))

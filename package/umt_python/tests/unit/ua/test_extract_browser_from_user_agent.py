@@ -24,6 +24,10 @@ class TestExtractBrowserFromUserAgent(unittest.TestCase):
         ua = "Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko"
         self.assertEqual(extract_browser_from_user_agent(ua), "ie")
 
+    def test_opera(self):
+        ua = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36 OPR/77.0.4054.277"
+        self.assertEqual(extract_browser_from_user_agent(ua), "other")
+
     def test_other(self):
         ua = "Unknown Browser"
         self.assertEqual(extract_browser_from_user_agent(ua), "other")

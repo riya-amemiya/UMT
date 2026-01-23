@@ -20,6 +20,15 @@ class TestIsInRange(unittest.TestCase):
         with self.assertRaises(ValueError):
             is_in_range("192.168.1.1", "192.168.0.0", -1)
 
+    def test_invalid_ip_format_raises_error(self):
+        with self.assertRaises(ValueError) as context:
+            is_in_range("invalid.ip", "192.168.0.0", 16)
+        self.assertIn("Invalid IP address format", str(context.exception))
+
+        with self.assertRaises(ValueError) as context:
+            is_in_range("192.168.1.1", "invalid.ip", 16)
+        self.assertIn("Invalid IP address format", str(context.exception))
+
     def test_docstring_example(self):
         self.assertTrue(is_in_range("192.168.1.100", "192.168.0.0", 16))
         self.assertFalse(is_in_range("10.0.0.1", "192.168.0.0", 16))
