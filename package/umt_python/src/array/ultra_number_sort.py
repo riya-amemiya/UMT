@@ -1,4 +1,5 @@
 import math
+from typing import overload
 
 
 def _inline_sort_3(array: list[float], ascending: bool) -> None:
@@ -256,7 +257,13 @@ def _numeric_quick_sort(
     return array
 
 
-def ultra_number_sort(array: list[float], ascending: bool = True) -> list[float]:
+@overload
+def ultra_number_sort(array: list[int], ascending: bool = True) -> list[int]: ...
+@overload
+def ultra_number_sort(array: list[float], ascending: bool = True) -> list[float]: ...
+def ultra_number_sort(
+    array: list[int] | list[float], ascending: bool = True
+) -> list[int] | list[float]:
     """
     Ultra-fast sorting specifically optimized for number arrays.
 

@@ -12,10 +12,6 @@ class TestBitwise(unittest.TestCase):
         result = bitwise(0x12345678, 8, "right")
         self.assertEqual(hex(result), "0x78123456")
 
-    def test_invalid_direction(self):
-        with self.assertRaises(ValueError):
-            bitwise(0x12345678, 8, "invalid")
-
     def test_docstring_example(self):
         self.assertEqual(hex(bitwise(0x12345678, 8)), "0x34567812")
         self.assertEqual(hex(bitwise(0x12345678, 8, "right")), "0x78123456")

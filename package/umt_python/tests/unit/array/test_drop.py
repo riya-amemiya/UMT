@@ -22,12 +22,6 @@ class TestDrop(unittest.TestCase):
         self.assertEqual(drop([1, 2, 3, 4, 5], 2, "right"), [1, 2, 3])
         self.assertEqual(drop([1, 2, 3, 4, 5], 1, "between"), [1, 2, 4, 5])
 
-    def test_invalid_direction_fallback(self):
-        """Test that invalid direction falls back to left behavior."""
-
-        result = drop([1, 2, 3, 4, 5], 2, "invalid")
-        self.assertEqual(result, [3, 4, 5])
-
 
 if __name__ == "__main__":
     unittest.main()

@@ -11,6 +11,7 @@ class Success(Generic[V]):
 
     type: str = "success"
     value: V = None  # type: ignore
+    error: None = None
 
 
 @dataclass
@@ -19,6 +20,7 @@ class Error(Generic[E]):
 
     type: str = "error"
     error: E = None  # type: ignore
+    value: None = None
 
 
 Result = Union[Success[V], Error[E]]

@@ -1,9 +1,10 @@
 import re
 from datetime import datetime
+from typing import Any
 from .get_timezone_offset_string import get_timezone_offset_string
 
 
-def date_format(date: datetime, format_string: str = "YYYY-MM-DDTHH:mm:ssZ") -> str:
+def date_format(date: Any, format_string: str = "YYYY-MM-DDTHH:mm:ssZ") -> str:
     """
     Converts a date to a string according to the specified format pattern.
 

@@ -1,6 +1,7 @@
-from typing import TypeVar, Generic, List, Optional, Tuple
+from typing import TypeVar, Generic, List, Optional, Sequence, Tuple, Union
 
 T = TypeVar("T")
+Priority = Union[int, float]
 
 
 class PriorityQueue(Generic[T]):
@@ -40,15 +41,15 @@ class PriorityQueue(Generic[T]):
         'low'
     """
 
-    def __init__(self, initial_elements: Optional[List[Tuple[T, float]]] = None):
+    def __init__(self, initial_elements: Optional[Sequence[Tuple[T, Priority]]] = None):
         """
         Creates a new PriorityQueue instance.
 
         Args:
             initial_elements: Optional list of tuples (value, priority)
         """
-        self._heap: List[Tuple[T, float]] = []
-        self._min_priority = 0.0
+        self._heap: List[Tuple[T, Priority]] = []
+        self._min_priority: Priority = 0
 
         if initial_elements:
             self._heap = list(initial_elements)
@@ -65,7 +66,7 @@ class PriorityQueue(Generic[T]):
         """Checks if the queue is empty."""
         return len(self._heap) == 0
 
-    def enqueue(self, value: T, priority: float) -> None:
+    def enqueue(self, value: T, priority: Priority) -> None:
         """
         Adds an element to the queue with a specified priority.
         Higher priority values are dequeued first.
@@ -119,7 +120,7 @@ class PriorityQueue(Generic[T]):
             return None
         return self._heap[0][0]
 
-    def peek_priority(self) -> Optional[float]:
+    def peek_priority(self) -> Optional[Priority]:
         """
         Returns the priority of the element with the highest priority.
 
@@ -133,7 +134,7 @@ class PriorityQueue(Generic[T]):
     def clear(self) -> None:
         """Removes all elements from the queue."""
         self._heap = []
-        self._min_priority = 0.0
+        self._min_priority = 0
 
     def to_list(self) -> List[T]:
         """
@@ -145,7 +146,7 @@ class PriorityQueue(Generic[T]):
         """
         return [item[0] for item in self._heap]
 
-    def to_list_with_priorities(self) -> List[Tuple[T, float]]:
+    def to_list_with_priorities(self) -> List[Tuple[T, Priority]]:
         """
         Returns a list of all elements with their priorities.
         The order is not guaranteed to be sorted by priority.
@@ -155,13 +156,13 @@ class PriorityQueue(Generic[T]):
         """
         return list(self._heap)
 
-    def _update_min_priority_on_add(self, priority: float) -> None:
+    def _update_min_priority_on_add(self, priority: Priority) -> None:
         if len(self._heap) == 1 or priority < self._min_priority:
             self._min_priority = priority
 
     def _update_min_priority(self) -> None:
         if len(self._heap) == 0:
-            self._min_priority = 0.0
+            self._min_priority = 0
             return
         self._min_priority = min(item[1] for item in self._heap)
 

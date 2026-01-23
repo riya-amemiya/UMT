@@ -8,6 +8,7 @@ class TestParseEmail(unittest.TestCase):
     def test_basic_valid_email(self):
         result = parse_email("test@example.com", ParseEmailOptions(level="basic"))
         self.assertTrue(result.valid)
+        assert result.parts is not None
         self.assertEqual(result.parts.local, "test")
         self.assertEqual(result.parts.domain, "example.com")
 
@@ -19,6 +20,7 @@ class TestParseEmail(unittest.TestCase):
     def test_rfc822_valid_email(self):
         result = parse_email("test@example.com", ParseEmailOptions(level="rfc822"))
         self.assertTrue(result.valid)
+        assert result.parts is not None
         self.assertEqual(result.parts.local, "test")
         self.assertEqual(result.parts.domain, "example.com")
 
@@ -31,6 +33,7 @@ class TestParseEmail(unittest.TestCase):
     def test_rfc2822_valid_email(self):
         result = parse_email("test@example.com", ParseEmailOptions(level="rfc2822"))
         self.assertTrue(result.valid)
+        assert result.parts is not None
         self.assertEqual(result.parts.local, "test")
         self.assertEqual(result.parts.domain, "example.com")
 
@@ -41,6 +44,7 @@ class TestParseEmail(unittest.TestCase):
     def test_rfc5321_valid_email(self):
         result = parse_email("test@example.com", ParseEmailOptions(level="rfc5321"))
         self.assertTrue(result.valid)
+        assert result.parts is not None
         self.assertEqual(result.parts.local, "test")
         self.assertEqual(result.parts.domain, "example.com")
 
@@ -51,6 +55,7 @@ class TestParseEmail(unittest.TestCase):
     def test_rfc5322_valid_email(self):
         result = parse_email("test@example.com", ParseEmailOptions(level="rfc5322"))
         self.assertTrue(result.valid)
+        assert result.parts is not None
         self.assertEqual(result.parts.local, "test")
         self.assertEqual(result.parts.domain, "example.com")
 
@@ -59,11 +64,13 @@ class TestParseEmail(unittest.TestCase):
             "test.user+tag@example.com", ParseEmailOptions(level="basic")
         )
         self.assertTrue(result.valid)
+        assert result.parts is not None
         self.assertEqual(result.parts.local, "test.user+tag")
 
     def test_subdomain(self):
         result = parse_email("test@mail.example.com", ParseEmailOptions(level="basic"))
         self.assertTrue(result.valid)
+        assert result.parts is not None
         self.assertEqual(result.parts.domain, "mail.example.com")
 
     def test_empty_email(self):
@@ -81,6 +88,7 @@ class TestParseEmail(unittest.TestCase):
     def test_docstring_example(self):
         result = parse_email("test@example.com", ParseEmailOptions(level="basic"))
         self.assertTrue(result.valid)
+        assert result.parts is not None
         self.assertEqual(result.parts.local, "test")
         self.assertEqual(result.parts.domain, "example.com")
 

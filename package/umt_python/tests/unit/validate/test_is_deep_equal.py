@@ -1,4 +1,5 @@
 import unittest
+from typing import Any
 
 from src.validate import is_deep_equal
 from src.validate.is_deep_equal import IsDeepEqualOptions
@@ -35,9 +36,9 @@ class TestIsDeepEqual(unittest.TestCase):
         self.assertFalse(is_deep_equal(1.5, 1.6))
 
     def test_circular_reference(self):
-        list_a = [1, 2]
+        list_a: list[Any] = [1, 2]
         list_a.append(list_a)
-        list_b = [1, 2]
+        list_b: list[Any] = [1, 2]
         list_b.append(list_b)
         self.assertTrue(is_deep_equal(list_a, list_b))
 

@@ -169,7 +169,11 @@ class TestPriorityQueue(unittest.TestCase):
 
         self.assertEqual(queue.size, 3)
 
-        results = [queue.dequeue(), queue.dequeue(), queue.dequeue()]
+        results: list[str] = []
+        for _ in range(3):
+            item = queue.dequeue()
+            assert item is not None
+            results.append(item)
         self.assertEqual(sorted(results), ["a", "b", "c"])
 
     def test_negative_priorities(self):
