@@ -28,5 +28,4 @@ def average(numbers: Sequence[float]) -> float:
     total = 0.0
     for num in numbers:
         total = addition(total, num)
-    avg = division(total, len(numbers))
-    return avg
+    return division(total, len(numbers))

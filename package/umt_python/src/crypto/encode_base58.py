@@ -1,7 +1,4 @@
-from typing import Union
-
-
-def encode_base58(input_data: Union[str, bytes]) -> str:
+def encode_base58(input_data: str | bytes) -> str:
     """
     Encodes a string or bytes to Base58 format.
 
@@ -17,10 +14,7 @@ def encode_base58(input_data: Union[str, bytes]) -> str:
     """
     alphabet = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
 
-    if isinstance(input_data, str):
-        data = input_data.encode("utf-8")
-    else:
-        data = input_data
+    data = input_data.encode("utf-8") if isinstance(input_data, str) else input_data
 
     encoded = ""
     big_number = 0

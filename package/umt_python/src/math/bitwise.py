@@ -29,7 +29,4 @@ def bitwise(
 
     if direction == "left":
         return ((x << rotation) | (x >> (32 - rotation))) & 0xFFFFFFFF
-    elif direction == "right":
-        return ((x >> rotation) | (x << (32 - rotation))) & 0xFFFFFFFF
-    else:
-        raise ValueError(f"Invalid direction {direction}")
+    return ((x >> rotation) | (x << (32 - rotation))) & 0xFFFFFFFF

@@ -1,6 +1,6 @@
 import unittest
 
-from src import random_string_initialization, DEFAULT_RANDOM_STRING_CHARS
+from src import DEFAULT_RANDOM_STRING_CHARS, random_string_initialization
 
 
 class TestRandomStringInitialization(unittest.TestCase):

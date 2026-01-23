@@ -43,4 +43,4 @@ def is_in_range(remote_ip: str, network_ip: str, cidr: int) -> bool:
         mask = (0xFFFFFFFF >> shift) << shift
         return (remote_long & mask) == (network_long & mask)
     except Exception as error:
-        raise ValueError(f"Invalid IP address format: {error}")
+        raise ValueError(f"Invalid IP address format: {error}") from error

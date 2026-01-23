@@ -3,9 +3,9 @@ from .is_double import is_double
 
 def _gcd_integer(x: int, y: int, *z: int) -> int:
     """Internal function to calculate GCD for integers."""
-    copy_x = abs(round(x))
-    copy_y = abs(round(y))
-    copy_z = [abs(round(element)) for element in z]
+    copy_x = abs(x)
+    copy_y = abs(y)
+    copy_z = [abs(element) for element in z]
 
     if copy_x == 0:
         return copy_y

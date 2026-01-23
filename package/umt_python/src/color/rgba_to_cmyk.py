@@ -1,7 +1,4 @@
-from typing import Dict
-
-
-def rgba_to_cmyk(r: int, g: int, b: int, a: float = 1.0) -> Dict[str, float]:
+def rgba_to_cmyk(r: int, g: int, b: int, a: float = 1.0) -> dict[str, float]:
     """
     Convert RGBA color to CMYK color model.
 

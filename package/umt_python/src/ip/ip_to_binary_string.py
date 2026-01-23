@@ -34,12 +34,9 @@ def ip_to_binary_string(ip: str) -> str:
         if not octet or (len(octet) > 1 and octet.startswith("0")):
             raise ValueError("Invalid IP address format")
 
-        try:
-            num = int(octet)
-        except ValueError:
-            raise ValueError("Invalid IP address format")
+        num = int(octet)
 
         if num < 0 or num > 255:
             raise ValueError("Invalid IP address format")
 
-    return "".join(bin(int(octet))[2:].zfill(8) for octet in parts)
+    return "".join(f"{int(octet):08b}" for octet in parts)

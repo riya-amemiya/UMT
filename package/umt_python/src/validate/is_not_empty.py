@@ -1,7 +1,4 @@
-from typing import Any
-
-
-def is_not_empty(obj: Any) -> bool:
+def is_not_empty(obj: object) -> bool:
     """
     Checks if an object is not empty.
 

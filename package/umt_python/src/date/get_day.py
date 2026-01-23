@@ -1,10 +1,9 @@
-from typing import Literal, Dict, List
-
+from typing import Literal
 
 DayLang = Literal["de", "ko", "en", "ja", "fr"]
 
 
-DAY_LIST: Dict[DayLang, List[str]] = {
+DAY_LIST: dict[DayLang, list[str]] = {
     "de": ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"],
     "ko": ["일", "월", "화", "수", "목", "금", "토"],
     "en": ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],

@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 
 
 def new_date_int(
@@ -29,9 +29,10 @@ def new_date_int(
         >>> new_date_int(2021, 1, 1)  # Creates date for January 1, 2021
     """
     if hours is None:
-        local_now = datetime.now()
+        local_tz = datetime.now(timezone.utc).astimezone().tzinfo
+        local_now = datetime.now(local_tz)
         utc_now = datetime.now(timezone.utc).replace(tzinfo=None)
-        hours = round((local_now - utc_now).total_seconds() / 3600)
+        hours = round((local_now.replace(tzinfo=None) - utc_now).total_seconds() / 3600)
 
     return datetime(
         year=year,
@@ -41,6 +42,7 @@ def new_date_int(
         minute=minutes,
         second=seconds,
         microsecond=milliseconds * 1000,
+        tzinfo=timezone(timedelta(hours=hours)),
     )
 
 

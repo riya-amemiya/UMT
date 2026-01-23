@@ -1,8 +1,7 @@
 import re
-from typing import Dict
 
 
-def hexa_to_rgba(hex_code: str) -> Dict[str, float]:
+def hexa_to_rgba(hex_code: str) -> dict[str, float]:
     """
     Convert hexadecimal color code to RGBA color values.
 

@@ -1,7 +1,6 @@
 import re
 from typing import Literal
 
-
 OsType = Literal["ios", "android", "macos", "windows", "linux", "other"]
 
 

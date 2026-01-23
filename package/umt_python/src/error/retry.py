@@ -1,5 +1,6 @@
 import asyncio
-from typing import Callable, TypeVar, Awaitable, Optional
+from collections.abc import Awaitable, Callable
+from typing import TypeVar
 
 T = TypeVar("T")
 
@@ -8,7 +9,7 @@ async def retry(
     fn: Callable[[], Awaitable[T]],
     retries: int = 3,
     delay: float = 1.0,
-    should_retry: Optional[Callable[[Exception], bool]] = None,
+    should_retry: Callable[[Exception], bool] | None = None,
 ) -> T:
     """
     Retries a given async function with configurable retry logic.

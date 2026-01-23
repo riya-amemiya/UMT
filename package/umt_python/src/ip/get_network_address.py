@@ -30,30 +30,25 @@ def get_network_address(ip: str, subnet_mask: str) -> int:
     if len(ip_parts) != 4:
         raise TypeError("Invalid IP address or subnet mask")
 
-    for part in ip_parts:
-        try:
-            num = int(part)
-            if num < 0 or num > 255:
-                raise TypeError("Invalid IP address or subnet mask")
-        except ValueError:
-            raise TypeError("Invalid IP address or subnet mask")
+    try:
+        ip_nums = [int(part) for part in ip_parts]
+    except ValueError:
+        raise TypeError("Invalid IP address or subnet mask") from None
+    if any(num < 0 or num > 255 for num in ip_nums):
+        raise TypeError("Invalid IP address or subnet mask")
 
     mask_parts = subnet_mask.split(".")
     if len(mask_parts) != 4:
         raise TypeError("Invalid IP address or subnet mask")
 
-    for part in mask_parts:
-        try:
-            num = int(part)
-            if num < 0 or num > 255:
-                raise TypeError("Invalid IP address or subnet mask")
-        except ValueError:
-            raise TypeError("Invalid IP address or subnet mask")
+    try:
+        mask_nums = [int(part) for part in mask_parts]
+    except ValueError:
+        raise TypeError("Invalid IP address or subnet mask") from None
+    if any(num < 0 or num > 255 for num in mask_nums):
+        raise TypeError("Invalid IP address or subnet mask")
 
     try:
-        network_address = ip_to_long(ip) & cidr_to_long(
-            subnet_mask_to_cidr(subnet_mask)
-        )
-        return network_address
+        return ip_to_long(ip) & cidr_to_long(subnet_mask_to_cidr(subnet_mask))
     except Exception:
-        raise TypeError("Invalid IP address or subnet mask")
+        raise TypeError("Invalid IP address or subnet mask") from None

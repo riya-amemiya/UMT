@@ -59,7 +59,4 @@ def check_flag_alignment(matrix: list[list[T]]) -> bool:
         return True
 
     # Check diagonal alignment (bottom-left to top-right)
-    if all(matrix[i][cols - i - 1].flag for i in range(min(rows, cols))):
-        return True
-
-    return False
+    return all(matrix[i][cols - i - 1].flag for i in range(min(rows, cols)))

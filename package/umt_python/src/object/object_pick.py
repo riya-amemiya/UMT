@@ -1,9 +1,9 @@
-from typing import Dict, TypeVar
+from typing import TypeVar
 
 T = TypeVar("T")
 
 
-def object_pick(obj: Dict[str, T], *keys: str) -> Dict[str, T]:
+def object_pick(obj: dict[str, T], *keys: str) -> dict[str, T]:
     """
     Creates a new object with only the specified properties from the source object.
 
@@ -18,7 +18,7 @@ def object_pick(obj: Dict[str, T], *keys: str) -> Dict[str, T]:
         >>> object_pick({"id": 1, "name": "Alice", "age": 30}, "id", "name")
         {'id': 1, 'name': 'Alice'}
     """
-    result: Dict[str, T] = {}
+    result: dict[str, T] = {}
     for key in keys:
         if key in obj:
             result[key] = obj[key]

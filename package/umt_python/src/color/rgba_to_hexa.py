@@ -22,7 +22,6 @@ def rgba_to_hexa(r: int, g: int, b: int, a: float = 1.0) -> str:
         raise ValueError("Invalid rgba value")
 
     def to_hex(x: int) -> str:
-        hex_code = format(x, "02x")
-        return hex_code
+        return format(x, "02x")
 
     return f"#{to_hex(r)}{to_hex(g)}{to_hex(b)}{to_hex(round(a * 255))}"

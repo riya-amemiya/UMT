@@ -1,7 +1,4 @@
-from typing import Dict
-
-
-def rgba_to_hsla(r: int, g: int, b: int, a: float = 1.0) -> Dict[str, float]:
+def rgba_to_hsla(r: int, g: int, b: int, a: float = 1.0) -> dict[str, float]:
     """
     Convert RGBA color values to HSLA color space.
 

@@ -1,10 +1,11 @@
-from typing import Dict, TypeVar, Callable
+from collections.abc import Callable
+from typing import TypeVar
 
 K = TypeVar("K", bound=str)
 
 
 def unit_converter_initialization(
-    to_base_unit_ratios: Dict[str, float],
+    to_base_unit_ratios: dict[str, float],
 ) -> Callable[[float, str, str], float]:
     """
     Unit converter initialization function.

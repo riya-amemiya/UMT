@@ -23,6 +23,6 @@ def long_to_ip(long: int | float) -> str:
     if not math.isfinite(long) or long < 0 or long > 0xFFFFFFFF or long != int(long):
         raise ValueError("Input must be a valid 32-bit unsigned integer")
 
-    binary = bin(int(long))[2:].zfill(32)
+    binary = f"{int(long):032b}"
     octets = [int(binary[i : i + 8], 2) for i in range(0, 32, 8)]
     return ".".join(str(octet) for octet in octets)

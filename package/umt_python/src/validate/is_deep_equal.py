@@ -1,4 +1,4 @@
-from typing import Any, Optional
+import math
 from dataclasses import dataclass
 
 
@@ -14,7 +14,9 @@ class IsDeepEqualOptions:
     strict_order: bool = True
 
 
-def is_deep_equal(a: Any, b: Any, options: Optional[IsDeepEqualOptions] = None) -> bool:
+def is_deep_equal(
+    a: object, b: object, options: IsDeepEqualOptions | None = None
+) -> bool:
     """
     Performs a deep equality comparison between two values.
 
@@ -41,7 +43,7 @@ def is_deep_equal(a: Any, b: Any, options: Optional[IsDeepEqualOptions] = None) 
     strict_order = options.strict_order
     visited: set[int] = set()
 
-    def compare(x: Any, y: Any) -> bool:
+    def compare(x: object, y: object) -> bool:
         if x is y:
             return True
 
@@ -52,11 +54,13 @@ def is_deep_equal(a: Any, b: Any, options: Optional[IsDeepEqualOptions] = None) 
             return False
 
         if isinstance(x, (int, float, str, bool)):
-            if isinstance(x, float) and isinstance(y, float):
-                import math
-
-                if math.isnan(x) and math.isnan(y):
-                    return True
+            if (
+                isinstance(x, float)
+                and isinstance(y, float)
+                and math.isnan(x)
+                and math.isnan(y)
+            ):
+                return True
             return x == y
 
         id_x = id(x)
@@ -110,11 +114,7 @@ def is_deep_equal(a: Any, b: Any, options: Optional[IsDeepEqualOptions] = None) 
                 if key not in y:
                     return False
 
-            for key in x:
-                if not compare(x[key], y[key]):
-                    return False
-
-            return True
+            return all(compare(x[key], y[key]) for key in x)
 
         if isinstance(x, (bytes, bytearray)) and isinstance(y, (bytes, bytearray)):
             return x == y

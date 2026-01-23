@@ -34,4 +34,4 @@ def is_private_ip(ip: str) -> bool:
     try:
         return any(is_in_range(ip, r["network"], r["cidr"]) for r in private_ranges)
     except Exception as error:
-        raise ValueError(f"Invalid IP address: {error}")
+        raise ValueError(f"Invalid IP address: {error}") from error

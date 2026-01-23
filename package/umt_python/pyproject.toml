@@ -3,13 +3,11 @@ build-backend = "setuptools.build_meta"
 requires = ["setuptools>=61.0", "wheel"]
 
 [tool.setuptools]
-package-dir = {"umt_python" = "src"}
+package-dir = { "umt_python" = "src" }
 packages = ["umt_python"]
 
 [project]
-authors = [
-  {name = "riya-amemiya", email = "riyaamemiya@gmail.com"},
-]
+authors = [{ name = "riya-amemiya", email = "riyaamemiya@gmail.com" }]
 classifiers = [
   "Programming Language :: Python :: 3",
   "Programming Language :: Python :: 3.10",
@@ -37,5 +35,35 @@ version = "0.1.1"
 dev = [
   "pyright==1.1.408",
   "pytest==9.0.2",
-  "ruff==0.14.13",
+  "pytest-cov==7.0.0",
+  "ruff==0.14.14",
 ]
+
+[tool.ruff.lint]
+select = [
+  "ANN",
+  "ARG",
+  "A",
+  "C4",
+  "DTZ",
+  "E",
+  "W",
+  "F",
+  "FIX",
+  "UP",
+  "B",
+  "SIM",
+  "I",
+  "RET",
+  "PT",
+  "N",
+  "PERF",
+  "PL",
+  "FURB",
+  "RUF",
+]
+ignore = ["E501", "FBT003", "A005", "PLR2004", "PLR0911","PLR0912","PLR0913"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = ["ALL"]
+"src/string/to_half_width.py" = ["RUF"]

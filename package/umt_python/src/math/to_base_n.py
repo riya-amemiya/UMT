@@ -18,19 +18,18 @@ def to_base_n(value: int, radix: int = 2) -> str:
         'ff'
     """
     if radix == 2:
-        return bin(value)[2:]
-    elif radix == 8:
-        return oct(value)[2:]
-    elif radix == 16:
-        return hex(value)[2:]
-    else:
-        if value == 0:
-            return "0"
-        digits = "0123456789abcdefghijklmnopqrstuvwxyz"
-        result = ""
-        is_negative = value < 0
-        value = abs(value)
-        while value:
-            result = digits[value % radix] + result
-            value //= radix
-        return "-" + result if is_negative else result
+        return f"{value:b}"
+    if radix == 8:
+        return f"{value:o}"
+    if radix == 16:
+        return f"{value:x}"
+    if value == 0:
+        return "0"
+    digits = "0123456789abcdefghijklmnopqrstuvwxyz"
+    result = ""
+    is_negative = value < 0
+    value = abs(value)
+    while value:
+        result = digits[value % radix] + result
+        value //= radix
+    return "-" + result if is_negative else result

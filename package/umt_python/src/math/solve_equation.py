@@ -1,3 +1,5 @@
+from typing import overload
+
 from .addition import addition
 from .division import division
 from .multiplication import multiplication
@@ -5,9 +7,23 @@ from .round_of import round_of
 from .subtraction import subtraction
 
 
+@overload
+def solve_equation(
+    coefficients: list[list[int]],
+    constants: list[int],
+) -> list[float]: ...
+
+
+@overload
 def solve_equation(
     coefficients: list[list[float]],
     constants: list[float],
+) -> list[float]: ...
+
+
+def solve_equation(
+    coefficients: list[list[int]] | list[list[float]],
+    constants: list[int] | list[float],
 ) -> list[float]:
     """
     Solves a system of linear equations using Gaussian elimination.
@@ -25,9 +41,9 @@ def solve_equation(
     """
     n = len(constants)
 
-    # Make copies to avoid modifying input
-    coef = [row[:] for row in coefficients]
-    const = constants[:]
+    # Make copies to avoid modifying input (convert to float for internal calculations)
+    coef: list[list[float]] = [[float(x) for x in row] for row in coefficients]
+    const: list[float] = [float(x) for x in constants]
 
     for index in range(n):
         # Find the max element in the column (partial pivoting)

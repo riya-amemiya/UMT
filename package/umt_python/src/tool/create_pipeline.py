@@ -1,4 +1,5 @@
-from typing import TypeVar, Callable, Generic, Union, overload
+from collections.abc import Callable
+from typing import Generic, TypeVar, Union, overload
 
 T = TypeVar("T")
 U = TypeVar("U")
@@ -12,7 +13,7 @@ class Pipeline(Generic[T]):
     When called with a function argument, applies the function and generates a new Pipeline instance.
     """
 
-    def __init__(self, value: T):
+    def __init__(self, value: T) -> None:
         self._value = value
 
     @overload

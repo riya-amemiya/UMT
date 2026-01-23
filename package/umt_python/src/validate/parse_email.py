@@ -1,7 +1,6 @@
 import re
-from typing import Optional, Literal
 from dataclasses import dataclass
-
+from typing import Literal
 
 ParseEmailLevel = Literal["basic", "rfc822", "rfc2822", "rfc5321", "rfc5322"]
 
@@ -117,7 +116,7 @@ class ParseEmailResult:
     """
 
     valid: bool
-    parts: Optional[EmailParts] = None
+    parts: EmailParts | None = None
 
 
 def parse_email(email: str, options: ParseEmailOptions) -> ParseEmailResult:

@@ -16,7 +16,4 @@ def has_no_letters(text: str) -> bool:
         >>> has_no_letters("abc123")
         False
     """
-    for char_code in text:
-        if char_code.isalpha():
-            return False
-    return True
+    return all(not char_code.isalpha() for char_code in text)

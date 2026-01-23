@@ -1,5 +1,5 @@
-import random
 import math
+import random
 
 
 def generate_number_array(

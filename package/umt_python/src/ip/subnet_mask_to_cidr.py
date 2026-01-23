@@ -32,12 +32,12 @@ def subnet_mask_to_cidr(subnet_mask: str) -> int:
         try:
             num = int(octet)
         except ValueError:
-            raise ValueError("Invalid subnet mask format")
+            raise ValueError("Invalid subnet mask format") from None
 
         if num < 0 or num > 255:
             raise ValueError("Invalid subnet mask format")
 
-        binary_octets.append(bin(num)[2:].zfill(8))
+        binary_octets.append(f"{num:08b}")
 
     binary_string = "".join(binary_octets)
 

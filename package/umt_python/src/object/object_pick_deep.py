@@ -1,7 +1,7 @@
-from typing import Dict, Any
+from typing import Any
 
 
-def object_pick_deep(obj: Dict[str, Any], *keys: str) -> Dict[str, Any]:
+def object_pick_deep(obj: dict[str, Any], *keys: str) -> dict[str, Any]:
     """
     Creates a new object by deeply selecting properties from the source object based on specified keys.
 
@@ -17,7 +17,7 @@ def object_pick_deep(obj: Dict[str, Any], *keys: str) -> Dict[str, Any]:
         >>> object_pick_deep(obj, "a.b.c", "f")
         {'a': {'b': {'c': 1}}, 'f': 4}
     """
-    result: Dict[str, Any] = {}
+    result: dict[str, Any] = {}
 
     for key in keys:
         parts = key.split(".")

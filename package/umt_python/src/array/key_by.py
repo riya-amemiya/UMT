@@ -1,12 +1,13 @@
-from typing import Dict, Union, Callable, List, TypeVar
+from collections.abc import Callable
+from typing import TypeVar
 
 T = TypeVar("T")
 
 
 def key_by(
-    collection: Union[List[T], Dict[str, T]],
-    iteratee: Union[Callable[[T], str], str, None] = None,
-) -> Dict[str, T]:
+    collection: list[T] | dict[str, T],
+    iteratee: Callable[[T], str] | str | None = None,
+) -> dict[str, T]:
     """
     Creates an object composed of keys generated from the results of running each element
     of collection through iteratee.
@@ -36,7 +37,7 @@ def key_by(
             else str(getattr(value, iteratee))
         )
 
-    result: Dict[str, T] = {}
+    result: dict[str, T] = {}
 
     if isinstance(collection, list):
         for value in collection:

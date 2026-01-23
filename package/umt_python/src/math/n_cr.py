@@ -20,7 +20,7 @@ def n_cr(n: int, r: int) -> float:
     """
     if n < r or n < 0 or r < 0:
         return float("nan")
-    if r == 0 or n == r:
+    if r in (0, n):
         return 1
 
     numerator = n_pr(n, r)

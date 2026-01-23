@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 
 
 def get_timezone_offset_string(instance: datetime) -> str:
@@ -18,15 +18,15 @@ def get_timezone_offset_string(instance: datetime) -> str:
         '+09:00'
     """
     if instance.tzinfo is None:
-        local_now = datetime.now()
-        utc_now = datetime.now(datetime.now().astimezone().tzinfo).replace(tzinfo=None)
-        offset_seconds = (local_now - utc_now).total_seconds()
+        local_tz = datetime.now(timezone.utc).astimezone().tzinfo
+        local_now = datetime.now(local_tz)
+        utc_now = datetime.now(timezone.utc)
+        offset_seconds = (
+            local_now.replace(tzinfo=None) - utc_now.replace(tzinfo=None)
+        ).total_seconds()
     else:
         offset = instance.utcoffset()
-        if offset is None:
-            offset_seconds = 0
-        else:
-            offset_seconds = offset.total_seconds()
+        offset_seconds = 0 if offset is None else offset.total_seconds()
 
     neg_minutes = int(offset_seconds / 60)
     minutes = abs(neg_minutes)
