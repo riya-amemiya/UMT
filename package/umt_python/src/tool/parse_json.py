@@ -1,7 +1,8 @@
 import json
+from typing import Any
 
 
-def parse_json(json_str: str) -> object:
+def parse_json(json_str: str) -> Any:  # noqa: ANN401
     """
     Parses a JSON string into a Python value.
 
