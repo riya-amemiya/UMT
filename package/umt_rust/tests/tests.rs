@@ -1,6 +1,14 @@
+mod advance {
+    mod test_range_advance;
+}
+
 mod array {
     mod test_range;
     mod test_ultra_number_sort;
+}
+
+mod function {
+    mod test_curry;
 }
 
 mod math {
