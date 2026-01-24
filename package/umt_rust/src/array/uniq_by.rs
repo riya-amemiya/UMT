@@ -18,7 +18,7 @@ use std::hash::Hash;
 /// use umt_rust::array::umt_uniq_by;
 ///
 /// let arr = vec![1.1, 1.2, 2.1, 2.2, 3.1];
-/// let result = umt_uniq_by(&arr, |x| x.floor() as i32);
+/// let result = umt_uniq_by(&arr, |x| (*x as i32));
 /// assert_eq!(result, vec![1.1, 2.1, 3.1]);
 /// ```
 pub fn umt_uniq_by<T, K, F>(array: &[T], selector: F) -> Vec<T>
@@ -47,7 +47,7 @@ mod tests {
     #[test]
     fn test_uniq_by_floor() {
         let arr = vec![1.1, 1.2, 2.1, 2.2, 3.1];
-        let result = umt_uniq_by(&arr, |x| x.floor() as i32);
+        let result = umt_uniq_by(&arr, |x| (*x as i32));
         assert_eq!(result, vec![1.1, 2.1, 3.1]);
     }
 

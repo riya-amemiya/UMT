@@ -1,12 +1,19 @@
+pub mod advance;
 pub mod array;
 pub mod color;
 pub mod consts;
 pub mod crypto;
+pub mod data_structure;
 pub mod date;
 pub mod error;
-// pub mod ip;  // Temporarily disabled - has pre-existing issues
+pub mod function;
+pub mod ip;
 pub mod math;
+pub mod object;
 pub mod simple;
 pub mod string;
+pub mod time;
 pub mod tool;
+pub mod ua;
+pub mod unit;
 pub mod validate;

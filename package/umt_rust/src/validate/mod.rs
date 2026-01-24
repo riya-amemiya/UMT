@@ -7,6 +7,7 @@ pub mod core;
 pub mod number;
 pub mod object;
 pub mod string;
+pub mod types;
 
 // Re-export core validation functions
 pub use self::core::*;

@@ -18,7 +18,7 @@ use std::hash::Hash;
 /// use umt_rust::array::umt_group_by;
 ///
 /// let arr = vec![6.1, 4.2, 6.3];
-/// let result = umt_group_by(&arr, |x| x.floor() as i32);
+/// let result = umt_group_by(&arr, |x| (*x as i32));
 /// assert_eq!(result.get(&4), Some(&vec![4.2]));
 /// assert_eq!(result.get(&6), Some(&vec![6.1, 6.3]));
 /// ```
@@ -71,7 +71,7 @@ mod tests {
     #[test]
     fn test_group_by_floor() {
         let arr = vec![6.1, 4.2, 6.3];
-        let result = umt_group_by(&arr, |x| x.floor() as i32);
+        let result = umt_group_by(&arr, |x| (*x as i32));
 
         assert_eq!(result.get(&4), Some(&vec![4.2]));
         assert_eq!(result.get(&6), Some(&vec![6.1, 6.3]));

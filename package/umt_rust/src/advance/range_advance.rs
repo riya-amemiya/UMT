@@ -44,7 +44,7 @@ where
             }
             result
         }
-        None => umt_range(start, end),
+        None => umt_range(start, Some(end), None),
     }
 }
 

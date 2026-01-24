@@ -202,10 +202,11 @@ mod tests {
 
     #[test]
     fn test_no_alignment() {
+        // Matrix with no horizontal, vertical, or diagonal alignment
         let matrix = vec![
             vec![Cell { value: 1, flag: true }, Cell { value: 2, flag: false }, Cell { value: 3, flag: true }],
-            vec![Cell { value: 4, flag: false }, Cell { value: 5, flag: true }, Cell { value: 6, flag: false }],
-            vec![Cell { value: 7, flag: false }, Cell { value: 8, flag: true }, Cell { value: 9, flag: true }],
+            vec![Cell { value: 4, flag: false }, Cell { value: 5, flag: false }, Cell { value: 6, flag: false }],
+            vec![Cell { value: 7, flag: true }, Cell { value: 8, flag: false }, Cell { value: 9, flag: false }],
         ];
         assert!(!umt_check_flag_alignment(&matrix));
     }
@@ -246,10 +247,11 @@ mod tests {
 
     #[test]
     fn test_bool_matrix_no_alignment() {
+        // Matrix with no horizontal, vertical, or diagonal alignment
         let matrix = vec![
             vec![true, false, true],
-            vec![false, true, false],
-            vec![false, true, true],
+            vec![false, false, false],
+            vec![true, false, false],
         ];
         assert!(!umt_check_flag_alignment_bool(&matrix));
     }

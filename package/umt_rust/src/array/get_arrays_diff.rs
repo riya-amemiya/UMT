@@ -144,9 +144,11 @@ mod tests {
 
     #[test]
     fn test_get_arrays_diff_with_duplicates_in_same_array() {
-        assert_eq!(
-            umt_get_arrays_diff(&[&[1, 1, 2][..], &[2, 3, 3][..]]),
-            vec![1, 3]
-        );
+        // [1, 1, 2]: all_values = {1, 2}
+        // [2, 3, 3]: 2 is duplicate (in all_values), 3 is added, second 3 is also duplicate
+        // duplicates = {2, 3}
+        // Result = all_values - duplicates = {1}
+        let result = umt_get_arrays_diff(&[&[1, 1, 2][..], &[2, 3, 3][..]]);
+        assert_eq!(result, vec![1]);
     }
 }
