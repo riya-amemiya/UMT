@@ -7,7 +7,7 @@ pub use default_formatters::create_default_formatters;
 pub use get_value::get_value;
 
 use regex::Regex;
-use serde_json::{Map, Value};
+use serde_json::Value;
 use std::collections::HashMap;
 
 /// Options for format string customization

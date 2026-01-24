@@ -56,8 +56,8 @@ pub fn umt_random_string(size: usize, char_set: Option<&str>) -> String {
 /// ```
 /// use umt_rust::string::umt_random_string_initialization;
 ///
-/// let gen = umt_random_string_initialization(Some("abc123"));
-/// let s = gen(5);
+/// let generator = umt_random_string_initialization(Some("abc123"));
+/// let s = generator(5);
 /// assert_eq!(s.len(), 5);
 /// assert!(s.chars().all(|c| "abc123".contains(c)));
 /// ```
@@ -111,16 +111,16 @@ mod tests {
 
     #[test]
     fn test_initialization_default_charset() {
-        let gen = umt_random_string_initialization(None);
-        let result = gen(10);
+        let generator = umt_random_string_initialization(None);
+        let result = generator(10);
         assert_eq!(result.len(), 10);
     }
 
     #[test]
     fn test_initialization_custom_charset() {
         let custom_char_set = "ABC123";
-        let gen = umt_random_string_initialization(Some(custom_char_set));
-        let result = gen(5);
+        let generator = umt_random_string_initialization(Some(custom_char_set));
+        let result = generator(5);
         assert_eq!(result.len(), 5);
         assert!(result.chars().all(|c| custom_char_set.contains(c)));
     }

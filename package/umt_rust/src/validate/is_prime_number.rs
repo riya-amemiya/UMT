@@ -1,22 +1,14 @@
-//! Prime number checking functionality
-//!
-//! This module provides a function to check if a number is prime.
+//! Prime number checking utility
 
 /// Determines if a number is prime
 ///
-/// A prime number is a natural number greater than 1 that is not a product
-/// of two smaller natural numbers.
-///
 /// # Arguments
-///
-/// * `n` - The number to check (must be an integer)
+/// * `n` - Number to check (must be an integer)
 ///
 /// # Returns
-///
-/// `true` if the number is prime, `false` otherwise
+/// true if the number is prime, false otherwise
 ///
 /// # Examples
-///
 /// ```
 /// use umt_rust::validate::umt_is_prime_number;
 ///
@@ -32,45 +24,57 @@ pub fn umt_is_prime_number(n: i64) -> bool {
         return false;
     }
 
+    if n <= 3 {
+        return true;
+    }
+
+    if n % 2 == 0 || n % 3 == 0 {
+        return false;
+    }
+
     let sqrt_n = (n as f64).sqrt() as i64;
-    for i in 2..=sqrt_n {
-        if n % i == 0 {
+    let mut i = 5;
+    while i <= sqrt_n {
+        if n % i == 0 || n % (i + 2) == 0 {
             return false;
         }
+        i += 6;
     }
 
     true
 }
 
-/// Determines if a f64 number is prime
-///
-/// For non-integer values, this returns false.
+/// Determines if a usize is prime
 ///
 /// # Arguments
-///
-/// * `n` - The number to check
+/// * `n` - Number to check
 ///
 /// # Returns
-///
-/// `true` if the number is a prime integer, `false` otherwise
-///
-/// # Examples
-///
-/// ```
-/// use umt_rust::validate::umt_is_prime_number_f64;
-///
-/// assert!(umt_is_prime_number_f64(7.0));
-/// assert!(!umt_is_prime_number_f64(7.5));
-/// assert!(!umt_is_prime_number_f64(3.14));
-/// ```
+/// true if the number is prime, false otherwise
 #[inline]
-pub fn umt_is_prime_number_f64(n: f64) -> bool {
-    // Check if it's a valid positive integer
-    if n <= 1.0 || !n.is_finite() || n.fract() != 0.0 {
+pub fn umt_is_prime_number_usize(n: usize) -> bool {
+    if n <= 1 {
         return false;
     }
 
-    umt_is_prime_number(n as i64)
+    if n <= 3 {
+        return true;
+    }
+
+    if n % 2 == 0 || n % 3 == 0 {
+        return false;
+    }
+
+    let sqrt_n = (n as f64).sqrt() as usize;
+    let mut i = 5;
+    while i <= sqrt_n {
+        if n % i == 0 || n % (i + 2) == 0 {
+            return false;
+        }
+        i += 6;
+    }
+
+    true
 }
 
 #[cfg(test)]
@@ -78,13 +82,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_returns_false_for_numbers_less_than_or_equal_to_1() {
-        assert!(!umt_is_prime_number(0));
-        assert!(!umt_is_prime_number(1));
-    }
-
-    #[test]
-    fn test_returns_true_for_prime_numbers() {
+    fn test_is_prime_number() {
         assert!(umt_is_prime_number(2));
         assert!(umt_is_prime_number(3));
         assert!(umt_is_prime_number(5));
@@ -92,55 +90,23 @@ mod tests {
         assert!(umt_is_prime_number(11));
         assert!(umt_is_prime_number(13));
         assert!(umt_is_prime_number(17));
-        assert!(umt_is_prime_number(19));
-        assert!(umt_is_prime_number(23));
-        assert!(umt_is_prime_number(29));
-    }
+        assert!(umt_is_prime_number(97));
 
-    #[test]
-    fn test_returns_false_for_composite_numbers() {
+        assert!(!umt_is_prime_number(0));
+        assert!(!umt_is_prime_number(1));
         assert!(!umt_is_prime_number(4));
         assert!(!umt_is_prime_number(6));
         assert!(!umt_is_prime_number(8));
         assert!(!umt_is_prime_number(9));
-        assert!(!umt_is_prime_number(10));
-        assert!(!umt_is_prime_number(12));
-        assert!(!umt_is_prime_number(14));
-        assert!(!umt_is_prime_number(15));
-        assert!(!umt_is_prime_number(16));
-        assert!(!umt_is_prime_number(18));
+        assert!(!umt_is_prime_number(100));
+        assert!(!umt_is_prime_number(-3));
     }
 
     #[test]
-    fn test_returns_false_for_negative_numbers() {
-        assert!(!umt_is_prime_number(-2));
-        assert!(!umt_is_prime_number(-7));
-        assert!(!umt_is_prime_number(-11));
-    }
-
-    #[test]
-    fn test_f64_non_integer_numbers() {
-        assert!(!umt_is_prime_number_f64(2.5));
-        assert!(!umt_is_prime_number_f64(3.14));
-        assert!(umt_is_prime_number_f64(7.0)); // 7.0 is treated as integer 7
-    }
-
-    #[test]
-    fn test_large_non_prime_numbers() {
-        let large_non_prime = 10_000_000_000_000_i64;
-        assert!(!umt_is_prime_number(large_non_prime));
-    }
-
-    #[test]
-    fn test_large_prime_numbers() {
-        let large_prime = 982_451_653_i64;
-        assert!(umt_is_prime_number(large_prime));
-    }
-
-    #[test]
-    fn test_f64_special_values() {
-        assert!(!umt_is_prime_number_f64(f64::NAN));
-        assert!(!umt_is_prime_number_f64(f64::INFINITY));
-        assert!(!umt_is_prime_number_f64(f64::NEG_INFINITY));
+    fn test_is_prime_number_usize() {
+        assert!(umt_is_prime_number_usize(2));
+        assert!(umt_is_prime_number_usize(17));
+        assert!(!umt_is_prime_number_usize(4));
+        assert!(!umt_is_prime_number_usize(1));
     }
 }

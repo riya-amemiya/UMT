@@ -7,5 +7,5 @@ pub mod error;
 // pub mod ip;  // Temporarily disabled - has pre-existing issues
 pub mod math;
 pub mod simple;
-// pub mod string; // Temporarily disabled - Rust 2024 keyword conflict with `gen`
+pub mod string;
 pub mod tool;
