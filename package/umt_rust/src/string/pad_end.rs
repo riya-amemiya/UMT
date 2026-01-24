@@ -1,43 +1,31 @@
-/// Adds the specified string to the end of the string until it reaches the specified length.
+/// Adds the specified string to the end of the string until it reaches the specified length
 ///
 /// # Arguments
-///
-/// * `string_` - The original string to apply padding
+/// * `s` - The original string to apply padding
 /// * `target_length` - The target length after padding
 /// * `pad_string` - The string to use for padding
 ///
 /// # Returns
-///
 /// The string after padding has been applied
 ///
-/// # Examples
-///
+/// # Example
 /// ```
 /// use umt_rust::string::umt_pad_end;
-///
-/// assert_eq!(umt_pad_end("abc", 5, " "), "abc  ");
-/// assert_eq!(umt_pad_end("hello", 10, "!"), "hello!!!!!");
+/// assert_eq!(umt_pad_end("123", 5, "0"), "12300");
+/// assert_eq!(umt_pad_end("abc", 8, "def"), "abcdefde");
 /// ```
 #[inline]
-pub fn umt_pad_end(string_: &str, target_length: usize, pad_string: &str) -> String {
+pub fn umt_pad_end(s: &str, target_length: usize, pad_string: &str) -> String {
     if pad_string.is_empty() {
-        return string_.to_string();
+        return s.to_string();
     }
 
-    let current_len = string_.chars().count();
-    if current_len >= target_length {
-        return string_.to_string();
+    let mut result = s.to_string();
+    while result.len() < target_length {
+        let remaining = target_length - result.len();
+        let chars_to_add: String = pad_string.chars().take(remaining).collect();
+        result.push_str(&chars_to_add);
     }
-
-    let mut result = string_.to_string();
-    let pad_chars: Vec<char> = pad_string.chars().collect();
-
-    while result.chars().count() < target_length {
-        let remaining = target_length - result.chars().count();
-        let take_count = remaining.min(pad_chars.len());
-        result.extend(pad_chars.iter().take(take_count));
-    }
-
     result
 }
 
@@ -46,29 +34,27 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_add_padding_to_end() {
-        assert_eq!(umt_pad_end("abc", 5, " "), "abc  ");
-        assert_eq!(umt_pad_end("hello", 10, "!"), "hello!!!!!");
+    fn test_pad_end_basic() {
+        assert_eq!(umt_pad_end("123", 5, "0"), "12300");
     }
 
     #[test]
-    fn test_no_modify_if_already_long_enough() {
-        assert_eq!(umt_pad_end("abc", 3, " "), "abc");
-        assert_eq!(umt_pad_end("longstring", 5, "!"), "longstring");
+    fn test_pad_end_pattern() {
+        assert_eq!(umt_pad_end("abc", 8, "def"), "abcdefde");
     }
 
     #[test]
-    fn test_multi_character_padding() {
-        assert_eq!(umt_pad_end("abc", 10, "de"), "abcdededed");
+    fn test_pad_end_no_padding_needed() {
+        assert_eq!(umt_pad_end("hello", 3, "x"), "hello");
     }
 
     #[test]
-    fn test_shorter_target_length() {
-        assert_eq!(umt_pad_end("abc", 2, " "), "abc");
+    fn test_pad_end_empty_pad_string() {
+        assert_eq!(umt_pad_end("hello", 10, ""), "hello");
     }
 
     #[test]
-    fn test_empty_padding_string() {
-        assert_eq!(umt_pad_end("abc", 5, ""), "abc");
+    fn test_pad_end_same_length() {
+        assert_eq!(umt_pad_end("hello", 5, "x"), "hello");
     }
 }
