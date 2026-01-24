@@ -141,9 +141,10 @@ where
 ///
 /// ```
 /// use umt_rust::simple::array::umt_quick_sort_simple;
+/// use std::cmp::Ordering;
 ///
 /// let arr = vec![3, 1, 4, 1, 5, 9, 2, 6];
-/// let sorted = umt_quick_sort_simple(&arr, None, None, None);
+/// let sorted = umt_quick_sort_simple::<i32, fn(&i32, &i32) -> Ordering>(&arr, None, None, None);
 /// assert_eq!(sorted, vec![1, 1, 2, 3, 4, 5, 6, 9]);
 /// ```
 ///
