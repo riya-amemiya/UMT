@@ -1,7 +1,8 @@
 //! Core validation module
 //! Provides base validation types and the core validation function
 
-use std::fmt::Display;
+use std::fmt::{Debug, Display};
+use std::sync::Arc;
 
 /// Validation result type containing validation status, message, and type information
 #[derive(Debug, Clone, PartialEq)]
@@ -12,14 +13,13 @@ pub struct ValidateCoreReturnType<T> {
 }
 
 /// Validation return type for validators
-#[derive(Debug, Clone)]
-pub struct ValidateReturnType<T: Clone> {
+pub struct ValidateReturnType<T> {
     pub type_name: String,
     pub message: Option<String>,
-    pub validate: Box<dyn Fn(&T) -> bool + Send + Sync>,
+    pub validate: Arc<dyn Fn(&T) -> bool + Send + Sync>,
 }
 
-impl<T: Clone> ValidateReturnType<T> {
+impl<T> ValidateReturnType<T> {
     pub fn new<F>(type_name: &str, message: Option<String>, validate: F) -> Self
     where
         F: Fn(&T) -> bool + Send + Sync + 'static,
@@ -27,8 +27,28 @@ impl<T: Clone> ValidateReturnType<T> {
         Self {
             type_name: type_name.to_string(),
             message,
-            validate: Box::new(validate),
+            validate: Arc::new(validate),
         }
+    }
+}
+
+impl<T> Clone for ValidateReturnType<T> {
+    fn clone(&self) -> Self {
+        Self {
+            type_name: self.type_name.clone(),
+            message: self.message.clone(),
+            validate: Arc::clone(&self.validate),
+        }
+    }
+}
+
+impl<T> Debug for ValidateReturnType<T> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("ValidateReturnType")
+            .field("type_name", &self.type_name)
+            .field("message", &self.message)
+            .field("validate", &"<function>")
+            .finish()
     }
 }
 
@@ -71,7 +91,7 @@ impl Display for TypeName {
 #[inline]
 pub fn umt_validate_core<T: Clone>(
     value: T,
-    type_name: &str,
+    _type_name: &str,
     options: &[ValidateReturnType<T>],
     message: Option<&str>,
 ) -> ValidateCoreReturnType<T> {

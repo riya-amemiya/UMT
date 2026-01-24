@@ -64,7 +64,7 @@ pub fn umt_format(date: &DateTime<Utc>, format_string: &str, timezone_offset_min
     let hour_string = hours.to_string();
     let minute_string = date.minute().to_string();
     let second_string = date.second().to_string();
-    let millisecond_string = (date.nanosecond() / 1_000_000).to_string();
+    let _millisecond_string = (date.nanosecond() / 1_000_000).to_string();
     let day_string = date.weekday().num_days_from_sunday().to_string();
     let ampm = if hours < 12 { "AM" } else { "PM" };
 

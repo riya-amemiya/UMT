@@ -2,7 +2,7 @@
 //!
 //! This module provides functions to get timezone offset strings.
 
-use chrono::{DateTime, Local, Offset, TimeZone};
+use chrono::{DateTime, Local, Offset};
 
 /// Get timezone offset string in format "+HH:mm" or "-HH:mm".
 ///

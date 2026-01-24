@@ -9,3 +9,4 @@ pub mod math;
 pub mod simple;
 pub mod string;
 pub mod tool;
+pub mod validate;
