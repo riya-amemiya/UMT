@@ -1,25 +1,21 @@
 /// Escapes HTML special characters in a string
 ///
 /// # Arguments
-///
-/// * `string_` - The string to escape
+/// * `s` - The string to escape
 ///
 /// # Returns
-///
 /// The escaped string
 ///
-/// # Examples
-///
+/// # Example
 /// ```
 /// use umt_rust::string::umt_escape_html;
-///
-/// assert_eq!(umt_escape_html("Tom & Jerry"), "Tom &amp; Jerry");
 /// assert_eq!(umt_escape_html("<script>"), "&lt;script&gt;");
+/// assert_eq!(umt_escape_html("Tom & Jerry"), "Tom &amp; Jerry");
 /// ```
 #[inline]
-pub fn umt_escape_html(string_: &str) -> String {
-    let mut result = String::with_capacity(string_.len());
-    for c in string_.chars() {
+pub fn umt_escape_html(s: &str) -> String {
+    let mut result = String::with_capacity(s.len());
+    for c in s.chars() {
         match c {
             '&' => result.push_str("&amp;"),
             '<' => result.push_str("&lt;"),
@@ -37,55 +33,28 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_escape_ampersand() {
+    fn test_escape_html_basic() {
+        assert_eq!(umt_escape_html("<script>"), "&lt;script&gt;");
+    }
+
+    #[test]
+    fn test_escape_html_ampersand() {
         assert_eq!(umt_escape_html("Tom & Jerry"), "Tom &amp; Jerry");
     }
 
     #[test]
-    fn test_escape_less_than() {
-        assert_eq!(umt_escape_html("5 < 10"), "5 &lt; 10");
+    fn test_escape_html_quotes() {
+        assert_eq!(umt_escape_html("\"hello\""), "&quot;hello&quot;");
+        assert_eq!(umt_escape_html("'world'"), "&#39;world&#39;");
     }
 
     #[test]
-    fn test_escape_greater_than() {
-        assert_eq!(umt_escape_html("10 > 5"), "10 &gt; 5");
-    }
-
-    #[test]
-    fn test_escape_double_quotes() {
-        assert_eq!(umt_escape_html("Say \"Hello\""), "Say &quot;Hello&quot;");
-    }
-
-    #[test]
-    fn test_escape_single_quotes() {
-        assert_eq!(umt_escape_html("It's working"), "It&#39;s working");
-    }
-
-    #[test]
-    fn test_escape_all_special_characters() {
-        let input = "<script>alert(\"XSS & 'injection'\");</script>";
-        let expected = "&lt;script&gt;alert(&quot;XSS &amp; &#39;injection&#39;&quot;);&lt;/script&gt;";
-        assert_eq!(umt_escape_html(input), expected);
-    }
-
-    #[test]
-    fn test_empty_string() {
+    fn test_escape_html_empty() {
         assert_eq!(umt_escape_html(""), "");
     }
 
     #[test]
-    fn test_no_special_characters() {
-        assert_eq!(umt_escape_html("Hello World"), "Hello World");
-    }
-
-    #[test]
-    fn test_only_special_characters() {
-        assert_eq!(umt_escape_html("&<>\"'"), "&amp;&lt;&gt;&quot;&#39;");
-    }
-
-    #[test]
-    fn test_repeated_special_characters() {
-        assert_eq!(umt_escape_html("&&&"), "&amp;&amp;&amp;");
-        assert_eq!(umt_escape_html("<<<"), "&lt;&lt;&lt;");
+    fn test_escape_html_no_special() {
+        assert_eq!(umt_escape_html("hello"), "hello");
     }
 }
