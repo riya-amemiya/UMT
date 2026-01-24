@@ -151,11 +151,14 @@ mod tests {
 
     #[test]
     fn test_new_date_string_with_timezone() {
+        // UTC date: 2021-01-01 12:00 with offset 0 -> stays 2021-01-01 12:00 UTC
+        // JST date: 2021-01-01 12:00 with offset 9 -> becomes 2021-01-01 03:00 UTC
+        // So date_utc - date_jst = 12:00 - 03:00 = 9 hours (positive)
         let date_utc = umt_new_date_string("2021-01-01", Some("12"), None, None, None, Some(0));
         let date_jst = umt_new_date_string("2021-01-01", Some("12"), None, None, None, Some(9));
         assert!(date_utc.is_some());
         assert!(date_jst.is_some());
         let diff = date_utc.unwrap().signed_duration_since(date_jst.unwrap());
-        assert_eq!(diff.num_hours(), -9);
+        assert_eq!(diff.num_hours(), 9);
     }
 }
