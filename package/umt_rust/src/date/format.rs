@@ -1,9 +1,25 @@
-//! Date formatting utilities.
+//! Date formatting utility.
+//!
+//! This module provides a function to format dates according to specified patterns.
 
-use chrono::{DateTime, Datelike, FixedOffset, NaiveDateTime, Offset, TimeZone, Timelike};
+use chrono::{DateTime, Datelike, Timelike, Utc};
 use regex::Regex;
 
-/// Formats a DateTime according to the specified format pattern.
+use super::get_timezone_offset_string::{
+    umt_get_timezone_offset_string, umt_get_timezone_offset_string_compact,
+};
+
+/// Converts a date to a string according to the specified format pattern.
+///
+/// # Arguments
+///
+/// * `date` - The DateTime object to format
+/// * `format_string` - The format pattern string (default: "YYYY-MM-DDTHH:mm:ssZ")
+/// * `timezone_offset_minutes` - Timezone offset in minutes (default: 0 for UTC)
+///
+/// # Returns
+///
+/// The formatted date string
 ///
 /// # Format Tokens
 ///
@@ -13,7 +29,7 @@ use regex::Regex;
 /// - `M`: Month without leading zero (1-12)
 /// - `DD`: Day with leading zero (01-31)
 /// - `D`: Day without leading zero (1-31)
-/// - `d`: Day of week (0-6, where 0 is Sunday)
+/// - `d`: Day of week (0-6)
 /// - `HH`: Hours with leading zero (00-23)
 /// - `H`: Hours without leading zero (0-23)
 /// - `hh`: Hours (12-hour) with leading zero (01-12)
@@ -27,320 +43,198 @@ use regex::Regex;
 /// - `a`: am/pm
 /// - `Z`: Timezone offset (+09:00)
 /// - `ZZ`: Timezone offset without colon (+0900)
-///
-/// Text in square brackets `[...]` is treated as literal text.
-///
-/// # Arguments
-///
-/// * `dt` - The DateTime to format.
-/// * `format_string` - The format pattern string (default: "YYYY-MM-DDTHH:mm:ssZ").
-///
-/// # Returns
-///
-/// The formatted date string.
+/// - `[text]`: Escaped text (not replaced)
 ///
 /// # Examples
 ///
 /// ```
-/// use chrono::{FixedOffset, TimeZone};
+/// use chrono::{TimeZone, Utc};
 /// use umt_rust::date::umt_format;
 ///
-/// let jst = FixedOffset::east_opt(9 * 3600).unwrap();
-/// let dt = jst.with_ymd_and_hms(2023, 6, 10, 15, 30, 45).unwrap();
-///
-/// assert_eq!(umt_format(&dt, "YYYY-MM-DD"), "2023-06-10");
-/// assert_eq!(umt_format(&dt, "YYYY/MM/DD HH:mm:ss"), "2023/06/10 15:30:45");
+/// let date = Utc.with_ymd_and_hms(2025, 4, 4, 15, 30, 0).unwrap();
+/// assert_eq!(umt_format(&date, "YYYY-MM-DD", 0), "2025-04-04");
+/// assert_eq!(umt_format(&date, "HH:mm", 0), "15:30");
+/// assert_eq!(umt_format(&date, "MM/DD/YYYY", 0), "04/04/2025");
 /// ```
-pub fn umt_format<Tz: TimeZone>(dt: &DateTime<Tz>, format_string: &str) -> String {
-    let year = dt.year();
-    let month = dt.month();
-    let day = dt.day();
-    let hour = dt.hour();
-    let minute = dt.minute();
-    let second = dt.second();
-    let millisecond = dt.timestamp_subsec_millis();
-    let weekday = dt.weekday().num_days_from_sunday();
+pub fn umt_format(date: &DateTime<Utc>, format_string: &str, timezone_offset_minutes: i32) -> String {
+    let hours = date.hour();
+    let year_string = date.year().to_string();
+    let month_string = date.month().to_string();
+    let date_string = date.day().to_string();
+    let hour_string = hours.to_string();
+    let minute_string = date.minute().to_string();
+    let second_string = date.second().to_string();
+    let millisecond_string = (date.nanosecond() / 1_000_000).to_string();
+    let day_string = date.weekday().num_days_from_sunday().to_string();
+    let ampm = if hours < 12 { "AM" } else { "PM" };
 
-    let offset = dt.offset().fix();
-    let offset_seconds = offset.local_minus_utc();
-    let offset_hours = offset_seconds.abs() / 3600;
-    let offset_minutes = (offset_seconds.abs() % 3600) / 60;
-    let offset_sign = if offset_seconds >= 0 { '+' } else { '-' };
-    let timezone_string = format!("{}{:02}:{:02}", offset_sign, offset_hours, offset_minutes);
-    let timezone_string_no_colon = format!("{}{:02}{:02}", offset_sign, offset_hours, offset_minutes);
+    let timezone_string = umt_get_timezone_offset_string(timezone_offset_minutes);
+    let timezone_compact = umt_get_timezone_offset_string_compact(timezone_offset_minutes);
 
-    let ampm = if hour < 12 { "AM" } else { "PM" };
-    let hour_12 = {
-        let h = hour % 12;
-        if h == 0 { 12 } else { h }
-    };
+    let hour_12 = if hours % 12 == 0 { 12 } else { hours % 12 };
 
     // Build replacement map
     let replacements: Vec<(&str, String)> = vec![
-        ("YYYY", format!("{:04}", year)),
-        ("YY", format!("{:02}", year % 100)),
-        ("MM", format!("{:02}", month)),
-        ("M", month.to_string()),
-        ("DD", format!("{:02}", day)),
-        ("D", day.to_string()),
-        ("d", weekday.to_string()),
-        ("HH", format!("{:02}", hour)),
-        ("H", hour.to_string()),
+        ("YYYY", format!("{:04}", date.year())),
+        ("YY", year_string.chars().skip(year_string.len().saturating_sub(2)).collect()),
+        ("MM", format!("{:02}", date.month())),
+        ("M", month_string),
+        ("DD", format!("{:02}", date.day())),
+        ("D", date_string),
+        ("d", day_string),
+        ("HH", format!("{:02}", hours)),
+        ("H", hour_string),
         ("hh", format!("{:02}", hour_12)),
         ("h", hour_12.to_string()),
-        ("mm", format!("{:02}", minute)),
-        ("m", minute.to_string()),
-        ("ss", format!("{:02}", second)),
-        ("s", second.to_string()),
-        ("SSS", format!("{:03}", millisecond)),
+        ("mm", format!("{:02}", date.minute())),
+        ("m", minute_string),
+        ("ss", format!("{:02}", date.second())),
+        ("s", second_string),
+        ("SSS", format!("{:03}", date.nanosecond() / 1_000_000)),
         ("A", ampm.to_string()),
         ("a", ampm.to_lowercase()),
-        ("ZZ", timezone_string_no_colon),
+        ("ZZ", timezone_compact),
         ("Z", timezone_string),
     ];
 
-    // Use regex to handle escaped text and format tokens
-    let pattern =
-        Regex::new(r"\[([^\]]+)]|(Y{1,4}|M{1,2}|D{1,2}|d{1,2}|H{1,2}|h{1,2}|a|A|m{1,2}|s{1,2}|Z{1,2}|SSS)")
-            .unwrap();
+    // Handle escaped text in brackets
+    let re = Regex::new(r"\[([^\]]+)]").unwrap();
+    let mut result = format_string.to_string();
+    let mut escaped_texts: Vec<(String, String)> = Vec::new();
 
-    let result = pattern.replace_all(format_string, |caps: &regex::Captures| {
-        // Check for escaped text first (group 1)
-        if let Some(escaped) = caps.get(1) {
-            return escaped.as_str().to_string();
-        }
+    // Replace escaped text with placeholders
+    for (i, cap) in re.captures_iter(format_string).enumerate() {
+        let placeholder = format!("\x00ESC{}\x00", i);
+        let full_match = cap.get(0).unwrap().as_str();
+        let inner_text = cap.get(1).unwrap().as_str();
+        escaped_texts.push((placeholder.clone(), inner_text.to_string()));
+        result = result.replace(full_match, &placeholder);
+    }
 
-        // Handle format token (group 2)
-        if let Some(token) = caps.get(2) {
-            let token_str = token.as_str();
-            for (key, value) in &replacements {
-                if *key == token_str {
-                    return value.clone();
-                }
-            }
-        }
+    // Apply format replacements (order matters - longer patterns first)
+    for (pattern, replacement) in &replacements {
+        result = result.replace(pattern, replacement);
+    }
 
-        // Shouldn't reach here, but return empty string as fallback
-        String::new()
-    });
+    // Restore escaped texts
+    for (placeholder, text) in escaped_texts {
+        result = result.replace(&placeholder, &text);
+    }
 
-    result.to_string()
+    result
 }
 
-/// Formats a DateTime with the default format "YYYY-MM-DDTHH:mm:ssZ".
+/// Format a date with the default ISO 8601 format.
 ///
 /// # Arguments
 ///
-/// * `dt` - The DateTime to format.
+/// * `date` - The DateTime object to format
+/// * `timezone_offset_minutes` - Timezone offset in minutes (default: 0 for UTC)
 ///
 /// # Returns
 ///
-/// The formatted date string in ISO 8601-like format.
+/// The formatted date string in ISO 8601 format
 ///
 /// # Examples
 ///
 /// ```
-/// use chrono::{FixedOffset, TimeZone};
-/// use umt_rust::date::umt_format_default;
+/// use chrono::{TimeZone, Utc};
+/// use umt_rust::date::umt_format_iso;
 ///
-/// let jst = FixedOffset::east_opt(9 * 3600).unwrap();
-/// let dt = jst.with_ymd_and_hms(2023, 6, 10, 15, 30, 45).unwrap();
-///
-/// assert_eq!(umt_format_default(&dt), "2023-06-10T15:30:45+09:00");
+/// let date = Utc.with_ymd_and_hms(2025, 4, 4, 15, 30, 45).unwrap();
+/// assert_eq!(umt_format_iso(&date, 0), "2025-04-04T15:30:45+00:00");
 /// ```
 #[inline]
-pub fn umt_format_default<Tz: TimeZone>(dt: &DateTime<Tz>) -> String {
-    umt_format(dt, "YYYY-MM-DDTHH:mm:ssZ")
-}
-
-/// Formats a NaiveDateTime according to the specified format pattern.
-///
-/// Note: Timezone tokens (Z, ZZ) will use "+00:00" for NaiveDateTime.
-///
-/// # Arguments
-///
-/// * `dt` - The NaiveDateTime to format.
-/// * `format_string` - The format pattern string.
-///
-/// # Returns
-///
-/// The formatted date string.
-///
-/// # Examples
-///
-/// ```
-/// use chrono::NaiveDate;
-/// use umt_rust::date::umt_format_naive;
-///
-/// let dt = NaiveDate::from_ymd_opt(2023, 6, 10)
-///     .unwrap()
-///     .and_hms_milli_opt(15, 30, 45, 123)
-///     .unwrap();
-///
-/// assert_eq!(umt_format_naive(&dt, "YYYY-MM-DD HH:mm:ss.SSS"), "2023-06-10 15:30:45.123");
-/// ```
-pub fn umt_format_naive(dt: &NaiveDateTime, format_string: &str) -> String {
-    // Convert to DateTime with UTC offset for formatting
-    let utc = FixedOffset::east_opt(0).unwrap();
-    let dt_utc: DateTime<FixedOffset> = utc.from_utc_datetime(dt);
-    umt_format(&dt_utc, format_string)
+pub fn umt_format_iso(date: &DateTime<Utc>, timezone_offset_minutes: i32) -> String {
+    umt_format(date, "YYYY-MM-DDTHH:mm:ssZ", timezone_offset_minutes)
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use chrono::NaiveDate;
+    use chrono::TimeZone;
 
-    fn create_test_datetime() -> DateTime<FixedOffset> {
-        let jst = FixedOffset::east_opt(9 * 3600).unwrap();
-        jst.with_ymd_and_hms(2023, 6, 10, 15, 30, 45).unwrap()
-    }
-
-    fn create_test_datetime_with_ms() -> DateTime<FixedOffset> {
-        let jst = FixedOffset::east_opt(9 * 3600).unwrap();
-        let naive = NaiveDate::from_ymd_opt(2023, 6, 10)
-            .unwrap()
-            .and_hms_milli_opt(15, 30, 45, 123)
-            .unwrap();
-        jst.from_local_datetime(&naive).single().unwrap()
+    #[test]
+    fn test_format_date_only() {
+        let date = Utc.with_ymd_and_hms(2025, 4, 4, 0, 0, 0).unwrap();
+        assert_eq!(umt_format(&date, "YYYY-MM-DD", 0), "2025-04-04");
     }
 
     #[test]
-    fn test_format_basic_date() {
-        let dt = create_test_datetime();
-        assert_eq!(umt_format(&dt, "YYYY-MM-DD"), "2023-06-10");
+    fn test_format_time_only() {
+        let date = Utc.with_ymd_and_hms(2025, 4, 4, 15, 30, 45).unwrap();
+        assert_eq!(umt_format(&date, "HH:mm:ss", 0), "15:30:45");
     }
 
     #[test]
-    fn test_format_date_time() {
-        let dt = create_test_datetime();
-        assert_eq!(umt_format(&dt, "YYYY/MM/DD HH:mm:ss"), "2023/06/10 15:30:45");
+    fn test_format_us_style() {
+        let date = Utc.with_ymd_and_hms(2025, 4, 4, 0, 0, 0).unwrap();
+        assert_eq!(umt_format(&date, "MM/DD/YYYY", 0), "04/04/2025");
     }
 
     #[test]
-    fn test_format_with_milliseconds() {
-        let dt = create_test_datetime_with_ms();
-        assert_eq!(
-            umt_format(&dt, "YYYY-MM-DD HH:mm:ss.SSS"),
-            "2023-06-10 15:30:45.123"
-        );
+    fn test_format_short_year() {
+        let date = Utc.with_ymd_and_hms(2025, 4, 4, 0, 0, 0).unwrap();
+        assert_eq!(umt_format(&date, "YY-MM-DD", 0), "25-04-04");
     }
 
     #[test]
-    fn test_format_with_timezone() {
-        let dt = create_test_datetime_with_ms();
-        assert_eq!(
-            umt_format(&dt, "YYYY-MM-DD HH:mm:ss.SSS Z"),
-            "2023-06-10 15:30:45.123 +09:00"
-        );
+    fn test_format_no_padding() {
+        let date = Utc.with_ymd_and_hms(2025, 1, 5, 9, 5, 3).unwrap();
+        assert_eq!(umt_format(&date, "M/D/YYYY H:m:s", 0), "1/5/2025 9:5:3");
     }
 
     #[test]
-    fn test_format_with_timezone_no_colon() {
-        let dt = create_test_datetime_with_ms();
-        assert_eq!(
-            umt_format(&dt, "YYYY-MM-DD HH:mm:ss.SSS ZZ"),
-            "2023-06-10 15:30:45.123 +0900"
-        );
+    fn test_format_12_hour() {
+        let date_am = Utc.with_ymd_and_hms(2025, 4, 4, 9, 30, 0).unwrap();
+        let date_pm = Utc.with_ymd_and_hms(2025, 4, 4, 15, 30, 0).unwrap();
+        let date_noon = Utc.with_ymd_and_hms(2025, 4, 4, 12, 0, 0).unwrap();
+        let date_midnight = Utc.with_ymd_and_hms(2025, 4, 4, 0, 0, 0).unwrap();
+
+        assert_eq!(umt_format(&date_am, "h:mm A", 0), "9:30 AM");
+        assert_eq!(umt_format(&date_pm, "h:mm A", 0), "3:30 PM");
+        assert_eq!(umt_format(&date_noon, "h:mm A", 0), "12:00 PM");
+        assert_eq!(umt_format(&date_midnight, "h:mm A", 0), "12:00 AM");
     }
 
     #[test]
-    fn test_format_default() {
-        let dt = create_test_datetime();
-        assert_eq!(umt_format_default(&dt), "2023-06-10T15:30:45+09:00");
-    }
-
-    #[test]
-    fn test_format_escaped_characters() {
-        let dt = create_test_datetime();
-        assert_eq!(
-            umt_format(&dt, "[Year:] YYYY [Month:] MM [Day:] DD"),
-            "Year: 2023 Month: 06 Day: 10"
-        );
-    }
-
-    #[test]
-    fn test_format_short_tokens() {
-        let dt = create_test_datetime();
-        assert_eq!(umt_format(&dt, "YY-M-D"), "23-6-10");
-    }
-
-    #[test]
-    fn test_format_12_hour_with_ampm() {
-        let dt = create_test_datetime();
-        assert_eq!(umt_format(&dt, "hh:mm:ss A"), "03:30:45 PM");
-        assert_eq!(umt_format(&dt, "h:m:s a"), "3:30:45 pm");
+    fn test_format_lowercase_ampm() {
+        let date = Utc.with_ymd_and_hms(2025, 4, 4, 15, 30, 0).unwrap();
+        assert_eq!(umt_format(&date, "h:mm a", 0), "3:30 pm");
     }
 
     #[test]
     fn test_format_day_of_week() {
-        // June 10, 2023 was a Saturday (6)
-        let dt = create_test_datetime();
-        assert_eq!(umt_format(&dt, "d"), "6");
-        assert_eq!(umt_format(&dt, "YYYY-MM-DD (d)"), "2023-06-10 (6)");
+        // January 1, 2025 is Wednesday (3)
+        let date = Utc.with_ymd_and_hms(2025, 1, 1, 0, 0, 0).unwrap();
+        assert_eq!(umt_format(&date, "d", 0), "3");
     }
 
     #[test]
-    fn test_format_morning_hours() {
-        let jst = FixedOffset::east_opt(9 * 3600).unwrap();
-        let naive = NaiveDate::from_ymd_opt(2023, 6, 10)
-            .unwrap()
-            .and_hms_milli_opt(9, 5, 8, 4)
-            .unwrap();
-        let dt = jst.from_local_datetime(&naive).single().unwrap();
-
-        assert_eq!(umt_format(&dt, "HH:mm:ss"), "09:05:08");
-        assert_eq!(umt_format(&dt, "H:m:s"), "9:5:8");
-        assert_eq!(umt_format(&dt, "hh:mm A"), "09:05 AM");
-        assert_eq!(umt_format(&dt, "h:mm a"), "9:05 am");
+    fn test_format_timezone() {
+        let date = Utc.with_ymd_and_hms(2025, 4, 4, 0, 0, 0).unwrap();
+        assert_eq!(umt_format(&date, "Z", 540), "+09:00");
+        assert_eq!(umt_format(&date, "ZZ", 540), "+0900");
+        assert_eq!(umt_format(&date, "Z", -300), "-05:00");
     }
 
     #[test]
-    fn test_format_midnight() {
-        let jst = FixedOffset::east_opt(9 * 3600).unwrap();
-        let dt = jst.with_ymd_and_hms(2023, 6, 10, 0, 0, 0).unwrap();
-
-        assert_eq!(umt_format(&dt, "HH:mm:ss"), "00:00:00");
-        assert_eq!(umt_format(&dt, "hh:mm A"), "12:00 AM");
+    fn test_format_iso() {
+        let date = Utc.with_ymd_and_hms(2025, 4, 4, 15, 30, 45).unwrap();
+        assert_eq!(umt_format_iso(&date, 0), "2025-04-04T15:30:45+00:00");
+        assert_eq!(umt_format_iso(&date, 540), "2025-04-04T15:30:45+09:00");
     }
 
     #[test]
-    fn test_format_noon() {
-        let jst = FixedOffset::east_opt(9 * 3600).unwrap();
-        let dt = jst.with_ymd_and_hms(2023, 6, 10, 12, 0, 0).unwrap();
-
-        assert_eq!(umt_format(&dt, "HH:mm:ss"), "12:00:00");
-        assert_eq!(umt_format(&dt, "hh:mm A"), "12:00 PM");
+    fn test_format_escaped_text() {
+        let date = Utc.with_ymd_and_hms(2025, 4, 4, 15, 30, 0).unwrap();
+        assert_eq!(umt_format(&date, "[Date:] YYYY-MM-DD", 0), "Date: 2025-04-04");
     }
 
     #[test]
-    fn test_format_naive() {
-        let dt = NaiveDate::from_ymd_opt(2023, 6, 10)
-            .unwrap()
-            .and_hms_milli_opt(15, 30, 45, 123)
-            .unwrap();
-
-        assert_eq!(
-            umt_format_naive(&dt, "YYYY-MM-DD HH:mm:ss.SSS"),
-            "2023-06-10 15:30:45.123"
-        );
-    }
-
-    #[test]
-    fn test_format_negative_timezone() {
-        let est = FixedOffset::west_opt(5 * 3600).unwrap();
-        let dt = est.with_ymd_and_hms(2023, 6, 10, 15, 30, 45).unwrap();
-
-        assert_eq!(umt_format(&dt, "Z"), "-05:00");
-        assert_eq!(umt_format(&dt, "ZZ"), "-0500");
-    }
-
-    #[test]
-    fn test_format_utc_timezone() {
-        let utc = FixedOffset::east_opt(0).unwrap();
-        let dt = utc.with_ymd_and_hms(2023, 6, 10, 15, 30, 45).unwrap();
-
-        assert_eq!(umt_format(&dt, "Z"), "+00:00");
-        assert_eq!(umt_format(&dt, "ZZ"), "+0000");
+    fn test_format_milliseconds() {
+        let date = Utc.with_ymd_and_hms(2025, 4, 4, 15, 30, 45).unwrap();
+        // Note: with_ymd_and_hms doesn't set milliseconds, so SSS will be 000
+        assert_eq!(umt_format(&date, "HH:mm:ss.SSS", 0), "15:30:45.000");
     }
 }

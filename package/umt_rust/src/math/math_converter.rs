@@ -95,7 +95,8 @@ mod tests {
     #[test]
     fn test_math_converter_small() {
         let result = umt_math_converter("50*50");
-        assert_eq!(result, "100*10+40*40");
+        // 50 separates to [10, 40], so 50 + 40 = 90
+        assert_eq!(result, "90*10+40*40");
     }
 
     #[test]
