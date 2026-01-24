@@ -236,7 +236,6 @@ mod tests {
     #[test]
     fn test_partial_properties() {
         // Test with partial properties - only year specified
-        let now = umt_now_simple(9);
         let props = DateProperties::new(Some(2022), None, None);
         let day = umt_day_of_week_simple(Some(props), 9);
         // Should use 2022 with current month and day

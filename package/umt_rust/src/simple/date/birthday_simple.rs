@@ -81,9 +81,6 @@ pub fn umt_birthday(year: i32, mon: u32, day: u32, time_difference: i32) -> i32 
     let mut age = current_year - birth_year;
 
     // Check if birthday hasn't occurred this year yet
-    let this_year_birthday = umt_new_date(current_year, birthday_date.month, birthday_date.day);
-
-    // Compare timestamps to check if birthday has passed
     // Using month and day comparison instead of timestamp for accuracy
     if now_time.month < birthday_date.month
         || (now_time.month == birthday_date.month && now_time.day < birthday_date.day)
