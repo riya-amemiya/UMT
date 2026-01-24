@@ -33,10 +33,10 @@ pub fn umt_uuidv7() -> String {
         .expect("Time went backwards")
         .as_millis() as u64;
 
-    let mut rng = rand::thread_rng();
-    let rand_a: u16 = rng.gen_range(0..0xFFF);
-    let rand_b_hi: u32 = rng.gen_range(0..0x3FFFFFFF);
-    let rand_b_lo: u32 = rng.gen();
+    let mut rng = rand::rng();
+    let rand_a: u16 = rng.random_range(0..0xFFF);
+    let rand_b_hi: u32 = rng.random_range(0..0x3FFFFFFF);
+    let rand_b_lo: u32 = rng.random();
 
     let mut bytes = [0u8; 16];
 

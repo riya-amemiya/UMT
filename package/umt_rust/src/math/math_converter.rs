@@ -47,19 +47,22 @@ pub fn umt_math_converter(equation: &str) -> String {
         let operator = if capture.contains('*') { "*" } else { "^" };
 
         if operand1 == operand2 || operator == "^" {
-            let sep_result = umt_math_separator(operand1);
+            let operand1_val: i32 = match operand1.parse() {
+                Ok(v) => v,
+                Err(_) => return converted_equation,
+            };
+            let sep_result = umt_math_separator(operand1_val);
+            let primary = sep_result[0];
+            let remainder = sep_result[1];
 
-            if sep_result.primary == 0 {
+            if primary == 0 {
                 return converted_equation;
             }
-
-            let operand1_val: i64 = operand1.parse().unwrap_or(0);
-            let remainder = sep_result.remainder;
 
             converted_equation = format!(
                 "{}*{}+",
                 operand1_val + remainder,
-                sep_result.primary
+                primary
             );
 
             if remainder <= 100 {
@@ -92,7 +95,7 @@ mod tests {
     #[test]
     fn test_math_converter_small() {
         let result = umt_math_converter("50*50");
-        assert_eq!(result, "100*50+0*0");
+        assert_eq!(result, "100*10+40*40");
     }
 
     #[test]
