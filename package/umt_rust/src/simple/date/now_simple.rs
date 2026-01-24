@@ -123,7 +123,7 @@ fn ymd_to_days(year: i32, month: u32, day: u32) -> i64 {
     let doy = (153 * (if m > 2 { m - 3 } else { m + 9 }) + 2) / 5 + d - 1; // day of year [0, 365]
     let doe = yoe * 365 + yoe / 4 - yoe / 100 + doy as u32; // day of era [0, 146096]
 
-    (era * 146097 + doe as i64 - 719468)
+    era * 146097 + doe as i64 - 719468
 }
 
 /// Get the current time with a specified UTC offset.
