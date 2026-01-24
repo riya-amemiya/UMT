@@ -130,7 +130,8 @@ impl HttpStatus {
     /// Server did not receive a timely response from the upstream server.
     pub const GATEWAY_TIMEOUT: u16 = http_server_error_status::GATEWAY_TIMEOUT;
     /// Server does not support the HTTP protocol version used in the request.
-    pub const HTTP_VERSION_NOT_SUPPORTED: u16 = http_server_error_status::HTTP_VERSION_NOT_SUPPORTED;
+    pub const HTTP_VERSION_NOT_SUPPORTED: u16 =
+        http_server_error_status::HTTP_VERSION_NOT_SUPPORTED;
 }
 
 #[cfg(test)]
