@@ -1,45 +1,27 @@
-/// Error type for IP conversion
-#[derive(Debug, Clone, PartialEq)]
-pub struct LongToIpError {
-    pub message: String,
-}
-
-impl std::fmt::Display for LongToIpError {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", self.message)
-    }
-}
-
-impl std::error::Error for LongToIpError {}
-
-/// Converts a 32-bit number to an IPv4 address string.
+/// Converts a 32-bit number to an IPv4 address
 ///
 /// # Arguments
-///
-/// * `long` - A 32-bit unsigned integer representing an IP address
+/// * `long` - 32-bit unsigned integer to convert
 ///
 /// # Returns
-///
-/// A `Result` containing the IPv4 address string (e.g., "192.168.1.1"),
-/// or a `LongToIpError` if the input is invalid.
+/// * IPv4 address string (e.g., "192.168.1.1")
 ///
 /// # Examples
-///
 /// ```
-/// use umt_rust::ip::umt_long_to_ip;
-///
-/// assert_eq!(umt_long_to_ip(0xC0A80001).unwrap(), "192.168.0.1");
-/// assert_eq!(umt_long_to_ip(0x7F000001).unwrap(), "127.0.0.1");
+/// use umt_rust::ip::long_to_ip;
+/// assert_eq!(long_to_ip(3232235777), "192.168.1.1");
+/// assert_eq!(long_to_ip(0), "0.0.0.0");
+/// assert_eq!(long_to_ip(0xFFFFFFFF), "255.255.255.255");
 /// ```
-#[inline]
-pub fn umt_long_to_ip(long: u32) -> Result<String, LongToIpError> {
-    // Extract each octet from the 32-bit integer
-    let octet1 = (long >> 24) & 0xFF;
-    let octet2 = (long >> 16) & 0xFF;
-    let octet3 = (long >> 8) & 0xFF;
-    let octet4 = long & 0xFF;
+pub fn long_to_ip(long: u32) -> String {
+    let octets = [
+        (long >> 24) & 0xFF,
+        (long >> 16) & 0xFF,
+        (long >> 8) & 0xFF,
+        long & 0xFF,
+    ];
 
-    Ok(format!("{}.{}.{}.{}", octet1, octet2, octet3, octet4))
+    format!("{}.{}.{}.{}", octets[0], octets[1], octets[2], octets[3])
 }
 
 #[cfg(test)]
@@ -47,14 +29,10 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_valid_long_values() {
-        assert_eq!(umt_long_to_ip(0xC0A80001).unwrap(), "192.168.0.1"); // Common private network
-        assert_eq!(umt_long_to_ip(0x80000001).unwrap(), "128.0.0.1"); // Class B start
-        assert_eq!(umt_long_to_ip(0x0A000001).unwrap(), "10.0.0.1"); // Class A private
-        assert_eq!(umt_long_to_ip(0xAC100001).unwrap(), "172.16.0.1"); // Class B private
-        assert_eq!(umt_long_to_ip(0xFFFFFFFF).unwrap(), "255.255.255.255"); // Maximum value
-        assert_eq!(umt_long_to_ip(0x00000000).unwrap(), "0.0.0.0"); // Minimum value
-        assert_eq!(umt_long_to_ip(0x7F000001).unwrap(), "127.0.0.1"); // Localhost
-        assert_eq!(umt_long_to_ip(0x01020304).unwrap(), "1.2.3.4"); // Simple incremental
+    fn test_long_to_ip() {
+        assert_eq!(long_to_ip(0), "0.0.0.0");
+        assert_eq!(long_to_ip(0xFFFFFFFF), "255.255.255.255");
+        assert_eq!(long_to_ip(0xC0A80101), "192.168.1.1");
+        assert_eq!(long_to_ip(0x0A000001), "10.0.0.1");
     }
 }

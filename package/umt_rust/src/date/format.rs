@@ -1,6 +1,6 @@
 //! Date formatting utilities.
 
-use chrono::{DateTime, Datelike, FixedOffset, NaiveDateTime, TimeZone, Timelike};
+use chrono::{DateTime, Datelike, FixedOffset, NaiveDateTime, Offset, TimeZone, Timelike};
 use regex::Regex;
 
 /// Formats a DateTime according to the specified format pattern.

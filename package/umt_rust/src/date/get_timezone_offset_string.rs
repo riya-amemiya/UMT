@@ -1,6 +1,6 @@
 //! Timezone offset string utilities.
 
-use chrono::{DateTime, Local, TimeZone};
+use chrono::{DateTime, Local, Offset, TimeZone};
 
 /// Gets timezone offset string in format "+HH:mm" or "-HH:mm".
 ///
