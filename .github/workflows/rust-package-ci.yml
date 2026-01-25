@@ -1,0 +1,54 @@
+name: Rust Package CI
+permissions:
+  contents: read
+
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+      - feature/*
+    paths:
+      - 'package/umt_rust/**'
+  workflow_dispatch:
+
+jobs:
+  format:
+    name: Check Format
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./package/umt_rust
+    steps:
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+      - uses: dtolnay/rust-toolchain@nightly
+        with:
+          components: rustfmt
+      - name: Check Format
+        run: cargo fmt --check
+
+  clippy:
+    name: Run Clippy
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./package/umt_rust
+    steps:
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+      - uses: dtolnay/rust-toolchain@nightly
+        with:
+          components: clippy
+      - name: Run Clippy
+        run: cargo clippy -- -D warnings
+
+  build:
+    name: Build Package
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./package/umt_rust
+    steps:
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+      - uses: dtolnay/rust-toolchain@nightly
+      - name: Build Package
+        run: cargo build
