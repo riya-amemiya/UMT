@@ -2,7 +2,7 @@ use umt_rust::math::umt_factorize;
 
 #[test]
 fn test_factorize() {
-    assert_eq!(umt_factorize(0), vec![]);
+    assert_eq!(umt_factorize(0), Vec::<i32>::new());
     assert_eq!(umt_factorize(1), vec![1]);
     assert_eq!(umt_factorize(2), vec![2]);
     assert_eq!(umt_factorize(4), vec![2, 2]);
