@@ -1,5 +1,5 @@
-from typing import Any
 import itertools
+from typing import Any
 
 
 def arrays_join(array: list[Any], *arrays: list[Any]) -> list[Any]:
