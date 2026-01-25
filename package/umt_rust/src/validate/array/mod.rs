@@ -57,6 +57,7 @@ where
 ///
 /// # Returns
 /// A function that validates arrays
+#[allow(clippy::type_complexity)]
 pub fn umt_array_validator<T: Clone + 'static, F: Fn(&T) -> bool + 'static>(
     validator: F,
     message: Option<String>,

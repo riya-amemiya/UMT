@@ -161,8 +161,7 @@ mod tests {
 
     #[test]
     fn test_detect_internet_explorer() {
-        let ie11_ua =
-            "Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko";
+        let ie11_ua = "Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko";
         let ie10_ua = "Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; Trident/6.0)";
         assert_eq!(umt_extract_browser_from_user_agent(ie11_ua), Browser::Ie);
         assert_eq!(umt_extract_browser_from_user_agent(ie10_ua), Browser::Ie);
@@ -173,11 +172,17 @@ mod tests {
         let opera_ua = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36 OPR/75.0.3969.149";
         let unknown_ua = "Unknown Browser";
         let empty_ua = "";
-        assert_eq!(umt_extract_browser_from_user_agent(opera_ua), Browser::Other);
+        assert_eq!(
+            umt_extract_browser_from_user_agent(opera_ua),
+            Browser::Other
+        );
         assert_eq!(
             umt_extract_browser_from_user_agent(unknown_ua),
             Browser::Other
         );
-        assert_eq!(umt_extract_browser_from_user_agent(empty_ua), Browser::Other);
+        assert_eq!(
+            umt_extract_browser_from_user_agent(empty_ua),
+            Browser::Other
+        );
     }
 }

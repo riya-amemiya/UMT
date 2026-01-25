@@ -112,50 +112,35 @@ mod tests {
         let result = umt_decode_base58("119Ajdvzr").unwrap();
         assert_eq!(result[0], 0);
         assert_eq!(result[1], 0);
-        assert_eq!(
-            String::from_utf8(result[2..].to_vec()).unwrap(),
-            "Hello"
-        );
+        assert_eq!(String::from_utf8(result[2..].to_vec()).unwrap(), "Hello");
     }
 
     #[test]
     fn test_invalid_character_zero() {
         let result = umt_decode_base58("9Ajdvz0");
         assert!(result.is_err());
-        assert_eq!(
-            result.unwrap_err().message,
-            "Invalid base58 character: 0"
-        );
+        assert_eq!(result.unwrap_err().message, "Invalid base58 character: 0");
     }
 
     #[test]
     fn test_invalid_character_uppercase_o() {
         let result = umt_decode_base58("9AjdvzO");
         assert!(result.is_err());
-        assert_eq!(
-            result.unwrap_err().message,
-            "Invalid base58 character: O"
-        );
+        assert_eq!(result.unwrap_err().message, "Invalid base58 character: O");
     }
 
     #[test]
     fn test_invalid_character_uppercase_i() {
         let result = umt_decode_base58("9AjdvzI");
         assert!(result.is_err());
-        assert_eq!(
-            result.unwrap_err().message,
-            "Invalid base58 character: I"
-        );
+        assert_eq!(result.unwrap_err().message, "Invalid base58 character: I");
     }
 
     #[test]
     fn test_invalid_character_lowercase_l() {
         let result = umt_decode_base58("9Ajdvzl");
         assert!(result.is_err());
-        assert_eq!(
-            result.unwrap_err().message,
-            "Invalid base58 character: l"
-        );
+        assert_eq!(result.unwrap_err().message, "Invalid base58 character: l");
     }
 
     #[test]

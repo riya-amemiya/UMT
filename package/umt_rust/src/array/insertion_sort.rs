@@ -74,13 +74,19 @@ mod tests {
     #[test]
     fn test_insertion_sort_basic() {
         let arr = vec![4, 2, 7, 1, 3];
-        assert_eq!(umt_insertion_sort(&arr, None, None, None), vec![1, 2, 3, 4, 7]);
+        assert_eq!(
+            umt_insertion_sort(&arr, None, None, None),
+            vec![1, 2, 3, 4, 7]
+        );
     }
 
     #[test]
     fn test_insertion_sort_empty() {
         let arr: Vec<i32> = vec![];
-        assert_eq!(umt_insertion_sort(&arr, None, None, None), Vec::<i32>::new());
+        assert_eq!(
+            umt_insertion_sort(&arr, None, None, None),
+            Vec::<i32>::new()
+        );
     }
 
     #[test]
@@ -92,13 +98,19 @@ mod tests {
     #[test]
     fn test_insertion_sort_already_sorted() {
         let arr = vec![1, 2, 3, 4, 5];
-        assert_eq!(umt_insertion_sort(&arr, None, None, None), vec![1, 2, 3, 4, 5]);
+        assert_eq!(
+            umt_insertion_sort(&arr, None, None, None),
+            vec![1, 2, 3, 4, 5]
+        );
     }
 
     #[test]
     fn test_insertion_sort_reverse() {
         let arr = vec![5, 4, 3, 2, 1];
-        assert_eq!(umt_insertion_sort(&arr, None, None, None), vec![1, 2, 3, 4, 5]);
+        assert_eq!(
+            umt_insertion_sort(&arr, None, None, None),
+            vec![1, 2, 3, 4, 5]
+        );
     }
 
     #[test]
@@ -116,7 +128,13 @@ mod tests {
         let arr = vec![1, 2, 3, 4, 5];
         // Sort in descending order
         let descending = |a: &i32, b: &i32| -> i32 {
-            if a < b { 1 } else if a > b { -1 } else { 0 }
+            if a < b {
+                1
+            } else if a > b {
+                -1
+            } else {
+                0
+            }
         };
         assert_eq!(
             umt_insertion_sort(&arr, Some(descending), None, None),

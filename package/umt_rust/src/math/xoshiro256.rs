@@ -1,4 +1,4 @@
-use super::{umt_bitwise, RotateDirection};
+use super::{RotateDirection, umt_bitwise};
 
 /// Xoshiro256** state type.
 pub type Xoshiro256State = [u32; 4];

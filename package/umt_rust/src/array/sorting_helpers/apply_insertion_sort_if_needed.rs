@@ -23,7 +23,7 @@ pub fn apply_insertion_sort_if_needed<T, F>(
 where
     F: Fn(&T, &T) -> i32,
 {
-    if high >= low && high - low + 1 <= insertion_sort_threshold {
+    if high >= low && high - low < insertion_sort_threshold {
         insertion_sort_range(array, compare, low, high);
         return true;
     }

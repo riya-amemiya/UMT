@@ -1,4 +1,4 @@
-use super::now_simple::{umt_new_date, umt_now_simple, DateTime};
+use super::now_simple::{DateTime, umt_new_date, umt_now_simple};
 
 /// Properties for specifying a date.
 #[derive(Debug, Clone, Default)]

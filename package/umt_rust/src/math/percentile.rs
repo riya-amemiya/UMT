@@ -24,7 +24,7 @@ pub fn umt_percentile(array: &[f64], percentile: f64) -> Result<f64, &'static st
         return Ok(f64::NAN);
     }
 
-    if percentile < 0.0 || percentile > 100.0 {
+    if !(0.0..=100.0).contains(&percentile) {
         return Err("Percentile must be between 0 and 100");
     }
 
@@ -52,27 +52,42 @@ mod tests {
 
     #[test]
     fn test_percentile_median() {
-        assert_eq!(umt_percentile(&[1.0, 2.0, 3.0, 4.0, 5.0], 50.0).unwrap(), 3.0);
+        assert_eq!(
+            umt_percentile(&[1.0, 2.0, 3.0, 4.0, 5.0], 50.0).unwrap(),
+            3.0
+        );
     }
 
     #[test]
     fn test_percentile_25() {
-        assert_eq!(umt_percentile(&[1.0, 2.0, 3.0, 4.0, 5.0], 25.0).unwrap(), 2.0);
+        assert_eq!(
+            umt_percentile(&[1.0, 2.0, 3.0, 4.0, 5.0], 25.0).unwrap(),
+            2.0
+        );
     }
 
     #[test]
     fn test_percentile_75() {
-        assert_eq!(umt_percentile(&[1.0, 2.0, 3.0, 4.0, 5.0], 75.0).unwrap(), 4.0);
+        assert_eq!(
+            umt_percentile(&[1.0, 2.0, 3.0, 4.0, 5.0], 75.0).unwrap(),
+            4.0
+        );
     }
 
     #[test]
     fn test_percentile_0() {
-        assert_eq!(umt_percentile(&[1.0, 2.0, 3.0, 4.0, 5.0], 0.0).unwrap(), 1.0);
+        assert_eq!(
+            umt_percentile(&[1.0, 2.0, 3.0, 4.0, 5.0], 0.0).unwrap(),
+            1.0
+        );
     }
 
     #[test]
     fn test_percentile_100() {
-        assert_eq!(umt_percentile(&[1.0, 2.0, 3.0, 4.0, 5.0], 100.0).unwrap(), 5.0);
+        assert_eq!(
+            umt_percentile(&[1.0, 2.0, 3.0, 4.0, 5.0], 100.0).unwrap(),
+            5.0
+        );
     }
 
     #[test]

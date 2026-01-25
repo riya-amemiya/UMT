@@ -1,4 +1,4 @@
-use super::decode_base32::{umt_decode_base32, Base32Error};
+use super::decode_base32::{Base32Error, umt_decode_base32};
 
 /// Decodes a Base32 string to a UTF-8 string.
 ///
@@ -68,16 +68,12 @@ mod tests {
     fn test_invalid_character() {
         let result = umt_decode_base32_to_string("JBSWY3D@");
         assert!(result.is_err());
-        assert_eq!(
-            result.unwrap_err().message,
-            "Invalid base32 character: @"
-        );
+        assert_eq!(result.unwrap_err().message, "Invalid base32 character: @");
     }
 
     #[test]
     fn test_decode_longer_text() {
-        let encoded =
-            "KRUGKIDROVUWG2ZAMJZG653OEBTG66BANJ2W24DTEBXXMZLSEB2GQZJANRQXU6JAMRXWO===";
+        let encoded = "KRUGKIDROVUWG2ZAMJZG653OEBTG66BANJ2W24DTEBXXMZLSEB2GQZJANRQXU6JAMRXWO===";
         assert_eq!(
             umt_decode_base32_to_string(encoded).unwrap(),
             "The quick brown fox jumps over the lazy dog"

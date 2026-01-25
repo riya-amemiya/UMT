@@ -1,4 +1,6 @@
-use umt_rust::function::{umt_curry0, umt_curry1, umt_curry2, umt_curry3, umt_curry4, umt_curry5, umt_curry6};
+use umt_rust::function::{
+    umt_curry0, umt_curry1, umt_curry2, umt_curry3, umt_curry4, umt_curry5, umt_curry6,
+};
 
 #[test]
 fn test_curry_function_with_0_arguments() {
@@ -178,11 +180,7 @@ fn test_curry_with_boolean_result() {
 #[test]
 fn test_curry_with_optional_result() {
     let safe_divide = |a: f64, b: f64| {
-        if b == 0.0 {
-            None
-        } else {
-            Some(a / b)
-        }
+        if b == 0.0 { None } else { Some(a / b) }
     };
 
     let curried = umt_curry2(safe_divide);

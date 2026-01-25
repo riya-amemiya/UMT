@@ -32,10 +32,7 @@ pub fn umt_addition(numbers: &[f64]) -> f64 {
         .collect();
     let z = 10_f64.powi(umt_max(&decimal_lengths) as i32);
 
-    let sum: f64 = numbers
-        .iter()
-        .map(|&n| umt_multiplication(&[n, z]))
-        .sum();
+    let sum: f64 = numbers.iter().map(|&n| umt_multiplication(&[n, z])).sum();
 
     sum / z
 }

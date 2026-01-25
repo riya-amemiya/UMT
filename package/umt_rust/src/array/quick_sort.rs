@@ -54,9 +54,7 @@ where
 
         array.swap(left, right);
         left += 1;
-        if right > 0 {
-            right -= 1;
-        }
+        right = right.saturating_sub(1);
     }
 }
 
@@ -67,8 +65,7 @@ fn sort_impl<T, F>(
     high_init: usize,
     compare: &F,
     insertion_sort_threshold: usize,
-)
-where
+) where
     T: Clone,
     F: Fn(&T, &T) -> i32,
 {
@@ -88,7 +85,13 @@ where
             }
             low = pivot_index + 1;
         } else {
-            sort_impl(array, pivot_index + 1, high, compare, insertion_sort_threshold);
+            sort_impl(
+                array,
+                pivot_index + 1,
+                high,
+                compare,
+                insertion_sort_threshold,
+            );
             if pivot_index == 0 {
                 break;
             }
@@ -192,7 +195,10 @@ mod tests {
     #[test]
     fn test_quick_sort_empty() {
         let arr: Vec<i32> = vec![];
-        assert_eq!(umt_quick_sort(&arr, None, None, None, None), Vec::<i32>::new());
+        assert_eq!(
+            umt_quick_sort(&arr, None, None, None, None),
+            Vec::<i32>::new()
+        );
     }
 
     #[test]
@@ -204,13 +210,19 @@ mod tests {
     #[test]
     fn test_quick_sort_already_sorted() {
         let arr = vec![1, 2, 3, 4, 5];
-        assert_eq!(umt_quick_sort(&arr, None, None, None, None), vec![1, 2, 3, 4, 5]);
+        assert_eq!(
+            umt_quick_sort(&arr, None, None, None, None),
+            vec![1, 2, 3, 4, 5]
+        );
     }
 
     #[test]
     fn test_quick_sort_reverse() {
         let arr = vec![5, 4, 3, 2, 1];
-        assert_eq!(umt_quick_sort(&arr, None, None, None, None), vec![1, 2, 3, 4, 5]);
+        assert_eq!(
+            umt_quick_sort(&arr, None, None, None, None),
+            vec![1, 2, 3, 4, 5]
+        );
     }
 
     #[test]
@@ -218,7 +230,13 @@ mod tests {
         let arr = vec![1, 2, 3, 4, 5];
         // Sort in descending order
         let descending = |a: &i32, b: &i32| -> i32 {
-            if a < b { 1 } else if a > b { -1 } else { 0 }
+            if a < b {
+                1
+            } else if a > b {
+                -1
+            } else {
+                0
+            }
         };
         assert_eq!(
             umt_quick_sort(&arr, Some(descending), None, None, None),

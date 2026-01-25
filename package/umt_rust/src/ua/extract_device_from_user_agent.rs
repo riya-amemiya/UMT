@@ -94,10 +94,8 @@ mod tests {
 
     #[test]
     fn test_detect_bots_and_crawlers() {
-        let googlebot =
-            "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)";
-        let bingbot =
-            "Mozilla/5.0 (compatible; bingbot/2.0; +http://www.bing.com/bingbot.htm)";
+        let googlebot = "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)";
+        let bingbot = "Mozilla/5.0 (compatible; bingbot/2.0; +http://www.bing.com/bingbot.htm)";
         let crawler = "Mozilla/5.0 (compatible; YandexBot/3.0; +http://yandex.com/bots)";
 
         assert_eq!(umt_extract_device_from_user_agent(googlebot), Device::Bot);
@@ -117,8 +115,14 @@ mod tests {
             umt_extract_device_from_user_agent(android_mobile),
             Device::Mobile
         );
-        assert_eq!(umt_extract_device_from_user_agent(blackberry), Device::Mobile);
-        assert_eq!(umt_extract_device_from_user_agent(opera_mini), Device::Mobile);
+        assert_eq!(
+            umt_extract_device_from_user_agent(blackberry),
+            Device::Mobile
+        );
+        assert_eq!(
+            umt_extract_device_from_user_agent(opera_mini),
+            Device::Mobile
+        );
     }
 
     #[test]

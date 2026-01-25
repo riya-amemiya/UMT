@@ -51,7 +51,7 @@ pub fn umt_unique_f64(array: &[f64]) -> Vec<f64> {
                 result.push(item);
                 has_nan = true;
             }
-        } else if !result.iter().any(|&x| x == item) {
+        } else if !result.contains(&item) {
             result.push(item);
         }
     }
@@ -82,10 +82,7 @@ mod tests {
 
     #[test]
     fn test_unique_strings() {
-        assert_eq!(
-            umt_unique(&["a", "b", "a", "c", "b"]),
-            vec!["a", "b", "c"]
-        );
+        assert_eq!(umt_unique(&["a", "b", "a", "c", "b"]), vec!["a", "b", "c"]);
     }
 
     #[test]

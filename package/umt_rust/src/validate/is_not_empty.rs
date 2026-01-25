@@ -42,7 +42,7 @@ pub fn umt_is_not_empty<K, V>(object: &HashMap<K, V>) -> bool {
 /// assert!(umt_is_not_empty_vec(&vec![1, 2, 3]));
 /// ```
 #[inline]
-pub fn umt_is_not_empty_vec<T>(vec: &Vec<T>) -> bool {
+pub fn umt_is_not_empty_vec<T>(vec: &[T]) -> bool {
     !vec.is_empty()
 }
 

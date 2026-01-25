@@ -106,10 +106,7 @@ mod tests {
 
     #[test]
     fn test_get_arrays_diff_single_array() {
-        assert_eq!(
-            umt_get_arrays_diff(&[&[1, 2, 3][..]]),
-            vec![1, 2, 3]
-        );
+        assert_eq!(umt_get_arrays_diff(&[&[1, 2, 3][..]]), vec![1, 2, 3]);
     }
 
     #[test]
@@ -136,10 +133,7 @@ mod tests {
 
     #[test]
     fn test_get_arrays_diff_two_convenience() {
-        assert_eq!(
-            umt_get_arrays_diff_two(&[1, 2, 3], &[2, 3, 4]),
-            vec![1, 4]
-        );
+        assert_eq!(umt_get_arrays_diff_two(&[1, 2, 3], &[2, 3, 4]), vec![1, 4]);
     }
 
     #[test]

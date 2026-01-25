@@ -4,7 +4,7 @@
 use regex::Regex;
 
 use super::core::{ValidateCoreReturnType, ValidateReturnType};
-use super::{umt_is_number_str, umt_parse_email, ParseEmailLevel, ParseEmailOptions};
+use super::{ParseEmailLevel, ParseEmailOptions, umt_is_number_str, umt_parse_email};
 
 /// Validates a string value with optional validation rules
 ///
@@ -206,7 +206,9 @@ mod tests {
     #[test]
     fn test_uuid() {
         let validator = umt_uuid(None, None);
-        assert!((validator.validate)(&"550e8400-e29b-41d4-a716-446655440000".to_string()));
+        assert!((validator.validate)(
+            &"550e8400-e29b-41d4-a716-446655440000".to_string()
+        ));
         assert!(!(validator.validate)(&"not-a-uuid".to_string()));
     }
 

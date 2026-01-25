@@ -112,7 +112,10 @@ mod tests {
         let date = umt_new_date_int(2021, 6, 15, Some(14), Some(30), Some(45), Some(500));
         assert!(date.is_some());
         let dt = date.unwrap();
-        assert_eq!(dt.format("%Y-%m-%d %H:%M:%S").to_string(), "2021-06-15 14:30:45");
+        assert_eq!(
+            dt.format("%Y-%m-%d %H:%M:%S").to_string(),
+            "2021-06-15 14:30:45"
+        );
     }
 
     #[test]
@@ -137,7 +140,14 @@ mod tests {
 
     #[test]
     fn test_new_date_string_with_time() {
-        let date = umt_new_date_string("2021-06-15", Some("14"), Some("30"), Some("45"), Some("500"), None);
+        let date = umt_new_date_string(
+            "2021-06-15",
+            Some("14"),
+            Some("30"),
+            Some("45"),
+            Some("500"),
+            None,
+        );
         assert!(date.is_some());
         let dt = date.unwrap();
         assert_eq!(dt.format("%H:%M:%S").to_string(), "14:30:45");

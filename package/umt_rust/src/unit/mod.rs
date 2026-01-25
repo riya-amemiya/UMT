@@ -24,5 +24,5 @@
 
 pub mod unit_converter;
 
-pub use unit_converter::umt_unit_converter;
 pub use unit_converter::UmtUnitConverter;
+pub use unit_converter::umt_unit_converter;

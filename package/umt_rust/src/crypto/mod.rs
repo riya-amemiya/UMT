@@ -18,9 +18,9 @@ mod decode_base58_to_string;
 mod encode_base32;
 mod encode_base58;
 
-pub use decode_base32::{umt_decode_base32, Base32Error};
+pub use decode_base32::{Base32Error, umt_decode_base32};
 pub use decode_base32_to_string::umt_decode_base32_to_string;
-pub use decode_base58::{umt_decode_base58, Base58Error};
+pub use decode_base58::{Base58Error, umt_decode_base58};
 pub use decode_base58_to_string::umt_decode_base58_to_string;
 pub use encode_base32::umt_encode_base32;
 pub use encode_base58::umt_encode_base58;

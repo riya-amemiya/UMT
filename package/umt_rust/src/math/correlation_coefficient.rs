@@ -71,28 +71,20 @@ mod tests {
 
     #[test]
     fn test_perfect_positive_correlation() {
-        let r = umt_correlation_coefficient(
-            &[1.0, 2.0, 3.0, 4.0, 5.0],
-            &[2.0, 4.0, 6.0, 8.0, 10.0],
-        );
+        let r =
+            umt_correlation_coefficient(&[1.0, 2.0, 3.0, 4.0, 5.0], &[2.0, 4.0, 6.0, 8.0, 10.0]);
         assert!((r - 1.0).abs() < 1e-10);
     }
 
     #[test]
     fn test_perfect_negative_correlation() {
-        let r = umt_correlation_coefficient(
-            &[1.0, 2.0, 3.0, 4.0, 5.0],
-            &[5.0, 4.0, 3.0, 2.0, 1.0],
-        );
+        let r = umt_correlation_coefficient(&[1.0, 2.0, 3.0, 4.0, 5.0], &[5.0, 4.0, 3.0, 2.0, 1.0]);
         assert!((r - (-1.0)).abs() < 1e-10);
     }
 
     #[test]
     fn test_no_correlation() {
-        let r = umt_correlation_coefficient(
-            &[1.0, 2.0, 3.0, 4.0, 5.0],
-            &[1.0, 1.0, 1.0, 1.0, 1.0],
-        );
+        let r = umt_correlation_coefficient(&[1.0, 2.0, 3.0, 4.0, 5.0], &[1.0, 1.0, 1.0, 1.0, 1.0]);
         assert!(r.is_nan());
     }
 

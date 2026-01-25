@@ -89,8 +89,14 @@ pub fn umt_parse_email(email: &str, options: Option<ParseEmailOptions>) -> Parse
         Some(caps) => ParseEmailResult {
             valid: true,
             parts: Some(EmailParts {
-                local: caps.name("local").map(|m| m.as_str().to_string()).unwrap_or_default(),
-                domain: caps.name("domain").map(|m| m.as_str().to_string()).unwrap_or_default(),
+                local: caps
+                    .name("local")
+                    .map(|m| m.as_str().to_string())
+                    .unwrap_or_default(),
+                domain: caps
+                    .name("domain")
+                    .map(|m| m.as_str().to_string())
+                    .unwrap_or_default(),
             }),
         },
         None => ParseEmailResult {
@@ -142,7 +148,9 @@ mod tests {
 
     #[test]
     fn test_parse_email_rfc2822() {
-        let opts = ParseEmailOptions { level: ParseEmailLevel::Rfc2822 };
+        let opts = ParseEmailOptions {
+            level: ParseEmailLevel::Rfc2822,
+        };
         let result = umt_parse_email("user@example.com", Some(opts));
         assert!(result.valid);
     }

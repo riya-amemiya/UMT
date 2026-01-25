@@ -3,9 +3,10 @@ use std::fmt;
 
 /// A dynamic value type for representing JSON-like structures.
 /// This allows working with heterogeneous data structures similar to JavaScript objects.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Default)]
 pub enum Value {
     /// Null value
+    #[default]
     Null,
     /// Boolean value
     Bool(bool),
@@ -54,12 +55,6 @@ impl Value {
             Value::Object(map) => Some(map),
             _ => None,
         }
-    }
-}
-
-impl Default for Value {
-    fn default() -> Self {
-        Value::Null
     }
 }
 

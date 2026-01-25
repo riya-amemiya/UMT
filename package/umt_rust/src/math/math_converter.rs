@@ -25,17 +25,16 @@ use regex::Regex;
 /// ```
 pub fn umt_math_converter(equation: &str) -> String {
     let mut converted_equation = equation.to_string();
+    let re = Regex::new(r"\d+\.?(\d+)?(\*|\^)\d+\.?(\d+)?").unwrap();
 
     loop {
-        let re = Regex::new(r"\d+\.?(\d+)?(\*|\^)\d+\.?(\d+)?").unwrap();
-
         let capture = match re.find(&converted_equation) {
             Some(m) => m.as_str().to_string(),
             None => return converted_equation,
         };
 
         // Split by * or ^
-        let parts: Vec<&str> = capture.split(|c| c == '*' || c == '^').collect();
+        let parts: Vec<&str> = capture.split(['*', '^']).collect();
         if parts.len() != 2 {
             return converted_equation;
         }
@@ -59,11 +58,7 @@ pub fn umt_math_converter(equation: &str) -> String {
                 return converted_equation;
             }
 
-            converted_equation = format!(
-                "{}*{}+",
-                operand1_val + remainder,
-                primary
-            );
+            converted_equation = format!("{}*{}+", operand1_val + remainder, primary);
 
             if remainder <= 100 {
                 converted_equation += &format!("{}*{}", remainder, remainder);

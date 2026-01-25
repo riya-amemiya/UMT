@@ -2,8 +2,7 @@ use regex::Regex;
 use std::sync::LazyLock;
 
 static ENTITY_REGEX: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"&(?:amp|lt|gt|quot|#39|#x27|#x2F|#x60|#x3D);|&#(\d+);|&#x([0-9a-fA-F]+);")
-        .unwrap()
+    Regex::new(r"&(?:amp|lt|gt|quot|#39|#x27|#x2F|#x60|#x3D);|&#(\d+);|&#x([0-9a-fA-F]+);").unwrap()
 });
 
 /// Unescapes HTML entities in a string
@@ -28,20 +27,20 @@ pub fn umt_unescape_html(s: &str) -> String {
 
             // Check for decimal numeric entity &#123;
             if let Some(dec) = caps.get(1) {
-                if let Ok(code_point) = dec.as_str().parse::<u32>() {
-                    if let Some(c) = char::from_u32(code_point) {
-                        return c.to_string();
-                    }
+                if let Ok(code_point) = dec.as_str().parse::<u32>()
+                    && let Some(c) = char::from_u32(code_point)
+                {
+                    return c.to_string();
                 }
                 return full_match.to_string();
             }
 
             // Check for hex numeric entity &#x1F;
             if let Some(hex) = caps.get(2) {
-                if let Ok(code_point) = u32::from_str_radix(hex.as_str(), 16) {
-                    if let Some(c) = char::from_u32(code_point) {
-                        return c.to_string();
-                    }
+                if let Ok(code_point) = u32::from_str_radix(hex.as_str(), 16)
+                    && let Some(c) = char::from_u32(code_point)
+                {
+                    return c.to_string();
                 }
                 return full_match.to_string();
             }

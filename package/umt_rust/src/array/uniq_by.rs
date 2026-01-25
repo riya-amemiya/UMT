@@ -74,9 +74,18 @@ mod tests {
         }
 
         let people = vec![
-            Person { name: "Alice".to_string(), age: 30 },
-            Person { name: "Bob".to_string(), age: 30 },
-            Person { name: "Charlie".to_string(), age: 25 },
+            Person {
+                name: "Alice".to_string(),
+                age: 30,
+            },
+            Person {
+                name: "Bob".to_string(),
+                age: 30,
+            },
+            Person {
+                name: "Charlie".to_string(),
+                age: 25,
+            },
         ];
 
         let result = umt_uniq_by(&people, |p| p.age);

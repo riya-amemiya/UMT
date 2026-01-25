@@ -90,8 +90,7 @@ fn sort_impl<T, F>(
     high: usize,
     compare_function: &F,
     insertion_sort_threshold: usize,
-)
-where
+) where
     T: Clone,
     F: Fn(&T, &T) -> Ordering,
 {
@@ -110,13 +109,37 @@ where
     // Recursively sort the smaller partition first to limit stack depth
     if pivot_index > 0 && pivot_index - low < high - pivot_index {
         if pivot_index > 0 {
-            sort_impl(array, low, pivot_index - 1, compare_function, insertion_sort_threshold);
+            sort_impl(
+                array,
+                low,
+                pivot_index - 1,
+                compare_function,
+                insertion_sort_threshold,
+            );
         }
-        sort_impl(array, pivot_index + 1, high, compare_function, insertion_sort_threshold);
+        sort_impl(
+            array,
+            pivot_index + 1,
+            high,
+            compare_function,
+            insertion_sort_threshold,
+        );
     } else {
-        sort_impl(array, pivot_index + 1, high, compare_function, insertion_sort_threshold);
+        sort_impl(
+            array,
+            pivot_index + 1,
+            high,
+            compare_function,
+            insertion_sort_threshold,
+        );
         if pivot_index > 0 {
-            sort_impl(array, low, pivot_index - 1, compare_function, insertion_sort_threshold);
+            sort_impl(
+                array,
+                low,
+                pivot_index - 1,
+                compare_function,
+                insertion_sort_threshold,
+            );
         }
     }
 }
@@ -299,7 +322,10 @@ mod tests {
     #[test]
     fn test_returns_empty_array_when_sorting_empty_array() {
         let arr: Vec<i32> = vec![];
-        assert_eq!(umt_quick_sort_simple::<i32, fn(&i32, &i32) -> Ordering>(&arr, None, None, None), Vec::<i32>::new());
+        assert_eq!(
+            umt_quick_sort_simple::<i32, fn(&i32, &i32) -> Ordering>(&arr, None, None, None),
+            Vec::<i32>::new()
+        );
     }
 
     #[test]
@@ -389,7 +415,8 @@ mod tests {
     #[test]
     fn test_sort_string_array() {
         let arr = vec!["banana", "apple", "cherry"];
-        let result = umt_quick_sort_simple::<&str, fn(&&str, &&str) -> Ordering>(&arr, None, None, None);
+        let result =
+            umt_quick_sort_simple::<&str, fn(&&str, &&str) -> Ordering>(&arr, None, None, None);
         assert_eq!(result, vec!["apple", "banana", "cherry"]);
     }
 }

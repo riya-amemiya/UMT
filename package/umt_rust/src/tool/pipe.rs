@@ -298,9 +298,8 @@ impl<T: Clone> Pipe<T> {
             let result = umt_safe_execute_mut(move || value);
             Pipe::new(result)
         } else {
-            let result = umt_safe_execute_mut(|| -> T {
-                panic!("Value did not match filter predicate")
-            });
+            let result =
+                umt_safe_execute_mut(|| -> T { panic!("Value did not match filter predicate") });
             Pipe::new(result)
         }
     }
@@ -368,9 +367,7 @@ mod tests {
 
     #[test]
     fn test_transforms_value_with_map() {
-        let result = umt_pipe(1)
-            .map(|x| x + 1)
-            .end();
+        let result = umt_pipe(1).map(|x| x + 1).end();
         assert_eq!(result, 2);
     }
 
@@ -386,17 +383,13 @@ mod tests {
 
     #[test]
     fn test_applies_transformation_when_condition_is_true_in_when() {
-        let result = umt_pipe(5)
-            .when(|x| *x > 3, |x| x * 2)
-            .end();
+        let result = umt_pipe(5).when(|x| *x > 3, |x| x * 2).end();
         assert_eq!(result, 10);
     }
 
     #[test]
     fn test_skips_transformation_when_condition_is_false_in_when() {
-        let result = umt_pipe(2)
-            .when(|x| *x > 3, |x| x * 2)
-            .end();
+        let result = umt_pipe(2).when(|x| *x > 3, |x| x * 2).end();
         assert_eq!(result, 2);
     }
 
@@ -440,35 +433,57 @@ mod tests {
             })
             .end();
 
-        assert_eq!(post, Post {
-            id: 1,
-            title: "First Post".to_string(),
-            content: "Hello, world!".to_string(),
-            author: User {
+        assert_eq!(
+            post,
+            Post {
                 id: 1,
-                name: "John Doe".to_string(),
-                age: 30,
-            },
-        });
+                title: "First Post".to_string(),
+                content: "Hello, world!".to_string(),
+                author: User {
+                    id: 1,
+                    name: "John Doe".to_string(),
+                    age: 30,
+                },
+            }
+        );
     }
 
     #[test]
     fn test_correctly_infers_nested_generic_types() {
         let users = umt_pipe(Vec::<User>::new())
             .map(|mut users| {
-                users.push(User { id: 1, name: "John Doe".to_string(), age: 30 });
+                users.push(User {
+                    id: 1,
+                    name: "John Doe".to_string(),
+                    age: 30,
+                });
                 users
             })
             .map(|mut users| {
-                users.push(User { id: 2, name: "Jane Smith".to_string(), age: 25 });
+                users.push(User {
+                    id: 2,
+                    name: "Jane Smith".to_string(),
+                    age: 25,
+                });
                 users
             })
             .end();
 
-        assert_eq!(users, vec![
-            User { id: 1, name: "John Doe".to_string(), age: 30 },
-            User { id: 2, name: "Jane Smith".to_string(), age: 25 },
-        ]);
+        assert_eq!(
+            users,
+            vec![
+                User {
+                    id: 1,
+                    name: "John Doe".to_string(),
+                    age: 30
+                },
+                User {
+                    id: 2,
+                    name: "Jane Smith".to_string(),
+                    age: 25
+                },
+            ]
+        );
     }
 
     #[test]
@@ -494,19 +509,13 @@ mod tests {
 
     #[test]
     fn test_processes_numeric_zero_correctly() {
-        let result = umt_pipe(0)
-            .map(|x| x + 1)
-            .map(|x| x * 2)
-            .end();
+        let result = umt_pipe(0).map(|x| x + 1).map(|x| x * 2).end();
         assert_eq!(result, 2);
     }
 
     #[test]
     fn test_processes_boolean_transformations_correctly() {
-        let result = umt_pipe(true)
-            .map(|x| !x)
-            .map(|x| x.to_string())
-            .end();
+        let result = umt_pipe(true).map(|x| !x).map(|x| x.to_string()).end();
         assert_eq!(result, "false");
     }
 
@@ -527,9 +536,15 @@ mod tests {
             items: Vec<String>,
         }
 
-        let initial = Data { count: 0, items: vec![] };
+        let initial = Data {
+            count: 0,
+            items: vec![],
+        };
         let result = umt_pipe(initial)
-            .map(|data| Data { count: data.count + 1, ..data })
+            .map(|data| Data {
+                count: data.count + 1,
+                ..data
+            })
             .map(|data| Data {
                 items: {
                     let mut items = data.items.clone();
@@ -540,10 +555,13 @@ mod tests {
             })
             .end();
 
-        assert_eq!(result, Data {
-            count: 1,
-            items: vec!["Item 1".to_string()],
-        });
+        assert_eq!(
+            result,
+            Data {
+                count: 1,
+                items: vec!["Item 1".to_string()],
+            }
+        );
     }
 
     #[test]
@@ -551,7 +569,11 @@ mod tests {
         let result = umt_pipe(123)
             .map(|x| x.to_string())
             .map(|x| x.chars().collect::<Vec<_>>())
-            .map(|arr| arr.into_iter().map(|c| c.to_digit(10).unwrap() as i32).collect::<Vec<_>>())
+            .map(|arr| {
+                arr.into_iter()
+                    .map(|c| c.to_digit(10).unwrap() as i32)
+                    .collect::<Vec<_>>()
+            })
             .end();
 
         assert_eq!(result, vec![1, 2, 3]);
@@ -579,19 +601,14 @@ mod tests {
 
         #[test]
         fn test_filters_and_narrows_type() {
-            let result = umt_pipe(42)
-                .filter_strict(is_positive)
-                .map(|x| x + 1)
-                .end();
+            let result = umt_pipe(42).filter_strict(is_positive).map(|x| x + 1).end();
             assert_eq!(result, 43);
         }
 
         #[test]
         #[should_panic(expected = "Value did not match filter predicate")]
         fn test_throws_error_when_filter_condition_is_not_met() {
-            umt_pipe(-5)
-                .filter_strict(is_positive)
-                .end();
+            umt_pipe(-5).filter_strict(is_positive).end();
         }
 
         #[test]

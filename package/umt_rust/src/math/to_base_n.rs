@@ -19,7 +19,7 @@
 /// assert_eq!(umt_to_base_n(255, 16), "ff"); // hexadecimal
 /// ```
 pub fn umt_to_base_n(value: i64, radix: u32) -> String {
-    if radix < 2 || radix > 36 {
+    if !(2..=36).contains(&radix) {
         return String::from("Invalid radix");
     }
 

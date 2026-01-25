@@ -116,7 +116,8 @@ mod tests {
     fn test_detect_macos_devices() {
         let macos_safari = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.1 Safari/605.1.15";
         let macos_chrome = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36";
-        let macos_firefox = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:88.0) Gecko/20100101 Firefox/88.0";
+        let macos_firefox =
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:88.0) Gecko/20100101 Firefox/88.0";
 
         assert_eq!(umt_extract_os_from_user_agent(macos_safari), Os::MacOs);
         assert_eq!(umt_extract_os_from_user_agent(macos_chrome), Os::MacOs);
@@ -127,8 +128,7 @@ mod tests {
     fn test_detect_windows_devices() {
         let win10_edge = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36 Edg/89.0.774.57";
         let win10_chrome = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36";
-        let win7_ie =
-            "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko";
+        let win7_ie = "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko";
         let win32_ua = "Mozilla/5.0 (Win32; x86) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36";
 
         assert_eq!(umt_extract_os_from_user_agent(win10_edge), Os::Windows);
@@ -140,8 +140,7 @@ mod tests {
     #[test]
     fn test_detect_linux_devices() {
         let ubuntu_chrome = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36";
-        let fedora_firefox =
-            "Mozilla/5.0 (X11; Linux x86_64; rv:88.0) Gecko/20100101 Firefox/88.0";
+        let fedora_firefox = "Mozilla/5.0 (X11; Linux x86_64; rv:88.0) Gecko/20100101 Firefox/88.0";
         let generic_linux = "Mozilla/5.0 (Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36";
 
         assert_eq!(umt_extract_os_from_user_agent(ubuntu_chrome), Os::Linux);

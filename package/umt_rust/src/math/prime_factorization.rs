@@ -70,8 +70,14 @@ mod tests {
         assert_eq!(
             result,
             vec![
-                PrimeFactor { number: 2, count: 2 },
-                PrimeFactor { number: 3, count: 1 }
+                PrimeFactor {
+                    number: 2,
+                    count: 2
+                },
+                PrimeFactor {
+                    number: 3,
+                    count: 1
+                }
             ]
         );
     }
@@ -79,13 +85,25 @@ mod tests {
     #[test]
     fn test_prime_factorization_prime() {
         let result = umt_prime_factorization(17);
-        assert_eq!(result, vec![PrimeFactor { number: 17, count: 1 }]);
+        assert_eq!(
+            result,
+            vec![PrimeFactor {
+                number: 17,
+                count: 1
+            }]
+        );
     }
 
     #[test]
     fn test_prime_factorization_power_of_2() {
         let result = umt_prime_factorization(16);
-        assert_eq!(result, vec![PrimeFactor { number: 2, count: 4 }]);
+        assert_eq!(
+            result,
+            vec![PrimeFactor {
+                number: 2,
+                count: 4
+            }]
+        );
     }
 
     #[test]
@@ -94,8 +112,14 @@ mod tests {
         assert_eq!(
             result,
             vec![
-                PrimeFactor { number: 2, count: 2 },
-                PrimeFactor { number: 5, count: 2 }
+                PrimeFactor {
+                    number: 2,
+                    count: 2
+                },
+                PrimeFactor {
+                    number: 5,
+                    count: 2
+                }
             ]
         );
     }

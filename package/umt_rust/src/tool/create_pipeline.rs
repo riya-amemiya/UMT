@@ -46,7 +46,9 @@ impl<T> Pipeline<T> {
     /// ```
     #[inline]
     pub fn new(initial_value: T) -> Self {
-        Pipeline { value: initial_value }
+        Pipeline {
+            value: initial_value,
+        }
     }
 
     /// Returns a reference to the stored value.
@@ -214,35 +216,57 @@ mod tests {
             })
             .into_value();
 
-        assert_eq!(post, Post {
-            id: 1,
-            title: "First Post".to_string(),
-            content: "Hello, world!".to_string(),
-            author: User {
+        assert_eq!(
+            post,
+            Post {
                 id: 1,
-                name: "John Doe".to_string(),
-                age: 30,
-            },
-        });
+                title: "First Post".to_string(),
+                content: "Hello, world!".to_string(),
+                author: User {
+                    id: 1,
+                    name: "John Doe".to_string(),
+                    age: 30,
+                },
+            }
+        );
     }
 
     #[test]
     fn test_correctly_infers_nested_generic_types() {
         let users = umt_create_pipeline(Vec::<User>::new())
             .transform(|mut users| {
-                users.push(User { id: 1, name: "John Doe".to_string(), age: 30 });
+                users.push(User {
+                    id: 1,
+                    name: "John Doe".to_string(),
+                    age: 30,
+                });
                 users
             })
             .transform(|mut users| {
-                users.push(User { id: 2, name: "Jane Smith".to_string(), age: 25 });
+                users.push(User {
+                    id: 2,
+                    name: "Jane Smith".to_string(),
+                    age: 25,
+                });
                 users
             })
             .into_value();
 
-        assert_eq!(users, vec![
-            User { id: 1, name: "John Doe".to_string(), age: 30 },
-            User { id: 2, name: "Jane Smith".to_string(), age: 25 },
-        ]);
+        assert_eq!(
+            users,
+            vec![
+                User {
+                    id: 1,
+                    name: "John Doe".to_string(),
+                    age: 30
+                },
+                User {
+                    id: 2,
+                    name: "Jane Smith".to_string(),
+                    age: 25
+                },
+            ]
+        );
     }
 
     #[test]
@@ -301,9 +325,15 @@ mod tests {
             items: Vec<String>,
         }
 
-        let initial = Data { count: 0, items: vec![] };
+        let initial = Data {
+            count: 0,
+            items: vec![],
+        };
         let result = umt_create_pipeline(initial)
-            .transform(|data| Data { count: data.count + 1, ..data })
+            .transform(|data| Data {
+                count: data.count + 1,
+                ..data
+            })
             .transform(|data| Data {
                 items: {
                     let mut items = data.items.clone();
@@ -314,10 +344,13 @@ mod tests {
             })
             .into_value();
 
-        assert_eq!(result, Data {
-            count: 1,
-            items: vec!["Item 1".to_string()],
-        });
+        assert_eq!(
+            result,
+            Data {
+                count: 1,
+                items: vec!["Item 1".to_string()],
+            }
+        );
     }
 
     #[test]
@@ -325,7 +358,11 @@ mod tests {
         let result = umt_create_pipeline(123)
             .transform(|x: i32| x.to_string())
             .transform(|x: String| x.chars().collect::<Vec<_>>())
-            .transform(|arr: Vec<char>| arr.into_iter().map(|c| c.to_digit(10).unwrap() as i32).collect::<Vec<_>>())
+            .transform(|arr: Vec<char>| {
+                arr.into_iter()
+                    .map(|c| c.to_digit(10).unwrap() as i32)
+                    .collect::<Vec<_>>()
+            })
             .into_value();
 
         assert_eq!(result, vec![1, 2, 3]);

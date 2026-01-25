@@ -56,7 +56,11 @@ use super::get_timezone_offset_string::{
 /// assert_eq!(umt_format(&date, "HH:mm", 0), "15:30");
 /// assert_eq!(umt_format(&date, "MM/DD/YYYY", 0), "04/04/2025");
 /// ```
-pub fn umt_format(date: &DateTime<Utc>, format_string: &str, timezone_offset_minutes: i32) -> String {
+pub fn umt_format(
+    date: &DateTime<Utc>,
+    format_string: &str,
+    timezone_offset_minutes: i32,
+) -> String {
     let hours = date.hour();
     let year_string = date.year().to_string();
     let month_string = date.month().to_string();
@@ -71,12 +75,22 @@ pub fn umt_format(date: &DateTime<Utc>, format_string: &str, timezone_offset_min
     let timezone_string = umt_get_timezone_offset_string(timezone_offset_minutes);
     let timezone_compact = umt_get_timezone_offset_string_compact(timezone_offset_minutes);
 
-    let hour_12 = if hours % 12 == 0 { 12 } else { hours % 12 };
+    let hour_12 = if hours.is_multiple_of(12) {
+        12
+    } else {
+        hours % 12
+    };
 
     // Build replacement map
     let replacements: Vec<(&str, String)> = vec![
         ("YYYY", format!("{:04}", date.year())),
-        ("YY", year_string.chars().skip(year_string.len().saturating_sub(2)).collect()),
+        (
+            "YY",
+            year_string
+                .chars()
+                .skip(year_string.len().saturating_sub(2))
+                .collect(),
+        ),
         ("MM", format!("{:02}", date.month())),
         ("M", month_string),
         ("DD", format!("{:02}", date.day())),
@@ -228,7 +242,10 @@ mod tests {
     #[test]
     fn test_format_escaped_text() {
         let date = Utc.with_ymd_and_hms(2025, 4, 4, 15, 30, 0).unwrap();
-        assert_eq!(umt_format(&date, "[Date:] YYYY-MM-DD", 0), "Date: 2025-04-04");
+        assert_eq!(
+            umt_format(&date, "[Date:] YYYY-MM-DD", 0),
+            "Date: 2025-04-04"
+        );
     }
 
     #[test]

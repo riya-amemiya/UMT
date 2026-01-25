@@ -124,10 +124,7 @@ mod tests {
 
     #[test]
     fn test_compact_strings() {
-        assert_eq!(
-            umt_compact(&["", "a", "", "b", "c"]),
-            vec!["a", "b", "c"]
-        );
+        assert_eq!(umt_compact(&["", "a", "", "b", "c"]), vec!["a", "b", "c"]);
     }
 
     #[test]

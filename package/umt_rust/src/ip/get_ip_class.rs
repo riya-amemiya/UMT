@@ -31,12 +31,12 @@ pub fn get_ip_class(ip: &str) -> &'static str {
 
     // Check each class range
     match first_octet {
-        0 => "",           // Reserved
-        1..=127 => "A",    // Class A
-        128..=191 => "B",  // Class B
-        192..=223 => "C",  // Class C
-        224..=239 => "D",  // Class D (Multicast)
-        240..=255 => "E",  // Class E (Reserved)
+        0 => "",          // Reserved
+        1..=127 => "A",   // Class A
+        128..=191 => "B", // Class B
+        192..=223 => "C", // Class C
+        224..=239 => "D", // Class D (Multicast)
+        240..=255 => "E", // Class E (Reserved)
     }
 }
 

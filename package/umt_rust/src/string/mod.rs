@@ -34,7 +34,7 @@ pub use camel_case::umt_camel_case;
 pub use delete_spaces::umt_delete_spaces;
 pub use escape_html::umt_escape_html;
 pub use from_base64::umt_from_base64;
-pub use fuzzy_search::{umt_fuzzy_search, umt_fuzzy_search_default, FuzzyMatch};
+pub use fuzzy_search::{FuzzyMatch, umt_fuzzy_search, umt_fuzzy_search_default};
 pub use has_no_letters::umt_has_no_letters;
 pub use kebab_case::umt_kebab_case;
 pub use levenshtein_distance::umt_levenshtein_distance;

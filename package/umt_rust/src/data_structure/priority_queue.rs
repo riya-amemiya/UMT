@@ -228,8 +228,7 @@ impl<T: Clone> PriorityQueue<T> {
     /// ```
     pub fn enqueue_back(&mut self, value: T) {
         let new_priority = self.min_priority - 1.0;
-        self.heap
-            .push(PriorityQueueItem::new(value, new_priority));
+        self.heap.push(PriorityQueueItem::new(value, new_priority));
         self.min_priority = new_priority;
         self.heapify_up(self.heap.len() - 1);
     }

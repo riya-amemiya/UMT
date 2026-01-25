@@ -52,9 +52,7 @@ pub fn umt_generate_number_array(
             .collect()
     } else {
         let step = (actual_max - actual_min) / (length - 1) as f64;
-        (0..length)
-            .map(|i| actual_min + i as f64 * step)
-            .collect()
+        (0..length).map(|i| actual_min + i as f64 * step).collect()
     }
 }
 

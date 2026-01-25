@@ -70,6 +70,7 @@ impl TimeUnit {
     /// # Returns
     ///
     /// `Some(TimeUnit)` if the string is a valid time unit, `None` otherwise.
+    #[allow(clippy::should_implement_trait)]
     pub fn from_str(s: &str) -> Option<TimeUnit> {
         match s {
             "milliseconds" | "ms" => Some(TimeUnit::Milliseconds),
@@ -130,7 +131,10 @@ mod tests {
 
     #[test]
     fn test_time_unit_from_str() {
-        assert_eq!(TimeUnit::from_str("milliseconds"), Some(TimeUnit::Milliseconds));
+        assert_eq!(
+            TimeUnit::from_str("milliseconds"),
+            Some(TimeUnit::Milliseconds)
+        );
         assert_eq!(TimeUnit::from_str("ms"), Some(TimeUnit::Milliseconds));
         assert_eq!(TimeUnit::from_str("seconds"), Some(TimeUnit::Seconds));
         assert_eq!(TimeUnit::from_str("s"), Some(TimeUnit::Seconds));
@@ -247,7 +251,10 @@ mod tests {
 
     #[test]
     fn test_normalize_invalid_unit() {
-        assert_eq!(umt_normalize_time_unit("invalid", NormalizeFormat::Long), None);
+        assert_eq!(
+            umt_normalize_time_unit("invalid", NormalizeFormat::Long),
+            None
+        );
         assert_eq!(umt_normalize_time_unit("", NormalizeFormat::Short), None);
     }
 }

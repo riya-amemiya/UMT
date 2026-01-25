@@ -41,8 +41,8 @@ pub fn umt_uuidv7() -> String {
     let mut bytes = [0u8; 16];
 
     // Timestamp (48 bits)
-    for i in 0..6 {
-        bytes[i] = ((unix_ts_ms >> ((5 - i) * 8)) & 0xff) as u8;
+    for (i, byte) in bytes.iter_mut().enumerate().take(6) {
+        *byte = ((unix_ts_ms >> ((5 - i) * 8)) & 0xff) as u8;
     }
 
     // Version (4 bits) + rand_a (12 bits)
@@ -97,7 +97,12 @@ mod tests {
     fn test_uuidv7_variant() {
         let id = umt_uuidv7();
         let variant_char = id.chars().nth(19).unwrap();
-        assert!(variant_char == '8' || variant_char == '9' || variant_char == 'a' || variant_char == 'b');
+        assert!(
+            variant_char == '8'
+                || variant_char == '9'
+                || variant_char == 'a'
+                || variant_char == 'b'
+        );
     }
 
     #[test]

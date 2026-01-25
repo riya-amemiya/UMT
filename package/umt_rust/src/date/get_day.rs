@@ -3,7 +3,7 @@
 //! This module provides a function to convert a day number to a localized day name.
 
 /// Supported languages for day names.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub enum DayLanguage {
     /// German
     De,
@@ -12,15 +12,10 @@ pub enum DayLanguage {
     /// English
     En,
     /// Japanese (default)
+    #[default]
     Ja,
     /// French
     Fr,
-}
-
-impl Default for DayLanguage {
-    fn default() -> Self {
-        DayLanguage::Ja
-    }
 }
 
 const DAYS_DE: [&str; 7] = ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"];

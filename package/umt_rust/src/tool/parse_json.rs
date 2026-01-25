@@ -127,11 +127,14 @@ mod tests {
 
         let json_string = r#"{"key": {"nestedKey": "nestedValue"}}"#;
         let result: Outer = umt_parse_json(json_string).unwrap();
-        assert_eq!(result, Outer {
-            key: Nested {
-                nested_key: "nestedValue".to_string(),
-            },
-        });
+        assert_eq!(
+            result,
+            Outer {
+                key: Nested {
+                    nested_key: "nestedValue".to_string(),
+                },
+            }
+        );
     }
 
     #[test]

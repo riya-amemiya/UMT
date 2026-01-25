@@ -116,12 +116,33 @@ mod tests {
     fn test_day_of_week_all_days() {
         // Week of Jan 5-11, 2025
         // Sun=5, Mon=6, Tue=7, Wed=8, Thu=9, Fri=10, Sat=11
-        assert_eq!(umt_day_of_week(Some(2025), Some(1), Some(5), Some(0)), Some(0)); // Sun
-        assert_eq!(umt_day_of_week(Some(2025), Some(1), Some(6), Some(0)), Some(1)); // Mon
-        assert_eq!(umt_day_of_week(Some(2025), Some(1), Some(7), Some(0)), Some(2)); // Tue
-        assert_eq!(umt_day_of_week(Some(2025), Some(1), Some(8), Some(0)), Some(3)); // Wed
-        assert_eq!(umt_day_of_week(Some(2025), Some(1), Some(9), Some(0)), Some(4)); // Thu
-        assert_eq!(umt_day_of_week(Some(2025), Some(1), Some(10), Some(0)), Some(5)); // Fri
-        assert_eq!(umt_day_of_week(Some(2025), Some(1), Some(11), Some(0)), Some(6)); // Sat
+        assert_eq!(
+            umt_day_of_week(Some(2025), Some(1), Some(5), Some(0)),
+            Some(0)
+        ); // Sun
+        assert_eq!(
+            umt_day_of_week(Some(2025), Some(1), Some(6), Some(0)),
+            Some(1)
+        ); // Mon
+        assert_eq!(
+            umt_day_of_week(Some(2025), Some(1), Some(7), Some(0)),
+            Some(2)
+        ); // Tue
+        assert_eq!(
+            umt_day_of_week(Some(2025), Some(1), Some(8), Some(0)),
+            Some(3)
+        ); // Wed
+        assert_eq!(
+            umt_day_of_week(Some(2025), Some(1), Some(9), Some(0)),
+            Some(4)
+        ); // Thu
+        assert_eq!(
+            umt_day_of_week(Some(2025), Some(1), Some(10), Some(0)),
+            Some(5)
+        ); // Fri
+        assert_eq!(
+            umt_day_of_week(Some(2025), Some(1), Some(11), Some(0)),
+            Some(6)
+        ); // Sat
     }
 }

@@ -23,9 +23,9 @@ pub fn is_private_ip(ip: &str) -> Result<bool, String> {
 
     // Define private IP ranges with their CIDR notations
     let private_ranges = [
-        ("10.0.0.0", 8),      // Class A private network
-        ("172.16.0.0", 12),   // Class B private network
-        ("192.168.0.0", 16),  // Class C private network
+        ("10.0.0.0", 8),     // Class A private network
+        ("172.16.0.0", 12),  // Class B private network
+        ("192.168.0.0", 16), // Class C private network
     ];
 
     for (network, cidr) in private_ranges {

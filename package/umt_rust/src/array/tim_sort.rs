@@ -205,7 +205,13 @@ mod tests {
         let arr = vec![1, 2, 3, 4, 5];
         // Sort in descending order
         let descending = |a: &i32, b: &i32| -> i32 {
-            if a < b { 1 } else if a > b { -1 } else { 0 }
+            if a < b {
+                1
+            } else if a > b {
+                -1
+            } else {
+                0
+            }
         };
         assert_eq!(
             umt_tim_sort(&arr, Some(descending), None, None),

@@ -27,9 +27,8 @@ pub fn umt_multiplication(numbers: &[f64]) -> f64 {
     }
 
     numbers.iter().fold(1.0, |accumulator, &number| {
-        let n = 10_f64.powi(
-            (umt_get_decimal_length(accumulator) + umt_get_decimal_length(number)) as i32,
-        );
+        let n = 10_f64
+            .powi((umt_get_decimal_length(accumulator) + umt_get_decimal_length(number)) as i32);
         let acc_str = accumulator.to_string().replace('.', "");
         let num_str = number.to_string().replace('.', "");
         let acc_int: f64 = acc_str.parse().unwrap_or(accumulator);

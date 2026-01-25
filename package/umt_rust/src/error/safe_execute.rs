@@ -1,4 +1,4 @@
-use std::panic::{catch_unwind, AssertUnwindSafe};
+use std::panic::{AssertUnwindSafe, catch_unwind};
 
 /// Represents a successful execution result containing a value
 #[derive(Debug, Clone, PartialEq)]
@@ -272,8 +272,7 @@ mod tests {
         let success_result: SafeResult<i32, String> = umt_safe_execute(|| 42);
         assert_eq!(success_result.to_result(), Ok(42));
 
-        let error_result: SafeResult<i32, String> =
-            umt_safe_execute(|| -> i32 { panic!("error") });
+        let error_result: SafeResult<i32, String> = umt_safe_execute(|| -> i32 { panic!("error") });
         assert!(error_result.to_result().is_err());
     }
 

@@ -99,7 +99,7 @@ pub fn umt_get_arrays_common_f64(arrays: &[&[f64]]) -> Vec<f64> {
                     result.push(item);
                     has_nan = true;
                 }
-            } else if !result.iter().any(|&x| x == item) {
+            } else if !result.contains(&item) {
                 result.push(item);
             }
         }
@@ -119,8 +119,8 @@ pub fn umt_get_arrays_common_f64(arrays: &[&[f64]]) -> Vec<f64> {
                 has_nan_in_result = true;
             }
         } else {
-            let in_all = arrays[1..].iter().all(|arr| arr.iter().any(|&x| x == item));
-            if in_all && !result.iter().any(|&x| x == item) {
+            let in_all = arrays[1..].iter().all(|arr| arr.contains(&item));
+            if in_all && !result.contains(&item) {
                 result.push(item);
             }
         }
@@ -159,10 +159,7 @@ mod tests {
 
     #[test]
     fn test_get_arrays_common_single_array() {
-        assert_eq!(
-            umt_get_arrays_common(&[&[1, 2, 3][..]]),
-            vec![1, 2, 3]
-        );
+        assert_eq!(umt_get_arrays_common(&[&[1, 2, 3][..]]), vec![1, 2, 3]);
     }
 
     #[test]

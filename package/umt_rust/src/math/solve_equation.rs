@@ -28,6 +28,7 @@ use super::umt_round_of;
 /// );
 /// assert_eq!(result, vec![-2.0, 6.0]);
 /// ```
+#[allow(clippy::ptr_arg, clippy::needless_range_loop)]
 pub fn umt_solve_equation(coefficients: &mut Vec<Vec<f64>>, constants: &mut Vec<f64>) -> Vec<f64> {
     let n = constants.len();
 
@@ -50,9 +51,7 @@ pub fn umt_solve_equation(coefficients: &mut Vec<Vec<f64>>, constants: &mut Vec<
             coefficients[index][col] = temp;
         }
 
-        let temp = constants[max_row];
-        constants[max_row] = constants[index];
-        constants[index] = temp;
+        constants.swap(max_row, index);
 
         // Perform elimination on the rows below
         for row in (index + 1)..n {

@@ -43,22 +43,22 @@ pub fn umt_hsla_to_rgba(h: f64, s: f64, l: f64, a: Option<f64>) -> Result<Rgba, 
     let alpha = a.unwrap_or(1.0);
 
     // Validate input ranges
-    if h < 0.0 || h > 360.0 {
+    if !(0.0..=360.0).contains(&h) {
         return Err(HslaError {
             message: "Hue must be between 0 and 360 degrees".to_string(),
         });
     }
-    if s < 0.0 || s > 100.0 {
+    if !(0.0..=100.0).contains(&s) {
         return Err(HslaError {
             message: "Saturation must be between 0 and 100 percent".to_string(),
         });
     }
-    if l < 0.0 || l > 100.0 {
+    if !(0.0..=100.0).contains(&l) {
         return Err(HslaError {
             message: "Lightness must be between 0 and 100 percent".to_string(),
         });
     }
-    if alpha < 0.0 || alpha > 1.0 {
+    if !(0.0..=1.0).contains(&alpha) {
         return Err(HslaError {
             message: "Alpha must be between 0 and 1".to_string(),
         });
@@ -130,17 +130,32 @@ mod tests {
         // Red
         assert_eq!(
             umt_hsla_to_rgba(0.0, 100.0, 50.0, Some(1.0)).unwrap(),
-            Rgba { r: 255.0, g: 0.0, b: 0.0, a: 1.0 }
+            Rgba {
+                r: 255.0,
+                g: 0.0,
+                b: 0.0,
+                a: 1.0
+            }
         );
         // Green
         assert_eq!(
             umt_hsla_to_rgba(120.0, 100.0, 50.0, Some(1.0)).unwrap(),
-            Rgba { r: 0.0, g: 255.0, b: 0.0, a: 1.0 }
+            Rgba {
+                r: 0.0,
+                g: 255.0,
+                b: 0.0,
+                a: 1.0
+            }
         );
         // Blue
         assert_eq!(
             umt_hsla_to_rgba(240.0, 100.0, 50.0, Some(1.0)).unwrap(),
-            Rgba { r: 0.0, g: 0.0, b: 255.0, a: 1.0 }
+            Rgba {
+                r: 0.0,
+                g: 0.0,
+                b: 255.0,
+                a: 1.0
+            }
         );
     }
 
@@ -149,17 +164,32 @@ mod tests {
         // Yellow
         assert_eq!(
             umt_hsla_to_rgba(60.0, 100.0, 50.0, Some(1.0)).unwrap(),
-            Rgba { r: 255.0, g: 255.0, b: 0.0, a: 1.0 }
+            Rgba {
+                r: 255.0,
+                g: 255.0,
+                b: 0.0,
+                a: 1.0
+            }
         );
         // Cyan
         assert_eq!(
             umt_hsla_to_rgba(180.0, 100.0, 50.0, Some(1.0)).unwrap(),
-            Rgba { r: 0.0, g: 255.0, b: 255.0, a: 1.0 }
+            Rgba {
+                r: 0.0,
+                g: 255.0,
+                b: 255.0,
+                a: 1.0
+            }
         );
         // Magenta
         assert_eq!(
             umt_hsla_to_rgba(300.0, 100.0, 50.0, Some(1.0)).unwrap(),
-            Rgba { r: 255.0, g: 0.0, b: 255.0, a: 1.0 }
+            Rgba {
+                r: 255.0,
+                g: 0.0,
+                b: 255.0,
+                a: 1.0
+            }
         );
     }
 
@@ -168,12 +198,22 @@ mod tests {
         // White
         assert_eq!(
             umt_hsla_to_rgba(0.0, 0.0, 100.0, Some(1.0)).unwrap(),
-            Rgba { r: 255.0, g: 255.0, b: 255.0, a: 1.0 }
+            Rgba {
+                r: 255.0,
+                g: 255.0,
+                b: 255.0,
+                a: 1.0
+            }
         );
         // Black
         assert_eq!(
             umt_hsla_to_rgba(0.0, 0.0, 0.0, Some(1.0)).unwrap(),
-            Rgba { r: 0.0, g: 0.0, b: 0.0, a: 1.0 }
+            Rgba {
+                r: 0.0,
+                g: 0.0,
+                b: 0.0,
+                a: 1.0
+            }
         );
     }
 
@@ -181,7 +221,12 @@ mod tests {
     fn test_hsla_to_rgba_with_alpha() {
         assert_eq!(
             umt_hsla_to_rgba(0.0, 100.0, 50.0, Some(0.5)).unwrap(),
-            Rgba { r: 255.0, g: 0.0, b: 0.0, a: 0.5 }
+            Rgba {
+                r: 255.0,
+                g: 0.0,
+                b: 0.0,
+                a: 0.5
+            }
         );
     }
 
@@ -189,15 +234,30 @@ mod tests {
     fn test_hsla_to_rgba_default_alpha() {
         assert_eq!(
             umt_hsla_to_rgba(0.0, 0.0, 0.0, None).unwrap(),
-            Rgba { r: 0.0, g: 0.0, b: 0.0, a: 1.0 }
+            Rgba {
+                r: 0.0,
+                g: 0.0,
+                b: 0.0,
+                a: 1.0
+            }
         );
         assert_eq!(
             umt_hsla_to_rgba(360.0, 100.0, 100.0, None).unwrap(),
-            Rgba { r: 255.0, g: 255.0, b: 255.0, a: 1.0 }
+            Rgba {
+                r: 255.0,
+                g: 255.0,
+                b: 255.0,
+                a: 1.0
+            }
         );
         assert_eq!(
             umt_hsla_to_rgba(0.0, 100.0, 50.0, None).unwrap(),
-            Rgba { r: 255.0, g: 0.0, b: 0.0, a: 1.0 }
+            Rgba {
+                r: 255.0,
+                g: 0.0,
+                b: 0.0,
+                a: 1.0
+            }
         );
     }
 
@@ -206,37 +266,72 @@ mod tests {
         // Dark blue
         assert_eq!(
             umt_hsla_to_rgba(240.0, 100.0, 25.0, Some(1.0)).unwrap(),
-            Rgba { r: 0.0, g: 0.0, b: 127.5, a: 1.0 }
+            Rgba {
+                r: 0.0,
+                g: 0.0,
+                b: 127.5,
+                a: 1.0
+            }
         );
         // Dark green
         assert_eq!(
             umt_hsla_to_rgba(120.0, 100.0, 25.0, Some(1.0)).unwrap(),
-            Rgba { r: 0.0, g: 127.5, b: 0.0, a: 1.0 }
+            Rgba {
+                r: 0.0,
+                g: 127.5,
+                b: 0.0,
+                a: 1.0
+            }
         );
         // Dark red
         assert_eq!(
             umt_hsla_to_rgba(0.0, 100.0, 25.0, Some(1.0)).unwrap(),
-            Rgba { r: 127.5, g: 0.0, b: 0.0, a: 1.0 }
+            Rgba {
+                r: 127.5,
+                g: 0.0,
+                b: 0.0,
+                a: 1.0
+            }
         );
         // Dark yellow
         assert_eq!(
             umt_hsla_to_rgba(60.0, 100.0, 25.0, Some(1.0)).unwrap(),
-            Rgba { r: 127.5, g: 127.5, b: 0.0, a: 1.0 }
+            Rgba {
+                r: 127.5,
+                g: 127.5,
+                b: 0.0,
+                a: 1.0
+            }
         );
         // Dark cyan
         assert_eq!(
             umt_hsla_to_rgba(180.0, 100.0, 25.0, Some(1.0)).unwrap(),
-            Rgba { r: 0.0, g: 127.5, b: 127.5, a: 1.0 }
+            Rgba {
+                r: 0.0,
+                g: 127.5,
+                b: 127.5,
+                a: 1.0
+            }
         );
         // Dark magenta
         assert_eq!(
             umt_hsla_to_rgba(300.0, 100.0, 25.0, Some(1.0)).unwrap(),
-            Rgba { r: 127.5, g: 0.0, b: 127.5, a: 1.0 }
+            Rgba {
+                r: 127.5,
+                g: 0.0,
+                b: 127.5,
+                a: 1.0
+            }
         );
         // Gray (0% saturation)
         assert_eq!(
             umt_hsla_to_rgba(0.0, 0.0, 25.0, Some(1.0)).unwrap(),
-            Rgba { r: 63.75, g: 63.75, b: 63.75, a: 1.0 }
+            Rgba {
+                r: 63.75,
+                g: 63.75,
+                b: 63.75,
+                a: 1.0
+            }
         );
     }
 

@@ -1,6 +1,6 @@
-use super::extract_browser_from_user_agent::{umt_extract_browser_from_user_agent, Browser};
-use super::extract_device_from_user_agent::{umt_extract_device_from_user_agent, Device};
-use super::extract_os_from_user_agent::{umt_extract_os_from_user_agent, Os};
+use super::extract_browser_from_user_agent::{Browser, umt_extract_browser_from_user_agent};
+use super::extract_device_from_user_agent::{Device, umt_extract_device_from_user_agent};
+use super::extract_os_from_user_agent::{Os, umt_extract_os_from_user_agent};
 
 /// Represents simplified user agent information containing browser, device, and OS.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -13,7 +13,11 @@ pub struct UserAgentInfo {
 impl UserAgentInfo {
     /// Creates a new UserAgentInfo with the given components.
     pub fn new(os: Os, browser: Browser, device: Device) -> Self {
-        Self { os, browser, device }
+        Self {
+            os,
+            browser,
+            device,
+        }
     }
 }
 

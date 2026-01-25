@@ -1,4 +1,4 @@
-/// Curry functions for transforming multi-argument functions into chains of single-argument functions.
+//! Curry functions for transforming multi-argument functions into chains of single-argument functions.
 
 /// Curries a 0-argument function (identity wrapper).
 #[inline]
@@ -36,6 +36,7 @@ where
 
 /// Curries a 3-argument function.
 #[inline]
+#[allow(clippy::type_complexity)]
 pub fn umt_curry3<F, A, B, C, R>(f: F) -> impl Fn(A) -> Box<dyn Fn(B) -> Box<dyn Fn(C) -> R>>
 where
     F: Fn(A, B, C) -> R + Clone + 'static,
@@ -58,6 +59,7 @@ where
 
 /// Curries a 4-argument function.
 #[inline]
+#[allow(clippy::type_complexity)]
 pub fn umt_curry4<F, A, B, C, D, R>(
     f: F,
 ) -> impl Fn(A) -> Box<dyn Fn(B) -> Box<dyn Fn(C) -> Box<dyn Fn(D) -> R>>>
@@ -89,6 +91,7 @@ where
 
 /// Curries a 5-argument function.
 #[inline]
+#[allow(clippy::type_complexity)]
 pub fn umt_curry5<F, A, B, C, D, E, R>(
     f: F,
 ) -> impl Fn(A) -> Box<dyn Fn(B) -> Box<dyn Fn(C) -> Box<dyn Fn(D) -> Box<dyn Fn(E) -> R>>>>
@@ -128,9 +131,14 @@ where
 
 /// Curries a 6-argument function.
 #[inline]
+#[allow(clippy::type_complexity)]
 pub fn umt_curry6<F, A, B, C, D, E, G, R>(
     f: F,
-) -> impl Fn(A) -> Box<dyn Fn(B) -> Box<dyn Fn(C) -> Box<dyn Fn(D) -> Box<dyn Fn(E) -> Box<dyn Fn(G) -> R>>>>>
+) -> impl Fn(
+    A,
+) -> Box<
+    dyn Fn(B) -> Box<dyn Fn(C) -> Box<dyn Fn(D) -> Box<dyn Fn(E) -> Box<dyn Fn(G) -> R>>>>,
+>
 where
     F: Fn(A, B, C, D, E, G) -> R + Clone + 'static,
     A: Clone + 'static,

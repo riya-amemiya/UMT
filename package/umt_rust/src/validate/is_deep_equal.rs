@@ -105,8 +105,14 @@ mod tests {
 
     #[test]
     fn test_is_deep_equal_unordered() {
-        let opts = IsDeepEqualOptions { strict_order: false };
-        assert!(umt_is_deep_equal(&vec![1, 2, 3], &vec![3, 2, 1], Some(opts)));
+        let opts = IsDeepEqualOptions {
+            strict_order: false,
+        };
+        assert!(umt_is_deep_equal(
+            &vec![1, 2, 3],
+            &vec![3, 2, 1],
+            Some(opts)
+        ));
     }
 
     #[test]

@@ -51,7 +51,7 @@ pub fn umt_drop<T: Clone>(array: &[T], n: usize, direction: DropDirection) -> Ve
             let len = array.len();
             let mid = len / 2;
             let start = mid.saturating_sub(n / 2);
-            let end = (mid + (n + 1) / 2).min(len);
+            let end = (mid + n.div_ceil(2)).min(len);
 
             let mut result = array[..start].to_vec();
             result.extend_from_slice(&array[end..]);
@@ -98,39 +98,72 @@ mod tests {
 
     #[test]
     fn test_drop_left() {
-        assert_eq!(umt_drop(&[1, 2, 3, 4, 5], 2, DropDirection::Left), vec![3, 4, 5]);
-        assert_eq!(umt_drop(&[1, 2, 3, 4, 5], 1, DropDirection::Left), vec![2, 3, 4, 5]);
+        assert_eq!(
+            umt_drop(&[1, 2, 3, 4, 5], 2, DropDirection::Left),
+            vec![3, 4, 5]
+        );
+        assert_eq!(
+            umt_drop(&[1, 2, 3, 4, 5], 1, DropDirection::Left),
+            vec![2, 3, 4, 5]
+        );
     }
 
     #[test]
     fn test_drop_right() {
-        assert_eq!(umt_drop(&[1, 2, 3, 4, 5], 2, DropDirection::Right), vec![1, 2, 3]);
+        assert_eq!(
+            umt_drop(&[1, 2, 3, 4, 5], 2, DropDirection::Right),
+            vec![1, 2, 3]
+        );
     }
 
     #[test]
     fn test_drop_between() {
-        assert_eq!(umt_drop(&[1, 2, 3, 4, 5], 1, DropDirection::Between), vec![1, 2, 4, 5]);
-        assert_eq!(umt_drop(&[1, 2, 3, 4, 5, 6], 2, DropDirection::Between), vec![1, 2, 5, 6]);
+        assert_eq!(
+            umt_drop(&[1, 2, 3, 4, 5], 1, DropDirection::Between),
+            vec![1, 2, 4, 5]
+        );
+        assert_eq!(
+            umt_drop(&[1, 2, 3, 4, 5, 6], 2, DropDirection::Between),
+            vec![1, 2, 5, 6]
+        );
     }
 
     #[test]
     fn test_drop_exceeds_length() {
-        assert_eq!(umt_drop(&[1, 2, 3], 4, DropDirection::Left), Vec::<i32>::new());
-        assert_eq!(umt_drop(&[1, 2, 3], 3, DropDirection::Left), Vec::<i32>::new());
+        assert_eq!(
+            umt_drop(&[1, 2, 3], 4, DropDirection::Left),
+            Vec::<i32>::new()
+        );
+        assert_eq!(
+            umt_drop(&[1, 2, 3], 3, DropDirection::Left),
+            Vec::<i32>::new()
+        );
     }
 
     #[test]
     fn test_drop_zero() {
         assert_eq!(umt_drop(&[1, 2, 3], 0, DropDirection::Left), vec![1, 2, 3]);
         assert_eq!(umt_drop(&[1, 2, 3], 0, DropDirection::Right), vec![1, 2, 3]);
-        assert_eq!(umt_drop(&[1, 2, 3], 0, DropDirection::Between), vec![1, 2, 3]);
+        assert_eq!(
+            umt_drop(&[1, 2, 3], 0, DropDirection::Between),
+            vec![1, 2, 3]
+        );
     }
 
     #[test]
     fn test_drop_empty_array() {
-        assert_eq!(umt_drop::<i32>(&[], 1, DropDirection::Left), Vec::<i32>::new());
-        assert_eq!(umt_drop::<i32>(&[], 2, DropDirection::Right), Vec::<i32>::new());
-        assert_eq!(umt_drop::<i32>(&[], 3, DropDirection::Between), Vec::<i32>::new());
+        assert_eq!(
+            umt_drop::<i32>(&[], 1, DropDirection::Left),
+            Vec::<i32>::new()
+        );
+        assert_eq!(
+            umt_drop::<i32>(&[], 2, DropDirection::Right),
+            Vec::<i32>::new()
+        );
+        assert_eq!(
+            umt_drop::<i32>(&[], 3, DropDirection::Between),
+            Vec::<i32>::new()
+        );
     }
 
     #[test]

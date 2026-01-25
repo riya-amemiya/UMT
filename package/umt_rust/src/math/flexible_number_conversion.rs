@@ -44,20 +44,20 @@ pub fn umt_flexible_number_conversion(value: &str) -> f64 {
     }
 
     // Handle special base notations (hex, octal, binary)
-    if trimmed.starts_with("0x") {
-        return match i64::from_str_radix(&trimmed[2..], 16) {
+    if let Some(hex) = trimmed.strip_prefix("0x") {
+        return match i64::from_str_radix(hex, 16) {
             Ok(n) => n as f64,
             Err(_) => f64::NAN,
         };
     }
-    if trimmed.starts_with("0o") {
-        return match i64::from_str_radix(&trimmed[2..], 8) {
+    if let Some(oct) = trimmed.strip_prefix("0o") {
+        return match i64::from_str_radix(oct, 8) {
             Ok(n) => n as f64,
             Err(_) => f64::NAN,
         };
     }
-    if trimmed.starts_with("0b") {
-        return match i64::from_str_radix(&trimmed[2..], 2) {
+    if let Some(bin) = trimmed.strip_prefix("0b") {
+        return match i64::from_str_radix(bin, 2) {
             Ok(n) => n as f64,
             Err(_) => f64::NAN,
         };
@@ -75,11 +75,11 @@ pub fn umt_flexible_number_conversion(value: &str) -> f64 {
     let mut chars = trimmed.chars().peekable();
 
     // Handle optional sign
-    if let Some(&c) = chars.peek() {
-        if c == '+' || c == '-' {
-            num_str.push(c);
-            chars.next();
-        }
+    if let Some(&c) = chars.peek()
+        && (c == '+' || c == '-')
+    {
+        num_str.push(c);
+        chars.next();
     }
 
     while let Some(&c) = chars.peek() {
@@ -95,21 +95,21 @@ pub fn umt_flexible_number_conversion(value: &str) -> f64 {
             num_str.push(c);
             chars.next();
             // Handle optional sign after e
-            if let Some(&next) = chars.peek() {
-                if next == '+' || next == '-' {
-                    num_str.push(next);
-                    chars.next();
-                }
+            if let Some(&next) = chars.peek()
+                && (next == '+' || next == '-')
+            {
+                num_str.push(next);
+                chars.next();
             }
         } else {
             break;
         }
     }
 
-    if !num_str.is_empty() {
-        if let Ok(n) = num_str.parse::<f64>() {
-            return n;
-        }
+    if !num_str.is_empty()
+        && let Ok(n) = num_str.parse::<f64>()
+    {
+        return n;
     }
 
     f64::NAN
@@ -172,7 +172,10 @@ mod tests {
     #[test]
     fn test_infinity() {
         assert_eq!(umt_flexible_number_conversion("infinity"), f64::INFINITY);
-        assert_eq!(umt_flexible_number_conversion("-infinity"), f64::NEG_INFINITY);
+        assert_eq!(
+            umt_flexible_number_conversion("-infinity"),
+            f64::NEG_INFINITY
+        );
     }
 
     #[test]

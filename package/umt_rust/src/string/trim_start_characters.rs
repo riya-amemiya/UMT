@@ -17,9 +17,7 @@
 #[inline]
 pub fn umt_trim_start_characters(s: &str, chars: &str) -> String {
     let char_set: Vec<char> = chars.chars().collect();
-    s.chars()
-        .skip_while(|c| char_set.contains(c))
-        .collect()
+    s.chars().skip_while(|c| char_set.contains(c)).collect()
 }
 
 #[cfg(test)]

@@ -25,7 +25,7 @@ pub use birthday::umt_birthday;
 pub use date_range::{umt_date_range, umt_date_range_with_step};
 pub use day_of_week::{umt_day_of_week, umt_today_day_of_week};
 pub use format::{umt_format, umt_format_iso};
-pub use get_day::{umt_get_day, umt_get_day_en, umt_get_day_ja, DayLanguage};
+pub use get_day::{DayLanguage, umt_get_day, umt_get_day_en, umt_get_day_ja};
 pub use get_timezone_offset_string::{
     umt_get_local_timezone_offset_string, umt_get_timezone_offset_string,
     umt_get_timezone_offset_string_compact,

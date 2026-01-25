@@ -26,6 +26,7 @@ use super::core::ValidateCoreReturnType;
 /// assert!(result.validate);
 /// ```
 #[inline]
+#[allow(clippy::type_complexity)]
 pub fn umt_validate_object<V: Clone>(
     value: &HashMap<String, V>,
     validators: Option<&HashMap<String, Box<dyn Fn(&V) -> bool>>>,
@@ -68,6 +69,7 @@ pub fn umt_validate_object<V: Clone>(
 ///
 /// # Returns
 /// A function that validates optional values
+#[allow(clippy::type_complexity)]
 pub fn umt_optional<T, F>(validator: F) -> Box<dyn Fn(&Option<T>) -> bool>
 where
     F: Fn(&T) -> bool + 'static,

@@ -70,7 +70,7 @@ pub fn umt_arrays_join_f64(arrays: &[&[f64]]) -> Vec<f64> {
                     result.push(item);
                     has_nan = true;
                 }
-            } else if !result.iter().any(|&x| x == item) {
+            } else if !result.contains(&item) {
                 result.push(item);
             }
         }
@@ -110,14 +110,8 @@ mod tests {
     #[test]
     fn test_arrays_join_empty() {
         let empty: &[i32] = &[];
-        assert_eq!(
-            umt_arrays_join(&[empty, &[1, 2, 3][..]]),
-            vec![1, 2, 3]
-        );
-        assert_eq!(
-            umt_arrays_join(&[&[1, 2, 3][..], empty]),
-            vec![1, 2, 3]
-        );
+        assert_eq!(umt_arrays_join(&[empty, &[1, 2, 3][..]]), vec![1, 2, 3]);
+        assert_eq!(umt_arrays_join(&[&[1, 2, 3][..], empty]), vec![1, 2, 3]);
     }
 
     #[test]
@@ -146,18 +140,12 @@ mod tests {
 
     #[test]
     fn test_arrays_join_single_array() {
-        assert_eq!(
-            umt_arrays_join(&[&[1, 2, 3][..]]),
-            vec![1, 2, 3]
-        );
+        assert_eq!(umt_arrays_join(&[&[1, 2, 3][..]]), vec![1, 2, 3]);
     }
 
     #[test]
     fn test_arrays_join_single_with_duplicates() {
-        assert_eq!(
-            umt_arrays_join(&[&[1, 1, 2, 2, 3, 3][..]]),
-            vec![1, 2, 3]
-        );
+        assert_eq!(umt_arrays_join(&[&[1, 1, 2, 2, 3, 3][..]]), vec![1, 2, 3]);
     }
 
     #[test]

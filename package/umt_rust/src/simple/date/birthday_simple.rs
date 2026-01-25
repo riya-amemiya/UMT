@@ -1,4 +1,4 @@
-use super::now_simple::{umt_new_date, umt_now_simple, DateTime};
+use super::now_simple::{DateTime, umt_new_date, umt_now_simple};
 
 /// Properties for specifying a birthday.
 #[derive(Debug, Clone)]
@@ -158,7 +158,12 @@ pub fn umt_birthday_simple_str(birthdays: &str, time_difference: i32) -> i32 {
 pub fn umt_birthday_simple_datetime(birthdays: &DateTime, time_difference: i32) -> i32 {
     // Note: For JavaScript Date compatibility, getMonth() returns 0-indexed month
     // But our DateTime uses 1-indexed month internally
-    umt_birthday(birthdays.year, birthdays.month, birthdays.day, time_difference)
+    umt_birthday(
+        birthdays.year,
+        birthdays.month,
+        birthdays.day,
+        time_difference,
+    )
 }
 
 /// Calculate age from BirthdayProperties.
@@ -183,7 +188,12 @@ pub fn umt_birthday_simple_datetime(birthdays: &DateTime, time_difference: i32) 
 /// ```
 #[inline]
 pub fn umt_birthday_simple_props(birthdays: &BirthdayProperties, time_difference: i32) -> i32 {
-    umt_birthday(birthdays.year, birthdays.mon, birthdays.day, time_difference)
+    umt_birthday(
+        birthdays.year,
+        birthdays.mon,
+        birthdays.day,
+        time_difference,
+    )
 }
 
 /// Calculate age from a date string with default timezone (JST).
@@ -303,12 +313,7 @@ mod tests {
     #[test]
     fn test_age_is_non_negative() {
         // Test with various dates to ensure age is never negative
-        let dates = vec![
-            "2100-01-01",
-            "2050-06-15",
-            "1900-01-01",
-            "2000-01-01",
-        ];
+        let dates = vec!["2100-01-01", "2050-06-15", "1900-01-01", "2000-01-01"];
 
         for date in dates {
             let age = umt_birthday_simple_str(date, 9);

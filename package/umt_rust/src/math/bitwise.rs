@@ -33,7 +33,7 @@ pub enum RotateDirection {
 /// ```
 #[inline]
 pub fn umt_bitwise(x: u32, k: i32, direction: RotateDirection) -> u32 {
-    let rotation = ((k % 32) + 32) % 32;
+    let rotation = k.rem_euclid(32);
     match direction {
         RotateDirection::Left => x.rotate_left(rotation as u32),
         RotateDirection::Right => x.rotate_right(rotation as u32),

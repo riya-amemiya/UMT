@@ -49,8 +49,8 @@ pub fn get_network_address(ip: &str, subnet_mask: &str) -> Result<u32, String> {
     }
 
     let ip_long = ip_to_long(ip).map_err(|_| "Invalid IP address or subnet mask".to_string())?;
-    let cidr =
-        subnet_mask_to_cidr(subnet_mask).map_err(|_| "Invalid IP address or subnet mask".to_string())?;
+    let cidr = subnet_mask_to_cidr(subnet_mask)
+        .map_err(|_| "Invalid IP address or subnet mask".to_string())?;
     let mask = cidr_to_long(cidr).map_err(|_| "Invalid IP address or subnet mask".to_string())?;
 
     Ok(ip_long & mask)

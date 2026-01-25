@@ -16,7 +16,11 @@ where
     F: Fn(&T, &T) -> i32,
 {
     // Create a vector of (index, value) pairs and sort by value
-    let mut values = vec![(a, array[a].clone()), (b, array[b].clone()), (c, array[c].clone())];
+    let mut values = [
+        (a, array[a].clone()),
+        (b, array[b].clone()),
+        (c, array[c].clone()),
+    ];
     values.sort_by(|(_, va), (_, vb)| {
         let cmp = compare(va, vb);
         if cmp < 0 {
@@ -41,13 +45,8 @@ where
     let gap = (length / 3).max(1);
 
     // Find optimal pivot positions
-    let left_pivot_index = median_of_three(
-        array,
-        low,
-        low + gap,
-        (low + 2 * gap).min(high),
-        compare,
-    );
+    let left_pivot_index =
+        median_of_three(array, low, low + gap, (low + 2 * gap).min(high), compare);
 
     let right_pivot_index = median_of_three(
         array,
@@ -118,8 +117,7 @@ fn sort_range<T, F>(
     end: usize,
     compare: &F,
     insertion_sort_threshold: usize,
-)
-where
+) where
     T: Clone,
     F: Fn(&T, &T) -> i32,
 {
@@ -284,7 +282,13 @@ mod tests {
         let arr = vec![1, 2, 3, 4, 5];
         // Sort in descending order
         let descending = |a: &i32, b: &i32| -> i32 {
-            if a < b { 1 } else if a > b { -1 } else { 0 }
+            if a < b {
+                1
+            } else if a > b {
+                -1
+            } else {
+                0
+            }
         };
         assert_eq!(
             umt_dual_pivot_quick_sort(&arr, Some(descending), None, None, None),

@@ -32,7 +32,7 @@ pub fn umt_date_range(start_date: DateTime<Utc>, end_date: DateTime<Utc>) -> Vec
 
     while current_date <= end_date {
         dates.push(current_date);
-        current_date = current_date + Duration::days(1);
+        current_date += Duration::days(1);
     }
 
     dates
@@ -75,7 +75,7 @@ pub fn umt_date_range_with_step(
 
     while current_date <= end_date {
         dates.push(current_date);
-        current_date = current_date + Duration::days(step_days);
+        current_date += Duration::days(step_days);
     }
 
     dates

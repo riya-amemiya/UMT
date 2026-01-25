@@ -82,7 +82,11 @@ pub fn umt_deviation_value_simple_from_array(value: f64, reference_values: Vec<f
 /// assert_eq!(umt_deviation_value_simple(100.0, 50.0, 0.0), 50.0);
 /// ```
 #[inline]
-pub fn umt_deviation_value_simple(value: f64, average_value: f64, standard_deviation_value: f64) -> f64 {
+pub fn umt_deviation_value_simple(
+    value: f64,
+    average_value: f64,
+    standard_deviation_value: f64,
+) -> f64 {
     if standard_deviation_value == 0.0 {
         50.0
     } else {
@@ -129,8 +133,17 @@ mod tests {
     #[test]
     fn test_deviation_value_simple_all_same_values() {
         let same_scores = vec![50.0, 50.0, 50.0];
-        assert_eq!(umt_deviation_value_simple_from_array(50.0, same_scores.clone()), 50.0);
-        assert_eq!(umt_deviation_value_simple_from_array(0.0, same_scores.clone()), 50.0);
-        assert_eq!(umt_deviation_value_simple_from_array(100.0, same_scores), 50.0);
+        assert_eq!(
+            umt_deviation_value_simple_from_array(50.0, same_scores.clone()),
+            50.0
+        );
+        assert_eq!(
+            umt_deviation_value_simple_from_array(0.0, same_scores.clone()),
+            50.0
+        );
+        assert_eq!(
+            umt_deviation_value_simple_from_array(100.0, same_scores),
+            50.0
+        );
     }
 }

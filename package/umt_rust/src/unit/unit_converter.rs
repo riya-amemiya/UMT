@@ -215,10 +215,14 @@ mod tests {
     fn test_converts_between_different_small_units() {
         let converter = create_length_converter();
 
-        let result1 = converter.convert(100.0, &"centimeters", &"millimeters").unwrap();
+        let result1 = converter
+            .convert(100.0, &"centimeters", &"millimeters")
+            .unwrap();
         assert!((result1 - 1000.0).abs() < 1e-10);
 
-        let result2 = converter.convert(1000.0, &"millimeters", &"centimeters").unwrap();
+        let result2 = converter
+            .convert(1000.0, &"millimeters", &"centimeters")
+            .unwrap();
         assert!((result2 - 100.0).abs() < 1e-10);
     }
 
@@ -229,7 +233,9 @@ mod tests {
         let result1 = converter.convert(0.0, &"meters", &"kilometers").unwrap();
         assert_eq!(result1, 0.0);
 
-        let result2 = converter.convert(0.0, &"millimeters", &"centimeters").unwrap();
+        let result2 = converter
+            .convert(0.0, &"millimeters", &"centimeters")
+            .unwrap();
         assert_eq!(result2, 0.0);
     }
 
@@ -240,7 +246,9 @@ mod tests {
         let result1 = converter.convert(5.0, &"meters", &"meters").unwrap();
         assert_eq!(result1, 5.0);
 
-        let result2 = converter.convert(100.0, &"centimeters", &"centimeters").unwrap();
+        let result2 = converter
+            .convert(100.0, &"centimeters", &"centimeters")
+            .unwrap();
         assert_eq!(result2, 100.0);
     }
 
@@ -250,13 +258,21 @@ mod tests {
         let original = 5.0;
 
         // Round trip: meters -> kilometers -> meters
-        let km_value = converter.convert(original, &"meters", &"kilometers").unwrap();
-        let round_trip1 = converter.convert(km_value, &"kilometers", &"meters").unwrap();
+        let km_value = converter
+            .convert(original, &"meters", &"kilometers")
+            .unwrap();
+        let round_trip1 = converter
+            .convert(km_value, &"kilometers", &"meters")
+            .unwrap();
         assert!((round_trip1 - original).abs() < 1e-10);
 
         // Round trip: centimeters -> millimeters -> centimeters
-        let mm_value = converter.convert(original, &"centimeters", &"millimeters").unwrap();
-        let round_trip2 = converter.convert(mm_value, &"millimeters", &"centimeters").unwrap();
+        let mm_value = converter
+            .convert(original, &"centimeters", &"millimeters")
+            .unwrap();
+        let round_trip2 = converter
+            .convert(mm_value, &"millimeters", &"centimeters")
+            .unwrap();
         assert!((round_trip2 - original).abs() < 1e-10);
     }
 
@@ -295,10 +311,7 @@ mod tests {
 
     #[test]
     fn test_umt_unit_converter_function() {
-        let converter = umt_unit_converter(vec![
-            ("meters", 1.0),
-            ("feet", 3.28084),
-        ]);
+        let converter = umt_unit_converter(vec![("meters", 1.0), ("feet", 3.28084)]);
 
         let result = converter.convert(1.0, &"meters", &"feet").unwrap();
         assert!((result - 3.28084).abs() < 1e-10);
@@ -311,7 +324,9 @@ mod tests {
             (String::from("kilometers"), 0.001),
         ]);
 
-        let result = converter.convert(1000.0, &String::from("meters"), &String::from("kilometers")).unwrap();
+        let result = converter
+            .convert(1000.0, &String::from("meters"), &String::from("kilometers"))
+            .unwrap();
         assert!((result - 1.0).abs() < 1e-10);
     }
 }
