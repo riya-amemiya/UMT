@@ -193,4 +193,42 @@ describe("getArraysCommon", () => {
       getArraysCommon([true, false], [false, true], [true, false]),
     ).toEqual([true, false]);
   });
+
+  it("should handle large arrays with duplicates", () => {
+    // Covers the branch where `seen` Set is used and item is already in it
+    const largeArray = Array.from({ length: 200 }, (_, i) => i % 100); // 0-99 repeated twice
+    const otherArray = Array.from({ length: 200 }, (_, i) => i);
+
+    const result = getArraysCommon(largeArray, otherArray);
+    expect(result).toHaveLength(100);
+    expect(result[0]).toBe(0);
+    expect(result[99]).toBe(99);
+  });
+
+  it("should handle small primary array with large comparison arrays", () => {
+    // Covers the branch where `collection` is Set but `seen` is undefined
+    const smallArray = [1, 2, 3];
+    const largeArray = Array.from({ length: 200 }, (_, i) => i); // 0-199
+
+    const result = getArraysCommon(smallArray, largeArray);
+    expect(result).toEqual([1, 2, 3]);
+  });
+
+  it("should handle small primary array with large comparison arrays (missing items)", () => {
+    // Covers the branch where `collection` is Set and `!collection.has(item)` is true
+    const smallArray = [1, 2, 999]; // 999 is not in largeArray
+    const largeArray = Array.from({ length: 200 }, (_, i) => i); // 0-199
+
+    const result = getArraysCommon(smallArray, largeArray);
+    expect(result).toEqual([1, 2]);
+  });
+
+  it("should handle large primary array with small comparison arrays", () => {
+    // Covers the branch where `collection` is Array but `seen` is defined
+    const largeArray = Array.from({ length: 200 }, (_, i) => i); // 0-199
+    const smallArray = [1, 2, 3];
+
+    const result = getArraysCommon(largeArray, smallArray);
+    expect(result).toEqual([1, 2, 3]);
+  });
 });
