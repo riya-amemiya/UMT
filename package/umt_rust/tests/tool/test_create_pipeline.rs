@@ -1,4 +1,4 @@
-use umt_rust::tool::{umt_create_pipeline, Pipeline};
+use umt_rust::tool::{Pipeline, umt_create_pipeline};
 
 #[derive(Debug, Clone, PartialEq)]
 struct User {

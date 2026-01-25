@@ -2,7 +2,7 @@ pub mod apply_formatter;
 pub mod default_formatters;
 pub mod get_value;
 
-pub use apply_formatter::{apply_formatter, Formatter};
+pub use apply_formatter::{Formatter, apply_formatter};
 pub use default_formatters::create_default_formatters;
 pub use get_value::get_value;
 
@@ -114,9 +114,7 @@ pub fn umt_format_string(template: &str, data: &Value, options: Option<FormatOpt
         // Get value from data
         let value = if data.is_array() {
             // Indexed mode
-            path.parse::<usize>()
-                .ok()
-                .and_then(|idx| data.get(idx))
+            path.parse::<usize>().ok().and_then(|idx| data.get(idx))
         } else {
             // Named mode
             get_value(data, path)
@@ -182,7 +180,10 @@ pub fn umt_format_string(template: &str, data: &Value, options: Option<FormatOpt
 /// assert_eq!(result, "Hello, World! It's sunny today.");
 /// ```
 pub fn umt_format_string_indexed(template: &str, values: &[&str]) -> String {
-    let array: Vec<Value> = values.iter().map(|&s| Value::String(s.to_string())).collect();
+    let array: Vec<Value> = values
+        .iter()
+        .map(|&s| Value::String(s.to_string()))
+        .collect();
     umt_format_string(template, &Value::Array(array), None)
 }
 
@@ -308,8 +309,11 @@ mod tests {
 
     #[test]
     fn test_plural_formatter() {
-        let result1 =
-            umt_format_string("You have {count:plural(item,items)}", &json!({"count": 1}), None);
+        let result1 = umt_format_string(
+            "You have {count:plural(item,items)}",
+            &json!({"count": 1}),
+            None,
+        );
         let result2 = umt_format_string(
             "{count} {count:plural(item,items)}",
             &json!({"count": 1}),
@@ -346,15 +350,21 @@ mod tests {
 
     #[test]
     fn test_invalid_formatter_syntax() {
-        let result =
-            umt_format_string("Value: {text:invalid-formatter-name!@#}", &json!({"text": "hello"}), None);
+        let result = umt_format_string(
+            "Value: {text:invalid-formatter-name!@#}",
+            &json!({"text": "hello"}),
+            None,
+        );
         assert_eq!(result, "Value: hello");
     }
 
     #[test]
     fn test_unknown_formatter() {
-        let result =
-            umt_format_string("Value: {text:nonExistentFormatter}", &json!({"text": "hello"}), None);
+        let result = umt_format_string(
+            "Value: {text:nonExistentFormatter}",
+            &json!({"text": "hello"}),
+            None,
+        );
         assert_eq!(result, "Value: hello");
     }
 }

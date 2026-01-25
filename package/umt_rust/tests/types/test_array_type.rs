@@ -112,13 +112,7 @@ fn test_chunk_array_type_chunk_size_two() {
     let input: Vec<i32> = (1..=10).collect();
     let result = umt_chunk(&input, 2);
 
-    let expected = vec![
-        vec![1, 2],
-        vec![3, 4],
-        vec![5, 6],
-        vec![7, 8],
-        vec![9, 10],
-    ];
+    let expected = vec![vec![1, 2], vec![3, 4], vec![5, 6], vec![7, 8], vec![9, 10]];
 
     assert_eq!(result, expected);
 }

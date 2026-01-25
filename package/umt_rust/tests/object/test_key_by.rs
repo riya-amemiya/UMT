@@ -29,29 +29,65 @@ struct DirectionCode {
 #[test]
 fn test_should_create_object_using_property_name_as_key() {
     let input = vec![
-        User { id: "a1".to_string(), name: "Alice".to_string() },
-        User { id: "b2".to_string(), name: "Bob".to_string() },
+        User {
+            id: "a1".to_string(),
+            name: "Alice".to_string(),
+        },
+        User {
+            id: "b2".to_string(),
+            name: "Bob".to_string(),
+        },
     ];
 
     let result = key_by(&input, |u| u.id.clone());
 
     assert_eq!(result.len(), 2);
-    assert_eq!(result.get("a1"), Some(&User { id: "a1".to_string(), name: "Alice".to_string() }));
-    assert_eq!(result.get("b2"), Some(&User { id: "b2".to_string(), name: "Bob".to_string() }));
+    assert_eq!(
+        result.get("a1"),
+        Some(&User {
+            id: "a1".to_string(),
+            name: "Alice".to_string()
+        })
+    );
+    assert_eq!(
+        result.get("b2"),
+        Some(&User {
+            id: "b2".to_string(),
+            name: "Bob".to_string()
+        })
+    );
 }
 
 #[test]
 fn test_should_generate_keys_using_custom_function() {
     let input = vec![
-        DirectionCode { dir: "left".to_string(), code: 97 },
-        DirectionCode { dir: "right".to_string(), code: 100 },
+        DirectionCode {
+            dir: "left".to_string(),
+            code: 97,
+        },
+        DirectionCode {
+            dir: "right".to_string(),
+            code: 100,
+        },
     ];
 
     let result = key_by(&input, |o| char::from_u32(o.code).unwrap().to_string());
 
     assert_eq!(result.len(), 2);
-    assert_eq!(result.get("a"), Some(&DirectionCode { dir: "left".to_string(), code: 97 }));
-    assert_eq!(result.get("d"), Some(&DirectionCode { dir: "right".to_string(), code: 100 }));
+    assert_eq!(
+        result.get("a"),
+        Some(&DirectionCode {
+            dir: "left".to_string(),
+            code: 97
+        })
+    );
+    assert_eq!(
+        result.get("d"),
+        Some(&DirectionCode {
+            dir: "right".to_string(),
+            code: 100
+        })
+    );
 }
 
 #[test]
@@ -64,14 +100,26 @@ fn test_should_return_empty_map_for_empty_array() {
 #[test]
 fn test_should_use_later_values_when_duplicate_keys() {
     let input = vec![
-        User { id: "a1".to_string(), name: "Alice".to_string() },
-        User { id: "a1".to_string(), name: "Alex".to_string() },
+        User {
+            id: "a1".to_string(),
+            name: "Alice".to_string(),
+        },
+        User {
+            id: "a1".to_string(),
+            name: "Alex".to_string(),
+        },
     ];
 
     let result = key_by(&input, |u| u.id.clone());
 
     assert_eq!(result.len(), 1);
-    assert_eq!(result.get("a1"), Some(&User { id: "a1".to_string(), name: "Alex".to_string() }));
+    assert_eq!(
+        result.get("a1"),
+        Some(&User {
+            id: "a1".to_string(),
+            name: "Alex".to_string()
+        })
+    );
 }
 
 #[test]

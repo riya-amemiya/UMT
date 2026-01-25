@@ -53,4 +53,4 @@ pub use trim_start_characters::umt_trim_start_characters;
 pub use truncate::{umt_truncate, umt_truncate_default};
 pub use unescape_html::umt_unescape_html;
 
-pub use format_string::{umt_format_string, umt_format_string_indexed, FormatOptions};
+pub use format_string::{FormatOptions, umt_format_string, umt_format_string_indexed};

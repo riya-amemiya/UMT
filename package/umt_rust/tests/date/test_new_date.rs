@@ -37,7 +37,14 @@ fn test_new_date_string_default_time() {
 
 #[test]
 fn test_new_date_string_with_time_components() {
-    let date = umt_new_date_string("2025-01-01", Some("10"), Some("30"), Some("45"), Some("500"), Some(9));
+    let date = umt_new_date_string(
+        "2025-01-01",
+        Some("10"),
+        Some("30"),
+        Some("45"),
+        Some("500"),
+        Some(9),
+    );
     assert!(date.is_some());
     let dt = date.unwrap();
     // With JST (UTC+9) offset of 9 hours, 10:30 JST becomes 01:30 UTC
@@ -46,8 +53,22 @@ fn test_new_date_string_with_time_components() {
 
 #[test]
 fn test_new_date_string_different_timezone_offsets() {
-    let date_utc = umt_new_date_string("2025-01-01", Some("12"), Some("00"), Some("00"), Some("000"), Some(0));
-    let date_jst = umt_new_date_string("2025-01-01", Some("12"), Some("00"), Some("00"), Some("000"), Some(9));
+    let date_utc = umt_new_date_string(
+        "2025-01-01",
+        Some("12"),
+        Some("00"),
+        Some("00"),
+        Some("000"),
+        Some(0),
+    );
+    let date_jst = umt_new_date_string(
+        "2025-01-01",
+        Some("12"),
+        Some("00"),
+        Some("00"),
+        Some("000"),
+        Some(9),
+    );
 
     assert!(date_utc.is_some());
     assert!(date_jst.is_some());

@@ -8,8 +8,7 @@ use umt_rust::simple::array::{umt_quick_sort_simple, umt_quick_sort_simple_i32};
 #[test]
 fn test_returns_empty_array_when_sorting_empty_array() {
     let arr: Vec<i32> = vec![];
-    let result =
-        umt_quick_sort_simple::<i32, fn(&i32, &i32) -> Ordering>(&arr, None, None, None);
+    let result = umt_quick_sort_simple::<i32, fn(&i32, &i32) -> Ordering>(&arr, None, None, None);
     assert_eq!(result, Vec::<i32>::new());
 }
 

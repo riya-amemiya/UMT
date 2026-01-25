@@ -1,5 +1,5 @@
 use std::collections::HashMap;
-use umt_rust::string::format_string::{apply_formatter, Formatter};
+use umt_rust::string::format_string::{Formatter, apply_formatter};
 
 fn create_mock_formatters() -> HashMap<String, Formatter> {
     let mut formatters: HashMap<String, Formatter> = HashMap::new();
@@ -159,18 +159,9 @@ fn test_handle_empty_formatters_object() {
 #[test]
 fn test_only_accept_word_characters_in_formatter_names() {
     let mut invalid_formatters: HashMap<String, Formatter> = HashMap::new();
-    invalid_formatters.insert(
-        "with-dash".to_string(),
-        Box::new(|v, _| v.to_string()),
-    );
-    invalid_formatters.insert(
-        "with.dot".to_string(),
-        Box::new(|v, _| v.to_string()),
-    );
-    invalid_formatters.insert(
-        "with space".to_string(),
-        Box::new(|v, _| v.to_string()),
-    );
+    invalid_formatters.insert("with-dash".to_string(), Box::new(|v, _| v.to_string()));
+    invalid_formatters.insert("with.dot".to_string(), Box::new(|v, _| v.to_string()));
+    invalid_formatters.insert("with space".to_string(), Box::new(|v, _| v.to_string()));
 
     // These should not match due to invalid characters in formatter name
     assert_eq!(

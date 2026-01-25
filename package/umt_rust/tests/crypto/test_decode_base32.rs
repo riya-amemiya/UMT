@@ -44,30 +44,21 @@ fn test_decodes_strings_with_padding() {
 fn test_throws_error_on_invalid_character_at_sign() {
     let result = umt_decode_base32("JBSWY3D@");
     assert!(result.is_err());
-    assert_eq!(
-        result.unwrap_err().message,
-        "Invalid base32 character: @"
-    );
+    assert_eq!(result.unwrap_err().message, "Invalid base32 character: @");
 }
 
 #[test]
 fn test_throws_error_on_invalid_character_one() {
     let result = umt_decode_base32("JBSWY3D1");
     assert!(result.is_err());
-    assert_eq!(
-        result.unwrap_err().message,
-        "Invalid base32 character: 1"
-    );
+    assert_eq!(result.unwrap_err().message, "Invalid base32 character: 1");
 }
 
 #[test]
 fn test_throws_error_on_invalid_character_zero() {
     let result = umt_decode_base32("JBSWY3D0");
     assert!(result.is_err());
-    assert_eq!(
-        result.unwrap_err().message,
-        "Invalid base32 character: 0"
-    );
+    assert_eq!(result.unwrap_err().message, "Invalid base32 character: 0");
 }
 
 #[test]

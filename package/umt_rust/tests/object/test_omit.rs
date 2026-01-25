@@ -98,7 +98,10 @@ fn test_should_handle_various_value_types() {
     obj.insert("string".to_string(), Value::String("test".to_string()));
     obj.insert("number".to_string(), Value::Int(42));
     obj.insert("boolean".to_string(), Value::Bool(true));
-    obj.insert("array".to_string(), Value::Array(vec![Value::Int(1), Value::Int(2), Value::Int(3)]));
+    obj.insert(
+        "array".to_string(),
+        Value::Array(vec![Value::Int(1), Value::Int(2), Value::Int(3)]),
+    );
     obj.insert("object".to_string(), Value::Object(nested.clone()));
     obj.insert("null".to_string(), Value::Null);
 

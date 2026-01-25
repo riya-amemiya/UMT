@@ -67,7 +67,8 @@ fn test_handle_mixed_content() {
 
 #[test]
 fn test_handle_html_attributes() {
-    let input = "&lt;img src=&quot;test.jpg&quot; alt=&quot;Tom &amp; Jerry&#39;s picture&quot;&gt;";
+    let input =
+        "&lt;img src=&quot;test.jpg&quot; alt=&quot;Tom &amp; Jerry&#39;s picture&quot;&gt;";
     let expected = "<img src=\"test.jpg\" alt=\"Tom & Jerry's picture\">";
     assert_eq!(umt_unescape_html(input), expected);
 }

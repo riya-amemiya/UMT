@@ -1,11 +1,19 @@
-use umt_rust::string::{umt_fuzzy_search, umt_fuzzy_search_default, FuzzyMatch};
+use umt_rust::string::{FuzzyMatch, umt_fuzzy_search, umt_fuzzy_search_default};
 
 #[test]
 fn test_perform_fuzzy_string_matching_according_to_jsdoc_example() {
     let result = umt_fuzzy_search("hello", &["hello", "world", "helo", "help"], 0.6);
     assert!(result.iter().any(|m| m.item == "hello" && m.score == 1.0));
-    assert!(result.iter().any(|m| m.item == "helo" && (m.score - 0.8).abs() < 0.001));
-    assert!(result.iter().any(|m| m.item == "help" && (m.score - 0.6).abs() < 0.001));
+    assert!(
+        result
+            .iter()
+            .any(|m| m.item == "helo" && (m.score - 0.8).abs() < 0.001)
+    );
+    assert!(
+        result
+            .iter()
+            .any(|m| m.item == "help" && (m.score - 0.6).abs() < 0.001)
+    );
     assert_eq!(result.len(), 3);
 }
 

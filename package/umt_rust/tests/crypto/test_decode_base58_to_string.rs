@@ -29,20 +29,14 @@ fn test_decodes_special_characters() {
 fn test_throws_error_on_invalid_character_zero() {
     let result = umt_decode_base58_to_string("9Ajdvz0");
     assert!(result.is_err());
-    assert_eq!(
-        result.unwrap_err().message,
-        "Invalid base58 character: 0"
-    );
+    assert_eq!(result.unwrap_err().message, "Invalid base58 character: 0");
 }
 
 #[test]
 fn test_throws_error_on_invalid_character_uppercase_o() {
     let result = umt_decode_base58_to_string("9AjdvzO");
     assert!(result.is_err());
-    assert_eq!(
-        result.unwrap_err().message,
-        "Invalid base58 character: O"
-    );
+    assert_eq!(result.unwrap_err().message, "Invalid base58 character: O");
 }
 
 #[test]

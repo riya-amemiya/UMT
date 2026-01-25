@@ -276,7 +276,10 @@ fn test_preserve_original_data_types() {
     assert_eq!(get_value(&obj, "numbers[3]"), Some(&json!(3.14)));
     assert_eq!(get_value(&obj, "booleans[0]"), Some(&json!(true)));
     assert_eq!(get_value(&obj, "booleans[1]"), Some(&json!(false)));
-    assert_eq!(get_value(&obj, "objects[0]"), Some(&json!({"key": "value"})));
+    assert_eq!(
+        get_value(&obj, "objects[0]"),
+        Some(&json!({"key": "value"}))
+    );
     assert_eq!(get_value(&obj, "mixed[0]"), Some(&json!(null)));
     assert_eq!(get_value(&obj, "mixed[1]"), Some(&json!("")));
     assert_eq!(get_value(&obj, "mixed[2]"), Some(&json!(0)));

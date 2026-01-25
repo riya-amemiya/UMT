@@ -42,7 +42,9 @@ fn test_regex_match_email_pattern() {
     let validator = umt_regex_match(pattern, None);
 
     assert!((validator.validate)(&"test@example.com".to_string()));
-    assert!((validator.validate)(&"user.name+tag@example.co.uk".to_string()));
+    assert!((validator.validate)(
+        &"user.name+tag@example.co.uk".to_string()
+    ));
     assert!(!(validator.validate)(&"invalid-email".to_string()));
 }
 

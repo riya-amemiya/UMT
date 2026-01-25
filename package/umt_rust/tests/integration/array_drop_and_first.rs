@@ -6,7 +6,7 @@
 //! - Dropping elements from the end (right) and getting the first element
 //! - Edge cases with different array sizes and drop amounts
 
-use umt_rust::array::{umt_drop, umt_drop_left, umt_drop_right, umt_first, DropDirection};
+use umt_rust::array::{DropDirection, umt_drop, umt_drop_left, umt_drop_right, umt_first};
 
 #[cfg(test)]
 mod tests {

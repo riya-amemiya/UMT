@@ -1,7 +1,7 @@
 //! Tests for email validation
 
-use umt_rust::validate::string::umt_validate_email_validator;
 use umt_rust::validate::ParseEmailLevel;
+use umt_rust::validate::string::umt_validate_email_validator;
 
 #[test]
 fn test_email_with_message() {
@@ -76,7 +76,11 @@ fn test_email_rejects_various_invalid_formats() {
 fn test_email_regex_limitations() {
     let validator = umt_validate_email_validator(None, None);
 
-    let buggy_emails = vec!["user@example..com", "user@.example.com", "user@example.com."];
+    let buggy_emails = vec![
+        "user@example..com",
+        "user@.example.com",
+        "user@example.com.",
+    ];
 
     for email in buggy_emails {
         assert!(

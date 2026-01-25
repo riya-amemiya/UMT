@@ -32,7 +32,10 @@ fn test_handle_already_kebab_case_input() {
 
 #[test]
 fn test_handle_mixed_separators() {
-    assert_eq!(umt_kebab_case("helloWorld_test case"), "hello-world-test-case");
+    assert_eq!(
+        umt_kebab_case("helloWorld_test case"),
+        "hello-world-test-case"
+    );
     assert_eq!(umt_kebab_case("fooBar-baz qux"), "foo-bar-baz-qux");
 }
 

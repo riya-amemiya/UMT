@@ -1,4 +1,4 @@
-use umt_rust::math::{umt_bitwise, umt_bitwise_left, RotateDirection};
+use umt_rust::math::{RotateDirection, umt_bitwise, umt_bitwise_left};
 
 #[test]
 fn test_bitwise_rotate_8_left() {

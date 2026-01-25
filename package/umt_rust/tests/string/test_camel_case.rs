@@ -32,7 +32,10 @@ fn test_handle_already_camel_case_input() {
 
 #[test]
 fn test_handle_mixed_separators() {
-    assert_eq!(umt_camel_case("hello-world_test case"), "helloWorldTestCase");
+    assert_eq!(
+        umt_camel_case("hello-world_test case"),
+        "helloWorldTestCase"
+    );
     assert_eq!(umt_camel_case("foo_bar-baz qux"), "fooBarBazQux");
 }
 

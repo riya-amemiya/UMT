@@ -6,8 +6,8 @@
 //! system time and verify results are within expected ranges.
 
 use umt_rust::simple::date::{
-    umt_birthday_simple, umt_birthday_simple_datetime, umt_birthday_simple_props,
-    umt_birthday_simple_str, umt_new_date, umt_now_simple, BirthdayProperties,
+    BirthdayProperties, umt_birthday_simple, umt_birthday_simple_datetime,
+    umt_birthday_simple_props, umt_birthday_simple_str, umt_new_date, umt_now_simple,
 };
 
 // ============================================================================
@@ -49,7 +49,11 @@ fn test_leap_year_birthday_hyphen() {
 fn test_end_of_year_birthday() {
     let age = umt_birthday_simple_str("2000-12-31", 9);
     // Should be around 23-25 depending on current date
-    assert!(age >= 23 && age <= 30, "End of year age {} out of range", age);
+    assert!(
+        age >= 23 && age <= 30,
+        "End of year age {} out of range",
+        age
+    );
 }
 
 // ============================================================================
@@ -59,7 +63,11 @@ fn test_end_of_year_birthday() {
 #[test]
 fn test_basic_age_calculation_colon() {
     let age = umt_birthday_simple_str("2000:01:01", 9);
-    assert!(age >= 24 && age <= 30, "Colon format age {} out of range", age);
+    assert!(
+        age >= 24 && age <= 30,
+        "Colon format age {} out of range",
+        age
+    );
 }
 
 #[test]
@@ -78,7 +86,11 @@ fn test_various_patterns_colon() {
 #[test]
 fn test_basic_age_calculation_slash() {
     let age = umt_birthday_simple_str("2000/01/01", 9);
-    assert!(age >= 24 && age <= 30, "Slash format age {} out of range", age);
+    assert!(
+        age >= 24 && age <= 30,
+        "Slash format age {} out of range",
+        age
+    );
 }
 
 #[test]

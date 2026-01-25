@@ -124,11 +124,21 @@ fn test_should_handle_objects_with_null_properties() {
 #[test]
 fn test_should_handle_objects_containing_arrays() {
     let mut obj = HashMap::new();
-    obj.insert("a".to_string(), Value::Array(vec![Value::Int(1), Value::Int(2), Value::Int(3)]));
+    obj.insert(
+        "a".to_string(),
+        Value::Array(vec![Value::Int(1), Value::Int(2), Value::Int(3)]),
+    );
     obj.insert("b".to_string(), Value::Int(4));
 
     let result = pick(&obj, &["a"]);
 
     assert_eq!(result.len(), 1);
-    assert_eq!(result.get("a"), Some(&Value::Array(vec![Value::Int(1), Value::Int(2), Value::Int(3)])));
+    assert_eq!(
+        result.get("a"),
+        Some(&Value::Array(vec![
+            Value::Int(1),
+            Value::Int(2),
+            Value::Int(3)
+        ]))
+    );
 }

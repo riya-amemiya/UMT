@@ -38,5 +38,8 @@ fn test_mode_decimals() {
 
 #[test]
 fn test_mode_sorted_ascending() {
-    assert_eq!(umt_mode(&[3.0, 1.0, 3.0, 1.0, 2.0, 2.0]), vec![1.0, 2.0, 3.0]);
+    assert_eq!(
+        umt_mode(&[3.0, 1.0, 3.0, 1.0, 2.0, 2.0]),
+        vec![1.0, 2.0, 3.0]
+    );
 }

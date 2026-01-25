@@ -1,9 +1,8 @@
-use umt_rust::ua::{umt_parse_user_agent, Browser, Device, Os};
+use umt_rust::ua::{Browser, Device, Os, umt_parse_user_agent};
 
 #[test]
 fn test_should_detect_ios_mobile_with_safari() {
-    let ua =
-        "Mozilla/5.0 (iPhone; CPU iPhone OS 14_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.3 Mobile/15E148 Safari/604.1";
+    let ua = "Mozilla/5.0 (iPhone; CPU iPhone OS 14_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.3 Mobile/15E148 Safari/604.1";
     let result = umt_parse_user_agent(ua);
     assert_eq!(result.os, Os::Ios);
     assert_eq!(result.browser, Browser::Safari);
@@ -12,8 +11,7 @@ fn test_should_detect_ios_mobile_with_safari() {
 
 #[test]
 fn test_should_detect_android_mobile_with_chrome() {
-    let ua =
-        "Mozilla/5.0 (Linux; Android 10; SM-A505FN) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.105 Mobile Safari/537.36";
+    let ua = "Mozilla/5.0 (Linux; Android 10; SM-A505FN) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.105 Mobile Safari/537.36";
     let result = umt_parse_user_agent(ua);
     assert_eq!(result.os, Os::Android);
     assert_eq!(result.browser, Browser::Chrome);
@@ -31,8 +29,7 @@ fn test_should_detect_macos_desktop_with_firefox() {
 
 #[test]
 fn test_should_detect_windows_desktop_with_edge() {
-    let ua =
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36 Edg/89.0.774.57";
+    let ua = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36 Edg/89.0.774.57";
     let result = umt_parse_user_agent(ua);
     assert_eq!(result.os, Os::Windows);
     assert_eq!(result.browser, Browser::Edge);
@@ -41,8 +38,7 @@ fn test_should_detect_windows_desktop_with_edge() {
 
 #[test]
 fn test_should_detect_linux_desktop_with_chrome() {
-    let ua =
-        "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36";
+    let ua = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36";
     let result = umt_parse_user_agent(ua);
     assert_eq!(result.os, Os::Linux);
     assert_eq!(result.browser, Browser::Chrome);
@@ -51,8 +47,7 @@ fn test_should_detect_linux_desktop_with_chrome() {
 
 #[test]
 fn test_should_detect_ipad_as_tablet() {
-    let ua =
-        "Mozilla/5.0 (iPad; CPU OS 14_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Mobile/15E148 Safari/604.1";
+    let ua = "Mozilla/5.0 (iPad; CPU OS 14_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Mobile/15E148 Safari/604.1";
     let result = umt_parse_user_agent(ua);
     assert_eq!(result.os, Os::Ios);
     assert_eq!(result.browser, Browser::Safari);
@@ -61,8 +56,7 @@ fn test_should_detect_ipad_as_tablet() {
 
 #[test]
 fn test_should_detect_android_tablet() {
-    let ua =
-        "Mozilla/5.0 (Linux; Android 11; SM-T870) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.105 Safari/537.36";
+    let ua = "Mozilla/5.0 (Linux; Android 11; SM-T870) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.105 Safari/537.36";
     let result = umt_parse_user_agent(ua);
     assert_eq!(result.os, Os::Android);
     assert_eq!(result.browser, Browser::Chrome);

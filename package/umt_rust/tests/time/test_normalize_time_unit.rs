@@ -1,4 +1,4 @@
-use umt_rust::time::{umt_normalize_time_unit, NormalizeFormat, TimeUnit};
+use umt_rust::time::{NormalizeFormat, TimeUnit, umt_normalize_time_unit};
 
 #[test]
 fn test_converts_long_format_to_long_format() {
@@ -124,7 +124,10 @@ fn test_time_unit_enum() {
 
 #[test]
 fn test_time_unit_from_str() {
-    assert_eq!(TimeUnit::from_str("milliseconds"), Some(TimeUnit::Milliseconds));
+    assert_eq!(
+        TimeUnit::from_str("milliseconds"),
+        Some(TimeUnit::Milliseconds)
+    );
     assert_eq!(TimeUnit::from_str("ms"), Some(TimeUnit::Milliseconds));
     assert_eq!(TimeUnit::from_str("seconds"), Some(TimeUnit::Seconds));
     assert_eq!(TimeUnit::from_str("s"), Some(TimeUnit::Seconds));
@@ -137,8 +140,14 @@ fn test_time_unit_from_str() {
 
 #[test]
 fn test_invalid_units() {
-    assert_eq!(umt_normalize_time_unit("invalid", NormalizeFormat::Long), None);
-    assert_eq!(umt_normalize_time_unit("invalid", NormalizeFormat::Short), None);
+    assert_eq!(
+        umt_normalize_time_unit("invalid", NormalizeFormat::Long),
+        None
+    );
+    assert_eq!(
+        umt_normalize_time_unit("invalid", NormalizeFormat::Short),
+        None
+    );
     assert_eq!(umt_normalize_time_unit("", NormalizeFormat::Long), None);
     assert_eq!(umt_normalize_time_unit("", NormalizeFormat::Short), None);
 }

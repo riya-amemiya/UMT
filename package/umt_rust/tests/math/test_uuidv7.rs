@@ -5,7 +5,9 @@ use umt_rust::math::umt_uuidv7;
 fn test_uuidv7_correct_format() {
     let uuid = umt_uuidv7();
     // Format: xxxxxxxx-xxxx-7xxx-Vxxx-xxxxxxxxxxxx
-    let regex = regex::Regex::new(r"^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$").unwrap();
+    let regex =
+        regex::Regex::new(r"^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$")
+            .unwrap();
     assert!(regex.is_match(&uuid), "UUID format incorrect: {}", uuid);
 }
 

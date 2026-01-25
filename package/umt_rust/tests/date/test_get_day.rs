@@ -1,6 +1,6 @@
 //! Tests for the get_day module.
 
-use umt_rust::date::{umt_get_day, umt_get_day_en, umt_get_day_ja, DayLanguage};
+use umt_rust::date::{DayLanguage, umt_get_day, umt_get_day_en, umt_get_day_ja};
 
 #[test]
 fn test_get_day_sunday_in_different_languages() {

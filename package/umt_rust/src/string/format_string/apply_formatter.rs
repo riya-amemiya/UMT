@@ -36,9 +36,7 @@ pub fn apply_formatter(
         return value.to_string();
     };
 
-    let arguments = arguments_string
-        .map(parse_arguments)
-        .unwrap_or_default();
+    let arguments = arguments_string.map(parse_arguments).unwrap_or_default();
 
     formatter(value, &arguments)
 }
@@ -95,19 +93,16 @@ mod tests {
     fn create_mock_formatters() -> HashMap<String, Formatter> {
         let mut formatters: HashMap<String, Formatter> = HashMap::new();
 
-        formatters.insert(
-            "upper".to_string(),
-            Box::new(|v, _| v.to_uppercase()),
-        );
-        formatters.insert(
-            "lower".to_string(),
-            Box::new(|v, _| v.to_lowercase()),
-        );
+        formatters.insert("upper".to_string(), Box::new(|v, _| v.to_uppercase()));
+        formatters.insert("lower".to_string(), Box::new(|v, _| v.to_lowercase()));
         formatters.insert(
             "pad".to_string(),
             Box::new(|v, args| {
                 let length: usize = args.get(0).and_then(|s| s.parse().ok()).unwrap_or(2);
-                let pad_char = args.get(1).map(|s| s.chars().next().unwrap_or('0')).unwrap_or('0');
+                let pad_char = args
+                    .get(1)
+                    .map(|s| s.chars().next().unwrap_or('0'))
+                    .unwrap_or('0');
                 format!("{:>width$}", v, width = length).replace(' ', &pad_char.to_string())
             }),
         );

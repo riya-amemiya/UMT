@@ -51,7 +51,10 @@ fn test_max_with_infinity() {
 
 #[test]
 fn test_max_with_neg_infinity() {
-    assert_eq!(umt_max(&[f64::NEG_INFINITY, f64::NEG_INFINITY]), f64::NEG_INFINITY);
+    assert_eq!(
+        umt_max(&[f64::NEG_INFINITY, f64::NEG_INFINITY]),
+        f64::NEG_INFINITY
+    );
 }
 
 #[test]

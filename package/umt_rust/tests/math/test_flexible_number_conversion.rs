@@ -78,7 +78,10 @@ fn test_non_numeric_prefix() {
 #[test]
 fn test_infinity() {
     assert_eq!(umt_flexible_number_conversion("Infinity"), f64::INFINITY);
-    assert_eq!(umt_flexible_number_conversion("-Infinity"), f64::NEG_INFINITY);
+    assert_eq!(
+        umt_flexible_number_conversion("-Infinity"),
+        f64::NEG_INFINITY
+    );
 }
 
 #[test]

@@ -2,11 +2,16 @@ use std::collections::HashMap;
 use umt_rust::object::Value;
 
 /// Helper function to deep merge HashMaps
-fn merge_deep(target: &HashMap<String, Value>, sources: &[&HashMap<String, Value>]) -> HashMap<String, Value> {
+fn merge_deep(
+    target: &HashMap<String, Value>,
+    sources: &[&HashMap<String, Value>],
+) -> HashMap<String, Value> {
     let mut result = target.clone();
     for source in sources {
         for (key, value) in source.iter() {
-            if let (Some(Value::Object(existing)), Value::Object(new_obj)) = (result.get(key), value) {
+            if let (Some(Value::Object(existing)), Value::Object(new_obj)) =
+                (result.get(key), value)
+            {
                 // Both are objects, merge deeply
                 result.insert(key.clone(), Value::Object(merge_deep(existing, &[new_obj])));
             } else {
@@ -151,20 +156,29 @@ fn test_should_handle_arrays_as_values() {
     target_b.insert("c".to_string(), Value::Array(vec![Value::Int(3)]));
 
     let mut target = HashMap::new();
-    target.insert("a".to_string(), Value::Array(vec![Value::Int(1), Value::Int(2)]));
+    target.insert(
+        "a".to_string(),
+        Value::Array(vec![Value::Int(1), Value::Int(2)]),
+    );
     target.insert("b".to_string(), Value::Object(target_b));
 
     let mut source_b = HashMap::new();
     source_b.insert("c".to_string(), Value::Array(vec![Value::Int(6)]));
 
     let mut source = HashMap::new();
-    source.insert("a".to_string(), Value::Array(vec![Value::Int(4), Value::Int(5)]));
+    source.insert(
+        "a".to_string(),
+        Value::Array(vec![Value::Int(4), Value::Int(5)]),
+    );
     source.insert("b".to_string(), Value::Object(source_b));
 
     let result = merge_deep(&target, &[&source]);
 
     // Arrays should be replaced, not merged
-    assert_eq!(result.get("a"), Some(&Value::Array(vec![Value::Int(4), Value::Int(5)])));
+    assert_eq!(
+        result.get("a"),
+        Some(&Value::Array(vec![Value::Int(4), Value::Int(5)]))
+    );
 
     if let Some(Value::Object(b)) = result.get("b") {
         assert_eq!(b.get("c"), Some(&Value::Array(vec![Value::Int(6)])));

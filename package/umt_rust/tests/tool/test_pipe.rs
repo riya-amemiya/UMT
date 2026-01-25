@@ -1,6 +1,6 @@
 use std::cell::RefCell;
 use std::rc::Rc;
-use umt_rust::tool::{umt_pipe, Pipe};
+use umt_rust::tool::{Pipe, umt_pipe};
 
 #[derive(Debug, Clone, PartialEq)]
 struct User {

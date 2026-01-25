@@ -122,7 +122,10 @@ mod tests {
 
         assert_eq!(get_value(&obj, "user.name"), Some(&json!("Bob")));
         assert_eq!(get_value(&obj, "user.profile.age"), Some(&json!(25)));
-        assert_eq!(get_value(&obj, "user.profile.location"), Some(&json!("Tokyo")));
+        assert_eq!(
+            get_value(&obj, "user.profile.location"),
+            Some(&json!("Tokyo"))
+        );
     }
 
     #[test]

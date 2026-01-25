@@ -1,4 +1,4 @@
-use umt_rust::math::{umt_xoshiro256, umt_xoshiro256_01, Xoshiro256State};
+use umt_rust::math::{Xoshiro256State, umt_xoshiro256, umt_xoshiro256_01};
 
 #[test]
 fn test_xoshiro256_default_range() {

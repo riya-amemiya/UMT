@@ -3,8 +3,8 @@
 //! Ported from TypeScript: dayOfWeekSimple.test.ts
 
 use umt_rust::simple::date::{
-    umt_day_of_week_simple, umt_day_of_week_simple_datetime, umt_day_of_week_simple_str,
-    umt_new_date, DateProperties,
+    DateProperties, umt_day_of_week_simple, umt_day_of_week_simple_datetime,
+    umt_day_of_week_simple_str, umt_new_date,
 };
 
 // ============================================================================

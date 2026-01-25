@@ -43,10 +43,7 @@ pub fn create_default_formatters() -> HashMap<String, Formatter> {
     formatters.insert(
         "pad".to_string(),
         Box::new(|value, args| {
-            let length: usize = args
-                .get(0)
-                .and_then(|s| s.trim().parse().ok())
-                .unwrap_or(2);
+            let length: usize = args.get(0).and_then(|s| s.trim().parse().ok()).unwrap_or(2);
             let pad_char = args
                 .get(1)
                 .and_then(|s| {
@@ -75,10 +72,7 @@ pub fn create_default_formatters() -> HashMap<String, Formatter> {
         "number".to_string(),
         Box::new(|value, args| {
             let num: f64 = value.parse().unwrap_or(0.0);
-            let min_fraction: usize = args
-                .get(1)
-                .and_then(|s| s.trim().parse().ok())
-                .unwrap_or(0);
+            let min_fraction: usize = args.get(1).and_then(|s| s.trim().parse().ok()).unwrap_or(0);
             let max_fraction: usize = args
                 .get(2)
                 .and_then(|s| s.trim().parse().ok())

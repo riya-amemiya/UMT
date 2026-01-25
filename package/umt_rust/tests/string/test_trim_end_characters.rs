@@ -38,6 +38,9 @@ fn test_return_original_string_if_trim_characters_is_empty() {
 
 #[test]
 fn test_handle_non_ascii_characters() {
-    assert_eq!(umt_trim_end_characters("こんにちは。。。", "。"), "こんにちは");
+    assert_eq!(
+        umt_trim_end_characters("こんにちは。。。", "。"),
+        "こんにちは"
+    );
     assert_eq!(umt_trim_end_characters("Hello！！", "！"), "Hello");
 }

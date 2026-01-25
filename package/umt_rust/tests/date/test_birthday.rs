@@ -6,7 +6,10 @@ use umt_rust::date::umt_birthday;
 fn test_birthday_returns_positive_age() {
     // Test with a date far in the past (someone born in 1990)
     let age = umt_birthday(1990, 1, 1, Some(0));
-    assert!(age > 30, "Age should be greater than 30 for someone born in 1990");
+    assert!(
+        age > 30,
+        "Age should be greater than 30 for someone born in 1990"
+    );
 }
 
 #[test]

@@ -1,4 +1,4 @@
-use umt_rust::unit::{umt_unit_converter, UmtUnitConverter};
+use umt_rust::unit::{UmtUnitConverter, umt_unit_converter};
 
 /// Helper function to create a length converter for testing
 fn create_length_converter() -> UmtUnitConverter<&'static str> {
@@ -144,9 +144,7 @@ fn test_returns_none_for_unknown_units() {
         "Should return None for unknown 'to' unit"
     );
     assert!(
-        converter
-            .convert(100.0, &"unknown1", &"unknown2")
-            .is_none(),
+        converter.convert(100.0, &"unknown1", &"unknown2").is_none(),
         "Should return None when both units are unknown"
     );
 }
@@ -204,11 +202,7 @@ fn test_with_string_keys() {
     ]);
 
     let result = converter
-        .convert(
-            1000.0,
-            &String::from("meters"),
-            &String::from("kilometers"),
-        )
+        .convert(1000.0, &String::from("meters"), &String::from("kilometers"))
         .unwrap();
     assert!((result - 1.0).abs() < 1e-10, "Expected 1.0, got {}", result);
 }
@@ -225,14 +219,18 @@ fn test_temperature_converter() {
         ("pounds", 0.00220462),
     ]);
 
-    let result = weight_converter.convert(1.0, &"kilograms", &"grams").unwrap();
+    let result = weight_converter
+        .convert(1.0, &"kilograms", &"grams")
+        .unwrap();
     assert!(
         (result - 1000.0).abs() < 1e-10,
         "Expected 1000.0 grams, got {}",
         result
     );
 
-    let pounds = weight_converter.convert(1.0, &"kilograms", &"pounds").unwrap();
+    let pounds = weight_converter
+        .convert(1.0, &"kilograms", &"pounds")
+        .unwrap();
     assert!(
         (pounds - 2.20462).abs() < 1e-5,
         "Expected ~2.20462 pounds, got {}",
@@ -283,7 +281,9 @@ fn test_time_converter() {
         ("milliseconds", 1000.0),
     ]);
 
-    let result = time_converter.convert(3600.0, &"seconds", &"hours").unwrap();
+    let result = time_converter
+        .convert(3600.0, &"seconds", &"hours")
+        .unwrap();
     assert!((result - 1.0).abs() < 1e-10, "Expected 1.0, got {}", result);
 
     let result2 = time_converter.convert(1.0, &"hours", &"minutes").unwrap();

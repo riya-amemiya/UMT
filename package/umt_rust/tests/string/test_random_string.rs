@@ -1,5 +1,5 @@
-use umt_rust::string::{umt_random_string, umt_random_string_default};
 use regex::Regex;
+use umt_rust::string::{umt_random_string, umt_random_string_default};
 
 #[test]
 fn test_generate_random_string_with_default_characters_and_length() {

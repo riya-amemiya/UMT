@@ -2,7 +2,10 @@ use std::collections::HashMap;
 use umt_rust::object::Value;
 
 /// Helper function to merge HashMaps (shallow merge)
-fn merge(target: &HashMap<String, Value>, sources: &[&HashMap<String, Value>]) -> HashMap<String, Value> {
+fn merge(
+    target: &HashMap<String, Value>,
+    sources: &[&HashMap<String, Value>],
+) -> HashMap<String, Value> {
     let mut result = target.clone();
     for source in sources {
         for (key, value) in source.iter() {

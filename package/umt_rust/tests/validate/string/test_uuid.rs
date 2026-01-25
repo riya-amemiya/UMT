@@ -106,7 +106,9 @@ fn test_uuid_validates_different_versions() {
 #[test]
 fn test_uuid_rejects_completely_invalid_formats() {
     let validator = umt_uuid(None, None);
-    assert!(!(validator.validate)(&"completely-invalid-format".to_string()));
+    assert!(!(validator.validate)(
+        &"completely-invalid-format".to_string()
+    ));
 }
 
 #[test]

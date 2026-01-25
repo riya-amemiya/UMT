@@ -2,7 +2,7 @@
 
 use std::collections::{HashMap, HashSet};
 use umt_rust::validate::{
-    umt_is_deep_equal, umt_is_deep_equal_map, umt_is_deep_equal_set, IsDeepEqualOptions,
+    IsDeepEqualOptions, umt_is_deep_equal, umt_is_deep_equal_map, umt_is_deep_equal_set,
 };
 
 // Basic array comparison tests

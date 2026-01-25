@@ -26,10 +26,7 @@ fn test_validate_object_with_validators() {
     obj.insert("name".to_string(), "John Doe".to_string());
 
     let mut validators: HashMap<String, Box<dyn Fn(&String) -> bool>> = HashMap::new();
-    validators.insert(
-        "name".to_string(),
-        Box::new(|s: &String| !s.is_empty()),
-    );
+    validators.insert("name".to_string(), Box::new(|s: &String| !s.is_empty()));
 
     let result = umt_validate_object(&obj, Some(&validators), None);
     assert!(result.validate);
@@ -41,10 +38,7 @@ fn test_validate_object_fails_with_invalid_value() {
     obj.insert("name".to_string(), "".to_string()); // Empty name
 
     let mut validators: HashMap<String, Box<dyn Fn(&String) -> bool>> = HashMap::new();
-    validators.insert(
-        "name".to_string(),
-        Box::new(|s: &String| !s.is_empty()),
-    );
+    validators.insert("name".to_string(), Box::new(|s: &String| !s.is_empty()));
 
     let result = umt_validate_object(&obj, Some(&validators), Some("Invalid object"));
     assert!(!result.validate);
@@ -55,10 +49,7 @@ fn test_validate_object_returns_custom_message() {
     let obj: HashMap<String, String> = HashMap::new();
 
     let mut validators: HashMap<String, Box<dyn Fn(&String) -> bool>> = HashMap::new();
-    validators.insert(
-        "name".to_string(),
-        Box::new(|s: &String| !s.is_empty()),
-    );
+    validators.insert("name".to_string(), Box::new(|s: &String| !s.is_empty()));
 
     let custom_message = "Invalid object structure";
     let result = umt_validate_object(&obj, Some(&validators), Some(custom_message));
@@ -72,10 +63,7 @@ fn test_validate_object_returns_empty_message_on_validation_failure() {
     let obj: HashMap<String, String> = HashMap::new();
 
     let mut validators: HashMap<String, Box<dyn Fn(&String) -> bool>> = HashMap::new();
-    validators.insert(
-        "name".to_string(),
-        Box::new(|s: &String| !s.is_empty()),
-    );
+    validators.insert("name".to_string(), Box::new(|s: &String| !s.is_empty()));
 
     let result = umt_validate_object(&obj, Some(&validators), None);
     assert!(!result.validate);

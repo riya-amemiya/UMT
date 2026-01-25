@@ -1,4 +1,4 @@
-use umt_rust::math::{umt_repeated_trial, Probability};
+use umt_rust::math::{Probability, umt_repeated_trial};
 
 #[test]
 fn test_repeated_trial_basic() {

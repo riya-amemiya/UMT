@@ -43,7 +43,9 @@ fn set_deep_value(obj: &mut HashMap<String, Value>, path: &[&str], value: Value)
         return;
     }
 
-    let entry = obj.entry(path[0].to_string()).or_insert_with(|| Value::Object(HashMap::new()));
+    let entry = obj
+        .entry(path[0].to_string())
+        .or_insert_with(|| Value::Object(HashMap::new()));
     if let Value::Object(inner) = entry {
         set_deep_value(inner, &path[1..], value);
     }
@@ -118,18 +120,21 @@ fn test_should_handle_no_keys_specified() {
 #[test]
 fn test_should_handle_objects_containing_arrays() {
     let mut obj = HashMap::new();
-    obj.insert("a".to_string(), Value::Array(vec![
-        Value::Object({
-            let mut m = HashMap::new();
-            m.insert("b".to_string(), Value::Int(1));
-            m
-        }),
-        Value::Object({
-            let mut m = HashMap::new();
-            m.insert("c".to_string(), Value::Int(2));
-            m
-        }),
-    ]));
+    obj.insert(
+        "a".to_string(),
+        Value::Array(vec![
+            Value::Object({
+                let mut m = HashMap::new();
+                m.insert("b".to_string(), Value::Int(1));
+                m
+            }),
+            Value::Object({
+                let mut m = HashMap::new();
+                m.insert("c".to_string(), Value::Int(2));
+                m
+            }),
+        ]),
+    );
     obj.insert("d".to_string(), Value::Int(3));
 
     let result = pick_deep(&obj, &["a", "d"]);

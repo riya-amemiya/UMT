@@ -17,7 +17,10 @@ fn test_decodes_strings_with_padding() {
     assert_eq!(umt_decode_base32_to_string("MZXW6===").unwrap(), "foo");
     assert_eq!(umt_decode_base32_to_string("MZXW6YQ=").unwrap(), "foob");
     assert_eq!(umt_decode_base32_to_string("MZXW6YTB").unwrap(), "fooba");
-    assert_eq!(umt_decode_base32_to_string("MZXW6YTBOI======").unwrap(), "foobar");
+    assert_eq!(
+        umt_decode_base32_to_string("MZXW6YTBOI======").unwrap(),
+        "foobar"
+    );
 }
 
 #[test]
@@ -32,10 +35,7 @@ fn test_decodes_special_characters() {
 fn test_throws_error_on_invalid_character() {
     let result = umt_decode_base32_to_string("JBSWY3D@");
     assert!(result.is_err());
-    assert_eq!(
-        result.unwrap_err().message,
-        "Invalid base32 character: @"
-    );
+    assert_eq!(result.unwrap_err().message, "Invalid base32 character: @");
 }
 
 #[test]

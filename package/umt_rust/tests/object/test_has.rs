@@ -1,5 +1,5 @@
 use std::collections::HashMap;
-use umt_rust::object::{umt_has, umt_has_path, Value};
+use umt_rust::object::{Value, umt_has, umt_has_path};
 
 fn create_nested_object() -> HashMap<String, Value> {
     let mut inner = HashMap::new();

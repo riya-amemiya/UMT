@@ -1,6 +1,6 @@
 //! Tests for parse_email function
 
-use umt_rust::validate::{umt_parse_email, umt_validate_email, ParseEmailLevel, ParseEmailOptions};
+use umt_rust::validate::{ParseEmailLevel, ParseEmailOptions, umt_parse_email, umt_validate_email};
 
 // Basic email validation tests
 #[test]
@@ -132,7 +132,11 @@ fn test_parse_email_ipv6_address_literals() {
 
     for email in ipv6_cases {
         let result = umt_parse_email(email, None);
-        assert!(!result.valid, "Expected {} to be invalid at basic level", email);
+        assert!(
+            !result.valid,
+            "Expected {} to be invalid at basic level",
+            email
+        );
     }
 }
 

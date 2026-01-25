@@ -167,7 +167,11 @@ fn test_get_date() {
 fn test_get_day() {
     let result = umt_now_simple(9);
     let day_of_week = result.get_day();
-    assert!(day_of_week < 7, "Day of week should be 0-6, got {}", day_of_week);
+    assert!(
+        day_of_week < 7,
+        "Day of week should be 0-6, got {}",
+        day_of_week
+    );
 }
 
 // ============================================================================

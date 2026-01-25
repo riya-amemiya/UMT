@@ -1,6 +1,6 @@
 //! Tests for core validation function
 
-use umt_rust::validate::core::{umt_validate_core, ValidateReturnType};
+use umt_rust::validate::core::{ValidateReturnType, umt_validate_core};
 
 #[test]
 fn test_validate_core_validates_type_correctly() {

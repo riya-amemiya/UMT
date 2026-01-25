@@ -6,8 +6,8 @@
 //! - Accuracy of conversions across color spaces
 
 use umt_rust::color::{
-    umt_cmyk_to_rgba, umt_hexa_to_rgba, umt_hsla_to_rgba, umt_rgba_to_cmyk, umt_rgba_to_hexa,
-    umt_rgba_to_hsla, RgbaInput,
+    RgbaInput, umt_cmyk_to_rgba, umt_hexa_to_rgba, umt_hsla_to_rgba, umt_rgba_to_cmyk,
+    umt_rgba_to_hexa, umt_rgba_to_hsla,
 };
 
 #[cfg(test)]
@@ -22,11 +22,36 @@ mod tests {
     #[test]
     fn should_perform_roundtrip_conversion_rgba_to_hsla_to_rgba() {
         let test_colors = vec![
-            RgbaInput { r: 255.0, g: 0.0, b: 0.0, a: Some(1.0) },    // Red
-            RgbaInput { r: 0.0, g: 255.0, b: 0.0, a: Some(0.5) },    // Green with alpha
-            RgbaInput { r: 0.0, g: 0.0, b: 255.0, a: Some(1.0) },    // Blue
-            RgbaInput { r: 128.0, g: 128.0, b: 128.0, a: Some(1.0) }, // Gray
-            RgbaInput { r: 255.0, g: 255.0, b: 255.0, a: Some(0.8) }, // White with alpha
+            RgbaInput {
+                r: 255.0,
+                g: 0.0,
+                b: 0.0,
+                a: Some(1.0),
+            }, // Red
+            RgbaInput {
+                r: 0.0,
+                g: 255.0,
+                b: 0.0,
+                a: Some(0.5),
+            }, // Green with alpha
+            RgbaInput {
+                r: 0.0,
+                g: 0.0,
+                b: 255.0,
+                a: Some(1.0),
+            }, // Blue
+            RgbaInput {
+                r: 128.0,
+                g: 128.0,
+                b: 128.0,
+                a: Some(1.0),
+            }, // Gray
+            RgbaInput {
+                r: 255.0,
+                g: 255.0,
+                b: 255.0,
+                a: Some(0.8),
+            }, // White with alpha
         ];
 
         for original in test_colors {
@@ -63,10 +88,30 @@ mod tests {
     #[test]
     fn should_perform_roundtrip_conversion_rgba_to_cmyk_to_rgba() {
         let test_colors = vec![
-            RgbaInput { r: 255.0, g: 0.0, b: 0.0, a: Some(1.0) },     // Red
-            RgbaInput { r: 0.0, g: 255.0, b: 0.0, a: Some(1.0) },     // Green
-            RgbaInput { r: 0.0, g: 0.0, b: 255.0, a: Some(1.0) },     // Blue
-            RgbaInput { r: 100.0, g: 150.0, b: 200.0, a: Some(0.7) }, // Custom color with alpha
+            RgbaInput {
+                r: 255.0,
+                g: 0.0,
+                b: 0.0,
+                a: Some(1.0),
+            }, // Red
+            RgbaInput {
+                r: 0.0,
+                g: 255.0,
+                b: 0.0,
+                a: Some(1.0),
+            }, // Green
+            RgbaInput {
+                r: 0.0,
+                g: 0.0,
+                b: 255.0,
+                a: Some(1.0),
+            }, // Blue
+            RgbaInput {
+                r: 100.0,
+                g: 150.0,
+                b: 200.0,
+                a: Some(0.7),
+            }, // Custom color with alpha
         ];
 
         for original in test_colors {
@@ -103,9 +148,24 @@ mod tests {
     #[test]
     fn should_perform_roundtrip_conversion_rgba_to_hex_to_rgba() {
         let test_colors = vec![
-            RgbaInput { r: 255.0, g: 0.0, b: 0.0, a: Some(1.0) },     // Red
-            RgbaInput { r: 0.0, g: 255.0, b: 0.0, a: Some(0.5) },     // Green with alpha
-            RgbaInput { r: 128.0, g: 64.0, b: 192.0, a: Some(0.75) }, // Purple with alpha
+            RgbaInput {
+                r: 255.0,
+                g: 0.0,
+                b: 0.0,
+                a: Some(1.0),
+            }, // Red
+            RgbaInput {
+                r: 0.0,
+                g: 255.0,
+                b: 0.0,
+                a: Some(0.5),
+            }, // Green with alpha
+            RgbaInput {
+                r: 128.0,
+                g: 64.0,
+                b: 192.0,
+                a: Some(0.75),
+            }, // Purple with alpha
         ];
 
         for original in test_colors {
@@ -126,7 +186,12 @@ mod tests {
 
     #[test]
     fn should_handle_multi_step_color_transformations() {
-        let original_rgba = RgbaInput { r: 75.0, g: 150.0, b: 225.0, a: Some(0.9) };
+        let original_rgba = RgbaInput {
+            r: 75.0,
+            g: 150.0,
+            b: 225.0,
+            a: Some(0.9),
+        };
 
         // RGBA -> HSLA
         let hsla = umt_rgba_to_hsla(original_rgba.clone()).unwrap();
@@ -142,8 +207,7 @@ mod tests {
         let cmyk = umt_rgba_to_cmyk(rgba_input).unwrap();
 
         // CMYK -> RGBA -> HEX
-        let rgba_from_cmyk =
-            umt_cmyk_to_rgba(cmyk.c, cmyk.m, cmyk.y, cmyk.k, Some(cmyk.a));
+        let rgba_from_cmyk = umt_cmyk_to_rgba(cmyk.c, cmyk.m, cmyk.y, cmyk.k, Some(cmyk.a));
         let rgba_input2 = RgbaInput {
             r: rgba_from_cmyk.r,
             g: rgba_from_cmyk.g,
@@ -186,7 +250,12 @@ mod tests {
         let gray_levels = [0.0, 64.0, 128.0, 192.0, 255.0];
 
         for gray in gray_levels {
-            let rgba = RgbaInput { r: gray, g: gray, b: gray, a: Some(1.0) };
+            let rgba = RgbaInput {
+                r: gray,
+                g: gray,
+                b: gray,
+                a: Some(1.0),
+            };
 
             // Test HSLA conversion
             let hsla = umt_rgba_to_hsla(rgba.clone()).unwrap();
@@ -210,8 +279,7 @@ mod tests {
 
             // Test CMYK conversion
             let cmyk = umt_rgba_to_cmyk(rgba.clone()).unwrap();
-            let rgba_from_cmyk =
-                umt_cmyk_to_rgba(cmyk.c, cmyk.m, cmyk.y, cmyk.k, Some(cmyk.a));
+            let rgba_from_cmyk = umt_cmyk_to_rgba(cmyk.c, cmyk.m, cmyk.y, cmyk.k, Some(cmyk.a));
             assert!(
                 close_to(rgba_from_cmyk.r, gray, 0),
                 "CMYK roundtrip red mismatch"
@@ -273,9 +341,24 @@ mod tests {
     #[test]
     fn should_handle_edge_cases_in_color_conversions() {
         let edge_cases = vec![
-            RgbaInput { r: 0.0, g: 0.0, b: 0.0, a: Some(1.0) },       // Black
-            RgbaInput { r: 255.0, g: 255.0, b: 255.0, a: Some(1.0) }, // White
-            RgbaInput { r: 255.0, g: 0.0, b: 255.0, a: Some(0.0) },   // Magenta with 0 alpha
+            RgbaInput {
+                r: 0.0,
+                g: 0.0,
+                b: 0.0,
+                a: Some(1.0),
+            }, // Black
+            RgbaInput {
+                r: 255.0,
+                g: 255.0,
+                b: 255.0,
+                a: Some(1.0),
+            }, // White
+            RgbaInput {
+                r: 255.0,
+                g: 0.0,
+                b: 255.0,
+                a: Some(0.0),
+            }, // Magenta with 0 alpha
         ];
 
         for color in edge_cases {
@@ -320,8 +403,18 @@ mod tests {
 
     #[test]
     fn should_handle_color_mixing_through_conversions() {
-        let color1 = RgbaInput { r: 255.0, g: 0.0, b: 0.0, a: Some(1.0) }; // Red
-        let color2 = RgbaInput { r: 0.0, g: 0.0, b: 255.0, a: Some(1.0) }; // Blue
+        let color1 = RgbaInput {
+            r: 255.0,
+            g: 0.0,
+            b: 0.0,
+            a: Some(1.0),
+        }; // Red
+        let color2 = RgbaInput {
+            r: 0.0,
+            g: 0.0,
+            b: 255.0,
+            a: Some(1.0),
+        }; // Blue
 
         // Convert to HSLA for mixing
         let hsla1 = umt_rgba_to_hsla(color1).unwrap();

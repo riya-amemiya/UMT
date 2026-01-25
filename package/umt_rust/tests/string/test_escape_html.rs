@@ -63,13 +63,15 @@ fn test_handle_mixed_content() {
 #[test]
 fn test_handle_html_attributes() {
     let input = "<img src=\"test.jpg\" alt=\"Tom & Jerry's picture\">";
-    let expected = "&lt;img src=&quot;test.jpg&quot; alt=&quot;Tom &amp; Jerry&#39;s picture&quot;&gt;";
+    let expected =
+        "&lt;img src=&quot;test.jpg&quot; alt=&quot;Tom &amp; Jerry&#39;s picture&quot;&gt;";
     assert_eq!(umt_escape_html(input), expected);
 }
 
 #[test]
 fn test_handle_javascript_code() {
     let input = "if (x < 5 && y > 3) { alert(\"Hello 'World'\"); }";
-    let expected = "if (x &lt; 5 &amp;&amp; y &gt; 3) { alert(&quot;Hello &#39;World&#39;&quot;); }";
+    let expected =
+        "if (x &lt; 5 &amp;&amp; y &gt; 3) { alert(&quot;Hello &#39;World&#39;&quot;); }";
     assert_eq!(umt_escape_html(input), expected);
 }

@@ -1,6 +1,8 @@
 use std::cell::Cell;
 use std::rc::Rc;
-use umt_rust::error::{umt_retry, umt_retry_default, umt_retry_simple, RetryError, RetryOptionsBuilder};
+use umt_rust::error::{
+    RetryError, RetryOptionsBuilder, umt_retry, umt_retry_default, umt_retry_simple,
+};
 
 // =============================================================================
 // Successful Operations
@@ -99,7 +101,10 @@ fn test_succeeds_on_last_retry_attempt() {
         || -> Result<&str, RetryError> {
             call_count_clone.set(call_count_clone.get() + 1);
             if call_count_clone.get() < 4 {
-                Err(RetryError::new(format!("failure {}", call_count_clone.get())))
+                Err(RetryError::new(format!(
+                    "failure {}",
+                    call_count_clone.get()
+                )))
             } else {
                 Ok("success")
             }
@@ -257,8 +262,8 @@ fn test_uses_default_values_when_options_not_provided() {
             call_count_clone.set(call_count_clone.get() + 1);
             Err(RetryError::new("test error"))
         },
-        3,  // default retries
-        1,  // minimal delay for testing
+        3, // default retries
+        1, // minimal delay for testing
     );
 
     assert!(result.is_err());
