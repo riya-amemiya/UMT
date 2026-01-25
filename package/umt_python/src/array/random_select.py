@@ -25,13 +25,13 @@ def random_select(
         >>> len(result)
         2
     """
-    result: list[T] = []
-    used_indices: set[int] = set()
+    if count == 0:
+        return []
 
-    while len(result) < count and (allow_duplicates or len(result) < len(array)):
-        random_index = random.randint(0, len(array) - 1)
-        if allow_duplicates or random_index not in used_indices:
-            used_indices.add(random_index)
-            result.append(array[random_index])
+    if allow_duplicates:
+        return random.choices(array, k=count)
 
-    return result
+    if count >= len(array):
+        return random.sample(array, len(array))
+
+    return random.sample(array, count)
