@@ -1,0 +1,8 @@
+mod test_has;
+mod test_is_empty;
+mod test_key_by;
+mod test_merge;
+mod test_merge_deep;
+mod test_omit;
+mod test_pick;
+mod test_pick_deep;

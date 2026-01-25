@@ -71,7 +71,7 @@ mod tests {
 
         for original in test_colors {
             let cmyk = umt_rgba_to_cmyk(original.clone()).unwrap();
-            let converted = umt_cmyk_to_rgba(cmyk.c, cmyk.m, cmyk.y, cmyk.k, Some(cmyk.a)).unwrap();
+            let converted = umt_cmyk_to_rgba(cmyk.c, cmyk.m, cmyk.y, cmyk.k, Some(cmyk.a));
 
             assert!(
                 close_to(converted.r, original.r, 0),
@@ -143,7 +143,7 @@ mod tests {
 
         // CMYK -> RGBA -> HEX
         let rgba_from_cmyk =
-            umt_cmyk_to_rgba(cmyk.c, cmyk.m, cmyk.y, cmyk.k, Some(cmyk.a)).unwrap();
+            umt_cmyk_to_rgba(cmyk.c, cmyk.m, cmyk.y, cmyk.k, Some(cmyk.a));
         let rgba_input2 = RgbaInput {
             r: rgba_from_cmyk.r,
             g: rgba_from_cmyk.g,
@@ -211,7 +211,7 @@ mod tests {
             // Test CMYK conversion
             let cmyk = umt_rgba_to_cmyk(rgba.clone()).unwrap();
             let rgba_from_cmyk =
-                umt_cmyk_to_rgba(cmyk.c, cmyk.m, cmyk.y, cmyk.k, Some(cmyk.a)).unwrap();
+                umt_cmyk_to_rgba(cmyk.c, cmyk.m, cmyk.y, cmyk.k, Some(cmyk.a));
             assert!(
                 close_to(rgba_from_cmyk.r, gray, 0),
                 "CMYK roundtrip red mismatch"
@@ -285,7 +285,7 @@ mod tests {
             let hex = umt_rgba_to_hexa(color.clone()).unwrap();
 
             let from_hsla = umt_hsla_to_rgba(hsla.h, hsla.s, hsla.l, Some(hsla.a)).unwrap();
-            let from_cmyk = umt_cmyk_to_rgba(cmyk.c, cmyk.m, cmyk.y, cmyk.k, Some(cmyk.a)).unwrap();
+            let from_cmyk = umt_cmyk_to_rgba(cmyk.c, cmyk.m, cmyk.y, cmyk.k, Some(cmyk.a));
             let from_hex = umt_hexa_to_rgba(&hex).unwrap();
 
             // All conversions should yield similar results

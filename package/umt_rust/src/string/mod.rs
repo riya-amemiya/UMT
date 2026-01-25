@@ -11,6 +11,7 @@
 mod camel_case;
 mod delete_spaces;
 mod escape_html;
+pub mod format_string;
 mod from_base64;
 mod fuzzy_search;
 mod has_no_letters;
@@ -51,3 +52,5 @@ pub use trim_end_characters::umt_trim_end_characters;
 pub use trim_start_characters::umt_trim_start_characters;
 pub use truncate::{umt_truncate, umt_truncate_default};
 pub use unescape_html::umt_unescape_html;
+
+pub use format_string::{umt_format_string, umt_format_string_indexed, FormatOptions};
