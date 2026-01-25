@@ -199,7 +199,7 @@ describe("getArraysCommon", () => {
     const largeArray = Array.from({ length: 200 }, (_, i) => i % 100); // 0-99 repeated twice
     const otherArray = Array.from({ length: 200 }, (_, i) => i);
 
-    const result = getArraysCommon(largeArray, otherArray);
+    const result = getArraysCommon<number[]>(largeArray, otherArray);
     expect(result).toHaveLength(100);
     expect(result[0]).toBe(0);
     expect(result[99]).toBe(99);
