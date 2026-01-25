@@ -43,7 +43,10 @@ pub fn create_default_formatters() -> HashMap<String, Formatter> {
     formatters.insert(
         "pad".to_string(),
         Box::new(|value, args| {
-            let length: usize = args.first().and_then(|s| s.trim().parse().ok()).unwrap_or(2);
+            let length: usize = args
+                .first()
+                .and_then(|s| s.trim().parse().ok())
+                .unwrap_or(2);
             let pad_char = args
                 .get(1)
                 .and_then(|s| {
