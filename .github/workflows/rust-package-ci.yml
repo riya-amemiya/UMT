@@ -10,6 +10,7 @@ on:
       - feature/*
     paths:
       - 'package/umt_rust/**'
+      - '.github/workflows/rust-package-ci.yml'
   workflow_dispatch:
 
 jobs:

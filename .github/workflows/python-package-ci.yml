@@ -8,6 +8,7 @@ on:
       - feature/*
     paths:
       - 'package/umt_python/**'
+      - '.github/workflows/python-package-ci.yml'
   workflow_dispatch:
 permissions:
   pull-requests: write
