@@ -28,7 +28,7 @@ pub fn create_default_formatters() -> HashMap<String, Formatter> {
         "plural".to_string(),
         Box::new(|value, args| {
             let num: f64 = value.parse().unwrap_or(0.0);
-            let singular = args.get(0).map(|s| s.as_str()).unwrap_or("");
+            let singular = args.first().map(|s| s.as_str()).unwrap_or("");
             let plural = args.get(1).map(|s| s.as_str()).unwrap_or("");
 
             if num == 1.0 {
@@ -43,7 +43,7 @@ pub fn create_default_formatters() -> HashMap<String, Formatter> {
     formatters.insert(
         "pad".to_string(),
         Box::new(|value, args| {
-            let length: usize = args.get(0).and_then(|s| s.trim().parse().ok()).unwrap_or(2);
+            let length: usize = args.first().and_then(|s| s.trim().parse().ok()).unwrap_or(2);
             let pad_char = args
                 .get(1)
                 .and_then(|s| {
@@ -62,7 +62,7 @@ pub fn create_default_formatters() -> HashMap<String, Formatter> {
             }
 
             let padding_needed = length - current_len;
-            let padding: String = std::iter::repeat(pad_char).take(padding_needed).collect();
+            let padding: String = std::iter::repeat_n(pad_char, padding_needed).collect();
             format!("{}{}", padding, value)
         }),
     );
@@ -84,13 +84,7 @@ pub fn create_default_formatters() -> HashMap<String, Formatter> {
 
             if parts.len() == 2 {
                 let integer_part = parts[0];
-                let mut decimal_part = parts[1].trim_end_matches('0');
-
-                // Ensure minimum fraction digits
-                while decimal_part.len() < min_fraction {
-                    decimal_part = &formatted[formatted.len() - decimal_part.len() - 1..];
-                    break;
-                }
+                let decimal_part = parts[1].trim_end_matches('0');
 
                 if decimal_part.is_empty() && min_fraction == 0 {
                     integer_part.to_string()
