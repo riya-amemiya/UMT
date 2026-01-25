@@ -7,8 +7,37 @@ mod array {
     mod test_ultra_number_sort;
 }
 
+mod crypto {
+    mod test_decode_base32;
+    mod test_decode_base32_to_string;
+    mod test_decode_base58;
+    mod test_decode_base58_to_string;
+    mod test_encode_base32;
+    mod test_encode_base58;
+}
+
+mod error {
+    mod test_retry;
+    mod test_safe_execute;
+}
+
 mod function {
     mod test_curry;
+}
+
+mod integration;
+
+mod ip {
+    mod test_cidr_to_long;
+    mod test_cidr_to_subnet_mask;
+    mod test_get_ip_class;
+    mod test_get_network_address;
+    mod test_ip_to_binary_string;
+    mod test_ip_to_long;
+    mod test_is_in_range;
+    mod test_is_private_ip;
+    mod test_long_to_ip;
+    mod test_subnet_mask_to_cidr;
 }
 
 mod math {
