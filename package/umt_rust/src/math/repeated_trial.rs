@@ -43,24 +43,3 @@ pub fn umt_repeated_trial(n: i32, r: i32, p: Probability) -> (i64, i64) {
     let gcd = umt_gcd(a1.abs() as i32, a2.abs() as i32) as i64;
     (a1 / gcd, a2 / gcd)
 }
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_repeated_trial_basic() {
-        let (num, den) = umt_repeated_trial(5, 2, Probability { x: 1.0, y: 3.0 });
-        // 5C2 * (1/3)^2 * (2/3)^3 = 10 * 1/9 * 8/27 = 80/243
-        assert_eq!(num, 80);
-        assert_eq!(den, 243);
-    }
-
-    #[test]
-    fn test_repeated_trial_simple() {
-        let (num, den) = umt_repeated_trial(2, 1, Probability { x: 1.0, y: 2.0 });
-        // 2C1 * (1/2)^1 * (1/2)^1 = 2 * 1/2 * 1/2 = 2/4 = 1/2
-        assert_eq!(num, 1);
-        assert_eq!(den, 2);
-    }
-}

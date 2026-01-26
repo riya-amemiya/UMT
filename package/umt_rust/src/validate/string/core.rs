@@ -66,35 +66,3 @@ pub fn umt_string_validator_simple(
 ) -> impl Fn(&str) -> ValidateCoreResult<String> {
     move |value: &str| ValidateCoreResult::success(value.to_string(), ValueType::String)
 }
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-    use crate::validate::string::{umt_max_length, umt_min_length};
-
-    #[test]
-    fn test_string_validator_no_rules() {
-        let validator = umt_string_validator(vec![], None);
-        assert!(validator("").validate);
-        assert!(validator("abc").validate);
-        assert!(validator("hello world").validate);
-    }
-
-    #[test]
-    fn test_string_validator_with_min_and_max_length() {
-        let rules = vec![umt_min_length(3, None), umt_max_length(5, None)];
-        let validator = umt_string_validator(rules, None);
-        assert!(!validator("ab").validate);
-        assert!(validator("abc").validate);
-        assert!(validator("abcde").validate);
-        assert!(!validator("abcdef").validate);
-        assert!(!validator("abcdefg").validate);
-    }
-
-    #[test]
-    fn test_string_validator_returns_message() {
-        let validator = umt_string_validator(vec![], Some("Must be string"));
-        assert_eq!(validator("").message, "");
-        assert!(validator("abc").validate);
-    }
-}

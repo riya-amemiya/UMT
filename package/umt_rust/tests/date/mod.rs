@@ -1,6 +1,7 @@
 //! Date module tests.
 
 mod test_birthday;
+mod test_date_mod;
 mod test_date_range;
 mod test_day_of_week;
 mod test_format;

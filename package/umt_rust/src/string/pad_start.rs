@@ -31,33 +31,3 @@ pub fn umt_pad_start(s: &str, target_length: usize, pad_string: &str) -> String 
     let trimmed_padding: String = padding.chars().take(padding_length).collect();
     format!("{}{}", trimmed_padding, s)
 }
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_pad_start_basic() {
-        assert_eq!(umt_pad_start("123", 5, "0"), "00123");
-    }
-
-    #[test]
-    fn test_pad_start_pattern() {
-        assert_eq!(umt_pad_start("abc", 8, "def"), "defdeabc");
-    }
-
-    #[test]
-    fn test_pad_start_no_padding_needed() {
-        assert_eq!(umt_pad_start("hello", 3, "x"), "hello");
-    }
-
-    #[test]
-    fn test_pad_start_empty_pad_string() {
-        assert_eq!(umt_pad_start("hello", 10, ""), "hello");
-    }
-
-    #[test]
-    fn test_pad_start_same_length() {
-        assert_eq!(umt_pad_start("hello", 5, "x"), "hello");
-    }
-}

@@ -16,38 +16,3 @@ pub fn umt_max(numbers: &[f64]) -> f64 {
         .iter()
         .fold(f64::NEG_INFINITY, |acc, &x| if x > acc { x } else { acc })
 }
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_max_basic() {
-        assert_eq!(umt_max(&[1.0, 2.0, 3.0]), 3.0);
-    }
-
-    #[test]
-    fn test_max_negative() {
-        assert_eq!(umt_max(&[-1.0, -2.0, -3.0]), -1.0);
-    }
-
-    #[test]
-    fn test_max_mixed() {
-        assert_eq!(umt_max(&[-1.0, 0.0, 1.0]), 1.0);
-    }
-
-    #[test]
-    fn test_max_single() {
-        assert_eq!(umt_max(&[5.0]), 5.0);
-    }
-
-    #[test]
-    fn test_max_empty() {
-        assert_eq!(umt_max(&[]), f64::NEG_INFINITY);
-    }
-
-    #[test]
-    fn test_max_with_duplicates() {
-        assert_eq!(umt_max(&[1.0, 3.0, 3.0, 2.0]), 3.0);
-    }
-}

@@ -35,33 +35,3 @@ pub fn umt_string_similarity(s1: &str, s2: &str) -> f64 {
     // Calculate similarity as 1 - (distance / maxLength)
     1.0 - (distance as f64 / max_length as f64)
 }
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_string_similarity_identical() {
-        assert_eq!(umt_string_similarity("hello", "hello"), 1.0);
-    }
-
-    #[test]
-    fn test_string_similarity_different() {
-        let similarity = umt_string_similarity("hello", "hallo");
-        assert!(similarity > 0.5);
-        assert!(similarity < 1.0);
-    }
-
-    #[test]
-    fn test_string_similarity_empty() {
-        assert_eq!(umt_string_similarity("", "hello"), 0.0);
-        assert_eq!(umt_string_similarity("hello", ""), 0.0);
-        assert_eq!(umt_string_similarity("", ""), 1.0);
-    }
-
-    #[test]
-    fn test_string_similarity_completely_different() {
-        let similarity = umt_string_similarity("abc", "xyz");
-        assert!(similarity < 0.5);
-    }
-}

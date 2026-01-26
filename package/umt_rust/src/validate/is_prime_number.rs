@@ -76,37 +76,3 @@ pub fn umt_is_prime_number_usize(n: usize) -> bool {
 
     true
 }
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_is_prime_number() {
-        assert!(umt_is_prime_number(2));
-        assert!(umt_is_prime_number(3));
-        assert!(umt_is_prime_number(5));
-        assert!(umt_is_prime_number(7));
-        assert!(umt_is_prime_number(11));
-        assert!(umt_is_prime_number(13));
-        assert!(umt_is_prime_number(17));
-        assert!(umt_is_prime_number(97));
-
-        assert!(!umt_is_prime_number(0));
-        assert!(!umt_is_prime_number(1));
-        assert!(!umt_is_prime_number(4));
-        assert!(!umt_is_prime_number(6));
-        assert!(!umt_is_prime_number(8));
-        assert!(!umt_is_prime_number(9));
-        assert!(!umt_is_prime_number(100));
-        assert!(!umt_is_prime_number(-3));
-    }
-
-    #[test]
-    fn test_is_prime_number_usize() {
-        assert!(umt_is_prime_number_usize(2));
-        assert!(umt_is_prime_number_usize(17));
-        assert!(!umt_is_prime_number_usize(4));
-        assert!(!umt_is_prime_number_usize(1));
-    }
-}

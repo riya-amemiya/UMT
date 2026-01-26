@@ -46,31 +46,3 @@ pub fn umt_levenshtein_distance(s1: &str, s2: &str) -> usize {
 
     prev_row[len2]
 }
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_levenshtein_distance_basic() {
-        assert_eq!(umt_levenshtein_distance("kitten", "sitting"), 3);
-    }
-
-    #[test]
-    fn test_levenshtein_distance_same() {
-        assert_eq!(umt_levenshtein_distance("hello", "hello"), 0);
-    }
-
-    #[test]
-    fn test_levenshtein_distance_empty() {
-        assert_eq!(umt_levenshtein_distance("", "hello"), 5);
-        assert_eq!(umt_levenshtein_distance("hello", ""), 5);
-        assert_eq!(umt_levenshtein_distance("", ""), 0);
-    }
-
-    #[test]
-    fn test_levenshtein_distance_single_char() {
-        assert_eq!(umt_levenshtein_distance("a", "b"), 1);
-        assert_eq!(umt_levenshtein_distance("a", "a"), 0);
-    }
-}

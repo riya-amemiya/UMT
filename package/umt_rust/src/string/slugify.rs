@@ -44,33 +44,3 @@ pub fn umt_slugify(s: &str) -> String {
 
     result
 }
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_slugify_basic() {
-        assert_eq!(umt_slugify("Hello World!"), "hello-world");
-    }
-
-    #[test]
-    fn test_slugify_sentence() {
-        assert_eq!(umt_slugify("This is a Test"), "this-is-a-test");
-    }
-
-    #[test]
-    fn test_slugify_special_chars() {
-        assert_eq!(umt_slugify("Hello, World!"), "hello-world");
-    }
-
-    #[test]
-    fn test_slugify_empty() {
-        assert_eq!(umt_slugify(""), "");
-    }
-
-    #[test]
-    fn test_slugify_accented() {
-        assert_eq!(umt_slugify("cafe"), "cafe");
-    }
-}

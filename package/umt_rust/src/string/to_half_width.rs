@@ -32,38 +32,3 @@ pub fn umt_to_half_width(s: &str) -> String {
         })
         .collect()
 }
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_to_half_width_uppercase() {
-        assert_eq!(umt_to_half_width("\u{FF21}\u{FF22}\u{FF23}"), "ABC");
-    }
-
-    #[test]
-    fn test_to_half_width_lowercase() {
-        assert_eq!(umt_to_half_width("\u{FF41}\u{FF42}\u{FF43}"), "abc");
-    }
-
-    #[test]
-    fn test_to_half_width_digits() {
-        assert_eq!(umt_to_half_width("\u{FF11}\u{FF12}\u{FF13}"), "123");
-    }
-
-    #[test]
-    fn test_to_half_width_mixed() {
-        assert_eq!(umt_to_half_width("\u{FF21}1\u{FF42}2"), "A1b2");
-    }
-
-    #[test]
-    fn test_to_half_width_empty() {
-        assert_eq!(umt_to_half_width(""), "");
-    }
-
-    #[test]
-    fn test_to_half_width_no_conversion() {
-        assert_eq!(umt_to_half_width("ABC123"), "ABC123");
-    }
-}

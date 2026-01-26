@@ -44,34 +44,3 @@ pub fn ip_to_binary_string(ip: &str) -> Result<String, String> {
 
     Ok(binary_parts.join(""))
 }
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_ip_to_binary_string_valid() {
-        assert_eq!(
-            ip_to_binary_string("192.168.1.1").unwrap(),
-            "11000000101010000000000100000001"
-        );
-        assert_eq!(
-            ip_to_binary_string("0.0.0.0").unwrap(),
-            "00000000000000000000000000000000"
-        );
-        assert_eq!(
-            ip_to_binary_string("255.255.255.255").unwrap(),
-            "11111111111111111111111111111111"
-        );
-    }
-
-    #[test]
-    fn test_ip_to_binary_string_invalid() {
-        assert!(ip_to_binary_string("").is_err());
-        assert!(ip_to_binary_string("192.168.1").is_err());
-        assert!(ip_to_binary_string("192.168.1.1.1").is_err());
-        assert!(ip_to_binary_string("192.168.01.1").is_err());
-        assert!(ip_to_binary_string("192.168.1.256").is_err());
-        assert!(ip_to_binary_string("abc.def.ghi.jkl").is_err());
-    }
-}

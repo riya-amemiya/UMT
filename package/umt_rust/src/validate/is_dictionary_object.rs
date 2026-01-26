@@ -26,18 +26,3 @@ use std::collections::HashMap;
 pub fn umt_is_dictionary_object<K, V>(_object: &HashMap<K, V>) -> bool {
     true
 }
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_is_dictionary_object() {
-        let mut map: HashMap<&str, i32> = HashMap::new();
-        map.insert("a", 1);
-        assert!(umt_is_dictionary_object(&map));
-
-        let empty: HashMap<String, String> = HashMap::new();
-        assert!(umt_is_dictionary_object(&empty));
-    }
-}

@@ -45,36 +45,3 @@ pub fn umt_standard_deviation(values: &[f64]) -> f64 {
     // Return the square root of the mean squared differences
     avg_square_diff.sqrt()
 }
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_standard_deviation_basic() {
-        let result = umt_standard_deviation(&[1.0, 2.0, 3.0]);
-        assert!((result - 0.816496580927726).abs() < 1e-10);
-    }
-
-    #[test]
-    fn test_standard_deviation_larger() {
-        let result = umt_standard_deviation(&[10.0, 12.0, 23.0, 23.0, 16.0, 23.0, 21.0, 16.0]);
-        assert!((result - 4.898979485566356).abs() < 1e-10);
-    }
-
-    #[test]
-    fn test_standard_deviation_same_values() {
-        let result = umt_standard_deviation(&[5.0, 5.0, 5.0, 5.0]);
-        assert_eq!(result, 0.0);
-    }
-
-    #[test]
-    fn test_standard_deviation_empty() {
-        assert!(umt_standard_deviation(&[]).is_nan());
-    }
-
-    #[test]
-    fn test_standard_deviation_single() {
-        assert_eq!(umt_standard_deviation(&[5.0]), 0.0);
-    }
-}

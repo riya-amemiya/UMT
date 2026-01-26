@@ -31,24 +31,3 @@ impl HttpInformationalStatus {
     /// Server is likely to send a final response with the header fields included in the informational response.
     pub const EARLYHINTS: u16 = EARLY_HINTS;
 }
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_informational_status_codes() {
-        assert_eq!(HttpInformationalStatus::CONTINUE, 100);
-        assert_eq!(HttpInformationalStatus::SWITCHING_PROTOCOLS, 101);
-        assert_eq!(HttpInformationalStatus::PROCESSING, 102);
-        assert_eq!(HttpInformationalStatus::EARLYHINTS, 103);
-    }
-
-    #[test]
-    fn test_informational_status_constants() {
-        assert_eq!(CONTINUE, 100);
-        assert_eq!(SWITCHING_PROTOCOLS, 101);
-        assert_eq!(PROCESSING, 102);
-        assert_eq!(EARLY_HINTS, 103);
-    }
-}
