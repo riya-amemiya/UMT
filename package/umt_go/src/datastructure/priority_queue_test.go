@@ -7,14 +7,28 @@ import (
 )
 
 // maxIntCompare is a comparison function for a max-heap of ints.
-// Lower return value = higher priority, so we use b - a to get max-heap behaviour.
+// Lower return value = higher priority, so higher values come first.
+// Uses comparisons instead of subtraction to avoid integer overflow.
 func maxIntCompare(a, b int) int {
-	return b - a
+	if a > b {
+		return -1
+	}
+	if a < b {
+		return 1
+	}
+	return 0
 }
 
 // minIntCompare is a comparison function for a min-heap of ints.
+// Uses comparisons instead of subtraction to avoid integer overflow.
 func minIntCompare(a, b int) int {
-	return a - b
+	if a < b {
+		return -1
+	}
+	if a > b {
+		return 1
+	}
+	return 0
 }
 
 // ---------------------------------------------------------------------------

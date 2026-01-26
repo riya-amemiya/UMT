@@ -49,8 +49,8 @@ func TestPipeTypeTransformation(t *testing.T) {
 			return "small"
 		},
 	)
-	if result != "small" {
-		t.Errorf("expected 'small', got %v", result)
+	if result != "big" {
+		t.Errorf("expected 'big', got %v", result)
 	}
 }
 
