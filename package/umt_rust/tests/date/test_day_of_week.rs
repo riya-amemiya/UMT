@@ -83,3 +83,32 @@ fn test_day_of_week_all_days() {
         Some(6)
     ); // Sat
 }
+
+use umt_rust::date::*;
+
+#[test]
+fn test_day_of_week_known_date() {
+    // January 1, 2025 is a Wednesday
+    let dow = umt_day_of_week(Some(2025), Some(1), Some(1), Some(0));
+    assert_eq!(dow, Some(3)); // Wednesday = 3
+}
+
+#[test]
+fn test_day_of_week_saturday() {
+    // January 4, 2025 is a Saturday
+    let dow = umt_day_of_week(Some(2025), Some(1), Some(4), Some(0));
+    assert_eq!(dow, Some(6)); // Saturday = 6
+}
+
+#[test]
+fn test_day_of_week_sunday() {
+    // January 5, 2025 is a Sunday
+    let dow = umt_day_of_week(Some(2025), Some(1), Some(5), Some(0));
+    assert_eq!(dow, Some(0)); // Sunday = 0
+}
+
+#[test]
+fn test_today_day_of_week() {
+    let dow = umt_today_day_of_week(Some(0));
+    assert!(dow <= 6);
+}

@@ -85,3 +85,54 @@ fn test_merge_sort_does_not_mutate_original() {
     let _ = umt_merge_sort(&arr, None);
     assert_eq!(arr, vec![3, 1, 4, 1, 5]);
 }
+
+use umt_rust::array::*;
+
+#[test]
+fn test_merge_sort_basic() {
+    let arr = vec![3, 1, 4, 1, 5, 9, 2, 6];
+    assert_eq!(umt_merge_sort(&arr, None), vec![1, 1, 2, 3, 4, 5, 6, 9]);
+}
+
+#[test]
+fn test_merge_sort_does_not_mutate() {
+    let arr = vec![3, 1, 4, 1, 5];
+    let _ = umt_merge_sort(&arr, None);
+    assert_eq!(arr, vec![3, 1, 4, 1, 5]);
+}
+
+#[test]
+fn test_merge_sort_floats() {
+    let arr = vec![3.14, 2.71, 1.41, 1.73];
+    let sorted = umt_merge_sort(&arr, None);
+    assert_eq!(sorted, vec![1.41, 1.73, 2.71, 3.14]);
+}
+
+#[test]
+fn test_merge_sort_large() {
+    let arr: Vec<i32> = (0..1000).rev().collect();
+    let sorted = umt_merge_sort(&arr, None);
+    assert_eq!(sorted, (0..1000).collect::<Vec<i32>>());
+}
+
+#[test]
+fn test_merge_sort_single() {
+    let arr = vec![42];
+    assert_eq!(umt_merge_sort(&arr, None), vec![42]);
+}
+
+#[test]
+fn test_merge_sort_with_custom_compare() {
+    let arr = vec![1, 2, 3, 4, 5];
+    // Sort in descending order
+    let descending = |a: &i32, b: &i32| -> i32 {
+        if a < b {
+            1
+        } else if a > b {
+            -1
+        } else {
+            0
+        }
+    };
+    assert_eq!(umt_merge_sort(&arr, Some(descending)), vec![5, 4, 3, 2, 1]);
+}

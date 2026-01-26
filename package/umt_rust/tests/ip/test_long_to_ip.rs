@@ -46,3 +46,13 @@ fn test_long_to_ip_simple_incremental() {
 // numbers larger than u32::MAX, non-integers, or strings.
 // The type system prevents these at compile time.
 // The TypeScript tests for these cases are not applicable to the Rust implementation.
+
+use umt_rust::ip::*;
+
+#[test]
+fn test_long_to_ip() {
+    assert_eq!(long_to_ip(0), "0.0.0.0");
+    assert_eq!(long_to_ip(0xFFFFFFFF), "255.255.255.255");
+    assert_eq!(long_to_ip(0xC0A80101), "192.168.1.1");
+    assert_eq!(long_to_ip(0x0A000001), "10.0.0.1");
+}

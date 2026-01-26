@@ -58,3 +58,29 @@ fn test_is_perfect_square_negative_numbers() {
     assert!(!umt_is_perfect_square(-4));
     assert!(!umt_is_perfect_square(-100));
 }
+
+use umt_rust::validate::*;
+
+#[test]
+fn test_is_perfect_square() {
+    assert!(umt_is_perfect_square(0));
+    assert!(umt_is_perfect_square(1));
+    assert!(umt_is_perfect_square(4));
+    assert!(umt_is_perfect_square(9));
+    assert!(umt_is_perfect_square(16));
+    assert!(umt_is_perfect_square(25));
+    assert!(umt_is_perfect_square(100));
+    assert!(!umt_is_perfect_square(2));
+    assert!(!umt_is_perfect_square(3));
+    assert!(!umt_is_perfect_square(10));
+    assert!(!umt_is_perfect_square(-4));
+    assert!(!umt_is_perfect_square(-1));
+}
+
+#[test]
+fn test_is_perfect_square_f64() {
+    assert!(umt_is_perfect_square_f64(16.0));
+    assert!(umt_is_perfect_square_f64(25.0));
+    assert!(!umt_is_perfect_square_f64(2.25));
+    assert!(!umt_is_perfect_square_f64(-4.0));
+}

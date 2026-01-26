@@ -186,3 +186,15 @@ fn test_single_cell_false() {
     let matrix = vec![vec![Cell { value: 1, flag: false }]];
     assert!(!umt_check_flag_alignment(&matrix));
 }
+
+use umt_rust::array::*;
+
+#[test]
+fn test_bool_matrix() {
+    let matrix = vec![
+        vec![true, true, true],
+        vec![false, false, false],
+        vec![false, false, false],
+    ];
+    assert!(umt_check_flag_alignment_bool(&matrix));
+}

@@ -48,3 +48,15 @@ fn test_is_dictionary_object_with_integer_keys() {
     map.insert(2, "two".to_string());
     assert!(umt_is_dictionary_object(&map));
 }
+
+use umt_rust::validate::*;
+
+#[test]
+fn test_is_dictionary_object() {
+    let mut map: HashMap<&str, i32> = HashMap::new();
+    map.insert("a", 1);
+    assert!(umt_is_dictionary_object(&map));
+
+    let empty: HashMap<String, String> = HashMap::new();
+    assert!(umt_is_dictionary_object(&empty));
+}

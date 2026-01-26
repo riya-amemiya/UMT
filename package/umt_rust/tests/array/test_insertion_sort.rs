@@ -97,3 +97,46 @@ fn test_insertion_sort_does_not_mutate_original() {
     let _ = umt_insertion_sort(&arr, None, None, None);
     assert_eq!(arr, vec![3, 1, 4, 1, 5]);
 }
+
+use umt_rust::array::*;
+
+#[test]
+fn test_insertion_sort_basic() {
+    let arr = vec![4, 2, 7, 1, 3];
+    assert_eq!(
+        umt_insertion_sort(&arr, None, None, None),
+        vec![1, 2, 3, 4, 7]
+    );
+}
+
+#[test]
+fn test_insertion_sort_does_not_mutate() {
+    let arr = vec![4, 2, 7, 1, 3];
+    let _ = umt_insertion_sort(&arr, None, None, None);
+    assert_eq!(arr, vec![4, 2, 7, 1, 3]);
+}
+
+#[test]
+fn test_insertion_sort_single() {
+    let arr = vec![42];
+    assert_eq!(umt_insertion_sort(&arr, None, None, None), vec![42]);
+}
+
+#[test]
+fn test_insertion_sort_with_custom_compare() {
+    let arr = vec![1, 2, 3, 4, 5];
+    // Sort in descending order
+    let descending = |a: &i32, b: &i32| -> i32 {
+        if a < b {
+            1
+        } else if a > b {
+            -1
+        } else {
+            0
+        }
+    };
+    assert_eq!(
+        umt_insertion_sort(&arr, Some(descending), None, None),
+        vec![5, 4, 3, 2, 1]
+    );
+}

@@ -103,3 +103,63 @@ fn test_tim_sort_does_not_mutate_original() {
     let _ = umt_tim_sort(&arr, None, None, None);
     assert_eq!(arr, vec![3, 1, 4, 1, 5]);
 }
+
+use umt_rust::array::*;
+
+#[test]
+fn test_get_min_run_length() {
+    assert!(get_min_run_length(100) >= 16);
+    assert!(get_min_run_length(100) <= 64);
+}
+
+#[test]
+fn test_tim_sort_basic() {
+    let arr = vec![3, 1, 4, 1, 5];
+    assert_eq!(umt_tim_sort(&arr, None, None, None), vec![1, 1, 3, 4, 5]);
+}
+
+#[test]
+fn test_tim_sort_does_not_mutate() {
+    let arr = vec![3, 1, 4, 1, 5];
+    let _ = umt_tim_sort(&arr, None, None, None);
+    assert_eq!(arr, vec![3, 1, 4, 1, 5]);
+}
+
+#[test]
+fn test_tim_sort_in_place() {
+    let mut arr = vec![3, 1, 4, 1, 5];
+    umt_tim_sort_in_place(&mut arr, None);
+    assert_eq!(arr, vec![1, 1, 3, 4, 5]);
+}
+
+#[test]
+fn test_tim_sort_large() {
+    let arr: Vec<i32> = (0..1000).rev().collect();
+    let sorted = umt_tim_sort(&arr, None, None, None);
+    assert_eq!(sorted, (0..1000).collect::<Vec<i32>>());
+}
+
+#[test]
+fn test_tim_sort_single() {
+    let arr = vec![42];
+    assert_eq!(umt_tim_sort(&arr, None, None, None), vec![42]);
+}
+
+#[test]
+fn test_tim_sort_with_custom_compare() {
+    let arr = vec![1, 2, 3, 4, 5];
+    // Sort in descending order
+    let descending = |a: &i32, b: &i32| -> i32 {
+        if a < b {
+            1
+        } else if a > b {
+            -1
+        } else {
+            0
+        }
+    };
+    assert_eq!(
+        umt_tim_sort(&arr, Some(descending), None, None),
+        vec![5, 4, 3, 2, 1]
+    );
+}

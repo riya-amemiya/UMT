@@ -62,3 +62,33 @@ fn test_is_number_i64_always_true() {
     assert!(umt_is_number_i64(i64::MAX));
     assert!(umt_is_number_i64(i64::MIN));
 }
+
+use umt_rust::validate::*;
+
+#[test]
+fn test_is_number() {
+    assert!(umt_is_number(0.1));
+    assert!(umt_is_number(42.0));
+    assert!(umt_is_number(-123.45));
+    assert!(umt_is_number(0.0));
+    assert!(!umt_is_number(f64::NAN));
+    assert!(!umt_is_number(f64::INFINITY));
+    assert!(!umt_is_number(f64::NEG_INFINITY));
+}
+
+#[test]
+fn test_is_number_i64() {
+    assert!(umt_is_number_i64(42));
+    assert!(umt_is_number_i64(-100));
+    assert!(umt_is_number_i64(0));
+}
+
+#[test]
+fn test_is_number_str() {
+    assert!(umt_is_number_str("0.1"));
+    assert!(umt_is_number_str("42"));
+    assert!(umt_is_number_str("-123.45"));
+    assert!(!umt_is_number_str("abc"));
+    assert!(!umt_is_number_str(""));
+    assert!(!umt_is_number_str("NaN"));
+}

@@ -81,3 +81,41 @@ fn test_sort_reverse_sorted() {
     let result = umt_quick_sort_simple_i32(&arr, true, None, None);
     assert_eq!(result, vec![1, 2, 3, 4, 5]);
 }
+
+use umt_rust::simple::array::*;
+
+#[test]
+fn test_sort_f64_array() {
+    let arr = vec![3.14, 1.41, 2.72, 1.61];
+    let result = umt_quick_sort_simple_f64(&arr, true, None, None);
+    assert_eq!(result, vec![1.41, 1.61, 2.72, 3.14]);
+}
+
+#[test]
+fn test_sort_string_array() {
+    let arr = vec!["banana", "apple", "cherry"];
+    let result =
+        umt_quick_sort_simple::<&str, fn(&&str, &&str) -> Ordering>(&arr, None, None, None);
+    assert_eq!(result, vec!["apple", "banana", "cherry"]);
+}
+
+#[test]
+fn test_sort_two_elements() {
+    let arr = vec![2, 1];
+    let result = umt_quick_sort_simple_i32(&arr, true, None, None);
+    assert_eq!(result, vec![1, 2]);
+}
+
+#[test]
+fn test_sort_with_custom_compare_function() {
+    let arr = vec![1, 3, 2, 4, 5];
+    let result = umt_quick_sort_simple(&arr, Some(|a: &i32, b: &i32| a.cmp(b)), None, None);
+    assert_eq!(result, vec![1, 2, 3, 4, 5]);
+}
+
+#[test]
+fn test_sort_with_partial_range() {
+    let arr = vec![5, 4, 3, 2, 1];
+    let result = umt_quick_sort_simple_i32(&arr, true, Some(1), Some(3));
+    assert_eq!(result, vec![5, 2, 3, 4, 1]);
+}

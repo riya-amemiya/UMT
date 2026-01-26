@@ -89,3 +89,39 @@ fn test_get_arrays_diff_empty() {
     let empty: &[&[i32]] = &[];
     assert_eq!(umt_get_arrays_diff(empty), Vec::<i32>::new());
 }
+
+use umt_rust::array::*;
+
+#[test]
+fn test_get_arrays_diff_all_diff() {
+    assert_eq!(
+        umt_get_arrays_diff(&[&[1, 2][..], &[3, 4][..]]),
+        vec![1, 2, 3, 4]
+    );
+}
+
+#[test]
+fn test_get_arrays_diff_multiple_arrays() {
+    assert_eq!(
+        umt_get_arrays_diff(&[&[1, 2, 3][..], &[2, 3, 4][..], &[3, 4, 5][..]]),
+        vec![1, 5]
+    );
+}
+
+#[test]
+fn test_get_arrays_diff_no_diff() {
+    assert_eq!(
+        umt_get_arrays_diff(&[&[1, 2, 3][..], &[1, 2, 3][..]]),
+        Vec::<i32>::new()
+    );
+}
+
+#[test]
+fn test_get_arrays_diff_with_duplicates_in_same_array() {
+    // [1, 1, 2]: all_values = {1, 2}
+    // [2, 3, 3]: 2 is duplicate (in all_values), 3 is added, second 3 is also duplicate
+    // duplicates = {2, 3}
+    // Result = all_values - duplicates = {1}
+    let result = umt_get_arrays_diff(&[&[1, 1, 2][..], &[2, 3, 3][..]]);
+    assert_eq!(result, vec![1]);
+}

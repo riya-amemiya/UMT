@@ -49,3 +49,22 @@ fn test_uuidv7_length() {
     let uuid = umt_uuidv7();
     assert_eq!(uuid.len(), 36);
 }
+
+use umt_rust::math::*;
+
+#[test]
+fn test_uuidv7_format() {
+    let id = umt_uuidv7();
+    assert_eq!(id.len(), 36);
+    assert_eq!(&id[8..9], "-");
+    assert_eq!(&id[13..14], "-");
+    assert_eq!(&id[18..19], "-");
+    assert_eq!(&id[23..24], "-");
+}
+
+#[test]
+fn test_uuidv7_uniqueness() {
+    let id1 = umt_uuidv7();
+    let id2 = umt_uuidv7();
+    assert_ne!(id1, id2);
+}

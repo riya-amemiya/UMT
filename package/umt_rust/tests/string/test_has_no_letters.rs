@@ -44,3 +44,30 @@ fn test_return_false_for_strings_with_mixed_content() {
     "
     )); // Multiline mixed content
 }
+
+use umt_rust::string::*;
+
+#[test]
+fn test_has_no_letters_empty() {
+    assert!(umt_has_no_letters(""));
+}
+
+#[test]
+fn test_has_no_letters_numbers() {
+    assert!(umt_has_no_letters("123"));
+}
+
+#[test]
+fn test_has_no_letters_only_letters() {
+    assert!(!umt_has_no_letters("abc"));
+}
+
+#[test]
+fn test_has_no_letters_special() {
+    assert!(umt_has_no_letters("!@#$%"));
+}
+
+#[test]
+fn test_has_no_letters_with_letters() {
+    assert!(!umt_has_no_letters("abc123"));
+}

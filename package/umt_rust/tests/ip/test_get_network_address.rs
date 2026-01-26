@@ -123,3 +123,29 @@ fn test_get_network_address_invalid_subnet_mask_pattern() {
     assert!(result.is_err());
     assert_eq!(result.unwrap_err(), "Invalid IP address or subnet mask");
 }
+
+use umt_rust::ip::*;
+
+#[test]
+fn test_get_network_address_invalid() {
+    assert!(get_network_address("", "255.255.255.0").is_err());
+    assert!(get_network_address("192.168.1.1", "").is_err());
+    assert!(get_network_address("invalid", "255.255.255.0").is_err());
+    assert!(get_network_address("192.168.1.1", "invalid").is_err());
+}
+
+#[test]
+fn test_get_network_address_valid() {
+    assert_eq!(
+        get_network_address("192.168.1.100", "255.255.255.0").unwrap(),
+        0xC0A80100
+    );
+    assert_eq!(
+        get_network_address("10.20.30.40", "255.0.0.0").unwrap(),
+        0x0A000000
+    );
+    assert_eq!(
+        get_network_address("172.16.5.10", "255.255.0.0").unwrap(),
+        0xAC100000
+    );
+}

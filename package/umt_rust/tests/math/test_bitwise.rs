@@ -83,3 +83,36 @@ fn test_bitwise_left_helper() {
     let result = umt_bitwise_left(0x12345678, 8);
     assert_eq!(result, 0x34567812);
 }
+
+use umt_rust::math::*;
+
+#[test]
+fn test_bitwise_full_rotation() {
+    let result = umt_bitwise(0x12345678, 32, RotateDirection::Left);
+    assert_eq!(result, 0x12345678);
+}
+
+#[test]
+fn test_bitwise_left_rotation() {
+    let result = umt_bitwise(0x12345678, 8, RotateDirection::Left);
+    assert_eq!(result, 0x34567812);
+}
+
+#[test]
+fn test_bitwise_negative_rotation() {
+    // Negative rotation should work correctly
+    let result = umt_bitwise(0x12345678, -8, RotateDirection::Left);
+    assert_eq!(result, 0x78123456);
+}
+
+#[test]
+fn test_bitwise_right_rotation() {
+    let result = umt_bitwise(0x12345678, 8, RotateDirection::Right);
+    assert_eq!(result, 0x78123456);
+}
+
+#[test]
+fn test_bitwise_zero_rotation() {
+    let result = umt_bitwise(0x12345678, 0, RotateDirection::Left);
+    assert_eq!(result, 0x12345678);
+}

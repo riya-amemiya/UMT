@@ -82,4 +82,3 @@ pub fn umt_parse_json<T: DeserializeOwned>(json: &str) -> Result<T, JsonParseErr
 pub fn umt_parse_json_value(json: &str) -> Result<serde_json::Value, JsonParseError> {
     umt_parse_json(json)
 }
-

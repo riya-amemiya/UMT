@@ -171,3 +171,53 @@ fn test_prime_factorization_consecutive() {
         ]
     );
 }
+
+use umt_rust::math::*;
+
+#[test]
+fn test_prime_factorization_1() {
+    let result = umt_prime_factorization(1);
+    assert!(result.is_empty());
+}
+
+#[test]
+fn test_prime_factorization_12() {
+    let result = umt_prime_factorization(12);
+    assert_eq!(
+        result,
+        vec![
+            PrimeFactor {
+                number: 2,
+                count: 2
+            },
+            PrimeFactor {
+                number: 3,
+                count: 1
+            }
+        ]
+    );
+}
+
+#[test]
+fn test_prime_factorization_power_of_2() {
+    let result = umt_prime_factorization(16);
+    assert_eq!(
+        result,
+        vec![PrimeFactor {
+            number: 2,
+            count: 4
+        }]
+    );
+}
+
+#[test]
+fn test_prime_factorization_prime() {
+    let result = umt_prime_factorization(17);
+    assert_eq!(
+        result,
+        vec![PrimeFactor {
+            number: 17,
+            count: 1
+        }]
+    );
+}

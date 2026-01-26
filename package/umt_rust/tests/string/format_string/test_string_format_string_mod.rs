@@ -1,5 +1,5 @@
-use umt_rust::string::format_string::*;
 use serde_json::json;
+use umt_rust::string::format_string::*;
 
 #[test]
 fn test_indexed_mode_basic() {

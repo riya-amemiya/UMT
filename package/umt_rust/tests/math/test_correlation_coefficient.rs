@@ -66,3 +66,29 @@ fn test_second_array_no_variance() {
     let r = umt_correlation_coefficient(&[1.0, 2.0, 3.0], &[2.0, 2.0, 2.0]);
     assert!(r.is_nan());
 }
+
+use umt_rust::math::*;
+
+#[test]
+fn test_different_lengths() {
+    let r = umt_correlation_coefficient(&[1.0, 2.0, 3.0], &[1.0, 2.0]);
+    assert!(r.is_nan());
+}
+
+#[test]
+fn test_empty_arrays() {
+    let r = umt_correlation_coefficient(&[], &[]);
+    assert!(r.is_nan());
+}
+
+#[test]
+fn test_no_correlation() {
+    let r = umt_correlation_coefficient(&[1.0, 2.0, 3.0, 4.0, 5.0], &[1.0, 1.0, 1.0, 1.0, 1.0]);
+    assert!(r.is_nan());
+}
+
+#[test]
+fn test_single_element() {
+    let r = umt_correlation_coefficient(&[1.0], &[2.0]);
+    assert!(r.is_nan());
+}

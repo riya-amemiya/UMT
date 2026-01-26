@@ -71,3 +71,33 @@ fn test_subtract_empty() {
 fn test_subtract_single() {
     assert_eq!(umt_subtract(&[5.0]), 5.0);
 }
+
+use umt_rust::math::*;
+
+#[test]
+fn test_subtract_float() {
+    let result = umt_subtract(&[0.3, 0.1]);
+    assert!((result - 0.2).abs() < 1e-10);
+}
+
+#[test]
+fn test_subtract_integers() {
+    assert_eq!(umt_subtract(&[5.0, 3.0]), 2.0);
+}
+
+#[test]
+fn test_subtract_negative() {
+    assert_eq!(umt_subtract(&[-2.0, -3.0]), 1.0);
+}
+
+#[test]
+fn test_subtract_result_negative() {
+    let result = umt_subtract(&[0.1, 0.2]);
+    assert!((result - (-0.1)).abs() < 1e-10);
+}
+
+#[test]
+fn test_subtract_three_numbers() {
+    let result = umt_subtract(&[1.0, 0.1, 0.2]);
+    assert!((result - 0.7).abs() < 1e-10);
+}

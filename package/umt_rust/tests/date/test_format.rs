@@ -85,3 +85,85 @@ fn test_format_morning_hours() {
     assert_eq!(umt_format(&date, "hh:mm A", 0), "09:05 AM");
     assert_eq!(umt_format(&date, "h:mm a", 0), "9:05 am");
 }
+
+use umt_rust::date::*;
+
+#[test]
+fn test_format_12_hour() {
+    let date_am = Utc.with_ymd_and_hms(2025, 4, 4, 9, 30, 0).unwrap();
+    let date_pm = Utc.with_ymd_and_hms(2025, 4, 4, 15, 30, 0).unwrap();
+    let date_noon = Utc.with_ymd_and_hms(2025, 4, 4, 12, 0, 0).unwrap();
+    let date_midnight = Utc.with_ymd_and_hms(2025, 4, 4, 0, 0, 0).unwrap();
+
+    assert_eq!(umt_format(&date_am, "h:mm A", 0), "9:30 AM");
+    assert_eq!(umt_format(&date_pm, "h:mm A", 0), "3:30 PM");
+    assert_eq!(umt_format(&date_noon, "h:mm A", 0), "12:00 PM");
+    assert_eq!(umt_format(&date_midnight, "h:mm A", 0), "12:00 AM");
+}
+
+#[test]
+fn test_format_date_only() {
+    let date = Utc.with_ymd_and_hms(2025, 4, 4, 0, 0, 0).unwrap();
+    assert_eq!(umt_format(&date, "YYYY-MM-DD", 0), "2025-04-04");
+}
+
+#[test]
+fn test_format_escaped_text() {
+    let date = Utc.with_ymd_and_hms(2025, 4, 4, 15, 30, 0).unwrap();
+    assert_eq!(
+        umt_format(&date, "[Date:] YYYY-MM-DD", 0),
+        "Date: 2025-04-04"
+    );
+}
+
+#[test]
+fn test_format_iso() {
+    let date = Utc.with_ymd_and_hms(2025, 4, 4, 15, 30, 45).unwrap();
+    assert_eq!(umt_format_iso(&date, 0), "2025-04-04T15:30:45+00:00");
+    assert_eq!(umt_format_iso(&date, 540), "2025-04-04T15:30:45+09:00");
+}
+
+#[test]
+fn test_format_lowercase_ampm() {
+    let date = Utc.with_ymd_and_hms(2025, 4, 4, 15, 30, 0).unwrap();
+    assert_eq!(umt_format(&date, "h:mm a", 0), "3:30 pm");
+}
+
+#[test]
+fn test_format_milliseconds() {
+    let date = Utc.with_ymd_and_hms(2025, 4, 4, 15, 30, 45).unwrap();
+    // Note: with_ymd_and_hms doesn't set milliseconds, so SSS will be 000
+    assert_eq!(umt_format(&date, "HH:mm:ss.SSS", 0), "15:30:45.000");
+}
+
+#[test]
+fn test_format_no_padding() {
+    let date = Utc.with_ymd_and_hms(2025, 1, 5, 9, 5, 3).unwrap();
+    assert_eq!(umt_format(&date, "M/D/YYYY H:m:s", 0), "1/5/2025 9:5:3");
+}
+
+#[test]
+fn test_format_short_year() {
+    let date = Utc.with_ymd_and_hms(2025, 4, 4, 0, 0, 0).unwrap();
+    assert_eq!(umt_format(&date, "YY-MM-DD", 0), "25-04-04");
+}
+
+#[test]
+fn test_format_time_only() {
+    let date = Utc.with_ymd_and_hms(2025, 4, 4, 15, 30, 45).unwrap();
+    assert_eq!(umt_format(&date, "HH:mm:ss", 0), "15:30:45");
+}
+
+#[test]
+fn test_format_timezone() {
+    let date = Utc.with_ymd_and_hms(2025, 4, 4, 0, 0, 0).unwrap();
+    assert_eq!(umt_format(&date, "Z", 540), "+09:00");
+    assert_eq!(umt_format(&date, "ZZ", 540), "+0900");
+    assert_eq!(umt_format(&date, "Z", -300), "-05:00");
+}
+
+#[test]
+fn test_format_us_style() {
+    let date = Utc.with_ymd_and_hms(2025, 4, 4, 0, 0, 0).unwrap();
+    assert_eq!(umt_format(&date, "MM/DD/YYYY", 0), "04/04/2025");
+}

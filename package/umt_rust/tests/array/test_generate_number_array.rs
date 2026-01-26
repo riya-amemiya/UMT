@@ -83,3 +83,61 @@ fn test_generate_random_single_element() {
     // Single element should be min value
     assert_eq!(result[0], 5.0);
 }
+
+use umt_rust::array::*;
+
+#[test]
+fn test_generate_i32_basic() {
+    assert_eq!(
+        umt_generate_number_array_i32(5, None, None, false),
+        vec![0, 1, 2, 3, 4]
+    );
+}
+
+#[test]
+fn test_generate_i32_random() {
+    let result = umt_generate_number_array_i32(10, Some(0), Some(100), true);
+    assert_eq!(result.len(), 10);
+    for val in &result {
+        assert!(*val >= 0 && *val <= 100);
+    }
+}
+
+#[test]
+fn test_generate_i32_with_range() {
+    let result = umt_generate_number_array_i32(5, Some(10), Some(20), false);
+    assert_eq!(result.len(), 5);
+    assert_eq!(result[0], 10);
+    assert_eq!(result[4], 20);
+}
+
+#[test]
+#[should_panic(expected = "min should be less than or equal to max")]
+fn test_generate_invalid_range() {
+    umt_generate_number_array(5, Some(10.0), Some(5.0), false);
+}
+
+#[test]
+fn test_generate_random_length() {
+    let result = umt_generate_number_array(10, Some(0.0), Some(100.0), true);
+    assert_eq!(result.len(), 10);
+    for val in &result {
+        assert!(*val >= 0.0 && *val <= 100.0);
+    }
+}
+
+#[test]
+fn test_generate_single() {
+    assert_eq!(
+        umt_generate_number_array(1, Some(5.0), Some(10.0), false),
+        vec![5.0]
+    );
+}
+
+#[test]
+fn test_generate_with_range() {
+    assert_eq!(
+        umt_generate_number_array(5, Some(10.0), Some(14.0), false),
+        vec![10.0, 11.0, 12.0, 13.0, 14.0]
+    );
+}
