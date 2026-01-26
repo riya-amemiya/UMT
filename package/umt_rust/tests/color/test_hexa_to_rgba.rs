@@ -167,12 +167,11 @@ fn test_hexa_to_rgba_error_message() {
     assert_eq!(err.message, "Invalid hex code");
 }
 
-use umt_rust::color::*;
-
 #[test]
-fn test_hexa_to_rgba_invalid() {
-    assert!(umt_hexa_to_rgba("#12345").is_err());
-    assert!(umt_hexa_to_rgba("#1234567").is_err());
-    assert!(umt_hexa_to_rgba("123456").is_err());
-    assert!(umt_hexa_to_rgba("").is_err());
+fn test_hex_color_error_display() {
+    use umt_rust::color::HexColorError;
+    let error = HexColorError {
+        message: "test error".to_string(),
+    };
+    assert_eq!(format!("{}", error), "test error");
 }

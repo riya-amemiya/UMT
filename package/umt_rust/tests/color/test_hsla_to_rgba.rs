@@ -247,3 +247,19 @@ fn test_hsla_to_rgba_invalid_alpha() {
     let err = umt_hsla_to_rgba(0.0, 100.0, 50.0, Some(1.5)).unwrap_err();
     assert_eq!(err.message, "Alpha must be between 0 and 1");
 }
+
+#[test]
+fn test_hsla_error_display() {
+    use umt_rust::color::HslaError;
+    let error = HslaError {
+        message: "test error".to_string(),
+    };
+    assert_eq!(format!("{}", error), "test error");
+}
+
+#[test]
+fn test_hsla_to_rgba_light_colors() {
+    // Light color (lightness > 50%)
+    let result = umt_hsla_to_rgba(0.0, 100.0, 75.0, None).unwrap();
+    assert!(result.r > 127.0);
+}

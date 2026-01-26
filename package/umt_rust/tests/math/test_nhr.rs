@@ -53,23 +53,3 @@ fn test_nhr_negative_r() {
 fn test_nhr_both_negative() {
     assert_eq!(umt_nhr(-1, -1), -1);
 }
-
-use umt_rust::math::*;
-
-#[test]
-fn test_nhr_equal() {
-    assert_eq!(umt_nhr(3, 3), 10);
-}
-
-#[test]
-fn test_nhr_invalid() {
-    assert_eq!(umt_nhr(0, 2), -1);
-    assert_eq!(umt_nhr(5, 0), -1);
-    assert_eq!(umt_nhr(-1, 2), -1);
-    assert_eq!(umt_nhr(5, -1), -1);
-}
-
-#[test]
-fn test_nhr_one() {
-    assert_eq!(umt_nhr(5, 1), 5);
-}

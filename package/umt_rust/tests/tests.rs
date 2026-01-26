@@ -3,8 +3,34 @@ mod advance {
 }
 
 mod array {
+    mod test_arrays_join;
+    mod test_binary_search;
+    mod test_check_flag_alignment;
+    mod test_chunk;
+    mod test_compact;
+    mod test_compare_function_default;
+    mod test_drop;
+    mod test_dual_pivot_quick_sort;
+    mod test_first;
+    mod test_generate_number_array;
+    mod test_get_arrays_common;
+    mod test_get_arrays_diff;
+    mod test_group_by;
+    mod test_insertion_sort;
+    mod test_merge_sort;
+    mod test_pop;
+    mod test_quick_sort;
+    mod test_random_select;
     mod test_range;
+    mod test_shuffle;
+    mod test_shuffle_2d_array;
+    mod test_sum;
+    mod test_tim_sort;
     mod test_ultra_number_sort;
+    mod test_uniq_by;
+    mod test_unique;
+    mod test_zip;
+    mod test_zip_longest;
     mod sorting_helpers {
         mod test_apply_insertion_sort_if_needed;
         mod test_insertion_sort_range;

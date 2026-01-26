@@ -39,10 +39,3 @@ fn test_to_kelvin_negative_300() {
 fn test_to_kelvin_decimal() {
     assert!((umt_to_kelvin(25.5) - 298.65).abs() < 1e-10);
 }
-
-use umt_rust::math::*;
-
-#[test]
-fn test_to_kelvin_freezing() {
-    assert!((umt_to_kelvin(0.0) - 273.15).abs() < 1e-10);
-}

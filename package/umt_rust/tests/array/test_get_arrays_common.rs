@@ -1,4 +1,6 @@
-use umt_rust::array::{umt_get_arrays_common, umt_get_arrays_common_f64, umt_get_arrays_common_two};
+use umt_rust::array::{
+    umt_get_arrays_common, umt_get_arrays_common_f64, umt_get_arrays_common_two,
+};
 
 #[test]
 fn test_get_arrays_common_basic() {
@@ -19,7 +21,12 @@ fn test_get_arrays_common_three_arrays() {
 #[test]
 fn test_get_arrays_common_four_arrays() {
     assert_eq!(
-        umt_get_arrays_common(&[&[1, 2, 3][..], &[2, 3, 9][..], &[3, 4, 5][..], &[3, 4, 5][..]]),
+        umt_get_arrays_common(&[
+            &[1, 2, 3][..],
+            &[2, 3, 9][..],
+            &[3, 4, 5][..],
+            &[3, 4, 5][..]
+        ]),
         vec![3]
     );
 }
@@ -28,8 +35,14 @@ fn test_get_arrays_common_four_arrays() {
 fn test_get_arrays_common_empty() {
     let empty: &[i32] = &[];
     assert_eq!(umt_get_arrays_common(&[empty, empty]), Vec::<i32>::new());
-    assert_eq!(umt_get_arrays_common(&[&[1, 2, 3][..], empty]), Vec::<i32>::new());
-    assert_eq!(umt_get_arrays_common(&[empty, &[1, 2, 3][..]]), Vec::<i32>::new());
+    assert_eq!(
+        umt_get_arrays_common(&[&[1, 2, 3][..], empty]),
+        Vec::<i32>::new()
+    );
+    assert_eq!(
+        umt_get_arrays_common(&[empty, &[1, 2, 3][..]]),
+        Vec::<i32>::new()
+    );
 }
 
 #[test]
@@ -51,7 +64,11 @@ fn test_get_arrays_common_strings() {
         vec!["b", "c"]
     );
     assert_eq!(
-        umt_get_arrays_common(&[&["a", "b", "c"][..], &["b", "c", "d"][..], &["c", "d", "e"][..]]),
+        umt_get_arrays_common(&[
+            &["a", "b", "c"][..],
+            &["b", "c", "d"][..],
+            &["c", "d", "e"][..]
+        ]),
         vec!["c"]
     );
 }
@@ -59,7 +76,10 @@ fn test_get_arrays_common_strings() {
 #[test]
 fn test_get_arrays_common_single_array() {
     assert_eq!(umt_get_arrays_common(&[&[1, 2, 3][..]]), vec![1, 2, 3]);
-    assert_eq!(umt_get_arrays_common(&[&["a", "b", "c"][..]]), vec!["a", "b", "c"]);
+    assert_eq!(
+        umt_get_arrays_common(&[&["a", "b", "c"][..]]),
+        vec!["a", "b", "c"]
+    );
     let empty: &[&[i32]] = &[];
     assert_eq!(umt_get_arrays_common(empty), Vec::<i32>::new());
 }
@@ -67,7 +87,11 @@ fn test_get_arrays_common_single_array() {
 #[test]
 fn test_get_arrays_common_with_duplicates() {
     assert_eq!(
-        umt_get_arrays_common(&[&[1, 1, 2, 2, 3][..], &[2, 2, 3, 3, 4][..], &[3, 3, 4, 4, 5][..]]),
+        umt_get_arrays_common(&[
+            &[1, 1, 2, 2, 3][..],
+            &[2, 2, 3, 3, 4][..],
+            &[3, 3, 4, 4, 5][..]
+        ]),
         vec![3]
     );
 }
@@ -79,7 +103,11 @@ fn test_get_arrays_common_preserves_order() {
         vec![3, 1, 2]
     );
     assert_eq!(
-        umt_get_arrays_common(&[&["c", "a", "b"][..], &["b", "c", "a"][..], &["a", "c", "b"][..]]),
+        umt_get_arrays_common(&[
+            &["c", "a", "b"][..],
+            &["b", "c", "a"][..],
+            &["a", "c", "b"][..]
+        ]),
         vec!["c", "a", "b"]
     );
 }
@@ -98,7 +126,10 @@ fn test_get_arrays_common_booleans() {
 
 #[test]
 fn test_get_arrays_common_two_convenience() {
-    assert_eq!(umt_get_arrays_common_two(&[1, 2, 3], &[2, 3, 4]), vec![2, 3]);
+    assert_eq!(
+        umt_get_arrays_common_two(&[1, 2, 3], &[2, 3, 4]),
+        vec![2, 3]
+    );
 }
 
 #[test]
@@ -131,14 +162,4 @@ fn test_get_arrays_common_f64_with_nan() {
     assert_eq!(result.len(), 2);
     assert!(result[0].is_nan());
     assert_eq!(result[1], 2.0);
-}
-
-use umt_rust::array::*;
-
-#[test]
-fn test_get_arrays_common_two_arrays() {
-    assert_eq!(
-        umt_get_arrays_common(&[&[1, 2, 3][..], &[2, 3, 4][..]]),
-        vec![2, 3]
-    );
 }

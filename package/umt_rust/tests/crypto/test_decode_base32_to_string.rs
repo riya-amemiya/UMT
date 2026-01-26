@@ -47,51 +47,12 @@ fn test_decodes_longer_text() {
     );
 }
 
-use umt_rust::crypto::*;
-
 #[test]
-fn test_decode_empty_string() {
-    assert_eq!(umt_decode_base32_to_string("").unwrap(), "");
-}
-
-#[test]
-fn test_decode_longer_text() {
-    let encoded = "KRUGKIDROVUWG2ZAMJZG653OEBTG66BANJ2W24DTEBXXMZLSEB2GQZJANRQXU6JAMRXWO===";
-    assert_eq!(
-        umt_decode_base32_to_string(encoded).unwrap(),
-        "The quick brown fox jumps over the lazy dog"
-    );
-}
-
-#[test]
-fn test_decode_simple_string() {
-    assert_eq!(umt_decode_base32_to_string("JBSWY3DP").unwrap(), "Hello");
-}
-
-#[test]
-fn test_decode_special_characters() {
-    assert_eq!(
-        umt_decode_base32_to_string("4OAZHY4CSPRYDK7DQGQ6HANP").unwrap(),
-        "こんにちは"
-    );
-}
-
-#[test]
-fn test_decode_strings_with_padding() {
-    assert_eq!(umt_decode_base32_to_string("MY======").unwrap(), "f");
-    assert_eq!(umt_decode_base32_to_string("MZXQ====").unwrap(), "fo");
-    assert_eq!(umt_decode_base32_to_string("MZXW6===").unwrap(), "foo");
-    assert_eq!(umt_decode_base32_to_string("MZXW6YQ=").unwrap(), "foob");
-    assert_eq!(umt_decode_base32_to_string("MZXW6YTB").unwrap(), "fooba");
-    assert_eq!(
-        umt_decode_base32_to_string("MZXW6YTBOI======").unwrap(),
-        "foobar"
-    );
-}
-
-#[test]
-fn test_invalid_character() {
-    let result = umt_decode_base32_to_string("JBSWY3D@");
+fn test_error_on_invalid_utf8() {
+    // Create a base32 encoded string that represents invalid UTF-8 bytes
+    // 0x80 is invalid UTF-8 start byte, encoded in base32 as "QA======"
+    let result = umt_decode_base32_to_string("QA======");
     assert!(result.is_err());
-    assert_eq!(result.unwrap_err().message, "Invalid base32 character: @");
+    let error = result.unwrap_err();
+    assert!(error.message.contains("Invalid UTF-8"));
 }

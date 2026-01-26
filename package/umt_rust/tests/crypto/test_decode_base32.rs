@@ -80,84 +80,11 @@ fn test_handles_base32_without_padding() {
     );
 }
 
-use umt_rust::crypto::*;
-
 #[test]
-fn test_decode_empty_string() {
-    let result = umt_decode_base32("").unwrap();
-    assert!(result.is_empty());
-}
-
-#[test]
-fn test_decode_longer_text() {
-    let encoded = "KRUGKIDROVUWG2ZAMJZG653OEBTG66BANJ2W24DTEBXXMZLSEB2GQZJANRQXU6JAMRXWO===";
-    let result = String::from_utf8(umt_decode_base32(encoded).unwrap()).unwrap();
-    assert_eq!(result, "The quick brown fox jumps over the lazy dog");
-}
-
-#[test]
-fn test_decode_simple_string() {
-    let result = umt_decode_base32("JBSWY3DP").unwrap();
-    assert_eq!(String::from_utf8(result).unwrap(), "Hello");
-}
-
-#[test]
-fn test_decode_strings_with_padding() {
-    assert_eq!(
-        String::from_utf8(umt_decode_base32("MY======").unwrap()).unwrap(),
-        "f"
-    );
-    assert_eq!(
-        String::from_utf8(umt_decode_base32("MZXQ====").unwrap()).unwrap(),
-        "fo"
-    );
-    assert_eq!(
-        String::from_utf8(umt_decode_base32("MZXW6===").unwrap()).unwrap(),
-        "foo"
-    );
-    assert_eq!(
-        String::from_utf8(umt_decode_base32("MZXW6YQ=").unwrap()).unwrap(),
-        "foob"
-    );
-    assert_eq!(
-        String::from_utf8(umt_decode_base32("MZXW6YTB").unwrap()).unwrap(),
-        "fooba"
-    );
-    assert_eq!(
-        String::from_utf8(umt_decode_base32("MZXW6YTBOI======").unwrap()).unwrap(),
-        "foobar"
-    );
-}
-
-#[test]
-fn test_decode_without_padding() {
-    assert_eq!(
-        String::from_utf8(umt_decode_base32("JBSWY3DP").unwrap()).unwrap(),
-        "Hello"
-    );
-    assert_eq!(
-        String::from_utf8(umt_decode_base32("MZXW6YTB").unwrap()).unwrap(),
-        "fooba"
-    );
-}
-
-#[test]
-fn test_invalid_character_at_sign() {
-    let result = umt_decode_base32("JBSWY3D@");
-    assert!(result.is_err());
-    assert_eq!(result.unwrap_err().message, "Invalid base32 character: @");
-}
-
-#[test]
-fn test_invalid_character_one() {
-    let result = umt_decode_base32("JBSWY3D1");
-    assert!(result.is_err());
-    assert_eq!(result.unwrap_err().message, "Invalid base32 character: 1");
-}
-
-#[test]
-fn test_invalid_character_zero() {
-    let result = umt_decode_base32("JBSWY3D0");
-    assert!(result.is_err());
-    assert_eq!(result.unwrap_err().message, "Invalid base32 character: 0");
+fn test_base32_error_display() {
+    use umt_rust::crypto::Base32Error;
+    let error = Base32Error {
+        message: "test error".to_string(),
+    };
+    assert_eq!(format!("{}", error), "test error");
 }

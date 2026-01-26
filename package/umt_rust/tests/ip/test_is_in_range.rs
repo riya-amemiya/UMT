@@ -219,29 +219,3 @@ fn test_is_in_range_error_format_out_of_range_values() {
     assert!(result.is_err());
     assert!(result.unwrap_err().contains("Invalid IP address format"));
 }
-
-use umt_rust::ip::*;
-
-#[test]
-fn test_is_in_range_invalid() {
-    assert!(is_in_range("", "192.168.0.0", 16).is_err());
-    assert!(is_in_range("192.168.1.1", "", 16).is_err());
-    assert!(is_in_range("192.168.1.1", "192.168.0.0", 33).is_err());
-    assert!(is_in_range("invalid", "192.168.0.0", 16).is_err());
-}
-
-#[test]
-fn test_is_in_range_valid() {
-    // Same network
-    assert!(is_in_range("192.168.1.100", "192.168.0.0", 16).unwrap());
-    assert!(is_in_range("192.168.255.255", "192.168.0.0", 16).unwrap());
-
-    // Different network
-    assert!(!is_in_range("10.0.0.1", "192.168.0.0", 16).unwrap());
-    assert!(!is_in_range("192.169.0.1", "192.168.0.0", 16).unwrap());
-
-    // Edge cases
-    assert!(is_in_range("1.2.3.4", "5.6.7.8", 0).unwrap()); // CIDR 0 matches all
-    assert!(is_in_range("192.168.1.1", "192.168.1.1", 32).unwrap()); // Exact match
-    assert!(!is_in_range("192.168.1.1", "192.168.1.2", 32).unwrap()); // No match
-}

@@ -260,3 +260,62 @@ fn test_work_with_exactly_two_arguments() {
     let result = umt_format_string_indexed(template, &["first", "second"]);
     assert_eq!(result, "first and second");
 }
+
+#[test]
+fn test_custom_formatter_options() {
+    use std::collections::HashMap;
+    use umt_rust::string::format_string::FormatOptions;
+
+    let mut custom_formatters: HashMap<
+        String,
+        Box<dyn Fn(&str, &[String]) -> String + Send + Sync>,
+    > = HashMap::new();
+    custom_formatters.insert(
+        "reverse".to_string(),
+        Box::new(|value, _args| value.chars().rev().collect()),
+    );
+
+    let options = FormatOptions {
+        formatters: custom_formatters,
+    };
+
+    let template = "Reversed: {name:reverse}";
+    let result = umt_format_string(template, &json!({"name": "hello"}), Some(options));
+    assert_eq!(result, "Reversed: olleh");
+}
+
+#[test]
+fn test_format_array_value() {
+    let template = "Items: {items}";
+    let result = umt_format_string(template, &json!({"items": ["a", "b", "c"]}), None);
+    assert_eq!(result, "Items: a,b,c");
+}
+
+#[test]
+fn test_format_array_with_numbers() {
+    let template = "Numbers: {nums}";
+    let result = umt_format_string(template, &json!({"nums": [1, 2, 3]}), None);
+    assert_eq!(result, "Numbers: 1,2,3");
+}
+
+#[test]
+fn test_format_object_value() {
+    let template = "Object: {obj}";
+    let result = umt_format_string(template, &json!({"obj": {"key": "value"}}), None);
+    assert_eq!(result, "Object: [object Object]");
+}
+
+#[test]
+fn test_format_boolean_value() {
+    let template = "Is active: {active}";
+    let result = umt_format_string(template, &json!({"active": true}), None);
+    assert_eq!(result, "Is active: true");
+}
+
+#[test]
+fn test_format_null_value_direct() {
+    let template = "Value: {val}";
+    let result = umt_format_string(template, &json!({"val": null}), None);
+    // Should keep the placeholder since value is null
+    assert_eq!(result, "Value: {val}");
+}

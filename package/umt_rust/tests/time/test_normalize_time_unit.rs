@@ -152,103 +152,12 @@ fn test_invalid_units() {
     assert_eq!(umt_normalize_time_unit("", NormalizeFormat::Short), None);
 }
 
-use umt_rust::time::*;
-
 #[test]
-fn test_normalize_invalid_unit() {
-    assert_eq!(
-        umt_normalize_time_unit("invalid", NormalizeFormat::Long),
-        None
-    );
-    assert_eq!(umt_normalize_time_unit("", NormalizeFormat::Short), None);
-}
-
-#[test]
-fn test_normalize_long_to_long() {
-    assert_eq!(
-        umt_normalize_time_unit("milliseconds", NormalizeFormat::Long),
-        Some("milliseconds".to_string())
-    );
-    assert_eq!(
-        umt_normalize_time_unit("seconds", NormalizeFormat::Long),
-        Some("seconds".to_string())
-    );
-    assert_eq!(
-        umt_normalize_time_unit("minutes", NormalizeFormat::Long),
-        Some("minutes".to_string())
-    );
-    assert_eq!(
-        umt_normalize_time_unit("hours", NormalizeFormat::Long),
-        Some("hours".to_string())
-    );
-}
-
-#[test]
-fn test_normalize_long_to_short() {
-    assert_eq!(
-        umt_normalize_time_unit("milliseconds", NormalizeFormat::Short),
-        Some("ms".to_string())
-    );
-    assert_eq!(
-        umt_normalize_time_unit("seconds", NormalizeFormat::Short),
-        Some("s".to_string())
-    );
-    assert_eq!(
-        umt_normalize_time_unit("minutes", NormalizeFormat::Short),
-        Some("m".to_string())
-    );
-    assert_eq!(
-        umt_normalize_time_unit("hours", NormalizeFormat::Short),
-        Some("h".to_string())
-    );
-}
-
-#[test]
-fn test_normalize_short_to_long() {
-    assert_eq!(
-        umt_normalize_time_unit("ms", NormalizeFormat::Long),
-        Some("milliseconds".to_string())
-    );
-    assert_eq!(
-        umt_normalize_time_unit("s", NormalizeFormat::Long),
-        Some("seconds".to_string())
-    );
-    assert_eq!(
-        umt_normalize_time_unit("m", NormalizeFormat::Long),
-        Some("minutes".to_string())
-    );
-    assert_eq!(
-        umt_normalize_time_unit("h", NormalizeFormat::Long),
-        Some("hours".to_string())
-    );
-}
-
-#[test]
-fn test_normalize_short_to_short() {
-    assert_eq!(
-        umt_normalize_time_unit("ms", NormalizeFormat::Short),
-        Some("ms".to_string())
-    );
-    assert_eq!(
-        umt_normalize_time_unit("s", NormalizeFormat::Short),
-        Some("s".to_string())
-    );
-    assert_eq!(
-        umt_normalize_time_unit("m", NormalizeFormat::Short),
-        Some("m".to_string())
-    );
-    assert_eq!(
-        umt_normalize_time_unit("h", NormalizeFormat::Short),
-        Some("h".to_string())
-    );
-}
-
-#[test]
-fn test_time_unit_to_long() {
-    assert_eq!(TimeUnit::Milliseconds.to_long(), "milliseconds");
-    assert_eq!(TimeUnit::Seconds.to_long(), "seconds");
-    assert_eq!(TimeUnit::Minutes.to_long(), "minutes");
-    assert_eq!(TimeUnit::Hours.to_long(), "hours");
+fn test_time_unit_display() {
+    assert_eq!(format!("{}", TimeUnit::Milliseconds), "milliseconds");
+    assert_eq!(format!("{}", TimeUnit::Seconds), "seconds");
+    assert_eq!(format!("{}", TimeUnit::Minutes), "minutes");
+    assert_eq!(format!("{}", TimeUnit::Hours), "hours");
 }
 
 #[test]
@@ -257,12 +166,4 @@ fn test_time_unit_to_milliseconds_rate() {
     assert_eq!(TimeUnit::Seconds.to_milliseconds_rate(), 1000.0);
     assert_eq!(TimeUnit::Minutes.to_milliseconds_rate(), 60_000.0);
     assert_eq!(TimeUnit::Hours.to_milliseconds_rate(), 3_600_000.0);
-}
-
-#[test]
-fn test_time_unit_to_short() {
-    assert_eq!(TimeUnit::Milliseconds.to_short(), "ms");
-    assert_eq!(TimeUnit::Seconds.to_short(), "s");
-    assert_eq!(TimeUnit::Minutes.to_short(), "m");
-    assert_eq!(TimeUnit::Hours.to_short(), "h");
 }

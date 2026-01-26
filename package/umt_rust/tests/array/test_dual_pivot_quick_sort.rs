@@ -22,7 +22,13 @@ fn test_dual_pivot_quick_sort_strings() {
 fn test_dual_pivot_quick_sort_descending() {
     let array = vec![3, 1, 4, 1, 5, 9, 2, 6, 5, 3];
     let compare_fn = |a: &i32, b: &i32| -> i32 {
-        if a < b { 1 } else if a > b { -1 } else { 0 }
+        if a < b {
+            1
+        } else if a > b {
+            -1
+        } else {
+            0
+        }
     };
     assert_eq!(
         umt_dual_pivot_quick_sort(&array, Some(compare_fn), None, None, None),
@@ -104,76 +110,5 @@ fn test_dual_pivot_quick_sort_custom_threshold() {
     assert_eq!(
         umt_dual_pivot_quick_sort(&array, None, None, None, Some(5)),
         vec![1, 1, 2, 3, 3, 4, 5, 5, 6, 9]
-    );
-}
-
-use umt_rust::array::*;
-
-#[test]
-fn test_dual_pivot_quick_sort_basic() {
-    let arr = vec![3, 1, 4, 1, 5, 9, 2, 6, 5, 3];
-    assert_eq!(
-        umt_dual_pivot_quick_sort(&arr, None, None, None, None),
-        vec![1, 1, 2, 3, 3, 4, 5, 5, 6, 9]
-    );
-}
-
-#[test]
-fn test_dual_pivot_quick_sort_does_not_mutate() {
-    let arr = vec![3, 1, 4, 1, 5];
-    let _ = umt_dual_pivot_quick_sort(&arr, None, None, None, None);
-    assert_eq!(arr, vec![3, 1, 4, 1, 5]);
-}
-
-#[test]
-fn test_dual_pivot_quick_sort_large() {
-    let arr: Vec<i32> = (0..1000).rev().collect();
-    let sorted = umt_dual_pivot_quick_sort(&arr, None, None, None, None);
-    assert_eq!(sorted, (0..1000).collect::<Vec<i32>>());
-}
-
-#[test]
-fn test_dual_pivot_quick_sort_many_duplicates() {
-    let arr = vec![5, 5, 5, 5, 1, 1, 1, 3, 3, 3];
-    assert_eq!(
-        umt_dual_pivot_quick_sort(&arr, None, None, None, None),
-        vec![1, 1, 1, 3, 3, 3, 5, 5, 5, 5]
-    );
-}
-
-#[test]
-fn test_dual_pivot_quick_sort_reverse() {
-    let arr = vec![5, 4, 3, 2, 1];
-    assert_eq!(
-        umt_dual_pivot_quick_sort(&arr, None, None, None, None),
-        vec![1, 2, 3, 4, 5]
-    );
-}
-
-#[test]
-fn test_dual_pivot_quick_sort_single() {
-    let arr = vec![42];
-    assert_eq!(
-        umt_dual_pivot_quick_sort(&arr, None, None, None, None),
-        vec![42]
-    );
-}
-
-#[test]
-fn test_dual_pivot_quick_sort_with_custom_compare() {
-    let arr = vec![1, 2, 3, 4, 5];
-    // Sort in descending order
-    let descending = |a: &i32, b: &i32| -> i32 {
-        if a < b {
-            1
-        } else if a > b {
-            -1
-        } else {
-            0
-        }
-    };
-    assert_eq!(
-        umt_dual_pivot_quick_sort(&arr, Some(descending), None, None, None),
-        vec![5, 4, 3, 2, 1]
     );
 }

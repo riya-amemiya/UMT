@@ -67,19 +67,3 @@ fn test_cidr_to_subnet_mask_invalid_cidr_255() {
         "CIDR must be an integer between 0 and 32"
     );
 }
-
-use umt_rust::ip::*;
-
-#[test]
-fn test_cidr_to_subnet_mask() {
-    assert_eq!(cidr_to_subnet_mask(0).unwrap(), "0.0.0.0");
-    assert_eq!(cidr_to_subnet_mask(8).unwrap(), "255.0.0.0");
-    assert_eq!(cidr_to_subnet_mask(16).unwrap(), "255.255.0.0");
-    assert_eq!(cidr_to_subnet_mask(24).unwrap(), "255.255.255.0");
-    assert_eq!(cidr_to_subnet_mask(32).unwrap(), "255.255.255.255");
-}
-
-#[test]
-fn test_cidr_to_subnet_mask_invalid() {
-    assert!(cidr_to_subnet_mask(33).is_err());
-}

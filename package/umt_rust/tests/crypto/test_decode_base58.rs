@@ -77,81 +77,18 @@ fn test_decodes_binary_data() {
     assert_eq!(result, vec![255, 254, 253, 252, 251]);
 }
 
-use umt_rust::crypto::*;
-
 #[test]
-fn test_decode_binary_data() {
-    let result = umt_decode_base58("Vt9aq46").unwrap();
-    assert_eq!(result, vec![255, 254, 253, 252, 251]);
+fn test_base58_error_display() {
+    use umt_rust::crypto::Base58Error;
+    let error = Base58Error {
+        message: "test error".to_string(),
+    };
+    assert_eq!(format!("{}", error), "test error");
 }
 
 #[test]
-fn test_decode_empty_string() {
-    let result = umt_decode_base58("").unwrap();
-    assert!(result.is_empty());
-}
-
-#[test]
-fn test_decode_longer_text() {
-    let encoded = "7DdiPPYtxLjCD3wA1po2rvZHTDYjkZYiEtazrfiwJcwnKCizhGFhBGHeRdx";
-    let result = String::from_utf8(umt_decode_base58(encoded).unwrap()).unwrap();
-    assert_eq!(result, "The quick brown fox jumps over the lazy dog");
-}
-
-#[test]
-fn test_decode_simple_string() {
-    let result = umt_decode_base58("9Ajdvzr").unwrap();
-    assert_eq!(String::from_utf8(result).unwrap(), "Hello");
-}
-
-#[test]
-fn test_decode_single_character_strings() {
-    assert_eq!(
-        String::from_utf8(umt_decode_base58("2g").unwrap()).unwrap(),
-        "a"
-    );
-    assert_eq!(
-        String::from_utf8(umt_decode_base58("2h").unwrap()).unwrap(),
-        "b"
-    );
-    assert_eq!(
-        String::from_utf8(umt_decode_base58("2i").unwrap()).unwrap(),
-        "c"
-    );
-}
-
-#[test]
-fn test_decode_with_leading_ones() {
-    let result = umt_decode_base58("119Ajdvzr").unwrap();
-    assert_eq!(result[0], 0);
-    assert_eq!(result[1], 0);
-    assert_eq!(String::from_utf8(result[2..].to_vec()).unwrap(), "Hello");
-}
-
-#[test]
-fn test_invalid_character_lowercase_l() {
-    let result = umt_decode_base58("9Ajdvzl");
-    assert!(result.is_err());
-    assert_eq!(result.unwrap_err().message, "Invalid base58 character: l");
-}
-
-#[test]
-fn test_invalid_character_uppercase_i() {
-    let result = umt_decode_base58("9AjdvzI");
-    assert!(result.is_err());
-    assert_eq!(result.unwrap_err().message, "Invalid base58 character: I");
-}
-
-#[test]
-fn test_invalid_character_uppercase_o() {
-    let result = umt_decode_base58("9AjdvzO");
-    assert!(result.is_err());
-    assert_eq!(result.unwrap_err().message, "Invalid base58 character: O");
-}
-
-#[test]
-fn test_invalid_character_zero() {
-    let result = umt_decode_base58("9Ajdvz0");
-    assert!(result.is_err());
-    assert_eq!(result.unwrap_err().message, "Invalid base58 character: 0");
+fn test_only_leading_ones() {
+    // Only leading 1s (zeros)
+    let result = umt_decode_base58("111").unwrap();
+    assert_eq!(result, vec![0, 0, 0]);
 }

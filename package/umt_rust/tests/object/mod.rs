@@ -6,3 +6,4 @@ mod test_merge_deep;
 mod test_omit;
 mod test_pick;
 mod test_pick_deep;
+mod test_value;

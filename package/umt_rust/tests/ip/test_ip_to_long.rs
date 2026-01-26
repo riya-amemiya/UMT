@@ -90,19 +90,3 @@ fn test_ip_to_long_double_dot() {
     assert!(result.is_err());
     assert_eq!(result.unwrap_err(), "Invalid IP address format");
 }
-
-use umt_rust::ip::*;
-
-#[test]
-fn test_ip_to_long_invalid() {
-    assert!(ip_to_long("").is_err());
-    assert!(ip_to_long("invalid").is_err());
-}
-
-#[test]
-fn test_ip_to_long_valid() {
-    assert_eq!(ip_to_long("0.0.0.0").unwrap(), 0);
-    assert_eq!(ip_to_long("255.255.255.255").unwrap(), 0xFFFFFFFF);
-    assert_eq!(ip_to_long("192.168.1.1").unwrap(), 0xC0A80101);
-    assert_eq!(ip_to_long("10.0.0.1").unwrap(), 0x0A000001);
-}

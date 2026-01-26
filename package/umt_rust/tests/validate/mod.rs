@@ -21,7 +21,6 @@ mod array {
 
 mod boolean {
     mod test_core;
-    mod test_validate_boolean_mod;
 }
 
 mod core {
@@ -36,13 +35,11 @@ mod number {
     mod test_min_value;
     mod test_odd;
     mod test_prime;
-    mod test_validate_number_mod;
 }
 
 mod object {
     mod test_core;
     mod test_optional;
-    mod test_validate_object_mod;
 }
 
 mod string {
@@ -54,5 +51,4 @@ mod string {
     mod test_number_string;
     mod test_regex_match;
     mod test_uuid;
-    mod test_validate_string_mod;
 }

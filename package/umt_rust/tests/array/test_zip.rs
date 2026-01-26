@@ -1,4 +1,4 @@
-use umt_rust::array::{umt_zip, umt_zip3, umt_zip_many};
+use umt_rust::array::{umt_zip, umt_zip_many, umt_zip3};
 
 #[test]
 fn test_zip_basic() {
@@ -52,7 +52,9 @@ fn test_zip_with_booleans() {
 #[test]
 fn test_zip_with_structs() {
     #[derive(Clone, Debug, PartialEq)]
-    struct Item { value: i32 }
+    struct Item {
+        value: i32,
+    }
 
     let a = vec![Item { value: 1 }, Item { value: 2 }];
     let b = vec!["a", "b"];

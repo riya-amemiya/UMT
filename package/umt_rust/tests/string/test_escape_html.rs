@@ -75,31 +75,3 @@ fn test_handle_javascript_code() {
         "if (x &lt; 5 &amp;&amp; y &gt; 3) { alert(&quot;Hello &#39;World&#39;&quot;); }";
     assert_eq!(umt_escape_html(input), expected);
 }
-
-use umt_rust::string::*;
-
-#[test]
-fn test_escape_html_ampersand() {
-    assert_eq!(umt_escape_html("Tom & Jerry"), "Tom &amp; Jerry");
-}
-
-#[test]
-fn test_escape_html_basic() {
-    assert_eq!(umt_escape_html("<script>"), "&lt;script&gt;");
-}
-
-#[test]
-fn test_escape_html_empty() {
-    assert_eq!(umt_escape_html(""), "");
-}
-
-#[test]
-fn test_escape_html_no_special() {
-    assert_eq!(umt_escape_html("hello"), "hello");
-}
-
-#[test]
-fn test_escape_html_quotes() {
-    assert_eq!(umt_escape_html("\"hello\""), "&quot;hello&quot;");
-    assert_eq!(umt_escape_html("'world'"), "&#39;world&#39;");
-}

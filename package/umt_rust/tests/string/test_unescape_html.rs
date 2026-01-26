@@ -184,32 +184,3 @@ fn test_preserve_already_unescaped_content() {
     let input = "Already < unescaped & content with 'quotes'";
     assert_eq!(umt_unescape_html(input), input);
 }
-
-use umt_rust::string::*;
-
-#[test]
-fn test_unescape_html_ampersand() {
-    assert_eq!(umt_unescape_html("Tom &amp; Jerry"), "Tom & Jerry");
-}
-
-#[test]
-fn test_unescape_html_basic() {
-    assert_eq!(umt_unescape_html("&lt;script&gt;"), "<script>");
-}
-
-#[test]
-fn test_unescape_html_empty() {
-    assert_eq!(umt_unescape_html(""), "");
-}
-
-#[test]
-fn test_unescape_html_numeric() {
-    assert_eq!(umt_unescape_html("&#65;"), "A");
-    assert_eq!(umt_unescape_html("&#x41;"), "A");
-}
-
-#[test]
-fn test_unescape_html_quotes() {
-    assert_eq!(umt_unescape_html("&quot;hello&quot;"), "\"hello\"");
-    assert_eq!(umt_unescape_html("&#39;world&#39;"), "'world'");
-}

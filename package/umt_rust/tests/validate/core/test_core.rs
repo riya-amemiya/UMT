@@ -1,6 +1,8 @@
 //! Tests for core validation function
 
-use umt_rust::validate::core::{ValidateReturnType, umt_validate_core};
+use umt_rust::validate::core::{
+    TypeName, ValidateCoreReturnType, ValidateReturnType, umt_validate_core,
+};
 
 #[test]
 fn test_validate_core_validates_type_correctly() {
@@ -118,4 +120,86 @@ fn test_validate_core_preserves_type_information() {
 
     let result_bool = umt_validate_core(true, "boolean", &[], None);
     assert!(result_bool.type_value);
+}
+
+#[test]
+fn test_type_name_display() {
+    assert_eq!(TypeName::String.to_string(), "string");
+    assert_eq!(TypeName::Number.to_string(), "number");
+    assert_eq!(TypeName::Boolean.to_string(), "boolean");
+    assert_eq!(TypeName::Undefined.to_string(), "undefined");
+    assert_eq!(TypeName::Null.to_string(), "null");
+    assert_eq!(TypeName::Object.to_string(), "object");
+    assert_eq!(TypeName::Array.to_string(), "array");
+}
+
+#[test]
+fn test_type_name_equality() {
+    assert_eq!(TypeName::String, TypeName::String);
+    assert_ne!(TypeName::String, TypeName::Number);
+}
+
+#[test]
+fn test_type_name_clone() {
+    let original = TypeName::String;
+    let cloned = original.clone();
+    assert_eq!(original, cloned);
+}
+
+#[test]
+fn test_validate_return_type_clone() {
+    let original = ValidateReturnType::new("string", Some("Error".to_string()), |s: &String| {
+        !s.is_empty()
+    });
+    let cloned = original.clone();
+    assert_eq!(original.type_name, cloned.type_name);
+    assert_eq!(original.message, cloned.message);
+    assert!((cloned.validate)(&"test".to_string()));
+}
+
+#[test]
+fn test_validate_return_type_debug() {
+    let return_type =
+        ValidateReturnType::new("string", Some("Error".to_string()), |_: &String| true);
+    let debug_str = format!("{:?}", return_type);
+    assert!(debug_str.contains("ValidateReturnType"));
+    assert!(debug_str.contains("type_name"));
+    assert!(debug_str.contains("message"));
+}
+
+#[test]
+fn test_validate_core_return_type_equality() {
+    let result1 = ValidateCoreReturnType {
+        validate: true,
+        message: "test".to_string(),
+        type_value: 42,
+    };
+    let result2 = ValidateCoreReturnType {
+        validate: true,
+        message: "test".to_string(),
+        type_value: 42,
+    };
+    assert_eq!(result1, result2);
+}
+
+#[test]
+fn test_validate_core_return_type_clone() {
+    let original = ValidateCoreReturnType {
+        validate: true,
+        message: "test".to_string(),
+        type_value: 42,
+    };
+    let cloned = original.clone();
+    assert_eq!(original, cloned);
+}
+
+#[test]
+fn test_validate_core_return_type_debug() {
+    let result = ValidateCoreReturnType {
+        validate: true,
+        message: "test".to_string(),
+        type_value: 42,
+    };
+    let debug_str = format!("{:?}", result);
+    assert!(debug_str.contains("ValidateCoreReturnType"));
 }

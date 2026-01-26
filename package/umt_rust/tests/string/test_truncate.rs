@@ -39,25 +39,3 @@ fn test_handle_empty_string() {
 fn test_truncate_default() {
     assert_eq!(umt_truncate_default("Hello World", 5), "Hello...");
 }
-
-use umt_rust::string::*;
-
-#[test]
-fn test_truncate_basic() {
-    assert_eq!(umt_truncate("Hello World", 5, "..."), "Hello...");
-}
-
-#[test]
-fn test_truncate_custom_suffix() {
-    assert_eq!(umt_truncate("Hello World", 5, "~"), "Hello~");
-}
-
-#[test]
-fn test_truncate_empty() {
-    assert_eq!(umt_truncate("", 5, "..."), "");
-}
-
-#[test]
-fn test_truncate_no_truncation() {
-    assert_eq!(umt_truncate("Hello", 10, "..."), "Hello");
-}

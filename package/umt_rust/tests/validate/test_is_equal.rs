@@ -49,20 +49,3 @@ fn test_is_equal_strings() {
     let s3 = "world".to_string();
     assert!(!umt_is_equal(&s1, &s3));
 }
-
-use umt_rust::validate::*;
-
-#[test]
-fn test_is_equal() {
-    assert!(umt_is_equal(&1, &1));
-    assert!(umt_is_equal(&"test", &"test"));
-    assert!(!umt_is_equal(&1, &2));
-}
-
-#[test]
-fn test_is_equal_f64() {
-    assert!(umt_is_equal_f64(1.0, 1.0));
-    assert!(umt_is_equal_f64(f64::NAN, f64::NAN));
-    assert!(!umt_is_equal_f64(-0.0, 0.0));
-    assert!(!umt_is_equal_f64(1.0, 2.0));
-}

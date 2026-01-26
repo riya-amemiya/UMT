@@ -3,7 +3,7 @@ use umt_rust::array::umt_uniq_by;
 #[test]
 fn test_uniq_by_floor() {
     let arr = vec![1.1, 1.2, 2.1, 2.2, 3.1];
-    let result = umt_uniq_by(&arr, |x| (*x as i32));
+    let result = umt_uniq_by(&arr, |x| *x as i32);
     assert_eq!(result, vec![1.1, 2.1, 3.1]);
 }
 
@@ -37,10 +37,22 @@ fn test_uniq_by_preserves_order() {
     }
 
     let items = vec![
-        Item { item_type: "fruit".to_string(), name: "apple".to_string() },
-        Item { item_type: "vegetable".to_string(), name: "carrot".to_string() },
-        Item { item_type: "fruit".to_string(), name: "orange".to_string() },
-        Item { item_type: "meat".to_string(), name: "chicken".to_string() },
+        Item {
+            item_type: "fruit".to_string(),
+            name: "apple".to_string(),
+        },
+        Item {
+            item_type: "vegetable".to_string(),
+            name: "carrot".to_string(),
+        },
+        Item {
+            item_type: "fruit".to_string(),
+            name: "orange".to_string(),
+        },
+        Item {
+            item_type: "meat".to_string(),
+            name: "chicken".to_string(),
+        },
     ];
 
     let result = umt_uniq_by(&items, |item| item.item_type.clone());
@@ -88,10 +100,22 @@ fn test_uniq_by_boolean_selector() {
     }
 
     let items = vec![
-        Item { value: 1, flag: true },
-        Item { value: 2, flag: false },
-        Item { value: 3, flag: true },
-        Item { value: 4, flag: false },
+        Item {
+            value: 1,
+            flag: true,
+        },
+        Item {
+            value: 2,
+            flag: false,
+        },
+        Item {
+            value: 3,
+            flag: true,
+        },
+        Item {
+            value: 4,
+            flag: false,
+        },
     ];
 
     let result = umt_uniq_by(&items, |item| item.flag);
@@ -109,10 +133,22 @@ fn test_uniq_by_struct_id() {
     }
 
     let people = vec![
-        Person { id: 1, name: "Alice".to_string() },
-        Person { id: 2, name: "Bob".to_string() },
-        Person { id: 1, name: "Alice Duplicate".to_string() },
-        Person { id: 3, name: "Charlie".to_string() },
+        Person {
+            id: 1,
+            name: "Alice".to_string(),
+        },
+        Person {
+            id: 2,
+            name: "Bob".to_string(),
+        },
+        Person {
+            id: 1,
+            name: "Alice Duplicate".to_string(),
+        },
+        Person {
+            id: 3,
+            name: "Charlie".to_string(),
+        },
     ];
 
     let result = umt_uniq_by(&people, |p| p.id);
@@ -121,49 +157,4 @@ fn test_uniq_by_struct_id() {
     assert_eq!(result[0].name, "Alice");
     assert_eq!(result[1].name, "Bob");
     assert_eq!(result[2].name, "Charlie");
-}
-
-use umt_rust::array::*;
-
-#[test]
-fn test_uniq_by_all_different_keys() {
-    let arr = vec![1, 2, 3, 4, 5];
-    let result = umt_uniq_by(&arr, |x| *x);
-    assert_eq!(result, vec![1, 2, 3, 4, 5]);
-}
-
-#[test]
-fn test_uniq_by_string_length() {
-    let arr = vec!["one", "two", "three", "four", "five"];
-    let result = umt_uniq_by(&arr, |s| s.len());
-    assert_eq!(result, vec!["one", "three", "four"]);
-}
-
-#[test]
-fn test_uniq_by_struct_field() {
-    #[derive(Clone, Debug, PartialEq)]
-    struct Person {
-        name: String,
-        age: u32,
-    }
-
-    let people = vec![
-        Person {
-            name: "Alice".to_string(),
-            age: 30,
-        },
-        Person {
-            name: "Bob".to_string(),
-            age: 30,
-        },
-        Person {
-            name: "Charlie".to_string(),
-            age: 25,
-        },
-    ];
-
-    let result = umt_uniq_by(&people, |p| p.age);
-    assert_eq!(result.len(), 2);
-    assert_eq!(result[0].name, "Alice");
-    assert_eq!(result[1].name, "Charlie");
 }

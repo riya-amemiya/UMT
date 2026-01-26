@@ -22,7 +22,10 @@ fn test_first_single_element() {
 fn test_first_with_special_numeric_values() {
     assert!(umt_first(&[f64::NAN, 1.0, 2.0]).unwrap().is_nan());
     assert_eq!(umt_first(&[f64::INFINITY, 1.0, 2.0]), Some(&f64::INFINITY));
-    assert_eq!(umt_first(&[f64::NEG_INFINITY, 1.0, 2.0]), Some(&f64::NEG_INFINITY));
+    assert_eq!(
+        umt_first(&[f64::NEG_INFINITY, 1.0, 2.0]),
+        Some(&f64::NEG_INFINITY)
+    );
     assert_eq!(umt_first(&[0.0, 1.0, 2.0]), Some(&0.0));
 }
 
@@ -50,12 +53,4 @@ fn test_first_large_array() {
 
     let large_string_array: Vec<String> = (0..10_000).map(|i| format!("item{}", i)).collect();
     assert_eq!(umt_first(&large_string_array), Some(&"item0".to_string()));
-}
-
-use umt_rust::array::*;
-
-#[test]
-fn test_first_with_strings() {
-    let arr = vec!["hello".to_string(), "world".to_string()];
-    assert_eq!(umt_first(&arr), Some(&"hello".to_string()));
 }

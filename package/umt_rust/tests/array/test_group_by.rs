@@ -1,11 +1,9 @@
-use umt_rust::array::umt_group_by;
+use umt_rust::array::{umt_group_by, umt_group_by_indexed};
 
 #[test]
 fn test_group_by_odd_even() {
     let array = vec![1, 2, 3, 4, 5];
-    let result = umt_group_by(&array, |num| {
-        if num % 2 == 0 { "even" } else { "odd" }
-    });
+    let result = umt_group_by(&array, |num| if num % 2 == 0 { "even" } else { "odd" });
     assert_eq!(result.get(&"odd"), Some(&vec![1, 3, 5]));
     assert_eq!(result.get(&"even"), Some(&vec![2, 4]));
 }
@@ -30,9 +28,7 @@ fn test_group_by_floor() {
 #[test]
 fn test_group_by_empty() {
     let array: Vec<i32> = vec![];
-    let result = umt_group_by(&array, |num| {
-        if num % 2 == 0 { "even" } else { "odd" }
-    });
+    let result = umt_group_by(&array, |num| if num % 2 == 0 { "even" } else { "odd" });
     assert!(result.is_empty());
 }
 
@@ -78,9 +74,18 @@ fn test_group_by_struct() {
     }
 
     let items = vec![
-        Item { category: "fruit".to_string(), name: "apple".to_string() },
-        Item { category: "vegetable".to_string(), name: "carrot".to_string() },
-        Item { category: "fruit".to_string(), name: "banana".to_string() },
+        Item {
+            category: "fruit".to_string(),
+            name: "apple".to_string(),
+        },
+        Item {
+            category: "vegetable".to_string(),
+            name: "carrot".to_string(),
+        },
+        Item {
+            category: "fruit".to_string(),
+            name: "banana".to_string(),
+        },
     ];
 
     let result = umt_group_by(&items, |item| item.category.clone());
@@ -89,13 +94,34 @@ fn test_group_by_struct() {
     assert_eq!(result.get(&"vegetable".to_string()).unwrap().len(), 1);
 }
 
-use umt_rust::array::*;
-
 #[test]
 fn test_group_by_indexed() {
-    let arr = vec!["a", "b", "c", "d", "e"];
-    let result = umt_group_by_indexed(&arr, |_, idx| idx % 2);
+    let array = vec![10, 20, 30, 40, 50];
+    let result = umt_group_by_indexed(
+        &array,
+        |_, idx| if idx % 2 == 0 { "even_idx" } else { "odd_idx" },
+    );
+    assert_eq!(result.get(&"even_idx"), Some(&vec![10, 30, 50]));
+    assert_eq!(result.get(&"odd_idx"), Some(&vec![20, 40]));
+}
 
-    assert_eq!(result.get(&0), Some(&vec!["a", "c", "e"]));
-    assert_eq!(result.get(&1), Some(&vec!["b", "d"]));
+#[test]
+fn test_group_by_indexed_empty() {
+    let array: Vec<i32> = vec![];
+    let result = umt_group_by_indexed(&array, |_, idx| idx);
+    assert!(result.is_empty());
+}
+
+#[test]
+fn test_group_by_indexed_with_value() {
+    let array = vec!["a", "bb", "ccc", "dd", "e"];
+    let result = umt_group_by_indexed(&array, |s, idx| s.len() + idx);
+    // idx=0, len=1 -> 1
+    // idx=1, len=2 -> 3
+    // idx=2, len=3 -> 5
+    // idx=3, len=2 -> 5
+    // idx=4, len=1 -> 5
+    assert_eq!(result.get(&1), Some(&vec!["a"]));
+    assert_eq!(result.get(&3), Some(&vec!["bb"]));
+    assert_eq!(result.get(&5).unwrap().len(), 3);
 }

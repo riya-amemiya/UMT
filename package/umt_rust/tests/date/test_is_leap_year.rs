@@ -83,20 +83,3 @@ fn test_leap_year_pattern() {
         );
     }
 }
-
-use umt_rust::date::*;
-
-#[test]
-fn test_negative_years() {
-    assert!(umt_is_leap_year(-4));
-    assert!(!umt_is_leap_year(-1));
-    assert!(umt_is_leap_year(-400));
-}
-
-#[test]
-fn test_not_leap_year_not_divisible_by_4() {
-    assert!(!umt_is_leap_year(2023));
-    assert!(!umt_is_leap_year(2021));
-    assert!(!umt_is_leap_year(2019));
-    assert!(!umt_is_leap_year(2001));
-}

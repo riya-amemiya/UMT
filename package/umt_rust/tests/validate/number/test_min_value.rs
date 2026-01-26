@@ -47,37 +47,3 @@ fn test_min_value_with_decimal_numbers() {
     assert!((validator.validate)(&5.6));
     assert!(!(validator.validate)(&5.4));
 }
-
-use umt_rust::validate::number::*;
-
-#[test]
-fn test_custom_message() {
-    let custom_message = "Value must be at least 10";
-    let validator = umt_min_value(10.0, Some(custom_message.to_string()));
-    assert!(!(validator.validate)(&9.0));
-    assert_eq!(validator.message, Some(custom_message.to_string()));
-}
-
-#[test]
-fn test_edge_cases() {
-    let validator = umt_min_value(0.0, None);
-    assert!((validator.validate)(&0.0));
-    assert!((validator.validate)(&0.1));
-    assert!(!(validator.validate)(&-0.1));
-}
-
-#[test]
-fn test_returns_false_for_values_less_than_min() {
-    let validator = umt_min_value(10.0, None);
-    assert!(!(validator.validate)(&9.0));
-    assert!(!(validator.validate)(&0.0));
-    assert!(!(validator.validate)(&-5.0));
-}
-
-#[test]
-fn test_returns_true_for_values_greater_than_or_equal_to_min() {
-    let validator = umt_min_value(10.0, None);
-    assert!((validator.validate)(&10.0));
-    assert!((validator.validate)(&15.0));
-    assert!((validator.validate)(&100.0));
-}

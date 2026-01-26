@@ -113,13 +113,3 @@ fn test_reduce_24680_12340() {
     assert_eq!(result.y, 1);
     assert_eq!(result.gcd, 12340);
 }
-
-use umt_rust::math::*;
-
-#[test]
-fn test_reduce_basic() {
-    let result = umt_reduce(2, 4).unwrap();
-    assert_eq!(result.x, 1);
-    assert_eq!(result.y, 2);
-    assert_eq!(result.gcd, 2);
-}

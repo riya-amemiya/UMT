@@ -153,15 +153,18 @@ fn test_should_handle_unicode_strings() {
 }
 
 #[test]
-fn test_should_parse_json_value() {
-    let json_string = r#"{"key": "value"}"#;
-    let result = umt_parse_json_value(json_string).unwrap();
-    assert_eq!(result["key"], "value");
+fn test_json_parse_error_display() {
+    use umt_rust::tool::JsonParseError;
+
+    let error = JsonParseError {
+        message: "test error".to_string(),
+    };
+    assert_eq!(format!("{}", error), "test error");
 }
 
 #[test]
-fn test_should_parse_json_array_of_numbers() {
-    let json_string = r#"[1, 2, 3]"#;
-    let result: Vec<i32> = umt_parse_json(json_string).unwrap();
-    assert_eq!(result, vec![1, 2, 3]);
+fn test_json_parse_error_from_serde_error() {
+    let result: Result<serde_json::Value, _> = umt_parse_json("invalid json");
+    let error = result.unwrap_err();
+    assert!(!error.message.is_empty());
 }

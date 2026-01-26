@@ -44,26 +44,3 @@ fn test_compare_mixed_signs() {
     assert_eq!(umt_compare_function_default(&1, &-1), 1);
     assert_eq!(umt_compare_function_default(&-1, &1), -1);
 }
-
-use umt_rust::array::*;
-
-#[test]
-fn test_compare_integers() {
-    assert_eq!(umt_compare_function_default(&2, &1), 1);
-    assert_eq!(umt_compare_function_default(&1, &2), -1);
-    assert_eq!(umt_compare_function_default(&2, &2), 0);
-}
-
-#[test]
-fn test_compare_strings() {
-    assert_eq!(umt_compare_function_default(&"b", &"a"), 1);
-    assert_eq!(umt_compare_function_default(&"a", &"b"), -1);
-    assert_eq!(umt_compare_function_default(&"a", &"a"), 0);
-}
-
-#[test]
-fn test_compare_zero() {
-    assert_eq!(umt_compare_function_default(&0, &0), 0);
-    assert_eq!(umt_compare_function_default(&1, &0), 1);
-    assert_eq!(umt_compare_function_default(&0, &1), -1);
-}

@@ -49,7 +49,10 @@ fn test_arrays_join_strings() {
 
 #[test]
 fn test_arrays_join_two_convenience() {
-    assert_eq!(umt_arrays_join_two(&[1, 2, 3], &[2, 3, 4]), vec![1, 2, 3, 4]);
+    assert_eq!(
+        umt_arrays_join_two(&[1, 2, 3], &[2, 3, 4]),
+        vec![1, 2, 3, 4]
+    );
 }
 
 #[test]
@@ -71,10 +74,7 @@ fn test_arrays_join_single_array() {
 
 #[test]
 fn test_arrays_join_single_with_duplicates() {
-    assert_eq!(
-        umt_arrays_join(&[&[1, 1, 2, 2, 3, 3][..]]),
-        vec![1, 2, 3]
-    );
+    assert_eq!(umt_arrays_join(&[&[1, 1, 2, 2, 3, 3][..]]), vec![1, 2, 3]);
 }
 
 #[test]

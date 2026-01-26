@@ -69,21 +69,3 @@ fn test_xoshiro256_custom_range_iterations() {
         assert!(result >= 10.0 && result < 20.0);
     }
 }
-
-use umt_rust::math::*;
-
-#[test]
-fn test_xoshiro256_01() {
-    let mut state: Xoshiro256State = [1, 2, 3, 4];
-    let result = umt_xoshiro256_01(&mut state);
-    assert!(result >= 0.0 && result < 1.0);
-}
-
-#[test]
-fn test_xoshiro256_range() {
-    let mut state: Xoshiro256State = [1, 2, 3, 4];
-    for _ in 0..100 {
-        let result = umt_xoshiro256(&mut state, 0.0, 1.0);
-        assert!(result >= 0.0 && result < 1.0);
-    }
-}

@@ -1,4 +1,4 @@
-use umt_rust::array::{umt_drop, umt_drop_left, umt_drop_right, DropDirection};
+use umt_rust::array::{DropDirection, umt_drop, umt_drop_left, umt_drop_right};
 
 #[test]
 fn test_drop_left() {
@@ -48,7 +48,10 @@ fn test_drop_exceeds_length() {
 fn test_drop_zero() {
     assert_eq!(umt_drop(&[1, 2, 3], 0, DropDirection::Left), vec![1, 2, 3]);
     assert_eq!(umt_drop(&[1, 2, 3], 0, DropDirection::Right), vec![1, 2, 3]);
-    assert_eq!(umt_drop(&[1, 2, 3], 0, DropDirection::Between), vec![1, 2, 3]);
+    assert_eq!(
+        umt_drop(&[1, 2, 3], 0, DropDirection::Between),
+        vec![1, 2, 3]
+    );
 }
 
 #[test]

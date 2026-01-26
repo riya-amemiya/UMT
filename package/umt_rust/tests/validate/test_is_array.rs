@@ -32,12 +32,3 @@ fn test_is_array_with_different_types() {
     let nested_arr = vec![vec![1, 2], vec![3, 4]];
     assert!(umt_is_array(&nested_arr));
 }
-
-use umt_rust::validate::*;
-
-#[test]
-fn test_is_array() {
-    assert!(umt_is_array(&vec![1, 2, 3]));
-    assert!(umt_is_array(&vec!["a", "b"]));
-    assert!(umt_is_array(&Vec::<i32>::new()));
-}

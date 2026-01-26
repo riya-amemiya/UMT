@@ -47,37 +47,3 @@ fn test_max_value_with_decimal_numbers() {
     assert!((validator.validate)(&5.5));
     assert!(!(validator.validate)(&5.6));
 }
-
-use umt_rust::validate::number::*;
-
-#[test]
-fn test_custom_message() {
-    let custom_message = "Value must be less than or equal to 10";
-    let validator = umt_max_value(10.0, Some(custom_message.to_string()));
-    assert!(!(validator.validate)(&11.0));
-    assert_eq!(validator.message, Some(custom_message.to_string()));
-}
-
-#[test]
-fn test_edge_cases() {
-    let validator = umt_max_value(0.0, None);
-    assert!((validator.validate)(&0.0));
-    assert!((validator.validate)(&-1.0));
-    assert!(!(validator.validate)(&0.1));
-}
-
-#[test]
-fn test_returns_false_for_values_greater_than_max() {
-    let validator = umt_max_value(10.0, None);
-    assert!(!(validator.validate)(&11.0));
-    assert!(!(validator.validate)(&100.0));
-}
-
-#[test]
-fn test_returns_true_for_values_less_than_or_equal_to_max() {
-    let validator = umt_max_value(10.0, None);
-    assert!((validator.validate)(&5.0));
-    assert!((validator.validate)(&10.0));
-    assert!((validator.validate)(&0.0));
-    assert!((validator.validate)(&-5.0));
-}

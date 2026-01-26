@@ -46,30 +46,3 @@ fn test_number_string_special_cases() {
     assert!(!(validator.validate)(&"NaN".to_string()));
     assert!(!(validator.validate)(&"Infinity".to_string()));
 }
-
-use umt_rust::validate::string::*;
-
-#[test]
-fn test_custom_message() {
-    let custom_message = "This is not a valid number string";
-    let validator = umt_number_string(Some(custom_message.to_string()));
-    assert!(!(validator.validate)(&"abc".to_string()));
-    assert_eq!(validator.message, Some(custom_message.to_string()));
-}
-
-#[test]
-fn test_invalid_number_strings() {
-    let validator = umt_number_string(None);
-    assert!(!(validator.validate)(&"abc".to_string()));
-    assert!(!(validator.validate)(&"123abc".to_string()));
-    assert!(!(validator.validate)(&"NaN".to_string()));
-}
-
-#[test]
-fn test_valid_number_strings() {
-    let validator = umt_number_string(None);
-    assert!((validator.validate)(&"123".to_string()));
-    assert!((validator.validate)(&"0.56".to_string()));
-    assert!((validator.validate)(&"-42".to_string()));
-    assert!((validator.validate)(&"3.14159".to_string()));
-}

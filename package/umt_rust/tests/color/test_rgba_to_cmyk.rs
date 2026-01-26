@@ -210,109 +210,11 @@ fn test_rgba_to_cmyk_default_alpha() {
     );
 }
 
-use umt_rust::color::*;
-
 #[test]
-fn test_rgba_to_cmyk_black() {
-    let result = umt_rgba_to_cmyk(RgbaInput {
-        r: 0.0,
-        g: 0.0,
-        b: 0.0,
-        a: Some(1.0),
-    })
-    .unwrap();
-    assert_eq!(
-        result,
-        Cmyk {
-            c: 0.0,
-            m: 0.0,
-            y: 0.0,
-            k: 100.0,
-            a: 1.0
-        }
-    );
-}
-
-#[test]
-fn test_rgba_to_cmyk_blue() {
-    let result = umt_rgba_to_cmyk(RgbaInput {
-        r: 0.0,
-        g: 0.0,
-        b: 255.0,
-        a: Some(0.3),
-    })
-    .unwrap();
-    assert_eq!(
-        result,
-        Cmyk {
-            c: 100.0,
-            m: 100.0,
-            y: 0.0,
-            k: 0.0,
-            a: 0.3
-        }
-    );
-}
-
-#[test]
-fn test_rgba_to_cmyk_green() {
-    let result = umt_rgba_to_cmyk(RgbaInput {
-        r: 0.0,
-        g: 255.0,
-        b: 0.0,
-        a: Some(0.7),
-    })
-    .unwrap();
-    assert_eq!(
-        result,
-        Cmyk {
-            c: 100.0,
-            m: 0.0,
-            y: 100.0,
-            k: 0.0,
-            a: 0.7
-        }
-    );
-}
-
-#[test]
-fn test_rgba_to_cmyk_red() {
-    let result = umt_rgba_to_cmyk(RgbaInput {
-        r: 255.0,
-        g: 0.0,
-        b: 0.0,
-        a: Some(0.5),
-    })
-    .unwrap();
-    assert_eq!(
-        result,
-        Cmyk {
-            c: 0.0,
-            m: 100.0,
-            y: 100.0,
-            k: 0.0,
-            a: 0.5
-        }
-    );
-}
-
-#[test]
-fn test_rgba_to_cmyk_white() {
-    let result = umt_rgba_to_cmyk(RgbaInput {
-        r: 255.0,
-        g: 255.0,
-        b: 255.0,
-        a: Some(1.0),
-    })
-    .unwrap();
-    assert_eq!(
-        result,
-        Cmyk {
-            c: 0.0,
-            m: 0.0,
-            y: 0.0,
-            k: 0.0,
-            a: 1.0
-        }
-    );
+fn test_rgba_error_display() {
+    use umt_rust::color::RgbaError;
+    let error = RgbaError {
+        message: "test error".to_string(),
+    };
+    assert_eq!(format!("{}", error), "test error");
 }

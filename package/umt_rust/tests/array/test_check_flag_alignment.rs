@@ -1,4 +1,4 @@
-use umt_rust::array::{umt_check_flag_alignment, umt_check_flag_alignment_bool, HasFlag};
+use umt_rust::array::{HasFlag, umt_check_flag_alignment, umt_check_flag_alignment_bool};
 
 #[derive(Clone)]
 struct Cell {
@@ -29,19 +29,46 @@ fn test_empty_rows() {
 fn test_horizontal_alignment() {
     let matrix = vec![
         vec![
-            Cell { value: 10, flag: true },
-            Cell { value: 20, flag: true },
-            Cell { value: 30, flag: true },
+            Cell {
+                value: 10,
+                flag: true,
+            },
+            Cell {
+                value: 20,
+                flag: true,
+            },
+            Cell {
+                value: 30,
+                flag: true,
+            },
         ],
         vec![
-            Cell { value: 40, flag: false },
-            Cell { value: 50, flag: false },
-            Cell { value: 60, flag: false },
+            Cell {
+                value: 40,
+                flag: false,
+            },
+            Cell {
+                value: 50,
+                flag: false,
+            },
+            Cell {
+                value: 60,
+                flag: false,
+            },
         ],
         vec![
-            Cell { value: 70, flag: false },
-            Cell { value: 80, flag: false },
-            Cell { value: 90, flag: false },
+            Cell {
+                value: 70,
+                flag: false,
+            },
+            Cell {
+                value: 80,
+                flag: false,
+            },
+            Cell {
+                value: 90,
+                flag: false,
+            },
         ],
     ];
     assert!(umt_check_flag_alignment(&matrix));
@@ -51,19 +78,46 @@ fn test_horizontal_alignment() {
 fn test_vertical_alignment() {
     let matrix = vec![
         vec![
-            Cell { value: 10, flag: false },
-            Cell { value: 20, flag: true },
-            Cell { value: 30, flag: false },
+            Cell {
+                value: 10,
+                flag: false,
+            },
+            Cell {
+                value: 20,
+                flag: true,
+            },
+            Cell {
+                value: 30,
+                flag: false,
+            },
         ],
         vec![
-            Cell { value: 40, flag: false },
-            Cell { value: 50, flag: true },
-            Cell { value: 60, flag: false },
+            Cell {
+                value: 40,
+                flag: false,
+            },
+            Cell {
+                value: 50,
+                flag: true,
+            },
+            Cell {
+                value: 60,
+                flag: false,
+            },
         ],
         vec![
-            Cell { value: 70, flag: false },
-            Cell { value: 80, flag: true },
-            Cell { value: 90, flag: false },
+            Cell {
+                value: 70,
+                flag: false,
+            },
+            Cell {
+                value: 80,
+                flag: true,
+            },
+            Cell {
+                value: 90,
+                flag: false,
+            },
         ],
     ];
     assert!(umt_check_flag_alignment(&matrix));
@@ -73,19 +127,46 @@ fn test_vertical_alignment() {
 fn test_diagonal_top_left_to_bottom_right() {
     let matrix = vec![
         vec![
-            Cell { value: 10, flag: true },
-            Cell { value: 20, flag: false },
-            Cell { value: 30, flag: false },
+            Cell {
+                value: 10,
+                flag: true,
+            },
+            Cell {
+                value: 20,
+                flag: false,
+            },
+            Cell {
+                value: 30,
+                flag: false,
+            },
         ],
         vec![
-            Cell { value: 40, flag: false },
-            Cell { value: 50, flag: true },
-            Cell { value: 60, flag: false },
+            Cell {
+                value: 40,
+                flag: false,
+            },
+            Cell {
+                value: 50,
+                flag: true,
+            },
+            Cell {
+                value: 60,
+                flag: false,
+            },
         ],
         vec![
-            Cell { value: 70, flag: false },
-            Cell { value: 80, flag: false },
-            Cell { value: 90, flag: true },
+            Cell {
+                value: 70,
+                flag: false,
+            },
+            Cell {
+                value: 80,
+                flag: false,
+            },
+            Cell {
+                value: 90,
+                flag: true,
+            },
         ],
     ];
     assert!(umt_check_flag_alignment(&matrix));
@@ -95,19 +176,46 @@ fn test_diagonal_top_left_to_bottom_right() {
 fn test_diagonal_top_right_to_bottom_left() {
     let matrix = vec![
         vec![
-            Cell { value: 10, flag: false },
-            Cell { value: 20, flag: false },
-            Cell { value: 30, flag: true },
+            Cell {
+                value: 10,
+                flag: false,
+            },
+            Cell {
+                value: 20,
+                flag: false,
+            },
+            Cell {
+                value: 30,
+                flag: true,
+            },
         ],
         vec![
-            Cell { value: 40, flag: false },
-            Cell { value: 50, flag: true },
-            Cell { value: 60, flag: false },
+            Cell {
+                value: 40,
+                flag: false,
+            },
+            Cell {
+                value: 50,
+                flag: true,
+            },
+            Cell {
+                value: 60,
+                flag: false,
+            },
         ],
         vec![
-            Cell { value: 70, flag: true },
-            Cell { value: 80, flag: false },
-            Cell { value: 90, flag: false },
+            Cell {
+                value: 70,
+                flag: true,
+            },
+            Cell {
+                value: 80,
+                flag: false,
+            },
+            Cell {
+                value: 90,
+                flag: false,
+            },
         ],
     ];
     assert!(umt_check_flag_alignment(&matrix));
@@ -117,19 +225,46 @@ fn test_diagonal_top_right_to_bottom_left() {
 fn test_no_alignment() {
     let matrix = vec![
         vec![
-            Cell { value: 10, flag: false },
-            Cell { value: 20, flag: true },
-            Cell { value: 30, flag: false },
+            Cell {
+                value: 10,
+                flag: false,
+            },
+            Cell {
+                value: 20,
+                flag: true,
+            },
+            Cell {
+                value: 30,
+                flag: false,
+            },
         ],
         vec![
-            Cell { value: 40, flag: false },
-            Cell { value: 50, flag: true },
-            Cell { value: 60, flag: false },
+            Cell {
+                value: 40,
+                flag: false,
+            },
+            Cell {
+                value: 50,
+                flag: true,
+            },
+            Cell {
+                value: 60,
+                flag: false,
+            },
         ],
         vec![
-            Cell { value: 70, flag: false },
-            Cell { value: 80, flag: false },
-            Cell { value: 90, flag: false },
+            Cell {
+                value: 70,
+                flag: false,
+            },
+            Cell {
+                value: 80,
+                flag: false,
+            },
+            Cell {
+                value: 90,
+                flag: false,
+            },
         ],
     ];
     assert!(!umt_check_flag_alignment(&matrix));
@@ -177,24 +312,18 @@ fn test_bool_matrix_no_alignment() {
 
 #[test]
 fn test_single_cell_true() {
-    let matrix = vec![vec![Cell { value: 1, flag: true }]];
+    let matrix = vec![vec![Cell {
+        value: 1,
+        flag: true,
+    }]];
     assert!(umt_check_flag_alignment(&matrix));
 }
 
 #[test]
 fn test_single_cell_false() {
-    let matrix = vec![vec![Cell { value: 1, flag: false }]];
+    let matrix = vec![vec![Cell {
+        value: 1,
+        flag: false,
+    }]];
     assert!(!umt_check_flag_alignment(&matrix));
-}
-
-use umt_rust::array::*;
-
-#[test]
-fn test_bool_matrix() {
-    let matrix = vec![
-        vec![true, true, true],
-        vec![false, false, false],
-        vec![false, false, false],
-    ];
-    assert!(umt_check_flag_alignment_bool(&matrix));
 }

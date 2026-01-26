@@ -57,19 +57,3 @@ fn test_cidr_to_long_invalid_cidr_255() {
         "CIDR must be an integer between 0 and 32"
     );
 }
-
-use umt_rust::ip::*;
-
-#[test]
-fn test_cidr_to_long_invalid() {
-    assert!(cidr_to_long(33).is_err());
-}
-
-#[test]
-fn test_cidr_to_long_valid() {
-    assert_eq!(cidr_to_long(0).unwrap(), 0);
-    assert_eq!(cidr_to_long(8).unwrap(), 0xFF000000);
-    assert_eq!(cidr_to_long(16).unwrap(), 0xFFFF0000);
-    assert_eq!(cidr_to_long(24).unwrap(), 0xFFFFFF00);
-    assert_eq!(cidr_to_long(32).unwrap(), 0xFFFFFFFF);
-}

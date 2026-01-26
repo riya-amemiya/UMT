@@ -17,10 +17,7 @@ fn test_unique_no_duplicates() {
 
 #[test]
 fn test_unique_strings() {
-    assert_eq!(
-        umt_unique(&["a", "b", "b", "c", "a"]),
-        vec!["a", "b", "c"]
-    );
+    assert_eq!(umt_unique(&["a", "b", "b", "c", "a"]), vec!["a", "b", "c"]);
 }
 
 #[test]
@@ -35,7 +32,10 @@ fn test_unique_preserves_order() {
 
 #[test]
 fn test_unique_booleans() {
-    assert_eq!(umt_unique(&[true, false, true, false, true]), vec![true, false]);
+    assert_eq!(
+        umt_unique(&[true, false, true, false, true]),
+        vec![true, false]
+    );
 }
 
 #[test]
@@ -68,23 +68,4 @@ fn test_unique_large_array() {
     for i in 0..1000 {
         assert_eq!(result[i], i as i32);
     }
-}
-
-use umt_rust::array::*;
-
-#[test]
-fn test_unique_empty() {
-    assert_eq!(umt_unique::<i32>(&[]), Vec::<i32>::new());
-}
-
-#[test]
-fn test_unique_integers() {
-    assert_eq!(umt_unique(&[1, 2, 2, 3, 3, 3]), vec![1, 2, 3]);
-    assert_eq!(umt_unique(&[1, 1, 1, 1]), vec![1]);
-    assert_eq!(umt_unique(&[1, 2, 3]), vec![1, 2, 3]);
-}
-
-#[test]
-fn test_unique_single() {
-    assert_eq!(umt_unique(&[42]), vec![42]);
 }

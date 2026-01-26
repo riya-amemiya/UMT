@@ -43,28 +43,3 @@ fn test_handle_unicode_characters() {
     assert_eq!(umt_levenshtein_distance("😀", "😁"), 1);
     assert_eq!(umt_levenshtein_distance("こんにちは", "こんばんは"), 2);
 }
-
-use umt_rust::string::*;
-
-#[test]
-fn test_levenshtein_distance_basic() {
-    assert_eq!(umt_levenshtein_distance("kitten", "sitting"), 3);
-}
-
-#[test]
-fn test_levenshtein_distance_empty() {
-    assert_eq!(umt_levenshtein_distance("", "hello"), 5);
-    assert_eq!(umt_levenshtein_distance("hello", ""), 5);
-    assert_eq!(umt_levenshtein_distance("", ""), 0);
-}
-
-#[test]
-fn test_levenshtein_distance_same() {
-    assert_eq!(umt_levenshtein_distance("hello", "hello"), 0);
-}
-
-#[test]
-fn test_levenshtein_distance_single_char() {
-    assert_eq!(umt_levenshtein_distance("a", "b"), 1);
-    assert_eq!(umt_levenshtein_distance("a", "a"), 0);
-}

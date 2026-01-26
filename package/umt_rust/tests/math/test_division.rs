@@ -124,18 +124,3 @@ fn test_division_both_negative_decimals() {
     let result = umt_division(-0.16, -0.2);
     assert!((result - 0.8).abs() < 1e-10);
 }
-
-use umt_rust::math::*;
-
-#[test]
-fn test_division_float() {
-    let result = umt_division(0.1, 0.2);
-    assert!((result - 0.5).abs() < 1e-10);
-}
-
-#[test]
-fn test_division_with_remainder() {
-    let result = umt_division_with_remainder(10.0, 3.0).unwrap();
-    assert_eq!(result.quotient, 3);
-    assert_eq!(result.remainder, 1);
-}

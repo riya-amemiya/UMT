@@ -44,30 +44,3 @@ fn test_handle_non_ascii_characters() {
     );
     assert_eq!(umt_trim_end_characters("Hello！！", "！"), "Hello");
 }
-
-use umt_rust::string::*;
-
-#[test]
-fn test_trim_end_dashes() {
-    assert_eq!(umt_trim_end_characters("123---", "-"), "123");
-}
-
-#[test]
-fn test_trim_end_empty() {
-    assert_eq!(umt_trim_end_characters("", "!"), "");
-}
-
-#[test]
-fn test_trim_end_exclamation() {
-    assert_eq!(umt_trim_end_characters("hello!!!", "!"), "hello");
-}
-
-#[test]
-fn test_trim_end_multiple_chars() {
-    assert_eq!(umt_trim_end_characters("defabc", "abc"), "def");
-}
-
-#[test]
-fn test_trim_end_no_match() {
-    assert_eq!(umt_trim_end_characters("abc123", "xyz"), "abc123");
-}

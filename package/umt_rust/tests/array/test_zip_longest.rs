@@ -1,4 +1,4 @@
-use umt_rust::array::{umt_zip_longest, umt_zip_longest3, umt_zip_longest_many};
+use umt_rust::array::{umt_zip_longest, umt_zip_longest_many, umt_zip_longest3};
 
 #[test]
 fn test_zip_longest_same_length() {
@@ -54,7 +54,10 @@ fn test_zip_longest_second_empty() {
 fn test_zip_longest_both_empty() {
     let a: Vec<i32> = vec![];
     let b: Vec<i32> = vec![];
-    assert_eq!(umt_zip_longest(&a, &b), Vec::<(Option<i32>, Option<i32>)>::new());
+    assert_eq!(
+        umt_zip_longest(&a, &b),
+        Vec::<(Option<i32>, Option<i32>)>::new()
+    );
 }
 
 #[test]
@@ -115,57 +118,5 @@ fn test_zip_longest_with_strings() {
             (Some("b"), Some("d")),
             (None, Some("e")),
         ]
-    );
-}
-
-use umt_rust::array::*;
-
-#[test]
-fn test_zip_longest_basic() {
-    let a = vec![1, 2];
-    let b = vec!["a"];
-    assert_eq!(
-        umt_zip_longest(&a, &b),
-        vec![(Some(1), Some("a")), (Some(2), None)]
-    );
-}
-
-#[test]
-fn test_zip_longest_empty_arrays() {
-    let a: Vec<i32> = vec![];
-    let b: Vec<&str> = vec![];
-    assert_eq!(
-        umt_zip_longest(&a, &b),
-        Vec::<(Option<i32>, Option<&str>)>::new()
-    );
-}
-
-#[test]
-fn test_zip_longest_equal_length() {
-    let a = vec![1, 2];
-    let b = vec!["a", "b"];
-    assert_eq!(
-        umt_zip_longest(&a, &b),
-        vec![(Some(1), Some("a")), (Some(2), Some("b"))]
-    );
-}
-
-#[test]
-fn test_zip_longest_many_all_empty() {
-    let a: Vec<i32> = vec![];
-    let b: Vec<i32> = vec![];
-    assert_eq!(
-        umt_zip_longest_many(&[&a[..], &b[..]]),
-        Vec::<Vec<Option<i32>>>::new()
-    );
-}
-
-#[test]
-fn test_zip_longest_one_empty() {
-    let a = vec![1, 2, 3];
-    let b: Vec<&str> = vec![];
-    assert_eq!(
-        umt_zip_longest(&a, &b),
-        vec![(Some(1), None), (Some(2), None), (Some(3), None)]
     );
 }

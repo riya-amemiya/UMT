@@ -88,11 +88,3 @@ fn test_rad_to_deg_infinity() {
     assert_eq!(umt_rad_to_deg(f64::INFINITY), f64::INFINITY);
     assert_eq!(umt_rad_to_deg(f64::NEG_INFINITY), f64::NEG_INFINITY);
 }
-
-use umt_rust::math::*;
-
-#[test]
-fn test_rad_to_deg_negative() {
-    let degrees = umt_rad_to_deg(-PI);
-    assert!((degrees - (-180.0)).abs() < 1e-10);
-}

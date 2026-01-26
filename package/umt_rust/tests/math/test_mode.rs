@@ -43,10 +43,3 @@ fn test_mode_sorted_ascending() {
         vec![1.0, 2.0, 3.0]
     );
 }
-
-use umt_rust::math::*;
-
-#[test]
-fn test_mode_all_same() {
-    assert_eq!(umt_mode(&[3.0, 3.0, 3.0]), vec![3.0]);
-}

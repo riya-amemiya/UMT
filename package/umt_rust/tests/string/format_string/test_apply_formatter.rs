@@ -21,7 +21,6 @@ fn create_mock_formatters() -> HashMap<String, Formatter> {
         "currency".to_string(),
         Box::new(|v, args| {
             let num: f64 = v.parse().unwrap_or(0.0);
-            let locale = args.get(0).map(|s| s.as_str()).unwrap_or("en-US");
             let currency = args.get(1).map(|s| s.as_str()).unwrap_or("USD");
             // Simple formatting without full locale support
             if currency == "USD" {
@@ -176,54 +175,4 @@ fn test_only_accept_word_characters_in_formatter_names() {
         apply_formatter("test", "with space", &invalid_formatters),
         "test"
     );
-}
-
-use umt_rust::string::format_string::*;
-
-#[test]
-fn test_empty_arguments() {
-    let formatters = create_mock_formatters();
-    assert_eq!(apply_formatter("test", "upper()", &formatters), "TEST");
-}
-
-#[test]
-fn test_empty_formatters() {
-    let formatters: HashMap<String, Formatter> = HashMap::new();
-    assert_eq!(apply_formatter("test", "upper", &formatters), "test");
-}
-
-#[test]
-fn test_formatter_with_single_argument() {
-    let formatters = create_mock_formatters();
-    assert_eq!(apply_formatter("42", "multiply(2)", &formatters), "84");
-}
-
-#[test]
-fn test_invalid_formatter_syntax() {
-    let formatters = create_mock_formatters();
-    assert_eq!(apply_formatter("test", "invalid!@#", &formatters), "test");
-    assert_eq!(apply_formatter("hello", "upper(", &formatters), "hello");
-    assert_eq!(apply_formatter("world", "lower)", &formatters), "world");
-}
-
-#[test]
-fn test_lowercase_formatter() {
-    let formatters = create_mock_formatters();
-    assert_eq!(apply_formatter("HELLO", "lower", &formatters), "hello");
-    assert_eq!(apply_formatter("WoRlD", "lower", &formatters), "world");
-}
-
-#[test]
-fn test_non_existent_formatter() {
-    let formatters = create_mock_formatters();
-    assert_eq!(apply_formatter("test", "nonexistent", &formatters), "test");
-    assert_eq!(apply_formatter("456", "missing(arg)", &formatters), "456");
-}
-
-#[test]
-fn test_uppercase_formatter() {
-    let formatters = create_mock_formatters();
-    assert_eq!(apply_formatter("hello", "upper", &formatters), "HELLO");
-    assert_eq!(apply_formatter("WORLD", "upper", &formatters), "WORLD");
-    assert_eq!(apply_formatter("123", "upper", &formatters), "123");
 }

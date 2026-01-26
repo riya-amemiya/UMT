@@ -58,7 +58,13 @@ fn test_quick_sort_negative_numbers() {
 #[test]
 fn test_quick_sort_descending() {
     let descending = |a: &i32, b: &i32| -> i32 {
-        if a < b { 1 } else if a > b { -1 } else { 0 }
+        if a < b {
+            1
+        } else if a > b {
+            -1
+        } else {
+            0
+        }
     };
     assert_eq!(
         umt_quick_sort(&[1, 2, 3, 4, 5], Some(descending), None, None, None),
@@ -76,10 +82,7 @@ fn test_quick_sort_partial_range() {
 
 #[test]
 fn test_quick_sort_single_element() {
-    assert_eq!(
-        umt_quick_sort(&[1], None, None, None, None),
-        vec![1]
-    );
+    assert_eq!(umt_quick_sort(&[1], None, None, None, None), vec![1]);
 }
 
 #[test]
@@ -92,12 +95,30 @@ fn test_quick_sort_median_of_three_all_equal() {
 
 #[test]
 fn test_quick_sort_three_element_arrays() {
-    assert_eq!(umt_quick_sort(&[1, 2, 3], None, None, None, None), vec![1, 2, 3]);
-    assert_eq!(umt_quick_sort(&[1, 3, 2], None, None, None, None), vec![1, 2, 3]);
-    assert_eq!(umt_quick_sort(&[2, 1, 3], None, None, None, None), vec![1, 2, 3]);
-    assert_eq!(umt_quick_sort(&[2, 3, 1], None, None, None, None), vec![1, 2, 3]);
-    assert_eq!(umt_quick_sort(&[3, 1, 2], None, None, None, None), vec![1, 2, 3]);
-    assert_eq!(umt_quick_sort(&[3, 2, 1], None, None, None, None), vec![1, 2, 3]);
+    assert_eq!(
+        umt_quick_sort(&[1, 2, 3], None, None, None, None),
+        vec![1, 2, 3]
+    );
+    assert_eq!(
+        umt_quick_sort(&[1, 3, 2], None, None, None, None),
+        vec![1, 2, 3]
+    );
+    assert_eq!(
+        umt_quick_sort(&[2, 1, 3], None, None, None, None),
+        vec![1, 2, 3]
+    );
+    assert_eq!(
+        umt_quick_sort(&[2, 3, 1], None, None, None, None),
+        vec![1, 2, 3]
+    );
+    assert_eq!(
+        umt_quick_sort(&[3, 1, 2], None, None, None, None),
+        vec![1, 2, 3]
+    );
+    assert_eq!(
+        umt_quick_sort(&[3, 2, 1], None, None, None, None),
+        vec![1, 2, 3]
+    );
 }
 
 #[test]
@@ -126,14 +147,8 @@ fn test_quick_sort_custom_threshold() {
 
 #[test]
 fn test_quick_sort_boundary_conditions() {
-    assert_eq!(
-        umt_quick_sort(&[2, 1], None, None, None, None),
-        vec![1, 2]
-    );
-    assert_eq!(
-        umt_quick_sort(&[1, 2], None, None, None, None),
-        vec![1, 2]
-    );
+    assert_eq!(umt_quick_sort(&[2, 1], None, None, None, None), vec![1, 2]);
+    assert_eq!(umt_quick_sort(&[1, 2], None, None, None, None), vec![1, 2]);
 }
 
 #[test]
@@ -160,63 +175,4 @@ fn test_quick_sort_does_not_mutate_original() {
     let arr = vec![3, 1, 4, 1, 5];
     let _ = umt_quick_sort(&arr, None, None, None, None);
     assert_eq!(arr, vec![3, 1, 4, 1, 5]);
-}
-
-use umt_rust::array::*;
-
-#[test]
-fn test_quick_sort_basic() {
-    let arr = vec![3, 1, 4, 1, 5, 9, 2, 6];
-    assert_eq!(
-        umt_quick_sort(&arr, None, None, None, None),
-        vec![1, 1, 2, 3, 4, 5, 6, 9]
-    );
-}
-
-#[test]
-fn test_quick_sort_does_not_mutate() {
-    let arr = vec![3, 1, 4, 1, 5];
-    let _ = umt_quick_sort(&arr, None, None, None, None);
-    assert_eq!(arr, vec![3, 1, 4, 1, 5]);
-}
-
-#[test]
-fn test_quick_sort_large() {
-    let arr: Vec<i32> = (0..1000).rev().collect();
-    let sorted = umt_quick_sort(&arr, None, None, None, None);
-    assert_eq!(sorted, (0..1000).collect::<Vec<i32>>());
-}
-
-#[test]
-fn test_quick_sort_single() {
-    let arr = vec![42];
-    assert_eq!(umt_quick_sort(&arr, None, None, None, None), vec![42]);
-}
-
-#[test]
-fn test_quick_sort_strings() {
-    let arr = vec!["banana", "apple", "cherry"];
-    assert_eq!(
-        umt_quick_sort(&arr, None, None, None, None),
-        vec!["apple", "banana", "cherry"]
-    );
-}
-
-#[test]
-fn test_quick_sort_with_custom_compare() {
-    let arr = vec![1, 2, 3, 4, 5];
-    // Sort in descending order
-    let descending = |a: &i32, b: &i32| -> i32 {
-        if a < b {
-            1
-        } else if a > b {
-            -1
-        } else {
-            0
-        }
-    };
-    assert_eq!(
-        umt_quick_sort(&arr, Some(descending), None, None, None),
-        vec![5, 4, 3, 2, 1]
-    );
 }

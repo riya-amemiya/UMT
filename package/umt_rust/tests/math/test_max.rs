@@ -61,10 +61,3 @@ fn test_max_with_neg_infinity() {
 fn test_max_empty() {
     assert_eq!(umt_max(&[]), f64::NEG_INFINITY);
 }
-
-use umt_rust::math::*;
-
-#[test]
-fn test_max_mixed() {
-    assert_eq!(umt_max(&[-1.0, 0.0, 1.0]), 1.0);
-}

@@ -40,23 +40,3 @@ fn test_solve_equation_3x3() {
     );
     assert_eq!(result, vec![2.0, 5.0, 3.0]);
 }
-
-use umt_rust::math::*;
-
-#[test]
-fn test_solve_equation_basic() {
-    // x + y = 4
-    // x + 2y = 10
-    let result = umt_solve_equation(
-        &mut vec![vec![1.0, 1.0], vec![1.0, 2.0]],
-        &mut vec![4.0, 10.0],
-    );
-    assert_eq!(result, vec![-2.0, 6.0]);
-}
-
-#[test]
-fn test_solve_equation_single() {
-    // 2x = 6
-    let result = umt_solve_equation(&mut vec![vec![2.0]], &mut vec![6.0]);
-    assert_eq!(result, vec![3.0]);
-}
