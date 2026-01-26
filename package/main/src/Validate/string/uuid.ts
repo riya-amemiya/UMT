@@ -14,17 +14,20 @@ import type { ValidateReturnType } from "@/Validate/type";
 export const uuid = (
   versions: number[] = [4],
   message?: string,
-): ValidateReturnType<string> => ({
-  type: "string",
-  message,
-  validate: (value) => {
-    return versions.some((version) => {
-      // Regular expression for specific UUID version
-      const versionRegex = new RegExp(
+): ValidateReturnType<string> => {
+  const versionRegexes = versions.map(
+    (version) =>
+      new RegExp(
         String.raw`^[\da-f]{8}-?[\da-f]{4}-?${version}[\da-f]{3}-?[89ab][\da-f]{3}-?[\da-f]{12}$`,
         "i",
-      );
-      return versionRegex.test(value);
-    });
-  },
-});
+      ),
+  );
+
+  return {
+    type: "string",
+    message,
+    validate: (value) => {
+      return versionRegexes.some((regex) => regex.test(value));
+    },
+  };
+};

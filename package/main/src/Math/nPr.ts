@@ -9,8 +9,11 @@
  * nPr = n * (n-1) * (n-2) * ... * (n-r+1)
  */
 export const nPr = (n: number, r: number): number => {
-  if (n === 0 || r === 0 || n < r) {
+  if (n < r || n < 0 || r < 0) {
     return Number.NaN;
+  }
+  if (r === 0) {
+    return 1;
   }
   let result = 1;
   for (let index = 0; index < r; index++) {

@@ -90,6 +90,18 @@ const sanitizeSigns = (expr: string): string => {
     .replaceAll("-+", "+0-");
 };
 
+const currencyRegexCache = new Map<string, RegExp>();
+
+const getCurrencyRegex = (currencySymbol: string): RegExp => {
+  const cached = currencyRegexCache.get(currencySymbol);
+  if (cached) {
+    return cached;
+  }
+  const regex = new RegExp(`\\${currencySymbol}([0-9]+)`);
+  currencyRegexCache.set(currencySymbol, regex);
+  return regex;
+};
+
 const applyCurrencyExchange = <T extends { [key: string]: string | number }>(
   expr: string,
   rates: T,
@@ -98,7 +110,7 @@ const applyCurrencyExchange = <T extends { [key: string]: string | number }>(
   // Currency exchange logic
   for (const index in rates) {
     if (returnExpr.includes(index)) {
-      const $ = new RegExp(`\\${index}([0-9]+)`).exec(returnExpr);
+      const $ = getCurrencyRegex(index).exec(returnExpr);
       if ($) {
         returnExpr = returnExpr.replace($[0], convertCurrency($[0], rates));
       }

@@ -1,0 +1,24 @@
+mod test_camel_case;
+mod test_delete_spaces;
+mod test_escape_html;
+mod test_format_string;
+mod test_from_base64;
+mod test_fuzzy_search;
+mod test_has_no_letters;
+mod test_kebab_case;
+mod test_levenshtein_distance;
+mod test_pad_end;
+mod test_pad_start;
+mod test_random_string;
+mod test_reverse_string;
+mod test_slugify;
+mod test_string_similarity;
+mod test_to_base64;
+mod test_to_half_width;
+mod test_trim_characters;
+mod test_trim_end_characters;
+mod test_trim_start_characters;
+mod test_truncate;
+mod test_unescape_html;
+
+mod format_string;

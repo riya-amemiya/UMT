@@ -27,5 +27,5 @@ fn test_softmax() {
         vec![0.665, 0.245, 0.09]
     );
     assert_eq!(umt_softmax(vec![1.0, 2.0, 3.0], 2), vec![0.09, 0.24, 0.67]);
-    assert_eq!(umt_softmax(vec![], 3), vec![]);
+    assert_eq!(umt_softmax(Vec::<f64>::new(), 3), Vec::<f64>::new());
 }

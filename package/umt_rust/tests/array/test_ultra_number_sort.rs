@@ -19,11 +19,11 @@ fn test_sort_descending() {
 fn test_empty_array() {
     let mut arr: Vec<f64> = vec![];
     umt_ultra_number_sort(&mut arr, true);
-    assert_eq!(arr, vec![]);
+    assert_eq!(arr, Vec::<f64>::new());
 
     let mut arr2: Vec<f64> = vec![];
     umt_ultra_number_sort(&mut arr2, false);
-    assert_eq!(arr2, vec![]);
+    assert_eq!(arr2, Vec::<f64>::new());
 }
 
 #[test]
