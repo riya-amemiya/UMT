@@ -1,3 +1,5 @@
+import { unwrap } from "@/Tool/unwrap";
+
 /**
  * Converts Base64 to string
  * @param {string} base64String - Base64 encoded string
@@ -14,8 +16,7 @@ export const fromBase64 = (base64String: string): string => {
       Uint8Array.from(
         atob(base64String)
           .split("")
-          // biome-ignore lint/style/noNonNullAssertion: it will never be null
-          .map((c) => c.codePointAt(0)!),
+          .map((c) => unwrap(c.codePointAt(0), "panic: invalid base64 string")),
       ),
     );
   } catch {
