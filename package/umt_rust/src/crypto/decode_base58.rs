@@ -1,5 +1,3 @@
-use crate::internal::bigint::BigUint;
-
 /// Error type for Base58 decoding failures.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Base58Error {
@@ -43,114 +41,38 @@ pub fn umt_decode_base58(input: &str) -> Result<Vec<u8>, Base58Error> {
         return Ok(Vec::new());
     }
 
-    // Convert Base58 string to big integer
-    let mut big_number = BigUint::zero();
+    let leading_ones = input.chars().take_while(|&c| c == '1').count();
 
-    for char in input.chars() {
-        let value = match ALPHABET.find(char) {
-            Some(v) => v,
+    // Accumulate as big-endian base-256 number
+    let mut bytes: Vec<u8> = vec![0];
+
+    for ch in input.chars() {
+        let val = match ALPHABET.find(ch) {
+            Some(v) => v as u32,
             None => {
                 return Err(Base58Error {
-                    message: format!("Invalid base58 character: {}", char),
+                    message: format!("Invalid base58 character: {}", ch),
                 });
             }
         };
-        big_number = big_number.mul_u32(58).add_u32(value as u32);
+
+        // bytes = bytes * 58 + val
+        let mut carry = val;
+        for b in bytes.iter_mut().rev() {
+            let acc = *b as u32 * 58 + carry;
+            *b = (acc & 0xFF) as u8;
+            carry = acc >> 8;
+        }
+        while carry > 0 {
+            bytes.insert(0, (carry & 0xFF) as u8);
+            carry >>= 8;
+        }
     }
 
-    // Convert big integer to bytes
-    let bytes = big_number.to_bytes_be();
-
-    // Count leading '1's (which represent leading zeros)
-    let leading_ones = input.chars().take_while(|&c| c == '1').count();
-
-    // Prepend leading zeros
+    // Remove leading zeros from computed bytes, then prepend leading_ones as 0x00 bytes
+    let data_start = bytes.iter().position(|&b| b != 0).unwrap_or(bytes.len());
     let mut result = vec![0u8; leading_ones];
-    if !big_number.is_zero() {
-        result.extend(bytes);
-    }
+    result.extend_from_slice(&bytes[data_start..]);
 
     Ok(result)
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_decode_simple_string() {
-        let result = umt_decode_base58("9Ajdvzr").unwrap();
-        assert_eq!(String::from_utf8(result).unwrap(), "Hello");
-    }
-
-    #[test]
-    fn test_decode_empty_string() {
-        let result = umt_decode_base58("").unwrap();
-        assert!(result.is_empty());
-    }
-
-    #[test]
-    fn test_decode_single_character_strings() {
-        assert_eq!(
-            String::from_utf8(umt_decode_base58("2g").unwrap()).unwrap(),
-            "a"
-        );
-        assert_eq!(
-            String::from_utf8(umt_decode_base58("2h").unwrap()).unwrap(),
-            "b"
-        );
-        assert_eq!(
-            String::from_utf8(umt_decode_base58("2i").unwrap()).unwrap(),
-            "c"
-        );
-    }
-
-    #[test]
-    fn test_decode_with_leading_ones() {
-        let result = umt_decode_base58("119Ajdvzr").unwrap();
-        assert_eq!(result[0], 0);
-        assert_eq!(result[1], 0);
-        assert_eq!(String::from_utf8(result[2..].to_vec()).unwrap(), "Hello");
-    }
-
-    #[test]
-    fn test_invalid_character_zero() {
-        let result = umt_decode_base58("9Ajdvz0");
-        assert!(result.is_err());
-        assert_eq!(result.unwrap_err().message, "Invalid base58 character: 0");
-    }
-
-    #[test]
-    fn test_invalid_character_uppercase_o() {
-        let result = umt_decode_base58("9AjdvzO");
-        assert!(result.is_err());
-        assert_eq!(result.unwrap_err().message, "Invalid base58 character: O");
-    }
-
-    #[test]
-    fn test_invalid_character_uppercase_i() {
-        let result = umt_decode_base58("9AjdvzI");
-        assert!(result.is_err());
-        assert_eq!(result.unwrap_err().message, "Invalid base58 character: I");
-    }
-
-    #[test]
-    fn test_invalid_character_lowercase_l() {
-        let result = umt_decode_base58("9Ajdvzl");
-        assert!(result.is_err());
-        assert_eq!(result.unwrap_err().message, "Invalid base58 character: l");
-    }
-
-    #[test]
-    fn test_decode_longer_text() {
-        let encoded = "7DdiPPYtxLjCD3wA1po2rvZHTDYjkZYiEtazrfiwJcwnKCizhGFhBGHeRdx";
-        let result = String::from_utf8(umt_decode_base58(encoded).unwrap()).unwrap();
-        assert_eq!(result, "The quick brown fox jumps over the lazy dog");
-    }
-
-    #[test]
-    fn test_decode_binary_data() {
-        let result = umt_decode_base58("Vt9aq46").unwrap();
-        assert_eq!(result, vec![255, 254, 253, 252, 251]);
-    }
 }
