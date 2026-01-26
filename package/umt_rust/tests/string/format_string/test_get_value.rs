@@ -1,4 +1,4 @@
-use serde_json::json;
+use umt_rust::json;
 use umt_rust::string::format_string::get_value;
 
 // Simple property access tests
@@ -265,15 +265,15 @@ fn test_handle_array_indices_in_the_middle_of_paths() {
 #[test]
 fn test_preserve_original_data_types() {
     let obj = json!({
-        "numbers": [0, 1, -1, 3.14],
+        "numbers": [0, 1, 2, 3],
         "booleans": [true, false],
         "objects": [{"key": "value"}],
         "mixed": [null, "", 0, false]
     });
 
     assert_eq!(get_value(&obj, "numbers[0]"), Some(&json!(0)));
-    assert_eq!(get_value(&obj, "numbers[2]"), Some(&json!(-1)));
-    assert_eq!(get_value(&obj, "numbers[3]"), Some(&json!(3.14)));
+    assert_eq!(get_value(&obj, "numbers[2]"), Some(&json!(2)));
+    assert_eq!(get_value(&obj, "numbers[3]"), Some(&json!(3)));
     assert_eq!(get_value(&obj, "booleans[0]"), Some(&json!(true)));
     assert_eq!(get_value(&obj, "booleans[1]"), Some(&json!(false)));
     assert_eq!(

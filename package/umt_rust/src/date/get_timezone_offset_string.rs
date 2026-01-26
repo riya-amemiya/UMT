@@ -2,7 +2,7 @@
 //!
 //! This module provides functions to get timezone offset strings.
 
-use chrono::{DateTime, Local, Offset};
+use crate::internal::datetime;
 
 /// Get timezone offset string in format "+HH:mm" or "-HH:mm".
 ///
@@ -77,9 +77,7 @@ pub fn umt_get_timezone_offset_string_compact(offset_minutes: i32) -> String {
 /// // Will return something like "+09:00" depending on local timezone
 /// ```
 pub fn umt_get_local_timezone_offset_string() -> String {
-    let local: DateTime<Local> = Local::now();
-    let offset = local.offset();
-    let offset_seconds = offset.fix().local_minus_utc();
+    let offset_seconds = datetime::local_utc_offset_seconds();
     let offset_minutes = offset_seconds / 60;
 
     umt_get_timezone_offset_string(offset_minutes)

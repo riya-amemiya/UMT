@@ -1,4 +1,4 @@
-use rand::Rng;
+use crate::internal::rng;
 
 /// Shuffles all elements in a 2D array while maintaining the row lengths.
 ///
@@ -34,9 +34,8 @@ pub fn umt_shuffle_2d_array<T: Clone>(array: &[Vec<T>]) -> Vec<Vec<T>> {
     }
 
     // Shuffle the flat array using Fisher-Yates
-    let mut rng = rand::rng();
     for i in (1..flat_array.len()).rev() {
-        let j = rng.random_range(0..=i);
+        let j = rng::random_range_usize(0, i);
         flat_array.swap(i, j);
     }
 

@@ -6,8 +6,7 @@ pub use apply_formatter::{Formatter, apply_formatter};
 pub use default_formatters::create_default_formatters;
 pub use get_value::get_value;
 
-use regex::Regex;
-use serde_json::Value;
+use crate::internal::json::JsonValue;
 use std::collections::HashMap;
 
 /// Options for format string customization
@@ -60,7 +59,7 @@ pub struct FormatOptions {
 ///
 /// ```
 /// use umt_rust::string::umt_format_string;
-/// use serde_json::json;
+/// use umt_rust::json;
 ///
 /// // Named mode
 /// let result = umt_format_string(
@@ -78,7 +77,7 @@ pub struct FormatOptions {
 /// );
 /// assert_eq!(result, "Name: ALICE");
 /// ```
-pub fn umt_format_string(template: &str, data: &Value, options: Option<FormatOptions>) -> String {
+pub fn umt_format_string(template: &str, data: &JsonValue, options: Option<FormatOptions>) -> String {
     // Handle escaped braces
     let escaped_template = template.replace("{{", "\u{0000}").replace("}}", "\u{0001}");
 
@@ -90,10 +89,38 @@ pub fn umt_format_string(template: &str, data: &Value, options: Option<FormatOpt
         formatters.insert(key, value);
     }
 
-    let placeholder_regex = Regex::new(r"\{([^}]+)\}").unwrap();
+    let result = replace_placeholders(&escaped_template, &formatters, data);
 
-    let result = placeholder_regex.replace_all(&escaped_template, |caps: &regex::Captures| {
-        let content = caps.get(1).map(|m| m.as_str()).unwrap_or("");
+    // Restore escaped braces
+    result.replace('\u{0000}', "{").replace('\u{0001}', "}")
+}
+
+fn replace_placeholders(template: &str, formatters: &std::collections::HashMap<String, Formatter>, data: &JsonValue) -> String {
+    let mut result = String::with_capacity(template.len());
+    let mut chars = template.chars().peekable();
+
+    while let Some(c) = chars.next() {
+        if c != '{' {
+            result.push(c);
+            continue;
+        }
+
+        // Read until closing brace
+        let mut content = String::new();
+        let mut found_close = false;
+        for ch in chars.by_ref() {
+            if ch == '}' {
+                found_close = true;
+                break;
+            }
+            content.push(ch);
+        }
+
+        if !found_close || content.is_empty() {
+            result.push('{');
+            result.push_str(&content);
+            continue;
+        }
 
         // Parse content: path|default:formatter
         let (path_and_formatter, default_value) = if let Some(pipe_pos) = content.find('|') {
@@ -113,10 +140,8 @@ pub fn umt_format_string(template: &str, data: &Value, options: Option<FormatOpt
 
         // Get value from data
         let value = if data.is_array() {
-            // Indexed mode
             path.parse::<usize>().ok().and_then(|idx| data.get(idx))
         } else {
-            // Named mode
             get_value(data, path)
         };
 
@@ -124,40 +149,42 @@ pub fn umt_format_string(template: &str, data: &Value, options: Option<FormatOpt
             Some(v) if !v.is_null() => v.clone(),
             _ => {
                 if let Some(default) = default_value {
-                    Value::String(default.to_string())
+                    JsonValue::String(default.to_string())
                 } else {
-                    return caps[0].to_string();
+                    result.push('{');
+                    result.push_str(&content);
+                    result.push('}');
+                    continue;
                 }
             }
         };
 
         // Convert value to string
         let value_str = match &value {
-            Value::String(s) => s.clone(),
-            Value::Number(n) => n.to_string(),
-            Value::Bool(b) => b.to_string(),
-            Value::Array(arr) => arr
+            JsonValue::String(s) => s.clone(),
+            JsonValue::Number(n) => crate::internal::json::JsonValue::from(*n).to_string(),
+            JsonValue::Bool(b) => b.to_string(),
+            JsonValue::Array(arr) => arr
                 .iter()
                 .map(|v| match v {
-                    Value::String(s) => s.clone(),
+                    JsonValue::String(s) => s.clone(),
                     _ => v.to_string(),
                 })
                 .collect::<Vec<_>>()
                 .join(","),
-            Value::Object(_) => "[object Object]".to_string(),
-            Value::Null => "null".to_string(),
+            JsonValue::Object(_) => "[object Object]".to_string(),
+            JsonValue::Null => "null".to_string(),
         };
 
         // Apply formatter if present
         if let Some(fmt_str) = formatter_string {
-            apply_formatter(&value_str, fmt_str, &formatters)
+            result.push_str(&apply_formatter(&value_str, fmt_str, formatters));
         } else {
-            value_str
+            result.push_str(&value_str);
         }
-    });
+    }
 
-    // Restore escaped braces
-    result.replace('\u{0000}', "{").replace('\u{0001}', "}")
+    result
 }
 
 /// Replaces placeholders in a template string with indexed values.
@@ -180,17 +207,17 @@ pub fn umt_format_string(template: &str, data: &Value, options: Option<FormatOpt
 /// assert_eq!(result, "Hello, World! It's sunny today.");
 /// ```
 pub fn umt_format_string_indexed(template: &str, values: &[&str]) -> String {
-    let array: Vec<Value> = values
+    let array: Vec<JsonValue> = values
         .iter()
-        .map(|&s| Value::String(s.to_string()))
+        .map(|&s| JsonValue::String(s.to_string()))
         .collect();
-    umt_format_string(template, &Value::Array(array), None)
+    umt_format_string(template, &JsonValue::Array(array), None)
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use serde_json::json;
+    use crate::json;
 
     #[test]
     fn test_indexed_mode_basic() {

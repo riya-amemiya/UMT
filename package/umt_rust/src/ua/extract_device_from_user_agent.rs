@@ -1,5 +1,3 @@
-use regex::Regex;
-
 /// Represents the detected device type from a User-Agent string.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Device {
@@ -52,36 +50,43 @@ pub fn umt_extract_device_from_user_agent(ua: &str) -> Device {
     let ua_lower = ua.to_lowercase();
 
     // Bot/crawler detection
-    let bot_re = Regex::new(r"bot|googlebot|crawler|spider|robot|crawling").unwrap();
-    if bot_re.is_match(&ua_lower) {
+    if ua_lower.contains("bot")
+        || ua_lower.contains("googlebot")
+        || ua_lower.contains("crawler")
+        || ua_lower.contains("spider")
+        || ua_lower.contains("robot")
+        || ua_lower.contains("crawling")
+    {
         return Device::Bot;
     }
 
     // Mobile device detection (non-Android)
-    let mobile_re = Regex::new(r"iphone|ipod|webos|blackberry|iemobile|opera mini").unwrap();
-    if mobile_re.is_match(&ua_lower) {
+    if ua_lower.contains("iphone")
+        || ua_lower.contains("ipod")
+        || ua_lower.contains("webos")
+        || ua_lower.contains("blackberry")
+        || ua_lower.contains("iemobile")
+        || ua_lower.contains("opera mini")
+    {
         return Device::Mobile;
     }
 
     // Android device detection with mobile/tablet distinction
-    let android_re = Regex::new(r"android").unwrap();
-    if android_re.is_match(&ua_lower) {
-        let mobile_check_re = Regex::new(r"mobile").unwrap();
-        if mobile_check_re.is_match(&ua_lower) {
+    if ua_lower.contains("android") {
+        if ua_lower.contains("mobile") {
             return Device::Mobile;
         }
         return Device::Tablet;
     }
 
     // iPad detection (tablet)
-    let ipad_re = Regex::new(r"ipad").unwrap();
-    if ipad_re.is_match(&ua_lower) {
+    if ua_lower.contains("ipad") {
         return Device::Tablet;
     }
 
     // Desktop detection
-    let desktop_re = Regex::new(r"windows|macintosh|linux").unwrap();
-    if desktop_re.is_match(&ua_lower) {
+    if ua_lower.contains("windows") || ua_lower.contains("macintosh") || ua_lower.contains("linux")
+    {
         return Device::Desktop;
     }
 

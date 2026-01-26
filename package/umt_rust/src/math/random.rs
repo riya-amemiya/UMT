@@ -1,4 +1,4 @@
-use rand::Rng;
+use crate::internal::rng;
 
 /// Generates a random integer between min and max (inclusive).
 ///
@@ -23,8 +23,7 @@ use rand::Rng;
 /// assert!(r >= 5 && r <= 10);
 /// ```
 pub fn umt_random(max: i64, min: i64) -> i64 {
-    let mut rng = rand::rng();
-    rng.random_range(min..=max)
+    rng::random_range_i64(min, max)
 }
 
 /// Generates a random integer between 0 and max (inclusive).

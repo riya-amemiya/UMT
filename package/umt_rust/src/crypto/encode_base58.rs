@@ -1,5 +1,4 @@
-use num_bigint::BigUint;
-use num_traits::Zero;
+use crate::internal::bigint::BigUint;
 
 /// Encodes a byte slice or string to Base58 format.
 ///
@@ -38,13 +37,11 @@ pub fn umt_encode_base58<T: AsRef<[u8]>>(input: T) -> String {
 
     // Convert to Base58
     let mut encoded = String::new();
-    let fifty_eight = BigUint::from(58u32);
 
     while !big_number.is_zero() {
-        let remainder = &big_number % &fifty_eight;
-        let digit = remainder.iter_u32_digits().next().unwrap_or(0) as usize;
-        encoded.insert(0, ALPHABET[digit] as char);
-        big_number /= &fifty_eight;
+        let (quotient, remainder) = big_number.div_mod_u32(58);
+        encoded.insert(0, ALPHABET[remainder as usize] as char);
+        big_number = quotient;
     }
 
     // Add leading '1's for leading zeros

@@ -1,4 +1,4 @@
-use rand::Rng;
+use crate::internal::rng;
 
 /// Generates an array of numbers with the specified length.
 ///
@@ -43,10 +43,9 @@ pub fn umt_generate_number_array(
     }
 
     if random {
-        let mut rng = rand::rng();
         (0..length)
             .map(|_| {
-                let value = actual_min + rng.random::<f64>() * (actual_max - actual_min + 1.0);
+                let value = actual_min + rng::random_f64() * (actual_max - actual_min + 1.0);
                 value.floor()
             })
             .collect()
@@ -90,9 +89,8 @@ pub fn umt_generate_number_array_i32(
     }
 
     if random {
-        let mut rng = rand::rng();
         (0..length)
-            .map(|_| rng.random_range(actual_min..=actual_max))
+            .map(|_| rng::random_range_i64(actual_min as i64, actual_max as i64) as i32)
             .collect()
     } else {
         let step = (actual_max - actual_min) as f64 / (length - 1) as f64;

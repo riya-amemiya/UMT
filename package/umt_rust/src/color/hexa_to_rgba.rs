@@ -1,5 +1,4 @@
 use super::cmyk_to_rgba::Rgba;
-use regex::Regex;
 
 /// Error type for hex color parsing
 #[derive(Debug, Clone, PartialEq)]
@@ -14,6 +13,18 @@ impl std::fmt::Display for HexColorError {
 }
 
 impl std::error::Error for HexColorError {}
+
+fn is_valid_hex_color(hex: &str) -> bool {
+    if !hex.starts_with('#') {
+        return false;
+    }
+    let hex_part = &hex[1..];
+    let len = hex_part.len();
+    if len != 3 && len != 6 && len != 8 {
+        return false;
+    }
+    hex_part.chars().all(|c| c.is_ascii_hexdigit())
+}
 
 /// Convert hexadecimal color code to RGBA color values
 ///
@@ -38,10 +49,7 @@ impl std::error::Error for HexColorError {}
 /// ```
 #[inline]
 pub fn umt_hexa_to_rgba(hex: &str) -> Result<Rgba, HexColorError> {
-    // Validate hex code format using regex
-    let re = Regex::new(r"^#([\da-fA-F]{3}|[\da-fA-F]{6}|[\da-fA-F]{8})$").unwrap();
-
-    if !re.is_match(hex) {
+    if !is_valid_hex_color(hex) {
         return Err(HexColorError {
             message: "Invalid hex code".to_string(),
         });

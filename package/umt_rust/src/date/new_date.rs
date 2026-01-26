@@ -2,7 +2,7 @@
 //!
 //! This module provides functions to create Date objects from various inputs.
 
-use chrono::{DateTime, NaiveDate, NaiveDateTime, NaiveTime, TimeZone, Utc};
+use crate::internal::datetime::{UmtDateTime, UmtDuration, UmtNaiveDate, UmtNaiveTime};
 
 /// Create a new DateTime from numeric values.
 ///
@@ -18,7 +18,7 @@ use chrono::{DateTime, NaiveDate, NaiveDateTime, NaiveTime, TimeZone, Utc};
 ///
 /// # Returns
 ///
-/// `Option<DateTime<Utc>>` - The created DateTime or None if invalid
+/// `Option<UmtDateTime>` - The created DateTime or None if invalid
 ///
 /// # Examples
 ///
@@ -36,17 +36,16 @@ pub fn umt_new_date_int(
     minutes: Option<u32>,
     seconds: Option<u32>,
     milliseconds: Option<u32>,
-) -> Option<DateTime<Utc>> {
+) -> Option<UmtDateTime> {
     let h = hours.unwrap_or(0);
     let m = minutes.unwrap_or(0);
     let s = seconds.unwrap_or(0);
     let ms = milliseconds.unwrap_or(0);
 
-    let date = NaiveDate::from_ymd_opt(year, month, day)?;
-    let time = NaiveTime::from_hms_milli_opt(h, m, s, ms)?;
-    let naive_datetime = NaiveDateTime::new(date, time);
+    let date = UmtNaiveDate::from_ymd_opt(year, month, day)?;
+    let time = UmtNaiveTime::from_hms_milli_opt(h, m, s, ms)?;
 
-    Some(Utc.from_utc_datetime(&naive_datetime))
+    Some(UmtDateTime::from_naive(date, time))
 }
 
 /// Create a new DateTime from a date string.
@@ -62,7 +61,7 @@ pub fn umt_new_date_int(
 ///
 /// # Returns
 ///
-/// `Option<DateTime<Utc>>` - The created DateTime or None if invalid
+/// `Option<UmtDateTime>` - The created DateTime or None if invalid
 ///
 /// # Examples
 ///
@@ -79,20 +78,19 @@ pub fn umt_new_date_string(
     seconds: Option<&str>,
     milliseconds: Option<&str>,
     time_difference: Option<i32>,
-) -> Option<DateTime<Utc>> {
+) -> Option<UmtDateTime> {
     let h: u32 = hours.unwrap_or("00").parse().ok()?;
     let m: u32 = minutes.unwrap_or("00").parse().ok()?;
     let s: u32 = seconds.unwrap_or("00").parse().ok()?;
     let ms: u32 = milliseconds.unwrap_or("000").parse().ok()?;
     let offset_hours = time_difference.unwrap_or(0);
 
-    let date = NaiveDate::parse_from_str(date_str, "%Y-%m-%d").ok()?;
-    let time = NaiveTime::from_hms_milli_opt(h, m, s, ms)?;
-    let naive_datetime = NaiveDateTime::new(date, time);
+    let date = UmtNaiveDate::parse_from_str(date_str, "%Y-%m-%d")?;
+    let time = UmtNaiveTime::from_hms_milli_opt(h, m, s, ms)?;
 
     // Apply timezone offset
-    let utc_datetime = Utc.from_utc_datetime(&naive_datetime);
-    Some(utc_datetime - chrono::Duration::hours(offset_hours as i64))
+    let utc_datetime = UmtDateTime::from_naive(date, time);
+    Some(utc_datetime - UmtDuration::hours(offset_hours as i64))
 }
 
 #[cfg(test)]
@@ -104,7 +102,7 @@ mod tests {
         let date = umt_new_date_int(2021, 1, 1, None, None, None, None);
         assert!(date.is_some());
         let dt = date.unwrap();
-        assert_eq!(dt.format("%Y-%m-%d").to_string(), "2021-01-01");
+        assert_eq!(dt.format_str("%Y-%m-%d"), "2021-01-01");
     }
 
     #[test]
@@ -113,7 +111,7 @@ mod tests {
         assert!(date.is_some());
         let dt = date.unwrap();
         assert_eq!(
-            dt.format("%Y-%m-%d %H:%M:%S").to_string(),
+            dt.format_str("%Y-%m-%d %H:%M:%S"),
             "2021-06-15 14:30:45"
         );
     }
@@ -135,7 +133,7 @@ mod tests {
         let date = umt_new_date_string("2021-01-01", None, None, None, None, None);
         assert!(date.is_some());
         let dt = date.unwrap();
-        assert_eq!(dt.format("%Y-%m-%d").to_string(), "2021-01-01");
+        assert_eq!(dt.format_str("%Y-%m-%d"), "2021-01-01");
     }
 
     #[test]
@@ -150,7 +148,7 @@ mod tests {
         );
         assert!(date.is_some());
         let dt = date.unwrap();
-        assert_eq!(dt.format("%H:%M:%S").to_string(), "14:30:45");
+        assert_eq!(dt.format_str("%H:%M:%S"), "14:30:45");
     }
 
     #[test]
@@ -168,7 +166,7 @@ mod tests {
         let date_jst = umt_new_date_string("2021-01-01", Some("12"), None, None, None, Some(9));
         assert!(date_utc.is_some());
         assert!(date_jst.is_some());
-        let diff = date_utc.unwrap().signed_duration_since(date_jst.unwrap());
+        let diff = date_utc.unwrap().signed_duration_since(&date_jst.unwrap());
         assert_eq!(diff.num_hours(), 9);
     }
 }

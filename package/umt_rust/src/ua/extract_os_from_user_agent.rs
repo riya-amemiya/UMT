@@ -1,5 +1,3 @@
-use regex::Regex;
-
 /// Represents the detected operating system from a User-Agent string.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Os {
@@ -54,32 +52,27 @@ pub fn umt_extract_os_from_user_agent(ua: &str) -> Os {
     let ua_lower = ua.to_lowercase();
 
     // iOS detection (iPhone, iPad, iPod)
-    let ios_re = Regex::new(r"iphone|ipad|ipod").unwrap();
-    if ios_re.is_match(&ua_lower) {
+    if ua_lower.contains("iphone") || ua_lower.contains("ipad") || ua_lower.contains("ipod") {
         return Os::Ios;
     }
 
     // Android detection
-    let android_re = Regex::new(r"android").unwrap();
-    if android_re.is_match(&ua_lower) {
+    if ua_lower.contains("android") {
         return Os::Android;
     }
 
     // macOS detection
-    let macos_re = Regex::new(r"mac os x").unwrap();
-    if macos_re.is_match(&ua_lower) {
+    if ua_lower.contains("mac os x") {
         return Os::MacOs;
     }
 
     // Windows detection
-    let windows_re = Regex::new(r"windows|win32").unwrap();
-    if windows_re.is_match(&ua_lower) {
+    if ua_lower.contains("windows") || ua_lower.contains("win32") {
         return Os::Windows;
     }
 
     // Linux detection
-    let linux_re = Regex::new(r"linux").unwrap();
-    if linux_re.is_match(&ua_lower) {
+    if ua_lower.contains("linux") {
         return Os::Linux;
     }
 

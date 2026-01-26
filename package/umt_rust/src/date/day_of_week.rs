@@ -2,7 +2,7 @@
 //!
 //! This module provides a function to get the day of the week for a given date.
 
-use chrono::{Datelike, NaiveDate};
+use crate::internal::datetime::UmtNaiveDate;
 
 use super::now::umt_now;
 
@@ -42,12 +42,10 @@ pub fn umt_day_of_week(
     let m = month.unwrap_or(now.month());
     let d = day.unwrap_or(now.day());
 
-    let date = NaiveDate::from_ymd_opt(y, m, d)?;
+    let date = UmtNaiveDate::from_ymd_opt(y, m, d)?;
 
-    // chrono uses Monday = 0, so we need to convert to Sunday = 0
-    // chrono: Mon=0, Tue=1, Wed=2, Thu=3, Fri=4, Sat=5, Sun=6
-    // target: Sun=0, Mon=1, Tue=2, Wed=3, Thu=4, Fri=5, Sat=6
-    let weekday = date.weekday().num_days_from_sunday();
+    // Sunday = 0, Monday = 1, ..., Saturday = 6
+    let weekday = date.weekday_num_from_sunday();
 
     Some(weekday)
 }

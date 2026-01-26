@@ -34,10 +34,12 @@ pub use is_leap_year::umt_is_leap_year;
 pub use new_date::{umt_new_date_int, umt_new_date_string};
 pub use now::{umt_now, umt_now_jst};
 
+pub use crate::internal::datetime::{UmtDateTime, UmtDuration, UmtNaiveDate, UmtNaiveTime};
+
 #[cfg(test)]
 mod tests {
     use super::*;
-    use chrono::{TimeZone, Utc};
+    use crate::internal::datetime::UmtDateTime;
 
     #[test]
     fn test_module_exports() {
@@ -52,8 +54,8 @@ mod tests {
 
         let _ = umt_birthday(2000, 1, 1, None);
 
-        let start = Utc.with_ymd_and_hms(2025, 1, 1, 0, 0, 0).unwrap();
-        let end = Utc.with_ymd_and_hms(2025, 1, 3, 0, 0, 0).unwrap();
+        let start = UmtDateTime::from_ymd_hms(2025, 1, 1, 0, 0, 0).unwrap();
+        let end = UmtDateTime::from_ymd_hms(2025, 1, 3, 0, 0, 0).unwrap();
         let _ = umt_date_range(start, end);
         let _ = umt_date_range_with_step(start, end, 1);
 
@@ -68,7 +70,7 @@ mod tests {
         let _ = umt_get_timezone_offset_string_compact(540);
         let _ = umt_get_local_timezone_offset_string();
 
-        let date = Utc.with_ymd_and_hms(2025, 1, 1, 0, 0, 0).unwrap();
+        let date = UmtDateTime::from_ymd_hms(2025, 1, 1, 0, 0, 0).unwrap();
         let _ = umt_format(&date, "YYYY-MM-DD", 0);
         let _ = umt_format_iso(&date, 0);
     }

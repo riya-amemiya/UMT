@@ -1,8 +1,5 @@
 //! Email parsing and validation utility
 
-use regex::Regex;
-use std::sync::LazyLock;
-
 /// Email validation level
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum ParseEmailLevel {
@@ -41,18 +38,54 @@ pub struct ParseEmailResult {
     pub parts: Option<EmailParts>,
 }
 
-// Pre-compiled regex patterns
-static BASIC_EMAIL_REGEX: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^(?P<local>[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+)@(?P<domain>[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*)$").unwrap()
-});
+fn validate_basic_email(email: &str) -> Option<EmailParts> {
+    let at_pos = email.find('@')?;
+    if at_pos == 0 || at_pos == email.len() - 1 {
+        return None;
+    }
+    // Check no double @
+    if email[at_pos + 1..].contains('@') {
+        return None;
+    }
+    let local = &email[..at_pos];
+    let domain = &email[at_pos + 1..];
 
-static RFC2822_EMAIL_REGEX: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^(?P<local>[a-zA-Z0-9!#$%&'*/=?^_`{|}~-](?:[a-zA-Z0-9!#$%&'*/=?^_`{|}~.+-]{0,62}[a-zA-Z0-9!#$%&'*/=?^_`{|}~-])?)@(?P<domain>[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*\.[a-zA-Z]{2,})$").unwrap()
-});
+    // Validate local part
+    if !local.chars().all(|c| c.is_ascii_alphanumeric() || ".!#$%&'*+/=?^_`{|}~-".contains(c)) {
+        return None;
+    }
 
-static RFC5321_EMAIL_REGEX: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r#"^(?P<local>(?:[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[^"\\]|\\[\s\S]){0,62}"))@(?P<domain>[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+|\[(?:(?:[0-9]{1,3}\.){3}[0-9]{1,3}|IPv6:[0-9a-fA-F:]+)\])$"#).unwrap()
-});
+    // Validate domain
+    if domain.is_empty() || domain.starts_with('.') || domain.ends_with('.') || domain.starts_with('-') {
+        return None;
+    }
+    for part in domain.split('.') {
+        if part.is_empty() || part.len() > 63 {
+            return None;
+        }
+        if !part.chars().all(|c| c.is_ascii_alphanumeric() || c == '-') {
+            return None;
+        }
+    }
+
+    Some(EmailParts {
+        local: local.to_string(),
+        domain: domain.to_string(),
+    })
+}
+
+fn validate_rfc2822_email(email: &str) -> Option<EmailParts> {
+    let parts = validate_basic_email(email)?;
+    // RFC2822 requires at least one dot in domain (TLD must be 2+ chars)
+    if !parts.domain.contains('.') {
+        return None;
+    }
+    let tld = parts.domain.rsplit('.').next()?;
+    if tld.len() < 2 || !tld.chars().all(|c| c.is_ascii_alphabetic()) {
+        return None;
+    }
+    Some(parts)
+}
 
 /// Parses and validates an email address
 ///
@@ -79,25 +112,16 @@ static RFC5321_EMAIL_REGEX: LazyLock<Regex> = LazyLock::new(|| {
 pub fn umt_parse_email(email: &str, options: Option<ParseEmailOptions>) -> ParseEmailResult {
     let opts = options.unwrap_or_default();
 
-    let regex = match opts.level {
-        ParseEmailLevel::Basic | ParseEmailLevel::Rfc822 => &*BASIC_EMAIL_REGEX,
-        ParseEmailLevel::Rfc2822 => &*RFC2822_EMAIL_REGEX,
-        ParseEmailLevel::Rfc5321 | ParseEmailLevel::Rfc5322 => &*RFC5321_EMAIL_REGEX,
+    let parts = match opts.level {
+        ParseEmailLevel::Basic | ParseEmailLevel::Rfc822 => validate_basic_email(email),
+        ParseEmailLevel::Rfc2822 => validate_rfc2822_email(email),
+        ParseEmailLevel::Rfc5321 | ParseEmailLevel::Rfc5322 => validate_basic_email(email),
     };
 
-    match regex.captures(email) {
-        Some(caps) => ParseEmailResult {
+    match parts {
+        Some(parts) => ParseEmailResult {
             valid: true,
-            parts: Some(EmailParts {
-                local: caps
-                    .name("local")
-                    .map(|m| m.as_str().to_string())
-                    .unwrap_or_default(),
-                domain: caps
-                    .name("domain")
-                    .map(|m| m.as_str().to_string())
-                    .unwrap_or_default(),
-            }),
+            parts: Some(parts),
         },
         None => ParseEmailResult {
             valid: false,

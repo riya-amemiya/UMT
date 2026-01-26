@@ -1,4 +1,4 @@
-use base64::{Engine, engine::general_purpose::STANDARD};
+use crate::internal::base64;
 
 /// Convert string to Base64
 ///
@@ -15,7 +15,7 @@ use base64::{Engine, engine::general_purpose::STANDARD};
 /// ```
 #[inline]
 pub fn umt_to_base64(s: &str) -> String {
-    STANDARD.encode(s.as_bytes())
+    base64::encode(s.as_bytes())
 }
 
 #[cfg(test)]

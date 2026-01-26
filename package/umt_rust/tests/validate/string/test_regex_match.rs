@@ -1,12 +1,10 @@
 //! Tests for regex match validation
 
-use regex::Regex;
 use umt_rust::validate::string::umt_regex_match;
 
 #[test]
 fn test_regex_match_validates_matching_patterns() {
-    let pattern = Regex::new(r"^[a-z]+$").unwrap();
-    let validator = umt_regex_match(pattern, None);
+    let validator = umt_regex_match(|s: &str| s.chars().all(|c| c.is_ascii_lowercase()), None);
 
     assert!((validator.validate)(&"abc".to_string()));
     assert!(!(validator.validate)(&"ABC".to_string()));
@@ -16,8 +14,7 @@ fn test_regex_match_validates_matching_patterns() {
 
 #[test]
 fn test_regex_match_validates_numeric_patterns() {
-    let pattern = Regex::new(r"^[0-9]+$").unwrap();
-    let validator = umt_regex_match(pattern, None);
+    let validator = umt_regex_match(|s: &str| !s.is_empty() && s.chars().all(|c| c.is_ascii_digit()), None);
 
     assert!((validator.validate)(&"123".to_string()));
     assert!(!(validator.validate)(&"abc".to_string()));
@@ -27,9 +24,11 @@ fn test_regex_match_validates_numeric_patterns() {
 
 #[test]
 fn test_regex_match_handles_custom_error_messages() {
-    let pattern = Regex::new(r"^[A-Z]+$").unwrap();
     let message = "Only uppercase letters are allowed";
-    let validator = umt_regex_match(pattern, Some(message.to_string()));
+    let validator = umt_regex_match(
+        |s: &str| !s.is_empty() && s.chars().all(|c| c.is_ascii_uppercase()),
+        Some(message.to_string()),
+    );
 
     assert!((validator.validate)(&"ABC".to_string()));
     assert!(!(validator.validate)(&"abc".to_string()));
@@ -38,20 +37,22 @@ fn test_regex_match_handles_custom_error_messages() {
 
 #[test]
 fn test_regex_match_email_pattern() {
-    let pattern = Regex::new(r"^[\w.+-]+@[\w-]+\.[\w.-]+$").unwrap();
-    let validator = umt_regex_match(pattern, None);
+    let validator = umt_regex_match(|s: &str| {
+        let parts: Vec<&str> = s.splitn(2, '@').collect();
+        if parts.len() != 2 { return false; }
+        let local = parts[0];
+        let domain = parts[1];
+        !local.is_empty() && domain.contains('.') && !domain.starts_with('.') && !domain.ends_with('.')
+    }, None);
 
     assert!((validator.validate)(&"test@example.com".to_string()));
-    assert!((validator.validate)(
-        &"user.name+tag@example.co.uk".to_string()
-    ));
+    assert!((validator.validate)(&"user.name+tag@example.co.uk".to_string()));
     assert!(!(validator.validate)(&"invalid-email".to_string()));
 }
 
 #[test]
 fn test_regex_match_alphanumeric_pattern() {
-    let pattern = Regex::new(r"^[a-zA-Z0-9]+$").unwrap();
-    let validator = umt_regex_match(pattern, None);
+    let validator = umt_regex_match(|s: &str| !s.is_empty() && s.chars().all(|c| c.is_ascii_alphanumeric()), None);
 
     assert!((validator.validate)(&"abc123".to_string()));
     assert!((validator.validate)(&"ABC123".to_string()));
@@ -61,16 +62,16 @@ fn test_regex_match_alphanumeric_pattern() {
 
 #[test]
 fn test_regex_match_empty_string() {
-    let pattern = Regex::new(r"^[a-z]*$").unwrap();
-    let validator = umt_regex_match(pattern, None);
+    let validator = umt_regex_match(|s: &str| s.chars().all(|c| c.is_ascii_lowercase()), None);
 
     assert!((validator.validate)(&"".to_string()));
 }
 
 #[test]
 fn test_regex_match_special_characters() {
-    let pattern = Regex::new(r"^[\w!@#$%^&*]+$").unwrap();
-    let validator = umt_regex_match(pattern, None);
+    let validator = umt_regex_match(|s: &str| {
+        !s.is_empty() && s.chars().all(|c| c.is_ascii_alphanumeric() || "!@#$%^&*_".contains(c))
+    }, None);
 
     assert!((validator.validate)(&"test!@#".to_string()));
     assert!((validator.validate)(&"abc123".to_string()));

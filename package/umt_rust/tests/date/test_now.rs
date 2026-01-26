@@ -22,7 +22,7 @@ fn test_now_with_different_offsets() {
     let jst = umt_now(9);
 
     // JST should be 9 hours ahead of UTC
-    let diff = jst.signed_duration_since(utc);
+    let diff = jst.signed_duration_since(&utc);
     assert_eq!(diff.num_hours(), 9);
 }
 
@@ -32,7 +32,7 @@ fn test_now_jst_offset() {
     let jst = umt_now_jst();
 
     // JST (from umt_now_jst) should be 9 hours ahead of UTC
-    let diff = jst.signed_duration_since(utc);
+    let diff = jst.signed_duration_since(&utc);
     assert_eq!(diff.num_hours(), 9);
 }
 

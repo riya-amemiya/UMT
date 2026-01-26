@@ -2,7 +2,7 @@
 //!
 //! This module provides a function to calculate age based on birthdate.
 
-use chrono::{Datelike, NaiveDate};
+use crate::internal::datetime::UmtNaiveDate;
 
 use super::now::umt_now;
 
@@ -32,7 +32,7 @@ pub fn umt_birthday(year: i32, month: u32, day: u32, time_difference: Option<i32
     let tz_offset = time_difference.unwrap_or(9);
     let now = umt_now(tz_offset);
 
-    let birth_date = match NaiveDate::from_ymd_opt(year, month, day) {
+    let birth_date = match UmtNaiveDate::from_ymd_opt(year, month, day) {
         Some(d) => d,
         None => return 0,
     };
@@ -44,7 +44,7 @@ pub fn umt_birthday(year: i32, month: u32, day: u32, time_difference: Option<i32
     let mut age = current_year - birth_year;
 
     // Check if birthday hasn't occurred this year yet
-    let this_year_birthday = NaiveDate::from_ymd_opt(current_year, month, day);
+    let this_year_birthday = UmtNaiveDate::from_ymd_opt(current_year, month, day);
 
     if let Some(birthday_this_year) = this_year_birthday {
         let current_date = now.date_naive();

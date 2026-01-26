@@ -1,4 +1,4 @@
-use rand::Rng;
+use crate::internal::rng;
 
 const DEFAULT_CHARS: &str = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
@@ -26,9 +26,8 @@ pub fn umt_random_string(size: usize, chars: Option<&str>) -> String {
         return String::new();
     }
 
-    let mut rng = rand::rng();
     (0..size)
-        .map(|_| char_set[rng.random_range(0..length)])
+        .map(|_| char_set[rng::random_range_usize(0, length - 1)])
         .collect()
 }
 

@@ -1,8 +1,6 @@
 //! String validation module
 //! Provides validation functionality for string values with various constraints
 
-use regex::Regex;
-
 use super::core::{ValidateCoreReturnType, ValidateReturnType};
 use super::{ParseEmailLevel, ParseEmailOptions, umt_is_number_str, umt_parse_email};
 
@@ -99,18 +97,20 @@ pub fn umt_number_string(message: Option<String>) -> ValidateReturnType<String> 
     ValidateReturnType::new("string", message, |value: &String| umt_is_number_str(value))
 }
 
-/// Creates a validator for checking if a string matches a regex pattern
+/// Creates a validator for checking if a string matches a given predicate
 ///
 /// # Arguments
-/// * `pattern` - The regex pattern to match against
+/// * `matcher` - A closure that returns true if the string matches
 /// * `message` - Custom error message for validation failure
 ///
 /// # Returns
-/// A `ValidateReturnType` for regex matching validation
+/// A `ValidateReturnType` for pattern matching validation
 #[inline]
-pub fn umt_regex_match(pattern: Regex, message: Option<String>) -> ValidateReturnType<String> {
+pub fn umt_regex_match<F: Fn(&str) -> bool + Send + Sync + 'static>(
+    matcher: F, message: Option<String>
+) -> ValidateReturnType<String> {
     ValidateReturnType::new("string", message, move |value: &String| {
-        pattern.is_match(value)
+        matcher(value)
     })
 }
 
@@ -126,14 +126,32 @@ pub fn umt_regex_match(pattern: Regex, message: Option<String>) -> ValidateRetur
 pub fn umt_uuid(versions: Option<Vec<u8>>, message: Option<String>) -> ValidateReturnType<String> {
     let versions = versions.unwrap_or_else(|| vec![4]);
     ValidateReturnType::new("string", message, move |value: &String| {
-        versions.iter().any(|version| {
-            let pattern = format!(
-                r"(?i)^[\da-f]{{8}}-?[\da-f]{{4}}-?{}[\da-f]{{3}}-?[89ab][\da-f]{{3}}-?[\da-f]{{12}}$",
-                version
-            );
-            Regex::new(&pattern).map(|re| re.is_match(value)).unwrap_or(false)
-        })
+        is_valid_uuid(value, &versions)
     })
+}
+
+fn is_valid_uuid(value: &str, versions: &[u8]) -> bool {
+    // UUID can be with or without dashes
+    let hex_only: String = value.chars().filter(|c| *c != '-').collect();
+    if hex_only.len() != 32 {
+        return false;
+    }
+    if !hex_only.chars().all(|c| c.is_ascii_hexdigit()) {
+        return false;
+    }
+    // Check version (13th hex char)
+    let version_char = hex_only.as_bytes()[12];
+    let version_num = if version_char.is_ascii_digit() {
+        version_char - b'0'
+    } else {
+        return false;
+    };
+    if !versions.contains(&version_num) {
+        return false;
+    }
+    // Check variant (17th hex char should be 8, 9, a, or b)
+    let variant_char = hex_only.as_bytes()[16].to_ascii_lowercase();
+    matches!(variant_char, b'8' | b'9' | b'a' | b'b')
 }
 
 /// Creates a validator for checking if a string is a valid email address
@@ -198,7 +216,7 @@ mod tests {
 
     #[test]
     fn test_regex_match() {
-        let validator = umt_regex_match(Regex::new(r"^\d+$").unwrap(), None);
+        let validator = umt_regex_match(|s: &str| s.chars().all(|c| c.is_ascii_digit()), None);
         assert!((validator.validate)(&"123".to_string()));
         assert!(!(validator.validate)(&"abc".to_string()));
     }

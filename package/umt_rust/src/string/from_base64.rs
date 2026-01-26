@@ -1,4 +1,4 @@
-use base64::{Engine, engine::general_purpose::STANDARD};
+use crate::internal::base64;
 
 /// Converts Base64 to string
 ///
@@ -19,8 +19,7 @@ pub fn umt_from_base64(base64_string: &str) -> Result<String, String> {
         return Ok(String::new());
     }
 
-    STANDARD
-        .decode(base64_string)
+    base64::decode(base64_string)
         .map_err(|_| "Invalid Base64 string".to_string())
         .and_then(|bytes| {
             String::from_utf8(bytes).map_err(|_| "Invalid UTF-8 sequence".to_string())

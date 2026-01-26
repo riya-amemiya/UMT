@@ -448,9 +448,11 @@ mod tests {
         );
 
         // Check hex format (should be #RRGGBBAA)
-        let hex_pattern = regex::Regex::new(r"(?i)^#[0-9a-f]{8}$").unwrap();
+        let is_valid_hex = mixed_hex.len() == 9
+            && mixed_hex.starts_with('#')
+            && mixed_hex[1..].chars().all(|c| c.is_ascii_hexdigit());
         assert!(
-            hex_pattern.is_match(&mixed_hex),
+            is_valid_hex,
             "Hex should match pattern: {}",
             mixed_hex
         );

@@ -1,4 +1,4 @@
-use unicode_normalization::UnicodeNormalization;
+use crate::internal::unicode_nfd;
 
 /// Convert a string to a URL-friendly slug
 ///
@@ -17,10 +17,7 @@ use unicode_normalization::UnicodeNormalization;
 #[inline]
 pub fn umt_slugify(s: &str) -> String {
     // NFD normalization and remove combining marks
-    let normalized: String = s
-        .nfd()
-        .filter(|c| !('\u{0300}'..='\u{036F}').contains(c))
-        .collect();
+    let normalized = unicode_nfd::strip_diacritics(s);
 
     let mut result = String::with_capacity(normalized.len());
     let mut prev_was_dash = true; // Start as true to avoid leading dash

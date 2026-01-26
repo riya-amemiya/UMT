@@ -1,5 +1,3 @@
-use regex::Regex;
-
 /// Represents the detected browser type from a User-Agent string.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Browser {
@@ -54,38 +52,32 @@ pub fn umt_extract_browser_from_user_agent(ua: &str) -> Browser {
     let ua_lower = ua.to_lowercase();
 
     // Edge detection (includes both "Edg" and "Edge")
-    let edge_re = Regex::new(r"edg(e)?").unwrap();
-    if edge_re.is_match(&ua_lower) {
+    if ua_lower.contains("edg") {
         return Browser::Edge;
     }
 
     // Internet Explorer detection
-    let ie_re = Regex::new(r"msie|trident").unwrap();
-    if ie_re.is_match(&ua_lower) {
+    if ua_lower.contains("msie") || ua_lower.contains("trident") {
         return Browser::Ie;
     }
 
     // Firefox detection (includes FxiOS for iOS)
-    let firefox_re = Regex::new(r"firefox|fxios").unwrap();
-    if firefox_re.is_match(&ua_lower) {
+    if ua_lower.contains("firefox") || ua_lower.contains("fxios") {
         return Browser::Firefox;
     }
 
     // Opera detection (uses Chromium, check before Chrome)
-    let opera_re = Regex::new(r"opr/").unwrap();
-    if opera_re.is_match(&ua_lower) {
+    if ua_lower.contains("opr/") {
         return Browser::Other;
     }
 
     // Chrome detection (includes CriOS for iOS)
-    let chrome_re = Regex::new(r"chrome|crios").unwrap();
-    if chrome_re.is_match(&ua_lower) {
+    if ua_lower.contains("chrome") || ua_lower.contains("crios") {
         return Browser::Chrome;
     }
 
     // Safari detection (should be last as Chrome/Firefox on iOS also include Safari)
-    let safari_re = Regex::new(r"safari").unwrap();
-    if safari_re.is_match(&ua_lower) {
+    if ua_lower.contains("safari") {
         return Browser::Safari;
     }
 

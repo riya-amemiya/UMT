@@ -2,7 +2,7 @@
 //!
 //! This module provides a function to get the current time adjusted for a specified UTC offset.
 
-use chrono::{DateTime, Duration, Utc};
+use crate::internal::datetime::{UmtDateTime, UmtDuration};
 
 use crate::consts::ONE_HOUR_MS;
 
@@ -29,10 +29,10 @@ use crate::consts::ONE_HOUR_MS;
 /// let cet_time = umt_now(1);   // Current time in UTC+1
 /// ```
 #[inline]
-pub fn umt_now(time_difference: i32) -> DateTime<Utc> {
-    let now = Utc::now();
+pub fn umt_now(time_difference: i32) -> UmtDateTime {
+    let now = UmtDateTime::now();
     let offset_ms = (time_difference as i64) * (ONE_HOUR_MS as i64);
-    now + Duration::milliseconds(offset_ms)
+    now + UmtDuration::milliseconds(offset_ms)
 }
 
 /// Get the current time in Japan Standard Time (UTC+9).
@@ -51,7 +51,7 @@ pub fn umt_now(time_difference: i32) -> DateTime<Utc> {
 /// let jst_time = umt_now_jst();
 /// ```
 #[inline]
-pub fn umt_now_jst() -> DateTime<Utc> {
+pub fn umt_now_jst() -> UmtDateTime {
     umt_now(9)
 }
 
@@ -70,33 +70,33 @@ mod tests {
     fn test_now_with_positive_offset() {
         let utc = umt_now(0);
         let jst = umt_now(9);
-        let diff = jst.signed_duration_since(utc);
+        let diff = jst.signed_duration_since(&utc);
         assert_eq!(diff.num_hours(), 9);
     }
 
     #[test]
     fn test_now_with_negative_offset() {
         // Use a fixed base time to avoid race conditions
-        let base_time = Utc::now();
+        let base_time = UmtDateTime::now();
         let offset_ms_0 = 0i64 * (ONE_HOUR_MS as i64);
         let offset_ms_neg5 = -5i64 * (ONE_HOUR_MS as i64);
 
-        let utc = base_time + Duration::milliseconds(offset_ms_0);
-        let est = base_time + Duration::milliseconds(offset_ms_neg5);
-        let diff = utc.signed_duration_since(est);
+        let utc = base_time + UmtDuration::milliseconds(offset_ms_0);
+        let est = base_time + UmtDuration::milliseconds(offset_ms_neg5);
+        let diff = utc.signed_duration_since(&est);
         assert_eq!(diff.num_hours(), 5);
     }
 
     #[test]
     fn test_now_jst() {
         // Use a fixed base time to avoid race conditions
-        let base_time = Utc::now();
+        let base_time = UmtDateTime::now();
         let offset_ms_9 = 9i64 * (ONE_HOUR_MS as i64);
         let offset_ms_0 = 0i64 * (ONE_HOUR_MS as i64);
 
-        let jst = base_time + Duration::milliseconds(offset_ms_9);
-        let utc = base_time + Duration::milliseconds(offset_ms_0);
-        let diff = jst.signed_duration_since(utc);
+        let jst = base_time + UmtDuration::milliseconds(offset_ms_9);
+        let utc = base_time + UmtDuration::milliseconds(offset_ms_0);
+        let diff = jst.signed_duration_since(&utc);
         assert_eq!(diff.num_hours(), 9);
     }
 }

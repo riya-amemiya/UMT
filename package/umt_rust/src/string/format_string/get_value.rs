@@ -1,5 +1,4 @@
-use regex::Regex;
-use serde_json::Value;
+use crate::internal::json::JsonValue;
 
 /// Retrieves a value from a JSON object using a dot-notation path with array index support.
 ///
@@ -17,18 +16,17 @@ use serde_json::Value;
 /// # Examples
 ///
 /// ```ignore
-/// use serde_json::json;
+/// use umt_rust::json;
 /// use umt_rust::string::format_string::get_value;
 ///
 /// let obj = json!({"name": "Alice"});
 /// assert_eq!(get_value(&obj, "name"), Some(&json!("Alice")));
 /// ```
-pub fn get_value<'a>(object: &'a Value, path: &str) -> Option<&'a Value> {
+pub fn get_value<'a>(object: &'a JsonValue, path: &str) -> Option<&'a JsonValue> {
     if path.is_empty() {
         return None;
     }
 
-    let array_pattern = Regex::new(r"^(.+?)\[(-?\d+)\]$").unwrap();
     let parts: Vec<&str> = path.split('.').collect();
 
     let mut current = object;
@@ -39,11 +37,8 @@ pub fn get_value<'a>(object: &'a Value, path: &str) -> Option<&'a Value> {
             return None;
         }
 
-        if let Some(caps) = array_pattern.captures(part) {
+        if let Some((key, index)) = parse_array_access(part) {
             // Handle array notation like "items[0]" or "items[-1]"
-            let key = caps.get(1)?.as_str();
-            let index: i64 = caps.get(2)?.as_str().parse().ok()?;
-
             // Get the object property first
             current = current.get(key)?;
 
@@ -68,10 +63,24 @@ pub fn get_value<'a>(object: &'a Value, path: &str) -> Option<&'a Value> {
     Some(current)
 }
 
+fn parse_array_access(s: &str) -> Option<(&str, i64)> {
+    let bracket_start = s.find('[')?;
+    if !s.ends_with(']') {
+        return None;
+    }
+    let key = &s[..bracket_start];
+    let index_str = &s[bracket_start + 1..s.len() - 1];
+    let index: i64 = index_str.parse().ok()?;
+    if key.is_empty() {
+        return None;
+    }
+    Some((key, index))
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
-    use serde_json::json;
+    use crate::json;
 
     #[test]
     fn test_simple_property_access() {

@@ -1,14 +1,28 @@
 use std::collections::HashSet;
 use umt_rust::math::umt_uuidv7;
 
+fn is_valid_uuidv7(s: &str) -> bool {
+    if s.len() != 36 { return false; }
+    let bytes = s.as_bytes();
+    // Check dashes at positions 8, 13, 18, 23
+    if bytes[8] != b'-' || bytes[13] != b'-' || bytes[18] != b'-' || bytes[23] != b'-' { return false; }
+    // Check version '7' at position 14
+    if bytes[14] != b'7' { return false; }
+    // Check variant at position 19 (must be 8, 9, a, or b)
+    let variant = bytes[19];
+    if variant != b'8' && variant != b'9' && variant != b'a' && variant != b'b' { return false; }
+    // Check all other chars are lowercase hex
+    for (i, &b) in bytes.iter().enumerate() {
+        if i == 8 || i == 13 || i == 18 || i == 23 { continue; }
+        if !b.is_ascii_hexdigit() || (b.is_ascii_alphabetic() && !b.is_ascii_lowercase()) { return false; }
+    }
+    true
+}
+
 #[test]
 fn test_uuidv7_correct_format() {
     let uuid = umt_uuidv7();
-    // Format: xxxxxxxx-xxxx-7xxx-Vxxx-xxxxxxxxxxxx
-    let regex =
-        regex::Regex::new(r"^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$")
-            .unwrap();
-    assert!(regex.is_match(&uuid), "UUID format incorrect: {}", uuid);
+    assert!(is_valid_uuidv7(&uuid), "UUID format incorrect: {}", uuid);
 }
 
 #[test]

@@ -1,4 +1,4 @@
-use rand::Rng;
+use crate::internal::rng;
 use std::time::{SystemTime, UNIX_EPOCH};
 
 /// Generates a UUID v7 (Universally Unique Identifier version 7).
@@ -33,10 +33,9 @@ pub fn umt_uuidv7() -> String {
         .expect("Time went backwards")
         .as_millis() as u64;
 
-    let mut rng = rand::rng();
-    let rand_a: u16 = rng.random_range(0..0xFFF);
-    let rand_b_hi: u32 = rng.random_range(0..0x3FFFFFFF);
-    let rand_b_lo: u32 = rng.random();
+    let rand_a: u16 = rng::random_u16_below(0xFFF);
+    let rand_b_hi: u32 = rng::random_u32_below(0x3FFFFFFF);
+    let rand_b_lo: u32 = rng::random_u32();
 
     let mut bytes = [0u8; 16];
 

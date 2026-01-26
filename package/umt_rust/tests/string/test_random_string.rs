@@ -1,12 +1,10 @@
-use regex::Regex;
 use umt_rust::string::{umt_random_string, umt_random_string_default};
 
 #[test]
 fn test_generate_random_string_with_default_characters_and_length() {
     let str_result = umt_random_string_default(8);
     assert_eq!(str_result.len(), 8);
-    let pattern = Regex::new(r"^[0-9A-Za-z]{8}$").unwrap();
-    assert!(pattern.is_match(&str_result));
+    assert!(str_result.chars().all(|c| c.is_ascii_alphanumeric()));
 }
 
 #[test]
@@ -14,8 +12,7 @@ fn test_generate_random_string_using_custom_character_set() {
     let chars = "abc123";
     let str_result = umt_random_string(10, Some(chars));
     assert_eq!(str_result.len(), 10);
-    let pattern = Regex::new(r"^[abc123]{10}$").unwrap();
-    assert!(pattern.is_match(&str_result));
+    assert!(str_result.chars().all(|c| chars.contains(c)));
 }
 
 #[test]
@@ -35,6 +32,5 @@ fn test_generate_random_string_with_zero_size() {
 fn test_generate_random_string_custom_chars_all_included() {
     let chars = "ABC";
     let str_result = umt_random_string(100, Some(chars));
-    // With 100 characters, it's very likely all chars appear
     assert!(str_result.chars().all(|c| chars.contains(c)));
 }

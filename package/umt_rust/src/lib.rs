@@ -1,3 +1,5 @@
+pub mod internal;
+
 pub mod advance;
 pub mod array;
 pub mod color;

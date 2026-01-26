@@ -1,5 +1,4 @@
-use num_bigint::BigUint;
-use num_traits::Zero;
+use crate::internal::bigint::BigUint;
 
 /// Error type for Base58 decoding failures.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -46,7 +45,6 @@ pub fn umt_decode_base58(input: &str) -> Result<Vec<u8>, Base58Error> {
 
     // Convert Base58 string to big integer
     let mut big_number = BigUint::zero();
-    let fifty_eight = BigUint::from(58u32);
 
     for char in input.chars() {
         let value = match ALPHABET.find(char) {
@@ -57,7 +55,7 @@ pub fn umt_decode_base58(input: &str) -> Result<Vec<u8>, Base58Error> {
                 });
             }
         };
-        big_number = big_number * &fifty_eight + BigUint::from(value);
+        big_number = big_number.mul_u32(58).add_u32(value as u32);
     }
 
     // Convert big integer to bytes

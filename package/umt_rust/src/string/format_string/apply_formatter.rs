@@ -1,4 +1,3 @@
-use regex::Regex;
 use std::collections::HashMap;
 
 /// A formatter function type
@@ -23,14 +22,11 @@ pub fn apply_formatter(
     formatter_string: &str,
     formatters: &HashMap<String, Formatter>,
 ) -> String {
-    let pattern = Regex::new(r"^(\w+)(?:\(([^)]*)\))?$").unwrap();
-
-    let Some(caps) = pattern.captures(formatter_string) else {
+    // Parse formatter: "name" or "name(args)"
+    let (formatter_name, arguments_string) = parse_formatter_syntax(formatter_string);
+    if formatter_name.is_empty() {
         return value.to_string();
-    };
-
-    let formatter_name = caps.get(1).map(|m| m.as_str()).unwrap_or("");
-    let arguments_string = caps.get(2).map(|m| m.as_str());
+    }
 
     let Some(formatter) = formatters.get(formatter_name) else {
         return value.to_string();
@@ -39,6 +35,25 @@ pub fn apply_formatter(
     let arguments = arguments_string.map(parse_arguments).unwrap_or_default();
 
     formatter(value, &arguments)
+}
+
+fn parse_formatter_syntax(s: &str) -> (&str, Option<&str>) {
+    // Match pattern: word_chars optionally followed by (args)
+    let name_end = s.find(|c: char| !c.is_alphanumeric() && c != '_').unwrap_or(s.len());
+    if name_end == 0 {
+        return ("", None);
+    }
+    let name = &s[..name_end];
+    let rest = &s[name_end..];
+
+    if rest.starts_with('(') && rest.ends_with(')') {
+        let args = &rest[1..rest.len() - 1];
+        (name, Some(args))
+    } else if rest.is_empty() {
+        (name, None)
+    } else {
+        ("", None) // Invalid syntax
+    }
 }
 
 /// Parses comma-separated arguments while preserving quoted strings

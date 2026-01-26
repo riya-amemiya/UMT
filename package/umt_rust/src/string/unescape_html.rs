@@ -1,10 +1,3 @@
-use regex::Regex;
-use std::sync::LazyLock;
-
-static ENTITY_REGEX: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"&(?:amp|lt|gt|quot|#39|#x27|#x2F|#x60|#x3D);|&#(\d+);|&#x([0-9a-fA-F]+);").unwrap()
-});
-
 /// Unescapes HTML entities in a string
 ///
 /// # Arguments
@@ -21,44 +14,69 @@ static ENTITY_REGEX: LazyLock<Regex> = LazyLock::new(|| {
 /// ```
 #[inline]
 pub fn umt_unescape_html(s: &str) -> String {
-    ENTITY_REGEX
-        .replace_all(s, |caps: &regex::Captures| {
-            let full_match = caps.get(0).unwrap().as_str();
+    let mut result = String::with_capacity(s.len());
+    let mut chars = s.chars().peekable();
 
-            // Check for decimal numeric entity &#123;
-            if let Some(dec) = caps.get(1) {
-                if let Ok(code_point) = dec.as_str().parse::<u32>()
-                    && let Some(c) = char::from_u32(code_point)
-                {
-                    return c.to_string();
+    while let Some(c) = chars.next() {
+        if c != '&' {
+            result.push(c);
+            continue;
+        }
+
+        // Collect entity
+        let mut entity = String::from("&");
+        let mut found_semicolon = false;
+        for _ in 0..10 {
+            match chars.next() {
+                Some(';') => {
+                    entity.push(';');
+                    found_semicolon = true;
+                    break;
                 }
-                return full_match.to_string();
+                Some(ch) => entity.push(ch),
+                None => break,
             }
+        }
 
-            // Check for hex numeric entity &#x1F;
-            if let Some(hex) = caps.get(2) {
-                if let Ok(code_point) = u32::from_str_radix(hex.as_str(), 16)
-                    && let Some(c) = char::from_u32(code_point)
-                {
-                    return c.to_string();
+        if !found_semicolon {
+            result.push_str(&entity);
+            continue;
+        }
+
+        match entity.as_str() {
+            "&amp;" => result.push('&'),
+            "&lt;" => result.push('<'),
+            "&gt;" => result.push('>'),
+            "&quot;" => result.push('"'),
+            "&#39;" | "&#x27;" => result.push('\''),
+            "&#x2F;" => result.push('/'),
+            "&#x60;" => result.push('`'),
+            "&#x3D;" => result.push('='),
+            _ => {
+                // Try decimal numeric entity &#123;
+                if entity.starts_with("&#x") {
+                    let hex_str = &entity[3..entity.len() - 1];
+                    if let Ok(code_point) = u32::from_str_radix(hex_str, 16) {
+                        if let Some(c) = char::from_u32(code_point) {
+                            result.push(c);
+                            continue;
+                        }
+                    }
+                } else if entity.starts_with("&#") {
+                    let dec_str = &entity[2..entity.len() - 1];
+                    if let Ok(code_point) = dec_str.parse::<u32>() {
+                        if let Some(c) = char::from_u32(code_point) {
+                            result.push(c);
+                            continue;
+                        }
+                    }
                 }
-                return full_match.to_string();
+                result.push_str(&entity);
             }
+        }
+    }
 
-            // Named entities
-            match full_match {
-                "&amp;" => "&".to_string(),
-                "&lt;" => "<".to_string(),
-                "&gt;" => ">".to_string(),
-                "&quot;" => "\"".to_string(),
-                "&#39;" | "&#x27;" => "'".to_string(),
-                "&#x2F;" => "/".to_string(),
-                "&#x60;" => "`".to_string(),
-                "&#x3D;" => "=".to_string(),
-                _ => full_match.to_string(),
-            }
-        })
-        .to_string()
+    result
 }
 
 #[cfg(test)]

@@ -1,4 +1,4 @@
-use serde_json::json;
+use umt_rust::json;
 use umt_rust::string::{umt_format_string, umt_format_string_indexed};
 
 // Original functionality tests

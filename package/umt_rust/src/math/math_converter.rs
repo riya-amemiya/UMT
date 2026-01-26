@@ -1,5 +1,43 @@
 use super::umt_math_separator;
-use regex::Regex;
+
+fn find_math_expr(s: &str) -> Option<(usize, usize)> {
+    let bytes = s.as_bytes();
+    let mut i = 0;
+    while i < bytes.len() {
+        if bytes[i].is_ascii_digit() {
+            let start = i;
+            // Read first number (digits, optional dot, optional digits)
+            while i < bytes.len() && bytes[i].is_ascii_digit() {
+                i += 1;
+            }
+            if i < bytes.len() && bytes[i] == b'.' {
+                i += 1;
+                while i < bytes.len() && bytes[i].is_ascii_digit() {
+                    i += 1;
+                }
+            }
+            // Check for operator
+            if i < bytes.len() && (bytes[i] == b'*' || bytes[i] == b'^') {
+                i += 1;
+                // Read second number
+                if i < bytes.len() && bytes[i].is_ascii_digit() {
+                    while i < bytes.len() && bytes[i].is_ascii_digit() {
+                        i += 1;
+                    }
+                    if i < bytes.len() && bytes[i] == b'.' {
+                        i += 1;
+                        while i < bytes.len() && bytes[i].is_ascii_digit() {
+                            i += 1;
+                        }
+                    }
+                    return Some((start, i));
+                }
+            }
+        }
+        i += 1;
+    }
+    None
+}
 
 /// Expands square of n into a sum of simpler multiplications.
 ///
@@ -25,11 +63,10 @@ use regex::Regex;
 /// ```
 pub fn umt_math_converter(equation: &str) -> String {
     let mut converted_equation = equation.to_string();
-    let re = Regex::new(r"\d+\.?(\d+)?(\*|\^)\d+\.?(\d+)?").unwrap();
 
     loop {
-        let capture = match re.find(&converted_equation) {
-            Some(m) => m.as_str().to_string(),
+        let capture = match find_math_expr(&converted_equation) {
+            Some((start, end)) => converted_equation[start..end].to_string(),
             None => return converted_equation,
         };
 

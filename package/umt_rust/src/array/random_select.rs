@@ -1,4 +1,4 @@
-use rand::Rng;
+use crate::internal::rng;
 use std::collections::HashSet;
 
 /// Randomly selects a specified number of elements from an array.
@@ -27,12 +27,11 @@ pub fn umt_random_select<T: Clone>(array: &[T], count: usize, allow_duplicates: 
         return vec![];
     }
 
-    let mut rng = rand::rng();
     let mut result = Vec::with_capacity(count);
 
     if allow_duplicates {
         for _ in 0..count {
-            let random_index = rng.random_range(0..array.len());
+            let random_index = rng::random_range_usize(0, array.len() - 1);
             result.push(array[random_index].clone());
         }
     } else {
@@ -40,7 +39,7 @@ pub fn umt_random_select<T: Clone>(array: &[T], count: usize, allow_duplicates: 
         let max_selections = count.min(array.len());
 
         while result.len() < max_selections {
-            let random_index = rng.random_range(0..array.len());
+            let random_index = rng::random_range_usize(0, array.len() - 1);
             if used_indices.insert(random_index) {
                 result.push(array[random_index].clone());
             }
@@ -64,8 +63,7 @@ pub fn umt_random_select_one<T: Clone>(array: &[T]) -> Option<T> {
         return None;
     }
 
-    let mut rng = rand::rng();
-    let random_index = rng.random_range(0..array.len());
+    let random_index = rng::random_range_usize(0, array.len() - 1);
     Some(array[random_index].clone())
 }
 

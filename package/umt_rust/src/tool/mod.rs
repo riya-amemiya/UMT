@@ -13,3 +13,5 @@ pub use parse_json::*;
 
 pub mod pipe;
 pub use pipe::*;
+
+pub use crate::internal::json::{JsonParseError, JsonValue};

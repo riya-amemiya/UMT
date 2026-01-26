@@ -7,9 +7,9 @@ fn test_new_date_int_basic() {
     let date = umt_new_date_int(2025, 1, 1, None, None, None, None);
     assert!(date.is_some());
     let dt = date.unwrap();
-    assert_eq!(dt.format("%Y").to_string(), "2025");
-    assert_eq!(dt.format("%m").to_string(), "01");
-    assert_eq!(dt.format("%d").to_string(), "01");
+    assert_eq!(dt.format_str("%Y"), "2025");
+    assert_eq!(dt.format_str("%m"), "01");
+    assert_eq!(dt.format_str("%d"), "01");
 }
 
 #[test]
@@ -17,12 +17,12 @@ fn test_new_date_int_with_time_components() {
     let date = umt_new_date_int(2025, 1, 1, Some(10), Some(30), Some(45), Some(500));
     assert!(date.is_some());
     let dt = date.unwrap();
-    assert_eq!(dt.format("%Y").to_string(), "2025");
-    assert_eq!(dt.format("%m").to_string(), "01");
-    assert_eq!(dt.format("%d").to_string(), "01");
-    assert_eq!(dt.format("%H").to_string(), "10");
-    assert_eq!(dt.format("%M").to_string(), "30");
-    assert_eq!(dt.format("%S").to_string(), "45");
+    assert_eq!(dt.format_str("%Y"), "2025");
+    assert_eq!(dt.format_str("%m"), "01");
+    assert_eq!(dt.format_str("%d"), "01");
+    assert_eq!(dt.format_str("%H"), "10");
+    assert_eq!(dt.format_str("%M"), "30");
+    assert_eq!(dt.format_str("%S"), "45");
 }
 
 #[test]
@@ -31,8 +31,8 @@ fn test_new_date_string_default_time() {
     assert!(date.is_some());
     let dt = date.unwrap();
     // Without timezone offset, this should be midnight UTC
-    assert_eq!(dt.format("%Y-%m-%d").to_string(), "2025-01-01");
-    assert_eq!(dt.format("%H:%M:%S").to_string(), "00:00:00");
+    assert_eq!(dt.format_str("%Y-%m-%d"), "2025-01-01");
+    assert_eq!(dt.format_str("%H:%M:%S"), "00:00:00");
 }
 
 #[test]
@@ -48,7 +48,7 @@ fn test_new_date_string_with_time_components() {
     assert!(date.is_some());
     let dt = date.unwrap();
     // With JST (UTC+9) offset of 9 hours, 10:30 JST becomes 01:30 UTC
-    assert_eq!(dt.format("%H:%M:%S").to_string(), "01:30:45");
+    assert_eq!(dt.format_str("%H:%M:%S"), "01:30:45");
 }
 
 #[test]
@@ -74,7 +74,7 @@ fn test_new_date_string_different_timezone_offsets() {
     assert!(date_jst.is_some());
 
     // JST (UTC+9) date should be 9 hours behind UTC date when stored as UTC
-    let diff = date_utc.unwrap().signed_duration_since(date_jst.unwrap());
+    let diff = date_utc.unwrap().signed_duration_since(&date_jst.unwrap());
     assert_eq!(diff.num_hours(), 9);
 }
 

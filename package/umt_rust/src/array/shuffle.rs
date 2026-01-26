@@ -1,4 +1,4 @@
-use rand::Rng;
+use crate::internal::rng;
 
 /// Randomly shuffles the elements of an array using the Fisher-Yates algorithm.
 ///
@@ -27,10 +27,8 @@ pub fn umt_shuffle<T: Clone>(array: &[T]) -> Vec<T> {
         return shuffled;
     }
 
-    let mut rng = rand::rng();
-
     for i in (1..shuffled.len()).rev() {
-        let j = rng.random_range(0..=i);
+        let j = rng::random_range_usize(0, i);
         if i != j {
             shuffled.swap(i, j);
         }
@@ -49,10 +47,8 @@ pub fn umt_shuffle_in_place<T>(array: &mut [T]) {
         return;
     }
 
-    let mut rng = rand::rng();
-
     for i in (1..array.len()).rev() {
-        let j = rng.random_range(0..=i);
+        let j = rng::random_range_usize(0, i);
         if i != j {
             array.swap(i, j);
         }
