@@ -34,27 +34,4 @@ describe("uuidv7 function", () => {
       uuids.add(uuid);
     }
   });
-
-  it("should generate UUID v7 using fallback when crypto is unavailable", () => {
-    const originalCrypto = globalThis.crypto;
-
-    Object.defineProperty(globalThis, "crypto", {
-      value: undefined,
-      writable: true,
-      configurable: true,
-    });
-
-    try {
-      const uuid = uuidv7();
-      const uuidRegex =
-        /^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
-      expect(uuid).toMatch(uuidRegex);
-    } finally {
-      Object.defineProperty(globalThis, "crypto", {
-        value: originalCrypto,
-        writable: true,
-        configurable: true,
-      });
-    }
-  });
 });

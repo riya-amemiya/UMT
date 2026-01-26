@@ -22,13 +22,7 @@ export const uuidv7 = (): string => {
 
   // Generate 10 random bytes for the rest
   const randomBytes = new Uint8Array(10);
-  if (globalThis.crypto?.getRandomValues) {
-    globalThis.crypto.getRandomValues(randomBytes);
-  } else {
-    for (let index = 0; index < 10; index++) {
-      randomBytes[index] = Math.floor(Math.random() * 256);
-    }
-  }
+  globalThis.crypto.getRandomValues(randomBytes);
 
   // Version 7 (0x70) + 4 bits from randomBytes[0]
   bytes[6] = 0x70 | (randomBytes[0] & 0x0f);
