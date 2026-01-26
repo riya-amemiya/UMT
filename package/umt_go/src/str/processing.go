@@ -1,14 +1,21 @@
 package str
 
 import (
-	"regexp"
+	"strings"
 	"unicode"
 )
 
 // DeleteSpaces removes all whitespace characters from a string.
+// This handles all Unicode whitespace characters including em space, full-width space, etc.
 func DeleteSpaces(s string) string {
-	re := regexp.MustCompile(`\s`)
-	return re.ReplaceAllString(s, "")
+	var b strings.Builder
+	b.Grow(len(s))
+	for _, r := range s {
+		if !unicode.IsSpace(r) {
+			b.WriteRune(r)
+		}
+	}
+	return b.String()
 }
 
 // ReverseString reverses a string, operating on runes for proper Unicode support.

@@ -171,7 +171,6 @@ func decomposeRune(r rune) string {
 		'\u00FC': "u\u0308", // u with diaeresis
 		'\u00FD': "y\u0301", // y with acute
 		'\u00FF': "y\u0308", // y with diaeresis
-		'\u00EF': "i\u0308", // i with diaeresis (duplicate but safe)
 	}
 
 	if d, ok := decompositions[r]; ok {
