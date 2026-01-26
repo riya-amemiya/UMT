@@ -1,18 +1,21 @@
 /**
  * Calculates the Levenshtein distance between two strings
  * Returns the minimum number of single-character edits (insertions, deletions, or substitutions)
- * @param str1 - First string to compare
- * @param str2 - Second string to compare
+ * @param string1 - First string to compare
+ * @param string2 - Second string to compare
  * @returns The Levenshtein distance
  */
 export const levenshteinDistance = (
   string1: string,
   string2: string,
 ): number => {
+  if (string1 === string2) {
+    return 0;
+  }
+
   const length1 = string1.length;
   const length2 = string2.length;
 
-  // Return the length of the other string if one is empty
   if (length1 === 0) {
     return length2;
   }
@@ -20,30 +23,41 @@ export const levenshteinDistance = (
     return length1;
   }
 
-  // Create a 2D array for dynamic programming
-  const matrix: number[][] = Array.from({ length: length1 + 1 }, () =>
-    Array.from({ length: length2 + 1 }, () => 0),
-  );
+  // Ensure string1 is the shorter string to minimize space complexity to O(min(N, M))
+  if (length1 > length2) {
+    return levenshteinDistance(string2, string1);
+  }
 
-  // Initialize first column and row
+  // Create a single row array to store distances
+  // We only need the current row and the previous diagonal value
+  // eslint-disable-next-line unicorn/no-new-array
+  const row = new Array(length1 + 1);
+
+  // Initialize first row (0 to length1)
   for (let index = 0; index <= length1; index++) {
-    matrix[index][0] = index;
-  }
-  for (let index = 0; index <= length2; index++) {
-    matrix[0][index] = index;
+    row[index] = index;
   }
 
-  // Calculate distances
-  for (let index = 1; index <= length1; index++) {
-    for (let index_ = 1; index_ <= length2; index_++) {
-      const cost = string1[index - 1] === string2[index_ - 1] ? 0 : 1;
-      matrix[index][index_] = Math.min(
-        matrix[index - 1][index_] + 1, // deletion
-        matrix[index][index_ - 1] + 1, // insertion
-        matrix[index - 1][index_ - 1] + cost, // substitution
+  // Iterate through each character of string2
+  for (let index = 1; index <= length2; index++) {
+    let previousDiagonal = row[0]; // Stores the value of matrix[i-1][j-1]
+    row[0] = index; // Update first element for the new row (matrix[0][j])
+
+    const char2 = string2[index - 1];
+
+    for (let index = 1; index <= length1; index++) {
+      const temporary = row[index]; // Store current value to become prevDiagonal for next iteration
+      const cost = string1[index - 1] === char2 ? 0 : 1;
+
+      row[index] = Math.min(
+        row[index] + 1, // deletion (value from previous row, same column)
+        row[index - 1] + 1, // insertion (value from current row, previous column)
+        previousDiagonal + cost, // substitution (value from previous row, previous column)
       );
+
+      previousDiagonal = temporary;
     }
   }
 
-  return matrix[length1][length2];
+  return row[length1];
 };
