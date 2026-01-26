@@ -47,7 +47,7 @@ func DecodeBase58(input string) ([]byte, error) {
 	for _, ch := range input {
 		value := strings.IndexRune(base58Alphabet, ch)
 		if value == -1 {
-			return nil, fmt.Errorf("invalid base58 character: %c", ch)
+			return nil, fmt.Errorf("Invalid base58 character: %c", ch)
 		}
 		bigNum.Mul(bigNum, base)
 		bigNum.Add(bigNum, big.NewInt(int64(value)))

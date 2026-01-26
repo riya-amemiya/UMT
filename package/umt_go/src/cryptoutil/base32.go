@@ -46,7 +46,7 @@ func DecodeBase32(input string) ([]byte, error) {
 	for _, ch := range cleanedInput {
 		value := strings.IndexRune(base32Alphabet, ch)
 		if value == -1 {
-			return nil, fmt.Errorf("invalid base32 character: %c", ch)
+			return nil, fmt.Errorf("Invalid base32 character: %c", ch)
 		}
 
 		buffer = (buffer << 5) | value
