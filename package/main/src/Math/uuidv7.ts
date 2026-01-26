@@ -1,5 +1,3 @@
-import { random } from "./random";
-
 /**
  * Generates a UUID v7 (Universally Unique Identifier version 7)
  * @returns {string} A UUID v7 string in the format xxxxxxxx-xxxx-7xxx-8xxx-xxxxxxxxxxxx
@@ -16,24 +14,24 @@ import { random } from "./random";
 export const uuidv7 = (): string => {
   const DIGITS = "0123456789abcdef";
   const unixTsMs = Date.now();
-  const randA = random(0xf_ff);
-  const randBHi = random(0x3f_ff_ff_ff);
-  const randBLo = random(0xff_ff_ff_ff);
 
   const bytes = new Uint8Array(16);
   for (let index = 0; index < 6; index++) {
     bytes[index] = (unixTsMs >>> ((5 - index) * 8)) & 0xff;
   }
-  bytes[6] = 0x70 | (randA >>> 8);
-  bytes[7] = randA & 0xff;
-  bytes[8] = 0x80 | (randBHi >>> 24);
-  bytes[9] = (randBHi >>> 16) & 0xff;
-  bytes[10] = (randBHi >>> 8) & 0xff;
-  bytes[11] = randBHi & 0xff;
-  bytes[12] = (randBLo >>> 24) & 0xff;
-  bytes[13] = (randBLo >>> 16) & 0xff;
-  bytes[14] = (randBLo >>> 8) & 0xff;
-  bytes[15] = randBLo & 0xff;
+
+  // Generate 10 random bytes for the rest
+  const randomBytes = new Uint8Array(10);
+  globalThis.crypto.getRandomValues(randomBytes);
+
+  // Version 7 (0x70) + 4 bits from randomBytes[0]
+  bytes[6] = 0x70 | (randomBytes[0] & 0x0f);
+  // Random byte
+  bytes[7] = randomBytes[1];
+  // Variant 2 (0x80) + 6 bits from randomBytes[2]
+  bytes[8] = 0x80 | (randomBytes[2] & 0x3f);
+  // Remaining random bytes
+  bytes.set(randomBytes.subarray(3), 9);
 
   let uuid = "";
   for (const [index, byte] of bytes.entries()) {
