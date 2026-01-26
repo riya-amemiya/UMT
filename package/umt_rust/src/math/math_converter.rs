@@ -70,33 +70,3 @@ pub fn umt_math_converter(equation: &str) -> String {
         }
     }
 }
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_math_converter_square() {
-        let result = umt_math_converter("1250*1250");
-        assert_eq!(result, "1500*1000+400*100+200*100+50*50");
-    }
-
-    #[test]
-    fn test_math_converter_exponent() {
-        let result = umt_math_converter("1250^2");
-        assert_eq!(result, "1500*1000+400*100+200*100+50*50");
-    }
-
-    #[test]
-    fn test_math_converter_small() {
-        let result = umt_math_converter("50*50");
-        // 50 separates to [10, 40], so 50 + 40 = 90
-        assert_eq!(result, "90*10+40*40");
-    }
-
-    #[test]
-    fn test_math_converter_different_operands() {
-        let result = umt_math_converter("10*20");
-        assert_eq!(result, "10*20");
-    }
-}

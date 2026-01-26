@@ -22,15 +22,3 @@
 pub fn umt_is_string(_value: &str) -> bool {
     true
 }
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_is_string() {
-        assert!(umt_is_string("test"));
-        assert!(umt_is_string(&String::from("hello")));
-        assert!(umt_is_string(""));
-    }
-}

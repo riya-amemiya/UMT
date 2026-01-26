@@ -74,33 +74,3 @@ pub fn umt_kebab_case(s: &str) -> String {
 
     final_result
 }
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_kebab_case_camel() {
-        assert_eq!(umt_kebab_case("helloWorld"), "hello-world");
-    }
-
-    #[test]
-    fn test_kebab_case_underscore() {
-        assert_eq!(umt_kebab_case("foo_bar_baz"), "foo-bar-baz");
-    }
-
-    #[test]
-    fn test_kebab_case_spaces() {
-        assert_eq!(umt_kebab_case("hello world"), "hello-world");
-    }
-
-    #[test]
-    fn test_kebab_case_empty() {
-        assert_eq!(umt_kebab_case(""), "");
-    }
-
-    #[test]
-    fn test_kebab_case_pascal() {
-        assert_eq!(umt_kebab_case("HelloWorld"), "hello-world");
-    }
-}

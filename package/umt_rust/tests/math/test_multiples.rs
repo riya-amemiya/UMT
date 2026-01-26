@@ -37,3 +37,32 @@ fn test_multiples_decimals() {
     assert_eq!(umt_multiples(0.5, 3), vec![0.5, 1.0, 1.5]);
     assert_eq!(umt_multiples(1.5, 3), vec![1.5, 3.0, 4.5]);
 }
+
+use umt_rust::math::*;
+
+#[test]
+fn test_multiples_basic() {
+    assert_eq!(umt_multiples(2.0, 5), vec![2.0, 4.0, 6.0, 8.0, 10.0]);
+}
+
+#[test]
+fn test_multiples_float() {
+    let result = umt_multiples(0.5, 4);
+    assert_eq!(result, vec![0.5, 1.0, 1.5, 2.0]);
+}
+
+#[test]
+fn test_multiples_negative() {
+    assert_eq!(umt_multiples(-2.0, 3), vec![-2.0, -4.0, -6.0]);
+}
+
+#[test]
+fn test_multiples_one() {
+    assert_eq!(umt_multiples(3.0, 1), vec![3.0]);
+}
+
+#[test]
+fn test_multiples_zero() {
+    let result: Vec<f64> = vec![];
+    assert_eq!(umt_multiples(5.0, 0), result);
+}

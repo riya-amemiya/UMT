@@ -58,3 +58,10 @@ fn test_min_with_neg_infinity() {
 fn test_min_empty() {
     assert_eq!(umt_min(&[]), f64::INFINITY);
 }
+
+use umt_rust::math::*;
+
+#[test]
+fn test_min_mixed() {
+    assert_eq!(umt_min(&[-1.0, 0.0, 1.0]), -1.0);
+}

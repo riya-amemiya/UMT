@@ -90,3 +90,53 @@ fn test_should_handle_path_with_single_key() {
     assert!(umt_has(&obj, "a"));
     assert!(!umt_has(&obj, "c"));
 }
+
+use umt_rust::object::*;
+
+#[test]
+fn test_has_empty_object() {
+    let obj: HashMap<String, Value> = HashMap::new();
+    assert!(!umt_has(&obj, "a.b"));
+}
+
+#[test]
+fn test_has_empty_path_array() {
+    let obj = create_nested_object();
+    assert!(umt_has_path(&obj, &[]));
+}
+
+#[test]
+fn test_has_empty_path_string() {
+    let obj = create_nested_object();
+    assert!(!umt_has(&obj, ""));
+}
+
+#[test]
+fn test_has_existing_nested_path_array() {
+    let obj = create_nested_object();
+    assert!(umt_has_path(&obj, &["a", "b"]));
+}
+
+#[test]
+fn test_has_existing_nested_path_string() {
+    let obj = create_nested_object();
+    assert!(umt_has(&obj, "a.b"));
+}
+
+#[test]
+fn test_has_non_existing_nested_path_array() {
+    let obj = create_nested_object();
+    assert!(!umt_has_path(&obj, &["a", "c"]));
+}
+
+#[test]
+fn test_has_non_existing_nested_path_string() {
+    let obj = create_nested_object();
+    assert!(!umt_has(&obj, "a.c"));
+}
+
+#[test]
+fn test_has_non_existing_top_level_path() {
+    let obj = create_nested_object();
+    assert!(!umt_has(&obj, "b"));
+}

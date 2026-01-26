@@ -26,23 +26,3 @@ pub fn umt_from_base64(base64_string: &str) -> Result<String, String> {
             String::from_utf8(bytes).map_err(|_| "Invalid UTF-8 sequence".to_string())
         })
 }
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_from_base64_basic() {
-        assert_eq!(umt_from_base64("SGVsbG8gV29ybGQ=").unwrap(), "Hello World");
-    }
-
-    #[test]
-    fn test_from_base64_empty() {
-        assert_eq!(umt_from_base64("").unwrap(), "");
-    }
-
-    #[test]
-    fn test_from_base64_invalid() {
-        assert!(umt_from_base64("!!!invalid!!!").is_err());
-    }
-}

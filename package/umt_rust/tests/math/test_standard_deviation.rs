@@ -40,3 +40,17 @@ fn test_standard_deviation_single() {
 fn test_standard_deviation_empty() {
     assert!(umt_standard_deviation(&[]).is_nan());
 }
+
+use umt_rust::math::*;
+
+#[test]
+fn test_standard_deviation_basic() {
+    let result = umt_standard_deviation(&[1.0, 2.0, 3.0]);
+    assert!((result - 0.816496580927726).abs() < 1e-10);
+}
+
+#[test]
+fn test_standard_deviation_larger() {
+    let result = umt_standard_deviation(&[10.0, 12.0, 23.0, 23.0, 16.0, 23.0, 21.0, 16.0]);
+    assert!((result - 4.898979485566356).abs() < 1e-10);
+}

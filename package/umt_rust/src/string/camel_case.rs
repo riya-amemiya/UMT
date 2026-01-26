@@ -38,35 +38,3 @@ pub fn umt_camel_case(s: &str) -> String {
 
     result
 }
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_camel_case_basic() {
-        assert_eq!(umt_camel_case("hello-world"), "helloWorld");
-        assert_eq!(umt_camel_case("foo_bar_baz"), "fooBarBaz");
-        assert_eq!(umt_camel_case("hello world"), "helloWorld");
-    }
-
-    #[test]
-    fn test_camel_case_already_camel() {
-        assert_eq!(umt_camel_case("helloWorld"), "helloWorld");
-    }
-
-    #[test]
-    fn test_camel_case_uppercase_start() {
-        assert_eq!(umt_camel_case("Hello-World"), "helloWorld");
-    }
-
-    #[test]
-    fn test_camel_case_empty() {
-        assert_eq!(umt_camel_case(""), "");
-    }
-
-    #[test]
-    fn test_camel_case_trailing_special() {
-        assert_eq!(umt_camel_case("hello-"), "hello");
-    }
-}

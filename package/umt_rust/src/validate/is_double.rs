@@ -49,30 +49,3 @@ pub fn umt_is_double_str(s: &str) -> bool {
         Err(_) => false,
     }
 }
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_is_double() {
-        assert!(umt_is_double(0.1));
-        assert!(umt_is_double(3.14));
-        assert!(umt_is_double(-2.5));
-        assert!(!umt_is_double(5.0));
-        assert!(!umt_is_double(0.0));
-        assert!(!umt_is_double(-3.0));
-        assert!(!umt_is_double(f64::NAN));
-        assert!(!umt_is_double(f64::INFINITY));
-    }
-
-    #[test]
-    fn test_is_double_str() {
-        assert!(umt_is_double_str("0.1"));
-        assert!(umt_is_double_str("3.14"));
-        assert!(!umt_is_double_str("5"));
-        assert!(!umt_is_double_str("5.0"));
-        assert!(!umt_is_double_str("abc"));
-        assert!(!umt_is_double_str(""));
-    }
-}

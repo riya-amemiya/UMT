@@ -51,3 +51,12 @@ fn test_is_string_with_numbers_as_strings() {
     assert!(umt_is_string("-1"));
     assert!(umt_is_string("3.14"));
 }
+
+use umt_rust::validate::*;
+
+#[test]
+fn test_is_string() {
+    assert!(umt_is_string("test"));
+    assert!(umt_is_string(&String::from("hello")));
+    assert!(umt_is_string(""));
+}

@@ -68,3 +68,25 @@ fn test_handle_unicode_characters() {
     assert_eq!(umt_reverse_string("あいう"), "ういあ");
     assert_eq!(umt_reverse_string("日本語"), "語本日");
 }
+
+use umt_rust::string::*;
+
+#[test]
+fn test_reverse_string_basic() {
+    assert_eq!(umt_reverse_string("Hello"), "olleH");
+}
+
+#[test]
+fn test_reverse_string_empty() {
+    assert_eq!(umt_reverse_string(""), "");
+}
+
+#[test]
+fn test_reverse_string_palindrome() {
+    assert_eq!(umt_reverse_string("racecar"), "racecar");
+}
+
+#[test]
+fn test_reverse_string_single() {
+    assert_eq!(umt_reverse_string("a"), "a");
+}

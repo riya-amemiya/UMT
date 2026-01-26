@@ -26,3 +26,25 @@ fn test_handle_string_with_multibyte_characters() {
     // Full-width space U+3000
     assert_eq!(umt_delete_spaces("Hello\u{3000}World"), "HelloWorld");
 }
+
+use umt_rust::string::*;
+
+#[test]
+fn test_delete_spaces_basic() {
+    assert_eq!(umt_delete_spaces("Hello World"), "HelloWorld");
+}
+
+#[test]
+fn test_delete_spaces_empty() {
+    assert_eq!(umt_delete_spaces(""), "");
+}
+
+#[test]
+fn test_delete_spaces_no_spaces() {
+    assert_eq!(umt_delete_spaces("HelloWorld"), "HelloWorld");
+}
+
+#[test]
+fn test_delete_spaces_tabs() {
+    assert_eq!(umt_delete_spaces("  tab\t space "), "tabspace");
+}

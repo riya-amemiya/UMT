@@ -32,38 +32,3 @@ pub fn umt_max_length(max_len: usize, message: Option<&str>) -> ValidateReturnTy
         message.map(String::from),
     )
 }
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_max_length_with_message() {
-        let validator = umt_max_length(3, Some("Maximum length is 3"));
-        assert!((validator.validate)(&"abc".to_string()));
-        assert!((validator.validate)(&"ab".to_string()));
-        assert!(!(validator.validate)(&"abcd".to_string()));
-        assert_eq!(validator.message.as_deref(), Some("Maximum length is 3"));
-    }
-
-    #[test]
-    fn test_max_length_without_message() {
-        let validator = umt_max_length(3, None);
-        assert!((validator.validate)(&"abc".to_string()));
-        assert!(!(validator.validate)(&"abcd".to_string()));
-        assert!(validator.message.is_none());
-    }
-
-    #[test]
-    fn test_max_length_empty_string() {
-        let validator = umt_max_length(3, None);
-        assert!((validator.validate)(&"".to_string()));
-    }
-
-    #[test]
-    fn test_max_length_zero() {
-        let validator = umt_max_length(0, None);
-        assert!((validator.validate)(&"".to_string()));
-        assert!(!(validator.validate)(&"a".to_string()));
-    }
-}

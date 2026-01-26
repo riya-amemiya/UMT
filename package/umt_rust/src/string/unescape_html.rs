@@ -60,35 +60,3 @@ pub fn umt_unescape_html(s: &str) -> String {
         })
         .to_string()
 }
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_unescape_html_basic() {
-        assert_eq!(umt_unescape_html("&lt;script&gt;"), "<script>");
-    }
-
-    #[test]
-    fn test_unescape_html_ampersand() {
-        assert_eq!(umt_unescape_html("Tom &amp; Jerry"), "Tom & Jerry");
-    }
-
-    #[test]
-    fn test_unescape_html_quotes() {
-        assert_eq!(umt_unescape_html("&quot;hello&quot;"), "\"hello\"");
-        assert_eq!(umt_unescape_html("&#39;world&#39;"), "'world'");
-    }
-
-    #[test]
-    fn test_unescape_html_numeric() {
-        assert_eq!(umt_unescape_html("&#65;"), "A");
-        assert_eq!(umt_unescape_html("&#x41;"), "A");
-    }
-
-    #[test]
-    fn test_unescape_html_empty() {
-        assert_eq!(umt_unescape_html(""), "");
-    }
-}

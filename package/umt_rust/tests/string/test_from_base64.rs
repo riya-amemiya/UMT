@@ -46,3 +46,20 @@ fn test_throw_on_invalid_base64_string() {
     assert!(umt_from_base64("abc@!#").is_err());
     assert!(umt_from_base64("=abc").is_err());
 }
+
+use umt_rust::string::*;
+
+#[test]
+fn test_from_base64_basic() {
+    assert_eq!(umt_from_base64("SGVsbG8gV29ybGQ=").unwrap(), "Hello World");
+}
+
+#[test]
+fn test_from_base64_empty() {
+    assert_eq!(umt_from_base64("").unwrap(), "");
+}
+
+#[test]
+fn test_from_base64_invalid() {
+    assert!(umt_from_base64("!!!invalid!!!").is_err());
+}

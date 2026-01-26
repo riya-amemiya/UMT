@@ -61,3 +61,22 @@ fn test_compact_does_not_modify_original() {
     assert_eq!(result, vec![1, 2]);
     assert_eq!(original, vec![0, 1, 0, 2]);
 }
+
+use umt_rust::array::*;
+
+#[test]
+fn test_compact_bools() {
+    assert_eq!(umt_compact(&[false, true, false, true]), vec![true, true]);
+}
+
+#[test]
+fn test_compact_empty() {
+    assert_eq!(umt_compact::<i32>(&[]), Vec::<i32>::new());
+}
+
+#[test]
+fn test_compact_integers() {
+    assert_eq!(umt_compact(&[0, 1, 0, 2, 0, 3]), vec![1, 2, 3]);
+    assert_eq!(umt_compact(&[1, 2, 3]), vec![1, 2, 3]);
+    assert_eq!(umt_compact(&[0, 0, 0]), Vec::<i32>::new());
+}

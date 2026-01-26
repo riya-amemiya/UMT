@@ -47,3 +47,29 @@ fn test_random_returns_integer() {
         assert_eq!(result as f64, (result as f64).floor());
     }
 }
+
+use umt_rust::math::*;
+
+#[test]
+fn test_random_max_helper() {
+    for _ in 0..100 {
+        let r = umt_random_max(10);
+        assert!(r >= 0 && r <= 10);
+    }
+}
+
+#[test]
+fn test_random_single_value() {
+    for _ in 0..10 {
+        let r = umt_random(5, 5);
+        assert_eq!(r, 5);
+    }
+}
+
+#[test]
+fn test_random_with_min() {
+    for _ in 0..100 {
+        let r = umt_random(10, 5);
+        assert!(r >= 5 && r <= 10);
+    }
+}

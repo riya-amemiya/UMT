@@ -5,6 +5,11 @@ mod advance {
 mod array {
     mod test_range;
     mod test_ultra_number_sort;
+    mod sorting_helpers {
+        mod test_apply_insertion_sort_if_needed;
+        mod test_insertion_sort_range;
+        mod test_range_validator;
+    }
 }
 
 mod color;
@@ -140,6 +145,7 @@ mod object {
     mod test_omit;
     mod test_pick;
     mod test_pick_deep;
+    mod test_value;
 }
 
 mod validate;

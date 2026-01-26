@@ -23,16 +23,3 @@ pub fn long_to_ip(long: u32) -> String {
 
     format!("{}.{}.{}.{}", octets[0], octets[1], octets[2], octets[3])
 }
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_long_to_ip() {
-        assert_eq!(long_to_ip(0), "0.0.0.0");
-        assert_eq!(long_to_ip(0xFFFFFFFF), "255.255.255.255");
-        assert_eq!(long_to_ip(0xC0A80101), "192.168.1.1");
-        assert_eq!(long_to_ip(0x0A000001), "10.0.0.1");
-    }
-}

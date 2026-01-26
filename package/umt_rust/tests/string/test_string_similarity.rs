@@ -70,3 +70,30 @@ fn test_return_values_between_0_and_1() {
         assert!(similarity <= 1.0);
     }
 }
+
+use umt_rust::string::*;
+
+#[test]
+fn test_string_similarity_completely_different() {
+    let similarity = umt_string_similarity("abc", "xyz");
+    assert!(similarity < 0.5);
+}
+
+#[test]
+fn test_string_similarity_different() {
+    let similarity = umt_string_similarity("hello", "hallo");
+    assert!(similarity > 0.5);
+    assert!(similarity < 1.0);
+}
+
+#[test]
+fn test_string_similarity_empty() {
+    assert_eq!(umt_string_similarity("", "hello"), 0.0);
+    assert_eq!(umt_string_similarity("hello", ""), 0.0);
+    assert_eq!(umt_string_similarity("", ""), 1.0);
+}
+
+#[test]
+fn test_string_similarity_identical() {
+    assert_eq!(umt_string_similarity("hello", "hello"), 1.0);
+}

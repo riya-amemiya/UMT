@@ -122,3 +122,48 @@ fn test_uniq_by_struct_id() {
     assert_eq!(result[1].name, "Bob");
     assert_eq!(result[2].name, "Charlie");
 }
+
+use umt_rust::array::*;
+
+#[test]
+fn test_uniq_by_all_different_keys() {
+    let arr = vec![1, 2, 3, 4, 5];
+    let result = umt_uniq_by(&arr, |x| *x);
+    assert_eq!(result, vec![1, 2, 3, 4, 5]);
+}
+
+#[test]
+fn test_uniq_by_string_length() {
+    let arr = vec!["one", "two", "three", "four", "five"];
+    let result = umt_uniq_by(&arr, |s| s.len());
+    assert_eq!(result, vec!["one", "three", "four"]);
+}
+
+#[test]
+fn test_uniq_by_struct_field() {
+    #[derive(Clone, Debug, PartialEq)]
+    struct Person {
+        name: String,
+        age: u32,
+    }
+
+    let people = vec![
+        Person {
+            name: "Alice".to_string(),
+            age: 30,
+        },
+        Person {
+            name: "Bob".to_string(),
+            age: 30,
+        },
+        Person {
+            name: "Charlie".to_string(),
+            age: 25,
+        },
+    ];
+
+    let result = umt_uniq_by(&people, |p| p.age);
+    assert_eq!(result.len(), 2);
+    assert_eq!(result[0].name, "Alice");
+    assert_eq!(result[1].name, "Charlie");
+}

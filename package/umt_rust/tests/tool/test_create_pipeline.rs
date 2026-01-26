@@ -231,3 +231,38 @@ fn test_pipeline_new_is_equivalent_to_umt_create_pipeline() {
     let p2 = umt_create_pipeline(42);
     assert_eq!(p1.get(), p2.get());
 }
+
+use umt_rust::tool::*;
+
+#[test]
+fn test_correctly_handles_type_transformations() {
+    let result = umt_create_pipeline(1)
+        .transform(|x: i32| x.to_string())
+        .into_value();
+    assert_eq!(result, "1");
+}
+
+#[test]
+fn test_returns_initial_value_when_calling_get() {
+    let pipeline = umt_create_pipeline(1);
+    assert_eq!(pipeline.get(), &1);
+}
+
+#[test]
+fn test_returns_transformed_value() {
+    let pipeline = umt_create_pipeline(1);
+    let new_pipeline = pipeline.transform(|x| x + 1);
+    assert_eq!(new_pipeline.get(), &2);
+}
+
+#[test]
+fn test_works_with_option_none() {
+    let pipeline = umt_create_pipeline(None::<i32>);
+    assert_eq!(pipeline.get(), &None);
+}
+
+#[test]
+fn test_works_with_option_some() {
+    let pipeline = umt_create_pipeline(Some(42));
+    assert_eq!(pipeline.get(), &Some(42));
+}

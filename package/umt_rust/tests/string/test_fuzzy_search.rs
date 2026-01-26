@@ -82,3 +82,31 @@ fn test_fuzzy_search_default() {
     let result = umt_fuzzy_search_default("hello", &["hello", "helo"]);
     assert!(!result.is_empty());
 }
+
+use umt_rust::string::*;
+
+#[test]
+fn test_fuzzy_search_empty_query() {
+    let results = umt_fuzzy_search("", &["hello", "world"], 0.6);
+    assert!(results.is_empty());
+}
+
+#[test]
+fn test_fuzzy_search_exact() {
+    let results = umt_fuzzy_search("hello", &["hello", "world", "helo"], 0.6);
+    assert_eq!(results[0].item, "hello");
+    assert_eq!(results[0].score, 1.0);
+}
+
+#[test]
+fn test_fuzzy_search_no_match() {
+    let results = umt_fuzzy_search("xyz", &["hello", "world"], 0.9);
+    assert!(results.is_empty());
+}
+
+#[test]
+fn test_fuzzy_search_partial() {
+    let results = umt_fuzzy_search("hello", &["helo", "help", "world"], 0.6);
+    assert!(!results.is_empty());
+    assert!(results[0].score > 0.6);
+}

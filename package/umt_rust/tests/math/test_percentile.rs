@@ -85,3 +85,26 @@ fn test_percentile_duplicates() {
         2.0
     );
 }
+
+use umt_rust::math::*;
+
+#[test]
+fn test_percentile_interpolation() {
+    // Test interpolation between values
+    let result = umt_percentile(&[1.0, 2.0, 3.0, 4.0, 5.0], 37.5).unwrap();
+    assert!((result - 2.5).abs() < 1e-10);
+}
+
+#[test]
+fn test_percentile_invalid() {
+    assert!(umt_percentile(&[1.0, 2.0, 3.0], -1.0).is_err());
+    assert!(umt_percentile(&[1.0, 2.0, 3.0], 101.0).is_err());
+}
+
+#[test]
+fn test_percentile_median() {
+    assert_eq!(
+        umt_percentile(&[1.0, 2.0, 3.0, 4.0, 5.0], 50.0).unwrap(),
+        3.0
+    );
+}

@@ -75,3 +75,35 @@ fn test_regex_match_special_characters() {
     assert!((validator.validate)(&"test!@#".to_string()));
     assert!((validator.validate)(&"abc123".to_string()));
 }
+
+use umt_rust::validate::string::*;
+
+#[test]
+fn test_custom_message() {
+    let pattern = Regex::new(r"^[A-Z]+$").unwrap();
+    let message = "Only uppercase letters are allowed";
+    let validator = umt_regex_match(pattern, Some(message.to_string()));
+    assert!((validator.validate)(&"ABC".to_string()));
+    assert!(!(validator.validate)(&"abc".to_string()));
+    assert_eq!(validator.message, Some(message.to_string()));
+}
+
+#[test]
+fn test_matching_patterns() {
+    let pattern = Regex::new(r"^[a-z]+$").unwrap();
+    let validator = umt_regex_match(pattern, None);
+    assert!((validator.validate)(&"abc".to_string()));
+    assert!(!(validator.validate)(&"ABC".to_string()));
+    assert!(!(validator.validate)(&"123".to_string()));
+    assert!(!(validator.validate)(&"abc123".to_string()));
+}
+
+#[test]
+fn test_non_matching_patterns() {
+    let pattern = Regex::new(r"^[0-9]+$").unwrap();
+    let validator = umt_regex_match(pattern, None);
+    assert!((validator.validate)(&"123".to_string()));
+    assert!(!(validator.validate)(&"abc".to_string()));
+    assert!(!(validator.validate)(&"123abc".to_string()));
+    assert!(!(validator.validate)(&"".to_string()));
+}

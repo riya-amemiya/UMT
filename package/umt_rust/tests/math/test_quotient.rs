@@ -104,3 +104,26 @@ fn test_quotient_9999_10() {
     assert_eq!(q, 999.0);
     assert_eq!(r, 9.0);
 }
+
+use umt_rust::math::*;
+
+#[test]
+fn test_quotient_basic() {
+    let (q, r) = umt_quotient(5.0, 2.0);
+    assert_eq!(q, 2.0);
+    assert_eq!(r, 1.0);
+}
+
+#[test]
+fn test_quotient_larger() {
+    let (q, r) = umt_quotient(10.0, 3.0);
+    assert_eq!(q, 3.0);
+    assert_eq!(r, 1.0);
+}
+
+#[test]
+fn test_quotient_negative() {
+    let (q, r) = umt_quotient(-5.0, 2.0);
+    assert_eq!(q, -2.0);
+    assert_eq!(r, -1.0);
+}

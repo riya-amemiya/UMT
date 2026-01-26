@@ -51,3 +51,11 @@ fn test_first_large_array() {
     let large_string_array: Vec<String> = (0..10_000).map(|i| format!("item{}", i)).collect();
     assert_eq!(umt_first(&large_string_array), Some(&"item0".to_string()));
 }
+
+use umt_rust::array::*;
+
+#[test]
+fn test_first_with_strings() {
+    let arr = vec!["hello".to_string(), "world".to_string()];
+    assert_eq!(umt_first(&arr), Some(&"hello".to_string()));
+}

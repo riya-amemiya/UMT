@@ -12,13 +12,16 @@ mod test_is_prime_number;
 mod test_is_string;
 mod test_is_value_nan;
 mod test_parse_email;
+mod test_types;
 
 mod array {
     mod test_core;
+    mod test_validate_array_mod;
 }
 
 mod boolean {
     mod test_core;
+    mod test_validate_boolean_mod;
 }
 
 mod core {
@@ -33,11 +36,13 @@ mod number {
     mod test_min_value;
     mod test_odd;
     mod test_prime;
+    mod test_validate_number_mod;
 }
 
 mod object {
     mod test_core;
     mod test_optional;
+    mod test_validate_object_mod;
 }
 
 mod string {
@@ -49,4 +54,5 @@ mod string {
     mod test_number_string;
     mod test_regex_match;
     mod test_uuid;
+    mod test_validate_string_mod;
 }

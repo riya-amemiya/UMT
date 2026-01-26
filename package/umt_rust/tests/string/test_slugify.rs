@@ -54,3 +54,30 @@ fn test_handle_consecutive_hyphens() {
 fn test_handle_mixed_case() {
     assert_eq!(umt_slugify("CamelCase"), "camelcase");
 }
+
+use umt_rust::string::*;
+
+#[test]
+fn test_slugify_accented() {
+    assert_eq!(umt_slugify("cafe"), "cafe");
+}
+
+#[test]
+fn test_slugify_basic() {
+    assert_eq!(umt_slugify("Hello World!"), "hello-world");
+}
+
+#[test]
+fn test_slugify_empty() {
+    assert_eq!(umt_slugify(""), "");
+}
+
+#[test]
+fn test_slugify_sentence() {
+    assert_eq!(umt_slugify("This is a Test"), "this-is-a-test");
+}
+
+#[test]
+fn test_slugify_special_chars() {
+    assert_eq!(umt_slugify("Hello, World!"), "hello-world");
+}

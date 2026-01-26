@@ -54,3 +54,26 @@ fn test_is_not_empty_nested_objects() {
     nested.insert("a", inner);
     assert!(umt_is_not_empty(&nested));
 }
+
+use umt_rust::validate::*;
+
+#[test]
+fn test_is_not_empty_map() {
+    let mut map: HashMap<&str, i32> = HashMap::new();
+    assert!(!umt_is_not_empty(&map));
+
+    map.insert("a", 1);
+    assert!(umt_is_not_empty(&map));
+}
+
+#[test]
+fn test_is_not_empty_str() {
+    assert!(!umt_is_not_empty_str(""));
+    assert!(umt_is_not_empty_str("hello"));
+}
+
+#[test]
+fn test_is_not_empty_vec() {
+    assert!(!umt_is_not_empty_vec(&Vec::<i32>::new()));
+    assert!(umt_is_not_empty_vec(&vec![1, 2, 3]));
+}

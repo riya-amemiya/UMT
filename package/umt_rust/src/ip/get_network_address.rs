@@ -55,32 +55,3 @@ pub fn get_network_address(ip: &str, subnet_mask: &str) -> Result<u32, String> {
 
     Ok(ip_long & mask)
 }
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_get_network_address_valid() {
-        assert_eq!(
-            get_network_address("192.168.1.100", "255.255.255.0").unwrap(),
-            0xC0A80100
-        );
-        assert_eq!(
-            get_network_address("10.20.30.40", "255.0.0.0").unwrap(),
-            0x0A000000
-        );
-        assert_eq!(
-            get_network_address("172.16.5.10", "255.255.0.0").unwrap(),
-            0xAC100000
-        );
-    }
-
-    #[test]
-    fn test_get_network_address_invalid() {
-        assert!(get_network_address("", "255.255.255.0").is_err());
-        assert!(get_network_address("192.168.1.1", "").is_err());
-        assert!(get_network_address("invalid", "255.255.255.0").is_err());
-        assert!(get_network_address("192.168.1.1", "invalid").is_err());
-    }
-}

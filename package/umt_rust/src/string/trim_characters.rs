@@ -20,28 +20,3 @@ use super::trim_start_characters::umt_trim_start_characters;
 pub fn umt_trim_characters(s: &str, chars: &str) -> String {
     umt_trim_end_characters(&umt_trim_start_characters(s, chars), chars)
 }
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_trim_characters_both() {
-        assert_eq!(umt_trim_characters("!!!hello!!!", "!"), "hello");
-    }
-
-    #[test]
-    fn test_trim_characters_dashes() {
-        assert_eq!(umt_trim_characters("---123---", "-"), "123");
-    }
-
-    #[test]
-    fn test_trim_characters_no_match() {
-        assert_eq!(umt_trim_characters("abc123", "xyz"), "abc123");
-    }
-
-    #[test]
-    fn test_trim_characters_empty() {
-        assert_eq!(umt_trim_characters("", "!"), "");
-    }
-}

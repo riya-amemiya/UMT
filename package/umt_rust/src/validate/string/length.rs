@@ -32,32 +32,3 @@ pub fn umt_length(len: usize, message: Option<&str>) -> ValidateReturnType<Strin
         message.map(String::from),
     )
 }
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_length_with_message() {
-        let validator = umt_length(3, Some("Length must be 3"));
-        assert!((validator.validate)(&"abc".to_string()));
-        assert!(!(validator.validate)(&"ab".to_string()));
-        assert!(!(validator.validate)(&"abcd".to_string()));
-        assert_eq!(validator.message.as_deref(), Some("Length must be 3"));
-    }
-
-    #[test]
-    fn test_length_without_message() {
-        let validator = umt_length(3, None);
-        assert!((validator.validate)(&"abc".to_string()));
-        assert!(!(validator.validate)(&"abcd".to_string()));
-        assert!(validator.message.is_none());
-    }
-
-    #[test]
-    fn test_length_zero() {
-        let validator = umt_length(0, None);
-        assert!((validator.validate)(&"".to_string()));
-        assert!(!(validator.validate)(&"a".to_string()));
-    }
-}

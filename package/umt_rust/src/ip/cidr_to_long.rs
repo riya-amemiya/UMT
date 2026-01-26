@@ -26,22 +26,3 @@ pub fn cidr_to_long(cidr: u8) -> Result<u32, String> {
     // Create a mask with `cidr` leading 1s
     Ok(!0u32 << (32 - cidr))
 }
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_cidr_to_long_valid() {
-        assert_eq!(cidr_to_long(0).unwrap(), 0);
-        assert_eq!(cidr_to_long(8).unwrap(), 0xFF000000);
-        assert_eq!(cidr_to_long(16).unwrap(), 0xFFFF0000);
-        assert_eq!(cidr_to_long(24).unwrap(), 0xFFFFFF00);
-        assert_eq!(cidr_to_long(32).unwrap(), 0xFFFFFFFF);
-    }
-
-    #[test]
-    fn test_cidr_to_long_invalid() {
-        assert!(cidr_to_long(33).is_err());
-    }
-}

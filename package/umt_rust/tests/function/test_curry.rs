@@ -188,3 +188,54 @@ fn test_curry_with_optional_result() {
     assert_eq!(curried(10.0)(2.0), Some(5.0));
     assert_eq!(curried(10.0)(0.0), None);
 }
+
+use umt_rust::function::*;
+
+#[test]
+fn test_curry0() {
+    let hello = || "hello";
+    let curried = umt_curry0(hello);
+    assert_eq!(curried(), "hello");
+}
+
+#[test]
+fn test_curry1() {
+    let double = |a: i32| a * 2;
+    let curried = umt_curry1(double);
+    assert_eq!(curried(5), 10);
+}
+
+#[test]
+fn test_curry2() {
+    let add = |a: i32, b: i32| a + b;
+    let curried = umt_curry2(add);
+    assert_eq!(curried(2)(3), 5);
+}
+
+#[test]
+fn test_curry3() {
+    let multiply_add = |a: i32, b: i32, c: i32| a * b + c;
+    let curried = umt_curry3(multiply_add);
+    assert_eq!(curried(2)(3)(4), 10);
+}
+
+#[test]
+fn test_curry4() {
+    let sum4 = |a: i32, b: i32, c: i32, d: i32| a + b + c + d;
+    let curried = umt_curry4(sum4);
+    assert_eq!(curried(1)(2)(3)(4), 10);
+}
+
+#[test]
+fn test_curry5() {
+    let sum5 = |a: i32, b: i32, c: i32, d: i32, e: i32| a + b + c + d + e;
+    let curried = umt_curry5(sum5);
+    assert_eq!(curried(1)(2)(3)(4)(5), 15);
+}
+
+#[test]
+fn test_curry6() {
+    let sum6 = |a: i32, b: i32, c: i32, d: i32, e: i32, g: i32| a + b + c + d + e + g;
+    let curried = umt_curry6(sum6);
+    assert_eq!(curried(1)(2)(3)(4)(5)(6), 21);
+}

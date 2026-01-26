@@ -27,34 +27,3 @@ pub fn umt_escape_html(s: &str) -> String {
     }
     result
 }
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_escape_html_basic() {
-        assert_eq!(umt_escape_html("<script>"), "&lt;script&gt;");
-    }
-
-    #[test]
-    fn test_escape_html_ampersand() {
-        assert_eq!(umt_escape_html("Tom & Jerry"), "Tom &amp; Jerry");
-    }
-
-    #[test]
-    fn test_escape_html_quotes() {
-        assert_eq!(umt_escape_html("\"hello\""), "&quot;hello&quot;");
-        assert_eq!(umt_escape_html("'world'"), "&#39;world&#39;");
-    }
-
-    #[test]
-    fn test_escape_html_empty() {
-        assert_eq!(umt_escape_html(""), "");
-    }
-
-    #[test]
-    fn test_escape_html_no_special() {
-        assert_eq!(umt_escape_html("hello"), "hello");
-    }
-}

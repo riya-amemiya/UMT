@@ -132,3 +132,13 @@ fn test_get_arrays_common_f64_with_nan() {
     assert!(result[0].is_nan());
     assert_eq!(result[1], 2.0);
 }
+
+use umt_rust::array::*;
+
+#[test]
+fn test_get_arrays_common_two_arrays() {
+    assert_eq!(
+        umt_get_arrays_common(&[&[1, 2, 3][..], &[2, 3, 4][..]]),
+        vec![2, 3]
+    );
+}

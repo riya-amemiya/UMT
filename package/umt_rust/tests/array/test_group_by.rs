@@ -88,3 +88,14 @@ fn test_group_by_struct() {
     assert_eq!(result.get(&"fruit".to_string()).unwrap().len(), 2);
     assert_eq!(result.get(&"vegetable".to_string()).unwrap().len(), 1);
 }
+
+use umt_rust::array::*;
+
+#[test]
+fn test_group_by_indexed() {
+    let arr = vec!["a", "b", "c", "d", "e"];
+    let result = umt_group_by_indexed(&arr, |_, idx| idx % 2);
+
+    assert_eq!(result.get(&0), Some(&vec!["a", "c", "e"]));
+    assert_eq!(result.get(&1), Some(&vec!["b", "d"]));
+}

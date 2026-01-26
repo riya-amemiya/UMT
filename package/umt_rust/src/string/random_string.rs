@@ -37,33 +37,3 @@ pub fn umt_random_string(size: usize, chars: Option<&str>) -> String {
 pub fn umt_random_string_default(size: usize) -> String {
     umt_random_string(size, None)
 }
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_random_string_length() {
-        let s = umt_random_string(8, None);
-        assert_eq!(s.len(), 8);
-    }
-
-    #[test]
-    fn test_random_string_custom_chars() {
-        let s = umt_random_string(10, Some("abc"));
-        assert_eq!(s.len(), 10);
-        assert!(s.chars().all(|c| "abc".contains(c)));
-    }
-
-    #[test]
-    fn test_random_string_empty_size() {
-        let s = umt_random_string(0, None);
-        assert_eq!(s.len(), 0);
-    }
-
-    #[test]
-    fn test_random_string_default() {
-        let s = umt_random_string_default(16);
-        assert_eq!(s.len(), 16);
-    }
-}

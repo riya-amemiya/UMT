@@ -109,3 +109,68 @@ fn test_safe_execute_with_vec() {
     assert!(result.is_success());
     assert_eq!(result.value(), Some(&vec![1, 2, 3, 4, 5]));
 }
+
+use umt_rust::error::*;
+
+#[test]
+fn test_safe_execute_custom_error() {
+    let result = umt_safe_execute(|| -> i32 { panic!("custom type error") });
+    assert!(result.is_error());
+    assert_eq!(result.error(), Some(&"custom type error".to_string()));
+}
+
+#[test]
+fn test_safe_execute_error_handling() {
+    let result = umt_safe_execute(|| -> i32 { panic!("test error") });
+    assert!(result.is_error());
+    assert_eq!(result.result_type(), "error");
+    assert_eq!(result.error(), Some(&"test error".to_string()));
+}
+
+#[test]
+fn test_safe_execute_mut() {
+    let mut counter = 0;
+    let result = umt_safe_execute_mut(|| {
+        counter += 1;
+        counter
+    });
+    assert!(result.is_success());
+    assert_eq!(result.value(), Some(&1));
+}
+
+#[test]
+fn test_safe_execute_string_panic() {
+    let result = umt_safe_execute(|| -> i32 { panic!("string error") });
+    assert!(result.is_error());
+    assert_eq!(result.error(), Some(&"string error".to_string()));
+}
+
+#[test]
+fn test_safe_execute_success_with_number() {
+    let result = umt_safe_execute(|| 42);
+    assert!(result.is_success());
+    assert_eq!(result.value(), Some(&42));
+}
+
+#[test]
+fn test_safe_execute_success_with_object() {
+    #[derive(Debug, Clone, PartialEq)]
+    struct TestObj {
+        key: String,
+    }
+    let test_object = TestObj {
+        key: "value".to_string(),
+    };
+    let expected = test_object.clone();
+    let result = umt_safe_execute(move || test_object);
+    assert!(result.is_success());
+    assert_eq!(result.value(), Some(&expected));
+}
+
+#[test]
+fn test_safe_execute_success_with_string() {
+    let result = umt_safe_execute(|| "test".to_string());
+    assert!(result.is_success());
+    assert_eq!(result.result_type(), "success");
+    assert_eq!(result.value(), Some(&"test".to_string()));
+}

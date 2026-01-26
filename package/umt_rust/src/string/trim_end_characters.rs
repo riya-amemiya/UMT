@@ -26,33 +26,3 @@ pub fn umt_trim_end_characters(s: &str, chars: &str) -> String {
 
     s_chars[..end_index].iter().collect()
 }
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_trim_end_exclamation() {
-        assert_eq!(umt_trim_end_characters("hello!!!", "!"), "hello");
-    }
-
-    #[test]
-    fn test_trim_end_dashes() {
-        assert_eq!(umt_trim_end_characters("123---", "-"), "123");
-    }
-
-    #[test]
-    fn test_trim_end_no_match() {
-        assert_eq!(umt_trim_end_characters("abc123", "xyz"), "abc123");
-    }
-
-    #[test]
-    fn test_trim_end_empty() {
-        assert_eq!(umt_trim_end_characters("", "!"), "");
-    }
-
-    #[test]
-    fn test_trim_end_multiple_chars() {
-        assert_eq!(umt_trim_end_characters("defabc", "abc"), "def");
-    }
-}

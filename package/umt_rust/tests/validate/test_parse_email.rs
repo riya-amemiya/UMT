@@ -237,3 +237,30 @@ fn test_parse_email_malformed_domains() {
         assert!(!result.valid, "Expected {} to be invalid", email);
     }
 }
+
+use umt_rust::validate::*;
+
+#[test]
+fn test_parse_email_basic() {
+    let result = umt_parse_email("user@example.com", None);
+    assert!(result.valid);
+    let parts = result.parts.unwrap();
+    assert_eq!(parts.local, "user");
+    assert_eq!(parts.domain, "example.com");
+}
+
+#[test]
+fn test_parse_email_invalid() {
+    let result = umt_parse_email("invalid-email", None);
+    assert!(!result.valid);
+    assert!(result.parts.is_none());
+}
+
+#[test]
+fn test_parse_email_rfc2822() {
+    let opts = ParseEmailOptions {
+        level: ParseEmailLevel::Rfc2822,
+    };
+    let result = umt_parse_email("user@example.com", Some(opts));
+    assert!(result.valid);
+}

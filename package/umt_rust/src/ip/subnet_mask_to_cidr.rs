@@ -43,26 +43,3 @@ pub fn subnet_mask_to_cidr(subnet_mask: &str) -> Result<u8, String> {
 
     Ok(ones_count as u8)
 }
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_subnet_mask_to_cidr_valid() {
-        assert_eq!(subnet_mask_to_cidr("0.0.0.0").unwrap(), 0);
-        assert_eq!(subnet_mask_to_cidr("255.0.0.0").unwrap(), 8);
-        assert_eq!(subnet_mask_to_cidr("255.255.0.0").unwrap(), 16);
-        assert_eq!(subnet_mask_to_cidr("255.255.255.0").unwrap(), 24);
-        assert_eq!(subnet_mask_to_cidr("255.255.255.255").unwrap(), 32);
-        assert_eq!(subnet_mask_to_cidr("255.255.255.128").unwrap(), 25);
-    }
-
-    #[test]
-    fn test_subnet_mask_to_cidr_invalid() {
-        assert!(subnet_mask_to_cidr("").is_err());
-        assert!(subnet_mask_to_cidr("255.255.255").is_err());
-        assert!(subnet_mask_to_cidr("255.0.255.0").is_err()); // Non-consecutive
-        assert!(subnet_mask_to_cidr("invalid").is_err());
-    }
-}
