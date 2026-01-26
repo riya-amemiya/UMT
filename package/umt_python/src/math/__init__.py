@@ -38,6 +38,7 @@ from .solve_equation import solve_equation
 from .standard_deviation import standard_deviation
 from .subtraction import subtraction
 from .to_base_n import to_base_n
+from .to_celsius import to_celsius
 from .uuidv7 import uuidv7
 from .value_swap import value_swap
 from .xoshiro256 import xoshiro256
@@ -86,6 +87,7 @@ __all__ = [
     "standard_deviation",
     "subtraction",
     "to_base_n",
+    "to_celsius",
     "uuidv7",
     "value_swap",
     "xoshiro256",
