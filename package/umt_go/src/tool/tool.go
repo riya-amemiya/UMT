@@ -52,3 +52,45 @@ func Unwrap[T any](value *T, message string) T {
 	}
 	panic(message)
 }
+
+// Pipeline represents a reusable function pipeline. When called with Get(), it
+// returns the current stored value. When called with Then(), it applies a
+// transformer function and returns a new Pipeline with the result.
+//
+// Because Go does not support overloaded call operators or union return types
+// like TypeScript, the Pipeline is implemented as a struct with Get and Then
+// methods instead of a callable interface.
+//
+// Example:
+//
+//	p := CreatePipeline(1)
+//	p.Get() // returns 1 (as any)
+//	p2 := p.Then(func(v any) any { return v.(int) + 1 })
+//	p2.Get() // returns 2 (as any)
+//
+//	// Chaining:
+//	result := CreatePipeline(1).
+//	    Then(func(v any) any { return v.(int) + 1 }).
+//	    Then(func(v any) any { return v.(int) * 2 }).
+//	    Then(func(v any) any { return v.(int) - 1 }).
+//	    Get()
+//	// result == 3
+type Pipeline struct {
+	value any
+}
+
+// CreatePipeline creates a new Pipeline with the given initial value.
+func CreatePipeline(initialValue any) *Pipeline {
+	return &Pipeline{value: initialValue}
+}
+
+// Get returns the current stored value from the pipeline.
+func (p *Pipeline) Get() any {
+	return p.value
+}
+
+// Then applies the transformer function to the current value and returns a new
+// Pipeline containing the result.
+func (p *Pipeline) Then(transformer func(any) any) *Pipeline {
+	return CreatePipeline(transformer(p.value))
+}

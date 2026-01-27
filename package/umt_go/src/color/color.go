@@ -33,12 +33,18 @@ func roundTo(v float64, precision int) float64 {
 	return math.Round(v*p) / p
 }
 
+func validateRgba(rgba RGBA) {
+	if rgba.R < 0 || rgba.R > 255 || rgba.G < 0 || rgba.G > 255 || rgba.B < 0 || rgba.B > 255 || rgba.A < 0 || rgba.A > 1 {
+		panic("Invalid rgba value")
+	}
+}
+
 // HexaToRgba converts a hex color string to RGBA.
 // Supports 3, 6, or 8 digit hex codes with #.
 func HexaToRgba(hex string) (RGBA, error) {
 	re := regexp.MustCompile(`^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$`)
 	if !re.MatchString(hex) {
-		return RGBA{}, fmt.Errorf("invalid hex code")
+		return RGBA{}, fmt.Errorf("Invalid hex code")
 	}
 
 	hexCode := strings.TrimPrefix(hex, "#")
@@ -68,6 +74,8 @@ func HexaToRgba(hex string) (RGBA, error) {
 
 // RgbaToHexA converts RGBA color to hex string including alpha channel.
 func RgbaToHexA(rgba RGBA) string {
+	validateRgba(rgba)
+
 	hex := func(x int) string {
 		h := strconv.FormatInt(int64(x), 16)
 		if len(h) == 1 {
@@ -86,6 +94,8 @@ func RgbaToHexA(rgba RGBA) string {
 
 // RgbaToHsla converts RGBA to HSLA color space.
 func RgbaToHsla(rgba RGBA) HSLA {
+	validateRgba(rgba)
+
 	rPrime := rgba.R / 255.0
 	gPrime := rgba.G / 255.0
 	bPrime := rgba.B / 255.0
@@ -129,10 +139,23 @@ func RgbaToHsla(rgba RGBA) HSLA {
 
 // HslaToRgba converts HSLA to RGBA color space.
 func HslaToRgba(hsla HSLA) RGBA {
+	if hsla.H < 0 || hsla.H > 360 {
+		panic("Hue must be between 0 and 360 degrees")
+	}
+	if hsla.S < 0 || hsla.S > 100 {
+		panic("Saturation must be between 0 and 100 percent")
+	}
+	if hsla.L < 0 || hsla.L > 100 {
+		panic("Lightness must be between 0 and 100 percent")
+	}
+	if hsla.A < 0 || hsla.A > 1 {
+		panic("Alpha must be between 0 and 1")
+	}
+
 	h := math.Mod(hsla.H, 360) / 360.0
-	s := math.Max(0, math.Min(hsla.S, 100)) / 100.0
-	l := math.Max(0, math.Min(hsla.L, 100)) / 100.0
-	a := math.Max(0, math.Min(1, hsla.A))
+	s := hsla.S / 100.0
+	l := hsla.L / 100.0
+	a := hsla.A
 
 	var r, g, b float64
 
@@ -183,6 +206,8 @@ func HslaToRgba(hsla HSLA) RGBA {
 
 // RgbaToCmyk converts RGBA to CMYK color model.
 func RgbaToCmyk(rgba RGBA) CMYK {
+	validateRgba(rgba)
+
 	rPrime := rgba.R / 255.0
 	gPrime := rgba.G / 255.0
 	bPrime := rgba.B / 255.0

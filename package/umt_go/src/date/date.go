@@ -205,3 +205,20 @@ func Now() time.Time {
 func NewDate(year, month, day int) time.Time {
 	return time.Date(year, time.Month(month), day, 0, 0, 0, 0, time.UTC)
 }
+
+// GetTimezoneOffsetString returns the timezone offset of the given time as a
+// string in the format "+HH:MM" or "-HH:MM".
+//
+// For example, JST (UTC+9) returns "+09:00", EST (UTC-5) returns "-05:00",
+// and UTC returns "+00:00".
+func GetTimezoneOffsetString(t time.Time) string {
+	_, offset := t.Zone()
+	sign := "+"
+	if offset < 0 {
+		sign = "-"
+		offset = -offset
+	}
+	hours := offset / 3600
+	minutes := (offset % 3600) / 60
+	return fmt.Sprintf("%s%02d:%02d", sign, hours, minutes)
+}

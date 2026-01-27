@@ -53,3 +53,26 @@ func BitwiseLeftShift(a, b int) int {
 func BitwiseRightShift(a, b int) int {
 	return a >> uint(b)
 }
+
+// BitwiseRotate performs bit rotation on a 32-bit integer.
+// direction should be "left" or "right". Defaults to "left" if empty.
+//
+// Example:
+//
+//	BitwiseRotate(0x12345678, 8, "left")  // 0x34567812
+//	BitwiseRotate(0x12345678, 8, "right") // 0x78123456
+func BitwiseRotate(x int32, k int, direction string) int32 {
+	rotation := ((k % 32) + 32) % 32
+	ux := uint32(x)
+	if direction == "" {
+		direction = "left"
+	}
+	switch direction {
+	case "left":
+		return int32((ux << uint(rotation)) | (ux >> uint(32-rotation)))
+	case "right":
+		return int32((ux >> uint(rotation)) | (ux << uint(32-rotation)))
+	default:
+		panic("Invalid direction " + direction)
+	}
+}

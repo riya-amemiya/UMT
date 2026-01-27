@@ -1,5 +1,7 @@
 package object
 
+import "strings"
+
 // Merge performs a shallow merge of multiple maps into a single map.
 // Later maps override earlier ones for duplicate keys.
 // Returns a new map; the originals are not modified.
@@ -98,6 +100,76 @@ func KeyBy[T any](items []T, keyFn func(T) string) map[string]T {
 	for _, item := range items {
 		key := keyFn(item)
 		result[key] = item
+	}
+	return result
+}
+
+// PickDeep creates a new map by deeply selecting properties from the source map
+// based on dot-notation keys.
+//
+// For example, given the map {"a": {"b": {"c": 1, "d": 2}}, "f": 4} and keys
+// "a.b.c" and "f", the result is {"a": {"b": {"c": 1}}, "f": 4}.
+//
+// If a key path does not exist, it is silently skipped. Intermediate objects
+// are created as needed in the result.
+func PickDeep(obj map[string]any, keys ...string) map[string]any {
+	result := make(map[string]any)
+
+	for _, key := range keys {
+		parts := strings.Split(key, ".")
+
+		// Navigate the source object
+		current := copyShallowMap(obj)
+		target := result
+
+		for i, part := range parts {
+			if current == nil {
+				break
+			}
+			val, exists := current[part]
+			if !exists {
+				break
+			}
+
+			if i == len(parts)-1 {
+				// Last part: assign the value
+				target[part] = val
+			} else {
+				// Intermediate part: ensure target has a nested map
+				if existing, ok := target[part]; ok {
+					if existingMap, ok := existing.(map[string]any); ok {
+						target = existingMap
+					} else {
+						newMap := make(map[string]any)
+						target[part] = newMap
+						target = newMap
+					}
+				} else {
+					newMap := make(map[string]any)
+					target[part] = newMap
+					target = newMap
+				}
+
+				// Navigate source deeper
+				if nestedMap, ok := val.(map[string]any); ok {
+					current = nestedMap
+				} else {
+					// Source value is not a map, cannot traverse further
+					// but we still created an intermediate map in the result
+					current = nil
+				}
+			}
+		}
+	}
+
+	return result
+}
+
+// copyShallowMap creates a shallow copy of a map.
+func copyShallowMap(m map[string]any) map[string]any {
+	result := make(map[string]any, len(m))
+	for k, v := range m {
+		result[k] = v
 	}
 	return result
 }
