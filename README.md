@@ -10,3 +10,6 @@ UMT = Useful My Tools
 
 - No dependencies
 - Implement only the minimum functionality necessary to ensure extensibility
+
+> [!NOTE]
+> Most language implementations other than TypeScript are written almost entirely by AI.
