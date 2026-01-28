@@ -12,4 +12,4 @@ UMT = Useful My Tools
 - Implement only the minimum functionality necessary to ensure extensibility
 
 > [!NOTE]
-> Most language implementations other than TypeScript are written almost entirely by AI.
+> This project has multiple language implementations under `package`, but most of the language implementations other than the `main` package written in TypeScript were written by AI.
