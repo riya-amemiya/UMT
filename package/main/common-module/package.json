@@ -168,9 +168,9 @@
   },
   "scripts": {
     "build": "tsc && tsc-alias -p tsconfig.json",
-    "build:cjs": "babel module --config-file ./babel.cjs.config.json --out-dir common-module/module --ignore 'module/tests/**','module/tsconfig.tsbuildinfo','module/**/*.d.ts' && bun run cjs.build.mjs && cp LICENSE common-module/LICENSE && cp README.md common-module/README.md && cp .npmignore common-module/.npmignore",
-    "build:babel": "babel module --out-dir module/es5 --ignore 'module/tests/**','module/tsconfig.tsbuildinfo','module/**/*.d.ts','module/es5/**' && bun run es5.build.mjs",
-    "build:cjs:babel": "babel module/es5 --config-file ./babel.cjs.config.json --out-dir common-module/module/es5 --ignore 'module/es5/tests/**','module/es5/**/*.d.ts' && bun run cjs.es5.build.mjs",
+    "build:cjs": "tsc -p tsconfig.cjs.json && tsc-alias -p tsconfig.cjs.json && bun run cjs.build.mjs && cp LICENSE common-module/LICENSE && cp README.md common-module/README.md && cp .npmignore common-module/.npmignore",
+    "build:babel": "babel src --extensions '.ts' --out-dir module/es5 && tsc --emitDeclarationOnly --outDir module/es5 && tsc-alias -p tsconfig.json --outDir module/es5",
+    "build:cjs:babel": "babel src --extensions '.ts' --out-dir common-module/module/es5 && tsc --emitDeclarationOnly --outDir common-module/module/es5 && tsc-alias -p tsconfig.cjs.json --outDir common-module/module/es5",
     "build:full": "bun run build && bun run build:cjs && bun run build:babel && bun run build:cjs:babel",
     "build:clean": "rm -rf module && bun run build",
     "build:clean:full": "rm -rf module && rm -rf common-module && bun run build:full",

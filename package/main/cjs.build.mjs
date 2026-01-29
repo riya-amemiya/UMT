@@ -1,20 +1,4 @@
-import { $, write, Glob } from "bun";
-import { mkdir, cp } from "node:fs/promises";
-import { dirname, join } from "node:path";
-
-// Copy .d.ts files from module/ to common-module/module/ (excluding tests)
-const glob = new Glob("**/*.d.ts");
-for await (const file of glob.scan({ cwd: "./module", absolute: false })) {
-  // Skip tests directory
-  if (file.startsWith("tests/") || file.includes("/tests/")) {
-    continue;
-  }
-  const srcPath = join("./module", file);
-  const destPath = join("./common-module/module", file);
-  await mkdir(dirname(destPath), { recursive: true });
-  await cp(srcPath, destPath);
-}
-console.log("Copied .d.ts files from module/ to common-module/module/");
+import { $, write } from "bun";
 
 const packageJson = await $`cat ./package.json`.json();
 packageJson.name = "umt-common";
