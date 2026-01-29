@@ -8,6 +8,7 @@ on:
 jobs:
   publish-umt:
     name: Publish umt
+    if: github.event_name == 'workflow_dispatch' || startsWith(github.event.release.tag_name, 'main-')
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
