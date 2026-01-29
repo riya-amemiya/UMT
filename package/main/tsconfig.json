@@ -49,6 +49,9 @@
 	},
 	"include": [
 		"src",
-		"types",
+		"types"
+	],
+	"exclude": [
+		"src/tests"
 	]
 }
