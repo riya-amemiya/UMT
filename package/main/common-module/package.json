@@ -46,88 +46,109 @@
   },
   "exports": {
     ".": {
-      "import": "./module/index.js",
-      "types": "./module/index.d.ts"
+      "types": "./module/index.d.ts",
+      "require": "./module/index.js",
+      "default": "./module/index.js"
     },
     "./Advance": {
-      "import": "./module/Advance/index.js",
-      "types": "./module/Advance/index.d.ts"
+      "types": "./module/Advance/index.d.ts",
+      "require": "./module/Advance/index.js",
+      "default": "./module/Advance/index.js"
     },
     "./Array": {
-      "import": "./module/Array/index.js",
-      "types": "./module/Array/index.d.ts"
+      "types": "./module/Array/index.d.ts",
+      "require": "./module/Array/index.js",
+      "default": "./module/Array/index.js"
     },
     "./Color": {
-      "import": "./module/Color/index.js",
-      "types": "./module/Color/index.d.ts"
+      "types": "./module/Color/index.d.ts",
+      "require": "./module/Color/index.js",
+      "default": "./module/Color/index.js"
     },
     "./Consts": {
-      "import": "./module/Consts/index.js",
-      "types": "./module/Consts/index.d.ts"
+      "types": "./module/Consts/index.d.ts",
+      "require": "./module/Consts/index.js",
+      "default": "./module/Consts/index.js"
     },
     "./Crypto": {
-      "import": "./module/Crypto/index.js",
-      "types": "./module/Crypto/index.d.ts"
+      "types": "./module/Crypto/index.d.ts",
+      "require": "./module/Crypto/index.js",
+      "default": "./module/Crypto/index.js"
     },
     "./DataStructure": {
-      "import": "./module/DataStructure/index.js",
-      "types": "./module/DataStructure/index.d.ts"
+      "types": "./module/DataStructure/index.d.ts",
+      "require": "./module/DataStructure/index.js",
+      "default": "./module/DataStructure/index.js"
     },
     "./Date": {
-      "import": "./module/Date/index.js",
-      "types": "./module/Date/index.d.ts"
+      "types": "./module/Date/index.d.ts",
+      "require": "./module/Date/index.js",
+      "default": "./module/Date/index.js"
     },
     "./Error": {
-      "import": "./module/Error/index.js",
-      "types": "./module/Error/index.d.ts"
+      "types": "./module/Error/index.d.ts",
+      "require": "./module/Error/index.js",
+      "default": "./module/Error/index.js"
     },
     "./Function": {
-      "import": "./module/Function/index.js",
-      "types": "./module/Function/index.d.ts"
+      "types": "./module/Function/index.d.ts",
+      "require": "./module/Function/index.js",
+      "default": "./module/Function/index.js"
     },
     "./IP": {
-      "import": "./module/IP/index.js",
-      "types": "./module/IP/index.d.ts"
+      "types": "./module/IP/index.d.ts",
+      "require": "./module/IP/index.js",
+      "default": "./module/IP/index.js"
     },
     "./Math": {
-      "import": "./module/Math/index.js",
-      "types": "./module/Math/index.d.ts"
+      "types": "./module/Math/index.d.ts",
+      "require": "./module/Math/index.js",
+      "default": "./module/Math/index.js"
     },
     "./Object": {
-      "import": "./module/Object/index.js",
-      "types": "./module/Object/index.d.ts"
+      "types": "./module/Object/index.d.ts",
+      "require": "./module/Object/index.js",
+      "default": "./module/Object/index.js"
     },
     "./Simple": {
-      "import": "./module/Simple/index.js",
-      "types": "./module/Simple/index.d.ts"
+      "types": "./module/Simple/index.d.ts",
+      "require": "./module/Simple/index.js",
+      "default": "./module/Simple/index.js"
     },
     "./String": {
-      "import": "./module/String/index.js",
-      "types": "./module/String/index.d.ts"
+      "types": "./module/String/index.d.ts",
+      "require": "./module/String/index.js",
+      "default": "./module/String/index.js"
     },
     "./Time": {
-      "import": "./module/Time/index.js",
-      "types": "./module/Time/index.d.ts"
+      "types": "./module/Time/index.d.ts",
+      "require": "./module/Time/index.js",
+      "default": "./module/Time/index.js"
     },
     "./Tool": {
-      "import": "./module/Tool/index.js",
-      "types": "./module/Tool/index.d.ts"
+      "types": "./module/Tool/index.d.ts",
+      "require": "./module/Tool/index.js",
+      "default": "./module/Tool/index.js"
     },
     "./types": {
-      "import": "./module/types/index.js",
-      "types": "./module/types/index.d.ts"
+      "types": "./module/types/index.d.ts",
+      "require": "./module/types/index.js",
+      "default": "./module/types/index.js"
     },
     "./UA": {
-      "import": "./module/UA/index.js",
-      "types": "./module/UA/index.d.ts"
+      "types": "./module/UA/index.d.ts",
+      "require": "./module/UA/index.js",
+      "default": "./module/UA/index.js"
     },
     "./Unit": {
-      "import": "./module/Unit/index.js",
-      "types": "./module/Unit/index.d.ts"
+      "types": "./module/Unit/index.d.ts",
+      "require": "./module/Unit/index.js",
+      "default": "./module/Unit/index.js"
     },
     "./Validate": {
-      "import": "./module/Validate/index.js",
-      "types": "./module/Validate/index.d.ts"
+      "types": "./module/Validate/index.d.ts",
+      "require": "./module/Validate/index.js",
+      "default": "./module/Validate/index.js"
     }
   },
   "files": [
