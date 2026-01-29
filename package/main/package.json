@@ -183,10 +183,9 @@
     "lint:ci": "bun run eslint && biome ci . && tsc",
     "test": "jest",
     "test-debug": "cd test && tsc",
-    "ts-node": "bun run build && ts-node --project tmp/tsconfig.json tmp/src/index.ts",
-    "prepublishOnly": "bun run lint:ci && bun run build:clean:full"
+    "ts-node": "bun run build && ts-node --project tmp/tsconfig.json tmp/src/index.ts"
   },
   "type": "module",
   "types": "module/index.d.ts",
-  "version": "2.12.0"
+  "version": "2.12.1"
 }
