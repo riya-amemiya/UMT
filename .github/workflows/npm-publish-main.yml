@@ -6,8 +6,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  publish-umt:
-    name: Publish umt
+  publish:
+    name: Publish umt packages
     if: github.event_name == 'workflow_dispatch' || startsWith(github.event.release.tag_name, 'main-')
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -47,45 +47,6 @@ jobs:
 
       - name: Publish umt to npm
         run: npm publish --provenance
-
-  publish-umt-common:
-    name: Publish umt-common
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    needs: publish-umt
-    permissions:
-      contents: read
-      id-token: write
-    defaults:
-      run:
-        working-directory: ./package/main
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-        with:
-          persist-credentials: false
-          fetch-depth: 0
-
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@3d267786b128fe76c2f16a390aa2448b815359f3 # v2.1.2
-        with:
-          bun-version: latest
-
-      - name: Setup Node.js for npm publish
-        uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
-        with:
-          node-version: 24
-          registry-url: 'https://registry.npmjs.org'
-
-      - name: Install dependencies with frozen lockfile
-        run: bun install --frozen-lockfile
-
-      - name: Build project
-        run: bun run build:clean:full
-
-      - name: Update npm to the latest version
-        run: npm install -g npm@latest
 
       - name: Publish umt-common to npm
         run: npm publish --provenance
