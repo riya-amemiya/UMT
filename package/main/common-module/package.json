@@ -46,109 +46,88 @@
   },
   "exports": {
     ".": {
-      "types": "./module/index.d.ts",
-      "require": "./module/index.js",
-      "default": "./module/index.js"
+      "import": "./module/index.js",
+      "types": "./module/index.d.ts"
     },
     "./Advance": {
-      "types": "./module/Advance/index.d.ts",
-      "require": "./module/Advance/index.js",
-      "default": "./module/Advance/index.js"
+      "import": "./module/Advance/index.js",
+      "types": "./module/Advance/index.d.ts"
     },
     "./Array": {
-      "types": "./module/Array/index.d.ts",
-      "require": "./module/Array/index.js",
-      "default": "./module/Array/index.js"
+      "import": "./module/Array/index.js",
+      "types": "./module/Array/index.d.ts"
     },
     "./Color": {
-      "types": "./module/Color/index.d.ts",
-      "require": "./module/Color/index.js",
-      "default": "./module/Color/index.js"
+      "import": "./module/Color/index.js",
+      "types": "./module/Color/index.d.ts"
     },
     "./Consts": {
-      "types": "./module/Consts/index.d.ts",
-      "require": "./module/Consts/index.js",
-      "default": "./module/Consts/index.js"
+      "import": "./module/Consts/index.js",
+      "types": "./module/Consts/index.d.ts"
     },
     "./Crypto": {
-      "types": "./module/Crypto/index.d.ts",
-      "require": "./module/Crypto/index.js",
-      "default": "./module/Crypto/index.js"
+      "import": "./module/Crypto/index.js",
+      "types": "./module/Crypto/index.d.ts"
     },
     "./DataStructure": {
-      "types": "./module/DataStructure/index.d.ts",
-      "require": "./module/DataStructure/index.js",
-      "default": "./module/DataStructure/index.js"
+      "import": "./module/DataStructure/index.js",
+      "types": "./module/DataStructure/index.d.ts"
     },
     "./Date": {
-      "types": "./module/Date/index.d.ts",
-      "require": "./module/Date/index.js",
-      "default": "./module/Date/index.js"
+      "import": "./module/Date/index.js",
+      "types": "./module/Date/index.d.ts"
     },
     "./Error": {
-      "types": "./module/Error/index.d.ts",
-      "require": "./module/Error/index.js",
-      "default": "./module/Error/index.js"
+      "import": "./module/Error/index.js",
+      "types": "./module/Error/index.d.ts"
     },
     "./Function": {
-      "types": "./module/Function/index.d.ts",
-      "require": "./module/Function/index.js",
-      "default": "./module/Function/index.js"
+      "import": "./module/Function/index.js",
+      "types": "./module/Function/index.d.ts"
     },
     "./IP": {
-      "types": "./module/IP/index.d.ts",
-      "require": "./module/IP/index.js",
-      "default": "./module/IP/index.js"
+      "import": "./module/IP/index.js",
+      "types": "./module/IP/index.d.ts"
     },
     "./Math": {
-      "types": "./module/Math/index.d.ts",
-      "require": "./module/Math/index.js",
-      "default": "./module/Math/index.js"
+      "import": "./module/Math/index.js",
+      "types": "./module/Math/index.d.ts"
     },
     "./Object": {
-      "types": "./module/Object/index.d.ts",
-      "require": "./module/Object/index.js",
-      "default": "./module/Object/index.js"
+      "import": "./module/Object/index.js",
+      "types": "./module/Object/index.d.ts"
     },
     "./Simple": {
-      "types": "./module/Simple/index.d.ts",
-      "require": "./module/Simple/index.js",
-      "default": "./module/Simple/index.js"
+      "import": "./module/Simple/index.js",
+      "types": "./module/Simple/index.d.ts"
     },
     "./String": {
-      "types": "./module/String/index.d.ts",
-      "require": "./module/String/index.js",
-      "default": "./module/String/index.js"
+      "import": "./module/String/index.js",
+      "types": "./module/String/index.d.ts"
     },
     "./Time": {
-      "types": "./module/Time/index.d.ts",
-      "require": "./module/Time/index.js",
-      "default": "./module/Time/index.js"
+      "import": "./module/Time/index.js",
+      "types": "./module/Time/index.d.ts"
     },
     "./Tool": {
-      "types": "./module/Tool/index.d.ts",
-      "require": "./module/Tool/index.js",
-      "default": "./module/Tool/index.js"
+      "import": "./module/Tool/index.js",
+      "types": "./module/Tool/index.d.ts"
     },
     "./types": {
-      "types": "./module/types/index.d.ts",
-      "require": "./module/types/index.js",
-      "default": "./module/types/index.js"
+      "import": "./module/types/index.js",
+      "types": "./module/types/index.d.ts"
     },
     "./UA": {
-      "types": "./module/UA/index.d.ts",
-      "require": "./module/UA/index.js",
-      "default": "./module/UA/index.js"
+      "import": "./module/UA/index.js",
+      "types": "./module/UA/index.d.ts"
     },
     "./Unit": {
-      "types": "./module/Unit/index.d.ts",
-      "require": "./module/Unit/index.js",
-      "default": "./module/Unit/index.js"
+      "import": "./module/Unit/index.js",
+      "types": "./module/Unit/index.d.ts"
     },
     "./Validate": {
-      "types": "./module/Validate/index.d.ts",
-      "require": "./module/Validate/index.js",
-      "default": "./module/Validate/index.js"
+      "import": "./module/Validate/index.js",
+      "types": "./module/Validate/index.d.ts"
     }
   },
   "files": [
