@@ -10,6 +10,7 @@ mod test_levenshtein_distance;
 mod test_pad_end;
 mod test_pad_start;
 mod test_random_string;
+mod test_random_string_initialization;
 mod test_reverse_string;
 mod test_slugify;
 mod test_string_similarity;
