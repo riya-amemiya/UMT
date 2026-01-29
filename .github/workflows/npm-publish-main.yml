@@ -46,8 +46,6 @@ jobs:
 
       - name: Publish umt to npm
         run: npm publish --provenance
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
   publish-umt-common:
     name: Publish umt-common
@@ -91,5 +89,3 @@ jobs:
       - name: Publish umt-common to npm
         run: npm publish --provenance
         working-directory: ./package/main/common-module
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
