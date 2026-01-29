@@ -169,9 +169,9 @@
   },
   "scripts": {
     "build": "tsc && tsc-alias -p tsconfig.json",
-    "build:cjs": "tsc -p tsconfig.cjs.json && bun run cjs.build.mjs && cp LICENSE common-module/LICENSE && cp README.md common-module/README.md && cp .npmignore common-module/.npmignore",
-    "build:babel": "babel src --extensions '.ts' --out-dir module/es5 && tsc --emitDeclarationOnly --outDir module/es5",
-    "build:cjs:babel": "babel src --extensions '.ts' --out-dir common-module/module/es5 && tsc --emitDeclarationOnly --outDir common-module/module/es5",
+    "build:cjs": "tsc -p tsconfig.cjs.json && tsc-alias -p tsconfig.cjs.json && bun run cjs.build.mjs && cp LICENSE common-module/LICENSE && cp README.md common-module/README.md && cp .npmignore common-module/.npmignore",
+    "build:babel": "babel src --extensions '.ts' --out-dir module/es5 && tsc --emitDeclarationOnly --outDir module/es5 && tsc-alias -p tsconfig.json --outDir module/es5",
+    "build:cjs:babel": "babel src --extensions '.ts' --out-dir common-module/module/es5 && tsc --emitDeclarationOnly --outDir common-module/module/es5 && tsc-alias -p tsconfig.cjs.json --outDir common-module/module/es5",
     "build:full": "bun run build && bun run build:cjs && bun run build:babel && bun run build:cjs:babel",
     "build:clean": "rm -rf module && bun run build",
     "build:clean:full": "rm -rf module && rm -rf common-module && bun run build:full",
@@ -187,5 +187,5 @@
   },
   "type": "module",
   "types": "module/index.d.ts",
-  "version": "2.12.1"
+  "version": "2.12.2"
 }
