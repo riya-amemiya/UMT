@@ -7,16 +7,17 @@ packageJson.type = "commonjs";
 // Convert exports from ESM (import) to CommonJS (require)
 if (packageJson.exports) {
   for (const key of Object.keys(packageJson.exports)) {
-    const entry = packageJson.exports[key];
-    if (entry.import) {
-      entry.require = entry.import;
-      delete entry.import;
+    const { import: importPath, ...rest } = packageJson.exports[key];
+    if (importPath) {
+      packageJson.exports[key] = { ...rest, require: importPath };
     }
   }
 }
 
 // Remove module field (ESM-only)
-delete packageJson.module;
+const { module: _, ...restPackageJson } = packageJson;
+Object.assign(packageJson, restPackageJson);
+packageJson.module = undefined;
 
 await write("common-module/package.json", JSON.stringify(packageJson, null, 2));
 
