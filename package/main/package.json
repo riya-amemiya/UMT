@@ -46,88 +46,109 @@
   },
   "exports": {
     ".": {
+      "types": "./module/index.d.ts",
       "import": "./module/index.js",
-      "types": "./module/index.d.ts"
+      "default": "./module/index.js"
     },
     "./Advance": {
+      "types": "./module/Advance/index.d.ts",
       "import": "./module/Advance/index.js",
-      "types": "./module/Advance/index.d.ts"
+      "default": "./module/Advance/index.js"
     },
     "./Array": {
+      "types": "./module/Array/index.d.ts",
       "import": "./module/Array/index.js",
-      "types": "./module/Array/index.d.ts"
+      "default": "./module/Array/index.js"
     },
     "./Color": {
+      "types": "./module/Color/index.d.ts",
       "import": "./module/Color/index.js",
-      "types": "./module/Color/index.d.ts"
+      "default": "./module/Color/index.js"
     },
     "./Consts": {
+      "types": "./module/Consts/index.d.ts",
       "import": "./module/Consts/index.js",
-      "types": "./module/Consts/index.d.ts"
+      "default": "./module/Consts/index.js"
     },
     "./Crypto": {
+      "types": "./module/Crypto/index.d.ts",
       "import": "./module/Crypto/index.js",
-      "types": "./module/Crypto/index.d.ts"
+      "default": "./module/Crypto/index.js"
     },
     "./DataStructure": {
+      "types": "./module/DataStructure/index.d.ts",
       "import": "./module/DataStructure/index.js",
-      "types": "./module/DataStructure/index.d.ts"
+      "default": "./module/DataStructure/index.js"
     },
     "./Date": {
+      "types": "./module/Date/index.d.ts",
       "import": "./module/Date/index.js",
-      "types": "./module/Date/index.d.ts"
+      "default": "./module/Date/index.js"
     },
     "./Error": {
+      "types": "./module/Error/index.d.ts",
       "import": "./module/Error/index.js",
-      "types": "./module/Error/index.d.ts"
+      "default": "./module/Error/index.js"
     },
     "./Function": {
+      "types": "./module/Function/index.d.ts",
       "import": "./module/Function/index.js",
-      "types": "./module/Function/index.d.ts"
+      "default": "./module/Function/index.js"
     },
     "./IP": {
+      "types": "./module/IP/index.d.ts",
       "import": "./module/IP/index.js",
-      "types": "./module/IP/index.d.ts"
+      "default": "./module/IP/index.js"
     },
     "./Math": {
+      "types": "./module/Math/index.d.ts",
       "import": "./module/Math/index.js",
-      "types": "./module/Math/index.d.ts"
+      "default": "./module/Math/index.js"
     },
     "./Object": {
+      "types": "./module/Object/index.d.ts",
       "import": "./module/Object/index.js",
-      "types": "./module/Object/index.d.ts"
+      "default": "./module/Object/index.js"
     },
     "./Simple": {
+      "types": "./module/Simple/index.d.ts",
       "import": "./module/Simple/index.js",
-      "types": "./module/Simple/index.d.ts"
+      "default": "./module/Simple/index.js"
     },
     "./String": {
+      "types": "./module/String/index.d.ts",
       "import": "./module/String/index.js",
-      "types": "./module/String/index.d.ts"
+      "default": "./module/String/index.js"
     },
     "./Time": {
+      "types": "./module/Time/index.d.ts",
       "import": "./module/Time/index.js",
-      "types": "./module/Time/index.d.ts"
+      "default": "./module/Time/index.js"
     },
     "./Tool": {
+      "types": "./module/Tool/index.d.ts",
       "import": "./module/Tool/index.js",
-      "types": "./module/Tool/index.d.ts"
+      "default": "./module/Tool/index.js"
     },
     "./types": {
+      "types": "./module/types/index.d.ts",
       "import": "./module/types/index.js",
-      "types": "./module/types/index.d.ts"
+      "default": "./module/types/index.js"
     },
     "./UA": {
+      "types": "./module/UA/index.d.ts",
       "import": "./module/UA/index.js",
-      "types": "./module/UA/index.d.ts"
+      "default": "./module/UA/index.js"
     },
     "./Unit": {
+      "types": "./module/Unit/index.d.ts",
       "import": "./module/Unit/index.js",
-      "types": "./module/Unit/index.d.ts"
+      "default": "./module/Unit/index.js"
     },
     "./Validate": {
+      "types": "./module/Validate/index.d.ts",
       "import": "./module/Validate/index.js",
-      "types": "./module/Validate/index.d.ts"
+      "default": "./module/Validate/index.js"
     }
   },
   "files": [
@@ -140,6 +161,7 @@
   "keywords": [],
   "license": "MIT",
   "main": "module/index.js",
+  "module": "module/index.js",
   "name": "umt",
   "repository": {
     "type": "git",

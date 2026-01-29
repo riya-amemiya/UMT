@@ -3,5 +3,8 @@
 	"compilerOptions": {
 		"module": "CommonJS",
 		"outDir": "./common-module/module"
-	}
+	},
+	"exclude": [
+		"src/tests"
+	]
 }
