@@ -168,7 +168,7 @@
     "url": "git://github.com/riya-amemiya/UMT.git"
   },
   "scripts": {
-    "build": "tsc && tsc-alias -p tsconfig.json",
+    "build": "tsc && tsc-alias -p tsconfig.json && node fix-esm-imports.mjs",
     "build:cjs": "tsc -p tsconfig.cjs.json && bun run cjs.build.mjs && cp LICENSE common-module/LICENSE && cp README.md common-module/README.md && cp .npmignore common-module/.npmignore",
     "build:babel": "babel src --extensions '.ts' --out-dir module/es5 && tsc --emitDeclarationOnly --outDir module/es5",
     "build:cjs:babel": "babel src --extensions '.ts' --out-dir common-module/module/es5 && tsc --emitDeclarationOnly --outDir common-module/module/es5",
