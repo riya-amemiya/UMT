@@ -4,6 +4,7 @@ from .is_dictionary_object import is_dictionary_object
 from .is_equal import is_equal
 from .is_not_empty import is_not_empty
 from .is_number import is_number
+from .is_prime_number import is_prime_number
 from .is_string import is_string
 from .is_value_nan import is_value_nan
 from .parse_email import (
@@ -26,6 +27,7 @@ __all__ = [
     "is_equal",
     "is_not_empty",
     "is_number",
+    "is_prime_number",
     "is_string",
     "is_value_nan",
     "parse_email",
