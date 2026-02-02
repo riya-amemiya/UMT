@@ -10,14 +10,17 @@
 //! function with HashMap-based object structures.
 
 use std::collections::HashMap;
-use umt_rust::object::{umt_has, Value};
+use umt_rust::object::{Value, umt_has};
 
 #[cfg(test)]
 mod tests {
     use super::*;
 
     /// Helper function to merge two Value objects deeply
-    fn merge_deep(base: &HashMap<String, Value>, update: &HashMap<String, Value>) -> HashMap<String, Value> {
+    fn merge_deep(
+        base: &HashMap<String, Value>,
+        update: &HashMap<String, Value>,
+    ) -> HashMap<String, Value> {
         let mut result = base.clone();
 
         for (key, value) in update {
@@ -95,7 +98,10 @@ mod tests {
         env_app.insert("features".to_string(), Value::Object(env_features));
 
         let mut env_database = HashMap::new();
-        env_database.insert("host".to_string(), Value::String("prod-db.example.com".to_string()));
+        env_database.insert(
+            "host".to_string(),
+            Value::String("prod-db.example.com".to_string()),
+        );
 
         let mut env_config = HashMap::new();
         env_config.insert("app".to_string(), Value::Object(env_app));
@@ -176,7 +182,10 @@ mod tests {
         // Create default config
         let mut default_cors = HashMap::new();
         default_cors.insert("enabled".to_string(), Value::Bool(true));
-        default_cors.insert("origins".to_string(), Value::Array(vec![Value::String("http://localhost".to_string())]));
+        default_cors.insert(
+            "origins".to_string(),
+            Value::Array(vec![Value::String("http://localhost".to_string())]),
+        );
 
         let mut default_auth = HashMap::new();
         default_auth.insert("enabled".to_string(), Value::Bool(false));
@@ -191,7 +200,10 @@ mod tests {
 
         let mut default_logging = HashMap::new();
         default_logging.insert("level".to_string(), Value::String("info".to_string()));
-        default_logging.insert("transports".to_string(), Value::Array(vec![Value::String("console".to_string())]));
+        default_logging.insert(
+            "transports".to_string(),
+            Value::Array(vec![Value::String("console".to_string())]),
+        );
 
         let mut default_features = HashMap::new();
         default_features.insert("caching".to_string(), Value::Bool(true));
@@ -203,7 +215,10 @@ mod tests {
 
         // Create custom config
         let mut custom_cors = HashMap::new();
-        custom_cors.insert("origins".to_string(), Value::Array(vec![Value::String("https://example.com".to_string())]));
+        custom_cors.insert(
+            "origins".to_string(),
+            Value::Array(vec![Value::String("https://example.com".to_string())]),
+        );
 
         let mut custom_rate_limit = HashMap::new();
         custom_rate_limit.insert("enabled".to_string(), Value::Bool(true));
@@ -219,10 +234,13 @@ mod tests {
 
         let mut custom_logging = HashMap::new();
         custom_logging.insert("level".to_string(), Value::String("debug".to_string()));
-        custom_logging.insert("transports".to_string(), Value::Array(vec![
-            Value::String("console".to_string()),
-            Value::String("file".to_string()),
-        ]));
+        custom_logging.insert(
+            "transports".to_string(),
+            Value::Array(vec![
+                Value::String("console".to_string()),
+                Value::String("file".to_string()),
+            ]),
+        );
 
         let mut custom_features = HashMap::new();
         custom_features.insert("logging".to_string(), Value::Object(custom_logging));
@@ -236,7 +254,10 @@ mod tests {
 
         // Verify paths exist
         assert!(umt_has(&final_config, "server.middleware.cors.enabled"));
-        assert!(umt_has(&final_config, "server.middleware.rateLimit.enabled"));
+        assert!(umt_has(
+            &final_config,
+            "server.middleware.rateLimit.enabled"
+        ));
         assert!(umt_has(&final_config, "features.logging.transports"));
 
         // Verify merged values
@@ -260,14 +281,23 @@ mod tests {
         let mut specs = HashMap::new();
         specs.insert("weight".to_string(), Value::String("2kg".to_string()));
         specs.insert("dimensions".to_string(), Value::Object(dimensions));
-        specs.insert("materials".to_string(), Value::Array(vec![
-            Value::String("aluminum".to_string()),
-            Value::String("plastic".to_string()),
-        ]));
+        specs.insert(
+            "materials".to_string(),
+            Value::Array(vec![
+                Value::String("aluminum".to_string()),
+                Value::String("plastic".to_string()),
+            ]),
+        );
 
         let mut details = HashMap::new();
-        details.insert("name".to_string(), Value::String("Premium Widget".to_string()));
-        details.insert("description".to_string(), Value::String("High-quality widget".to_string()));
+        details.insert(
+            "name".to_string(),
+            Value::String("Premium Widget".to_string()),
+        );
+        details.insert(
+            "description".to_string(),
+            Value::String("High-quality widget".to_string()),
+        );
         details.insert("specs".to_string(), Value::Object(specs));
 
         let mut discounts = HashMap::new();
@@ -310,40 +340,69 @@ mod tests {
         }
 
         let base_users = vec![
-            UserRole { id: 1, name: "Alice".to_string(), roles: vec!["user".to_string()] },
-            UserRole { id: 2, name: "Bob".to_string(), roles: vec!["user".to_string(), "editor".to_string()] },
+            UserRole {
+                id: 1,
+                name: "Alice".to_string(),
+                roles: vec!["user".to_string()],
+            },
+            UserRole {
+                id: 2,
+                name: "Bob".to_string(),
+                roles: vec!["user".to_string(), "editor".to_string()],
+            },
         ];
 
-        let update_users = vec![
-            UserRole { id: 3, name: "Charlie".to_string(), roles: vec!["admin".to_string()] },
-        ];
+        let update_users = vec![UserRole {
+            id: 3,
+            name: "Charlie".to_string(),
+            roles: vec!["admin".to_string()],
+        }];
 
         // Merge users
-        let all_users: Vec<_> = base_users.iter().chain(update_users.iter()).cloned().collect();
+        let all_users: Vec<_> = base_users
+            .iter()
+            .chain(update_users.iter())
+            .cloned()
+            .collect();
 
         // Create permissions
         let mut base_permissions = HashMap::new();
-        base_permissions.insert("user".to_string(), Value::Array(vec![Value::String("read".to_string())]));
-        base_permissions.insert("editor".to_string(), Value::Array(vec![
-            Value::String("read".to_string()),
-            Value::String("write".to_string()),
-        ]));
-        base_permissions.insert("admin".to_string(), Value::Array(vec![
-            Value::String("read".to_string()),
-            Value::String("write".to_string()),
-            Value::String("delete".to_string()),
-        ]));
+        base_permissions.insert(
+            "user".to_string(),
+            Value::Array(vec![Value::String("read".to_string())]),
+        );
+        base_permissions.insert(
+            "editor".to_string(),
+            Value::Array(vec![
+                Value::String("read".to_string()),
+                Value::String("write".to_string()),
+            ]),
+        );
+        base_permissions.insert(
+            "admin".to_string(),
+            Value::Array(vec![
+                Value::String("read".to_string()),
+                Value::String("write".to_string()),
+                Value::String("delete".to_string()),
+            ]),
+        );
 
         let mut update_permissions = HashMap::new();
-        update_permissions.insert("editor".to_string(), Value::Array(vec![
-            Value::String("read".to_string()),
-            Value::String("write".to_string()),
-            Value::String("publish".to_string()),
-        ]));
-        update_permissions.insert("moderator".to_string(), Value::Array(vec![
-            Value::String("read".to_string()),
-            Value::String("moderate".to_string()),
-        ]));
+        update_permissions.insert(
+            "editor".to_string(),
+            Value::Array(vec![
+                Value::String("read".to_string()),
+                Value::String("write".to_string()),
+                Value::String("publish".to_string()),
+            ]),
+        );
+        update_permissions.insert(
+            "moderator".to_string(),
+            Value::Array(vec![
+                Value::String("read".to_string()),
+                Value::String("moderate".to_string()),
+            ]),
+        );
 
         let merged_permissions = merge_deep(&base_permissions, &update_permissions);
 
@@ -424,7 +483,10 @@ mod tests {
 
         // Merge with metadata
         let mut meta = HashMap::new();
-        meta.insert("timestamp".to_string(), Value::String("2025-01-01T00:00:00Z".to_string()));
+        meta.insert(
+            "timestamp".to_string(),
+            Value::String("2025-01-01T00:00:00Z".to_string()),
+        );
 
         let mut final_config = HashMap::new();
         final_config.insert("users".to_string(), Value::Object(user_index.clone()));
@@ -439,7 +501,10 @@ mod tests {
         if let Some(Value::Object(users)) = final_config.get("users") {
             if let Some(Value::Object(user1)) = users.get("user-1") {
                 if let Some(Value::Object(summary)) = user1.get("summary") {
-                    assert_eq!(summary.get("displayName"), Some(&Value::String("Alice".to_string())));
+                    assert_eq!(
+                        summary.get("displayName"),
+                        Some(&Value::String("Alice".to_string()))
+                    );
                 }
             }
         }

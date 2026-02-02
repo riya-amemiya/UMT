@@ -68,14 +68,22 @@ mod tests {
             let data = parse_result.value().unwrap();
             match data {
                 Ok(user_data) => {
-                    let name = user_data.name.clone().unwrap_or_else(|| "Unknown".to_string());
+                    let name = user_data
+                        .name
+                        .clone()
+                        .unwrap_or_else(|| "Unknown".to_string());
                     let age = user_data
                         .age
                         .as_ref()
                         .and_then(|a| a.as_i64())
                         .map(|a| a as i32)
                         .unwrap_or(0);
-                    let valid = user_data.name.is_some() && user_data.age.as_ref().map(|a| a.is_number()).unwrap_or(false);
+                    let valid = user_data.name.is_some()
+                        && user_data
+                            .age
+                            .as_ref()
+                            .map(|a| a.is_number())
+                            .unwrap_or(false);
 
                     ProcessedData {
                         error: None,
@@ -93,7 +101,10 @@ mod tests {
             }
         };
 
-        let results: Vec<_> = json_strings.iter().map(|s| process_json_safely(s)).collect();
+        let results: Vec<_> = json_strings
+            .iter()
+            .map(|s| process_json_safely(s))
+            .collect();
 
         assert!(results[0].valid);
         assert_eq!(results[1].error, Some("Invalid JSON".to_string()));
@@ -215,9 +226,9 @@ mod tests {
         };
 
         let expressions = [
-            (true, 10, 5, 15),   // valid
-            (false, 0, 0, 0),   // invalid
-            (true, 20, 4, 24),  // valid division result would be 5
+            (true, 10, 5, 15), // valid
+            (false, 0, 0, 0),  // invalid
+            (true, 20, 4, 24), // valid division result would be 5
         ];
 
         let results: Vec<_> = expressions
@@ -277,7 +288,10 @@ mod tests {
             r#"{"operation": "sum", "values": []}"#,
         ];
 
-        let results: Vec<_> = test_inputs.iter().map(|s| process_complex_data(s)).collect();
+        let results: Vec<_> = test_inputs
+            .iter()
+            .map(|s| process_complex_data(s))
+            .collect();
 
         assert_eq!(results[0], Some(10));
         assert_eq!(results[1], Some(24));
@@ -306,9 +320,8 @@ mod tests {
         }
 
         let validate_and_process = |user: Option<UserObject>| -> ValidationResult {
-            let parse_result = umt_safe_execute_mut(|| {
-                user.ok_or_else(|| "Invalid user object".to_string())
-            });
+            let parse_result =
+                umt_safe_execute_mut(|| user.ok_or_else(|| "Invalid user object".to_string()));
 
             if parse_result.is_error() {
                 return ValidationResult {
@@ -418,11 +431,7 @@ mod tests {
                 });
 
                 if result.is_success() {
-                    return (
-                        true,
-                        result.value().cloned(),
-                        attempts + 1,
-                    );
+                    return (true, result.value().cloned(), attempts + 1);
                 }
 
                 attempts += 1;

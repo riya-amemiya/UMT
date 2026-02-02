@@ -18,10 +18,7 @@ fn should_parse_json_string_with_number_values() {
         umt_parse_json(json_string).expect("JSON parsing should succeed for valid input");
 
     let mut validators: HashMap<String, Box<dyn Fn(&Value) -> bool>> = HashMap::new();
-    validators.insert(
-        "key".to_string(),
-        Box::new(|v| v.is_number()),
-    );
+    validators.insert("key".to_string(), Box::new(|v| v.is_number()));
 
     let validation = umt_validate_object(&result, Some(&validators), None);
     assert!(validation.validate);
@@ -38,10 +35,7 @@ fn should_parse_json_string_with_boolean_values() {
         umt_parse_json(json_string).expect("JSON parsing should succeed for valid input");
 
     let mut validators: HashMap<String, Box<dyn Fn(&Value) -> bool>> = HashMap::new();
-    validators.insert(
-        "key".to_string(),
-        Box::new(|v| v.is_boolean()),
-    );
+    validators.insert("key".to_string(), Box::new(|v| v.is_boolean()));
 
     let validation = umt_validate_object(&result, Some(&validators), None);
     assert!(validation.validate);
@@ -114,10 +108,7 @@ fn should_fail_validation_for_mismatched_types() {
         umt_parse_json(json_string).expect("JSON parsing should succeed for valid input");
 
     let mut validators: HashMap<String, Box<dyn Fn(&Value) -> bool>> = HashMap::new();
-    validators.insert(
-        "key".to_string(),
-        Box::new(|v| v.is_number()),
-    );
+    validators.insert("key".to_string(), Box::new(|v| v.is_number()));
 
     let validation = umt_validate_object(&result, Some(&validators), None);
     assert!(!validation.validate);

@@ -47,7 +47,12 @@ mod tests {
         let json_data = r#"{"users": [{"name": "Alice", "age": 30}, {"name": "Bob", "age": 25}]}"#;
 
         let get_users = |data: UserData| data.users;
-        let filter_adults = |users: Vec<User>| users.into_iter().filter(|u| u.age >= 25).collect::<Vec<_>>();
+        let filter_adults = |users: Vec<User>| {
+            users
+                .into_iter()
+                .filter(|u| u.age >= 25)
+                .collect::<Vec<_>>()
+        };
         let map_names = |users: Vec<User>| users.into_iter().map(|u| u.name).collect::<Vec<_>>();
         let join_names = |names: Vec<String>| names.join(", ");
 
@@ -93,25 +98,19 @@ mod tests {
             value: i32,
         }
 
-        let math_expressions = [
-            r#"{"value": 10}"#,
-            r#"{"value": 20}"#,
-            r#"{"value": 30}"#,
-        ];
+        let math_expressions = [r#"{"value": 10}"#, r#"{"value": 20}"#, r#"{"value": 30}"#];
 
         let parse_value = |json: &str| umt_parse_json::<ValueData>(json).unwrap().value;
         let square = |n: i32| n * n;
         let halve = |n: i32| n / 2;
 
-        let process_expression = |expr: &str| -> i32 {
-            umt_pipe(expr)
-                .map(parse_value)
-                .map(square)
-                .map(halve)
-                .end()
-        };
+        let process_expression =
+            |expr: &str| -> i32 { umt_pipe(expr).map(parse_value).map(square).map(halve).end() };
 
-        let results: Vec<_> = math_expressions.iter().map(|e| process_expression(e)).collect();
+        let results: Vec<_> = math_expressions
+            .iter()
+            .map(|e| process_expression(e))
+            .collect();
         assert_eq!(results, vec![50, 200, 450]);
     }
 
@@ -141,9 +140,8 @@ mod tests {
         };
 
         let serialize = |obj: ProcessedObject| -> String { serde_json::to_string(&obj).unwrap() };
-        let deserialize = |json: String| -> ProcessedObject {
-            umt_parse_json::<ProcessedObject>(&json).unwrap()
-        };
+        let deserialize =
+            |json: String| -> ProcessedObject { umt_parse_json::<ProcessedObject>(&json).unwrap() };
 
         let round_trip_transform = umt_create_pipeline(TestObject {
             id: 1,
@@ -162,13 +160,8 @@ mod tests {
 
     #[test]
     fn should_combine_currying_with_error_safe_operations() {
-        let safe_divide = |a: i32, b: i32| -> Option<i32> {
-            if b == 0 {
-                None
-            } else {
-                Some(a / b)
-            }
-        };
+        let safe_divide =
+            |a: i32, b: i32| -> Option<i32> { if b == 0 { None } else { Some(a / b) } };
         let safe_parse_number = |s: &str| -> Option<i32> { s.parse().ok() };
 
         let curried_safe_divide = std::rc::Rc::new(umt_curry2(safe_divide));
