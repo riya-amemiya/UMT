@@ -46,7 +46,7 @@ def gcd(x: float, y: float, *z: float) -> float:
 
     scaled_numerators = [
         num * (common_denominator // den)
-        for num, den in zip(numerators, denominators)
+        for num, den in zip(numerators, denominators, strict=True)
     ]
 
     result_numerator = math.gcd(*scaled_numerators)
