@@ -4,17 +4,23 @@ import sys
 import os
 
 # Add package root to python path to allow imports like 'from src.math...'
-package_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+package_root = os.path.dirname(
+    os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+)
 sys.path.append(package_root)
 
 from src.math.n_pr import n_pr
 
+
 def benchmark():
-    setup = """
+    # Adjust path to reach package root from this file location
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    package_root = os.path.dirname(os.path.dirname(current_dir))
+
+    setup = f"""
 import sys
 import os
-# Adjust path to reach package root
-package_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+package_root = r"{package_root}"
 if package_root not in sys.path:
     sys.path.append(package_root)
 from src.math.n_pr import n_pr
@@ -30,7 +36,9 @@ import math
         (20000, 1000),
     ]
 
-    print(f"{'n':<10} {'r':<10} {'Current (us)':<15} {'math.perm (us)':<15} {'Speedup':<10}")
+    print(
+        f"{'n':<10} {'r':<10} {'Current (us)':<15} {'math.perm (us)':<15} {'Speedup':<10}"
+    )
     print("-" * 65)
 
     for n, r in cases:
@@ -56,6 +64,7 @@ import math
         speedup = us_current / us_math if us_math > 0 else 0
 
         print(f"{n:<10} {r:<10} {us_current:<15.4f} {us_math:<15.4f} {speedup:<10.2f}x")
+
 
 if __name__ == "__main__":
     benchmark()

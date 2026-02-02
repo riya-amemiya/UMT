@@ -30,6 +30,10 @@ class TestNPr(unittest.TestCase):
         self.assertEqual(n_pr(5, 2), 20)
         self.assertEqual(n_pr(5, 0), 1)
 
+    def test_float_input(self):
+        self.assertEqual(n_pr(5.0, 2), 20)
+        self.assertAlmostEqual(n_pr(5.5, 2), 24.75)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -25,6 +25,9 @@ def n_pr(n: int, r: int) -> float:
         if n.is_integer():
             n = int(n)
         else:
-            return float("nan")
+            result = 1.0
+            for index in range(r):
+                result *= n - index
+            return result
 
     return math.perm(n, r)
