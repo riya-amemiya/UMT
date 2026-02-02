@@ -1,8 +1,4 @@
-import math
-
-from .average import average
-from .multiplication import multiplication
-from .subtraction import subtraction
+import statistics
 
 
 def standard_deviation(values: list[float]) -> float:
@@ -21,16 +17,7 @@ def standard_deviation(values: list[float]) -> float:
         >>> round(standard_deviation([10, 12, 23, 23, 16, 23, 21, 16]), 6)
         4.89898
     """
-    avg = average(values)
+    if not values:
+        return 0.0
 
-    # Calculate the squared differences from the mean
-    square_diffs = []
-    for value in values:
-        diff = subtraction(value, avg)
-        square_diffs.append(multiplication(diff, diff))
-
-    # Calculate the mean of the squared differences
-    avg_square_diff = average(square_diffs)
-
-    # Return the square root of the mean squared differences
-    return math.sqrt(avg_square_diff)
+    return statistics.pstdev(values)
