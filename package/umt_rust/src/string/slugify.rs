@@ -29,11 +29,9 @@ pub fn umt_slugify(s: &str) -> String {
         if c.is_alphanumeric() {
             result.push(c.to_ascii_lowercase());
             prev_was_dash = false;
-        } else {
-            if !prev_was_dash {
-                result.push('-');
-                prev_was_dash = true;
-            }
+        } else if !prev_was_dash {
+            result.push('-');
+            prev_was_dash = true;
         }
     }
 
