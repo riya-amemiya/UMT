@@ -13,11 +13,13 @@ if package_root not in sys.path:
 
 from src.string.levenshtein_distance import levenshtein_distance
 
+
 def generate_random_string(length):
-    return ''.join(random.choices(string.ascii_letters, k=length))
+    return "".join(random.choices(string.ascii_letters, k=length))
+
 
 def run_benchmark():
-    length = 2000 # Enough to see memory difference
+    length = 2000  # Enough to see memory difference
     str1 = generate_random_string(length)
     str2 = generate_random_string(length)
 
@@ -35,6 +37,7 @@ def run_benchmark():
     print(f"Result: {dist}")
     print(f"Time: {end_time - start_time:.4f} seconds")
     print(f"Peak Memory: {peak / 1024:.2f} KB")
+
 
 if __name__ == "__main__":
     run_benchmark()
