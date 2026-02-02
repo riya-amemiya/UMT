@@ -123,7 +123,7 @@ mod tests {
             name: String,
         }
 
-        #[derive(Debug, Clone, PartialEq, Deserialize)]
+        #[derive(Debug, Clone, PartialEq, Deserialize, serde::Serialize)]
         struct ProcessedObject {
             id: i32,
             name: String,
@@ -171,17 +171,21 @@ mod tests {
         };
         let safe_parse_number = |s: &str| -> Option<i32> { s.parse().ok() };
 
-        let curried_safe_divide = umt_curry2(safe_divide);
-        let divide_by = |divisor: i32| move |dividend: i32| curried_safe_divide(dividend)(divisor);
+        let curried_safe_divide = std::rc::Rc::new(umt_curry2(safe_divide));
+        let divide_by = std::rc::Rc::new(move |divisor: i32| {
+            let curried = curried_safe_divide.clone();
+            move |dividend: i32| (*curried)(dividend)(divisor)
+        });
 
         let test_cases = ["10", "20", "invalid", "0"];
 
         let results: Vec<Option<i32>> = test_cases
             .iter()
             .map(|input| {
+                let divide_by = divide_by.clone();
                 umt_pipe(*input)
                     .map(safe_parse_number)
-                    .map(|num| num.and_then(|n| divide_by(2)(n)))
+                    .map(move |num| num.and_then(|n| (*divide_by)(2)(n)))
                     .end()
             })
             .collect();

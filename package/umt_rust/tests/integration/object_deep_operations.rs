@@ -122,6 +122,7 @@ mod tests {
     #[test]
     fn should_transform_nested_data_structures_with_multiple_operations() {
         #[derive(Debug, Clone)]
+        #[allow(dead_code)]
         struct User {
             id: i32,
             name: String,
@@ -301,6 +302,7 @@ mod tests {
     #[test]
     fn should_handle_deep_merging_with_array_data_and_selective_extraction() {
         #[derive(Debug, Clone)]
+        #[allow(dead_code)]
         struct UserRole {
             id: i32,
             name: String,
@@ -366,6 +368,7 @@ mod tests {
     #[test]
     fn should_chain_multiple_object_operations_in_complex_workflows() {
         #[derive(Debug, Clone)]
+        #[allow(dead_code)]
         struct ApiUser {
             id: String,
             name: String,

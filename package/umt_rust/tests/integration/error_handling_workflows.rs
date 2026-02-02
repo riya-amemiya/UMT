@@ -8,7 +8,7 @@
 use serde::Deserialize;
 use umt_rust::error::{umt_safe_execute, umt_safe_execute_mut};
 use umt_rust::tool::{umt_parse_json, umt_pipe};
-use umt_rust::validate::string::{umt_validate_email_validator, umt_validate_string};
+use umt_rust::validate::string::umt_validate_email_validator;
 
 #[cfg(test)]
 mod tests {
@@ -117,6 +117,7 @@ mod tests {
         ];
 
         #[derive(Debug)]
+        #[allow(dead_code)]
         struct ProcessResult {
             success: bool,
             error: Option<String>,
@@ -236,7 +237,7 @@ mod tests {
 
     #[test]
     fn should_chain_safe_operations_in_complex_workflows() {
-        #[derive(Deserialize, Debug)]
+        #[derive(Deserialize, Debug, Clone)]
         struct OperationData {
             operation: String,
             values: Vec<i64>,
@@ -295,6 +296,7 @@ mod tests {
         }
 
         #[derive(Debug)]
+        #[allow(dead_code)]
         struct ValidationResult {
             valid: bool,
             error: Option<String>,
@@ -405,7 +407,7 @@ mod tests {
             let call_count = std::cell::RefCell::new(0);
 
             while attempts <= max_retries {
-                let count = *call_count.borrow();
+                let _count = *call_count.borrow();
                 let result = umt_safe_execute_mut(|| -> String {
                     *call_count.borrow_mut() += 1;
                     let current = *call_count.borrow();

@@ -27,7 +27,7 @@ mod tests {
 
         for original_ip in test_ips {
             let long_value = ip_to_long(original_ip).unwrap();
-            let converted_ip = long_to_ip(long_value).unwrap();
+            let converted_ip = long_to_ip(long_value);
 
             assert_eq!(converted_ip, original_ip);
         }
@@ -66,7 +66,7 @@ mod tests {
             );
 
             let network_long = get_network_address(ip, subnet).unwrap();
-            let _network_from_long = long_to_ip(network_long).unwrap();
+            let _network_from_long = long_to_ip(network_long);
 
             let converted_subnet = cidr_to_subnet_mask(cidr).unwrap();
             assert_eq!(converted_subnet, subnet);
@@ -99,7 +99,7 @@ mod tests {
                 expected_private
             );
             assert_eq!(
-                get_ip_class(ip).unwrap(),
+                get_ip_class(ip),
                 expected_class,
                 "{} class should be {}",
                 ip,
@@ -107,9 +107,9 @@ mod tests {
             );
 
             let long_value = ip_to_long(ip).unwrap();
-            let converted_ip = long_to_ip(long_value).unwrap();
+            let converted_ip = long_to_ip(long_value);
             assert_eq!(is_private_ip(&converted_ip).unwrap(), expected_private);
-            assert_eq!(get_ip_class(&converted_ip).unwrap(), expected_class);
+            assert_eq!(get_ip_class(&converted_ip), expected_class);
         }
     }
 
@@ -153,7 +153,7 @@ mod tests {
                 );
 
                 let network_long = get_network_address(network, &subnet_mask).unwrap();
-                let network_ip_from_long = long_to_ip(network_long).unwrap();
+                let network_ip_from_long = long_to_ip(network_long);
                 assert_eq!(
                     is_in_range(ip, &network_ip_from_long, cidr).unwrap(),
                     in_range
@@ -178,7 +178,7 @@ mod tests {
             let binary_from_long = format!("{:032b}", long_value);
             assert_eq!(binary_from_long, expected_binary);
 
-            let ip_from_long = long_to_ip(long_value).unwrap();
+            let ip_from_long = long_to_ip(long_value);
             assert_eq!(ip_from_long, ip);
         }
     }
@@ -198,7 +198,7 @@ mod tests {
             assert_eq!(converted_cidr, cidr);
 
             let network_long = get_network_address(network, &mask).unwrap();
-            let network_from_long = long_to_ip(network_long).unwrap();
+            let network_from_long = long_to_ip(network_long);
 
             assert!(is_in_range(network, &network_from_long, cidr).unwrap());
 
@@ -224,10 +224,10 @@ mod tests {
         for (ip, expected_class, is_private) in edge_cases {
             let long_value = ip_to_long(ip).unwrap();
             let binary = ip_to_binary_string(ip).unwrap();
-            let reconstructed = long_to_ip(long_value).unwrap();
+            let reconstructed = long_to_ip(long_value);
 
             assert_eq!(reconstructed, ip);
-            assert_eq!(get_ip_class(&reconstructed).unwrap(), expected_class);
+            assert_eq!(get_ip_class(&reconstructed), expected_class);
             assert_eq!(is_private_ip(&reconstructed).unwrap(), is_private);
 
             assert_eq!(binary.len(), 32);
