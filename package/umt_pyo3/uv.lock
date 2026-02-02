@@ -26,9 +26,13 @@ wheels = [
 [[package]]
 name = "umt-pyo3"
 source = { editable = "." }
-dependencies = [
+
+[package.dev-dependencies]
+dev = [
     { name = "maturin" },
 ]
 
 [package.metadata]
-requires-dist = [{ name = "maturin", specifier = ">=1.11.5" }]
+
+[package.metadata.requires-dev]
+dev = [{ name = "maturin", specifier = "==1.11.5" }]

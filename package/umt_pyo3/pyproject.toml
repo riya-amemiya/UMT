@@ -3,21 +3,19 @@ name = "umt_pyo3"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.14"
-dependencies = [
-    "maturin>=1.11.5",
-]
 classifiers = [
     "Programming Language :: Rust",
     "Programming Language :: Python :: Implementation :: CPython",
     "Programming Language :: Python :: Implementation :: PyPy",
 ]
 dynamic = ["version"]
+[dependency-groups]
+dev = ["maturin==1.11.5"]
 
 [project.urls]
 "Bug Tracker" = "https://github.com/riya-amemiya/UMT/issues"
 "Homepage" = "https://github.com/riya-amemiya/UMT"
 "Repository" = "https://github.com/riya-amemiya/UMT"
-
 
 [build-system]
 requires = ["maturin>=1.11,<2.0"]
