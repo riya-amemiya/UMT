@@ -2,6 +2,32 @@ import math
 from typing import Any
 
 
+def _to_set_if_hashable(arr: list[Any]) -> set[Any] | list[Any]:
+    try:
+        return set(arr)
+    except TypeError:
+        return arr
+
+
+def _safe_is_in(item: object, container: set[Any] | list[Any]) -> bool:
+    if isinstance(container, set):
+        try:
+            return item in container
+        except TypeError:
+            return False
+    return item in container
+
+
+def _add_unique(item: object, seen: set[Any], unique_result: list[Any]) -> None:
+    try:
+        if item not in seen:
+            seen.add(item)
+            unique_result.append(item)
+    except TypeError:
+        if item not in unique_result:
+            unique_result.append(item)
+
+
 def get_arrays_common(array: list[Any], *arrays: list[Any]) -> list[Any]:
     """
     Extract common elements from multiple arrays.
@@ -21,12 +47,7 @@ def get_arrays_common(array: list[Any], *arrays: list[Any]) -> list[Any]:
         return list(array)
 
     # Pre-process arrays for O(1) lookups where possible
-    lookup_structures = []
-    for arr in arrays:
-        try:
-            lookup_structures.append(set(arr))
-        except TypeError:
-            lookup_structures.append(arr)
+    lookup_structures = [_to_set_if_hashable(arr) for arr in arrays]
 
     result = []
     for item in array:
@@ -39,25 +60,8 @@ def get_arrays_common(array: list[Any], *arrays: list[Any]) -> list[Any]:
                 for arr in arrays
             ):
                 result.append(item)
-        else:
-            is_common = True
-            for container in lookup_structures:
-                if isinstance(container, set):
-                    try:
-                        if item not in container:
-                            is_common = False
-                            break
-                    except TypeError:
-                        # item is unhashable, so it cannot be in the set
-                        # (which only contains hashable items)
-                        is_common = False
-                        break
-                elif item not in container:
-                    is_common = False
-                    break
-
-            if is_common:
-                result.append(item)
+        elif all(_safe_is_in(item, container) for container in lookup_structures):
+            result.append(item)
 
     unique_result: list[Any] = []
     seen: set[Any] = set()
@@ -69,12 +73,6 @@ def get_arrays_common(array: list[Any], *arrays: list[Any]) -> list[Any]:
                 unique_result.append(item)
                 has_seen_nan = True
         else:
-            try:
-                if item not in seen:
-                    seen.add(item)
-                    unique_result.append(item)
-            except TypeError:
-                if item not in unique_result:
-                    unique_result.append(item)
+            _add_unique(item, seen, unique_result)
 
     return unique_result
