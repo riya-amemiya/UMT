@@ -1,7 +1,8 @@
 import math
+from typing import Union
 
 
-def n_pr(n: int, r: int) -> float:
+def n_pr(n: Union[int, float], r: int) -> float:
     """
     Calculates permutations (nPr) - number of ways to arrange r items from n items.
 
