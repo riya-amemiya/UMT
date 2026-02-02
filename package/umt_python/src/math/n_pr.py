@@ -1,4 +1,7 @@
-def n_pr(n: int, r: int) -> float:
+import math
+
+
+def n_pr(n: int | float, r: int) -> float:
     """
     Calculates permutations (nPr) - number of ways to arrange r items from n items.
 
@@ -17,9 +20,14 @@ def n_pr(n: int, r: int) -> float:
     """
     if n < r or n < 0 or r < 0:
         return float("nan")
-    if r == 0:
-        return 1
-    result = 1
-    for index in range(r):
-        result *= n - index
-    return result
+
+    if isinstance(n, float):
+        if n.is_integer():
+            n = int(n)
+        else:
+            result = 1.0
+            for index in range(r):
+                result *= n - index
+            return result
+
+    return math.perm(n, r)
