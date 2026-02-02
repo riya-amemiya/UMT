@@ -1,4 +1,5 @@
 import math
+from collections import Counter
 from dataclasses import dataclass
 
 
@@ -79,6 +80,20 @@ def is_deep_equal(
                     if not compare(elem, y[i]):
                         return False
             else:
+                try:
+
+                    def _make_hashable_key(item: object) -> tuple[type, object]:
+                        t = type(item)
+                        if t is float and math.isnan(item):  # type: ignore
+                            return (float, "NaN")
+                        return (t, item)
+
+                    return Counter(_make_hashable_key(i) for i in x) == Counter(
+                        _make_hashable_key(i) for i in y
+                    )
+                except TypeError:
+                    pass
+
                 y_copy = list(y)
                 for item_x in x:
                     found = False
