@@ -29,10 +29,8 @@ pub fn umt_camel_case(s: &str) -> String {
             } else {
                 result.push(c);
             }
-        } else {
-            if first_letter_found {
-                capitalize_next = true;
-            }
+        } else if first_letter_found {
+            capitalize_next = true;
         }
     }
 
