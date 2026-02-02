@@ -74,6 +74,15 @@ class TestGetArraysCommon(unittest.TestCase):
         result = get_arrays_common([1, 2, 3], [2, 3, 4], [2, 5, 3])
         self.assertEqual(result, [2, 3])
 
+    def test_unhashable_elements(self):
+        """Test with unhashable elements (lists)."""
+        result = get_arrays_common(
+            [[1], [2], [3]],
+            [[2], [3], [4]],
+            [[2], [5], [3]],
+        )
+        self.assertEqual(result, [[2], [3]])
+
 
 if __name__ == "__main__":
     unittest.main()
