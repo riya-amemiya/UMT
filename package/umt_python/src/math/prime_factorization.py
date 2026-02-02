@@ -20,10 +20,20 @@ def prime_factorization(x: int) -> list[PrimeFactor]:
         >>> prime_factorization(12)
         [{'number': 2, 'count': 2}, {'number': 3, 'count': 1}]
     """
-    n = 0
+    if x <= 1:
+        return []
+
     copy_x = x
     out: list[PrimeFactor] = []
-    index = 2
+
+    if copy_x % 2 == 0:
+        n = 0
+        while copy_x % 2 == 0:
+            n += 1
+            copy_x //= 2
+        out.append({"number": 2, "count": n})
+
+    index = 3
     while index * index <= copy_x:
         if copy_x % index == 0:
             n = 0
@@ -31,7 +41,7 @@ def prime_factorization(x: int) -> list[PrimeFactor]:
                 n += 1
                 copy_x //= index
             out.append({"number": index, "count": n})
-        index += 1
+        index += 2
     # If remaining value is greater than 1, it's a prime factor
     if copy_x > 1:
         out.append({"number": copy_x, "count": 1})
