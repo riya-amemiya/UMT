@@ -1,3 +1,5 @@
+from collections.abc import Sequence
+
 from ...math.average import average
 from ...math.deviation_value import deviation_value
 from ...math.standard_deviation import standard_deviation
@@ -5,7 +7,7 @@ from ...math.standard_deviation import standard_deviation
 
 def deviation_value_simple(
     value: float,
-    average_value: list[float] | float,
+    average_value: Sequence[float] | float,
     standard_deviation_value: float | None = None,
 ) -> float:
     """
@@ -29,8 +31,10 @@ def deviation_value_simple(
         >>> deviation_value_simple(60, [40, 50, 60])
         62.24744871391589
     """
-    # Handle list input
-    if isinstance(average_value, list):
+    # Handle sequence input (list, tuple, etc.), but not strings/bytes
+    if isinstance(average_value, Sequence) and not isinstance(
+        average_value, (str, bytes)
+    ):
         avg = average(average_value)
         sd = standard_deviation(average_value)
         # When all values are the same, standard deviation is 0
@@ -42,8 +46,12 @@ def deviation_value_simple(
             "Standard deviation is required when using a single average value"
         )
 
+    # Ensure average_value is treated as float for calculation
+    # (though type hint says float, runtime could be int, which is fine)
+    avg_val = float(average_value)  # type: ignore
+
     return (
         50
         if standard_deviation_value == 0
-        else deviation_value(value, average_value, standard_deviation_value)
+        else deviation_value(value, avg_val, standard_deviation_value)
     )
