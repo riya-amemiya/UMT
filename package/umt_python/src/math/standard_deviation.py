@@ -1,11 +1,12 @@
 import math
+from collections.abc import Sequence
 
 from .average import average
 from .multiplication import multiplication
 from .subtraction import subtraction
 
 
-def standard_deviation(values: list[float]) -> float:
+def standard_deviation(values: Sequence[float]) -> float:
     """
     Calculates the standard deviation of a set of values.
 
