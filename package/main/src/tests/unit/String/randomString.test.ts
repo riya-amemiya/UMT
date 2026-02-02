@@ -28,7 +28,7 @@ describe("randomString", () => {
 
   it("should handle large size requests", () => {
     // 20000 * 4 bytes = 80000 bytes > 65536 bytes limit
-    const size = 20000;
+    const size = 20_000;
     const str = randomString(size);
     expect(str).toHaveLength(size);
   });
