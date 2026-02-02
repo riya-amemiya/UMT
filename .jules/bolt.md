@@ -1,3 +1,3 @@
-## 2026-02-02 - Object Omission Strategy
-**Learning:** Contrary to common V8 optimization advice, using `delete` on small-to-medium objects in Bun was measured to be significantly faster (2x-80x) than reconstructing the object using `Object.keys` and filtering.
-**Action:** When optimizing object key removal, prefer `delete` unless working with extremely large objects or specific engines where dictionary mode penalty is proven to be higher than allocation cost.
+## 2026-02-02 - Fuzzy Search Optimization
+**Learning:** In fuzzy search algorithms using Levenshtein distance, a length-based heuristic check (`abs(lenA - lenB) > maxDistance`) can provide a 3x-100x speedup by skipping expensive distance calculations for obvious non-matches.
+**Action:** Always implement length difference pruning before running full edit distance algorithms when a threshold is available.

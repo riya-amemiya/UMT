@@ -35,12 +35,18 @@ const legacyFuzzySearch = (
 const query = "hello";
 const itemsSmall = ["hello", "world", "helo", "help", "abcde", "fghij"];
 // Generate a mix of similar and dissimilar strings
-const itemsLarge = Array.from({ length: 1000 }, (_, i) => {
-    const r = Math.random();
-    if (r < 0.1) return "hello"; // exact match
-    if (r < 0.3) return "helo";  // close match
-    if (r < 0.5) return "he" + i; // partial
-    return "randomstring" + i; // diff length
+const itemsLarge = Array.from({ length: 1000 }, (_, index) => {
+  const r = Math.random();
+  if (r < 0.1) {
+    return "hello"; // exact match
+  }
+  if (r < 0.3) {
+    return "helo"; // close match
+  }
+  if (r < 0.5) {
+    return `he${index}`; // partial
+  }
+  return `randomstring${index}`; // diff length
 });
 
 summary(() => {
