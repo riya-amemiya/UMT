@@ -1,4 +1,4 @@
-from .n_pr import n_pr
+import math
 
 
 def n_cr(n: int, r: int) -> float:
@@ -23,10 +23,4 @@ def n_cr(n: int, r: int) -> float:
     if r in (0, n):
         return 1
 
-    numerator = n_pr(n, r)
-    denominator = 1
-
-    for index in range(2, r + 1):
-        denominator *= index
-
-    return numerator / denominator
+    return float(math.comb(n, r))

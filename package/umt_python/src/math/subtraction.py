@@ -1,6 +1,4 @@
-from .get_decimal_length import get_decimal_length
-from .max_value import max_value
-from .multiplication import multiplication
+from decimal import Decimal
 
 
 def subtraction(*numbers: float) -> float:
@@ -19,11 +17,11 @@ def subtraction(*numbers: float) -> float:
         >>> subtraction(1, 0.1, 0.2)
         0.7
     """
-    result = 0.0
-    for index, current in enumerate(numbers):
-        if index == 0:
-            result = current
-        else:
-            z = 10 ** max_value(get_decimal_length(result), get_decimal_length(current))
-            result = (multiplication(result, z) - multiplication(current, z)) / z
-    return result
+    if not numbers:
+        return 0.0
+
+    result = Decimal(str(numbers[0]))
+    for num in numbers[1:]:
+        result -= Decimal(str(num))
+
+    return float(result)

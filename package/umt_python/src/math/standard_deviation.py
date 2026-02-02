@@ -1,7 +1,8 @@
 import statistics
+from collections.abc import Sequence
 
 
-def standard_deviation(values: list[float]) -> float:
+def standard_deviation(values: Sequence[float]) -> float:
     """
     Calculates the standard deviation of a set of values.
 

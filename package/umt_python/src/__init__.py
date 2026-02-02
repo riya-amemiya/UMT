@@ -162,6 +162,9 @@ from .object import (
     object_pick,
     object_pick_deep,
 )
+from .simple.math import (
+    deviation_value_simple,
+)
 from .string import (
     DEFAULT_RANDOM_STRING_CHARS,
     HTML_ESCAPE_MAP,
@@ -298,6 +301,7 @@ __all__ = [
     "deg_to_rad",
     "delete_spaces",
     "deviation_value",
+    "deviation_value_simple",
     "division",
     "drop",
     "dual_pivot_quick_sort",
