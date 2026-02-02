@@ -22,13 +22,20 @@ export const fuzzySearch = (
   }
 
   const results: { item: string; score: number }[] = [];
+  const lowerQuery = query.toLowerCase();
+  const queryLength = query.length;
 
   for (const item of items) {
-    const distance = levenshteinDistance(
-      query.toLowerCase(),
-      item.toLowerCase(),
-    );
-    const maxLength = Math.max(query.length, item.length);
+    const itemLength = item.length;
+    const maxLength = Math.max(queryLength, itemLength);
+
+    const maxAllowedDistance = Math.floor(maxLength * (1 - threshold));
+
+    if (Math.abs(queryLength - itemLength) > maxAllowedDistance) {
+      continue;
+    }
+
+    const distance = levenshteinDistance(lowerQuery, item.toLowerCase());
     const score = 1 - distance / maxLength;
 
     if (score >= threshold) {
