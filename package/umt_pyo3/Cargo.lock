@@ -124,7 +124,14 @@ name = "umt_pyo3"
 version = "0.1.0"
 dependencies = [
  "pyo3",
+ "umt_rust",
 ]
+
+[[package]]
+name = "umt_rust"
+version = "0.2.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "53cbb0af8d28eba1792c7602445a1f7d8d68ecd03dc765f2c1f3edb5734858e1"
 
 [[package]]
 name = "unicode-ident"
