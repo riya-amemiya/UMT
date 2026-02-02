@@ -81,16 +81,9 @@ mod tests {
     #[test]
     fn should_calculate_weighted_averages_using_calculator() {
         // Simulating grades with weights
-        let grades = [
-            (85.0, 0.3),
-            (90.0, 0.4),
-            (78.0, 0.3),
-        ];
+        let grades = [(85.0, 0.3), (90.0, 0.4), (78.0, 0.3)];
 
-        let weighted_sum: f64 = grades
-            .iter()
-            .map(|(score, weight)| score * weight)
-            .sum();
+        let weighted_sum: f64 = grades.iter().map(|(score, weight)| score * weight).sum();
 
         assert_eq!(weighted_sum, 84.9);
     }
@@ -111,7 +104,11 @@ mod tests {
             })
             .collect();
 
-        let non_zero_rates: Vec<f64> = growth_rates.iter().filter(|&&r| r != 0.0).cloned().collect();
+        let non_zero_rates: Vec<f64> = growth_rates
+            .iter()
+            .filter(|&&r| r != 0.0)
+            .cloned()
+            .collect();
         let avg_growth_rate = umt_average(non_zero_rates);
         assert!(
             close_to(avg_growth_rate, 32.083, 2),
@@ -153,10 +150,7 @@ mod tests {
         let sum = umt_sum(&data);
 
         // Calculate z-scores
-        let z_scores: Vec<f64> = data
-            .iter()
-            .map(|&val| (val - avg) / std_dev)
-            .collect();
+        let z_scores: Vec<f64> = data.iter().map(|&val| (val - avg) / std_dev).collect();
 
         assert_eq!(avg, 30.0);
         assert_eq!(sum, 150.0);

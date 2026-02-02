@@ -17,16 +17,30 @@ mod tests {
 
     #[test]
     fn should_generate_date_range_and_format_each_date() {
-        let start_date = Utc.with_ymd_and_hms(2025, 1, 1, 0, 0, 0).unwrap();
-        let end_date = Utc.with_ymd_and_hms(2025, 1, 5, 0, 0, 0).unwrap();
+        let start_date = Utc
+            .with_ymd_and_hms(2025, 1, 1, 0, 0, 0)
+            .single()
+            .expect("Start date creation failed");
+        let end_date = Utc
+            .with_ymd_and_hms(2025, 1, 5, 0, 0, 0)
+            .single()
+            .expect("End date creation failed");
         let dates = umt_date_range(start_date, end_date);
 
-        let formatted_dates: Vec<String> =
-            dates.iter().map(|date| umt_format(date, "YYYY-MM-DD", 0)).collect();
+        let formatted_dates: Vec<String> = dates
+            .iter()
+            .map(|date| umt_format(date, "YYYY-MM-DD", 0))
+            .collect();
 
         assert_eq!(
             formatted_dates,
-            vec!["2025-01-01", "2025-01-02", "2025-01-03", "2025-01-04", "2025-01-05"]
+            vec![
+                "2025-01-01",
+                "2025-01-02",
+                "2025-01-03",
+                "2025-01-04",
+                "2025-01-05"
+            ]
         );
     }
 
@@ -42,10 +56,20 @@ mod tests {
             Some(birth_month),
             Some(birth_day),
             None,
-        );
+        )
+        .expect("Day of week calculation failed");
         let day_name = umt_get_day_en(day_num);
 
-        let birth_date = umt_new_date_int(birth_year as i32, birth_month, birth_day, None, None, None, None);
+        let birth_date = umt_new_date_int(
+            birth_year as i32,
+            birth_month,
+            birth_day,
+            None,
+            None,
+            None,
+            None,
+        )
+        .expect("Birthday creation failed");
         let formatted_birth = umt_format(&birth_date, "MM/DD/YYYY", 0);
 
         assert!(age > 20, "Age should be greater than 20, got {}", age);
@@ -57,8 +81,10 @@ mod tests {
     fn should_generate_weekday_dates_within_a_month() {
         let year = 2025;
         let month = 1;
-        let start_date = umt_new_date_int(year, month, 1, None, None, None, None);
-        let end_date = umt_new_date_int(year, month, 31, None, None, None, None);
+        let start_date = umt_new_date_int(year, month, 1, None, None, None, None)
+            .expect("Start date creation failed");
+        let end_date = umt_new_date_int(year, month, 31, None, None, None, None)
+            .expect("End date creation failed");
 
         let all_dates = umt_date_range(start_date, end_date);
         let weekday_dates: Vec<_> = all_dates
@@ -73,7 +99,7 @@ mod tests {
             .iter()
             .map(|date| {
                 let formatted = umt_format(date, "YYYY-MM-DD", 0);
-                let day_name = umt_get_day_en(date.weekday().num_days_from_sunday() as u8);
+                let day_name = umt_get_day_en((date.weekday().num_days_from_sunday() as u8).into());
                 (formatted, day_name)
             })
             .collect();
@@ -87,11 +113,7 @@ mod tests {
 
         let valid_days = ["Mon", "Tue", "Wed", "Thu", "Fri"];
         for (_, day) in &formatted_weekdays {
-            assert!(
-                valid_days.contains(&day.as_str()),
-                "Day {} is not a weekday",
-                day
-            );
+            assert!(valid_days.contains(day), "Day {} is not a weekday", day);
         }
     }
 
@@ -101,11 +123,13 @@ mod tests {
         let non_leap_years = [2021, 2022, 2023];
 
         for year in leap_years {
-            let feb1 = umt_new_date_int(year, 2, 1, None, None, None, None);
-            let feb29 = umt_new_date_int(year, 2, 29, None, None, None, None);
+            let feb1 = umt_new_date_int(year, 2, 1, None, None, None, None)
+                .expect("Feb 1st creation failed");
+            let feb29 = umt_new_date_int(year, 2, 29, None, None, None, None)
+                .expect("Feb 29th creation failed");
             let dates = umt_date_range(feb1, feb29);
 
-            let is_leap = umt_is_leap_year(year as u32);
+            let is_leap = umt_is_leap_year(year);
             let feb_days = dates.len();
             let last_day = umt_format(&dates[dates.len() - 1], "YYYY-MM-DD", 0);
 
@@ -116,7 +140,7 @@ mod tests {
 
         for year in non_leap_years {
             assert!(
-                !umt_is_leap_year(year as u32),
+                !umt_is_leap_year(year),
                 "Year {} should not be a leap year",
                 year
             );
@@ -127,8 +151,10 @@ mod tests {
     fn should_create_calendar_view_with_formatted_dates_and_day_names() {
         let year = 2025;
         let month = 4;
-        let first_day = umt_new_date_int(year, month, 1, None, None, None, None);
-        let last_day = umt_new_date_int(year, month, 30, None, None, None, None);
+        let first_day = umt_new_date_int(year, month, 1, None, None, None, None)
+            .expect("First day creation failed");
+        let last_day = umt_new_date_int(year, month, 30, None, None, None, None)
+            .expect("Last day creation failed");
 
         let dates = umt_date_range(first_day, last_day);
         let calendar_data: Vec<_> = dates
@@ -137,7 +163,7 @@ mod tests {
                 let day_of_month = date.day();
                 (
                     umt_format(date, "DD", 0),
-                    umt_get_day_en(date.weekday().num_days_from_sunday() as u8),
+                    umt_get_day_en((date.weekday().num_days_from_sunday() as u8).into()),
                     umt_format(date, "YYYY-MM-DD", 0),
                     ((day_of_month - 1) / 7 + 1) as u32,
                 )
@@ -158,8 +184,10 @@ mod tests {
 
     #[test]
     fn should_calculate_business_days_between_dates() {
-        let start_date = umt_new_date_int(2025, 1, 1, None, None, None, None);
-        let end_date = umt_new_date_int(2025, 1, 31, None, None, None, None);
+        let start_date = umt_new_date_int(2025, 1, 1, None, None, None, None)
+            .expect("Start date creation failed");
+        let end_date = umt_new_date_int(2025, 1, 31, None, None, None, None)
+            .expect("End date creation failed");
 
         let all_dates = umt_date_range(start_date, end_date);
         let business_days: Vec<_> = all_dates
@@ -185,15 +213,16 @@ mod tests {
 
     #[test]
     fn should_handle_international_date_formatting() {
-        let test_date = umt_new_date_int(2025, 12, 25, None, None, None, None);
+        let test_date = umt_new_date_int(2025, 12, 25, None, None, None, None)
+            .expect("Test date creation failed");
 
         let us_format = umt_format(&test_date, "MM/DD/YYYY", 0);
         let eu_format = umt_format(&test_date, "DD/MM/YYYY", 0);
         let iso_format = umt_format(&test_date, "YYYY-MM-DD", 0);
         let simple_format = umt_format(&test_date, "MM/DD", 0);
 
-        let day_of_week_num =
-            umt_day_of_week(Some(2025), Some(12), Some(25), None);
+        let day_of_week_num = umt_day_of_week(Some(2025), Some(12), Some(25), None)
+            .expect("Day of week calculation failed");
         let day_name = umt_get_day_en(day_of_week_num);
         let day_of_week_format = format!("{}, {}", day_name, simple_format);
 
