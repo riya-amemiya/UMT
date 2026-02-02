@@ -1,31 +1,4 @@
-from .is_double import is_double
-
-
-def _gcd_integer(x: int, y: int, *z: int) -> int:
-    """Internal function to calculate GCD for integers."""
-    copy_x = abs(x)
-    copy_y = abs(y)
-    copy_z = [abs(element) for element in z]
-
-    if copy_x == 0:
-        return copy_y
-    if copy_y == 0:
-        return copy_x
-
-    copy_x, copy_y = max(copy_x, copy_y), min(copy_x, copy_y)
-
-    # Euclidean algorithm
-    r = copy_y % copy_x
-    while r != 0:
-        copy_y = copy_x
-        copy_x = r
-        r = copy_y % copy_x
-
-    if len(copy_z) > 0:
-        for element in copy_z:
-            copy_x = _gcd_integer(copy_x, element)
-
-    return copy_x
+import math
 
 
 def gcd(x: float, y: float, *z: float) -> float:
@@ -42,28 +15,40 @@ def gcd(x: float, y: float, *z: float) -> float:
 
     Example:
         >>> gcd(12, 18)
-        6
+        6.0
         >>> gcd(12, 18, 24)
-        6
+        6.0
         >>> gcd(0.5, 0.25)
         0.25
     """
-    all_numbers = [x, y, *z]
+    numbers = [x, y, *z]
 
-    has_decimals = any(is_double(num, False) for num in all_numbers)
+    # Convert all inputs to (numerator, denominator) pairs
+    fractions = []
+    for num in numbers:
+        if hasattr(num, "as_integer_ratio"):
+            fractions.append(num.as_integer_ratio())
+        else:
+            # Fallback for types compatible with int/float but missing the method (e.g. strings)
+            try:
+                fractions.append(int(num).as_integer_ratio())
+            except (ValueError, TypeError):
+                fractions.append(float(num).as_integer_ratio())
 
-    if has_decimals:
+    numerators = [n for n, _ in fractions]
+    denominators = [d for _, d in fractions]
 
-        def get_decimal_places(num: float) -> int:
-            string_val = str(num)
-            return len(string_val.split(".")[1]) if "." in string_val else 0
+    # Optimization: if all are integers
+    if all(d == 1 for d in denominators):
+        return float(math.gcd(*numerators))
 
-        max_decimal_places = max(get_decimal_places(num) for num in all_numbers)
-        multiplier = 10**max_decimal_places
+    common_denominator = math.lcm(*denominators)
 
-        scaled_numbers = [round(num * multiplier) for num in all_numbers]
-        result = _gcd_integer(scaled_numbers[0], scaled_numbers[1], *scaled_numbers[2:])
+    scaled_numerators = [
+        num * (common_denominator // den)
+        for num, den in zip(numerators, denominators)
+    ]
 
-        return result / multiplier
+    result_numerator = math.gcd(*scaled_numerators)
 
-    return float(_gcd_integer(int(x), int(y), *[int(num) for num in z]))
+    return result_numerator / common_denominator
