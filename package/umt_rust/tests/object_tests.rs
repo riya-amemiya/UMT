@@ -1,6 +1,7 @@
-use std::collections::HashMap;
-use umt_rust::object::{umt_key_by, umt_merge, umt_merge_deep, umt_omit, umt_pick, umt_pick_deep, Value};
 use umt_rust::obj;
+use umt_rust::object::{
+    Value, umt_key_by, umt_merge, umt_merge_deep, umt_omit, umt_pick, umt_pick_deep,
+};
 
 #[test]
 fn test_key_by() {

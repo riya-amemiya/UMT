@@ -1,7 +1,7 @@
-use std::collections::HashMap;
 use crate::math::multiplication::umt_multiplication;
-use crate::validate::umt_is_number_str;
 use crate::object::Value;
+use crate::validate::umt_is_number_str;
+use std::collections::HashMap;
 
 /// Converts currency amounts in a string using currency symbols.
 ///

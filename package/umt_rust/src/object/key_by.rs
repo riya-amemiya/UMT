@@ -38,18 +38,24 @@ fn extract_key(item: &Value, path: &str) -> String {
         return item.to_string();
     }
 
-    // Simple property access for now, could be expanded to dot notation if needed
-    match item {
-        Value::Object(map) => {
-            if let Some(val) = map.get(path) {
-                match val {
-                    Value::String(s) => s.clone(),
-                    v => v.to_string(),
+    let parts: Vec<&str> = path.split('.').collect();
+    let mut current = item;
+
+    for part in parts {
+        match current {
+            Value::Object(map) => {
+                if let Some(val) = map.get(part) {
+                    current = val;
+                } else {
+                    return "undefined".to_string();
                 }
-            } else {
-                "undefined".to_string()
             }
+            _ => return "undefined".to_string(),
         }
-        _ => "undefined".to_string(),
+    }
+
+    match current {
+        Value::String(s) => s.clone(),
+        v => v.to_string(),
     }
 }

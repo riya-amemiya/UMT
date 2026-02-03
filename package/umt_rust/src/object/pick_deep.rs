@@ -67,7 +67,9 @@ fn insert_deep(map: &mut HashMap<String, Value>, path: &str, value: Value) {
     let key = parts[0];
     let rest = parts[1..].join(".");
 
-    let entry = map.entry(key.to_string()).or_insert_with(|| Value::Object(HashMap::new()));
+    let entry = map
+        .entry(key.to_string())
+        .or_insert_with(|| Value::Object(HashMap::new()));
 
     if let Value::Object(inner_map) = entry {
         insert_deep(inner_map, &rest, value);

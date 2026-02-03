@@ -1,7 +1,6 @@
 use umt_rust::math::calculator::{umt_calculator, umt_calculator_core};
-use umt_rust::object::Value;
 use umt_rust::obj;
-use std::collections::HashMap;
+use umt_rust::object::Value;
 
 #[test]
 fn test_core_basic_operations() {

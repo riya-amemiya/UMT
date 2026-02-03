@@ -15,10 +15,7 @@ use std::collections::HashMap;
 /// # Returns
 ///
 /// Calculation result
-pub fn umt_calculator(
-    expression: &str,
-    exchange: Option<&HashMap<String, Value>>,
-) -> String {
+pub fn umt_calculator(expression: &str, exchange: Option<&HashMap<String, Value>>) -> String {
     let clean_expression = expression.replace(char::is_whitespace, "");
     if clean_expression.contains('=') {
         umt_literal_expression(&clean_expression)

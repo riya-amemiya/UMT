@@ -1,9 +1,9 @@
-use regex::Regex;
-use crate::object::Value;
-use std::collections::HashMap;
-use crate::math::{umt_addition, umt_subtract, umt_multiplication, umt_division};
-use crate::validate::umt_is_number_str;
 use super::convert_currency::umt_convert_currency;
+use crate::math::{umt_addition, umt_division, umt_multiplication, umt_subtract};
+use crate::object::Value;
+use crate::validate::umt_is_number_str;
+use regex::Regex;
+use std::collections::HashMap;
 use std::sync::OnceLock;
 
 pub fn umt_calculator_core(
@@ -48,7 +48,9 @@ pub fn umt_calculator_core(
             sanitized_expression = temporary;
         }
         // Handle addition and subtraction
-        else if contains_add_sub(&sanitized_expression) && !umt_is_number_str(&sanitized_expression) {
+        else if contains_add_sub(&sanitized_expression)
+            && !umt_is_number_str(&sanitized_expression)
+        {
             let temporary = resolve_add_sub(&sanitized_expression);
             if temporary == "NaN" {
                 return sanitized_expression;
@@ -73,14 +75,14 @@ fn apply_currency_exchange(expr: &str, rates: &HashMap<String, Value>) -> String
     let mut return_expr = expr.to_string();
     for (currency_symbol, _) in rates {
         if return_expr.contains(currency_symbol) {
-             let pattern = format!(r"{}(\d+)", regex::escape(currency_symbol));
-             let re = Regex::new(&pattern).unwrap();
+            let pattern = format!(r"{}(\d+)", regex::escape(currency_symbol));
+            let re = Regex::new(&pattern).unwrap();
 
-             if let Some(caps) = re.captures(&return_expr) {
-                 let match_str = caps.get(0).unwrap().as_str();
-                 let converted = umt_convert_currency(match_str, Some(rates));
-                 return_expr = return_expr.replacen(match_str, &converted, 1);
-             }
+            if let Some(caps) = re.captures(&return_expr) {
+                let match_str = caps.get(0).unwrap().as_str();
+                let converted = umt_convert_currency(match_str, Some(rates));
+                return_expr = return_expr.replacen(match_str, &converted, 1);
+            }
         }
     }
     return_expr
@@ -98,13 +100,16 @@ fn contains_parentheses(expr: &str) -> bool {
 }
 
 fn resolve_parentheses(expr: &str) -> String {
+    // Find the innermost parentheses: matches (...) containing no other ( or )
     static RE: OnceLock<Regex> = OnceLock::new();
-    let re = RE.get_or_init(|| Regex::new(r"\((-?\d+(?:\.\d+)?)([*+/-])(-?\d+(?:\.\d+)?)\)").unwrap());
+    let re = RE.get_or_init(|| Regex::new(r"\(([^()]+)\)").unwrap());
 
     if let Some(caps) = re.captures(expr) {
         let match_str = caps.get(0).unwrap().as_str();
-        let inner_expr = match_str.replace(['(', ')'], "");
-        let result = umt_calculator_core(&inner_expr, None);
+        let inner_content = caps.get(1).unwrap().as_str();
+        // Calculate the content inside the parentheses
+        let result = umt_calculator_core(inner_content, None);
+        // Replace the entire (...) block with the result
         return expr.replace(match_str, &result);
     }
     "NaN".to_string()

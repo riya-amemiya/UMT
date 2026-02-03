@@ -11,8 +11,6 @@ use std::collections::HashMap;
 /// # Returns
 ///
 /// Configured calculator closure
-pub fn umt_calculator_initialization(
-    exchange: HashMap<String, Value>,
-) -> impl Fn(&str) -> String {
+pub fn umt_calculator_initialization(exchange: HashMap<String, Value>) -> impl Fn(&str) -> String {
     move |x: &str| umt_calculator(x, Some(&exchange))
 }
