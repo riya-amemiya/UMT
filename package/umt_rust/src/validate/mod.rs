@@ -38,3 +38,14 @@ pub use is_prime_number::*;
 pub use is_string::*;
 pub use is_value_nan::*;
 pub use parse_email::*;
+
+// Environment checks
+mod is_browser;
+mod is_bun;
+mod is_node;
+mod is_node_webkit;
+
+pub use is_browser::*;
+pub use is_bun::*;
+pub use is_node::*;
+pub use is_node_webkit::*;
