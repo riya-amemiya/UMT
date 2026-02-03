@@ -110,6 +110,8 @@ jobs:
       - name: Build Package
         if: steps.cache-restore-prod.outputs.cache-hit != 'true'
         run: bun run build
+      - name: Remove unnecessary build artifacts for accurate size measurement
+        run: rm -rf module/tsconfig.tsbuildinfo module/tests
       - name: List Module Directory
         run: ls module
       - name: Upload Bundle Analysis to Codecov
