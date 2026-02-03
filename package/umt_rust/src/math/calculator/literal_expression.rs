@@ -93,10 +93,10 @@ pub fn umt_literal_expression(x: &str) -> String {
     let coeff;
 
     // Check sign
-    let (sign_mult, rest) = if var_term.starts_with('-') {
-        (-1.0, &var_term[1..])
-    } else if var_term.starts_with('+') {
-        (1.0, &var_term[1..])
+    let (sign_mult, rest) = if let Some(stripped) = var_term.strip_prefix('-') {
+        (-1.0, stripped)
+    } else if let Some(stripped) = var_term.strip_prefix('+') {
+        (1.0, stripped)
     } else {
         (1.0, &var_term[0..])
     };

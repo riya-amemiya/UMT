@@ -73,7 +73,7 @@ pub fn umt_calculator_core(
 
 fn apply_currency_exchange(expr: &str, rates: &HashMap<String, Value>) -> String {
     let mut return_expr = expr.to_string();
-    for (currency_symbol, _) in rates {
+    for currency_symbol in rates.keys() {
         if return_expr.contains(currency_symbol) {
             let pattern = format!(r"{}(\d+)", regex::escape(currency_symbol));
             let re = Regex::new(&pattern).unwrap();

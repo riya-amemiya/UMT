@@ -22,7 +22,7 @@ pub fn umt_key_by(collection: &Value, iteratee: &str) -> Value {
             }
         }
         Value::Object(obj) => {
-            for (_, item) in obj {
+            for item in obj.values() {
                 let key = extract_key(item, iteratee);
                 result.insert(key, item.clone());
             }

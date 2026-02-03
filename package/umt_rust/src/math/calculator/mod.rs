@@ -7,8 +7,8 @@ pub use core::*;
 pub mod literal_expression;
 pub use literal_expression::*;
 
-pub mod calculator;
-pub use calculator::*;
+pub mod calc;
+pub use calc::*;
 
 pub mod calculator_initialization;
 pub use calculator_initialization::*;
