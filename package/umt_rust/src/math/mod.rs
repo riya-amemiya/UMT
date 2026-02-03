@@ -87,3 +87,6 @@ pub mod uuidv7;
 pub use uuidv7::*;
 pub mod xoshiro256;
 pub use xoshiro256::*;
+
+// Calculator subsystem
+pub mod calculator;

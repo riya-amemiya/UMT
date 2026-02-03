@@ -1,27 +1,5 @@
 use std::collections::HashMap;
-use umt_rust::object::Value;
-
-/// Helper function to deep merge HashMaps
-fn merge_deep(
-    target: &HashMap<String, Value>,
-    sources: &[&HashMap<String, Value>],
-) -> HashMap<String, Value> {
-    let mut result = target.clone();
-    for source in sources {
-        for (key, value) in source.iter() {
-            if let (Some(Value::Object(existing)), Value::Object(new_obj)) =
-                (result.get(key), value)
-            {
-                // Both are objects, merge deeply
-                result.insert(key.clone(), Value::Object(merge_deep(existing, &[new_obj])));
-            } else {
-                // Otherwise, just override
-                result.insert(key.clone(), value.clone());
-            }
-        }
-    }
-    result
-}
+use umt_rust::object::{umt_merge_deep, umt_merge_deep_two, Value};
 
 #[test]
 fn test_should_deeply_merge_nested_objects() {
@@ -41,7 +19,7 @@ fn test_should_deeply_merge_nested_objects() {
     source.insert("b".to_string(), Value::Object(source_b));
     source.insert("f".to_string(), Value::Int(6));
 
-    let result = merge_deep(&target, &[&source]);
+    let result = umt_merge_deep(&target, &[&source]);
 
     assert_eq!(result.get("a"), Some(&Value::Int(1)));
     assert_eq!(result.get("f"), Some(&Value::Int(6)));
@@ -72,7 +50,7 @@ fn test_should_not_modify_original_objects() {
     let target_clone = target.clone();
     let source_clone = source.clone();
 
-    let result = merge_deep(&target, &[&source]);
+    let result = umt_merge_deep(&target, &[&source]);
 
     assert_eq!(target, target_clone);
     assert_eq!(source, source_clone);
@@ -114,7 +92,7 @@ fn test_should_handle_multiple_levels_of_nesting() {
     let mut source = HashMap::new();
     source.insert("level1".to_string(), Value::Object(level1_source));
 
-    let result = merge_deep(&target, &[&source]);
+    let result = umt_merge_deep(&target, &[&source]);
 
     // Verify the deep structure
     if let Some(Value::Object(l1)) = result.get("level1") {
@@ -145,7 +123,7 @@ fn test_should_handle_non_object_values() {
     let mut source = HashMap::new();
     source.insert("a".to_string(), Value::String("string".to_string()));
 
-    let result = merge_deep(&target, &[&source]);
+    let result = umt_merge_deep(&target, &[&source]);
 
     assert_eq!(result.get("a"), Some(&Value::String("string".to_string())));
 }
@@ -172,7 +150,7 @@ fn test_should_handle_arrays_as_values() {
     );
     source.insert("b".to_string(), Value::Object(source_b));
 
-    let result = merge_deep(&target, &[&source]);
+    let result = umt_merge_deep(&target, &[&source]);
 
     // Arrays should be replaced, not merged
     assert_eq!(
@@ -197,7 +175,7 @@ fn test_should_handle_empty_objects() {
     let mut source = HashMap::new();
     source.insert("a".to_string(), Value::Object(source_a));
 
-    let result = merge_deep(&target, &[&source]);
+    let result = umt_merge_deep(&target, &[&source]);
 
     if let Some(Value::Object(a)) = result.get("a") {
         assert_eq!(a.get("b"), Some(&Value::Int(1)));
@@ -226,7 +204,7 @@ fn test_should_handle_multiple_sources() {
     let mut source2 = HashMap::new();
     source2.insert("a".to_string(), Value::Object(source2_a));
 
-    let result = merge_deep(&target, &[&source1, &source2]);
+    let result = umt_merge_deep(&target, &[&source1, &source2]);
 
     if let Some(Value::Object(a)) = result.get("a") {
         assert_eq!(a.get("b"), Some(&Value::Int(1)));
@@ -248,7 +226,7 @@ fn test_should_handle_null_values() {
     let mut source = HashMap::new();
     source.insert("a".to_string(), Value::Null);
 
-    let result = merge_deep(&target, &[&source]);
+    let result = umt_merge_deep(&target, &[&source]);
 
     assert_eq!(result.get("a"), Some(&Value::Null));
 }
@@ -262,12 +240,36 @@ fn test_should_handle_no_sources_provided() {
     target.insert("a".to_string(), Value::Int(1));
     target.insert("b".to_string(), Value::Object(target_b));
 
-    let result = merge_deep(&target, &[]);
+    let result = umt_merge_deep(&target, &[]);
 
     assert_eq!(result.get("a"), Some(&Value::Int(1)));
     if let Some(Value::Object(b)) = result.get("b") {
         assert_eq!(b.get("c"), Some(&Value::Int(2)));
     } else {
         panic!("Expected b to be an object");
+    }
+}
+
+#[test]
+fn test_merge_deep_two_objects() {
+    let mut inner_target = HashMap::new();
+    inner_target.insert("x".to_string(), Value::Int(1));
+
+    let mut target = HashMap::new();
+    target.insert("nested".to_string(), Value::Object(inner_target));
+
+    let mut inner_source = HashMap::new();
+    inner_source.insert("y".to_string(), Value::Int(2));
+
+    let mut source = HashMap::new();
+    source.insert("nested".to_string(), Value::Object(inner_source));
+
+    let result = umt_merge_deep_two(&target, &source);
+
+    if let Some(Value::Object(nested)) = result.get("nested") {
+        assert_eq!(nested.get("x"), Some(&Value::Int(1)));
+        assert_eq!(nested.get("y"), Some(&Value::Int(2)));
+    } else {
+        panic!("Expected object for key 'nested'");
     }
 }
