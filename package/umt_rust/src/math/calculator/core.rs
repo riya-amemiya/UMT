@@ -59,12 +59,14 @@ pub fn umt_calculator_core(
         }
         // Return result if no more calculations needed
         else {
-            if let Ok(number) = sanitized_expression.parse::<f64>() {
-                if !number.is_nan() {
-                    // Handle floating point precision issues
-                    let rounded = (number * 1e10).round() / 1e10;
-                    return rounded.to_string();
-                }
+            if let Some(number) = sanitized_expression
+                .parse::<f64>()
+                .ok()
+                .filter(|n| !n.is_nan())
+            {
+                // Handle floating point precision issues
+                let rounded = (number * 1e10).round() / 1e10;
+                return rounded.to_string();
             }
             return sanitized_expression;
         }

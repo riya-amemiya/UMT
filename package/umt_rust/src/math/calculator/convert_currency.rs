@@ -1,6 +1,5 @@
 use crate::math::multiplication::umt_multiplication;
 use crate::object::Value;
-use crate::validate::umt_is_number_str;
 use std::collections::HashMap;
 
 /// Converts currency amounts in a string using currency symbols.
@@ -29,8 +28,13 @@ pub fn umt_convert_currency(
                     _ => f64::NAN,
                 };
 
-                if !rate.is_nan() && umt_is_number_str(amount_string) {
-                    if let Ok(amount) = amount_string.parse::<f64>() {
+                #[allow(clippy::collapsible_if)]
+                if !rate.is_nan() {
+                    if let Some(amount) = amount_string
+                        .parse::<f64>()
+                        .ok()
+                        .filter(|n| n.is_finite())
+                    {
                         let converted_amount = umt_multiplication(&[amount, rate]);
                         if !converted_amount.is_nan() {
                             return converted_amount.to_string();

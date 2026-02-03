@@ -39,10 +39,8 @@ pub fn umt_literal_expression(x: &str) -> String {
             // This side has the variable
             // We parse it into tokens.
             for cap in re_tokens.captures_iter(part) {
-                if let Some(m) = cap.get(0) {
-                    if !m.as_str().is_empty() {
-                        variable_part_tokens.push(m.as_str().to_string());
-                    }
+                if let Some(m) = cap.get(0).filter(|m| !m.as_str().is_empty()) {
+                    variable_part_tokens.push(m.as_str().to_string());
                 }
             }
         } else {
