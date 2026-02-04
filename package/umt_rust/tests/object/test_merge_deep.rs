@@ -1,5 +1,5 @@
 use std::collections::HashMap;
-use umt_rust::object::{umt_merge_deep, umt_merge_deep_two, Value};
+use umt_rust::object::{Value, umt_merge_deep, umt_merge_deep_two};
 
 #[test]
 fn test_should_deeply_merge_nested_objects() {

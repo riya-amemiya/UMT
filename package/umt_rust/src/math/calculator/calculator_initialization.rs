@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 use std::sync::Arc;
 
-use super::calculator::umt_calculator;
+use super::entry::umt_calculator;
 
 /// A configured calculator with pre-set exchange rates.
 pub struct Calculator {

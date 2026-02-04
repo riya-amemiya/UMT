@@ -1,5 +1,5 @@
 use std::collections::HashMap;
-use umt_rust::object::{umt_merge, umt_merge_two, Value};
+use umt_rust::object::{Value, umt_merge, umt_merge_two};
 
 #[test]
 fn test_should_merge_multiple_objects() {

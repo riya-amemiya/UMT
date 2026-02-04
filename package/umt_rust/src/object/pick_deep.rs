@@ -95,11 +95,7 @@ fn set_nested_value(
 }
 
 /// Recursively set a value at the given path in a nested structure.
-fn set_nested_value_recursive(
-    result: &mut HashMap<String, Value>,
-    parts: &[&str],
-    value: Value,
-) {
+fn set_nested_value_recursive(result: &mut HashMap<String, Value>, parts: &[&str], value: Value) {
     if parts.is_empty() {
         return;
     }

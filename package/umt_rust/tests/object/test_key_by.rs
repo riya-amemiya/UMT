@@ -1,5 +1,5 @@
 use std::collections::HashMap;
-use umt_rust::object::{umt_key_by, umt_key_by_property, Value};
+use umt_rust::object::{Value, umt_key_by, umt_key_by_property};
 
 #[test]
 fn test_should_create_object_using_property_name_as_key() {

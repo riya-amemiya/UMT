@@ -73,7 +73,8 @@ pub fn umt_calculator_core(
             sanitized_expression = temporary;
         }
         // Handle addition and subtraction
-        else if contains_add_sub(&sanitized_expression) && !is_number_string(&sanitized_expression)
+        else if contains_add_sub(&sanitized_expression)
+            && !is_number_string(&sanitized_expression)
         {
             let temporary = resolve_add_sub(&sanitized_expression);
             if temporary == "NaN" {
@@ -83,12 +84,12 @@ pub fn umt_calculator_core(
         }
         // Return result if no more calculations needed
         else {
-            if let Ok(number) = sanitized_expression.parse::<f64>() {
-                if !number.is_nan() {
-                    // Handle floating point precision issues
-                    let rounded = (number * 1e10).round() / 1e10;
-                    return rounded.to_string();
-                }
+            if let Ok(number) = sanitized_expression.parse::<f64>()
+                && !number.is_nan()
+            {
+                // Handle floating point precision issues
+                let rounded = (number * 1e10).round() / 1e10;
+                return rounded.to_string();
             }
             return sanitized_expression;
         }
@@ -108,12 +109,12 @@ fn apply_currency_exchange(expr: &str, rates: &HashMap<String, f64>) -> String {
     for currency_symbol in rates.keys() {
         if return_expr.contains(currency_symbol) {
             let pattern = format!(r"{}([0-9]+(?:\.[0-9]+)?)", regex::escape(currency_symbol));
-            if let Ok(regex) = Regex::new(&pattern) {
-                if let Some(captures) = regex.captures(&return_expr) {
-                    let full_match = captures.get(0).unwrap().as_str();
-                    let converted = umt_convert_currency(full_match, Some(rates));
-                    return_expr = return_expr.replacen(full_match, &converted, 1);
-                }
+            if let Ok(regex) = Regex::new(&pattern)
+                && let Some(captures) = regex.captures(&return_expr)
+            {
+                let full_match = captures.get(0).unwrap().as_str();
+                let converted = umt_convert_currency(full_match, Some(rates));
+                return_expr = return_expr.replacen(full_match, &converted, 1);
             }
         }
     }
@@ -161,9 +162,19 @@ fn resolve_mul_exp(expr: &str) -> String {
 
     if let Some(captures) = regex.captures(expr) {
         let prefix = captures.get(1).map_or("", |m| m.as_str());
-        let left: f64 = captures.get(2).unwrap().as_str().parse().unwrap_or(f64::NAN);
+        let left: f64 = captures
+            .get(2)
+            .unwrap()
+            .as_str()
+            .parse()
+            .unwrap_or(f64::NAN);
         let operator = captures.get(3).unwrap().as_str();
-        let right: f64 = captures.get(4).unwrap().as_str().parse().unwrap_or(f64::NAN);
+        let right: f64 = captures
+            .get(4)
+            .unwrap()
+            .as_str()
+            .parse()
+            .unwrap_or(f64::NAN);
 
         let result = if operator == "^" {
             left.powf(right)
@@ -182,8 +193,18 @@ fn resolve_div(expr: &str) -> String {
 
     if let Some(captures) = regex.captures(expr) {
         let full_match = captures.get(0).unwrap().as_str();
-        let left: f64 = captures.get(1).unwrap().as_str().parse().unwrap_or(f64::NAN);
-        let right: f64 = captures.get(2).unwrap().as_str().parse().unwrap_or(f64::NAN);
+        let left: f64 = captures
+            .get(1)
+            .unwrap()
+            .as_str()
+            .parse()
+            .unwrap_or(f64::NAN);
+        let right: f64 = captures
+            .get(2)
+            .unwrap()
+            .as_str()
+            .parse()
+            .unwrap_or(f64::NAN);
 
         let result = umt_division(left, right);
         return expr.replacen(full_match, &result.to_string(), 1);
@@ -201,9 +222,19 @@ fn resolve_add_sub(expr: &str) -> String {
 
     if let Some(captures) = regex.captures(expr) {
         let full_match = captures.get(0).unwrap().as_str();
-        let left: f64 = captures.get(1).unwrap().as_str().parse().unwrap_or(f64::NAN);
+        let left: f64 = captures
+            .get(1)
+            .unwrap()
+            .as_str()
+            .parse()
+            .unwrap_or(f64::NAN);
         let operator = captures.get(2).unwrap().as_str();
-        let right: f64 = captures.get(3).unwrap().as_str().parse().unwrap_or(f64::NAN);
+        let right: f64 = captures
+            .get(3)
+            .unwrap()
+            .as_str()
+            .parse()
+            .unwrap_or(f64::NAN);
 
         let result = if operator == "+" {
             umt_addition(&[left, right])

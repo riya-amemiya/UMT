@@ -34,10 +34,10 @@ pub fn umt_literal_expression(x: &str) -> String {
     let mut variable_part: Vec<String> = Vec::new();
 
     // Split by equals sign and identify numerical and variable parts
+    let letter_regex = Regex::new(r"[A-Za-z]+").unwrap();
+    let split_regex = Regex::new(r"([-+]?\d*[A-Za-z]+)|([-+]?\d+)").unwrap();
     for part in &sides {
-        let letter_regex = Regex::new(r"[A-Za-z]+").unwrap();
         if letter_regex.is_match(part) {
-            let split_regex = Regex::new(r"([-+]?\d*[A-Za-z]+)|([-+]?\d+)").unwrap();
             variable_part = split_regex
                 .find_iter(part)
                 .map(|m| m.as_str().to_string())
@@ -67,8 +67,10 @@ pub fn umt_literal_expression(x: &str) -> String {
         } else {
             "+"
         };
-        numerical_part =
-            umt_calculator_core(&format!("{}{}{}", numerical_part, sign, variable_part[1]), None);
+        numerical_part = umt_calculator_core(
+            &format!("{}{}{}", numerical_part, sign, variable_part[1]),
+            None,
+        );
     } else {
         numerical_part = umt_calculator_core(&numerical_part, None);
     }

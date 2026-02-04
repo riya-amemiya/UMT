@@ -39,12 +39,12 @@ pub fn umt_convert_currency(
         if input_string.starts_with(currency_symbol) {
             let amount_string = &input_string[currency_symbol.len()..];
 
-            if !rate.is_nan() {
-                if let Ok(amount) = amount_string.parse::<f64>() {
-                    let converted_amount = umt_multiplication(&[amount, *rate]);
-                    if !converted_amount.is_nan() {
-                        return converted_amount.to_string();
-                    }
+            if !rate.is_nan()
+                && let Ok(amount) = amount_string.parse::<f64>()
+            {
+                let converted_amount = umt_multiplication(&[amount, *rate]);
+                if !converted_amount.is_nan() {
+                    return converted_amount.to_string();
                 }
             }
         }

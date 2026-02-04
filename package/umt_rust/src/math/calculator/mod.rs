@@ -7,8 +7,8 @@
 //! - `convert_currency` - Currency conversion utilities
 //! - `literal_expression` - Algebraic equation solver
 
-pub mod calculator;
-pub use calculator::*;
+pub mod entry;
+pub use entry::*;
 
 pub mod calculator_initialization;
 pub use calculator_initialization::*;

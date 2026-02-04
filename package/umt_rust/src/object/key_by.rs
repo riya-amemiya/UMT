@@ -96,10 +96,10 @@ where
 /// ```
 pub fn umt_key_by_property(collection: &[Value], property: &str) -> HashMap<String, Value> {
     umt_key_by(collection, |v| {
-        if let Value::Object(obj) = v {
-            if let Some(val) = obj.get(property) {
-                return value_to_string(val);
-            }
+        if let Value::Object(obj) = v
+            && let Some(val) = obj.get(property)
+        {
+            return value_to_string(val);
         }
         String::new()
     })

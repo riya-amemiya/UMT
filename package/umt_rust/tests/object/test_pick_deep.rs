@@ -1,5 +1,5 @@
 use std::collections::HashMap;
-use umt_rust::object::{umt_pick_deep, umt_pick_deep_string_keys, Value};
+use umt_rust::object::{Value, umt_pick_deep, umt_pick_deep_string_keys};
 
 #[test]
 fn test_should_select_simple_keys() {

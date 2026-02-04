@@ -25,10 +25,7 @@ use super::literal_expression::umt_literal_expression;
 /// assert_eq!(umt_calculator("(2+3)*4", None), "20");
 /// assert_eq!(umt_calculator("x=5", None), "5");
 /// ```
-pub fn umt_calculator(
-    expression: &str,
-    exchange: Option<&HashMap<String, f64>>,
-) -> String {
+pub fn umt_calculator(expression: &str, exchange: Option<&HashMap<String, f64>>) -> String {
     let clean_expression: String = expression.chars().filter(|c| !c.is_whitespace()).collect();
 
     if clean_expression.contains('=') {

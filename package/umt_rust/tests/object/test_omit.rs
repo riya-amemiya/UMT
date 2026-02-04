@@ -1,5 +1,5 @@
 use std::collections::HashMap;
-use umt_rust::object::{umt_omit, umt_omit_string_keys, Value};
+use umt_rust::object::{Value, umt_omit, umt_omit_string_keys};
 
 #[test]
 fn test_should_omit_specified_keys() {
