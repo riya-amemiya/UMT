@@ -25,7 +25,7 @@ pub fn umt_calculator_core(
 
         // Handle parentheses
         if contains_parentheses(&sanitized_expression) {
-            let temporary = resolve_parentheses(&sanitized_expression);
+            let temporary = resolve_parentheses(&sanitized_expression, currency_exchange);
             if temporary == "NaN" {
                 return sanitized_expression;
             }
@@ -101,7 +101,7 @@ fn contains_parentheses(expr: &str) -> bool {
     expr.contains('(') || expr.contains(')')
 }
 
-fn resolve_parentheses(expr: &str) -> String {
+fn resolve_parentheses(expr: &str, currency_exchange: Option<&HashMap<String, Value>>) -> String {
     // Find the innermost parentheses: matches (...) containing no other ( or )
     static RE: OnceLock<Regex> = OnceLock::new();
     let re = RE.get_or_init(|| Regex::new(r"\(([^()]+)\)").unwrap());
@@ -110,7 +110,7 @@ fn resolve_parentheses(expr: &str) -> String {
         let match_str = caps.get(0).unwrap().as_str();
         let inner_content = caps.get(1).unwrap().as_str();
         // Calculate the content inside the parentheses
-        let result = umt_calculator_core(inner_content, None);
+        let result = umt_calculator_core(inner_content, currency_exchange);
         // Replace the entire (...) block with the result
         return expr.replace(match_str, &result);
     }

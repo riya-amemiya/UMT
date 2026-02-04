@@ -1,9 +1,11 @@
+use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::fmt;
 
 /// A dynamic value type for representing JSON-like structures.
 /// This allows working with heterogeneous data structures similar to JavaScript objects.
-#[derive(Debug, Clone, PartialEq, Default)]
+#[derive(Debug, Clone, PartialEq, Default, Serialize, Deserialize)]
+#[serde(untagged)]
 pub enum Value {
     /// Null value
     #[default]
