@@ -1,6 +1,6 @@
 use umt_rust::string::{
-    umt_to_base64, umt_from_base64, umt_format_string_indexed, umt_trim_characters,
-    umt_camel_case, umt_kebab_case
+    umt_camel_case, umt_format_string_indexed, umt_from_base64, umt_kebab_case, umt_to_base64,
+    umt_trim_characters,
 };
 
 #[test]

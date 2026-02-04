@@ -1,6 +1,6 @@
-use umt_rust::math::calculator::umt_calculator;
-use umt_rust::math::{umt_average, umt_standard_deviation, umt_deviation_value};
 use umt_rust::array::umt_sum;
+use umt_rust::math::calculator::umt_calculator;
+use umt_rust::math::{umt_average, umt_deviation_value, umt_standard_deviation};
 
 #[test]
 fn test_calc_and_stats() {
@@ -10,7 +10,10 @@ fn test_calc_and_stats() {
         umt_calculator("20 - 8", None),
         umt_calculator("3 * 6", None),
         umt_calculator("100 / 4", None),
-    ].iter().map(|s| s.parse().unwrap()).collect();
+    ]
+    .iter()
+    .map(|s| s.parse().unwrap())
+    .collect();
 
     // 15, 12, 18, 25
     let avg = umt_average(values);

@@ -33,7 +33,7 @@ fn test_merge() {
     let obj1 = obj!("a" => 1, "b" => 2);
     let obj2 = obj!("b" => 3, "c" => 4);
 
-    let result = umt_merge(&obj1, &obj2);
+    let result = umt_merge(&obj1, &[obj2]);
 
     if let Value::Object(map) = result {
         assert_eq!(map.get("a").unwrap(), &Value::Int(1));
@@ -49,7 +49,7 @@ fn test_merge_deep() {
     let obj1 = obj!("a" => 1, "nested" => obj!("x" => 10, "y" => 20));
     let obj2 = obj!("b" => 2, "nested" => obj!("y" => 30, "z" => 40));
 
-    let result = umt_merge_deep(&obj1, &obj2);
+    let result = umt_merge_deep(&obj1, &[obj2]);
 
     if let Value::Object(map) = result {
         assert_eq!(map.get("a").unwrap(), &Value::Int(1));

@@ -58,6 +58,29 @@ impl Value {
             _ => None,
         }
     }
+
+    /// Returns the length of the value (for Array, Object, String).
+    pub fn len(&self) -> usize {
+        match self {
+            Value::Array(arr) => arr.len(),
+            Value::Object(obj) => obj.len(),
+            Value::String(s) => s.len(),
+            _ => 0,
+        }
+    }
+
+    /// Returns true if the value is empty.
+    pub fn is_empty(&self) -> bool {
+        self.len() == 0
+    }
+
+    /// Gets a value by key (for Object).
+    pub fn get(&self, key: &str) -> Option<&Value> {
+        match self {
+            Value::Object(obj) => obj.get(key),
+            _ => None,
+        }
+    }
 }
 
 impl fmt::Display for Value {

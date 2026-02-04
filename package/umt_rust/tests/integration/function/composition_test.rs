@@ -1,6 +1,6 @@
-use umt_rust::tool::umt_pipe;
-use umt_rust::tool::umt_parse_json;
 use umt_rust::object::Value;
+use umt_rust::tool::umt_parse_json;
+use umt_rust::tool::umt_pipe;
 
 #[test]
 fn test_combine_curry_with_pipe() {
@@ -33,12 +33,28 @@ fn test_complex_data_processing() {
             if let Ok(Value::Object(map)) = v {
                 if let Some(Value::Array(users)) = map.get("users") {
                     // Filter adults
-                    let names: Vec<String> = users.iter()
+                    let names: Vec<String> = users
+                        .iter()
                         .filter_map(|u| {
                             if let Value::Object(u_map) = u {
-                                let age = u_map.get("age").and_then(|a| if let Value::Int(i) = a { Some(*i) } else { None }).unwrap_or(0);
+                                let age = u_map
+                                    .get("age")
+                                    .and_then(|a| {
+                                        if let Value::Int(i) = a {
+                                            Some(*i)
+                                        } else {
+                                            None
+                                        }
+                                    })
+                                    .unwrap_or(0);
                                 if age >= 25 {
-                                    u_map.get("name").and_then(|n| if let Value::String(s) = n { Some(s.clone()) } else { None })
+                                    u_map.get("name").and_then(|n| {
+                                        if let Value::String(s) = n {
+                                            Some(s.clone())
+                                        } else {
+                                            None
+                                        }
+                                    })
                                 } else {
                                     None
                                 }

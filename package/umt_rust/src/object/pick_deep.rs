@@ -18,11 +18,6 @@ pub fn umt_pick_deep(object: &Value, paths: &[&str]) -> Value {
 
             for path in paths {
                 if let Some(val) = get_deep(object, path) {
-                    // When picking deep, we need to reconstruct the structure?
-                    // Or just flat map? TS `pickDeep` usually constructs deep object.
-                    // But looking at typical implementations, it might just be subset.
-                    // For simplicity, let's assume we just put it in the root or preserve structure.
-                    // Let's preserve structure.
                     insert_deep(&mut result_map, path, val);
                 }
             }

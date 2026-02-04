@@ -1,4 +1,4 @@
-use umt_rust::array::{umt_drop, umt_first, DropDirection};
+use umt_rust::array::{DropDirection, umt_drop, umt_first};
 
 #[test]
 fn test_drop_and_first() {
@@ -36,16 +36,25 @@ fn test_edge_cases() {
     assert_eq!(umt_first(&umt_drop(&two, 5, DropDirection::Left)), None);
 
     let three = vec![1, 2, 3];
-    assert_eq!(umt_first(&umt_drop(&three, 0, DropDirection::Left)), Some(&1));
+    assert_eq!(
+        umt_first(&umt_drop(&three, 0, DropDirection::Left)),
+        Some(&1)
+    );
 }
 
 #[test]
 fn test_mixed_types() {
     let str_arr = vec!["a", "b", "c"];
-    assert_eq!(umt_first(&umt_drop(&str_arr, 1, DropDirection::Left)), Some(&"b"));
+    assert_eq!(
+        umt_first(&umt_drop(&str_arr, 1, DropDirection::Left)),
+        Some(&"b")
+    );
 
     let bool_arr = vec![true, false];
-    assert_eq!(umt_first(&umt_drop(&bool_arr, 1, DropDirection::Left)), Some(&false));
+    assert_eq!(
+        umt_first(&umt_drop(&bool_arr, 1, DropDirection::Left)),
+        Some(&false)
+    );
 
     // Rust is strongly typed, so we can't easily mix null, undefined, and numbers in a Vec
     // unless we use the Value enum or similar wrapper.

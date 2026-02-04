@@ -1,4 +1,4 @@
-use super::calc::umt_calculator;
+use super::entry::umt_calculator;
 use crate::object::Value;
 use std::collections::HashMap;
 
