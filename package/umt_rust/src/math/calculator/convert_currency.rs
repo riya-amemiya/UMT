@@ -30,10 +30,8 @@ pub fn umt_convert_currency(
 
                 #[allow(clippy::collapsible_if)]
                 if !rate.is_nan() {
-                    if let Some(amount) = amount_string
-                        .parse::<f64>()
-                        .ok()
-                        .filter(|n| n.is_finite())
+                    if let Some(amount) =
+                        amount_string.parse::<f64>().ok().filter(|n| n.is_finite())
                     {
                         let converted_amount = umt_multiplication(&[amount, rate]);
                         if !converted_amount.is_nan() {
