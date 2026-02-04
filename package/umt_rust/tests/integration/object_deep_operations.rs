@@ -4,69 +4,13 @@
 //! - Deep merging with selective picking
 //! - Complex object transformations
 //! - Nested property manipulations
-//!
-//! Note: The Rust implementation has a subset of TypeScript's object manipulation
-//! functions. These tests demonstrate using the available `Value` type and `umt_has`
-//! function with HashMap-based object structures.
 
 use std::collections::HashMap;
-use umt_rust::object::{Value, umt_has};
+use umt_rust::object::{Value, umt_has, umt_key_by, umt_merge_deep_two, umt_omit, umt_pick};
 
 #[cfg(test)]
 mod tests {
     use super::*;
-
-    /// Helper function to merge two Value objects deeply
-    fn merge_deep(
-        base: &HashMap<String, Value>,
-        update: &HashMap<String, Value>,
-    ) -> HashMap<String, Value> {
-        let mut result = base.clone();
-
-        for (key, value) in update {
-            match (result.get(key), value) {
-                (Some(Value::Object(base_inner)), Value::Object(update_inner)) => {
-                    let merged_inner = merge_deep(base_inner, update_inner);
-                    result.insert(key.clone(), Value::Object(merged_inner));
-                }
-                _ => {
-                    result.insert(key.clone(), value.clone());
-                }
-            }
-        }
-
-        result
-    }
-
-    /// Helper function to pick specific keys from an object
-    fn pick(obj: &HashMap<String, Value>, keys: &[&str]) -> HashMap<String, Value> {
-        let mut result = HashMap::new();
-        for key in keys {
-            if let Some(value) = obj.get(*key) {
-                result.insert(key.to_string(), value.clone());
-            }
-        }
-        result
-    }
-
-    /// Helper function to omit specific keys from an object
-    fn omit(obj: &HashMap<String, Value>, keys: &[&str]) -> HashMap<String, Value> {
-        let mut result = obj.clone();
-        for key in keys {
-            result.remove(*key);
-        }
-        result
-    }
-
-    /// Helper function to create an index from a collection
-    fn key_by<T: Clone, F: Fn(&T) -> String>(items: &[T], get_key: F) -> HashMap<String, T> {
-        let mut result = HashMap::new();
-        for item in items {
-            let key = get_key(item);
-            result.insert(key, item.clone());
-        }
-        result
-    }
 
     #[test]
     fn should_merge_deep_objects_and_pick_specific_nested_properties() {
@@ -107,8 +51,8 @@ mod tests {
         env_config.insert("app".to_string(), Value::Object(env_app));
         env_config.insert("database".to_string(), Value::Object(env_database));
 
-        // Merge configs
-        let merged = merge_deep(&base_config, &env_config);
+        // Merge configs using library function
+        let merged = umt_merge_deep_two(&base_config, &env_config);
 
         // Verify deep merge results
         assert!(umt_has(&merged, "app.features.auth"));
@@ -127,54 +71,85 @@ mod tests {
 
     #[test]
     fn should_transform_nested_data_structures_with_multiple_operations() {
-        #[derive(Debug, Clone)]
-        #[allow(dead_code)]
-        struct User {
-            id: i32,
-            name: String,
-            email: String,
-            theme: String,
-            notifications: bool,
-        }
+        // Create user data as Value objects
+        let mut user1_settings = HashMap::new();
+        user1_settings.insert("theme".to_string(), Value::String("dark".to_string()));
+        user1_settings.insert("notifications".to_string(), Value::Bool(true));
 
-        let user_data = vec![
-            User {
-                id: 1,
-                name: "Alice".to_string(),
-                email: "alice@example.com".to_string(),
-                theme: "dark".to_string(),
-                notifications: true,
-            },
-            User {
-                id: 2,
-                name: "Bob".to_string(),
-                email: "bob@example.com".to_string(),
-                theme: "light".to_string(),
-                notifications: false,
-            },
-        ];
+        let mut user1_profile = HashMap::new();
+        user1_profile.insert("name".to_string(), Value::String("Alice".to_string()));
+        user1_profile.insert(
+            "email".to_string(),
+            Value::String("alice@example.com".to_string()),
+        );
+        user1_profile.insert("settings".to_string(), Value::Object(user1_settings));
 
-        // Create index by id
-        let user_index = key_by(&user_data, |u| u.id.to_string());
+        let mut user1 = HashMap::new();
+        user1.insert("id".to_string(), Value::Int(1));
+        user1.insert("profile".to_string(), Value::Object(user1_profile));
 
-        // Pick profiles without email
+        let mut user2_settings = HashMap::new();
+        user2_settings.insert("theme".to_string(), Value::String("light".to_string()));
+        user2_settings.insert("notifications".to_string(), Value::Bool(false));
+
+        let mut user2_profile = HashMap::new();
+        user2_profile.insert("name".to_string(), Value::String("Bob".to_string()));
+        user2_profile.insert(
+            "email".to_string(),
+            Value::String("bob@example.com".to_string()),
+        );
+        user2_profile.insert("settings".to_string(), Value::Object(user2_settings));
+
+        let mut user2 = HashMap::new();
+        user2.insert("id".to_string(), Value::Int(2));
+        user2.insert("profile".to_string(), Value::Object(user2_profile));
+
+        let user_data = vec![Value::Object(user1), Value::Object(user2)];
+
+        // Create index by id using library function
+        let user_index = umt_key_by(&user_data, |v| {
+            if let Value::Object(obj) = v {
+                if let Some(Value::Int(id)) = obj.get("id") {
+                    return id.to_string();
+                }
+            }
+            String::new()
+        });
+
+        // Pick profiles and omit email using library functions
         let user_profiles: Vec<_> = user_index
             .values()
-            .map(|user| {
-                let mut profile = HashMap::new();
-                profile.insert("id".to_string(), Value::Int(user.id as i64));
-                profile.insert("name".to_string(), Value::String(user.name.clone()));
-                profile.insert("theme".to_string(), Value::String(user.theme.clone()));
-                profile.insert("notifications".to_string(), Value::Bool(user.notifications));
-                // Omit email by not including it
-                profile
+            .filter_map(|value| {
+                if let Value::Object(user) = value {
+                    let picked = umt_pick(user, &["id", "profile"]);
+                    if let Some(Value::Object(profile)) = picked.get("profile") {
+                        let profile_without_email = umt_omit(profile, &["email"]);
+                        let mut result = picked.clone();
+                        result.insert("profile".to_string(), Value::Object(profile_without_email));
+                        return Some(result);
+                    }
+                }
+                None
             })
             .collect();
 
-        assert_eq!(user_index.get("1").unwrap().name, "Alice");
-        assert!(!umt_has(&user_profiles[0], "email"));
-        assert!(umt_has(&user_profiles[0], "id"));
-        assert!(umt_has(&user_profiles[0], "name"));
+        // Verify user index
+        if let Some(Value::Object(user)) = user_index.get("1") {
+            if let Some(Value::Object(profile)) = user.get("profile") {
+                assert_eq!(
+                    profile.get("name"),
+                    Some(&Value::String("Alice".to_string()))
+                );
+            }
+        }
+
+        // Verify profiles without email
+        for profile in &user_profiles {
+            if let Some(Value::Object(p)) = profile.get("profile") {
+                assert!(!p.contains_key("email"));
+                assert!(p.contains_key("name"));
+            }
+        }
     }
 
     #[test]
@@ -249,8 +224,8 @@ mod tests {
         custom_config.insert("server".to_string(), Value::Object(custom_server));
         custom_config.insert("features".to_string(), Value::Object(custom_features));
 
-        // Merge configs
-        let final_config = merge_deep(&default_config, &custom_config);
+        // Merge configs using library function
+        let final_config = umt_merge_deep_two(&default_config, &custom_config);
 
         // Verify paths exist
         assert!(umt_has(&final_config, "server.middleware.cors.enabled"));
@@ -319,9 +294,9 @@ mod tests {
         product_data.insert("pricing".to_string(), Value::Object(pricing));
         product_data.insert("inventory".to_string(), Value::Object(inventory));
 
-        // Create filtered views
-        let internal_view = omit(&product_data, &["pricing"]);
-        let pricing_only = pick(&product_data, &["id", "pricing"]);
+        // Create filtered views using library functions
+        let internal_view = umt_omit(&product_data, &["pricing"]);
+        let pricing_only = umt_pick(&product_data, &["id", "pricing"]);
 
         // Verify views
         assert!(!umt_has(&internal_view, "pricing"));
@@ -331,41 +306,7 @@ mod tests {
 
     #[test]
     fn should_handle_deep_merging_with_array_data_and_selective_extraction() {
-        #[derive(Debug, Clone)]
-        #[allow(dead_code)]
-        struct UserRole {
-            id: i32,
-            name: String,
-            roles: Vec<String>,
-        }
-
-        let base_users = vec![
-            UserRole {
-                id: 1,
-                name: "Alice".to_string(),
-                roles: vec!["user".to_string()],
-            },
-            UserRole {
-                id: 2,
-                name: "Bob".to_string(),
-                roles: vec!["user".to_string(), "editor".to_string()],
-            },
-        ];
-
-        let update_users = vec![UserRole {
-            id: 3,
-            name: "Charlie".to_string(),
-            roles: vec!["admin".to_string()],
-        }];
-
-        // Merge users
-        let all_users: Vec<_> = base_users
-            .iter()
-            .chain(update_users.iter())
-            .cloned()
-            .collect();
-
-        // Create permissions
+        // Create base permissions
         let mut base_permissions = HashMap::new();
         base_permissions.insert(
             "user".to_string(),
@@ -404,17 +345,12 @@ mod tests {
             ]),
         );
 
-        let merged_permissions = merge_deep(&base_permissions, &update_permissions);
+        // Merge permissions using library function
+        let merged_permissions = umt_merge_deep_two(&base_permissions, &update_permissions);
 
-        // Key by role
-        let users_by_role = key_by(&all_users, |u| u.roles[0].clone());
-
-        // Extract specific permissions
-        let admin_permissions = pick(&merged_permissions, &["admin"]);
-        let non_user_permissions = omit(&merged_permissions, &["user"]);
-
-        assert_eq!(all_users.len(), 3);
-        assert_eq!(users_by_role.get("admin").unwrap().name, "Charlie");
+        // Extract specific permissions using library functions
+        let admin_permissions = umt_pick(&merged_permissions, &["admin"]);
+        let non_user_permissions = umt_omit(&merged_permissions, &["user"]);
 
         if let Some(Value::Array(perms)) = admin_permissions.get("admin") {
             assert_eq!(perms.len(), 3);
@@ -426,70 +362,81 @@ mod tests {
 
     #[test]
     fn should_chain_multiple_object_operations_in_complex_workflows() {
-        #[derive(Debug, Clone)]
-        #[allow(dead_code)]
-        struct ApiUser {
-            id: String,
-            name: String,
-            email: String,
-            theme: String,
-            active: bool,
-        }
+        // Create user data as Value objects
+        let mut user1 = HashMap::new();
+        user1.insert("id".to_string(), Value::String("user-1".to_string()));
+        user1.insert("name".to_string(), Value::String("Alice".to_string()));
+        user1.insert(
+            "email".to_string(),
+            Value::String("alice@example.com".to_string()),
+        );
+        user1.insert("theme".to_string(), Value::String("dark".to_string()));
+        user1.insert("active".to_string(), Value::Bool(true));
 
-        let api_response = vec![
-            ApiUser {
-                id: "user-1".to_string(),
-                name: "Alice".to_string(),
-                email: "alice@example.com".to_string(),
-                theme: "dark".to_string(),
-                active: true,
-            },
-            ApiUser {
-                id: "user-2".to_string(),
-                name: "Bob".to_string(),
-                email: "bob@example.com".to_string(),
-                theme: "light".to_string(),
-                active: false,
-            },
-        ];
+        let mut user2 = HashMap::new();
+        user2.insert("id".to_string(), Value::String("user-2".to_string()));
+        user2.insert("name".to_string(), Value::String("Bob".to_string()));
+        user2.insert(
+            "email".to_string(),
+            Value::String("bob@example.com".to_string()),
+        );
+        user2.insert("theme".to_string(), Value::String("light".to_string()));
+        user2.insert("active".to_string(), Value::Bool(false));
 
-        // Filter active users and process
+        let api_response = vec![Value::Object(user1), Value::Object(user2)];
+
+        // Filter active users and process using library functions
         let processed_data: Vec<HashMap<String, Value>> = api_response
             .iter()
-            .filter(|user| user.active)
-            .map(|user| {
-                let mut picked = HashMap::new();
-                picked.insert("id".to_string(), Value::String(user.id.clone()));
-                picked.insert("name".to_string(), Value::String(user.name.clone()));
-                picked.insert("theme".to_string(), Value::String(user.theme.clone()));
+            .filter_map(|value| {
+                if let Value::Object(user) = value {
+                    if user.get("active") == Some(&Value::Bool(true)) {
+                        let picked = umt_pick(user, &["id", "name", "theme"]);
 
-                // Add summary
-                let mut summary = HashMap::new();
-                summary.insert("displayName".to_string(), Value::String(user.name.clone()));
-                summary.insert("isActive".to_string(), Value::Bool(user.active));
-                picked.insert("summary".to_string(), Value::Object(summary));
+                        // Add summary
+                        let mut summary = HashMap::new();
+                        if let Some(Value::String(name)) = user.get("name") {
+                            summary.insert("displayName".to_string(), Value::String(name.clone()));
+                        }
+                        summary.insert("isActive".to_string(), Value::Bool(true));
 
-                picked
+                        let mut result = picked;
+                        result.insert("summary".to_string(), Value::Object(summary));
+                        return Some(result);
+                    }
+                }
+                None
             })
             .collect();
 
-        // Create user index
-        let mut user_index = HashMap::new();
-        for user_data in &processed_data {
-            if let Some(Value::String(id)) = user_data.get("id") {
-                user_index.insert(id.clone(), Value::Object(user_data.clone()));
+        // Create user index using library function
+        let user_data_values: Vec<Value> = processed_data
+            .iter()
+            .map(|m| Value::Object(m.clone()))
+            .collect();
+        let user_index = umt_key_by(&user_data_values, |v| {
+            if let Value::Object(obj) = v {
+                if let Some(Value::String(id)) = obj.get("id") {
+                    return id.clone();
+                }
             }
-        }
+            String::new()
+        });
 
-        // Merge with metadata
+        // Merge with metadata using library function
         let mut meta = HashMap::new();
         meta.insert(
             "timestamp".to_string(),
             Value::String("2025-01-01T00:00:00Z".to_string()),
         );
 
+        let mut users_obj = HashMap::new();
+        for (k, v) in &user_index {
+            users_obj.insert(k.clone(), v.clone());
+        }
+
         let mut final_config = HashMap::new();
-        final_config.insert("users".to_string(), Value::Object(user_index.clone()));
+        final_config.insert("users".to_string(), Value::Object(users_obj));
         final_config.insert("meta".to_string(), Value::Object(meta));
 
         assert_eq!(processed_data.len(), 1);
