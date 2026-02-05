@@ -30,6 +30,11 @@ impl Value {
         matches!(self, Value::Object(_))
     }
 
+    /// Returns true if this value is an array.
+    pub fn is_array(&self) -> bool {
+        matches!(self, Value::Array(_))
+    }
+
     /// Returns true if this value is null.
     pub fn is_null(&self) -> bool {
         matches!(self, Value::Null)
@@ -47,6 +52,14 @@ impl Value {
     pub fn as_object_mut(&mut self) -> Option<&mut HashMap<String, Value>> {
         match self {
             Value::Object(map) => Some(map),
+            _ => None,
+        }
+    }
+
+    /// Returns the value as an array if it is one.
+    pub fn as_array(&self) -> Option<&Vec<Value>> {
+        match self {
+            Value::Array(arr) => Some(arr),
             _ => None,
         }
     }

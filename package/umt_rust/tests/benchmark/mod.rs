@@ -1,0 +1,9 @@
+pub mod array_chunk_benchmark;
+pub mod array_get_arrays_common_benchmark;
+pub mod array_group_by_benchmark;
+pub mod array_sort_number_benchmark;
+pub mod array_sort_string_benchmark;
+pub mod calculator_currency_benchmark;
+pub mod fuzzy_search_benchmark;
+pub mod levenshtein_benchmark;
+pub mod uuid_benchmark;

@@ -2,6 +2,7 @@ use umt_rust::string::{
     umt_camel_case, umt_format_string_indexed, umt_from_base64, umt_kebab_case, umt_to_base64,
     umt_trim_characters,
 };
+use umt_rust::object::Value;
 
 #[test]
 fn test_base64_roundtrip() {
@@ -14,7 +15,8 @@ fn test_base64_roundtrip() {
 #[test]
 fn test_format_string() {
     let template = "{0}@{1}.{2}";
-    let args = vec!["user", "example", "com"];
+    let args_str = vec!["user", "example", "com"];
+    let args: Vec<Value> = args_str.iter().map(|&s| Value::String(s.to_string())).collect();
     let generated = umt_format_string_indexed(template, &args);
     assert_eq!(generated, "user@example.com");
 }
