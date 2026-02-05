@@ -1,7 +1,6 @@
 use umt_rust::ip::{
-    ip_to_long, long_to_ip, cidr_to_subnet_mask, subnet_mask_to_cidr,
-    ip_to_binary_string, is_in_range, is_private_ip,
-    get_ip_class
+    cidr_to_subnet_mask, get_ip_class, ip_to_binary_string, ip_to_long, is_in_range, is_private_ip,
+    long_to_ip, subnet_mask_to_cidr,
 };
 
 #[test]

@@ -1,5 +1,5 @@
-use umt_rust::tool::umt_parse_json;
 use umt_rust::object::Value;
+use umt_rust::tool::umt_parse_json;
 
 #[test]
 fn test_parse_json_valid() {

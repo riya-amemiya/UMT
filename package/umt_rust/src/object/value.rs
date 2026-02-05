@@ -30,6 +30,11 @@ impl Value {
         matches!(self, Value::Object(_))
     }
 
+    /// Returns true if this value is an array.
+    pub fn is_array(&self) -> bool {
+        matches!(self, Value::Array(_))
+    }
+
     /// Returns true if this value is null.
     pub fn is_null(&self) -> bool {
         matches!(self, Value::Null)
@@ -51,10 +56,41 @@ impl Value {
         }
     }
 
+    /// Returns the value as an array if it is one.
+    pub fn as_array(&self) -> Option<&Vec<Value>> {
+        match self {
+            Value::Array(arr) => Some(arr),
+            _ => None,
+        }
+    }
+
     /// Converts the value into an object if it is one.
     pub fn into_object(self) -> Option<HashMap<String, Value>> {
         match self {
             Value::Object(map) => Some(map),
+            _ => None,
+        }
+    }
+
+    /// Returns the length of the value (for Array, Object, String).
+    pub fn len(&self) -> usize {
+        match self {
+            Value::Array(arr) => arr.len(),
+            Value::Object(obj) => obj.len(),
+            Value::String(s) => s.len(),
+            _ => 0,
+        }
+    }
+
+    /// Returns true if the value is empty.
+    pub fn is_empty(&self) -> bool {
+        self.len() == 0
+    }
+
+    /// Gets a value by key (for Object).
+    pub fn get(&self, key: &str) -> Option<&Value> {
+        match self {
+            Value::Object(obj) => obj.get(key),
             _ => None,
         }
     }

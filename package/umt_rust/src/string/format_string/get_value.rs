@@ -1,5 +1,5 @@
+use crate::object::Value;
 use regex::Regex;
-use serde_json::Value;
 
 /// Retrieves a value from a JSON object using a dot-notation path with array index support.
 ///
@@ -17,11 +17,14 @@ use serde_json::Value;
 /// # Examples
 ///
 /// ```ignore
-/// use serde_json::json;
+/// use umt_rust::object::Value;
 /// use umt_rust::string::format_string::get_value;
+/// use std::collections::HashMap;
 ///
-/// let obj = json!({"name": "Alice"});
-/// assert_eq!(get_value(&obj, "name"), Some(&json!("Alice")));
+/// let mut map = HashMap::new();
+/// map.insert("name".to_string(), Value::String("Alice".to_string()));
+/// let obj = Value::Object(map);
+/// assert_eq!(get_value(&obj, "name"), Some(&Value::String("Alice".to_string())));
 /// ```
 pub fn get_value<'a>(object: &'a Value, path: &str) -> Option<&'a Value> {
     if path.is_empty() {

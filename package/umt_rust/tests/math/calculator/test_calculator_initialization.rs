@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 use std::collections::HashMap;
 use umt_rust::math::calculator::{umt_calculator_initialization, umt_calculator_initialization_fn};
 
@@ -39,3 +40,48 @@ fn test_calculator_initialization_complex_expression() {
     let calc = umt_calculator_initialization(rates);
     assert_eq!(calc.calculate("(2+3)*4"), "20");
 }
+||||||| 30d5753
+=======
+use std::collections::HashMap;
+use umt_rust::math::calculator::umt_calculator_initialization;
+use umt_rust::object::Value;
+
+#[test]
+fn test_calculator_initialization_with_currency() {
+    let mut rates = HashMap::new();
+    rates.insert("$".to_string(), Value::Float(100.0));
+    let calc = umt_calculator_initialization(rates);
+    assert_eq!(calc("$1"), "100");
+}
+
+#[test]
+fn test_calculator_initialization_with_multiple_currencies() {
+    let mut rates = HashMap::new();
+    rates.insert("$".to_string(), Value::Float(100.0));
+    rates.insert("EUR".to_string(), Value::Float(1.2));
+    let calc = umt_calculator_initialization(rates);
+    assert_eq!(calc("$1"), "100");
+}
+
+#[test]
+fn test_calculator_initialization_fn_with_currency() {
+    let mut rates = HashMap::new();
+    rates.insert("EUR".to_string(), Value::Float(1.2));
+    let calc = umt_calculator_initialization(rates);
+    assert_eq!(calc("EUR5+10"), "16");
+}
+
+#[test]
+fn test_calculator_initialization_regular_expression() {
+    let rates = HashMap::new();
+    let calc = umt_calculator_initialization(rates);
+    assert_eq!(calc("1+2"), "3");
+}
+
+#[test]
+fn test_calculator_initialization_complex_expression() {
+    let rates = HashMap::new();
+    let calc = umt_calculator_initialization(rates);
+    assert_eq!(calc("(2+3)*4"), "20");
+}
+>>>>>>> 36e5fbd009729e51174857904826bd81d5477247

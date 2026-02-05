@@ -1,7 +1,7 @@
 use umt_rust::error::umt_safe_execute;
 use umt_rust::math::calculator::umt_calculator;
-use umt_rust::tool::umt_parse_json;
 use umt_rust::object::Value;
+use umt_rust::tool::umt_parse_json;
 
 #[test]
 fn test_handle_calculator_errors_safely() {
@@ -33,9 +33,7 @@ fn test_handle_calculator_errors_safely() {
     // Let's assume calculator might panic or we simulate panic.
     // In TS test: `throw new Error`.
 
-    let invalid_result = umt_safe_execute(|| {
-        umt_calculator(invalid_expression, None)
-    });
+    let invalid_result = umt_safe_execute(|| umt_calculator(invalid_expression, None));
 
     // umt_calculator returns the original string if it can't evaluate it (e.g. "invalid expression").
     // It does not panic.
@@ -69,7 +67,10 @@ fn test_handle_calculator_errors_safely() {
     // If I strictly follow the TS test code:
     assert!(invalid_result.is_success());
     // umt_calculator strips whitespaces
-    assert_eq!(invalid_result.value().map(|s| s.as_str()), Some("invalidexpression"));
+    assert_eq!(
+        invalid_result.value().map(|s| s.as_str()),
+        Some("invalidexpression")
+    );
 
     // If I want to verify safe_execute catches panics:
     let panic_result = umt_safe_execute(|| {
@@ -98,7 +99,10 @@ fn test_handle_json_parsing_errors() {
             // So parse_result.value() gives &Result<Value, Error>.
 
             if let Some(Ok(Value::Object(map))) = parse_result.value() {
-                assert_eq!(map.get("name").unwrap(), &Value::String("Alice".to_string()));
+                assert_eq!(
+                    map.get("name").unwrap(),
+                    &Value::String("Alice".to_string())
+                );
             } else {
                 panic!("Expected successful parsing");
             }

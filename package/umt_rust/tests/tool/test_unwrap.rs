@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 use umt_rust::tool::{umt_unwrap, umt_unwrap_or, umt_unwrap_or_else, umt_unwrap_or_panic};
 
 #[test]
@@ -123,3 +124,21 @@ fn test_unwrap_with_empty_string() {
     assert!(result.is_ok());
     assert_eq!(result.unwrap(), "");
 }
+||||||| 30d5753
+=======
+use umt_rust::tool::umt_unwrap;
+
+#[test]
+fn test_unwrap_some() {
+    let val = Some(10);
+    let result = umt_unwrap(val, "Error");
+    assert_eq!(result, 10);
+}
+
+#[test]
+#[should_panic(expected = "Error")]
+fn test_unwrap_none() {
+    let val: Option<i32> = None;
+    umt_unwrap(val, "Error");
+}
+>>>>>>> 36e5fbd009729e51174857904826bd81d5477247

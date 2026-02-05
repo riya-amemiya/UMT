@@ -1,5 +1,11 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 use super::calc::umt_calculator;
+||||||| 30d5753
+use super::calc::umt_calculator;
+=======
+use super::calculator::umt_calculator;
+>>>>>>> 36e5fbd009729e51174857904826bd81d5477247
 use crate::object::Value;
 use std::collections::HashMap;
 
