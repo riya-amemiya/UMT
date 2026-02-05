@@ -54,15 +54,17 @@ pub fn umt_has_path(object: &Value, path: &[&str]) -> bool {
         }
 
         match current {
-            Value::Object(map) => match map.get(*key) {
-                Some(value) => {
-                    if i == path.len() - 1 {
-                        return true;
+            Value::Object(map) => {
+                match map.get(*key) {
+                    Some(value) => {
+                        if i == path.len() - 1 {
+                            return true;
+                        }
+                        current = value;
                     }
-                    current = value;
+                    None => return false,
                 }
-                None => return false,
-            },
+            }
             _ => return false,
         }
     }

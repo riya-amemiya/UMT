@@ -1,7 +1,6 @@
 use umt_rust::obj;
 use umt_rust::object::Value;
 use umt_rust::string::format_string::get_value;
-use std::collections::HashMap;
 
 // Simple property access tests
 #[test]

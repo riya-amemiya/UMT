@@ -1,7 +1,6 @@
 use umt_rust::obj;
 use umt_rust::object::Value;
 use umt_rust::string::umt_format_string;
-use std::collections::HashMap;
 
 #[test]
 fn test_indexed_mode_basic() {
