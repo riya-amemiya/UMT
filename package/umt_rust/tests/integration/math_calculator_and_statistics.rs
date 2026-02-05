@@ -6,6 +6,7 @@
 //! - Real-world calculation scenarios
 
 use umt_rust::array::umt_sum;
+use umt_rust::math::calculator::umt_calculator;
 use umt_rust::math::{umt_average, umt_deviation_value, umt_standard_deviation};
 
 #[cfg(test)]
@@ -19,8 +20,13 @@ mod tests {
 
     #[test]
     fn should_calculate_average_from_calculator_results() {
-        // Simulating calculator operations: 10+5=15, 20-8=12, 3*6=18, 100/4=25
-        let values = vec![15.0, 12.0, 18.0, 25.0];
+        // Using actual calculator function
+        let values: Vec<f64> = vec![
+            umt_calculator("10 + 5", None).parse().unwrap_or(0.0),
+            umt_calculator("20 - 8", None).parse().unwrap_or(0.0),
+            umt_calculator("3 * 6", None).parse().unwrap_or(0.0),
+            umt_calculator("100 / 4", None).parse().unwrap_or(0.0),
+        ];
 
         let avg = umt_average(values);
         assert_eq!(avg, 17.5);
@@ -80,8 +86,21 @@ mod tests {
 
     #[test]
     fn should_calculate_weighted_averages_using_calculator() {
-        // Simulating grades with weights
-        let grades = [(85.0, 0.3), (90.0, 0.4), (78.0, 0.3)];
+        // Using actual calculator function for grades
+        let grades = [
+            (
+                umt_calculator("85", None).parse::<f64>().unwrap_or(0.0),
+                0.3,
+            ),
+            (
+                umt_calculator("90", None).parse::<f64>().unwrap_or(0.0),
+                0.4,
+            ),
+            (
+                umt_calculator("78", None).parse::<f64>().unwrap_or(0.0),
+                0.3,
+            ),
+        ];
 
         let weighted_sum: f64 = grades.iter().map(|(score, weight)| score * weight).sum();
 
@@ -119,9 +138,17 @@ mod tests {
 
     #[test]
     fn should_calculate_complex_expressions_and_analyze_results() {
-        let results = [13.0, 12.0, 10.0, 27.0, 2.0];
+        // Using actual calculator function for complex expressions
+        let results: Vec<f64> = vec![
+            umt_calculator("10 + 3", None).parse().unwrap_or(0.0), // 13
+            umt_calculator("15 - 3", None).parse().unwrap_or(0.0), // 12
+            umt_calculator("2 * 5", None).parse().unwrap_or(0.0),  // 10
+            umt_calculator("9 * 3", None).parse().unwrap_or(0.0),  // 27
+            umt_calculator("10 / 5", None).parse().unwrap_or(0.0), // 2
+        ];
+
         let total = umt_sum(&results);
-        let avg = umt_average(results.to_vec());
+        let avg = umt_average(results.clone());
 
         assert_eq!(results, [13.0, 12.0, 10.0, 27.0, 2.0]);
         assert_eq!(total, 64.0);
@@ -162,5 +189,31 @@ mod tests {
             (z_scores[4] - 1.4142135623730951).abs() < 0.0001,
             "Z-score for 50 mismatch"
         );
+    }
+
+    #[test]
+    fn should_use_calculator_with_parentheses_in_analysis() {
+        // Using calculator for expressions with parentheses
+        let results: Vec<f64> = vec![
+            umt_calculator("(2 + 3) * 4", None).parse().unwrap_or(0.0), // 20
+            umt_calculator("(10 - 2) / 2", None).parse().unwrap_or(0.0), // 4
+            umt_calculator("2 ^ 3", None).parse().unwrap_or(0.0),       // 8
+        ];
+
+        let avg = umt_average(results.clone());
+        assert_eq!(results, [20.0, 4.0, 8.0]);
+        assert!(close_to(avg, 10.666666666666666, 5));
+    }
+
+    #[test]
+    fn should_handle_calculator_with_negative_numbers() {
+        let results: Vec<f64> = vec![
+            umt_calculator("-5 + 10", None).parse().unwrap_or(0.0), // 5
+            umt_calculator("10 - 15", None).parse().unwrap_or(0.0), // -5
+            umt_calculator("-3 * -2", None).parse().unwrap_or(0.0), // 6
+        ];
+
+        let sum = umt_sum(&results);
+        assert_eq!(sum, 6.0);
     }
 }

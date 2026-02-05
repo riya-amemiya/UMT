@@ -123,6 +123,13 @@ mod math {
     mod test_uuidv7;
     mod test_value_swap;
     mod test_xoshiro256;
+    mod calculator {
+        mod test_calculator;
+        mod test_calculator_initialization;
+        mod test_convert_currency;
+        mod test_core;
+        mod test_literal_expression;
+    }
 }
 
 mod simple {
@@ -149,6 +156,7 @@ mod tool {
     mod test_create_pipeline;
     mod test_parse_json;
     mod test_pipe;
+    mod test_unwrap;
 }
 
 mod ua {
