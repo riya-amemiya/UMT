@@ -1,3 +1,5 @@
+#![allow(clippy::module_inception)]
+
 pub mod convert_currency;
 pub use convert_currency::*;
 

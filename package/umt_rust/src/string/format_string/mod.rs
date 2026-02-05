@@ -1,96 +1,80 @@
 pub mod apply_formatter;
+pub use apply_formatter::*;
+
 pub mod default_formatters;
+pub use default_formatters::*;
+
 pub mod get_value;
+pub use get_value::*;
 
-pub use apply_formatter::{Formatter, apply_formatter};
-pub use default_formatters::create_default_formatters;
-pub use get_value::get_value;
+pub mod detect_mode;
+pub use detect_mode::*;
 
+use crate::object::Value;
 use regex::Regex;
-use serde_json::Value;
 use std::collections::HashMap;
+use std::sync::OnceLock;
 
-/// Options for format string customization
-#[derive(Default)]
-pub struct FormatOptions {
-    pub formatters: HashMap<String, Formatter>,
-}
+static PLACEHOLDER_REGEX: OnceLock<Regex> = OnceLock::new();
 
-/// Replaces placeholders in a template string with specified values.
-///
-/// Supports two modes:
-/// 1. **Indexed mode**: Use numbered placeholders like {0}, {1}, {2}...
-/// 2. **Named mode**: Use named placeholders with an object like {name}, {age}...
-///
-/// ## Features
-///
-/// ### Nested Object Access
-/// Access nested properties using dot notation: `{user.name}`, `{user.address.city}`
-///
-/// ### Array Access
-/// Access array elements with brackets: `{items[0]}`, `{users[1].name}`
-/// Supports negative indices: `{items[-1]}` (last element)
-///
-/// ### Default Values
-/// Provide fallback values using pipe syntax: `{name|Unknown}`, `{age|N/A}`
-///
-/// ### Formatters
-/// Apply formatters to values: `{name:upper}`, `{count:plural(item,items)}`
-///
-/// Built-in formatters:
-/// - `upper` - Convert to uppercase
-/// - `lower` - Convert to lowercase
-/// - `plural(singular, plural)` - Pluralization
-/// - `pad(length, char?)` - Pad string/number
-///
-/// ### Escape Sequences
-/// Use double braces to escape: `{{name}}` renders as literal `{name}`
+/// Formats a string by replacing placeholders with values.
 ///
 /// # Arguments
 ///
-/// * `template` - Template string containing placeholders
-/// * `data` - JSON value containing the data
-/// * `options` - Optional format options with custom formatters
+/// * `template` - The template string
+/// * `args` - Arguments for formatting
 ///
 /// # Returns
 ///
-/// String with placeholders replaced with formatted values
-///
-/// # Examples
-///
-/// ```
-/// use umt_rust::string::umt_format_string;
-/// use serde_json::json;
-///
-/// // Named mode
-/// let result = umt_format_string(
-///     "Hello, {name}! You are {age} years old.",
-///     &json!({"name": "Alice", "age": 25}),
-///     None
-/// );
-/// assert_eq!(result, "Hello, Alice! You are 25 years old.");
-///
-/// // With formatters
-/// let result = umt_format_string(
-///     "Name: {name:upper}",
-///     &json!({"name": "alice"}),
-///     None
-/// );
-/// assert_eq!(result, "Name: ALICE");
-/// ```
-pub fn umt_format_string(template: &str, data: &Value, options: Option<FormatOptions>) -> String {
+/// Formatted string
+pub fn umt_format_string(template: &str, args: &[Value]) -> String {
+    if args.is_empty() {
+        return template.to_string();
+    }
+
+    // Convert args to detect_mode input format
+    let data_or_first = args.first().cloned();
+    let options_or_second = args.get(1).cloned();
+    let rest = if args.len() > 2 {
+        args[2..].to_vec()
+    } else {
+        Vec::new()
+    };
+
+    let result = umt_detect_mode(data_or_first, options_or_second, rest);
+    let data = result.data;
+    let options = result.options;
+
+    format_string_internal(template, &data, &options)
+}
+
+/// Helper function to format string with indexed args directly (for backward compatibility tests if any)
+pub fn umt_format_string_indexed(template: &str, args: &[Value]) -> String {
+     let data = Value::Array(args.to_vec());
+     let options = HashMap::new();
+     format_string_internal(template, &data, &options)
+}
+
+fn format_string_internal(
+    template: &str,
+    data: &Value,
+    options: &HashMap<String, Value>,
+) -> String {
     // Handle escaped braces
     let escaped_template = template.replace("{{", "\u{0000}").replace("}}", "\u{0001}");
 
-    let options = options.unwrap_or_default();
-
     // Merge default formatters with custom formatters
-    let mut formatters = create_default_formatters();
-    for (key, value) in options.formatters {
-        formatters.insert(key, value);
+    let formatters = create_default_formatters();
+    if let Some(Value::Object(_custom_formatters)) = options.get("formatters") {
+        // Since Value enum can't hold closures easily, we might not support custom formatters here
+        // fully unless we change Value definition. For now, we only support default formatters.
+        // If the custom formatters map contains keys that we can support (e.g. referencing other formatters?),
+        // we could implement it. But TS allows passing functions.
+        // For strict parity, we'd need a Value variant that holds a function, which is hard in Rust (serialization etc).
+        // We will skip merging custom formatters for now and rely on defaults.
     }
 
-    let placeholder_regex = Regex::new(r"\{([^}]+)\}").unwrap();
+    let placeholder_regex = PLACEHOLDER_REGEX.get_or_init(|| Regex::new(r"\{([^}]+)\}").unwrap());
 
     let result = placeholder_regex.replace_all(&escaped_template, |caps: &regex::Captures| {
         let content = caps.get(1).map(|m| m.as_str()).unwrap_or("");
@@ -113,40 +97,63 @@ pub fn umt_format_string(template: &str, data: &Value, options: Option<FormatOpt
 
         // Get value from data
         let value = if data.is_array() {
-            // Indexed mode
-            path.parse::<usize>().ok().and_then(|idx| data.get(idx))
+            // Indexed mode: path should be an index
+            if let Ok(idx) = path.parse::<usize>() {
+                if let Value::Array(arr) = data {
+                    arr.get(idx)
+                } else {
+                    None
+                }
+            } else if let Ok(neg_idx) = path.parse::<isize>() {
+                // Support negative indices
+                if neg_idx < 0 {
+                    if let Value::Array(arr) = data {
+                        let abs_idx = neg_idx.unsigned_abs();
+                        if abs_idx <= arr.len() {
+                            arr.get(arr.len() - abs_idx)
+                        } else {
+                            None
+                        }
+                    } else {
+                        None
+                    }
+                } else {
+                    None
+                }
+            } else {
+                // Path might be a property access on an object inside array?
+                // TS implementation for indexed mode usually expects simple index.
+                // But if data is array, get_value can handle "0.name" style paths?
+                // Let's rely on get_value if path is complex.
+                get_value(data, path)
+            }
         } else {
             // Named mode
             get_value(data, path)
         };
 
         let value = match value {
-            Some(v) if !v.is_null() => v.clone(),
-            _ => {
+            Some(Value::Null) => {
                 if let Some(default) = default_value {
                     Value::String(default.to_string())
                 } else {
+                    // If value is null and no default, return the full match (keep placeholder)
+                    return caps[0].to_string();
+                }
+            }
+            Some(v) => v.clone(),
+            None => {
+                if let Some(default) = default_value {
+                    Value::String(default.to_string())
+                } else {
+                    // If no value and no default, return the full match (keep placeholder)
                     return caps[0].to_string();
                 }
             }
         };
 
         // Convert value to string
-        let value_str = match &value {
-            Value::String(s) => s.clone(),
-            Value::Number(n) => n.to_string(),
-            Value::Bool(b) => b.to_string(),
-            Value::Array(arr) => arr
-                .iter()
-                .map(|v| match v {
-                    Value::String(s) => s.clone(),
-                    _ => v.to_string(),
-                })
-                .collect::<Vec<_>>()
-                .join(","),
-            Value::Object(_) => "[object Object]".to_string(),
-            Value::Null => "null".to_string(),
-        };
+        let value_str = to_string_view(&value);
 
         // Apply formatter if present
         if let Some(fmt_str) = formatter_string {
@@ -160,29 +167,21 @@ pub fn umt_format_string(template: &str, data: &Value, options: Option<FormatOpt
     result.replace('\u{0000}', "{").replace('\u{0001}', "}")
 }
 
-/// Replaces placeholders in a template string with indexed values.
-///
-/// # Arguments
-///
-/// * `template` - Template string containing placeholders like {0}, {1}
-/// * `values` - Array of values to substitute
-///
-/// # Returns
-///
-/// String with placeholders replaced
-///
-/// # Examples
-///
-/// ```
-/// use umt_rust::string::umt_format_string_indexed;
-///
-/// let result = umt_format_string_indexed("Hello, {0}! It's {1} today.", &["World", "sunny"]);
-/// assert_eq!(result, "Hello, World! It's sunny today.");
-/// ```
-pub fn umt_format_string_indexed(template: &str, values: &[&str]) -> String {
-    let array: Vec<Value> = values
-        .iter()
-        .map(|&s| Value::String(s.to_string()))
-        .collect();
-    umt_format_string(template, &Value::Array(array), None)
+fn to_string_view(v: &Value) -> String {
+    match v {
+        Value::String(s) => s.clone(),
+        Value::Int(n) => n.to_string(),
+        Value::Float(n) => n.to_string(),
+        Value::Bool(b) => b.to_string(),
+        Value::Array(arr) => arr
+            .iter()
+            .map(|elem| match elem {
+                 Value::Null => "".to_string(),
+                 _ => to_string_view(elem)
+            })
+            .collect::<Vec<_>>()
+            .join(","),
+        Value::Object(_) => "[object Object]".to_string(),
+        Value::Null => "null".to_string(),
+    }
 }

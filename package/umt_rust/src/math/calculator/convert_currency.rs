@@ -1,13 +1,16 @@
 use regex::Regex;
 use std::collections::HashMap;
+use std::sync::OnceLock;
 use crate::object::Value;
+
+static CURRENCY_REGEX: OnceLock<Regex> = OnceLock::new();
 
 #[allow(clippy::collapsible_if)]
 pub fn umt_convert_currency(
     expression: &str,
     currency_exchange: Option<&HashMap<String, Value>>,
 ) -> String {
-    let re = Regex::new(r"(\D+)([\d.]+)").unwrap();
+    let re = CURRENCY_REGEX.get_or_init(|| Regex::new(r"(\D+)([\d.]+)").unwrap());
 
     if let Some(caps) = re.captures(expression) {
         let currency = caps.get(1).map_or("", |m| m.as_str());
