@@ -1,13 +1,12 @@
 use std::collections::HashMap;
-use umt_rust::object::{Value, umt_pick_deep};
+use umt_rust::object::{Value, umt_pick_deep, umt_pick_deep_string_keys};
 
 #[test]
 fn test_should_select_simple_keys() {
-    let mut map = HashMap::new();
-    map.insert("a".to_string(), Value::Int(1));
-    map.insert("b".to_string(), Value::Int(2));
-    map.insert("c".to_string(), Value::Int(3));
-    let obj = Value::Object(map);
+    let mut obj = HashMap::new();
+    obj.insert("a".to_string(), Value::Int(1));
+    obj.insert("b".to_string(), Value::Int(2));
+    obj.insert("c".to_string(), Value::Int(3));
 
     let result = umt_pick_deep(&obj, &["a", "c"]);
 
@@ -31,7 +30,7 @@ fn test_should_select_nested_keys() {
     obj.insert("a".to_string(), Value::Object(ab));
     obj.insert("f".to_string(), Value::Int(4));
 
-    let result = umt_pick_deep(&Value::Object(obj.clone()), &["a.b.c", "f"]);
+    let result = umt_pick_deep(&obj, &["a.b.c", "f"]);
 
     assert_eq!(result.get("f"), Some(&Value::Int(4)));
     if let Some(Value::Object(a)) = result.get("a") {
@@ -52,7 +51,7 @@ fn test_should_handle_non_existent_keys() {
     obj.insert("a".to_string(), Value::Int(1));
     obj.insert("b".to_string(), Value::Int(2));
 
-    let result = umt_pick_deep(&Value::Object(obj.clone()), &["a", "c"]);
+    let result = umt_pick_deep(&obj, &["a", "c"]);
 
     assert_eq!(result.len(), 1);
     assert_eq!(result.get("a"), Some(&Value::Int(1)));
@@ -64,7 +63,7 @@ fn test_should_handle_no_keys_specified() {
     obj.insert("a".to_string(), Value::Int(1));
     obj.insert("b".to_string(), Value::Int(2));
 
-    let result = umt_pick_deep(&Value::Object(obj.clone()), &[]);
+    let result = umt_pick_deep(&obj, &[]);
 
     assert!(result.is_empty());
 }
@@ -89,7 +88,7 @@ fn test_should_handle_objects_containing_arrays() {
     );
     obj.insert("d".to_string(), Value::Int(3));
 
-    let result = umt_pick_deep(&Value::Object(obj.clone()), &["a", "d"]);
+    let result = umt_pick_deep(&obj, &["a", "d"]);
 
     assert_eq!(result.len(), 2);
     assert_eq!(result.get("d"), Some(&Value::Int(3)));
@@ -102,7 +101,7 @@ fn test_should_handle_objects_with_null_properties() {
     obj.insert("a".to_string(), Value::Null);
     obj.insert("c".to_string(), Value::Int(3));
 
-    let result = umt_pick_deep(&Value::Object(obj.clone()), &["a", "c"]);
+    let result = umt_pick_deep(&obj, &["a", "c"]);
 
     assert_eq!(result.len(), 2);
     assert_eq!(result.get("a"), Some(&Value::Null));
@@ -127,7 +126,7 @@ fn test_should_handle_deeply_nested_keys() {
     let mut obj = HashMap::new();
     obj.insert("a".to_string(), Value::Object(b_obj));
 
-    let result = umt_pick_deep(&Value::Object(obj.clone()), &["a.b.c.d.e"]);
+    let result = umt_pick_deep(&obj, &["a.b.c.d.e"]);
 
     // Navigate through the result
     if let Some(Value::Object(a)) = result.get("a") {
@@ -159,7 +158,7 @@ fn test_should_handle_keys_that_reference_entire_objects() {
     obj.insert("a".to_string(), Value::Object(inner.clone()));
     obj.insert("d".to_string(), Value::Int(3));
 
-    let result = umt_pick_deep(&Value::Object(obj.clone()), &["a"]);
+    let result = umt_pick_deep(&obj, &["a"]);
 
     assert_eq!(result.len(), 1);
     assert_eq!(result.get("a"), Some(&Value::Object(inner)));
@@ -174,7 +173,7 @@ fn test_should_handle_keys_without_dots() {
     obj.insert("a".to_string(), Value::Object(inner.clone()));
     obj.insert("c".to_string(), Value::Int(2));
 
-    let result = umt_pick_deep(&Value::Object(obj.clone()), &["a", "c"]);
+    let result = umt_pick_deep(&obj, &["a", "c"]);
 
     assert_eq!(result.len(), 2);
     assert_eq!(result.get("a"), Some(&Value::Object(inner)));
@@ -187,7 +186,7 @@ fn test_should_handle_empty_string_keys() {
     obj.insert("a".to_string(), Value::Int(1));
     obj.insert("b".to_string(), Value::Int(2));
 
-    let result = umt_pick_deep(&Value::Object(obj.clone()), &[""]);
+    let result = umt_pick_deep(&obj, &[""]);
 
     assert!(result.is_empty());
 }
@@ -202,7 +201,7 @@ fn test_should_handle_keys_containing_numbers() {
     obj.insert("a".to_string(), Value::Object(inner));
     obj.insert("b".to_string(), Value::Int(3));
 
-    let result = umt_pick_deep(&Value::Object(obj.clone()), &["a.1"]);
+    let result = umt_pick_deep(&obj, &["a.1"]);
 
     if let Some(Value::Object(a)) = result.get("a") {
         assert_eq!(a.get("1"), Some(&Value::Int(1)));
@@ -218,9 +217,25 @@ fn test_should_handle_duplicate_keys() {
     obj.insert("b".to_string(), Value::Int(2));
     obj.insert("c".to_string(), Value::Int(3));
 
-    let result = umt_pick_deep(&Value::Object(obj.clone()), &["a", "a", "c"]);
+    let result = umt_pick_deep(&obj, &["a", "a", "c"]);
 
     assert_eq!(result.len(), 2);
     assert_eq!(result.get("a"), Some(&Value::Int(1)));
     assert_eq!(result.get("c"), Some(&Value::Int(3)));
+}
+
+#[test]
+fn test_pick_deep_with_string_keys() {
+    let mut inner = HashMap::new();
+    inner.insert("b".to_string(), Value::Int(1));
+
+    let mut obj = HashMap::new();
+    obj.insert("a".to_string(), Value::Object(inner));
+
+    let keys = vec!["a.b".to_string()];
+    let result = umt_pick_deep_string_keys(&obj, &keys);
+
+    if let Some(Value::Object(a)) = result.get("a") {
+        assert_eq!(a.get("b"), Some(&Value::Int(1)));
+    }
 }

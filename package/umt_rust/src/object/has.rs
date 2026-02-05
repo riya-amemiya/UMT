@@ -22,12 +22,11 @@ use std::collections::HashMap;
 /// inner.insert("b".to_string(), Value::Int(1));
 /// let mut obj = HashMap::new();
 /// obj.insert("a".to_string(), Value::Object(inner));
-/// let value = Value::Object(obj);
 ///
-/// assert!(umt_has(&value, "a.b"));
-/// assert!(!umt_has(&value, "a.c"));
+/// assert!(umt_has(&obj, "a.b"));
+/// assert!(!umt_has(&obj, "a.c"));
 /// ```
-pub fn umt_has(object: &Value, path: &str) -> bool {
+pub fn umt_has(object: &HashMap<String, Value>, path: &str) -> bool {
     umt_has_path(object, &path_to_parts(path))
 }
 
@@ -41,31 +40,31 @@ pub fn umt_has(object: &Value, path: &str) -> bool {
 /// # Returns
 ///
 /// Returns true if path exists, false otherwise.
-pub fn umt_has_path(object: &Value, path: &[&str]) -> bool {
+pub fn umt_has_path(object: &HashMap<String, Value>, path: &[&str]) -> bool {
     if path.is_empty() {
         return true;
     }
 
-    let mut current = object;
+    let mut current: &HashMap<String, Value> = object;
 
     for (i, key) in path.iter().enumerate() {
         if key.is_empty() {
             return false;
         }
 
-        match current {
-            Value::Object(map) => {
-                match map.get(*key) {
-                    Some(value) => {
-                        if i == path.len() - 1 {
-                            return true;
-                        }
-                        current = value;
+        match current.get(*key) {
+            Some(value) => {
+                if i == path.len() - 1 {
+                    return true;
+                }
+                match value {
+                    Value::Object(inner) => {
+                        current = inner;
                     }
-                    None => return false,
+                    _ => return false,
                 }
             }
-            _ => return false,
+            None => return false,
         }
     }
 

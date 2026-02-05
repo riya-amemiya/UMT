@@ -1,5 +1,5 @@
 use std::collections::HashMap;
-use umt_rust::math::calculator::umt_calculator_initialization;
+use umt_rust::math::calculator::{umt_calculator_initialization, umt_calculator_initialization_fn};
 use umt_rust::object::Value;
 
 #[test]
@@ -23,7 +23,7 @@ fn test_calculator_initialization_with_multiple_currencies() {
 fn test_calculator_initialization_fn_with_currency() {
     let mut rates = HashMap::new();
     rates.insert("EUR".to_string(), Value::Float(1.2));
-    let calc = umt_calculator_initialization(rates);
+    let calc = umt_calculator_initialization_fn(rates);
     assert_eq!(calc("EUR5+10"), "16");
 }
 

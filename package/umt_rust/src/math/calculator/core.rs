@@ -162,8 +162,6 @@ fn resolve_mul_div(expr: &str) -> String {
     "NaN".to_string()
 }
 
-// contains_div/resolve_div removed as separate steps, merged into mul_div
-
 fn contains_add_sub(expr: &str) -> bool {
     expr.contains('+') || expr.contains('-')
 }

@@ -14,3 +14,9 @@ use std::collections::HashMap;
 pub fn umt_calculator_initialization(exchange: HashMap<String, Value>) -> impl Fn(&str) -> String {
     move |x: &str| umt_calculator(x, Some(&exchange))
 }
+
+pub fn umt_calculator_initialization_fn(
+    exchange: HashMap<String, Value>,
+) -> impl Fn(&str) -> String {
+    move |x: &str| umt_calculator(x, Some(&exchange))
+}

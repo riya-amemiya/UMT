@@ -6,7 +6,7 @@
 //! - Nested property manipulations
 
 use std::collections::HashMap;
-use umt_rust::object::{Value, umt_has, umt_key_by, umt_merge_deep, umt_omit, umt_pick};
+use umt_rust::object::{Value, umt_has, umt_key_by, umt_merge_deep_two, umt_omit, umt_pick};
 
 #[cfg(test)]
 mod tests {
@@ -28,10 +28,9 @@ mod tests {
         base_database.insert("host".to_string(), Value::String("localhost".to_string()));
         base_database.insert("port".to_string(), Value::Int(5432));
 
-        let mut base_config_map = HashMap::new();
-        base_config_map.insert("app".to_string(), Value::Object(base_app));
-        base_config_map.insert("database".to_string(), Value::Object(base_database));
-        let base_config = Value::Object(base_config_map);
+        let mut base_config = HashMap::new();
+        base_config.insert("app".to_string(), Value::Object(base_app));
+        base_config.insert("database".to_string(), Value::Object(base_database));
 
         // Create env config (update)
         let mut env_features = HashMap::new();
@@ -48,13 +47,12 @@ mod tests {
             Value::String("prod-db.example.com".to_string()),
         );
 
-        let mut env_config_map = HashMap::new();
-        env_config_map.insert("app".to_string(), Value::Object(env_app));
-        env_config_map.insert("database".to_string(), Value::Object(env_database));
-        let env_config = Value::Object(env_config_map);
+        let mut env_config = HashMap::new();
+        env_config.insert("app".to_string(), Value::Object(env_app));
+        env_config.insert("database".to_string(), Value::Object(env_database));
 
         // Merge configs using library function
-        let merged = umt_merge_deep(&base_config, &[env_config]);
+        let merged = umt_merge_deep_two(&base_config, &env_config);
 
         // Verify deep merge results
         assert!(umt_has(&merged, "app.features.auth"));
@@ -107,43 +105,33 @@ mod tests {
         user2.insert("profile".to_string(), Value::Object(user2_profile));
 
         let user_data = vec![Value::Object(user1), Value::Object(user2)];
-        let user_data_val = Value::Array(user_data);
 
         // Create index by id using library function
-        let user_index = umt_key_by(&user_data_val, "id");
+        let user_index = umt_key_by(&user_data, |v| {
+            if let Value::Object(obj) = v {
+                if let Some(Value::Int(id)) = obj.get("id") {
+                    return id.to_string();
+                }
+            }
+            String::new()
+        });
 
         // Pick profiles and omit email using library functions
-        let user_profiles: Vec<Value> = if let Value::Object(index_map) = &user_index {
-            index_map
-                .values()
-                .filter_map(|value| {
-                    if let Value::Object(_) = value {
-                        // Pass value (which is &Value) to umt_pick
-                        let mut picked = umt_pick(value, &["id", "profile"]);
-
-                        // Access profile from picked result
-                        let profile_opt = if let Value::Object(ref p_map) = picked {
-                            p_map.get("profile").cloned()
-                        } else {
-                            None
-                        };
-
-                        if let Some(profile_val) = profile_opt {
-                            let profile_without_email = umt_omit(&profile_val, &["email"]);
-
-                            // Insert modified profile back into picked
-                            if let Value::Object(ref mut picked_map) = picked {
-                                picked_map.insert("profile".to_string(), profile_without_email);
-                            }
-                            return Some(picked);
-                        }
+        let user_profiles: Vec<_> = user_index
+            .values()
+            .filter_map(|value| {
+                if let Value::Object(user) = value {
+                    let picked = umt_pick(user, &["id", "profile"]);
+                    if let Some(Value::Object(profile)) = picked.get("profile") {
+                        let profile_without_email = umt_omit(profile, &["email"]);
+                        let mut result = picked.clone();
+                        result.insert("profile".to_string(), Value::Object(profile_without_email));
+                        return Some(result);
                     }
-                    None
-                })
-                .collect()
-        } else {
-            vec![]
-        };
+                }
+                None
+            })
+            .collect();
 
         // Verify user index
         if let Some(Value::Object(user)) = user_index.get("1") {
@@ -157,11 +145,9 @@ mod tests {
 
         // Verify profiles without email
         for profile in &user_profiles {
-            if let Some(p_map) = profile.as_object() {
-                if let Some(Value::Object(p)) = p_map.get("profile") {
-                    assert!(!p.contains_key("email"));
-                    assert!(p.contains_key("name"));
-                }
+            if let Some(Value::Object(p)) = profile.get("profile") {
+                assert!(!p.contains_key("email"));
+                assert!(p.contains_key("name"));
             }
         }
     }
@@ -198,10 +184,9 @@ mod tests {
         default_features.insert("caching".to_string(), Value::Bool(true));
         default_features.insert("logging".to_string(), Value::Object(default_logging));
 
-        let mut default_config_map = HashMap::new();
-        default_config_map.insert("server".to_string(), Value::Object(default_server));
-        default_config_map.insert("features".to_string(), Value::Object(default_features));
-        let default_config = Value::Object(default_config_map);
+        let mut default_config = HashMap::new();
+        default_config.insert("server".to_string(), Value::Object(default_server));
+        default_config.insert("features".to_string(), Value::Object(default_features));
 
         // Create custom config
         let mut custom_cors = HashMap::new();
@@ -235,13 +220,12 @@ mod tests {
         let mut custom_features = HashMap::new();
         custom_features.insert("logging".to_string(), Value::Object(custom_logging));
 
-        let mut custom_config_map = HashMap::new();
-        custom_config_map.insert("server".to_string(), Value::Object(custom_server));
-        custom_config_map.insert("features".to_string(), Value::Object(custom_features));
-        let custom_config = Value::Object(custom_config_map);
+        let mut custom_config = HashMap::new();
+        custom_config.insert("server".to_string(), Value::Object(custom_server));
+        custom_config.insert("features".to_string(), Value::Object(custom_features));
 
         // Merge configs using library function
-        let final_config = umt_merge_deep(&default_config, &[custom_config]);
+        let final_config = umt_merge_deep_two(&default_config, &custom_config);
 
         // Verify paths exist
         assert!(umt_has(&final_config, "server.middleware.cors.enabled"));
@@ -304,12 +288,11 @@ mod tests {
         inventory.insert("stock".to_string(), Value::Int(50));
         inventory.insert("warehouse".to_string(), Value::String("WH-001".to_string()));
 
-        let mut product_data_map = HashMap::new();
-        product_data_map.insert("id".to_string(), Value::String("prod-123".to_string()));
-        product_data_map.insert("details".to_string(), Value::Object(details));
-        product_data_map.insert("pricing".to_string(), Value::Object(pricing));
-        product_data_map.insert("inventory".to_string(), Value::Object(inventory));
-        let product_data = Value::Object(product_data_map);
+        let mut product_data = HashMap::new();
+        product_data.insert("id".to_string(), Value::String("prod-123".to_string()));
+        product_data.insert("details".to_string(), Value::Object(details));
+        product_data.insert("pricing".to_string(), Value::Object(pricing));
+        product_data.insert("inventory".to_string(), Value::Object(inventory));
 
         // Create filtered views using library functions
         let internal_view = umt_omit(&product_data, &["pricing"]);
@@ -324,19 +307,19 @@ mod tests {
     #[test]
     fn should_handle_deep_merging_with_array_data_and_selective_extraction() {
         // Create base permissions
-        let mut base_permissions_map = HashMap::new();
-        base_permissions_map.insert(
+        let mut base_permissions = HashMap::new();
+        base_permissions.insert(
             "user".to_string(),
             Value::Array(vec![Value::String("read".to_string())]),
         );
-        base_permissions_map.insert(
+        base_permissions.insert(
             "editor".to_string(),
             Value::Array(vec![
                 Value::String("read".to_string()),
                 Value::String("write".to_string()),
             ]),
         );
-        base_permissions_map.insert(
+        base_permissions.insert(
             "admin".to_string(),
             Value::Array(vec![
                 Value::String("read".to_string()),
@@ -344,10 +327,9 @@ mod tests {
                 Value::String("delete".to_string()),
             ]),
         );
-        let base_permissions = Value::Object(base_permissions_map);
 
-        let mut update_permissions_map = HashMap::new();
-        update_permissions_map.insert(
+        let mut update_permissions = HashMap::new();
+        update_permissions.insert(
             "editor".to_string(),
             Value::Array(vec![
                 Value::String("read".to_string()),
@@ -355,17 +337,16 @@ mod tests {
                 Value::String("publish".to_string()),
             ]),
         );
-        update_permissions_map.insert(
+        update_permissions.insert(
             "moderator".to_string(),
             Value::Array(vec![
                 Value::String("read".to_string()),
                 Value::String("moderate".to_string()),
             ]),
         );
-        let update_permissions = Value::Object(update_permissions_map);
 
         // Merge permissions using library function
-        let merged_permissions = umt_merge_deep(&base_permissions, &[update_permissions]);
+        let merged_permissions = umt_merge_deep_two(&base_permissions, &update_permissions);
 
         // Extract specific permissions using library functions
         let admin_permissions = umt_pick(&merged_permissions, &["admin"]);
@@ -405,12 +386,12 @@ mod tests {
         let api_response = vec![Value::Object(user1), Value::Object(user2)];
 
         // Filter active users and process using library functions
-        let processed_data: Vec<Value> = api_response
+        let processed_data: Vec<HashMap<String, Value>> = api_response
             .iter()
             .filter_map(|value| {
                 if let Value::Object(user) = value {
                     if user.get("active") == Some(&Value::Bool(true)) {
-                        let mut picked = umt_pick(value, &["id", "name", "theme"]);
+                        let picked = umt_pick(user, &["id", "name", "theme"]);
 
                         // Add summary
                         let mut summary = HashMap::new();
@@ -419,10 +400,9 @@ mod tests {
                         }
                         summary.insert("isActive".to_string(), Value::Bool(true));
 
-                        if let Value::Object(ref mut map) = picked {
-                            map.insert("summary".to_string(), Value::Object(summary));
-                        }
-                        return Some(picked);
+                        let mut result = picked;
+                        result.insert("summary".to_string(), Value::Object(summary));
+                        return Some(result);
                     }
                 }
                 None
@@ -430,8 +410,18 @@ mod tests {
             .collect();
 
         // Create user index using library function
-        let user_data_values = Value::Array(processed_data.clone());
-        let user_index = umt_key_by(&user_data_values, "id");
+        let user_data_values: Vec<Value> = processed_data
+            .iter()
+            .map(|m| Value::Object(m.clone()))
+            .collect();
+        let user_index = umt_key_by(&user_data_values, |v| {
+            if let Value::Object(obj) = v {
+                if let Some(Value::String(id)) = obj.get("id") {
+                    return id.clone();
+                }
+            }
+            String::new()
+        });
 
         // Merge with metadata using library function
         let mut meta = HashMap::new();
@@ -441,16 +431,13 @@ mod tests {
         );
 
         let mut users_obj = HashMap::new();
-        if let Value::Object(index_map) = user_index {
-            for (k, v) in index_map {
-                users_obj.insert(k, v);
-            }
+        for (k, v) in &user_index {
+            users_obj.insert(k.clone(), v.clone());
         }
 
-        let mut final_config_map = HashMap::new();
-        final_config_map.insert("users".to_string(), Value::Object(users_obj));
-        final_config_map.insert("meta".to_string(), Value::Object(meta));
-        let final_config = Value::Object(final_config_map);
+        let mut final_config = HashMap::new();
+        final_config.insert("users".to_string(), Value::Object(users_obj));
+        final_config.insert("meta".to_string(), Value::Object(meta));
 
         assert_eq!(processed_data.len(), 1);
 

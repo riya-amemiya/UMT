@@ -16,11 +16,11 @@ pub use merge::*;
 pub mod merge_deep;
 pub use merge_deep::*;
 
-pub mod omit;
-pub use omit::*;
-
 pub mod pick;
 pub use pick::*;
 
 pub mod pick_deep;
 pub use pick_deep::*;
+
+pub mod omit;
+pub use omit::*;

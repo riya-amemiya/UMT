@@ -183,5 +183,3 @@ mod object {
 }
 
 mod validate;
-
-mod benchmark;

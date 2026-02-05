@@ -4,7 +4,7 @@
 //! - `create_pipeline` - A functional pipeline for chaining transformations
 //! - `parse_json` - JSON parsing utilities
 //! - `pipe` - A fluent pipeline builder with rich transformation methods
-//! - `unwrap` - Utility to unwrap Option values with a message
+//! - `unwrap` - Utilities for unwrapping optional values
 
 pub mod create_pipeline;
 pub use create_pipeline::*;

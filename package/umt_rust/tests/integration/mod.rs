@@ -10,7 +10,6 @@ mod error_handling_workflows;
 mod function_composition;
 mod ip_conversions_roundtrip;
 mod math_calculator_and_statistics;
-#[path = "object/deep_ops_test.rs"]
-mod object_deep_ops_test;
+mod object_deep_operations;
 mod string_transform_and_validate;
 mod tool_parse_json_and_validate;
