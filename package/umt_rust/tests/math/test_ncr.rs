@@ -32,5 +32,5 @@ fn test_ncr_r_less_than_zero() {
 
 #[test]
 fn test_ncr_n_and_r_greater_than_12() {
-    assert_eq!(umt_ncr(13, 13), 0);
+    assert_eq!(umt_ncr(13, 13), 1);
 }

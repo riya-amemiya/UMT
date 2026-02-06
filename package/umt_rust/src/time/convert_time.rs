@@ -35,8 +35,12 @@ pub fn umt_convert_time(value: f64, from_unit: &str, to_unit: &str) -> Option<f6
     let to = TimeUnit::from_str(to_unit)?;
 
     // Convert to milliseconds first, then to target unit
-    let milliseconds = value * from.to_milliseconds_rate();
-    Some(milliseconds / to.to_milliseconds_rate())
+    // Use precision-corrected math to match TypeScript version
+    let milliseconds = crate::math::umt_multiplication(&[value, from.to_milliseconds_rate()]);
+    Some(crate::math::umt_division(
+        milliseconds,
+        to.to_milliseconds_rate(),
+    ))
 }
 
 /// Converts time between different units from a string value.

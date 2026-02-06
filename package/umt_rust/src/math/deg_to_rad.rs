@@ -1,4 +1,4 @@
-use std::f32::consts::PI;
+use std::f64::consts::PI;
 
 /// Converts degrees to radians.
 ///
@@ -11,6 +11,6 @@ use std::f32::consts::PI;
 /// # Returns
 ///
 /// The angle in radians.
-pub fn umt_deg_to_rad(degrees: f32) -> f32 {
+pub fn umt_deg_to_rad(degrees: f64) -> f64 {
     degrees * PI / 180.0
 }

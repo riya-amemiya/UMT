@@ -57,3 +57,33 @@ pub fn umt_gcd_multiple(numbers: &[i32]) -> i32 {
     }
     result
 }
+
+/// Calculates the greatest common divisor (GCD) of multiple integers.
+///
+/// # Arguments
+///
+/// * `numbers` - A slice of integers (at least 2 elements).
+///
+/// # Returns
+///
+/// The GCD of all input integers, or 0 if the slice is empty.
+///
+/// # Examples
+///
+/// ```
+/// use umt_rust::math::umt_gcd_many;
+///
+/// assert_eq!(umt_gcd_many(&[12, 18, 24]), 6);
+/// assert_eq!(umt_gcd_many(&[4, 8]), 4);
+/// assert_eq!(umt_gcd_many(&[7]), 7);
+/// ```
+pub fn umt_gcd_many(numbers: &[i32]) -> i32 {
+    if numbers.is_empty() {
+        return 0;
+    }
+    let mut result = numbers[0].abs();
+    for &n in &numbers[1..] {
+        result = umt_gcd(result, n);
+    }
+    result
+}
