@@ -1,5 +1,7 @@
 /// Returns the sum of an array of numbers.
 ///
+/// Uses precision-corrected addition to avoid floating point errors.
+///
 /// # Arguments
 ///
 /// * `array` - Array of numbers
@@ -18,7 +20,7 @@
 /// ```
 #[inline]
 pub fn umt_sum(array: &[f64]) -> f64 {
-    array.iter().sum()
+    crate::math::umt_addition(array)
 }
 
 /// Returns the sum of an array of integers.

@@ -1,3 +1,5 @@
+export * from "./getObjectsCommon";
+export * from "./getObjectsDiff";
 export * from "./has";
 export * from "./isEmpty";
 export * from "./keyBy";

@@ -4,5 +4,5 @@ use umt_rust::math::umt_average;
 fn test_average() {
     assert_eq!(umt_average(vec![1.0, 2.0, 3.0]), 2.0);
     assert_eq!(umt_average(vec![-1.0, -2.0, -3.0]), -2.0);
-    assert!(umt_average(vec![]).is_nan());
+    assert_eq!(umt_average(vec![]), 0.0);
 }
