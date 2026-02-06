@@ -45,8 +45,8 @@ export const getObjectsDiff = <T extends Record<string, unknown>>(
   }
 
   const allKeys = new Set<string>();
-  for (const obj of allObjects) {
-    for (const key of Object.keys(obj)) {
+  for (const object_ of allObjects) {
+    for (const key of Object.keys(object_)) {
       allKeys.add(key);
     }
   }
@@ -57,10 +57,10 @@ export const getObjectsDiff = <T extends Record<string, unknown>>(
     const values: unknown[] = [];
     const presentIn: number[] = [];
 
-    for (let i = 0; i < allObjects.length; i++) {
-      if (Object.hasOwn(allObjects[i], key)) {
-        values.push(allObjects[i][key]);
-        presentIn.push(i);
+    for (const [index, currentObject] of allObjects.entries()) {
+      if (Object.hasOwn(currentObject, key)) {
+        values.push(currentObject[key]);
+        presentIn.push(index);
       }
     }
 
@@ -69,13 +69,10 @@ export const getObjectsDiff = <T extends Record<string, unknown>>(
       continue;
     }
 
-    const allPlain = values.every(isPlainObject);
+    const allPlain = values.every((value) => isPlainObject(value));
 
     if (allPlain) {
-      const nested = getObjectsDiff(
-        values[0] as Record<string, unknown> as T,
-        ...(values.slice(1) as Record<string, unknown>[]),
-      );
+      const nested = getObjectsDiff(values[0] as T, ...values.slice(1));
 
       if (Object.keys(nested).length > 0) {
         (result as Record<string, unknown>)[key] = nested;
@@ -83,18 +80,18 @@ export const getObjectsDiff = <T extends Record<string, unknown>>(
       continue;
     }
 
-    let lastUniqueValue: unknown = undefined;
+    let lastUniqueValue: unknown;
     let hasUnique = false;
 
-    for (let i = 0; i < values.length; i++) {
+    for (const value of values) {
       let count = 0;
-      for (let j = 0; j < values.length; j++) {
-        if (values[i] === values[j]) {
+      for (const other of values) {
+        if (value === other) {
           count++;
         }
       }
       if (count === 1) {
-        lastUniqueValue = values[i];
+        lastUniqueValue = value;
         hasUnique = true;
       }
     }
