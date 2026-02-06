@@ -52,10 +52,7 @@ fn test_detect_indexed_mode_with_multiple_primitive_values() {
     let rest = vec![json!("third"), json!("fourth")];
     let result = detect_mode(Some(&first), Some(&second), &rest);
 
-    assert_eq!(
-        result.data,
-        json!(["first", "second", "third", "fourth"])
-    );
+    assert_eq!(result.data, json!(["first", "second", "third", "fourth"]));
     assert!(result.options.formatters.is_empty());
 }
 
@@ -141,10 +138,7 @@ fn test_handle_object_with_additional_values_as_indexed_mode() {
     let rest = vec![json!("more")];
     let result = detect_mode(Some(&obj), Some(&extra), &rest);
 
-    assert_eq!(
-        result.data,
-        json!([{"name": "Alice"}, "extra", "more"])
-    );
+    assert_eq!(result.data, json!([{"name": "Alice"}, "extra", "more"]));
     assert!(result.options.formatters.is_empty());
 }
 
@@ -170,16 +164,10 @@ fn test_handle_primitive_values_as_first_argument() {
     );
 
     let num_val = json!(42);
-    assert_eq!(
-        detect_mode(Some(&num_val), None, &[]).data,
-        json!([42])
-    );
+    assert_eq!(detect_mode(Some(&num_val), None, &[]).data, json!([42]));
 
     let bool_val = json!(true);
-    assert_eq!(
-        detect_mode(Some(&bool_val), None, &[]).data,
-        json!([true])
-    );
+    assert_eq!(detect_mode(Some(&bool_val), None, &[]).data, json!([true]));
 
     let bool_val_false = json!(false);
     assert_eq!(
@@ -223,10 +211,7 @@ fn test_reject_array_as_options() {
     let array = json!(["not", "options"]);
     let result = detect_mode(Some(&data), Some(&array), &[]);
 
-    assert_eq!(
-        result.data,
-        json!([{"name": "test"}, ["not", "options"]])
-    );
+    assert_eq!(result.data, json!([{"name": "test"}, ["not", "options"]]));
     assert!(result.options.formatters.is_empty());
 }
 
@@ -260,9 +245,6 @@ fn test_handle_mixed_scenarios_correctly() {
 
     let result = detect_mode(Some(&obj), Some(&string_val), &rest);
 
-    assert_eq!(
-        result.data,
-        json!([{"key": "value"}, "string", 42, true])
-    );
+    assert_eq!(result.data, json!([{"key": "value"}, "string", 42, true]));
     assert!(result.options.formatters.is_empty());
 }

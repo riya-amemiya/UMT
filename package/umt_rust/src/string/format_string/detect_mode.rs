@@ -1,5 +1,5 @@
-use serde_json::Value;
 use super::FormatOptions;
+use serde_json::Value;
 use std::collections::HashMap;
 
 /// Result of detect_mode function
@@ -52,10 +52,7 @@ pub fn detect_mode(
     };
 
     // Named mode: object only, no extra values
-    if is_first_argument_object
-        && options_or_second_value.is_none()
-        && rest_values.is_empty()
-    {
+    if is_first_argument_object && options_or_second_value.is_none() && rest_values.is_empty() {
         return DetectModeResult {
             data: data_or_first_value.unwrap().clone(),
             options: FormatOptions::default(),
