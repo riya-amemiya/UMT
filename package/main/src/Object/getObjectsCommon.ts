@@ -69,9 +69,7 @@ export const getObjectsCommon = <T extends Record<string, unknown>>(
     if (allPlainObjects) {
       const nested = getObjectsCommon(
         value as Record<string, unknown>,
-        ...objects.map(
-          (other) => other[key] as Record<string, unknown>,
-        ),
+        ...objects.map((other) => other[key] as Record<string, unknown>),
       );
 
       if (Object.keys(nested).length > 0) {

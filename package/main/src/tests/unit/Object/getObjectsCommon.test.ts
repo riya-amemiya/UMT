@@ -91,9 +91,7 @@ describe("getObjectsCommon", () => {
   });
 
   test("should handle mixed nested and primitive values", () => {
-    expect(
-      getObjectsCommon({ a: { b: 1 } }, { a: "hello" }),
-    ).toEqual({});
+    expect(getObjectsCommon({ a: { b: 1 } }, { a: "hello" })).toEqual({});
   });
 
   test("should compare arrays by reference", () => {

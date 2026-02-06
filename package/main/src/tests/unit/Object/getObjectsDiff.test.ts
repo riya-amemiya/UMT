@@ -48,42 +48,27 @@ describe("getObjectsDiff", () => {
   });
 
   test("should handle same key with shared and unique values across three objects", () => {
-    expect(
-      getObjectsDiff({ a: 1 }, { a: 1 }, { a: 2 }),
-    ).toEqual({ a: 2 });
+    expect(getObjectsDiff({ a: 1 }, { a: 1 }, { a: 2 })).toEqual({ a: 2 });
   });
 
   test("should handle falsy values correctly", () => {
-    expect(
-      getObjectsDiff(
-        { a: null, b: 0 },
-        { a: null, b: 0 },
-      ),
-    ).toEqual({});
+    expect(getObjectsDiff({ a: null, b: 0 }, { a: null, b: 0 })).toEqual({});
   });
 
   test("should handle different falsy values", () => {
-    expect(
-      getObjectsDiff({ a: null }, { a: undefined }),
-    ).toEqual({ a: undefined });
+    expect(getObjectsDiff({ a: null }, { a: undefined })).toEqual({
+      a: undefined,
+    });
   });
 
   test("should find diff in nested objects recursively", () => {
     expect(
-      getObjectsDiff(
-        { a: { b: 1, c: 2 }, d: 3 },
-        { a: { b: 1, d: 4 }, d: 3 },
-      ),
+      getObjectsDiff({ a: { b: 1, c: 2 }, d: 3 }, { a: { b: 1, d: 4 }, d: 3 }),
     ).toEqual({ a: { c: 2, d: 4 } });
   });
 
   test("should exclude key when nested diff is empty", () => {
-    expect(
-      getObjectsDiff(
-        { a: { b: 1 } },
-        { a: { b: 1 } },
-      ),
-    ).toEqual({});
+    expect(getObjectsDiff({ a: { b: 1 } }, { a: { b: 1 } })).toEqual({});
   });
 
   test("should handle deeply nested objects", () => {
@@ -107,26 +92,22 @@ describe("getObjectsDiff", () => {
 
   test("should handle nested shared values across three objects", () => {
     expect(
-      getObjectsDiff(
-        { a: { b: 1 } },
-        { a: { b: 1 } },
-        { a: { b: 2 } },
-      ),
+      getObjectsDiff({ a: { b: 1 } }, { a: { b: 1 } }, { a: { b: 2 } }),
     ).toEqual({ a: { b: 2 } });
   });
 
   test("should handle mixed nested and primitive values", () => {
-    expect(
-      getObjectsDiff({ a: { b: 1 } }, { a: "hello" }),
-    ).toEqual({ a: "hello" });
+    expect(getObjectsDiff({ a: { b: 1 } }, { a: "hello" })).toEqual({
+      a: "hello",
+    });
   });
 
   test("should compare arrays by reference", () => {
     const arr = [1, 2, 3];
     expect(getObjectsDiff({ a: arr }, { a: arr })).toEqual({});
-    expect(
-      getObjectsDiff({ a: [1, 2, 3] }, { a: [1, 2, 3] }),
-    ).toEqual({ a: [1, 2, 3] });
+    expect(getObjectsDiff({ a: [1, 2, 3] }, { a: [1, 2, 3] })).toEqual({
+      a: [1, 2, 3],
+    });
   });
 
   test("should not mutate original objects", () => {
