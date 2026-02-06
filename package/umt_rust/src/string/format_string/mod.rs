@@ -1,9 +1,11 @@
 pub mod apply_formatter;
 pub mod default_formatters;
+pub mod detect_mode;
 pub mod get_value;
 
 pub use apply_formatter::{Formatter, apply_formatter};
 pub use default_formatters::create_default_formatters;
+pub use detect_mode::{DetectModeResult, detect_mode};
 pub use get_value::get_value;
 
 use regex::Regex;
