@@ -1,6 +1,7 @@
 from .is_array import is_array
 from .is_deep_equal import IsDeepEqualOptions, is_deep_equal
 from .is_dictionary_object import is_dictionary_object
+from .is_double import is_double
 from .is_equal import is_equal
 from .is_not_empty import is_not_empty
 from .is_number import is_number
@@ -25,6 +26,7 @@ __all__ = [
     "is_array",
     "is_deep_equal",
     "is_dictionary_object",
+    "is_double",
     "is_equal",
     "is_not_empty",
     "is_number",
