@@ -1,14 +1,4 @@
-/**
- * Checks if a value is a plain object
- */
-const isPlainObject = (value: unknown): value is Record<string, unknown> => {
-  return (
-    value !== null &&
-    typeof value === "object" &&
-    value.constructor === Object &&
-    Object.prototype.toString.call(value) === "[object Object]"
-  );
-};
+import { isPlainObject } from "@/Object/isPlainObject";
 
 /**
  * Extract key-value pairs that appear in exactly one input object.

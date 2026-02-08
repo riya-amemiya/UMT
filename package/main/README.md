@@ -60,11 +60,22 @@ bun add umt
 | zip | `<T extends unknown[][]>(...arrays: T) => ZipArrayType<T>` | Creates a new array by combining elements from multiple arrays at corresponding positions | `zip([1, 2], ['a', 'b']); // [[1, 'a'], [2, 'b']]` |
 | zipLongest | `<T extends unknown[][]>(...arrays: T) => ZipArrayType<T>` | Combines arrays of different lengths by padding shorter arrays with undefined values | `zipLongest([1, 2], ['a']); // [[1, 'a'], [2, undefined]]` |
 
+### Async
+
+| name | type | description | example |
+|------|------|-------------|---------|
+| defer | `<T>() => Deferred<T>` | Creates a deferred promise with externally accessible resolve and reject | `const d = defer<number>(); d.resolve(42); await d.promise; // 42` |
+| parallel | `<T, U>(limit: number, items: T[], function_: (item: T, index: number) => Promise<U>) => Promise<U[]>` | Executes async functions in parallel with a concurrency limit | `await parallel(2, [1, 2, 3], async (n) => n * 2); // [2, 4, 6]` |
+| sleep | `(ms: number) => Promise<void>` | Returns a promise that resolves after the specified milliseconds | `await sleep(1000);` |
+| timeout | `<T>(promise: Promise<T>, ms: number) => Promise<T>` | Wraps a promise with a timeout, rejecting if it does not resolve in time | `await timeout(fetch("/api"), 5000);` |
+
 ### DataStructure
 
 | name | type | description | example |
 |------|------|-------------|---------|
+| LRUCache | `class LRUCache<K, V>` | Least Recently Used cache with O(1) get/set using Map and doubly linked list | `const cache = new LRUCache<string, number>(3); cache.set("a", 1); cache.get("a"); // 1` |
 | PriorityQueue | `class PriorityQueue<T>` | A priority queue implementation using a binary heap. Higher priority values are dequeued first. | `const queue = new PriorityQueue<string>(); queue.enqueue("low", 1); queue.enqueue("high", 3); queue.enqueueBack("back"); queue.dequeue(); // "high"` |
+| TTLCache | `class TTLCache<K, V>` | Time-to-live cache with lazy expiration and optional max size | `const cache = new TTLCache<string, number>({ defaultTTL: 5000 }); cache.set("a", 1); cache.get("a"); // 1` |
 
 ### Color
 
@@ -107,6 +118,9 @@ bun add umt
 
 | name | type | description | example |
 |------|------|-------------|---------|
+| flatMapResult | `<V, E, U, F>(result: Result<V, E>, function_: (value: V) => Result<U, F>) => Result<U, E \| F>` | Transforms a success Result's value using a function that returns a Result | `flatMapResult({type: "success", value: 5}, (n) => ({type: "success", value: n * 2})); // {type: "success", value: 10}` |
+| mapResult | `<V, E, U>(result: Result<V, E>, function_: (value: V) => U) => Result<U, E>` | Transforms a success Result's value using the provided function | `mapResult({type: "success", value: 5}, (n) => n * 2); // {type: "success", value: 10}` |
+| matchResult | `<V, E, S, F>(result: Result<V, E>, handlers: {onSuccess: (value: V) => S; onError: (error: E) => F}) => S \| F` | Pattern matches on a Result, applying the appropriate handler | `matchResult({type: "success", value: 42}, {onSuccess: (v) => "Got " + v, onError: (e) => "Failed"}); // "Got 42"` |
 | safeExecute | `<V, E = Error>(callback: () => V) => Result<V, E>` | Safely executes a callback function and returns a Result type | `safeExecute(() => JSON.parse('{"a": 1}')); // {type: "success", value: {a: 1}}` |
 
 ### Function
@@ -114,6 +128,18 @@ bun add umt
 | name | type | description | example |
 |------|------|-------------|---------|
 | curry | `(func: (...args: unknown[]) => unknown) => Function` | Curries a function | `const add = (a, b, c) => a + b + c; curry(add)(1)(2)(3); // 6` |
+| debounce | `<T>(function_: T, wait: number, options?: DebounceOptions) => DebouncedFunction<T>` | Creates a debounced version of the provided function with leading/trailing options | `const debounced = debounce(() => console.log("called"), 300); debounced(); debounced.cancel();` |
+| memoize | `<A extends unknown[], R, K>(function_: (...args: A) => R, options?: MemoizeOptions<K>) => MemoizedFunction<A, R, K>` | Creates a memoized version of the provided function with optional maxSize | `const m = memoize((n: number) => n * 2); m(5); // 10 (computed); m(5); // 10 (cached)` |
+| once | `<A extends unknown[], R>(function_: (...args: A) => R) => (...args: A) => R` | Creates a function that is restricted to be called only once | `const init = once(() => 42); init(); // 42; init(); // 42 (cached)` |
+| throttle | `<T>(function_: T, wait: number) => ThrottledFunction<T>` | Creates a throttled version of the provided function | `const throttled = throttle(() => console.log("called"), 300); throttled(); throttled.cancel();` |
+
+### Iterator
+
+| name | type | description | example |
+|------|------|-------------|---------|
+| lazyFilter | `function*<T>(iterable: Iterable<T>, predicate: (value: T, index: number) => boolean) => Generator<T>` | Lazily filters values from an iterable using a generator | `[...lazyFilter([1, 2, 3, 4], (n) => n % 2 === 0)]; // [2, 4]` |
+| lazyMap | `function*<T, U>(iterable: Iterable<T>, function_: (value: T, index: number) => U) => Generator<U>` | Lazily maps values from an iterable using a generator | `[...lazyMap([1, 2, 3], (n) => n * 2)]; // [2, 4, 6]` |
+| lazyTake | `function*<T>(iterable: Iterable<T>, n: number) => Generator<T>` | Lazily takes the first n values from an iterable | `[...lazyTake([1, 2, 3, 4, 5], 3)]; // [1, 2, 3]` |
 
 ### IP
 
@@ -136,6 +162,7 @@ bun add umt
 |------|------|-------------|---------|
 | addition | `(...numbers: number[]) => number` | Addition without floating point errors | `addition(0.1, 0.2); // 0.3` |
 | average | `(numbers: number[]) => number` | Calculates the arithmetic mean of an array of numbers | `average([1, 2, 3]); // 2` |
+| clamp | `(value: number, min: number, max: number) => number` | Clamps a number between a minimum and maximum value | `clamp(-3, 0, 10); // 0` |
 | correlationCoefficient | `(x: number[], y: number[]) => number` | Calculate the Pearson correlation coefficient between two arrays | `correlationCoefficient([1, 2, 3, 4, 5], [2, 4, 6, 8, 10]); // 1` |
 | bitwise | `(x: number, k: number, direction?: "left" \| "right") => number` | Performs bit rotation on a number | `bitwise(0x12345678, 8); // 0x34567812` |
 | calculator | `<T extends Record<string, string \| number>>(expression: string, exchange?: T) => string` | Calculator function that handles mathematical expressions and simple equations | `calculator("1+2"); // "3"` |
@@ -149,6 +176,7 @@ bun add umt
 | flexibleNumberConversion | `(value: unknown) => number` | Flexible function to convert various inputs to numbers whenever possible | `flexibleNumberConversion("456"); // 456` |
 | gcd | `(x: number, y: number, ...z: number[]) => number` | Greatest Common Divisor (GCD) | `gcd(12, 18); // 6` |
 | getDecimalLength | `(value: number) => number` | Gets the number of decimal places in a number | `getDecimalLength(1.23); // 2` |
+| inRange | `(value: number, start: number, end?: number) => boolean` | Checks if a number is within a specified range | `inRange(3, 5); // true (range: [0, 5))` |
 | lcm | `(x: number, y: number) => number` | Least Common Multiple (LCM) | `lcm(2, 3); // 6` |
 | linearCongruentialGenerator | `(seed: number, max?: number, multiplier?: number, increment?: number) => number` | Linear Congruential Generator for random number generation | `linearCongruentialGenerator(12345);` |
 | literalExpression | `(x: string) => string` | Solves literal equations with variables | `literalExpression("x+1=2"); // "1"` |
@@ -174,6 +202,7 @@ bun add umt
 | solveEquation | `(coefficients: number[][], constants: number[]) => number[]` | Solves a system of linear equations using Gaussian elimination | `solveEquation([[1, 1], [1, 2]], [4, 10]); // [-2, 6]` |
 | standardDeviation | `(values: number[]) => number` | Calculates the standard deviation of a set of values | `standardDeviation([1, 2, 3]); // 0.816496580927726` |
 | subtract | `(...numbers: number[]) => number` | Performs subtraction with arbitrary number of arguments without floating point errors | `subtract(0.1, 0.2); // -0.1` |
+| sumPrecise | `(numbers: number[]) => number` | Calculates the sum using Neumaier summation for improved floating-point precision | `sumPrecise([1e20, 1, -1e20]); // 1` |
 | toBaseN | `(value: number, radix?: number) => string` | Converts a number to a string representation in the specified base | `toBaseN(10); // "1010" (binary)` |
 | toCelsius | `(kelvin: number) => number` | Converts temperature from Kelvin to Celsius | `toCelsius(300); // 26.85` |
 | toKelvin | `(celsius: number) => number` | Converts temperature from Celsius to Kelvin | `toKelvin(26.85); // 300` |
@@ -181,18 +210,40 @@ bun add umt
 | valueSwap | `(x: number, y: number) => [number, number]` | Swaps two numbers to ensure x < y | `valueSwap(2, 1); // [1, 2]` |
 | xoshiro256 | `(state: [number, number, number, number], min?: number, max?: number) => number` | Generates random numbers using the Xoshiro256** algorithm | `xoshiro256([1, 2, 3, 4]); // random number between 0 and 1` |
 
+### Number
+
+| name | type | description | example |
+|------|------|-------------|---------|
+| formatNumber | `(value: number, options?: FormatNumberOptions) => string` | Formats a number using Intl.NumberFormat | `formatNumber(1234567.89); // "1,234,567.89"` |
+| toOrdinal | `(value: number) => string` | Converts a number to its English ordinal string representation | `toOrdinal(1); // "1st"` |
+| toPercentage | `(value: number, total: number, decimals?: number) => number` | Calculates the percentage of a value relative to a total | `toPercentage(1, 3); // 33.33` |
+
 ### Object
 
 | name | type | description | example |
 |------|------|-------------|---------|
+| deepClone | `<T>(value: T) => T` | Creates a deep clone of the given value using structuredClone | `const cloned = deepClone({a: {b: 1}}); cloned.a.b = 99; // original unchanged` |
 | has | `<T extends { [key: string]: unknown }>(object: T, path: string \| string[]) => boolean` | Determines if an object has a specified path | `has({ a: { b: 1 } }, "a.b"); // true` |
+| isPlainObject | `(value: unknown) => value is Record<string, unknown>` | Checks if a value is a plain object | `isPlainObject({}); // true; isPlainObject(new Map()); // false` |
 | isEmpty | `(object: Record<string, unknown>) => boolean` | Checks if an object is empty (has no own properties) | `isEmpty({}); // true` |
 | keyBy | `<T>(collection: T[] \| Record<PropertyName, T>, iteratee?: Iteratee<T>) => Record<PropertyName, T>` | Creates an object composed of keys generated from the results of running each element of collection through iteratee | `keyBy([{id: 1, name: 'a'}, {id: 2, name: 'b'}], 'id'); // {1: {id: 1, name: 'a'}, 2: {id: 2, name: 'b'}}` |
+| mapKeys | `<T extends Record<string, unknown>>(object: T, function_: (value: T[keyof T], key: string) => string) => Record<string, T[keyof T]>` | Creates an object with the same values but keys transformed by the provided function | `mapKeys({a: 1, b: 2}, (_v, k) => k.toUpperCase()); // {A: 1, B: 2}` |
+| mapValues | `<T extends Record<string, unknown>, R>(object: T, function_: (value: T[keyof T], key: string) => R) => Record<keyof T, R>` | Creates an object with the same keys but values transformed by the provided function | `mapValues({a: 1, b: 2}, (v) => v * 2); // {a: 2, b: 4}` |
 | merge | `<T extends Record<string, unknown>>(target: T, ...sources: Partial<T>[]) => T` | Merges multiple objects into a single object (shallow merge) | `merge({a: 1}, {b: 2}); // {a: 1, b: 2}` |
 | mergeDeep | `<T extends Record<string, unknown>>(target: T, ...sources: Partial<T>[]) => T` | Deeply merges multiple objects into a single object | `mergeDeep({a: {b: 1}}, {a: {c: 2}}); // {a: {b: 1, c: 2}}` |
 | omit | `<T extends Record<string, unknown>, K extends keyof T>(object: T, ...keys: K[]) => Omit<T, K>` | Creates an object without the specified keys | `omit({a: 1, b: 2, c: 3}, 'b'); // {a: 1, c: 3}` |
 | pick | `<T extends object, K extends keyof T>(object: T, ...keys: K[]) => Pick<T, K>` | Creates a new object with only the specified properties from the source object | `pick({ id: 1, name: 'Alice', age: 30 }, 'id', 'name'); // { id: 1, name: 'Alice' }` |
 | pickDeep | `<T extends object, K extends PickDeepKey<T>>(object: T, ...keys: K[]) => PickDeep<T>` | Creates a new object by deeply selecting properties from the source object based on specified keys | `pickDeep({ a: { b: { c: 1, d: 2 }, e: 3 }, f: 4 }, 'a.b.c', 'f'); // { a: { b: { c: 1 } }, f: 4 }` |
+
+### Predicate
+
+| name | type | description | example |
+|------|------|-------------|---------|
+| every | `<T extends unknown[]>(...predicates: ((...args: T) => boolean)[]) => (...args: T) => boolean` | Creates a predicate that returns true only when all given predicates return true | `every((n: number) => n > 0, (n) => n % 2 === 0)(4); // true` |
+| isNullish | `(value: unknown) => value is null \| undefined` | Checks if a value is null or undefined | `isNullish(null); // true; isNullish(0); // false` |
+| matches | `(pattern: Record<string, unknown>) => (object: Record<string, unknown>) => boolean` | Creates a predicate that checks if an object matches a given pattern | `matches({role: "admin"})({name: "Alice", role: "admin"}); // true` |
+| not | `<T extends unknown[]>(function_: (...args: T) => boolean) => (...args: T) => boolean` | Creates a predicate that negates the given predicate | `const isOdd = not((n: number) => n % 2 === 0); isOdd(3); // true` |
+| some | `<T extends unknown[]>(...predicates: ((...args: T) => boolean)[]) => (...args: T) => boolean` | Creates a predicate that returns true when at least one predicate returns true | `some((n: number) => n === 0, (n) => n < 0)(0); // true` |
 
 ### Simple
 
@@ -255,6 +306,15 @@ bun add umt
 | extractDeviceFromUserAgent | `(ua: string) => SimplifiedUserAgentInfoDevice` | Extracts device type information from a User-Agent string | `extractDeviceFromUserAgent(navigator.userAgent); // "desktop"` |
 | extractOsFromUserAgent | `(ua: string) => SimplifiedUserAgentInfoOs` | Extracts operating system information from a User-Agent string | `extractOsFromUserAgent(navigator.userAgent); // "macos"` |
 | parseUserAgent | `(userAgent: string) => SimplifiedUserAgentInfo` | Parse a User-Agent string to extract browser, device, and OS information | `parseUserAgent(navigator.userAgent); // {browser: "chrome", device: "desktop", os: "macos"}` |
+
+### URL
+
+| name | type | description | example |
+|------|------|-------------|---------|
+| buildUrl | `(base: string, parameters?: Record<string, string>) => string` | Builds a URL with query parameters appended | `buildUrl("https://example.com", {page: "1", q: "search"}); // "https://example.com/?page=1&q=search"` |
+| isAbsoluteUrl | `(url: string) => boolean` | Checks if a URL is absolute (RFC 3986) | `isAbsoluteUrl("https://example.com"); // true; isAbsoluteUrl("/path"); // false` |
+| joinPath | `(...segments: string[]) => string` | Joins multiple path segments into one path, normalizing slashes | `joinPath("https://example.com/", "/api/", "/users"); // "https://example.com/api/users"` |
+| parseQueryString | `(query: string) => Record<string, string>` | Parses a query string into a key-value record | `parseQueryString("?page=1&q=search"); // {page: "1", q: "search"}` |
 
 ### Unit
 

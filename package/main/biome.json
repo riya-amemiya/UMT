@@ -148,6 +148,7 @@
         "noEmptyBlockStatements": "error",
         "noEvolvingTypes": "error",
         "noExportsInTest": "error",
+        "noExplicitAny": "error",
         "noFocusedTests": "error",
         "noMisplacedAssertion": "error",
         "noSkippedTests": "error",

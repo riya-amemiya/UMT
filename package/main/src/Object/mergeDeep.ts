@@ -1,16 +1,5 @@
 import type { UnionToIntersection } from "$/logic/unionToIntersection";
-
-/**
- * Checks if a value is a plain object
- */
-const isPlainObject = (value: unknown): value is Record<string, unknown> => {
-  return (
-    value !== null &&
-    typeof value === "object" &&
-    value.constructor === Object &&
-    Object.prototype.toString.call(value) === "[object Object]"
-  );
-};
+import { isPlainObject } from "@/Object/isPlainObject";
 
 /**
  * Deeply merges multiple objects into a single object

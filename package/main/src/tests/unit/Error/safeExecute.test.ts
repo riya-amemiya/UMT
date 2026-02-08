@@ -1,4 +1,24 @@
-import { safeExecute } from "@/Error/safeExecute";
+import {
+  errorFunction,
+  safeExecute,
+  successFunction,
+} from "@/Error/safeExecute";
+
+describe("errorFunction", () => {
+  it("should create an error result", () => {
+    const result = errorFunction(new Error("test"));
+    expect(result.type).toBe("error");
+    expect(result.error).toBeInstanceOf(Error);
+  });
+});
+
+describe("successFunction", () => {
+  it("should create a success result", () => {
+    const result = successFunction(42);
+    expect(result.type).toBe("success");
+    expect(result.value).toBe(42);
+  });
+});
 
 describe("safeExecute function", () => {
   describe("successful operations", () => {

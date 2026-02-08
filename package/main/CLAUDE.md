@@ -30,7 +30,7 @@ UMT (Utility Module Toolkit) is a TypeScript utility library organized into func
 
 - **Unit tests**: `/unit/` - mirrors source structure, tests individual functions
 - **Integration tests**: `/integration/` - tests cross-module functionality
-- **Benchmarks**: `/benchmark/` - performance testing for array sorting algorithms
+- **Benchmarks**: `/benchmark/` - performance testing (sorting, memoize, debounce, throttle, etc.)
 
 ### Key Path Aliases
 
@@ -69,25 +69,30 @@ UMT (Utility Module Toolkit) is a TypeScript utility library organized into func
 src/
 ├── index.ts                 # Main export file
 ├── types/                   # Shared type definitions ($/* alias)
+├── Advance/                 # Advanced functions
 ├── Array/                   # Array manipulation functions
-├── Math/                    # Mathematical functions
-├── String/                  # String manipulation functions
-├── Date/                    # Date manipulation functions
-├── Validate/                # Validation functions
-├── Crypto/                  # Cryptographic functions
+├── Async/                   # Async utilities (sleep, parallel, timeout, defer)
 ├── Color/                   # Color conversion functions
+├── Consts/                  # Constant definitions
+├── Crypto/                  # Cryptographic functions
+├── DataStructure/           # Data structures (PriorityQueue, LRUCache, TTLCache)
+├── Date/                    # Date manipulation functions
+├── Error/                   # Error handling and Result type functions
+├── Function/                # Function utilities (curry, debounce, throttle, memoize, once)
 ├── IP/                      # IP manipulation functions
+├── Iterator/                # Lazy iterator helpers (lazyMap, lazyFilter, lazyTake)
+├── Math/                    # Mathematical functions
+├── Number/                  # Number formatting (toOrdinal, formatNumber, toPercentage)
 ├── Object/                  # Object manipulation functions
-├── Function/                # Function manipulation functions
-├── Error/                   # Error handling functions
+├── Predicate/               # Predicate combinators (not, every, some, matches, isNullish)
+├── Simple/                  # Simple version functions
+├── String/                  # String manipulation functions
+├── Time/                    # Time conversion functions
 ├── Tool/                    # Tool functions
-├── DataStructure/           # Data structures
 ├── UA/                      # User Agent functions
 ├── Unit/                    # Unit conversion functions
-├── Time/                    # Time conversion functions
-├── Simple/                  # Simple version functions
-├── Advance/                 # Advanced functions
-├── Consts/                  # Constant definitions
+├── URL/                     # URL utilities (buildUrl, parseQueryString, joinPath, isAbsoluteUrl)
+├── Validate/                # Validation functions
 └── tests/                   # Test directory
     ├── unit/                # Unit tests (mirrors source structure)
     ├── integration/         # Integration tests
