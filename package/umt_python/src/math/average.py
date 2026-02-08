@@ -25,7 +25,5 @@ def average(numbers: Sequence[float]) -> float:
     if len(numbers) == 0:
         return 0
 
-    total = 0.0
-    for num in numbers:
-        total = addition(total, num)
+    total = addition(*numbers)
     return division(total, len(numbers))
