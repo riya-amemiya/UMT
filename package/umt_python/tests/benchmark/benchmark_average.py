@@ -31,7 +31,9 @@ def run_benchmark():
 
     # Case 3: Large list
     numbers_large = [float(i) / 10.0 for i in range(1000)]
-    t3 = timeit.timeit(lambda: average(numbers_large), number=100) # Fewer iterations for large list
+    t3 = timeit.timeit(
+        lambda: average(numbers_large), number=100
+    )  # Fewer iterations for large list
     print(f"average(large_list) [100 runs]: {t3:.6f}s")
 
 
