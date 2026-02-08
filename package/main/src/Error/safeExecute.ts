@@ -2,7 +2,7 @@
  * Represents a successful execution result containing a value
  * @template V The type of the success value
  */
-interface SuccessType<V> {
+export interface SuccessType<V> {
   type: "success";
   value: V;
 }
@@ -11,7 +11,7 @@ interface SuccessType<V> {
  * Represents an error result containing an error object
  * @template E The type of the error
  */
-interface ErrorType<E> {
+export interface ErrorType<E> {
   type: "error";
   error: E;
 }
@@ -28,14 +28,17 @@ export type Result<V, E> = SuccessType<V> | ErrorType<E>;
  * @param error The error object
  * @returns An ErrorType containing the error
  */
-const errorFunction = <E>(error: E): ErrorType<E> => ({ type: "error", error });
+export const errorFunction = <E>(error: E): ErrorType<E> => ({
+  type: "error",
+  error,
+});
 /**
  * Creates a success result
  * @template V The type of the success value
  * @param value The success value
  * @returns A SuccessType containing the value
  */
-const successFunction = <V>(value: V): SuccessType<V> => ({
+export const successFunction = <V>(value: V): SuccessType<V> => ({
   type: "success",
   value,
 });

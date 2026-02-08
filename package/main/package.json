@@ -60,6 +60,11 @@
       "import": "./module/Array/index.js",
       "default": "./module/Array/index.js"
     },
+    "./Async": {
+      "types": "./module/Async/index.d.ts",
+      "import": "./module/Async/index.js",
+      "default": "./module/Async/index.js"
+    },
     "./Color": {
       "types": "./module/Color/index.d.ts",
       "import": "./module/Color/index.js",
@@ -100,15 +105,30 @@
       "import": "./module/IP/index.js",
       "default": "./module/IP/index.js"
     },
+    "./Iterator": {
+      "types": "./module/Iterator/index.d.ts",
+      "import": "./module/Iterator/index.js",
+      "default": "./module/Iterator/index.js"
+    },
     "./Math": {
       "types": "./module/Math/index.d.ts",
       "import": "./module/Math/index.js",
       "default": "./module/Math/index.js"
     },
+    "./Number": {
+      "types": "./module/Number/index.d.ts",
+      "import": "./module/Number/index.js",
+      "default": "./module/Number/index.js"
+    },
     "./Object": {
       "types": "./module/Object/index.d.ts",
       "import": "./module/Object/index.js",
       "default": "./module/Object/index.js"
+    },
+    "./Predicate": {
+      "types": "./module/Predicate/index.d.ts",
+      "import": "./module/Predicate/index.js",
+      "default": "./module/Predicate/index.js"
     },
     "./Simple": {
       "types": "./module/Simple/index.d.ts",
@@ -144,6 +164,11 @@
       "types": "./module/Unit/index.d.ts",
       "import": "./module/Unit/index.js",
       "default": "./module/Unit/index.js"
+    },
+    "./URL": {
+      "types": "./module/URL/index.d.ts",
+      "import": "./module/URL/index.js",
+      "default": "./module/URL/index.js"
     },
     "./Validate": {
       "types": "./module/Validate/index.d.ts",
