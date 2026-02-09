@@ -153,6 +153,9 @@ from .math import (
     value_swap,
     xoshiro256,
 )
+from .number import (
+    to_ordinal,
+)
 from .object import (
     object_has,
     object_is_empty,
@@ -417,6 +420,7 @@ __all__ = [
     "to_celsius",
     "to_half_width",
     "to_kelvin",
+    "to_ordinal",
     "trim_characters",
     "trim_end_characters",
     "trim_start_characters",

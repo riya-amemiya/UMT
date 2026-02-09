@@ -9,6 +9,7 @@ pub mod error;
 pub mod function;
 pub mod ip;
 pub mod math;
+pub mod number;
 pub mod object;
 pub mod simple;
 pub mod string;

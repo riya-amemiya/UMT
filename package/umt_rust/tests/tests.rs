@@ -132,6 +132,8 @@ mod math {
     }
 }
 
+mod number;
+
 mod simple {
     mod test_birthday_simple;
     mod test_day_of_week_simple;
