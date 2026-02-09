@@ -162,6 +162,9 @@ from .object import (
     object_pick,
     object_pick_deep,
 )
+from .number import (
+    to_ordinal,
+)
 from .simple.math import (
     deviation_value_simple,
 )
@@ -417,6 +420,7 @@ __all__ = [
     "to_celsius",
     "to_half_width",
     "to_kelvin",
+    "to_ordinal",
     "trim_characters",
     "trim_end_characters",
     "trim_start_characters",
