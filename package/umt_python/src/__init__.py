@@ -153,6 +153,9 @@ from .math import (
     value_swap,
     xoshiro256,
 )
+from .number import (
+    to_ordinal,
+)
 from .object import (
     object_has,
     object_is_empty,
@@ -161,9 +164,6 @@ from .object import (
     object_omit,
     object_pick,
     object_pick_deep,
-)
-from .number import (
-    to_ordinal,
 )
 from .simple.math import (
     deviation_value_simple,
