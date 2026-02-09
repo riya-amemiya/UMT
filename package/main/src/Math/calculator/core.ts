@@ -4,6 +4,7 @@ import { addition } from "@/Math/addition";
 import { division } from "@/Math/division";
 import { multiplication } from "@/Math/multiplication";
 import { subtract } from "@/Math/subtract";
+import { escapeRegExp } from "@/Tool/escapeRegExp";
 import { isNumber } from "@/Validate/isNumber";
 
 export const calculatorCore = <T extends { [key: string]: string | number }>(
@@ -97,7 +98,7 @@ const getCurrencyRegex = (currencySymbol: string): RegExp => {
   if (cached) {
     return cached;
   }
-  const regex = new RegExp(`\\${currencySymbol}([0-9]+)`);
+  const regex = new RegExp(`${escapeRegExp(currencySymbol)}([0-9]+)`);
   currencyRegexCache.set(currencySymbol, regex);
   return regex;
 };
