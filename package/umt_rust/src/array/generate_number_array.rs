@@ -1,4 +1,4 @@
-use rand::Rng;
+use rand::RngExt;
 
 /// Generates an array of numbers with the specified length.
 ///

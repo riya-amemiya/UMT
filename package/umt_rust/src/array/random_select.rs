@@ -1,4 +1,4 @@
-use rand::Rng;
+use rand::RngExt;
 use std::collections::HashSet;
 
 /// Randomly selects a specified number of elements from an array.
