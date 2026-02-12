@@ -10,19 +10,20 @@ export type BinaryFullAdder<
   X extends string,
   Y extends string,
   B extends number = LengthOfString<X>,
-> = LengthOfString<X> extends LengthOfString<Y>
-  ? FirstNChars<
-      ShiftString<
-        StringReverse<
-          BinaryFullAdderParser<
-            StringReverse<FirstNChars<X, B>>,
-            StringReverse<FirstNChars<Y, B>>
+> =
+  LengthOfString<X> extends LengthOfString<Y>
+    ? FirstNChars<
+        ShiftString<
+          StringReverse<
+            BinaryFullAdderParser<
+              StringReverse<FirstNChars<X, B>>,
+              StringReverse<FirstNChars<Y, B>>
+            >
           >
-        >
-      >,
-      B
-    >
-  : never;
+        >,
+        B
+      >
+    : never;
 
 // Type for multi-byte adder operation
 type BinaryFullAdderParser<

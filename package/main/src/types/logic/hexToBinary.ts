@@ -2,14 +2,12 @@ import type { Decimal4bitTobinary } from "./decimal4bitTobinary";
 import type { Hex4bitToDecimal } from "./hex4bitToDecimal";
 import type { LengthOfString } from "./lengthOfString";
 
-export type HexToBinaryParser<
-  X extends string,
-  C extends string = "",
-> = LengthOfString<X> extends 1
-  ? `${C}${Decimal4bitTobinary<Hex4bitToDecimal<X>>}`
-  : X extends `${infer F}${infer R}`
-    ? HexToBinaryParser<R, `${C}${Decimal4bitTobinary<Hex4bitToDecimal<F>>}`>
-    : C;
+export type HexToBinaryParser<X extends string, C extends string = ""> =
+  LengthOfString<X> extends 1
+    ? `${C}${Decimal4bitTobinary<Hex4bitToDecimal<X>>}`
+    : X extends `${infer F}${infer R}`
+      ? HexToBinaryParser<R, `${C}${Decimal4bitTobinary<Hex4bitToDecimal<F>>}`>
+      : C;
 
 // Type to convert hexadecimal to binary
 export type HexToBinary<
