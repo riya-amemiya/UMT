@@ -1,4 +1,4 @@
-use rand::Rng;
+use rand::RngExt;
 
 /// Shuffles all elements in a 2D array while maintaining the row lengths.
 ///

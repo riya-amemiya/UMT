@@ -1,4 +1,4 @@
-use rand::Rng;
+use rand::RngExt;
 
 /// Generates a random integer between min and max (inclusive).
 ///
