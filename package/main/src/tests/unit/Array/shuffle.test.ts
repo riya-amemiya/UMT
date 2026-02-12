@@ -6,7 +6,9 @@ describe("shuffle function", () => {
     const array = Array.from({ length: 20 }, (_, i) => i + 1);
     const shuffledArray = shuffle(array);
     expect(shuffledArray).not.toEqual(array);
-    expect(shuffledArray.sort((a, b) => a - b)).toEqual(array.sort((a, b) => a - b));
+    expect(shuffledArray.sort((a, b) => a - b)).toEqual(
+      array.sort((a, b) => a - b),
+    );
   });
 
   it("should return empty array unchanged", () => {
@@ -22,11 +24,33 @@ describe("shuffle function", () => {
   });
 
   it("should shuffle array with mixed strings and numbers", () => {
-    const array = [1, "2", 3, "4", 5, 6, "7", 8, "9", 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20];
+    const array = [
+      1,
+      "2",
+      3,
+      "4",
+      5,
+      6,
+      "7",
+      8,
+      "9",
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+    ];
     const shuffledArray = shuffle(array);
     expect(shuffledArray).not.toEqual(array);
     // Sort logic needs to be consistent for mixed types
-    const sortFn = (a: string | number, b: string | number) => String(a).localeCompare(String(b));
+    const sortFn = (a: string | number, b: string | number) =>
+      String(a).localeCompare(String(b));
     expect(shuffledArray.sort(sortFn)).toEqual(array.sort(sortFn));
   });
 
@@ -34,7 +58,9 @@ describe("shuffle function", () => {
     const array = Array.from({ length: 1000 }, (_, index) => index);
     const shuffledArray = shuffle(array);
     expect(shuffledArray).not.toEqual(array);
-    expect(shuffledArray.sort((a, b) => a - b)).toEqual(array.sort((a, b) => a - b));
+    expect(shuffledArray.sort((a, b) => a - b)).toEqual(
+      array.sort((a, b) => a - b),
+    );
   });
 
   it("should return single-element array unchanged", () => {
@@ -59,7 +85,10 @@ describe("shuffle function", () => {
   });
 
   it("should handle array of objects", () => {
-    const array = Array.from({ length: 20 }, (_, i) => ({ id: i, value: `val${i}` }));
+    const array = Array.from({ length: 20 }, (_, i) => ({
+      id: i,
+      value: `val${i}`,
+    }));
     const shuffledArray = shuffle(array);
     expect(shuffledArray).not.toEqual(array);
     expect(shuffledArray.map((obj) => obj.id).sort((a, b) => a - b)).toEqual(

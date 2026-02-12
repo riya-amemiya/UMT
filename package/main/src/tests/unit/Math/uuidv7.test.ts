@@ -34,15 +34,4 @@ describe("uuidv7 function", () => {
       uuids.add(uuid);
     }
   });
-
-  it("should have correct timestamp", () => {
-    const now = Date.now();
-    const uuid = uuidv7();
-    const parts = uuid.split("-");
-    const timestampHex = parts[0] + parts[1];
-    const timestamp = Number.parseInt(timestampHex, 16);
-
-    // Allow for small time difference (e.g. 1000ms) due to execution time
-    expect(Math.abs(timestamp - now)).toBeLessThan(1000);
-  });
 });

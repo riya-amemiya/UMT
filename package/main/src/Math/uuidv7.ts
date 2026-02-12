@@ -15,68 +15,31 @@ export const uuidv7 = (): string => {
   const DIGITS = "0123456789abcdef";
   const unixTsMs = Date.now();
 
-  // Create a single 16-byte buffer for the UUID
   const bytes = new Uint8Array(16);
+  for (let index = 0; index < 6; index++) {
+    bytes[index] = (unixTsMs >>> ((5 - index) * 8)) & 0xff;
+  }
 
-  // Fill the entire buffer with random data first.
-  // This avoids allocating a separate 10-byte buffer for randomness.
-  // We will overwrite the first 6 bytes with the timestamp.
-  globalThis.crypto.getRandomValues(bytes);
+  // Generate 10 random bytes for the rest
+  const randomBytes = new Uint8Array(10);
+  globalThis.crypto.getRandomValues(randomBytes);
 
-  // Overwrite first 6 bytes with 48-bit timestamp (Big-Endian)
-  // Note: We use division for the high 16 bits because JS bitwise operators (>>>)
-  // truncate to 32 bits, which would corrupt the 48-bit timestamp.
-  bytes[0] = (unixTsMs / 0x1_00_00_00_00_00) & 0xff;
-  bytes[1] = (unixTsMs / 0x1_00_00_00_00) & 0xff;
-  bytes[2] = (unixTsMs >>> 24) & 0xff;
-  bytes[3] = (unixTsMs >>> 16) & 0xff;
-  bytes[4] = (unixTsMs >>> 8) & 0xff;
-  bytes[5] = unixTsMs & 0xff;
+  // Version 7 (0x70) + 4 bits from randomBytes[0]
+  bytes[6] = 0x70 | (randomBytes[0] & 0x0f);
+  // Random byte
+  bytes[7] = randomBytes[1];
+  // Variant 2 (0x80) + 6 bits from randomBytes[2]
+  bytes[8] = 0x80 | (randomBytes[2] & 0x3f);
+  // Remaining random bytes
+  bytes.set(randomBytes.subarray(3), 9);
 
-  // Version 7 (0x70) + 4 bits from random data (already in bytes[6])
-  bytes[6] = 0x70 | (bytes[6] & 0x0f);
+  let uuid = "";
+  for (const [index, byte] of bytes.entries()) {
+    uuid += DIGITS[byte >>> 4] + DIGITS[byte & 0xf];
+    if (index === 3 || index === 5 || index === 7 || index === 9) {
+      uuid += "-";
+    }
+  }
 
-  // Variant 2 (0x80) + 6 bits from random data (already in bytes[8])
-  bytes[8] = 0x80 | (bytes[8] & 0x3f);
-
-  // Convert to string (unrolled for performance)
-  // Format: 8-4-4-4-12 hex digits (xxxxxxxx-xxxx-7xxx-8xxx-xxxxxxxxxxxx)
-  return (
-    DIGITS[bytes[0] >>> 4] +
-    DIGITS[bytes[0] & 0xf] +
-    DIGITS[bytes[1] >>> 4] +
-    DIGITS[bytes[1] & 0xf] +
-    DIGITS[bytes[2] >>> 4] +
-    DIGITS[bytes[2] & 0xf] +
-    DIGITS[bytes[3] >>> 4] +
-    DIGITS[bytes[3] & 0xf] +
-    "-" +
-    DIGITS[bytes[4] >>> 4] +
-    DIGITS[bytes[4] & 0xf] +
-    DIGITS[bytes[5] >>> 4] +
-    DIGITS[bytes[5] & 0xf] +
-    "-" +
-    DIGITS[bytes[6] >>> 4] +
-    DIGITS[bytes[6] & 0xf] +
-    DIGITS[bytes[7] >>> 4] +
-    DIGITS[bytes[7] & 0xf] +
-    "-" +
-    DIGITS[bytes[8] >>> 4] +
-    DIGITS[bytes[8] & 0xf] +
-    DIGITS[bytes[9] >>> 4] +
-    DIGITS[bytes[9] & 0xf] +
-    "-" +
-    DIGITS[bytes[10] >>> 4] +
-    DIGITS[bytes[10] & 0xf] +
-    DIGITS[bytes[11] >>> 4] +
-    DIGITS[bytes[11] & 0xf] +
-    DIGITS[bytes[12] >>> 4] +
-    DIGITS[bytes[12] & 0xf] +
-    DIGITS[bytes[13] >>> 4] +
-    DIGITS[bytes[13] & 0xf] +
-    DIGITS[bytes[14] >>> 4] +
-    DIGITS[bytes[14] & 0xf] +
-    DIGITS[bytes[15] >>> 4] +
-    DIGITS[bytes[15] & 0xf]
-  );
+  return uuid;
 };

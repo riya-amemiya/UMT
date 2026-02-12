@@ -105,11 +105,6 @@ from .ip import (
     long_to_ip,
     subnet_mask_to_cidr,
 )
-from .iterator import (
-    lazy_filter,
-    lazy_map,
-    lazy_take,
-)
 from .math import (
     PrimeFactor,
     ProbabilityFraction,
@@ -223,10 +218,6 @@ from .unit import (
     to_celsius,
     to_kelvin,
     unit_converter_initialization,
-)
-from .url import (
-    is_absolute_url,
-    join_path,
 )
 from .validate import (
     EmailParts,
@@ -347,7 +338,6 @@ __all__ = [
     "insertion_sort_range",
     "ip_to_binary_string",
     "ip_to_long",
-    "is_absolute_url",
     "is_array",
     "is_deep_equal",
     "is_dictionary_object",
@@ -362,12 +352,8 @@ __all__ = [
     "is_private_ip",
     "is_string",
     "is_value_nan",
-    "join_path",
     "kebab_case",
     "key_by",
-    "lazy_filter",
-    "lazy_map",
-    "lazy_take",
     "lcm",
     "levenshtein_distance",
     "linear_congruential_generator",
