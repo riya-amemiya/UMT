@@ -1,4 +1,4 @@
-use rand::Rng;
+use rand::RngExt;
 
 /// Randomly shuffles the elements of an array using the Fisher-Yates algorithm.
 ///

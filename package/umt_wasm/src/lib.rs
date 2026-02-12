@@ -7,7 +7,7 @@ use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
 pub fn range(min: i32, max: i32) -> Vec<i32> {
-    umt_range(min, max)
+    umt_range(min, Some(max), None)
 }
 
 // math functions

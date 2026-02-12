@@ -1,4 +1,4 @@
-use rand::Rng;
+use rand::RngExt;
 use std::time::{SystemTime, UNIX_EPOCH};
 
 /// Generates a UUID v7 (Universally Unique Identifier version 7).

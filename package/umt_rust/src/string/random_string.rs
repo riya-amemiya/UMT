@@ -1,4 +1,4 @@
-use rand::Rng;
+use rand::RngExt;
 
 const DEFAULT_CHARS: &str = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
