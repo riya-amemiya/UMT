@@ -2,10 +2,11 @@ import { shuffle } from "@/Array/shuffle";
 
 describe("shuffle function", () => {
   it("should shuffle array elements", () => {
-    const array = [1, 2, 3, 4, 5];
+    // Increase array size to reduce probability of shuffle returning original order
+    const array = Array.from({ length: 20 }, (_, i) => i + 1);
     const shuffledArray = shuffle(array);
     expect(shuffledArray).not.toEqual(array);
-    expect(shuffledArray.sort()).toEqual(array.sort());
+    expect(shuffledArray.sort((a, b) => a - b)).toEqual(array.sort((a, b) => a - b));
   });
 
   it("should return empty array unchanged", () => {
@@ -21,17 +22,19 @@ describe("shuffle function", () => {
   });
 
   it("should shuffle array with mixed strings and numbers", () => {
-    const array = [1, "2", 3, "4", 5];
+    const array = [1, "2", 3, "4", 5, 6, "7", 8, "9", 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20];
     const shuffledArray = shuffle(array);
     expect(shuffledArray).not.toEqual(array);
-    expect(shuffledArray.sort()).toEqual(array.sort());
+    // Sort logic needs to be consistent for mixed types
+    const sortFn = (a: string | number, b: string | number) => String(a).localeCompare(String(b));
+    expect(shuffledArray.sort(sortFn)).toEqual(array.sort(sortFn));
   });
 
   it("should shuffle large arrays", () => {
     const array = Array.from({ length: 1000 }, (_, index) => index);
     const shuffledArray = shuffle(array);
     expect(shuffledArray).not.toEqual(array);
-    expect(shuffledArray.sort()).toEqual(array.sort());
+    expect(shuffledArray.sort((a, b) => a - b)).toEqual(array.sort((a, b) => a - b));
   });
 
   it("should return single-element array unchanged", () => {
@@ -56,17 +59,11 @@ describe("shuffle function", () => {
   });
 
   it("should handle array of objects", () => {
-    const array = [
-      { id: 1, value: "one" },
-      { id: 2, value: "two" },
-      { id: 3, value: "three" },
-      { id: 4, value: "four" },
-      { id: 5, value: "five" },
-    ];
+    const array = Array.from({ length: 20 }, (_, i) => ({ id: i, value: `val${i}` }));
     const shuffledArray = shuffle(array);
     expect(shuffledArray).not.toEqual(array);
-    expect(shuffledArray.map((obj) => obj.id).sort()).toEqual(
-      array.map((obj) => obj.id).sort(),
+    expect(shuffledArray.map((obj) => obj.id).sort((a, b) => a - b)).toEqual(
+      array.map((obj) => obj.id).sort((a, b) => a - b),
     );
   });
 
