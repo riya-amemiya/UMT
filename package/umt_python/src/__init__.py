@@ -224,6 +224,10 @@ from .unit import (
     to_kelvin,
     unit_converter_initialization,
 )
+from .url import (
+    is_absolute_url,
+    join_path,
+)
 from .validate import (
     EmailParts,
     IsDeepEqualOptions,
@@ -343,6 +347,7 @@ __all__ = [
     "insertion_sort_range",
     "ip_to_binary_string",
     "ip_to_long",
+    "is_absolute_url",
     "is_array",
     "is_deep_equal",
     "is_dictionary_object",
@@ -357,6 +362,7 @@ __all__ = [
     "is_private_ip",
     "is_string",
     "is_value_nan",
+    "join_path",
     "kebab_case",
     "key_by",
     "lazy_filter",
