@@ -21,10 +21,7 @@ export type Divide<A extends number, B extends number> = A extends 0
         : DivideHelper<A, B>;
 
 // Helper type for division operation
-type DivideHelper<
-  X extends number,
-  Y extends number,
-  A extends number = 0,
-> = BGreaterThanA<X, Y> extends true
-  ? A
-  : DivideHelper<Subtract<X, Y>, Y, Add<A, 1>>;
+type DivideHelper<X extends number, Y extends number, A extends number = 0> =
+  BGreaterThanA<X, Y> extends true
+    ? A
+    : DivideHelper<Subtract<X, Y>, Y, Add<A, 1>>;
