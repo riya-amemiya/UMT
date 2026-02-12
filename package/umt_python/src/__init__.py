@@ -105,6 +105,11 @@ from .ip import (
     long_to_ip,
     subnet_mask_to_cidr,
 )
+from .iterator import (
+    lazy_filter,
+    lazy_map,
+    lazy_take,
+)
 from .math import (
     PrimeFactor,
     ProbabilityFraction,
@@ -354,6 +359,9 @@ __all__ = [
     "is_value_nan",
     "kebab_case",
     "key_by",
+    "lazy_filter",
+    "lazy_map",
+    "lazy_take",
     "lcm",
     "levenshtein_distance",
     "linear_congruential_generator",
