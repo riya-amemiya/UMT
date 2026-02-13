@@ -43,4 +43,10 @@ describe("inRange", () => {
     expect(inRange(0.5, 0, 1)).toBe(true);
     expect(inRange(1.5, 0, 1)).toBe(false);
   });
+
+  it("should handle negative ranges (two-arg form)", () => {
+    expect(inRange(-3, -5)).toBe(true);
+    expect(inRange(0, -5)).toBe(false);
+    expect(inRange(-5, -5)).toBe(true);
+  });
 });
