@@ -10,6 +10,7 @@ from .factorize import factorize
 from .flexible_number_conversion import flexible_number_conversion
 from .gcd import gcd
 from .get_decimal_length import get_decimal_length
+from .in_range import in_range
 from .is_double import is_double
 from .is_perfect_square import is_perfect_square
 from .is_prime_number import is_prime_number
@@ -60,6 +61,7 @@ __all__ = [
     "flexible_number_conversion",
     "gcd",
     "get_decimal_length",
+    "in_range",
     "is_double",
     "is_perfect_square",
     "is_prime_number",

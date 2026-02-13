@@ -21,7 +21,7 @@ export const inRange = (
   start: number,
   end?: number,
 ): boolean => {
-  const lower = end === undefined ? 0 : Math.min(start, end);
-  const upper = end === undefined ? start : Math.max(start, end);
+  const lower = end === undefined ? Math.min(start, 0) : Math.min(start, end);
+  const upper = end === undefined ? Math.max(start, 0) : Math.max(start, end);
   return value >= lower && value < upper;
 };
