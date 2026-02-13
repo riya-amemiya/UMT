@@ -1,5 +1,3 @@
-
-
 def in_range(value: float, start: float, end: float | None = None) -> bool:
     """
     Checks if a number is within a given range.
