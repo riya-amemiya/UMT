@@ -164,6 +164,7 @@ from .number import (
 from .object import (
     object_has,
     object_is_empty,
+    object_map_values,
     object_merge,
     object_merge_deep,
     object_omit,
@@ -389,6 +390,7 @@ __all__ = [
     "normalize_time_unit",
     "object_has",
     "object_is_empty",
+    "object_map_values",
     "object_merge",
     "object_merge_deep",
     "object_omit",
