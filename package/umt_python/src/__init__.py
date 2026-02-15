@@ -171,6 +171,9 @@ from .object import (
     object_pick,
     object_pick_deep,
 )
+from .predicate import (
+    every,
+)
 from .simple.math import (
     deviation_value_simple,
 )
@@ -321,6 +324,7 @@ __all__ = [
     "encode_base32",
     "encode_base58",
     "escape_html",
+    "every",
     "extract_browser_from_user_agent",
     "extract_device_from_user_agent",
     "extract_os_from_user_agent",
