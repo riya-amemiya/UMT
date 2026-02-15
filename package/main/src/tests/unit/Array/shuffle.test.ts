@@ -5,7 +5,9 @@ describe("shuffle function", () => {
     const array = Array.from({ length: 20 }, (_, i) => i + 1);
     const shuffledArray = shuffle(array);
     expect(shuffledArray).not.toEqual(array);
-    expect(shuffledArray.sort((a, b) => a - b)).toEqual(array.sort((a, b) => a - b));
+    expect(shuffledArray.sort((a, b) => a - b)).toEqual(
+      array.sort((a, b) => a - b),
+    );
   });
 
   it("should return empty array unchanged", () => {
@@ -21,10 +23,13 @@ describe("shuffle function", () => {
   });
 
   it("should shuffle array with mixed strings and numbers", () => {
-    const array = Array.from({ length: 20 }, (_, i) => (i % 2 === 0 ? i : String(i)));
+    const array = Array.from({ length: 20 }, (_, i) =>
+      i % 2 === 0 ? i : String(i),
+    );
     const shuffledArray = shuffle(array);
     expect(shuffledArray).not.toEqual(array);
-    const sortFn = (a: string | number, b: string | number) => String(a).localeCompare(String(b));
+    const sortFn = (a: string | number, b: string | number) =>
+      String(a).localeCompare(String(b));
     expect(shuffledArray.sort(sortFn)).toEqual(array.sort(sortFn));
   });
 
@@ -32,7 +37,9 @@ describe("shuffle function", () => {
     const array = Array.from({ length: 1000 }, (_, index) => index);
     const shuffledArray = shuffle(array);
     expect(shuffledArray).not.toEqual(array);
-    expect(shuffledArray.sort((a, b) => a - b)).toEqual(array.sort((a, b) => a - b));
+    expect(shuffledArray.sort((a, b) => a - b)).toEqual(
+      array.sort((a, b) => a - b),
+    );
   });
 
   it("should return single-element array unchanged", () => {
@@ -57,7 +64,10 @@ describe("shuffle function", () => {
   });
 
   it("should handle array of objects", () => {
-    const array = Array.from({ length: 20 }, (_, i) => ({ id: i + 1, value: `val${i + 1}` }));
+    const array = Array.from({ length: 20 }, (_, i) => ({
+      id: i + 1,
+      value: `val${i + 1}`,
+    }));
     const shuffledArray = shuffle(array);
     expect(shuffledArray).not.toEqual(array);
     expect(shuffledArray.map((obj) => obj.id).sort((a, b) => a - b)).toEqual(
