@@ -24,9 +24,6 @@ export const generateNumberArray = (
   if (actualLength <= 0) {
     return [];
   }
-  if (min > actualMax) {
-    throw new Error("min should be less than or equal to max");
-  }
   if (actualLength === 1) {
     return [min];
   }

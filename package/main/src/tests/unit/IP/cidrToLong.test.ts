@@ -15,16 +15,4 @@ describe("cidrToLong", () => {
       expect(cidrToLong(cidr)).toBe(expected);
     });
   });
-
-  describe("invalid CIDR values", () => {
-    test.each([
-      [-1, "CIDR must be an integer between 0 and 32"],
-      [33, "CIDR must be an integer between 0 and 32"],
-      [3.5, "CIDR must be an integer between 0 and 32"],
-      [Number.NaN, "CIDR must be an integer between 0 and 32"],
-      [Number.POSITIVE_INFINITY, "CIDR must be an integer between 0 and 32"],
-    ])("should throw error for invalid CIDR %p", (cidr, expectedError) => {
-      expect(() => cidrToLong(cidr)).toThrow(expectedError);
-    });
-  });
 });

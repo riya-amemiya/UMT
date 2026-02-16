@@ -19,19 +19,5 @@ export const rgbaToHexA = ({
   b: number;
   a?: number;
 }): string => {
-  // Validate RGBA values
-  if (
-    r < 0 ||
-    r > 255 ||
-    g < 0 ||
-    g > 255 ||
-    b < 0 ||
-    b > 255 ||
-    a < 0 ||
-    a > 1
-  ) {
-    throw new Error("Invalid rgba value");
-  }
-
   return `#${hex(r)}${hex(g)}${hex(b)}${hex(Math.round(a * 255))}`;
 };

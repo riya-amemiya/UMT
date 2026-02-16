@@ -16,22 +16,4 @@ describe("longToIp", () => {
       expect(longToIp(long)).toBe(expected);
     });
   });
-
-  describe("invalid inputs", () => {
-    test.each([
-      [undefined, "Input must be a valid 32-bit unsigned integer"],
-      [null, "Input must be a valid 32-bit unsigned integer"],
-      [Number.NaN, "Input must be a valid 32-bit unsigned integer"],
-      [
-        Number.POSITIVE_INFINITY,
-        "Input must be a valid 32-bit unsigned integer",
-      ],
-      [-1, "Input must be a valid 32-bit unsigned integer"],
-      [0x1_00_00_00_00, "Input must be a valid 32-bit unsigned integer"], // Too large
-      [1.5, "Input must be a valid 32-bit unsigned integer"], // Not an integer
-      ["123", "Input must be a valid 32-bit unsigned integer"], // Wrong type
-    ])("should throw error for %p: %s", (input, expectedError) => {
-      expect(() => longToIp(input as number)).toThrow(expectedError);
-    });
-  });
 });

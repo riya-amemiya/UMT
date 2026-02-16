@@ -6,41 +6,25 @@ import { ipToLong } from "./ipToLong";
  * @param {string} networkIp - Network IP address (e.g., "192.168.0.0")
  * @param {number} cidr - CIDR notation (0-32)
  * @returns {boolean} True if the IP is in range, false otherwise
- * @throws {Error} If any parameter is invalid
  */
 export const isInRange = (
   remoteIp: string,
   networkIp: string,
   cidr: number,
 ): boolean => {
-  if (!remoteIp) {
-    throw new Error("Remote IP address is required");
+  const remoteLong = ipToLong(remoteIp);
+  const networkLong = ipToLong(networkIp);
+
+  // Special cases
+  if (cidr === 0) {
+    return true; // All IPs are in range
   }
-  if (!networkIp) {
-    throw new Error("Network IP address is required");
+  if (cidr === 32) {
+    return remoteLong === networkLong; // Exact match required
   }
 
-  if (!Number.isInteger(cidr) || cidr < 0 || cidr > 32) {
-    throw new Error("CIDR must be an integer between 0 and 32");
-  }
-
-  try {
-    const remoteLong = ipToLong(remoteIp);
-    const networkLong = ipToLong(networkIp);
-
-    // Special cases
-    if (cidr === 0) {
-      return true; // All IPs are in range
-    }
-    if (cidr === 32) {
-      return remoteLong === networkLong; // Exact match required
-    }
-
-    // Normal case
-    const shift = 32 - cidr;
-    const mask = (0xff_ff_ff_ff >>> 0) << shift;
-    return (remoteLong & mask) === (networkLong & mask);
-  } catch (error) {
-    throw new Error(`Invalid IP address format: ${String(error)}`);
-  }
+  // Normal case
+  const shift = 32 - cidr;
+  const mask = (0xff_ff_ff_ff >>> 0) << shift;
+  return (remoteLong & mask) === (networkLong & mask);
 };

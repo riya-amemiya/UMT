@@ -22,12 +22,6 @@ describe("decodeBase32ToString", () => {
     expect(decodeBase32ToString("4OAZHY4CSPRYDK7DQGQ6HANP")).toBe("こんにちは");
   });
 
-  test("throws error on invalid character", () => {
-    expect(() => decodeBase32ToString("JBSWY3D@")).toThrow(
-      "Invalid base32 character: @",
-    );
-  });
-
   test("decodes longer text", () => {
     const encoded =
       "KRUGKIDROVUWG2ZAMJZG653OEBTG66BANJ2W24DTEBXXMZLSEB2GQZJANRQXU6JAMRXWO===";

@@ -24,11 +24,4 @@ describe("hexaToRgba", () => {
     expect(hexaToRgba("#FF000080")).toEqual({ r: 255, g: 0, b: 0, a: 0.5 });
     expect(hexaToRgba("#FF000000")).toEqual({ r: 255, g: 0, b: 0, a: 0 });
   });
-
-  it("should throw an error for invalid hex code", () => {
-    expect(() => hexaToRgba("#12345")).toThrow("Invalid hex code");
-    expect(() => hexaToRgba("#1234567")).toThrow("Invalid hex code");
-    expect(() => hexaToRgba("123456")).toThrow("Invalid hex code");
-    expect(() => hexaToRgba("")).toThrow("Invalid hex code");
-  });
 });

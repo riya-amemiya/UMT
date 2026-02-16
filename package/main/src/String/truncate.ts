@@ -14,10 +14,6 @@ export const truncate = (
   length: number,
   suffix = "...",
 ): string => {
-  if (length < 0) {
-    throw new Error("Length must be non-negative");
-  }
-
   if (string_.length <= length) {
     return string_;
   }

@@ -21,10 +21,6 @@ describe("truncate", () => {
     expect(truncate("Hello", 0)).toBe("...");
   });
 
-  it("should throw error for negative length", () => {
-    expect(() => truncate("Hello", -1)).toThrow("Length must be non-negative");
-  });
-
   it("should handle suffix longer than target length", () => {
     expect(truncate("Hello World", 2, "...")).toBe("He...");
     expect(truncate("Hello World", 1, "...")).toBe("H...");

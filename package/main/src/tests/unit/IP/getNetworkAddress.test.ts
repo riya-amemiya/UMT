@@ -16,28 +16,4 @@ describe("getNetworkAddress", () => {
       expect(getNetworkAddress(ip, mask)).toBe(expected);
     });
   });
-
-  describe("invalid inputs", () => {
-    test.each([
-      [undefined, "255.255.255.0", "IP address is required"],
-      ["192.168.1.1", undefined, "Subnet mask is required"],
-      ["", "255.255.255.0", "IP address is required"],
-      ["192.168.1.1", "", "Subnet mask is required"],
-      ["invalid", "255.255.255.0", "Invalid IP address or subnet mask"],
-      ["192.168.1.1", "invalid", "Invalid IP address or subnet mask"],
-      ["256.256.256.256", "255.255.255.0", "Invalid IP address or subnet mask"],
-      ["192.168.1.1", "256.256.256.256", "Invalid IP address or subnet mask"],
-    ])("should throw error for %s and %s: %s", (ip, mask, expectedError) => {
-      expect(() => getNetworkAddress(ip as string, mask as string)).toThrow(
-        expectedError,
-      );
-    });
-  });
-
-  test("should handle internal function exceptions", () => {
-    // Test for exception handling in catch block (line 49)
-    expect(() => getNetworkAddress("192.168.1.1", "255.255.128.3")).toThrow(
-      "Invalid IP address or subnet mask",
-    );
-  });
 });

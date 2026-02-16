@@ -16,12 +16,6 @@ describe("generateNumberArray", () => {
     expect(result).toEqual([]);
   });
 
-  it("should throw an error when min is greater than max", () => {
-    expect(() => generateNumberArray(5, 10, 5)).toThrow(
-      "min should be less than or equal to max",
-    );
-  });
-
   it("should return min value when length is 1", () => {
     const result = generateNumberArray(1, 10, 20);
     expect(result).toEqual([10]);
@@ -151,24 +145,6 @@ describe("generateNumberArray", () => {
       expect(value).toBeGreaterThanOrEqual(1);
       expect(value).toBeLessThanOrEqual(10);
     }
-  });
-
-  it("should verify error message for invalid ranges", () => {
-    expect(() => generateNumberArray(5, 100, 50)).toThrow(
-      "min should be less than or equal to max",
-    );
-
-    expect(() => generateNumberArray(3, 0, -1)).toThrow(
-      "min should be less than or equal to max",
-    );
-
-    expect(() =>
-      generateNumberArray(
-        1,
-        Number.POSITIVE_INFINITY,
-        Number.NEGATIVE_INFINITY,
-      ),
-    ).toThrow("min should be less than or equal to max");
   });
 
   it("should handle special numeric edge cases", () => {
