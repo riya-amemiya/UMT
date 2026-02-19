@@ -162,11 +162,13 @@ describe("mergeDeep", () => {
     // biome-ignore lint/suspicious/noExplicitAny: ignore
     expect((result as any).polluted).toBeUndefined();
     // Should not have __proto__ property set directly
-    expect(Object.prototype.hasOwnProperty.call(result, "__proto__")).toBe(false);
+    expect(Object.hasOwn(result, "__proto__")).toBe(false);
   });
 
   it("should prevent prototype pollution via constructor", () => {
-    const payload = JSON.parse('{"constructor": {"prototype": {"polluted": true}}}');
+    const payload = JSON.parse(
+      '{"constructor": {"prototype": {"polluted": true}}}',
+    );
     const target = {};
     const result = mergeDeep(target, payload);
 

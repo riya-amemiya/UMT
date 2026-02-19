@@ -75,7 +75,6 @@
         "useSingleJsDocAsterisk": "error"
       },
       "nursery": {
-        "noUselessUndefined": "error",
         "useExhaustiveSwitchCases": "error"
       },
       "performance": {

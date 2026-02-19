@@ -31,6 +31,6 @@ export const isPlainObject = (
 
   // Handle objects created via Object.create(plainObject)
   // Check constructor on the prototype to avoid own-property shadowing
-  const constructor = prototype.constructor;
-  return typeof constructor === "function" && constructor === Object;
+  const protoConstructor = prototype.constructor;
+  return typeof protoConstructor === "function" && protoConstructor === Object;
 };

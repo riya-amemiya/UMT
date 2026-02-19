@@ -12,8 +12,14 @@ describe("isPlainObject", () => {
 
   it("should return true for objects with constructor property", () => {
     expect(isPlainObject({ constructor: 1 })).toBe(true);
-    // @ts-ignore
-    expect(isPlainObject({ constructor: function () {} })).toBe(true);
+    // @ts-expect-error
+    expect(
+      isPlainObject({
+        constructor() {
+          return 1;
+        },
+      }),
+    ).toBe(true);
   });
 
   it("should return true for objects inheriting from plain objects", () => {
@@ -32,7 +38,7 @@ describe("isPlainObject", () => {
 
   it("should return false for arrays", () => {
     expect(isPlainObject([])).toBe(false);
-    expect(isPlainObject(new Array())).toBe(false);
+    expect(isPlainObject([])).toBe(false);
   });
 
   it("should return false for Date objects", () => {
@@ -50,7 +56,11 @@ describe("isPlainObject", () => {
   });
 
   it("should return false for functions", () => {
-    expect(isPlainObject(() => {})).toBe(false);
-    expect(isPlainObject(function () {})).toBe(false);
+    expect(
+      isPlainObject(() => {
+        return 1;
+      }),
+    ).toBe(false);
+    expect(isPlainObject(() => 1)).toBe(false);
   });
 });
