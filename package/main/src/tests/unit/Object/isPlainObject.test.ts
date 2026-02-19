@@ -12,7 +12,6 @@ describe("isPlainObject", () => {
 
   it("should return true for objects with constructor property", () => {
     expect(isPlainObject({ constructor: 1 })).toBe(true);
-    // @ts-expect-error
     expect(
       isPlainObject({
         constructor() {
