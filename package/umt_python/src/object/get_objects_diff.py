@@ -26,7 +26,7 @@ def _is_strict_equal(a: object, b: object) -> bool:
     return a is b
 
 
-def get_objects_diff(obj: T, *objects: dict[str, Any]) -> T:
+def get_objects_diff(obj: dict[str, Any], *objects: dict[str, Any]) -> dict[str, Any]:
     """
     Extract key-value pairs that appear in exactly one input object.
 
