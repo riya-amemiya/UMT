@@ -24,6 +24,10 @@ export const mergeDeep = <
     const result = { ...target };
 
     for (const key in source) {
+      if (key === "__proto__" || key === "constructor" || key === "prototype") {
+        continue;
+      }
+
       if (Object.hasOwn(source, key)) {
         const sourceValue = source[key];
         const targetValue = result[key];

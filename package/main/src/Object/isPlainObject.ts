@@ -16,10 +16,21 @@
 export const isPlainObject = (
   value: unknown,
 ): value is Record<string, unknown> => {
-  return (
-    value !== null &&
-    typeof value === "object" &&
-    value.constructor === Object &&
-    Object.prototype.toString.call(value) === "[object Object]"
-  );
+  if (value === null || typeof value !== "object") {
+    return false;
+  }
+
+  const prototype = Object.getPrototypeOf(value);
+  if (prototype === null) {
+    return true;
+  }
+
+  if (prototype === Object.prototype) {
+    return true;
+  }
+
+  // Handle objects created via Object.create(plainObject)
+  // Check constructor on the prototype to avoid own-property shadowing
+  const constructor = prototype.constructor;
+  return typeof constructor === "function" && constructor === Object;
 };
