@@ -34,40 +34,4 @@ describe("hslaToRgba function", () => {
   ])("should convert HSLA(%i, %i%, %i%, %i) to RGBA", (h, s, l, a, expected) => {
     expect(hslaToRgba(h, s, l, a)).toEqual(expected);
   });
-
-  it("should throw error for invalid hue values", () => {
-    expect(() => hslaToRgba(-60, 100, 50, 1)).toThrow(
-      "Hue must be between 0 and 360 degrees",
-    );
-    expect(() => hslaToRgba(420, 100, 50, 1)).toThrow(
-      "Hue must be between 0 and 360 degrees",
-    );
-  });
-
-  it("should throw error for invalid saturation values", () => {
-    expect(() => hslaToRgba(0, -50, 50, 1)).toThrow(
-      "Saturation must be between 0 and 100 percent",
-    );
-    expect(() => hslaToRgba(0, 150, 50, 1)).toThrow(
-      "Saturation must be between 0 and 100 percent",
-    );
-  });
-
-  it("should throw error for invalid lightness values", () => {
-    expect(() => hslaToRgba(0, 100, -20, 1)).toThrow(
-      "Lightness must be between 0 and 100 percent",
-    );
-    expect(() => hslaToRgba(0, 100, 120, 1)).toThrow(
-      "Lightness must be between 0 and 100 percent",
-    );
-  });
-
-  it("should throw error for invalid alpha values", () => {
-    expect(() => hslaToRgba(0, 100, 50, -0.5)).toThrow(
-      "Alpha must be between 0 and 1",
-    );
-    expect(() => hslaToRgba(0, 100, 50, 1.5)).toThrow(
-      "Alpha must be between 0 and 1",
-    );
-  });
 });

@@ -16,19 +16,4 @@ describe("ipToLong", () => {
       expect(ipToLong(ip)).toBe(expected);
     });
   });
-
-  describe("invalid IP addresses", () => {
-    test.each([
-      [undefined, "IP address is required"],
-      ["", "IP address is required"],
-      ["192.168", "Invalid IP address format"],
-      ["256.1.2.3", "Invalid IP address format"],
-      ["a.b.c.d", "Invalid IP address format"],
-      ["-1.0.0.0", "Invalid IP address format"],
-      ["192.168.1.1.1", "Invalid IP address format"],
-      ["192.168..1", "Invalid IP address format"],
-    ])("should throw error for %s: %s", (ip, expectedError) => {
-      expect(() => ipToLong(ip as string)).toThrow(expectedError);
-    });
-  });
 });

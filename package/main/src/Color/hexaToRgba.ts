@@ -15,11 +15,6 @@ export const hexaToRgba = (
   b: number;
   a: number;
 } => {
-  // Validate hex code format
-  if (/^#([\da-f]{3}|[\da-f]{6}|[\da-f]{8})$/i.test(hex) === false) {
-    throw new Error("Invalid hex code");
-  }
-
   let hexCode = hex.replace("#", "");
 
   // Convert 3-digit hex to 6-digit format

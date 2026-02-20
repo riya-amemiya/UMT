@@ -24,21 +24,6 @@ describe("decodeBase58", () => {
     expect(new TextDecoder().decode(result.slice(2))).toBe("Hello");
   });
 
-  test("throws error on invalid character", () => {
-    expect(() => decodeBase58("9Ajdvz0")).toThrow(
-      "Invalid base58 character: 0",
-    );
-    expect(() => decodeBase58("9AjdvzO")).toThrow(
-      "Invalid base58 character: O",
-    );
-    expect(() => decodeBase58("9AjdvzI")).toThrow(
-      "Invalid base58 character: I",
-    );
-    expect(() => decodeBase58("9Ajdvzl")).toThrow(
-      "Invalid base58 character: l",
-    );
-  });
-
   test("decodes longer text", () => {
     const encoded =
       "7DdiPPYtxLjCD3wA1po2rvZHTDYjkZYiEtazrfiwJcwnKCizhGFhBGHeRdx";

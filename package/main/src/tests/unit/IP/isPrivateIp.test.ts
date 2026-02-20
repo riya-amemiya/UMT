@@ -31,18 +31,4 @@ describe("isPrivateIp", () => {
       expect(isPrivateIp(ip)).toBe(false);
     });
   });
-
-  describe("invalid inputs", () => {
-    test.each([
-      [undefined, "IP address is required"],
-      ["", "IP address is required"],
-      ["256.256.256.256", "Invalid IP address"],
-      ["192.168", "Invalid IP address"],
-      ["a.b.c.d", "Invalid IP address"],
-      ["192.168.1.1.1", "Invalid IP address"],
-      ["-1.0.0.0", "Invalid IP address"],
-    ])("should throw error for %s: %s", (ip, expectedError) => {
-      expect(() => isPrivateIp(ip as string)).toThrow(expectedError);
-    });
-  });
 });

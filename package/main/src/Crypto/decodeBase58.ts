@@ -10,9 +10,6 @@ export const decodeBase58 = (input: string): Uint8Array => {
 
   for (const char of input) {
     const value = alphabet.indexOf(char);
-    if (value === -1) {
-      throw new Error(`Invalid base58 character: ${char}`);
-    }
     bigNumber = bigNumber * 58n + BigInt(value);
   }
 

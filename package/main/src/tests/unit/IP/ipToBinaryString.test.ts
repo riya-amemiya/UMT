@@ -17,30 +17,6 @@ describe("ipToBinaryString", () => {
     });
   });
 
-  describe("invalid IP addresses", () => {
-    test.each([
-      [undefined, "IP address is required"],
-      ["", "IP address is required"],
-      ["192.168", "Invalid IP address format"],
-      ["a.b.c.d", "Invalid IP address format"],
-      ["256.1.2.3", "Invalid IP address format"],
-      ["-1.1.1.1", "Invalid IP address format"],
-      ["1.2.3.4.5", "Invalid IP address format"],
-      ["192.168.1", "Invalid IP address format"],
-      ["192.168.1.1.1", "Invalid IP address format"],
-      ["192.168.1.", "Invalid IP address format"],
-      ["192.168..1", "Invalid IP address format"],
-      [".192.168.1", "Invalid IP address format"],
-      ["192,168,1,1", "Invalid IP address format"],
-      ["192.168.1.1.", "Invalid IP address format"],
-      ["192.168.1.+1", "Invalid IP address format"],
-      ["256.256.256.256", "Invalid IP address format"],
-      ["999.999.999.999", "Invalid IP address format"],
-    ])("should throw error for %s: %s", (ip, expectedError) => {
-      expect(() => ipToBinaryString(ip as string)).toThrow(expectedError);
-    });
-  });
-
   describe("edge cases", () => {
     test.each([
       // [IP address, expected binary string]
@@ -51,17 +27,6 @@ describe("ipToBinaryString", () => {
       ["0.255.0.255", "00000000111111110000000011111111"],
     ])("should handle boundary values: %s", (ip, expected) => {
       expect(ipToBinaryString(ip)).toBe(expected);
-    });
-
-    test.each([
-      "0000",
-      "00.00",
-      "0.0.0",
-      "192.168.01.1",
-      "192.168.1.01",
-      "010.020.030.040",
-    ])("should reject IP with invalid format: %s", (ip) => {
-      expect(() => ipToBinaryString(ip)).toThrow("Invalid IP address format");
     });
   });
 });

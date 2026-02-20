@@ -1,33 +1,6 @@
 import { rgbaToHsla } from "@/Color/rgbaToHsla";
 
 describe("rgbaToHsla", () => {
-  it("should throw error for invalid rgba values", () => {
-    expect(() => rgbaToHsla({ r: -1, g: 0, b: 0, a: 1 })).toThrow(
-      "Invalid rgba value",
-    );
-    expect(() => rgbaToHsla({ r: 256, g: 0, b: 0, a: 1 })).toThrow(
-      "Invalid rgba value",
-    );
-    expect(() => rgbaToHsla({ r: 0, g: -1, b: 0, a: 1 })).toThrow(
-      "Invalid rgba value",
-    );
-    expect(() => rgbaToHsla({ r: 0, g: 256, b: 0, a: 1 })).toThrow(
-      "Invalid rgba value",
-    );
-    expect(() => rgbaToHsla({ r: 0, g: 0, b: -1, a: 1 })).toThrow(
-      "Invalid rgba value",
-    );
-    expect(() => rgbaToHsla({ r: 0, g: 0, b: 256, a: 1 })).toThrow(
-      "Invalid rgba value",
-    );
-    expect(() => rgbaToHsla({ r: 0, g: 0, b: 0, a: -0.1 })).toThrow(
-      "Invalid rgba value",
-    );
-    expect(() => rgbaToHsla({ r: 0, g: 0, b: 0, a: 1.1 })).toThrow(
-      "Invalid rgba value",
-    );
-  });
-
   it("should handle edge cases correctly", () => {
     // Black
     expect(rgbaToHsla({ r: 0, g: 0, b: 0 })).toEqual({

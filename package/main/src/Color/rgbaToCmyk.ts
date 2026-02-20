@@ -19,20 +19,6 @@ export const rgbaToCmyk = ({
   b: number;
   a?: number;
 }): { c: number; m: number; y: number; k: number; a: number } => {
-  // Validate RGBA values
-  if (
-    r < 0 ||
-    r > 255 ||
-    g < 0 ||
-    g > 255 ||
-    b < 0 ||
-    b > 255 ||
-    a < 0 ||
-    a > 1
-  ) {
-    throw new Error("Invalid rgba value");
-  }
-
   const rPrime = division(r, 255);
   const gPrime = division(g, 255);
   const bPrime = division(b, 255);

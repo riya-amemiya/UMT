@@ -19,15 +19,6 @@ describe("decodeBase58ToString", () => {
     expect(decodeBase58ToString("7NAasPYBzpyEe5hmwr1KL")).toBe("こんにちは");
   });
 
-  test("throws error on invalid character", () => {
-    expect(() => decodeBase58ToString("9Ajdvz0")).toThrow(
-      "Invalid base58 character: 0",
-    );
-    expect(() => decodeBase58ToString("9AjdvzO")).toThrow(
-      "Invalid base58 character: O",
-    );
-  });
-
   test("decodes longer text", () => {
     const encoded =
       "7DdiPPYtxLjCD3wA1po2rvZHTDYjkZYiEtazrfiwJcwnKCizhGFhBGHeRdx";
