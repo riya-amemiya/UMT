@@ -8,7 +8,7 @@
  * For example, 12 = 2^2 * 3^1 is represented as [{number: 2, count: 2}, {number: 3, count: 1}]
  */
 export const primeFactorization = (x: number) => {
-  let n = 0;
+  let n: number;
   let copyX = x;
   const out: { number: number; count: number }[] = [];
   for (let index = 2; index * index <= copyX; index++) {

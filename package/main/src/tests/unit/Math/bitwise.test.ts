@@ -65,4 +65,10 @@ describe("bitwise", () => {
     const result = bitwise(0x12_34_56_78, 40, "right"); // 40 % 32 = 8
     expect(result.toString(16)).toBe("78123456");
   });
+
+  it("should throw an error if the direction is invalid", () => {
+    expect(bitwise(0x12_34_56_78, 8, "invalid" as "left" | "right")).toBe(
+      "invalid",
+    );
+  });
 });

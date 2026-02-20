@@ -25,9 +25,9 @@ export const hslaToRgba = (
   const saturation = division(max(0, min(s, 100)), 100);
   const lightness = division(max(0, min(l, 100)), 100);
 
-  let r = 0;
-  let g = 0;
-  let b = 0;
+  let r: number;
+  let g: number;
+  let b: number;
 
   if (saturation === 0) {
     r = g = b = lightness;

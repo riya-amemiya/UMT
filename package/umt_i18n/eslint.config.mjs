@@ -1,16 +1,13 @@
-import { FlatCompat } from "@eslint/eslintrc";
 import js from "@eslint/js";
 import typescriptEslintPlugin from "@typescript-eslint/eslint-plugin";
 import typescriptEslintParser from "@typescript-eslint/parser";
 import unicornPlugin from "eslint-plugin-unicorn";
 import importPlugin from "eslint-plugin-import";
 
-const compat = new FlatCompat();
-
 export default [
   js.configs.recommended,
   unicornPlugin.configs.recommended,
-  ...compat.extends("plugin:@typescript-eslint/recommended"),
+  ...typescriptEslintPlugin.configs["flat/recommended"],
   {
     ignores: [
       "jest.config.ts",
