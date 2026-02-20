@@ -1,4 +1,3 @@
-import { FlatCompat } from "@eslint/eslintrc";
 import eslint from "@eslint/js";
 import tseslint from "typescript-eslint";
 import unicornPlugin from "eslint-plugin-unicorn";
@@ -6,14 +5,11 @@ import importPlugin from "eslint-plugin-import";
 import baselineJs, { BASELINE } from "eslint-plugin-baseline-js";
 import { defineConfig } from "eslint/config";
 
-const compat = new FlatCompat();
-
 export default defineConfig(
   eslint.configs.recommended,
   tseslint.configs.strict,
   tseslint.configs.stylisticTypeChecked,
   unicornPlugin.configs.recommended,
-  ...compat.extends("plugin:@typescript-eslint/recommended"),
   baselineJs.configs["recommended-ts"]({
     available: BASELINE.WIDELY,
   }),
