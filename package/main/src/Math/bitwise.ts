@@ -24,7 +24,7 @@ export const bitwise = (
       return (x >>> rotation) | (x << (32 - rotation));
     }
     default: {
-      throw new Error(`Invalid direction ${direction}`);
+      return direction satisfies never;
     }
   }
 };

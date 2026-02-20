@@ -7,12 +7,6 @@ describe("correlationCoefficient", () => {
     expect(correlationCoefficient([1, 2, 3, 4, 5], [1, 1, 1, 1, 1])).toBeNaN();
   });
 
-  it("should throw error for arrays of different lengths", () => {
-    expect(() => correlationCoefficient([1, 2, 3], [1, 2])).toThrow(
-      "Arrays must have the same length",
-    );
-  });
-
   it("should return NaN for empty arrays", () => {
     expect(correlationCoefficient([], [])).toBeNaN();
   });

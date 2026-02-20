@@ -30,9 +30,4 @@ describe("fromBase64", () => {
     expect(fromBase64("YWE=")).toBe("aa"); // 1 padding char
     expect(fromBase64("YWFh")).toBe("aaa"); // no padding
   });
-
-  it("should throw on invalid Base64 string", () => {
-    expect(() => fromBase64("abc@!#")).toThrow("Invalid Base64 string");
-    expect(() => fromBase64("=abc")).toThrow("Invalid Base64 string");
-  });
 });

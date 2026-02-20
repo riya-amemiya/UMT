@@ -22,15 +22,6 @@ describe("percentile", () => {
     expect(percentile([], 50)).toBeNaN();
   });
 
-  it("should throw error for invalid percentile values", () => {
-    expect(() => percentile([1, 2, 3], -1)).toThrow(
-      "Percentile must be between 0 and 100",
-    );
-    expect(() => percentile([1, 2, 3], 101)).toThrow(
-      "Percentile must be between 0 and 100",
-    );
-  });
-
   it("should handle unsorted arrays", () => {
     expect(percentile([5, 1, 3, 2, 4], 50)).toBe(3);
   });

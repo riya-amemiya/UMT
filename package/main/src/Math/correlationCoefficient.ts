@@ -11,10 +11,6 @@ import { average } from "./average";
  * correlationCoefficient([1, 2, 3, 4, 5], [1, 1, 1, 1, 1]); // 0 (no correlation)
  */
 export const correlationCoefficient = (x: number[], y: number[]): number => {
-  if (x.length !== y.length) {
-    throw new Error("Arrays must have the same length");
-  }
-
   if (x.length === 0) {
     return Number.NaN;
   }

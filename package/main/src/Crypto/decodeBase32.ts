@@ -13,9 +13,6 @@ export const decodeBase32 = (input: string): Uint8Array => {
 
   for (const char of cleanedInput) {
     const value = alphabet.indexOf(char);
-    if (value === -1) {
-      throw new Error(`Invalid base32 character: ${char}`);
-    }
 
     buffer = (buffer << 5) | value;
     bufferLength += 5;

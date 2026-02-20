@@ -152,4 +152,39 @@ describe("mergeDeep", () => {
     expect(result).toEqual({ a: 1, own: "child" });
     expect(result).not.toHaveProperty("inherited");
   });
+
+  it("should prevent prototype pollution via __proto__", () => {
+    const payload = JSON.parse('{"__proto__": {"polluted": true}}');
+    const target = {};
+    const result = mergeDeep(target, payload);
+
+    // Should not have polluted property on the result (local pollution)
+    // biome-ignore lint/suspicious/noExplicitAny: ignore
+    expect((result as any).polluted).toBeUndefined();
+    // Should not have __proto__ property set directly
+    expect(Object.hasOwn(result, "__proto__")).toBe(false);
+  });
+
+  it("should prevent prototype pollution via constructor", () => {
+    const payload = JSON.parse(
+      '{"constructor": {"prototype": {"polluted": true}}}',
+    );
+    const target = {};
+    const result = mergeDeep(target, payload);
+
+    // Should not have polluted property on Object.prototype (global pollution)
+    // biome-ignore lint/suspicious/noExplicitAny: ignore
+    expect((Object.prototype as any).polluted).toBeUndefined();
+    // Should not overwrite constructor
+    expect(result.constructor).toBe(Object);
+  });
+
+  it("should prevent prototype pollution via prototype", () => {
+    const payload = JSON.parse('{"prototype": {"polluted": true}}');
+    const target = {};
+    const result = mergeDeep(target, payload);
+
+    // biome-ignore lint/suspicious/noExplicitAny: ignore
+    expect((result as any).prototype).toBeUndefined();
+  });
 });

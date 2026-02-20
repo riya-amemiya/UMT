@@ -1,4 +1,5 @@
 from .get_objects_common import get_objects_common
+from .get_objects_diff import get_objects_diff
 from .object_has import object_has
 from .object_is_empty import object_is_empty
 from .object_map_values import object_map_values
@@ -10,6 +11,7 @@ from .object_pick_deep import object_pick_deep
 
 __all__ = [
     "get_objects_common",
+    "get_objects_diff",
     "object_has",
     "object_is_empty",
     "object_map_values",

@@ -14,7 +14,6 @@ import { subtract } from "@/Math/subtract";
  * @param a Alpha value (0-1)
  * @returns {Object} RGBA values (r, g, b as 0-255, a as 0-1)
  * @example hslaToRgba(120, 50, 50, 1) // { r: 64, g: 191, b: 64, a: 1 }
- * @throws {Error} If any input values are out of their valid ranges
  */
 export const hslaToRgba = (
   h: number,
@@ -22,20 +21,6 @@ export const hslaToRgba = (
   l: number,
   a = 1,
 ): { r: number; g: number; b: number; a: number } => {
-  // Validate input ranges
-  if (h < 0 || h > 360) {
-    throw new Error("Hue must be between 0 and 360 degrees");
-  }
-  if (s < 0 || s > 100) {
-    throw new Error("Saturation must be between 0 and 100 percent");
-  }
-  if (l < 0 || l > 100) {
-    throw new Error("Lightness must be between 0 and 100 percent");
-  }
-  if (a < 0 || a > 1) {
-    throw new Error("Alpha must be between 0 and 1");
-  }
-
   const hue = division(division(h, 360, false)[1], 360);
   const saturation = division(max(0, min(s, 100)), 100);
   const lightness = division(max(0, min(l, 100)), 100);

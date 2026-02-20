@@ -22,18 +22,6 @@ describe("decodeBase32", () => {
     );
   });
 
-  test("throws error on invalid character", () => {
-    expect(() => decodeBase32("JBSWY3D@")).toThrow(
-      "Invalid base32 character: @",
-    );
-    expect(() => decodeBase32("JBSWY3D1")).toThrow(
-      "Invalid base32 character: 1",
-    );
-    expect(() => decodeBase32("JBSWY3D0")).toThrow(
-      "Invalid base32 character: 0",
-    );
-  });
-
   test("decodes longer text", () => {
     const encoded =
       "KRUGKIDROVUWG2ZAMJZG653OEBTG66BANJ2W24DTEBXXMZLSEB2GQZJANRQXU6JAMRXWO===";

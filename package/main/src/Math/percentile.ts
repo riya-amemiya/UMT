@@ -15,10 +15,6 @@ export const percentile = (array: number[], percentile: number): number => {
     return Number.NaN;
   }
 
-  if (percentile < 0 || percentile > 100) {
-    throw new Error("Percentile must be between 0 and 100");
-  }
-
   const sortedArray = quickSort([...array]);
   const index = (percentile / 100) * (sortedArray.length - 1);
   const lowerIndex = Math.floor(index);
