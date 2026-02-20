@@ -2,7 +2,7 @@ import { escapeRegExp } from "@/Tool/escapeRegExp";
 
 describe("escapeRegExp", () => {
   it("should escape all regex special characters", () => {
-    // biome-ignore lint/suspicious/noTemplateCurlyInString: ignore
+    // biome-ignore lint/suspicious/noTemplateCurlyInString: Testing special characters
     const specialChars = ".*+?^${}()|[]\\";
     const expected = "\\.\\*\\+\\?\\^\\$\\{\\}\\(\\)\\|\\[\\]\\\\";
     expect(escapeRegExp(specialChars)).toBe(expected);

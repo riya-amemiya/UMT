@@ -38,6 +38,7 @@ from .round_of import round_of
 from .solve_equation import solve_equation
 from .standard_deviation import standard_deviation
 from .subtraction import subtraction
+from .sum_precise import sum_precise
 from .to_base_n import to_base_n
 from .to_celsius import to_celsius
 from .to_kelvin import to_kelvin
@@ -89,6 +90,7 @@ __all__ = [
     "solve_equation",
     "standard_deviation",
     "subtraction",
+    "sum_precise",
     "to_base_n",
     "to_celsius",
     "to_kelvin",

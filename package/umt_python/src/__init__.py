@@ -164,11 +164,15 @@ from .number import (
 from .object import (
     object_has,
     object_is_empty,
+    object_map_values,
     object_merge,
     object_merge_deep,
     object_omit,
     object_pick,
     object_pick_deep,
+)
+from .predicate import (
+    every,
 )
 from .simple.math import (
     deviation_value_simple,
@@ -320,6 +324,7 @@ __all__ = [
     "encode_base32",
     "encode_base58",
     "escape_html",
+    "every",
     "extract_browser_from_user_agent",
     "extract_device_from_user_agent",
     "extract_os_from_user_agent",
@@ -389,6 +394,7 @@ __all__ = [
     "normalize_time_unit",
     "object_has",
     "object_is_empty",
+    "object_map_values",
     "object_merge",
     "object_merge_deep",
     "object_omit",
