@@ -18,7 +18,8 @@ summary(() => {
   bench("pickDeep", () => {
     // biome-ignore lint/suspicious/noExplicitAny: benchmark keys
     const k = keys as any;
-    do_not_optimize(pickDeep(largeObj, ...k));
+    // biome-ignore lint/suspicious/noExplicitAny: benchmark call
+    do_not_optimize((pickDeep as any)(largeObj, ...k));
   });
 });
 
