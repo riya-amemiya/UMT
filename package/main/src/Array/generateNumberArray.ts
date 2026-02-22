@@ -34,8 +34,9 @@ export const generateNumberArray = (
   if (random) {
     if (isIntegerInputs) {
       const range = actualMax - min + 1;
-      return Array.from({ length: actualLength }, () =>
-        Math.floor(Math.random() * range) + min,
+      return Array.from(
+        { length: actualLength },
+        () => Math.floor(Math.random() * range) + min,
       );
     }
     return Array.from({ length: actualLength }, () =>
@@ -53,8 +54,9 @@ export const generateNumberArray = (
     const steps = actualLength - 1;
     if (range % steps === 0) {
       const step = range / steps;
-      return Array.from({ length: actualLength }, (_, index) =>
-        min + index * step,
+      return Array.from(
+        { length: actualLength },
+        (_, index) => min + index * step,
       );
     }
   }

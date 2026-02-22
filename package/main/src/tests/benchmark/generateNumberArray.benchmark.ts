@@ -25,7 +25,7 @@ summary(() => {
   });
 
   bench("generateNumberArray random (10,000 elements)", () => {
-    do_not_optimize(generateNumberArray(10_000, 0, 10000, true));
+    do_not_optimize(generateNumberArray(10_000, 0, 10_000, true));
   });
 });
 
