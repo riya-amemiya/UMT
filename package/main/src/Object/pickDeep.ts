@@ -30,7 +30,7 @@ export const pickDeep = <
   for (const key of keys) {
     const parts = (key as string).split(".");
     // biome-ignore lint/suspicious/noExplicitAny: ignore
-    let current: any = { ...object };
+    let current: any = object;
     // biome-ignore lint/suspicious/noExplicitAny: ignore
     let target: any = result;
 
