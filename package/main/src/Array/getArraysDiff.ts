@@ -14,11 +14,7 @@ export const getArraysDiff = <O, T extends unknown[] = unknown[]>(
 
   for (const array_ of arrays) {
     for (const value of array_) {
-      if (duplicates.has(value as T)) {
-        continue;
-      }
       if (allValues.has(value)) {
-        allValues.delete(value);
         duplicates.add(value as T);
       } else {
         allValues.add(value);
@@ -26,5 +22,7 @@ export const getArraysDiff = <O, T extends unknown[] = unknown[]>(
     }
   }
 
-  return [...allValues] as unknown as O;
+  return [...allValues].filter(
+    (value) => !duplicates.has(value as T),
+  ) as unknown as O;
 };

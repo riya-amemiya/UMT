@@ -9,7 +9,10 @@ export const multiplication = (...numbers: number[]) => {
   let decimalPlaces = 0;
 
   for (const number of numbers) {
-    if (number === 0) return 0;
+    if (number === 0) {
+      // Short-circuit for zero
+      return 0;
+    }
 
     if (Number.isInteger(number)) {
       result *= number;

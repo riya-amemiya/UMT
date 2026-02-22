@@ -1,6 +1,23 @@
 /**
+ * A node in the doubly linked list used by LRUCache.
+ * @template K - The type of the key
+ * @template V - The type of the value
+ */
+class LRUNode<K, V> {
+  key: K;
+  value: V;
+  prev: LRUNode<K, V> | null = null;
+  next: LRUNode<K, V> | null = null;
+
+  constructor(key: K, value: V) {
+    this.key = key;
+    this.value = value;
+  }
+}
+
+/**
  * A Least Recently Used (LRU) cache implementation
- * using a Map for O(1) get/set operations.
+ * using a Map and a doubly linked list for O(1) get/set operations.
  *
  * When the cache exceeds its capacity, the least recently used
  * entry is evicted.
@@ -38,7 +55,9 @@
  */
 export class LRUCache<K, V> {
   private capacity: number;
-  private map = new Map<K, V>();
+  private map = new Map<K, LRUNode<K, V>>();
+  private head: LRUNode<K, V> | null = null;
+  private tail: LRUNode<K, V> | null = null;
 
   /**
    * Creates a new LRUCache instance.
@@ -82,14 +101,12 @@ export class LRUCache<K, V> {
    * ```
    */
   get(key: K): V | undefined {
-    const value = this.map.get(key);
-    if (value === undefined && !this.map.has(key)) {
-      return undefined;
+    const node = this.map.get(key);
+    if (node === undefined) {
+      return;
     }
-    // Refresh key: delete and re-insert
-    this.map.delete(key);
-    this.map.set(key, value as V);
-    return value;
+    this.moveToHead(node);
+    return node.value;
   }
 
   /**
@@ -107,12 +124,20 @@ export class LRUCache<K, V> {
    * ```
    */
   set(key: K, value: V): void {
-    if (this.map.has(key)) {
-      this.map.delete(key);
-    } else if (this.map.size >= this.capacity) {
+    const existing = this.map.get(key);
+    if (existing !== undefined) {
+      existing.value = value;
+      this.moveToHead(existing);
+      return;
+    }
+
+    const node = new LRUNode(key, value);
+    this.map.set(key, node);
+    this.addToHead(node);
+
+    if (this.map.size > this.capacity) {
       this.evict();
     }
-    this.map.set(key, value);
   }
 
   /**
@@ -147,7 +172,13 @@ export class LRUCache<K, V> {
    * ```
    */
   delete(key: K): boolean {
-    return this.map.delete(key);
+    const node = this.map.get(key);
+    if (node === undefined) {
+      return false;
+    }
+    this.removeNode(node);
+    this.map.delete(key);
+    return true;
   }
 
   /**
@@ -164,15 +195,69 @@ export class LRUCache<K, V> {
    */
   clear(): void {
     this.map.clear();
+    this.head = null;
+    this.tail = null;
   }
 
   /**
-   * Evicts the least recently used entry (first inserted).
+   * Moves an existing node to the head (most recently used).
+   * @param node - The node to move
+   */
+  private moveToHead(node: LRUNode<K, V>): void {
+    if (node === this.head) {
+      return;
+    }
+    this.removeNode(node);
+    this.addToHead(node);
+  }
+
+  /**
+   * Removes a node from the doubly linked list.
+   * @param node - The node to remove
+   */
+  private removeNode(node: LRUNode<K, V>): void {
+    if (node.prev === null) {
+      this.head = node.next;
+    } else {
+      node.prev.next = node.next;
+    }
+
+    if (node.next === null) {
+      this.tail = node.prev;
+    } else {
+      node.next.prev = node.prev;
+    }
+
+    node.prev = null;
+    node.next = null;
+  }
+
+  /**
+   * Adds a node to the head of the doubly linked list.
+   * @param node - The node to add
+   */
+  private addToHead(node: LRUNode<K, V>): void {
+    node.next = this.head;
+    node.prev = null;
+
+    if (this.head !== null) {
+      this.head.prev = node;
+    }
+
+    this.head = node;
+
+    this.tail ??= node;
+  }
+
+  /**
+   * Evicts the least recently used entry (tail of the list).
    */
   private evict(): void {
-    const iterator = this.map.keys().next();
-    if (!iterator.done) {
-      this.map.delete(iterator.value);
+    if (this.tail === null) {
+      return;
     }
+    const evicted = this.tail;
+    this.removeNode(evicted);
+    this.map.delete(evicted.key);
   }
 }

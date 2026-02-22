@@ -1,4 +1,4 @@
-use rand::RngExt;
+use rand::Rng;
 use umt_rust::array::umt_ultra_number_sort;
 
 #[test]

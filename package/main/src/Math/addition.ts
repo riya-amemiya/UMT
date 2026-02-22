@@ -1,5 +1,6 @@
 import { getDecimalLength } from "./getDecimalLength";
-
+import { max } from "./max";
+import { multiplication } from "./multiplication";
 /**
  * Addition without floating point errors
  * @param  {number[]} numbers Numbers to add
@@ -7,27 +8,8 @@ import { getDecimalLength } from "./getDecimalLength";
  * @example addition(0.1, 0.2); // 0.3
  */
 export const addition = (...numbers: number[]) => {
-  let maxDecimal = 0;
-  let allIntegers = true;
-
-  for (const number of numbers) {
-    if (!Number.isInteger(number)) {
-      allIntegers = false;
-      const length = getDecimalLength(number);
-      if (length > maxDecimal) {
-        maxDecimal = length;
-      }
-    }
-  }
-
-  if (allIntegers || maxDecimal === 0) {
-    return numbers.reduce((sum, current) => sum + current, 0);
-  }
-
-  const z = 10 ** maxDecimal;
-  let sum = 0;
-  for (const number of numbers) {
-    sum += Math.round(number * z);
-  }
-  return sum / z;
+  const z = 10 ** max(...numbers.map((element) => getDecimalLength(element)));
+  return (
+    numbers.reduce((sum, current) => sum + multiplication(current, z), 0) / z
+  );
 };
