@@ -12,6 +12,7 @@ const MIN_RUN = 32;
  * @param mid Middle index separating the two portions
  * @param end Ending index of the second portion
  * @param compareFunction Function to compare elements
+ * @param temporary Temporary array for merging
  */
 const merge = <T>(
   array: T[],
@@ -19,34 +20,37 @@ const merge = <T>(
   mid: number,
   end: number,
   compareFunction: CompareFunction<T>,
+  temporary: T[],
 ): void => {
-  const left = array.slice(start, mid + 1);
-  const right = array.slice(mid + 1, end + 1);
-  let leftIndex = 0;
-  let rightIndex = 0;
-  let arrayIndex = start;
+  const length1 = mid - start + 1;
 
-  while (leftIndex < left.length && rightIndex < right.length) {
-    if (compareFunction(left[leftIndex], right[rightIndex]) <= 0) {
-      array[arrayIndex] = left[leftIndex];
-      leftIndex++;
+  if (compareFunction(array[mid], array[mid + 1]) <= 0) {
+    return;
+  }
+
+  for (let index = 0; index < length1; index++) {
+    temporary[index] = array[start + index];
+  }
+
+  let index = 0;
+  let index_ = mid + 1;
+  let k = start;
+
+  while (index < length1 && index_ <= end) {
+    if (compareFunction(temporary[index], array[index_]) <= 0) {
+      array[k] = temporary[index];
+      index++;
     } else {
-      array[arrayIndex] = right[rightIndex];
-      rightIndex++;
+      array[k] = array[index_];
+      index_++;
     }
-    arrayIndex++;
+    k++;
   }
 
-  while (leftIndex < left.length) {
-    array[arrayIndex] = left[leftIndex];
-    leftIndex++;
-    arrayIndex++;
-  }
-
-  while (rightIndex < right.length) {
-    array[arrayIndex] = right[rightIndex];
-    rightIndex++;
-    arrayIndex++;
+  while (index < length1) {
+    array[k] = temporary[index];
+    k++;
+    index++;
   }
 };
 
@@ -96,13 +100,15 @@ export const timSort = <T>(
     insertionSortRange(result, compareFunction, runStart, runEnd);
   }
 
+  const temporary: T[] = [];
+
   for (let size = minRun; size < n; size *= 2) {
     for (let left = start; left <= end; left += 2 * size) {
       const mid = left + size - 1;
       const right = Math.min(left + 2 * size - 1, end);
 
       if (mid < right) {
-        merge(result, left, mid, right, compareFunction);
+        merge(result, left, mid, right, compareFunction, temporary);
       }
     }
   }
