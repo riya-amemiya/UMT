@@ -14,9 +14,12 @@ summary(() => {
     do_not_optimize(randomSelect(array, size * 0.5));
   });
 
-  bench(`randomSelect(size=${size}, count=${size * 0.8}) (optimization threshold)`, () => {
-    do_not_optimize(randomSelect(array, size * 0.8));
-  });
+  bench(
+    `randomSelect(size=${size}, count=${size * 0.8}) (optimization threshold)`,
+    () => {
+      do_not_optimize(randomSelect(array, size * 0.8));
+    },
+  );
 
   bench(`randomSelect(size=${size}, count=${size * 0.9})`, () => {
     do_not_optimize(randomSelect(array, size * 0.9));
