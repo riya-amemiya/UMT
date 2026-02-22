@@ -53,4 +53,17 @@ describe("randomSelect", () => {
     const result = randomSelect(array, 0);
     expect(result).toEqual([]);
   });
+
+  it("should work correctly for large arrays triggering optimization path", () => {
+    const size = 1000;
+    const array = Array.from({ length: size }, (_, i) => i);
+    const count = 900; // 90%
+    const result = randomSelect(array, count);
+    expect(result).toHaveLength(count);
+    const uniqueResult = new Set(result);
+    expect(uniqueResult.size).toBe(count);
+    for (const item of result) {
+      expect(array).toContain(item);
+    }
+  });
 });
