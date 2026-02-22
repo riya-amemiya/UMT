@@ -58,23 +58,12 @@ describe("email", () => {
       "user@example,com",
       "",
       " ",
-    ];
-
-    for (const email of invalidEmails) {
-      expect(emailValidator(email).validate).toBeFalsy();
-    }
-  });
-
-  it("documents regex limitations as bugs", () => {
-    const emailValidator = string([validateEmail()]);
-
-    const buggyEmails = [
       "user@example..com",
       "user@.example.com",
       "user@example.com.",
     ];
 
-    for (const email of buggyEmails) {
+    for (const email of invalidEmails) {
       expect(emailValidator(email).validate).toBeFalsy();
     }
   });
