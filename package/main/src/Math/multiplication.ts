@@ -16,14 +16,14 @@ export const multiplication = (...numbers: number[]) => {
       continue;
     }
 
-    const str = number.toString();
-    const decimalIndex = str.indexOf(".");
+    const string_ = number.toString();
+    const decimalIndex = string_.indexOf(".");
 
     if (decimalIndex === -1) {
       result *= number;
     } else {
-      decimalPlaces += str.length - decimalIndex - 1;
-      result *= Number(str.replace(".", ""));
+      decimalPlaces += string_.length - decimalIndex - 1;
+      result *= Number(string_.replace(".", ""));
     }
   }
 
