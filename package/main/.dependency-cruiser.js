@@ -292,7 +292,7 @@ module.exports = {
     /* List of strings you have in use in addition to cjs/ es6 requires
        & imports to declare module dependencies. Use this e.g. if you've
        re-declared require, use a require-wrapper or use window.require as
-       a hack.
+       a workaround.
     */
     // exoticRequireStrings: [],
     /* options to pass on to enhanced-resolve, the package dependency-cruiser
