@@ -12,7 +12,7 @@ const MIN_RUN = 32;
  * @param mid Middle index separating the two portions
  * @param end Ending index of the second portion
  * @param compareFunction Function to compare elements
- * @param temp Temporary array for merging
+ * @param temporary Temporary array for merging
  */
 const merge = <T>(
   array: T[],
@@ -24,19 +24,17 @@ const merge = <T>(
 ): void => {
   const length1 = mid - start + 1;
 
-  // Optimization: check if already sorted
   if (compareFunction(array[mid], array[mid + 1]) <= 0) {
     return;
   }
 
-  // Copy left run to temp
   for (let index = 0; index < length1; index++) {
     temporary[index] = array[start + index];
   }
 
-  let index = 0; // index in temp (left run)
-  let index_ = mid + 1; // index in array (right run)
-  let k = start; // index in array (merge destination)
+  let index = 0;
+  let index_ = mid + 1;
+  let k = start;
 
   while (index < length1 && index_ <= end) {
     if (compareFunction(temporary[index], array[index_]) <= 0) {
@@ -102,8 +100,7 @@ export const timSort = <T>(
     insertionSortRange(result, compareFunction, runStart, runEnd);
   }
 
-  // eslint-disable-next-line unicorn/no-new-array
-  const temporary = new Array(n);
+  const temporary: T[] = [];
 
   for (let size = minRun; size < n; size *= 2) {
     for (let left = start; left <= end; left += 2 * size) {
