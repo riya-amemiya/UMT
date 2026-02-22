@@ -41,32 +41,32 @@ export const fuzzySearch = (
     const lowerItemLength = lowerItem.length;
 
     // Initialize the row: 0, 1, 2, ..., lowerQueryLength
-    for (let i = 0; i <= lowerQueryLength; i++) {
-      row[i] = i;
+    for (let index = 0; index <= lowerQueryLength; index++) {
+      row[index] = index;
     }
 
     // Iterate through each character of the lowercased item (outer loop)
-    for (let j = 1; j <= lowerItemLength; j++) {
+    for (let itemIndex = 1; itemIndex <= lowerItemLength; itemIndex++) {
       let previousDiagonal = row[0];
-      row[0] = j;
-      const charItem = lowerItem[j - 1];
+      row[0] = itemIndex;
+      const charItem = lowerItem[itemIndex - 1];
       let minRowValue = row[0];
 
-      for (let i = 1; i <= lowerQueryLength; i++) {
-        const temporary = row[i];
-        const charQuery = lowerQuery[i - 1];
+      for (let queryIndex = 1; queryIndex <= lowerQueryLength; queryIndex++) {
+        const temporary = row[queryIndex];
+        const charQuery = lowerQuery[queryIndex - 1];
 
         const cost = charQuery === charItem ? 0 : 1;
 
-        row[i] = Math.min(
-          row[i] + 1, // deletion
-          row[i - 1] + 1, // insertion
+        row[queryIndex] = Math.min(
+          row[queryIndex] + 1, // deletion
+          row[queryIndex - 1] + 1, // insertion
           previousDiagonal + cost, // substitution
         );
         previousDiagonal = temporary;
 
-        if (row[i] < minRowValue) {
-          minRowValue = row[i];
+        if (row[queryIndex] < minRowValue) {
+          minRowValue = row[queryIndex];
         }
       }
 
@@ -84,5 +84,6 @@ export const fuzzySearch = (
   }
 
   // Use native sort for better performance and in-place sorting
+  // eslint-disable-next-line unicorn/no-array-sort
   return results.sort((a, b) => b.score - a.score);
 };
