@@ -189,4 +189,13 @@ describe("generateNumberArray", () => {
     const result2 = generateNumberArray(3, 10, 20);
     expect(result2).toEqual([10, 15, 20]);
   });
+
+  it("should handle random generation with decimal min/max", () => {
+    const result = generateNumberArray(5, 0.5, 1.5, true);
+    expect(result).toHaveLength(5);
+    for (const item of result) {
+      expect(item).toBeGreaterThanOrEqual(0.5);
+      expect(item).toBeLessThanOrEqual(1.5);
+    }
+  });
 });
