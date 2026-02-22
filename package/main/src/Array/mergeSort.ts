@@ -17,40 +17,75 @@ export const mergeSort = <T>(
     return array;
   }
 
-  const middle = Math.floor(array.length / 2);
-  const left = array.slice(0, middle);
-  const right = array.slice(middle);
+  const length = array.length;
+  const result = array.slice();
+  const aux = array.slice();
 
-  return merge(
-    mergeSort(left, compareFunction),
-    mergeSort(right, compareFunction),
-    compareFunction,
-  );
+  mergeSortRecursive(result, aux, 0, length, compareFunction);
+
+  return result;
 };
 
 /**
- * Helper function to merge two sorted arrays
- * @param left Left array to merge
- * @param right Right array to merge
- * @param compareFunction Comparison function to determine order
- * @returns New merged array in sorted order
+ * Recursive merge sort implementation
+ * @param array Array to sort
+ * @param aux Auxiliary array
+ * @param start Start index
+ * @param end End index
+ * @param compareFunction Comparison function
  */
-function merge<T>(
-  left: T[],
-  right: T[],
+function mergeSortRecursive<T>(
+  array: T[],
+  aux: T[],
+  start: number,
+  end: number,
   compareFunction: (a: T, b: T) => number,
-): T[] {
-  const array: T[] = [];
-  let lIndex = 0;
-  let rIndex = 0;
-
-  while (lIndex < left.length && rIndex < right.length) {
-    if (compareFunction(left[lIndex], right[rIndex]) <= 0) {
-      array.push(left[lIndex++]);
-    } else {
-      array.push(right[rIndex++]);
-    }
+): void {
+  if (end - start <= 1) {
+    return;
   }
 
-  return array.concat(left.slice(lIndex)).concat(right.slice(rIndex));
+  const mid = (start + end) >>> 1;
+
+  mergeSortRecursive(array, aux, start, mid, compareFunction);
+  mergeSortRecursive(array, aux, mid, end, compareFunction);
+
+  merge(array, aux, start, mid, end, compareFunction);
+}
+
+/**
+ * Merges two sorted subarrays
+ * @param array Array containing the subarrays
+ * @param aux Auxiliary array
+ * @param start Start index
+ * @param mid Middle index
+ * @param end End index
+ * @param compareFunction Comparison function
+ */
+function merge<T>(
+  array: T[],
+  aux: T[],
+  start: number,
+  mid: number,
+  end: number,
+  compareFunction: (a: T, b: T) => number,
+): void {
+  for (let index = start; index < end; index++) {
+    aux[index] = array[index];
+  }
+
+  let leftIndex = start;
+  let rightIndex = mid;
+
+  for (let k = start; k < end; k++) {
+    if (leftIndex >= mid) {
+      array[k] = aux[rightIndex++];
+    } else if (rightIndex >= end) {
+      array[k] = aux[leftIndex++];
+    } else if (compareFunction(aux[leftIndex], aux[rightIndex]) <= 0) {
+      array[k] = aux[leftIndex++];
+    } else {
+      array[k] = aux[rightIndex++];
+    }
+  }
 }
