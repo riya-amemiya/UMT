@@ -20,7 +20,7 @@ export const addition = (...numbers: number[]) => {
     }
   }
 
-  if (allIntegers) {
+  if (allIntegers || maxDecimal === 0) {
     return numbers.reduce((sum, current) => sum + current, 0);
   }
 
