@@ -66,6 +66,8 @@ mod function {
 
 mod integration;
 
+mod iterator;
+
 mod ip {
     mod test_cidr_to_long;
     mod test_cidr_to_subnet_mask;
