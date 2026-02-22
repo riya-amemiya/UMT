@@ -8,7 +8,6 @@ pub mod date;
 pub mod error;
 pub mod function;
 pub mod ip;
-pub mod iterator;
 pub mod math;
 pub mod number;
 pub mod object;

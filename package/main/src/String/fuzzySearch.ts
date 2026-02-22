@@ -40,12 +40,10 @@ export const fuzzySearch = (
     const lowerItem = item.toLowerCase();
     const lowerItemLength = lowerItem.length;
 
-    // Initialize the row: 0, 1, 2, ..., lowerQueryLength
     for (let index = 0; index <= lowerQueryLength; index++) {
       row[index] = index;
     }
 
-    // Iterate through each character of the lowercased item (outer loop)
     for (let itemIndex = 1; itemIndex <= lowerItemLength; itemIndex++) {
       let previousDiagonal = row[0];
       row[0] = itemIndex;
@@ -83,7 +81,5 @@ export const fuzzySearch = (
     }
   }
 
-  // Use native sort for better performance and in-place sorting
-  // eslint-disable-next-line unicorn/no-array-sort
-  return results.sort((a, b) => b.score - a.score);
+  return results.toSorted((a, b) => b.score - a.score);
 };

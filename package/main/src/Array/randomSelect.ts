@@ -1,5 +1,3 @@
-import { shuffle } from "./shuffle";
-
 /**
  * Randomly selects a specified number of elements from an array
  * @param array Source array
@@ -13,14 +11,6 @@ export const randomSelect = <T>(
   count: number,
   allowDuplicates = false,
 ): T[] => {
-  if (!allowDuplicates && count > array.length * 0.8) {
-    const shuffled = shuffle(array);
-    if (count < shuffled.length) {
-      shuffled.length = count;
-    }
-    return shuffled;
-  }
-
   const result: T[] = [];
   const usedIndices = new Set<number>();
 
