@@ -18,9 +18,9 @@ export const ultraNumberSort = (
   // For tiny arrays, use optimized inline sort
   if (length === 2) {
     if (result[0] > result[1] === ascending) {
-      const temp = result[0];
+      const temporary = result[0];
       result[0] = result[1];
-      result[1] = temp;
+      result[1] = temporary;
     }
     return result;
   }
@@ -93,38 +93,38 @@ const inlineSort3 = (array: number[], ascending: boolean): void => {
   let a = array[0];
   let b = array[1];
   let c = array[2];
-  let temp: number;
+  let temporary: number;
 
   if (ascending) {
     if (a > b) {
-      temp = a;
+      temporary = a;
       a = b;
-      b = temp;
+      b = temporary;
     }
     if (b > c) {
-      temp = b;
+      temporary = b;
       b = c;
-      c = temp;
+      c = temporary;
       if (a > b) {
-        temp = a;
+        temporary = a;
         a = b;
-        b = temp;
+        b = temporary;
       }
     }
   } else {
     if (a < b) {
-      temp = a;
+      temporary = a;
       a = b;
-      b = temp;
+      b = temporary;
     }
     if (b < c) {
-      temp = b;
+      temporary = b;
       b = c;
-      c = temp;
+      c = temporary;
       if (a < b) {
-        temp = a;
+        temporary = a;
         a = b;
-        b = temp;
+        b = temporary;
       }
     }
   }
@@ -401,46 +401,46 @@ const numericPartition = (
 ): number => {
   // Median-of-three pivot selection
   const mid = low + ((high - low) >> 1);
-  let temp: number;
+  let temporary: number;
 
   if (ascending) {
     if (array[mid] < array[low]) {
-      temp = array[low];
+      temporary = array[low];
       array[low] = array[mid];
-      array[mid] = temp;
+      array[mid] = temporary;
     }
     if (array[high] < array[low]) {
-      temp = array[low];
+      temporary = array[low];
       array[low] = array[high];
-      array[high] = temp;
+      array[high] = temporary;
     }
     if (array[high] < array[mid]) {
-      temp = array[mid];
+      temporary = array[mid];
       array[mid] = array[high];
-      array[high] = temp;
+      array[high] = temporary;
     }
   } else {
     if (array[mid] > array[low]) {
-      temp = array[low];
+      temporary = array[low];
       array[low] = array[mid];
-      array[mid] = temp;
+      array[mid] = temporary;
     }
     if (array[high] > array[low]) {
-      temp = array[low];
+      temporary = array[low];
       array[low] = array[high];
-      array[high] = temp;
+      array[high] = temporary;
     }
     if (array[high] > array[mid]) {
-      temp = array[mid];
+      temporary = array[mid];
       array[mid] = array[high];
-      array[high] = temp;
+      array[high] = temporary;
     }
   }
 
   // Move pivot to end-1
-  temp = array[mid];
+  temporary = array[mid];
   array[mid] = array[high - 1];
-  array[high - 1] = temp;
+  array[high - 1] = temporary;
   const pivot = array[high - 1];
 
   let index = low;
@@ -457,9 +457,9 @@ const numericPartition = (
       if (index >= index_) {
         break;
       }
-      temp = array[index];
+      temporary = array[index];
       array[index] = array[index_];
-      array[index_] = temp;
+      array[index_] = temporary;
     }
   } else {
     while (true) {
@@ -472,14 +472,14 @@ const numericPartition = (
       if (index >= index_) {
         break;
       }
-      temp = array[index];
+      temporary = array[index];
       array[index] = array[index_];
-      array[index_] = temp;
+      array[index_] = temporary;
     }
   }
 
-  temp = array[index];
+  temporary = array[index];
   array[index] = array[high - 1];
-  array[high - 1] = temp;
+  array[high - 1] = temporary;
   return index;
 };
