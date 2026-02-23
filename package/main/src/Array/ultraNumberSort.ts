@@ -18,13 +18,28 @@ export const ultraNumberSort = (
   // For tiny arrays, use optimized inline sort
   if (length === 2) {
     if (result[0] > result[1] === ascending) {
-      [result[0], result[1]] = [result[1], result[0]];
+      const temporary = result[0];
+      result[0] = result[1];
+      result[1] = temporary;
     }
     return result;
   }
 
   if (length === 3) {
     inlineSort3(result, ascending);
+    return result;
+  }
+
+  // For small-medium arrays, skip integer/range analysis
+  // The scan overhead is not worthwhile at this size
+  if (length <= 128) {
+    for (let index = 0; index < length; index++) {
+      // biome-ignore lint/suspicious/noSelfCompare: NaN detection
+      if (result[index] !== result[index]) {
+        return handleNaNSort(result, ascending);
+      }
+    }
+    numericQuickSort(result, 0, length - 1, ascending);
     return result;
   }
 
@@ -78,25 +93,38 @@ const inlineSort3 = (array: number[], ascending: boolean): void => {
   let a = array[0];
   let b = array[1];
   let c = array[2];
+  let temporary: number;
 
   if (ascending) {
     if (a > b) {
-      [a, b] = [b, a];
+      temporary = a;
+      a = b;
+      b = temporary;
     }
     if (b > c) {
-      [b, c] = [c, b];
+      temporary = b;
+      b = c;
+      c = temporary;
       if (a > b) {
-        [a, b] = [b, a];
+        temporary = a;
+        a = b;
+        b = temporary;
       }
     }
   } else {
     if (a < b) {
-      [a, b] = [b, a];
+      temporary = a;
+      a = b;
+      b = temporary;
     }
     if (b < c) {
-      [b, c] = [c, b];
+      temporary = b;
+      b = c;
+      c = temporary;
       if (a < b) {
-        [a, b] = [b, a];
+        temporary = a;
+        a = b;
+        b = temporary;
       }
     }
   }
@@ -373,31 +401,46 @@ const numericPartition = (
 ): number => {
   // Median-of-three pivot selection
   const mid = low + ((high - low) >> 1);
+  let temporary: number;
 
   if (ascending) {
     if (array[mid] < array[low]) {
-      [array[low], array[mid]] = [array[mid], array[low]];
+      temporary = array[low];
+      array[low] = array[mid];
+      array[mid] = temporary;
     }
     if (array[high] < array[low]) {
-      [array[low], array[high]] = [array[high], array[low]];
+      temporary = array[low];
+      array[low] = array[high];
+      array[high] = temporary;
     }
     if (array[high] < array[mid]) {
-      [array[mid], array[high]] = [array[high], array[mid]];
+      temporary = array[mid];
+      array[mid] = array[high];
+      array[high] = temporary;
     }
   } else {
     if (array[mid] > array[low]) {
-      [array[low], array[mid]] = [array[mid], array[low]];
+      temporary = array[low];
+      array[low] = array[mid];
+      array[mid] = temporary;
     }
     if (array[high] > array[low]) {
-      [array[low], array[high]] = [array[high], array[low]];
+      temporary = array[low];
+      array[low] = array[high];
+      array[high] = temporary;
     }
     if (array[high] > array[mid]) {
-      [array[mid], array[high]] = [array[high], array[mid]];
+      temporary = array[mid];
+      array[mid] = array[high];
+      array[high] = temporary;
     }
   }
 
   // Move pivot to end-1
-  [array[mid], array[high - 1]] = [array[high - 1], array[mid]];
+  temporary = array[mid];
+  array[mid] = array[high - 1];
+  array[high - 1] = temporary;
   const pivot = array[high - 1];
 
   let index = low;
@@ -414,7 +457,9 @@ const numericPartition = (
       if (index >= index_) {
         break;
       }
-      [array[index], array[index_]] = [array[index_], array[index]];
+      temporary = array[index];
+      array[index] = array[index_];
+      array[index_] = temporary;
     }
   } else {
     while (true) {
@@ -427,10 +472,14 @@ const numericPartition = (
       if (index >= index_) {
         break;
       }
-      [array[index], array[index_]] = [array[index_], array[index]];
+      temporary = array[index];
+      array[index] = array[index_];
+      array[index_] = temporary;
     }
   }
 
-  [array[index], array[high - 1]] = [array[high - 1], array[index]];
+  temporary = array[index];
+  array[index] = array[high - 1];
+  array[high - 1] = temporary;
   return index;
 };

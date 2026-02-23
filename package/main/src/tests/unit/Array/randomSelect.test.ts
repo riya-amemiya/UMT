@@ -66,4 +66,21 @@ describe("randomSelect", () => {
       expect(array).toContain(item);
     }
   });
+
+  it("should skip duplicate indices when allowDuplicates is false (collision branch)", () => {
+    const array = [10, 20, 30];
+    const originalRandom = Math.random;
+    let callCount = 0;
+    // Force collision: pick index 0, then index 0 again (collision), then index 1
+    Math.random = () => {
+      callCount++;
+      if (callCount <= 2) {
+        return 0.0; // index 0 twice (second is collision)
+      }
+      return 0.4; // index 1
+    };
+    const result = randomSelect(array, 2, false);
+    expect(result).toEqual([10, 20]);
+    Math.random = originalRandom;
+  });
 });
