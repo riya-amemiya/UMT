@@ -19,10 +19,7 @@ export const hexaToRgba = (
 
   // Convert 3-digit hex to 6-digit format
   if (hexCode.length === 3) {
-    hexCode = hexCode
-      .split("")
-      .map((char) => char + char)
-      .join("");
+    hexCode = [...hexCode].map((char) => char + char).join("");
   }
 
   const r = Number.parseInt(hexCode.slice(0, 2), 16);

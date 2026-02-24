@@ -5,7 +5,7 @@
  */
 export const camelCase = (string_: string): string => {
   return string_
-    .replaceAll(/[^a-zA-Z0-9]+(.)/g, (_, char) => char.toUpperCase())
-    .replaceAll(/[^a-zA-Z0-9]+$/g, "")
+    .replaceAll(/[^\dA-Za-z]+(.)/g, (_, char) => char.toUpperCase())
+    .replaceAll(/[^\dA-Za-z]+$/g, "")
     .replace(/^[A-Z]/, (char) => char.toLowerCase());
 };

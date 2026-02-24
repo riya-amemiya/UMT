@@ -9,5 +9,5 @@ export const arraysJoin = <A extends unknown[]>(
   array: unknown[],
   ...arrays: unknown[]
 ) => {
-  return [...new Set(array.concat(...arrays))] as A;
+  return [...new Set([...array, ...arrays.flat()])] as A;
 };

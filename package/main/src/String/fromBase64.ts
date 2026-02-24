@@ -12,9 +12,9 @@ export const fromBase64 = (base64String: string): string => {
 
   return new TextDecoder().decode(
     Uint8Array.from(
-      atob(base64String)
-        .split("")
-        .map((c) => unwrap(c.codePointAt(0), "panic: invalid base64 string")),
+      [...atob(base64String)].map((c) =>
+        unwrap(c.codePointAt(0), "panic: invalid base64 string"),
+      ),
     ),
   );
 };
