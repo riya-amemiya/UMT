@@ -25,12 +25,12 @@ export const fuzzySearch = (
 
   // Reusable row array to avoid allocations
   // We allocate enough space for typical use cases or grow it if needed.
-  // eslint-disable-next-line unicorn/no-new-array
-  let rowBuffer = new Array(Math.max(queryLength, 50) + 1);
+  // Using dynamic array instead of new Array() to satisfy linter
+  const rowBuffer: number[] = [];
 
   for (const item of items) {
     const itemLength = item.length;
-    const maxLength = itemLength > queryLength ? itemLength : queryLength;
+    const maxLength = Math.max(itemLength, queryLength);
 
     const maxAllowedDistance = Math.floor(maxLength * (1 - threshold));
 
@@ -55,38 +55,34 @@ export const fuzzySearch = (
       length2 = queryLength;
     }
 
-    // Ensure buffer is large enough
-    if (rowBuffer.length <= length1) {
-      // eslint-disable-next-line unicorn/no-new-array
-      rowBuffer = new Array(length1 + 1);
-    }
-
     // Initialize first row: 0, 1, 2, ..., length1
-    for (let j = 0; j <= length1; j++) {
-      rowBuffer[j] = j;
+    for (let columnIndex = 0; columnIndex <= length1; columnIndex++) {
+      rowBuffer[columnIndex] = columnIndex;
     }
 
     let minDistanceInRow = 0;
 
     // Iterate through each character of string2 (rows)
-    for (let i = 1; i <= length2; i++) {
+    for (let rowIndex = 1; rowIndex <= length2; rowIndex++) {
       let previousDiagonal = rowBuffer[0];
-      rowBuffer[0] = i;
+      rowBuffer[0] = rowIndex;
 
-      const char2 = string2.charCodeAt(i - 1);
+      // eslint-disable-next-line unicorn/prefer-code-point
+      const char2 = string2.charCodeAt(rowIndex - 1);
       // Reset min distance for this row
       minDistanceInRow = rowBuffer[0];
 
-      for (let j = 1; j <= length1; j++) {
-        const temporary = rowBuffer[j];
-        const cost = string1.charCodeAt(j - 1) === char2 ? 0 : 1;
+      for (let columnIndex = 1; columnIndex <= length1; columnIndex++) {
+        const temporary = rowBuffer[columnIndex];
+        // eslint-disable-next-line unicorn/prefer-code-point
+        const cost = string1.charCodeAt(columnIndex - 1) === char2 ? 0 : 1;
 
         // min(deletion, insertion, substitution)
         // deletion: row[j] (from previous row)
         // insertion: row[j-1] (current row)
         // substitution: previousDiagonal + cost
-        const deletion = rowBuffer[j] + 1;
-        const insertion = rowBuffer[j - 1] + 1;
+        const deletion = rowBuffer[columnIndex] + 1;
+        const insertion = rowBuffer[columnIndex - 1] + 1;
         const substitution = previousDiagonal + cost;
 
         let value = deletion;
@@ -97,7 +93,7 @@ export const fuzzySearch = (
           value = substitution;
         }
 
-        rowBuffer[j] = value;
+        rowBuffer[columnIndex] = value;
         previousDiagonal = temporary;
 
         if (value < minDistanceInRow) {
@@ -115,10 +111,7 @@ export const fuzzySearch = (
       const trueDistance = rowBuffer[length1];
       if (trueDistance <= maxAllowedDistance) {
         const score = 1 - trueDistance / maxLength;
-        // Check threshold one more time (redundant if logic is perfect but safe)
-        if (score >= threshold) {
-          results.push({ item, score });
-        }
+        results.push({ item, score });
       }
     }
   }
