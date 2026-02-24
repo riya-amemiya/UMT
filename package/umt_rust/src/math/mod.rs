@@ -35,6 +35,8 @@ pub mod addition;
 pub use addition::*;
 pub mod bitwise;
 pub use bitwise::*;
+pub mod clamp;
+pub use clamp::*;
 pub mod correlation_coefficient;
 pub use correlation_coefficient::*;
 pub mod division;
