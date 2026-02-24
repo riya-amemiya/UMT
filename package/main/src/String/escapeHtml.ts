@@ -15,5 +15,5 @@ const htmlEscapeMap: Record<string, string> = {
  * @returns The escaped string
  */
 export const escapeHtml = (string_: string): string => {
-  return string_.replaceAll(/[&<>"']/g, (match) => htmlEscapeMap[match]);
+  return string_.replaceAll(/["&'<>]/g, (match) => htmlEscapeMap[match]);
 };

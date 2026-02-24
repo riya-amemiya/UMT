@@ -25,7 +25,7 @@ export const literalExpression = (x: string): string => {
   for (const part of sides) {
     if (/[A-Za-z]+/.test(part)) {
       variablePart = part
-        .split(/([-+]?\d*[A-Za-z]+)|([-+]?\d+)/)
+        .split(/([+-]?\d*[A-Za-z]+)|([+-]?\d+)/)
         .filter((n) => n && n !== undefined);
     } else {
       numericalPart = part;

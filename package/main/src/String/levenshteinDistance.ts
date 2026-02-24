@@ -30,8 +30,7 @@ export const levenshteinDistance = (
 
   // Create a single row array to store distances
   // We only need the current row and the previous diagonal value
-  // eslint-disable-next-line unicorn/no-new-array
-  const row = new Array(length1 + 1);
+  const row: number[] = Array.from({ length: length1 + 1 });
 
   // Initialize first row (0 to length1)
   for (let index = 0; index <= length1; index++) {

@@ -13,7 +13,7 @@ export const kebabCase = (string_: string): string => {
       // Replace spaces and underscores with dashes
       .replaceAll(/[\s_]+/g, "-")
       // Remove special characters except alphanumeric and dashes
-      .replaceAll(/[^a-zA-Z0-9-]/g, "-")
+      .replaceAll(/[^\dA-Za-z-]/g, "-")
       // Remove multiple consecutive dashes
       .replaceAll(/-+/g, "-")
       // Remove leading and trailing dashes

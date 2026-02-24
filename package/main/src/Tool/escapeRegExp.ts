@@ -6,5 +6,5 @@
  * escapeRegExp("a.b"); // "a\\.b"
  */
 export const escapeRegExp = (string: string): string => {
-  return string.replaceAll(/[.*+?^${}()|[\]\\]/g, String.raw`\$&`);
+  return string.replaceAll(/[$()*+.?[\\\]^{|}]/g, String.raw`\$&`);
 };
