@@ -270,9 +270,9 @@ describe("percentile", () => {
     });
 
     it("should handle very small decimals", () => {
-      expect(
-        percentile([0.001, 0.002, 0.003, 0.004, 0.005], 50),
-      ).toBeCloseTo(0.003);
+      expect(percentile([0.001, 0.002, 0.003, 0.004, 0.005], 50)).toBeCloseTo(
+        0.003,
+      );
     });
 
     it("should handle mixed integers and floats", () => {
@@ -410,7 +410,7 @@ describe("percentile", () => {
   // ============================================================
   describe("large numbers", () => {
     it("should handle millions", () => {
-      expect(percentile([1000000, 2000000, 3000000], 50)).toBe(2000000);
+      expect(percentile([1_000_000, 2_000_000, 3_000_000], 50)).toBe(2_000_000);
     });
 
     it("should handle very large values", () => {
@@ -895,8 +895,8 @@ describe("percentile", () => {
     });
 
     it("should handle mix of tiny and large numbers", () => {
-      const arr = [0.001, 1000000];
-      expect(percentile(arr, 50)).toBeCloseTo(500000.0005);
+      const arr = [0.001, 1_000_000];
+      expect(percentile(arr, 50)).toBeCloseTo(500_000.0005);
     });
   });
 
@@ -922,18 +922,16 @@ describe("percentile", () => {
 
     it("should handle salary-like skewed data", () => {
       const salaries = [
-        30000, 35000, 40000, 45000, 50000, 55000, 60000, 70000, 100000,
-        500000,
+        30_000, 35_000, 40_000, 45_000, 50_000, 55_000, 60_000, 70_000, 100_000,
+        500_000,
       ];
       const p90 = percentile(salaries, 90);
       // index = 0.9*9 = 8.1 → 100000 + (500000-100000)*0.1 = 140000
-      expect(p90).toBeCloseTo(140000);
+      expect(p90).toBeCloseTo(140_000);
     });
 
     it("should calculate response time percentiles", () => {
-      const times = [
-        10, 12, 15, 18, 20, 22, 25, 30, 50, 100, 200, 500, 1000,
-      ];
+      const times = [10, 12, 15, 18, 20, 22, 25, 30, 50, 100, 200, 500, 1000];
       const p50 = percentile(times, 50);
       const p95 = percentile(times, 95);
       const p99 = percentile(times, 99);
