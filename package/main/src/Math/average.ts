@@ -1,5 +1,6 @@
-import { sum } from "@/Array/sum";
 import { division } from "./division";
+
+import { sum } from "@/Array/sum";
 /**
  * Calculates the arithmetic mean of an array of numbers
  * @param  {number[]} numbers - Array of numbers to average
