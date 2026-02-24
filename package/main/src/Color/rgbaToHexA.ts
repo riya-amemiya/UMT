@@ -1,7 +1,6 @@
-const hex = (x: number) => {
-  const hexCode = x.toString(16);
-  return hexCode.length === 1 ? `0${hexCode}` : hexCode;
-};
+import { padStart } from "@/String/padStart";
+
+const hex = (x: number) => padStart(x.toString(16), 2, "0");
 /**
  * Convert RGBA color to hexadecimal color code
  * @param rgba Object containing r, g, b values (0-255) and optional a (0-1)
