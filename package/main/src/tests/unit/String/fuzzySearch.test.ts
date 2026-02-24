@@ -57,4 +57,12 @@ describe("fuzzySearch", () => {
     const result = fuzzySearch("hello!", ["hello!", "hello"]);
     expect(result[0]).toEqual({ item: "hello!", score: 1 });
   });
+
+  it("should exclude items where minDistanceInRow passes but trueDistance exceeds threshold", () => {
+    // query="ab", item="da", threshold=0.5
+    // maxLength=2, maxAllowedDistance=1
+    // Last DP row min is 1 (within threshold), but true distance is 2 (exceeds threshold)
+    const result = fuzzySearch("ab", ["da"], 0.5);
+    expect(result).toEqual([]);
+  });
 });
