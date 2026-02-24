@@ -1,3 +1,4 @@
+import { factorial } from "./factorial";
 import { nPr } from "./nPr";
 
 /**
@@ -19,11 +20,7 @@ export const nCr = (n: number, r: number): number => {
   }
 
   const numerator = nPr(n, r);
-  let denominator = 1;
-
-  for (let index = 2; index <= r; index++) {
-    denominator *= index;
-  }
+  const denominator = factorial(r);
 
   const result = numerator / denominator;
 

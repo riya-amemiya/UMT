@@ -1,3 +1,5 @@
+import { clamp } from "@/Math/clamp";
+
 export interface ValidatedSortRange {
   startIndex: number;
   endIndex: number;
@@ -26,10 +28,10 @@ export const validateRange = <T>(
     return { startIndex: 0, endIndex: -1, shouldSort: false };
   }
 
-  const validatedStartIndex = Math.max(0, Math.min(startIndex, length - 1));
+  const validatedStartIndex = clamp(startIndex, 0, length - 1);
   const validatedEndIndex = Math.max(
     validatedStartIndex,
-    Math.min(endIndex, length - 1),
+    clamp(endIndex, 0, length - 1),
   );
 
   return {
