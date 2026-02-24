@@ -1,4 +1,3 @@
-
 def clamp(value: float, min_val: float, max_val: float) -> float:
     """
     Clamps a number between a minimum and maximum value.

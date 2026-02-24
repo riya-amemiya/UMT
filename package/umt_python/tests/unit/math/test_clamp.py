@@ -1,6 +1,6 @@
-
 import unittest
 from src.math import clamp
+
 
 class TestClamp(unittest.TestCase):
     def test_should_return_the_value_when_within_range(self):
