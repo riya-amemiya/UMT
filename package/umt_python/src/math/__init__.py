@@ -1,6 +1,7 @@
 from .addition import addition
 from .average import average
 from .bitwise import bitwise
+from .clamp import clamp
 from .correlation_coefficient import correlation_coefficient
 from .deg_to_rad import deg_to_rad
 from .deviation_value import deviation_value
@@ -53,6 +54,7 @@ __all__ = [
     "addition",
     "average",
     "bitwise",
+    "clamp",
     "correlation_coefficient",
     "deg_to_rad",
     "deviation_value",

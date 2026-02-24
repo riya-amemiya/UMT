@@ -31,7 +31,7 @@ const htmlUnescapeMap: Record<string, string> = {
  */
 export const unescapeHtml = (string_: string): string => {
   const entityRegex =
-    /&(?:amp|lt|gt|quot|#39|#x27|#x2F|#x60|#x3D);|&#(\d*);|&#x([0-9a-fA-F]*);/g;
+    /&(?:amp|lt|gt|quot|#39|#x27|#x2F|#x60|#x3D);|&#(\d*);|&#x([\dA-Fa-f]*);/g;
 
   return string_.replaceAll(entityRegex, (match, dec, hex) => {
     if (dec !== undefined) {

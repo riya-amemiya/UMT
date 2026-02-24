@@ -85,6 +85,7 @@ mod math {
     mod test_addition;
     mod test_average;
     mod test_bitwise;
+    mod test_clamp;
     mod test_correlation_coefficient;
     mod test_deg_to_rad;
     mod test_deviation_value;

@@ -1,4 +1,4 @@
-import { quickSort } from "@/Array/quickSort";
+import { ultraNumberSort } from "@/Array/ultraNumberSort";
 
 /**
  * Calculate the nth percentile of values in an array
@@ -15,7 +15,7 @@ export const percentile = (array: number[], percentile: number): number => {
     return Number.NaN;
   }
 
-  const sortedArray = quickSort([...array]);
+  const sortedArray = ultraNumberSort(array);
   const index = (percentile / 100) * (sortedArray.length - 1);
   const lowerIndex = Math.floor(index);
   const upperIndex = Math.ceil(index);

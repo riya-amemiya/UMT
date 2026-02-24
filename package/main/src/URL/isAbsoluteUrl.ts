@@ -18,5 +18,5 @@
  * ```
  */
 export const isAbsoluteUrl = (url: string): boolean => {
-  return /^[a-z][a-z\d+\-.]*:/i.test(url);
+  return /^[a-z][\d+.a-z-]*:/i.test(url);
 };

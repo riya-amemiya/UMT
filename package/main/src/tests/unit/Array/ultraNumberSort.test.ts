@@ -399,4 +399,61 @@ describe("ultraNumberSort", () => {
     expect(ultraNumberSort([...arr])).toEqual(sortedAsc);
     expect(ultraNumberSort([...arr], false)).toEqual(sortedDesc);
   });
+
+  it("should handle NaN in large arrays (>128 elements)", () => {
+    const arr = Array.from({ length: 200 }, (_, i) => i);
+    arr[50] = Number.NaN;
+    arr[150] = Number.NaN;
+    const sorted = ultraNumberSort([...arr]);
+    // NaN values should be at the end
+    expect(Number.isNaN(sorted[sorted.length - 1])).toBe(true);
+    expect(Number.isNaN(sorted[sorted.length - 2])).toBe(true);
+    // Non-NaN values should be sorted
+    const nonNaN = sorted.slice(0, -2);
+    const expected = Array.from({ length: 200 }, (_, i) => i)
+      .filter((_, i) => i !== 50 && i !== 150)
+      .sort((a, b) => a - b);
+    expect(nonNaN).toEqual(expected);
+  });
+
+  it("should use counting sort for large arrays with small integer range (ascending)", () => {
+    // length > 128, allIntegers, range < length*2 and < 1_000_000
+    const arr = Array.from({ length: 200 }, (_, i) => i % 10);
+    const sortedArr = [...arr].sort((a, b) => a - b);
+    expect(ultraNumberSort([...arr])).toEqual(sortedArr);
+  });
+
+  it("should use counting sort for large arrays with small integer range (descending)", () => {
+    const arr = Array.from({ length: 200 }, (_, i) => i % 10);
+    const sortedArr = [...arr].sort((a, b) => b - a);
+    expect(ultraNumberSort([...arr], false)).toEqual(sortedArr);
+  });
+
+  it("should handle radixSort descending with zeros present (>128 elements)", () => {
+    // Trigger radix sort: length > 128, allIntegers, range >= length*2
+    const positives = Array.from({ length: 55 }, (_, i) => 200_000 + i);
+    const negatives = Array.from({ length: 55 }, (_, i) => -(200_000 + i));
+    const zeros = new Array(30).fill(0);
+    const arr = [...positives, ...negatives, ...zeros]; // length 140
+    const sortedDesc = [...arr].sort((a, b) => b - a);
+    expect(ultraNumberSort([...arr], false)).toEqual(sortedDesc);
+  });
+
+  it("should handle radixSortPositive early return with single positive element (>128 elements)", () => {
+    // positive has length 1 → radixSortPositive returns early
+    const arr = new Array(129).fill(0).concat([200_000]);
+    const sortedAsc = [...arr].sort((a, b) => a - b);
+    const sortedDesc = [...arr].sort((a, b) => b - a);
+    expect(ultraNumberSort([...arr])).toEqual(sortedAsc);
+    expect(ultraNumberSort([...arr], false)).toEqual(sortedDesc);
+  });
+
+  it("should handle radixSortPositive early return with single negative element (>128 elements)", () => {
+    // negative has length 1 → radixSortPositive returns early
+    const arr = new Array(129).fill(0).concat([-200_000]);
+    const sortedAsc = [...arr].sort((a, b) => a - b);
+    const sortedDesc = [...arr].sort((a, b) => b - a);
+    expect(ultraNumberSort([...arr])).toEqual(sortedAsc);
+    expect(ultraNumberSort([...arr], false)).toEqual(sortedDesc);
+  });
 });

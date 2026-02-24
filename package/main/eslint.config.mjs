@@ -36,33 +36,15 @@ export default defineConfig(
       import: importPlugin,
     },
     rules: {
-      "@typescript-eslint/no-explicit-any": "off",
-      "@typescript-eslint/no-unused-vars": "off",
-      "@typescript-eslint/no-non-null-assertion": "off",
-      "@typescript-eslint/unified-signatures": "off",
       "@typescript-eslint/consistent-indexed-object-style": "off",
+      "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/no-non-null-assertion": "off",
       "@typescript-eslint/no-unnecessary-type-assertion": [
         "error",
         { checkLiteralConstAssertions: true },
       ],
-      "no-constant-condition": "off",
-      "unicorn/filename-case": [
-        "error",
-        {
-          cases: {
-            camelCase: true,
-            pascalCase: true,
-          },
-        },
-      ],
-      "unicorn/no-null": "off",
-      "unicorn/prefer-spread": "off",
-      "unicorn/no-array-reduce": "off",
-      "unicorn/prefer-module": "off",
-      "unicorn/prefer-number-properties": "off",
-      "unicorn/no-nested-ternary": "off",
-      "unicorn/number-literal-case": "off",
-      "unicorn/no-array-reverse": "off",
+      "@typescript-eslint/no-unused-vars": "off",
+      "@typescript-eslint/unified-signatures": "off",
       "import/order": [
         "error",
         {
@@ -80,6 +62,25 @@ export default defineConfig(
           "newlines-between": "always",
         },
       ],
+      "no-constant-condition": "off",
+      "unicorn/better-regex": "error",
+      "unicorn/consistent-destructuring": "error",
+      "unicorn/filename-case": [
+        "error",
+        {
+          cases: {
+            camelCase: true,
+            pascalCase: true,
+          },
+        },
+      ],
+      "unicorn/no-array-reduce": "off",
+      "unicorn/no-array-reverse": "off",
+      "unicorn/no-nested-ternary": "off",
+      "unicorn/no-null": "off",
+      "unicorn/no-unused-properties": "error",
+      "unicorn/number-literal-case": "off",
+      "unicorn/prefer-number-properties": "off",
     },
   },
 );

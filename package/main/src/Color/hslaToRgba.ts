@@ -1,7 +1,6 @@
 import { addition } from "@/Math/addition";
+import { clamp } from "@/Math/clamp";
 import { division } from "@/Math/division";
-import { max } from "@/Math/max";
-import { min } from "@/Math/min";
 import { multiplication } from "@/Math/multiplication";
 import { roundOf } from "@/Math/roundOf";
 import { subtract } from "@/Math/subtract";
@@ -22,8 +21,8 @@ export const hslaToRgba = (
   a = 1,
 ): { r: number; g: number; b: number; a: number } => {
   const hue = division(division(h, 360, false)[1], 360);
-  const saturation = division(max(0, min(s, 100)), 100);
-  const lightness = division(max(0, min(l, 100)), 100);
+  const saturation = division(clamp(s, 0, 100), 100);
+  const lightness = division(clamp(l, 0, 100), 100);
 
   let r: number;
   let g: number;
@@ -78,7 +77,7 @@ export const hslaToRgba = (
   const roundedR = roundOf(multiplication(r, 255), 2);
   const roundedG = roundOf(multiplication(g, 255), 2);
   const roundedB = roundOf(multiplication(b, 255), 2);
-  const clampedA = max(0, min(1, a));
+  const clampedA = clamp(a, 0, 1);
 
   return {
     r: roundedR,

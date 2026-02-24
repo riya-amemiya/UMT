@@ -6,7 +6,7 @@
  */
 export const omit = <T extends object, K extends keyof T>(
   object: T,
-  ...keys: K[]
+  ...keys: (keyof T)[]
 ): Omit<T, K> => {
   const result = { ...object };
 

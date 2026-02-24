@@ -1,4 +1,4 @@
-import { quickSort } from "@/Array/quickSort";
+import { ultraNumberSort } from "@/Array/ultraNumberSort";
 
 /**
  * Calculate the median of an array of numbers
@@ -7,7 +7,7 @@ import { quickSort } from "@/Array/quickSort";
  * @example median([1, 3, 3, 6, 7, 8, 9]); // 6
  */
 export const median = (array: number[]): number => {
-  const sortedArray: number[] = quickSort(array);
+  const sortedArray: number[] = ultraNumberSort(array);
   const mid = Math.floor(sortedArray.length / 2);
 
   return sortedArray.length % 2 === 0

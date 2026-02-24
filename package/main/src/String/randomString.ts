@@ -21,17 +21,23 @@ export const randomString = (
   const bufferSize = Math.min(size, CHUNK_SIZE);
   const buffer = new Uint32Array(bufferSize);
 
-  let generated = 0;
-  while (generated < size) {
-    const needed = size - generated;
-    const currentBatchSize = Math.min(needed, CHUNK_SIZE);
+  // Calculate the rejection limit to avoid modulo bias.
+  // We want to reject values that fall into the remainder range of the random number generator
+  // relative to the character set length.
+  // 2^32 = 4294967296
+  const MAX_UINT32_PLUS_ONE = 4_294_967_296;
+  const limit = MAX_UINT32_PLUS_ONE - (MAX_UINT32_PLUS_ONE % length);
 
+  while (id.length < size) {
     globalThis.crypto.getRandomValues(buffer);
 
-    for (let index = 0; index < currentBatchSize; index++) {
-      id += char[buffer[index] % length];
+    for (let index = 0; index < bufferSize && id.length < size; index++) {
+      const value = buffer[index];
+      // Rejection sampling: only use values less than the limit to ensure uniform distribution
+      if (value < limit) {
+        id += char[value % length];
+      }
     }
-    generated += currentBatchSize;
   }
   return id;
 };

@@ -1,6 +1,5 @@
+import { clamp } from "@/Math/clamp";
 import { division } from "@/Math/division";
-import { max } from "@/Math/max";
-import { min } from "@/Math/min";
 import { multiplication } from "@/Math/multiplication";
 import { roundOf } from "@/Math/roundOf";
 import { subtract } from "@/Math/subtract";
@@ -23,10 +22,10 @@ export const cmykToRgba = (
   a = 1,
 ): { r: number; g: number; b: number; a: number } => {
   // Clamp CMYK values to 0-100 range
-  const clampedC = max(0, min(100, c));
-  const clampedM = max(0, min(100, m));
-  const clampedY = max(0, min(100, y));
-  const clampedK = max(0, min(100, k));
+  const clampedC = clamp(c, 0, 100);
+  const clampedM = clamp(m, 0, 100);
+  const clampedY = clamp(y, 0, 100);
+  const clampedK = clamp(k, 0, 100);
 
   // Convert CMYK values to 0-1 range
   const cPercentage = division(clampedC, 100);
@@ -57,7 +56,7 @@ export const cmykToRgba = (
   const roundedB = roundOf(b);
 
   // Clamp alpha value to 0-1 range
-  const clampedA = max(0, min(1, a));
+  const clampedA = clamp(a, 0, 1);
 
   return {
     r: roundedR,

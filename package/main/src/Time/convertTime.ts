@@ -1,5 +1,6 @@
 import type { TimeUnit } from "$/time/timeUnit";
 import type { TimeUnitShort } from "$/time/timeUnitShort";
+import { OneHourMs, OneMinuteMs, OneSecondMs } from "@/Consts/clock";
 import { division, multiplication } from "@/Math";
 import { normalizeTimeUnit } from "@/Time/normalizeTimeUnit";
 
@@ -8,9 +9,9 @@ import { normalizeTimeUnit } from "@/Time/normalizeTimeUnit";
  */
 const conversionRates: Record<TimeUnit, number> = {
   milliseconds: 1,
-  seconds: 1000,
-  minutes: 60_000,
-  hours: 3_600_000,
+  seconds: OneSecondMs,
+  minutes: OneMinuteMs,
+  hours: OneHourMs,
 };
 
 /**
