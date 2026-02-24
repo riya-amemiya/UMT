@@ -1,3 +1,5 @@
+import { BASE32_ALPHABET } from "./constants";
+
 /**
  * Decodes a Base32 string to Uint8Array
  * @param {string} input - Base32 encoded string
@@ -5,7 +7,7 @@
  * @example decodeBase32("JBSWY3DP"); // Uint8Array for "Hello"
  */
 export const decodeBase32 = (input: string): Uint8Array => {
-  const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
+  const alphabet = BASE32_ALPHABET;
   const cleanedInput = input.replaceAll("=", "");
   const result: number[] = [];
   let buffer = 0;

@@ -1,3 +1,5 @@
+import { BASE58_ALPHABET } from "./constants";
+
 /**
  * Encodes a string or Uint8Array to Base58 format
  * @param {string | Uint8Array} input - The input to encode
@@ -5,7 +7,7 @@
  * @example encodeBase58("Hello"); // "9Ajdvzr"
  */
 export const encodeBase58 = (input: string | Uint8Array): string => {
-  const alphabet = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
+  const alphabet = BASE58_ALPHABET;
   const bytes =
     typeof input === "string" ? new TextEncoder().encode(input) : input;
 

@@ -1,3 +1,5 @@
+import { BASE58_ALPHABET } from "./constants";
+
 /**
  * Decodes a Base58 string to Uint8Array
  * @param {string} input - Base58 encoded string
@@ -5,7 +7,7 @@
  * @example decodeBase58("9Ajdvzr"); // Uint8Array for "Hello"
  */
 export const decodeBase58 = (input: string): Uint8Array => {
-  const alphabet = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
+  const alphabet = BASE58_ALPHABET;
   let bigNumber = 0n;
 
   for (const char of input) {
