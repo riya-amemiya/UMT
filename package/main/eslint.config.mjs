@@ -76,6 +76,7 @@ export default defineConfig(
       ],
       "unicorn/no-array-reduce": "off",
       "unicorn/no-array-reverse": "off",
+      "unicorn/no-nested-ternary": "off",
       "unicorn/no-null": "off",
       "unicorn/no-unused-properties": "error",
       "unicorn/number-literal-case": "off",
