@@ -1,3 +1,4 @@
+import { cidrToLong } from "./cidrToLong";
 import { ipToLong } from "./ipToLong";
 
 /**
@@ -14,17 +15,6 @@ export const isInRange = (
 ): boolean => {
   const remoteLong = ipToLong(remoteIp);
   const networkLong = ipToLong(networkIp);
-
-  // Special cases
-  if (cidr === 0) {
-    return true; // All IPs are in range
-  }
-  if (cidr === 32) {
-    return remoteLong === networkLong; // Exact match required
-  }
-
-  // Normal case
-  const shift = 32 - cidr;
-  const mask = (0xff_ff_ff_ff >>> 0) << shift;
+  const mask = cidrToLong(cidr);
   return (remoteLong & mask) === (networkLong & mask);
 };

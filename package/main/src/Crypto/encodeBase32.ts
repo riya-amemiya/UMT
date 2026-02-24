@@ -1,3 +1,5 @@
+import { BASE32_ALPHABET } from "./constants";
+
 /**
  * Encodes a string or Uint8Array to Base32 format
  * @param {string | Uint8Array} input - The input to encode
@@ -5,7 +7,7 @@
  * @example encodeBase32("Hello"); // "JBSWY3DP"
  */
 export const encodeBase32 = (input: string | Uint8Array): string => {
-  const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
+  const alphabet = BASE32_ALPHABET;
   const bytes =
     typeof input === "string" ? new TextEncoder().encode(input) : input;
 

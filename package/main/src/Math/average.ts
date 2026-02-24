@@ -1,5 +1,6 @@
-import { addition } from "./addition";
 import { division } from "./division";
+
+import { sum } from "@/Array/sum";
 /**
  * Calculates the arithmetic mean of an array of numbers
  * @param  {number[]} numbers - Array of numbers to average
@@ -14,7 +15,7 @@ export const average = (numbers: number[]): number => {
     return 0;
   }
 
-  const sum = numbers.reduce((a, b) => addition(a, b), 0);
-  const avg = division(sum, numbers.length);
+  const total = sum(numbers);
+  const avg = division(total, numbers.length);
   return avg;
 };
