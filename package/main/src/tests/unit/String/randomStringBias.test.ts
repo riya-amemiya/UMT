@@ -26,4 +26,36 @@ describe("randomString bias check", () => {
     const str = randomString(100, chars);
     expect(str).toHaveLength(100);
   });
+
+  it("should reject values at or above the bias limit", () => {
+    // For charset length 3: limit = 4294967296 - (4294967296 % 3) = 4294967295
+    // Values >= 4294967295 (i.e., 0xFFFFFFFF) should be rejected
+    let callCount = 0;
+    const spy = jest
+      .spyOn(globalThis.crypto, "getRandomValues")
+      .mockImplementation(<T extends ArrayBufferView | null>(array: T): T => {
+        const buf = array as unknown as Uint32Array;
+        callCount++;
+        if (callCount === 1) {
+          // First call: fill with rejected values followed by valid values
+          for (let i = 0; i < buf.length; i++) {
+            // First value triggers rejection (0xFFFFFFFF >= limit 4294967295)
+            // Subsequent values are valid
+            buf[i] = i === 0 ? 0xff_ff_ff_ff : 0;
+          }
+        } else {
+          // Subsequent calls: all valid
+          for (let i = 0; i < buf.length; i++) {
+            buf[i] = i % 3;
+          }
+        }
+        return array;
+      });
+
+    const result = randomString(3, "abc");
+    expect(result).toHaveLength(3);
+    expect(result).toMatch(/^[abc]{3}$/);
+
+    spy.mockRestore();
+  });
 });
