@@ -79,6 +79,8 @@ pub mod standard_deviation;
 pub use standard_deviation::*;
 pub mod subtract;
 pub use subtract::*;
+pub mod sum_precise;
+pub use sum_precise::*;
 pub mod to_base_n;
 pub use to_base_n::*;
 pub mod to_celsius;
