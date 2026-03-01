@@ -43,6 +43,8 @@ pub mod division;
 pub use division::*;
 pub mod flexible_number_conversion;
 pub use flexible_number_conversion::*;
+pub mod in_range;
+pub use in_range::*;
 pub mod math_converter;
 pub use math_converter::*;
 pub mod max;
