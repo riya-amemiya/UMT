@@ -25,7 +25,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        bun-version: [latest]
+        bun-version: ["1.2.4"]
         os: [ubuntu-latest]
     defaults:
       run:
@@ -59,7 +59,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        bun-version: [latest]
+        bun-version: ["1.2.4"]
         os: [ubuntu-latest]
     defaults:
       run:
@@ -84,7 +84,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        bun-version: [latest]
+        bun-version: ["1.2.4"]
         os: [ubuntu-latest]
     defaults:
       run:
@@ -130,7 +130,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        bun-version: [latest]
+        bun-version: ["1.2.4"]
         os: [ubuntu-latest]
     defaults:
       run:

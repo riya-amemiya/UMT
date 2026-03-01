@@ -23,7 +23,7 @@ jobs:
         runs-on: ${{ matrix.os }}
         strategy:
             matrix:
-                bun-version: [latest]
+                bun-version: ["1.2.4"]
                 os: [ubuntu-latest]
                 node-version: [20.x, 22.x, 24.x]
         defaults:
@@ -62,7 +62,7 @@ jobs:
         strategy:
           matrix:
             node-version: [20.x, 22.x, 24.x]
-            bun-version: [latest]
+            bun-version: ["1.2.4"]
             os: [ubuntu-latest]
         defaults:
           run:
