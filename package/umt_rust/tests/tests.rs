@@ -95,6 +95,7 @@ mod math {
     mod test_flexible_number_conversion;
     mod test_gcd;
     mod test_get_decimal_length;
+    mod test_in_range;
     mod test_lcm;
     mod test_linear_congruential_generator;
     mod test_math_converter;
