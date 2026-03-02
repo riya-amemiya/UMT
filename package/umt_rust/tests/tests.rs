@@ -121,6 +121,7 @@ mod math {
     mod test_solve_equation;
     mod test_standard_deviation;
     mod test_subtract;
+    mod test_sum_precise;
     mod test_to_base_n;
     mod test_to_celsius;
     mod test_to_kelvin;
