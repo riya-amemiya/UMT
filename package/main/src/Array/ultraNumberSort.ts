@@ -8,14 +8,14 @@ export const ultraNumberSort = (
   array: number[],
   ascending = true,
 ): number[] => {
-  const result = [...array];
-  const length = result.length;
+  const length = array.length;
 
   if (length <= 1) {
-    return result;
+    return [...array];
   }
 
-  // For tiny arrays, use optimized inline sort
+  const result = [...array];
+
   if (length === 2) {
     if (result[0] > result[1] === ascending) {
       const temporary = result[0];
@@ -31,7 +31,6 @@ export const ultraNumberSort = (
   }
 
   // For small-medium arrays, skip integer/range analysis
-  // The scan overhead is not worthwhile at this size
   if (length <= 128) {
     for (let index = 0; index < length; index++) {
       // biome-ignore lint/suspicious/noSelfCompare: NaN detection
@@ -67,23 +66,174 @@ export const ultraNumberSort = (
     }
   }
 
-  // Handle NaN values
-  if (hasNaN) {
-    return handleNaNSort(result, ascending);
-  }
-
   // For small integer ranges, use counting sort
-  if (allIntegers && max - min < length * 2 && max - min < 1_000_000) {
+  if (
+    !hasNaN &&
+    allIntegers &&
+    max - min < length * 2 &&
+    max - min < 1_000_000
+  ) {
     return countingSort(result, min, max, ascending);
   }
 
-  // For larger arrays, use radix sort if applicable
-  if (allIntegers && length > 100) {
-    return radixSort(result, ascending);
+  // For medium arrays, quicksort is faster than radix sort
+  // due to typed array allocation overhead
+  if (length < 4096) {
+    if (hasNaN) {
+      return handleNaNSort(result, ascending);
+    }
+    numericQuickSort(result, 0, length - 1, ascending);
+    return result;
   }
 
-  // Fall back to optimized quicksort for floating point
-  return numericQuickSort(result, 0, length - 1, ascending);
+  // Use IEEE 754 Float64 radix sort for large arrays
+  return float64RadixSort(result, ascending, hasNaN);
+};
+
+/**
+ * IEEE 754 Float64 radix sort
+ * Works on all number types (integers and floats) by treating
+ * the 64-bit IEEE 754 bit pattern as a sortable unsigned integer.
+ *
+ * Bit transformation:
+ * - Positive numbers (sign bit 0): flip only the sign bit
+ * - Negative numbers (sign bit 1): flip ALL 64 bits
+ * After this transformation, unsigned integer comparison matches
+ * the original floating-point numerical order.
+ */
+const float64RadixSort = (
+  array: number[],
+  ascending: boolean,
+  hasNaN: boolean,
+): number[] => {
+  const length = array.length;
+
+  const sourceBuffer = new ArrayBuffer(length * 8);
+  const sourceF64 = new Float64Array(sourceBuffer);
+  const sourceU32 = new Uint32Array(sourceBuffer);
+
+  let validLength: number;
+
+  if (hasNaN) {
+    let writeIndex = 0;
+    for (let index = 0; index < length; index++) {
+      const v = array[index];
+      // biome-ignore lint/suspicious/noSelfCompare: NaN detection
+      if (v === v) {
+        sourceF64[writeIndex++] = v;
+      }
+    }
+    validLength = writeIndex;
+  } else {
+    for (let index = 0; index < length; index++) {
+      sourceF64[index] = array[index];
+    }
+    validLength = length;
+  }
+
+  if (validLength === 0) {
+    return array;
+  }
+
+  // Transform IEEE 754 bit patterns to sortable unsigned form
+  for (let index = 0; index < validLength; index++) {
+    const hiIndex = index * 2 + 1;
+    const loIndex = index * 2;
+    if (sourceU32[hiIndex] & 0x80_00_00_00) {
+      sourceU32[hiIndex] = ~sourceU32[hiIndex] >>> 0;
+      sourceU32[loIndex] = ~sourceU32[loIndex] >>> 0;
+    } else {
+      sourceU32[hiIndex] ^= 0x80_00_00_00;
+    }
+  }
+
+  const destinationBuffer = new ArrayBuffer(validLength * 8);
+  const destinationU32 = new Uint32Array(destinationBuffer);
+
+  const count = new Uint32Array(256);
+
+  let currentSource = sourceU32;
+  let currentDestination = destinationU32;
+  let resultInSource = true;
+
+  // 8-pass LSD radix sort (8 bits per pass)
+  // Passes 0-3: low 32-bit word (index i*2)
+  // Passes 4-7: high 32-bit word (index i*2+1)
+  for (let pass = 0; pass < 8; pass++) {
+    count.fill(0);
+
+    const wordOffset = pass < 4 ? 0 : 1;
+    const shift = (pass % 4) * 8;
+
+    for (let index = 0; index < validLength; index++) {
+      count[(currentSource[index * 2 + wordOffset] >>> shift) & 0xff]++;
+    }
+
+    // Skip pass if all elements have the same byte value
+    let skipPass = false;
+    for (let index = 0; index < 256; index++) {
+      if (count[index] === validLength) {
+        skipPass = true;
+        break;
+      }
+    }
+    if (skipPass) {
+      continue;
+    }
+
+    // Prefix sum (reverse for descending sort)
+    if (ascending) {
+      for (let index = 1; index < 256; index++) {
+        count[index] += count[index - 1];
+      }
+    } else {
+      for (let index = 254; index >= 0; index--) {
+        count[index] += count[index + 1];
+      }
+    }
+
+    // Scatter (backward for stability)
+    for (let index = validLength - 1; index >= 0; index--) {
+      const byte = (currentSource[index * 2 + wordOffset] >>> shift) & 0xff;
+      const pos = --count[byte];
+      currentDestination[pos * 2] = currentSource[index * 2];
+      currentDestination[pos * 2 + 1] = currentSource[index * 2 + 1];
+    }
+
+    // Ping-pong swap
+    const temporary = currentSource;
+    currentSource = currentDestination;
+    currentDestination = temporary;
+    resultInSource = !resultInSource;
+  }
+
+  // Determine which buffer holds the result
+  const resultU32 = currentSource;
+  const resultBuffer = resultInSource ? sourceBuffer : destinationBuffer;
+  const resultF64 = new Float64Array(resultBuffer);
+
+  // Reverse bit transformation
+  for (let index = 0; index < validLength; index++) {
+    const hiIndex = index * 2 + 1;
+    if (resultU32[hiIndex] & 0x80_00_00_00) {
+      resultU32[hiIndex] ^= 0x80_00_00_00;
+    } else {
+      resultU32[hiIndex] = ~resultU32[hiIndex] >>> 0;
+      resultU32[index * 2] = ~resultU32[index * 2] >>> 0;
+    }
+  }
+
+  // Copy results back
+  for (let index = 0; index < validLength; index++) {
+    array[index] = resultF64[index];
+  }
+
+  // Append NaN values at the end
+  for (let index = validLength; index < length; index++) {
+    array[index] = Number.NaN;
+  }
+
+  return array;
 };
 
 /**
@@ -203,120 +353,6 @@ const countingSort = (
   }
 
   return array;
-};
-
-/**
- * Radix sort for integers
- */
-const radixSort = (array: number[], ascending: boolean): number[] => {
-  const length = array.length;
-
-  // Separate positive and negative numbers
-  const positive: number[] = [];
-  const negative: number[] = [];
-  let zeroCount = 0;
-
-  for (let index_ = 0; index_ < length; index_++) {
-    if (array[index_] > 0) {
-      positive.push(array[index_]);
-    } else if (array[index_] < 0) {
-      negative.push(-array[index_]);
-    } else {
-      zeroCount++;
-    }
-  }
-
-  // Sort positive numbers
-  if (positive.length > 0) {
-    radixSortPositive(positive);
-  }
-
-  // Sort negative numbers
-  if (negative.length > 0) {
-    radixSortPositive(negative);
-  }
-
-  // Merge results
-  let index = 0;
-  if (ascending) {
-    // Negative numbers first (in reverse order)
-    for (let index_ = negative.length - 1; index_ >= 0; index_--) {
-      array[index++] = -negative[index_];
-    }
-    // Zeros
-    for (let index_ = 0; index_ < zeroCount; index_++) {
-      array[index++] = 0;
-    }
-    // Positive numbers
-    for (const element of positive) {
-      array[index++] = element;
-    }
-  } else {
-    // Positive numbers first (in reverse order)
-    for (let index_ = positive.length - 1; index_ >= 0; index_--) {
-      array[index++] = positive[index_];
-    }
-    // Zeros
-    for (let index_ = 0; index_ < zeroCount; index_++) {
-      array[index++] = 0;
-    }
-    // Negative numbers
-    for (const element of negative) {
-      array[index++] = -element;
-    }
-  }
-
-  return array;
-};
-
-/**
- * Radix sort for positive integers
- */
-const radixSortPositive = (array: number[]): void => {
-  const length = array.length;
-  if (length <= 1) {
-    return;
-  }
-
-  // Find maximum to determine number of digits
-  let max = array[0];
-  for (let index = 1; index < length; index++) {
-    if (array[index] > max) {
-      max = array[index];
-    }
-  }
-
-  // Use typed arrays for better performance
-  const output = new Float64Array(length);
-  const count = new Uint32Array(256);
-
-  // Process 8 bits at a time
-  for (let shift = 0; max >> shift > 0; shift += 8) {
-    // Reset count array
-    count.fill(0);
-
-    // Count occurrences
-    for (let index = 0; index < length; index++) {
-      const digit = (array[index] >> shift) & 0xff;
-      count[digit]++;
-    }
-
-    // Change count[i] to actual position
-    for (let index = 1; index < 256; index++) {
-      count[index] += count[index - 1];
-    }
-
-    // Build output array
-    for (let index = length - 1; index >= 0; index--) {
-      const digit = (array[index] >> shift) & 0xff;
-      output[--count[digit]] = array[index];
-    }
-
-    // Copy back
-    for (let index = 0; index < length; index++) {
-      array[index] = output[index];
-    }
-  }
 };
 
 /**
