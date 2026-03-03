@@ -456,4 +456,69 @@ describe("ultraNumberSort", () => {
     expect(ultraNumberSort([...arr])).toEqual(sortedAsc);
     expect(ultraNumberSort([...arr], false)).toEqual(sortedDesc);
   });
+
+  it("should sort large float arrays via float64 radix sort (ascending)", () => {
+    const arr = Array.from({ length: 5000 }, () => Math.random() * 2000 - 1000);
+    const sorted = [...arr].sort((a, b) => a - b);
+    expect(ultraNumberSort([...arr])).toEqual(sorted);
+  });
+
+  it("should sort large float arrays via float64 radix sort (descending)", () => {
+    const arr = Array.from({ length: 5000 }, () => Math.random() * 2000 - 1000);
+    const sorted = [...arr].sort((a, b) => b - a);
+    expect(ultraNumberSort([...arr], false)).toEqual(sorted);
+  });
+
+  it("should sort large arrays with Infinity values via float64 radix sort", () => {
+    const arr = Array.from({ length: 5000 }, (_, i) =>
+      i === 0
+        ? Number.POSITIVE_INFINITY
+        : i === 1
+          ? Number.NEGATIVE_INFINITY
+          : Math.random() * 100,
+    );
+    const sorted = [...arr].sort((a, b) => a - b);
+    expect(ultraNumberSort([...arr])).toEqual(sorted);
+  });
+
+  it("should handle NaN in arrays >= 4096 elements", () => {
+    const arr = Array.from({ length: 5000 }, (_, i) => i);
+    arr[100] = Number.NaN;
+    arr[3000] = Number.NaN;
+    const sorted = ultraNumberSort([...arr]);
+    expect(Number.isNaN(sorted[sorted.length - 1])).toBe(true);
+    expect(Number.isNaN(sorted[sorted.length - 2])).toBe(true);
+    const nonNaN = sorted.slice(0, -2);
+    const expected = Array.from({ length: 5000 }, (_, i) => i)
+      .filter((_, i) => i !== 100 && i !== 3000)
+      .sort((a, b) => a - b);
+    expect(nonNaN).toEqual(expected);
+  });
+
+  it("should sort large integer arrays via float64 radix sort (ascending)", () => {
+    const arr = Array.from(
+      { length: 5000 },
+      () => Math.floor(Math.random() * 1_000_000) - 500_000,
+    );
+    const sorted = [...arr].sort((a, b) => a - b);
+    expect(ultraNumberSort([...arr])).toEqual(sorted);
+  });
+
+  it("should sort large integer arrays via float64 radix sort (descending)", () => {
+    const arr = Array.from(
+      { length: 5000 },
+      () => Math.floor(Math.random() * 1_000_000) - 500_000,
+    );
+    const sorted = [...arr].sort((a, b) => b - a);
+    expect(ultraNumberSort([...arr], false)).toEqual(sorted);
+  });
+
+  it("should handle all-NaN array >= 4096 elements", () => {
+    const arr = new Array(4096).fill(Number.NaN);
+    const sorted = ultraNumberSort([...arr]);
+    expect(sorted.length).toBe(4096);
+    for (const v of sorted) {
+      expect(Number.isNaN(v)).toBe(true);
+    }
+  });
 });
