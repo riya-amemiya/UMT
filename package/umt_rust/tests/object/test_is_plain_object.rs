@@ -1,5 +1,5 @@
 use umt_rust::obj;
-use umt_rust::object::{umt_is_plain_object, Value};
+use umt_rust::object::{Value, umt_is_plain_object};
 
 #[test]
 fn test_should_return_true_for_object_literals() {

@@ -1,5 +1,3 @@
-
-
 def object_is_plain(value: object) -> bool:
     """
     Checks if a value is a plain object (a dict in Python).
