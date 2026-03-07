@@ -9,6 +9,9 @@
 pub mod create_pipeline;
 pub use create_pipeline::*;
 
+pub mod escape_regexp;
+pub use escape_regexp::*;
+
 pub mod parse_json;
 pub use parse_json::*;
 
