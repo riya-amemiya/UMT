@@ -15,4 +15,4 @@ def escape_regexp(string: str) -> str:
         >>> escape_regexp("a.b")
         "a\\.b"
     """
-    return re.sub(r'[$()*+.?\[\\\]^{|}]', r'\\\g<0>', string)
+    return re.sub(r"[$()*+.?\[\\\]^{|}]", r"\\\g<0>", string)

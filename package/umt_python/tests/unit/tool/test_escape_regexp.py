@@ -2,6 +2,7 @@ import unittest
 
 from src.tool.escape_regexp import escape_regexp
 
+
 class TestEscapeRegexp(unittest.TestCase):
     def test_escape_all_regex_special_characters(self):
         special_chars = ".*+?^${}()|[]\\"
@@ -34,6 +35,7 @@ class TestEscapeRegexp(unittest.TestCase):
 
     def test_handle_empty_string(self):
         self.assertEqual(escape_regexp(""), "")
+
 
 if __name__ == "__main__":
     unittest.main()
