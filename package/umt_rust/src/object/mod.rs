@@ -4,6 +4,9 @@ pub use has::*;
 pub mod is_empty;
 pub use is_empty::*;
 
+pub mod is_plain_object;
+pub use is_plain_object::*;
+
 pub mod value;
 pub use value::*;
 
