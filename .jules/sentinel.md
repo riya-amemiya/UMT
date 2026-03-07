@@ -7,3 +7,7 @@
 **Vulnerability:** Replacing `Math.random` with `crypto.getRandomValues` caused a crash for large requested sizes because the API has a 65536 byte limit (QuotaExceededError).
 **Learning:** `crypto.getRandomValues` is not a drop-in replacement for loop-based `Math.random` generation when arbitrary sizes are supported.
 **Prevention:** Always implement chunking (e.g. 64KB batches) when using `crypto.getRandomValues` to fill buffers of potentially unlimited size.
+## 2025-03-02 - [CRITICAL] Fix Prototype Pollution in pickDeep
+**Vulnerability:** The `pickDeep` function did not filter out sensitive object keys (`__proto__`, `constructor`, `prototype`), allowing an attacker to traverse the prototype chain and overwrite global properties (Prototype Pollution) by passing malicious paths like `__proto__.polluted`.
+**Learning:** Utilities that deeply traverse and construct objects based on dynamic, user-controlled paths must explicitly block access to prototype-related keys to prevent Prototype Pollution attacks.
+**Prevention:** Always validate and sanitize keys during deep object traversal or assignment, explicitly ignoring or rejecting keys like `__proto__`, `constructor`, and `prototype`.

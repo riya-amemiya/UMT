@@ -119,4 +119,41 @@ describe("pickDeep function", () => {
     const result = pickDeep(obj, "a", "a", "c");
     expect(result).toEqual({ a: 1, c: 3 });
   });
+
+  test("should prevent prototype pollution via __proto__", () => {
+    const payload = JSON.parse('{"__proto__": {"polluted": true}}');
+    // @ts-expect-error - testing invalid keys
+    const result = pickDeep(payload, "__proto__.polluted");
+    expect(
+      // biome-ignore lint/suspicious/noExplicitAny: ignore
+      (result as any).polluted,
+    ).toBeUndefined();
+    expect(
+      // biome-ignore lint/suspicious/noExplicitAny: ignore
+      ({} as any).polluted,
+    ).toBeUndefined();
+  });
+
+  test("should prevent prototype pollution via constructor", () => {
+    const payload = JSON.parse(
+      '{"constructor": {"prototype": {"polluted": true}}}',
+    );
+    // biome-ignore lint/suspicious/noExplicitAny: ignore
+    const result = pickDeep(payload, "constructor.prototype.polluted" as any);
+    expect(result.constructor).toBe(Object);
+    expect(
+      // biome-ignore lint/suspicious/noExplicitAny: ignore
+      (Object.prototype as any).polluted,
+    ).toBeUndefined();
+  });
+
+  test("should prevent prototype pollution via prototype", () => {
+    const payload = JSON.parse('{"prototype": {"polluted": true}}');
+    // biome-ignore lint/suspicious/noExplicitAny: ignore
+    const result = pickDeep(payload, "prototype.polluted" as any);
+    expect(
+      // biome-ignore lint/suspicious/noExplicitAny: ignore
+      (result as any).prototype,
+    ).toBeUndefined();
+  });
 });
