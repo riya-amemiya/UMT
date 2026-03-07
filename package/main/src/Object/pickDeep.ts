@@ -33,16 +33,22 @@ export const pickDeep = <
     let current: any = object;
     // biome-ignore lint/suspicious/noExplicitAny: ignore
     let target: any = result;
+    const lastIndex = parts.length - 1;
 
-    for (const [index, part] of parts.entries()) {
+    // ⚡ Bolt: Replaced iterator based `.entries()` with standard `for` loop to avoid closure overhead and object allocations.
+    for (let index = 0; index <= lastIndex; index++) {
+      const part = parts[index];
       if (current && typeof current === "object" && part in current) {
-        if (index === parts.length - 1) {
+        if (index === lastIndex) {
           target[part] = current[part];
         } else {
           target[part] = target[part] ?? {};
           current = current[part];
           target = target[part];
         }
+      } else {
+        // ⚡ Bolt: Early break when invalid path part is reached to skip unnecessary iterations.
+        break;
       }
     }
   }
