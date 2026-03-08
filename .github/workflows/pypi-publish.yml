@@ -1,31 +1,34 @@
-name: "Publish"
+name: "Publish Python Pacakge to pypi"
 
 on:
-  release:
-    types: [published]
-  workflow_dispatch:
+    release:
+        types: [published]
+    workflow_dispatch:
 
 jobs:
-  publish:
-    name: Publish umt packages
-    if: github.event_name == 'workflow_dispatch' || startsWith(github.event.release.tag_name, 'main-')
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    permissions:
-      id-token: write
-      contents: read
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-        with:
-          persist-credentials: false
-          fetch-depth: 0
-      - name: Install uv
-        uses: astral-sh/setup-uv@5a095e7a2014a4212f075830d4f7277575a9d098 # v7.3.1
-        with:
-            enable-cache: true
-            python-version: '3.14'
-      - name: Build
-        run: uv build
-      - name: Publish
-        run: uv publish
+    publish:
+        name: Publish umt packages
+        if: github.event_name == 'workflow_dispatch' || startsWith(github.event.release.tag_name, 'main-')
+        runs-on: ubuntu-latest
+        timeout-minutes: 10
+        permissions:
+            id-token: write
+            contents: read
+        defaults:
+            run:
+                working-directory: ./package/umt_python
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+              with:
+                  persist-credentials: false
+                  fetch-depth: 0
+            - name: Install uv
+              uses: astral-sh/setup-uv@5a095e7a2014a4212f075830d4f7277575a9d098 # v7.3.1
+              with:
+                  enable-cache: true
+                  python-version: "3.14"
+            - name: Build
+              run: uv build
+            - name: Publish
+              run: uv publish
