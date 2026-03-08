@@ -5,7 +5,7 @@
     "": {
       "name": "umt-i18n",
       "dependencies": {
-        "umt": "2.12.3",
+        "umt": "2.13.0",
       },
       "devDependencies": {
         "@babel/cli": "7.28.6",
@@ -1338,7 +1338,7 @@
 
     "uglify-js": ["uglify-js@3.19.3", "", { "bin": { "uglifyjs": "bin/uglifyjs" } }, "sha512-v3Xu+yuwBXisp6QYTcH4UbH+xYJXqnq2m/LtQVWKWzYc1iehYnLixoQDN9FH6/j9/oybfd6W9Ghwkl8+UMKTKQ=="],
 
-    "umt": ["umt@2.12.3", "", {}, "sha512-nKvz+6gkWtJdH3gaU1up3caXQ6KL0TEc45bzilQmLxa9V9s3wZDLNMENXxrLm4ybVuGFmUqe3ZGHd21S3RgKKQ=="],
+    "umt": ["umt@2.13.0", "", {}, "sha512-KqgUP+Ad6PQthEdP9KVpQC7wIlpi/0eJTZGqHbkfcw6pT4RmoTktEs9OP7qpF6Wg2hJ8pwiJetLfTmdFcwOTXQ=="],
 
     "unbox-primitive": ["unbox-primitive@1.1.0", "", { "dependencies": { "call-bound": "^1.0.3", "has-bigints": "^1.0.2", "has-symbols": "^1.1.0", "which-boxed-primitive": "^1.1.1" } }, "sha512-nWJ91DjeOkej/TA8pXQ3myruKpKEYgqvpw9lz4OPHj/NWFNluYrjbz9j01CJ8yKQd2g4jFoOkINCTW2I5LEEyw=="],
 
