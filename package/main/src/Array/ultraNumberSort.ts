@@ -291,8 +291,8 @@ const handleNaNSort = (array: number[], ascending: boolean): number[] => {
   const valid: number[] = [];
   let nanCount = 0;
 
-  // eslint-disable-next-line unicorn/no-for-loop, @typescript-eslint/prefer-for-of
-  for (let index = 0; index < array.length; index++) {
+  let index = 0;
+  while (index < array.length) {
     const element = array[index];
     // biome-ignore lint/suspicious/noSelfCompare: ignore
     if (element === element) {
@@ -300,6 +300,7 @@ const handleNaNSort = (array: number[], ascending: boolean): number[] => {
     } else {
       nanCount++;
     }
+    index++;
   }
 
   numericQuickSort(valid, 0, valid.length - 1, ascending);
@@ -330,9 +331,10 @@ const countingSort = (
   const count = new Uint32Array(range);
 
   // Count occurrences
-  // eslint-disable-next-line unicorn/no-for-loop, @typescript-eslint/prefer-for-of
-  for (let index = 0; index < array.length; index++) {
-    count[array[index] - min]++;
+  let index_ = 0;
+  while (index_ < array.length) {
+    count[array[index_] - min]++;
+    index_++;
   }
 
   // Reconstruct array
