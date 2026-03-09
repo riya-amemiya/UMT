@@ -1,3 +1,6 @@
+from .advance import (
+    range_advance,
+)
 from .array import (
     ValidatedSortRange,
     apply_insertion_sort_if_needed,
@@ -416,6 +419,7 @@ __all__ = [
     "random_select",
     "random_string",
     "random_string_initialization",
+    "range_advance",
     "range_array",
     "reduce_fraction",
     "repeated_trial",
