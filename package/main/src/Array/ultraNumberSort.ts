@@ -291,7 +291,8 @@ const handleNaNSort = (array: number[], ascending: boolean): number[] => {
   const valid: number[] = [];
   let nanCount = 0;
 
-  for (const element of array) {
+  for (let index = 0; index < array.length; index++) {
+    const element = array[index];
     // biome-ignore lint/suspicious/noSelfCompare: ignore
     if (element === element) {
       valid.push(element);
@@ -328,8 +329,8 @@ const countingSort = (
   const count = new Uint32Array(range);
 
   // Count occurrences
-  for (const element of array) {
-    count[element - min]++;
+  for (let index = 0; index < array.length; index++) {
+    count[array[index] - min]++;
   }
 
   // Reconstruct array
