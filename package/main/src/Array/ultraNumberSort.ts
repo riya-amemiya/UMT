@@ -291,6 +291,7 @@ const handleNaNSort = (array: number[], ascending: boolean): number[] => {
   const valid: number[] = [];
   let nanCount = 0;
 
+  // eslint-disable-next-line unicorn/no-for-loop, @typescript-eslint/prefer-for-of
   for (let index = 0; index < array.length; index++) {
     const element = array[index];
     // biome-ignore lint/suspicious/noSelfCompare: ignore
@@ -329,6 +330,7 @@ const countingSort = (
   const count = new Uint32Array(range);
 
   // Count occurrences
+  // eslint-disable-next-line unicorn/no-for-loop, @typescript-eslint/prefer-for-of
   for (let index = 0; index < array.length; index++) {
     count[array[index] - min]++;
   }
