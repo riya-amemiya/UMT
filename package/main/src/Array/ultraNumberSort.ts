@@ -291,13 +291,16 @@ const handleNaNSort = (array: number[], ascending: boolean): number[] => {
   const valid: number[] = [];
   let nanCount = 0;
 
-  for (const element of array) {
+  let index = 0;
+  while (index < array.length) {
+    const element = array[index];
     // biome-ignore lint/suspicious/noSelfCompare: ignore
     if (element === element) {
       valid.push(element);
     } else {
       nanCount++;
     }
+    index++;
   }
 
   numericQuickSort(valid, 0, valid.length - 1, ascending);
@@ -328,8 +331,10 @@ const countingSort = (
   const count = new Uint32Array(range);
 
   // Count occurrences
-  for (const element of array) {
-    count[element - min]++;
+  let index_ = 0;
+  while (index_ < array.length) {
+    count[array[index_] - min]++;
+    index_++;
   }
 
   // Reconstruct array
