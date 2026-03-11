@@ -33,7 +33,6 @@ export default [
     },
     rules: {
       "@typescript-eslint/no-explicit-any": "off",
-      "no-constant-condition": "off",
       "@typescript-eslint/no-unused-vars": "off",
       "unicorn/filename-case": [
         "error",
@@ -44,13 +43,6 @@ export default [
           },
         },
       ],
-      "unicorn/no-null": "off",
-      "unicorn/prefer-spread": "off",
-      "unicorn/no-array-reduce": "off",
-      "unicorn/prefer-module": "off",
-      "unicorn/prefer-number-properties": "off",
-      "unicorn/no-nested-ternary": "off",
-      "unicorn/number-literal-case": "off",
       "import/order": [
         "error",
         {
