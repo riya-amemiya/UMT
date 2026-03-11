@@ -18,7 +18,7 @@ pub fn average(numbers: Vec<f64>) -> f64 {
 }
 
 #[wasm_bindgen]
-pub fn deg_to_rad(degrees: f32) -> f32 {
+pub fn deg_to_rad(degrees: f64) -> f64 {
     umt_deg_to_rad(degrees)
 }
 
