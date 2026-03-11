@@ -655,11 +655,8 @@ dependencies = [
 [[package]]
 name = "wit-bindgen-core"
 version = "0.51.0"
-name = "zerocopy"
-version = "0.8.42"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ea61de684c3ea68cb082b7a88508a8b27fcc8b797d738bfc99a82facf1d752dc"
-checksum = "f2578b716f8a7a858b7f02d5bd870c14bf4ddbbcf3a4c05414ba6503640505e3"
 dependencies = [
  "anyhow",
  "heck",
@@ -669,11 +666,8 @@ dependencies = [
 [[package]]
 name = "wit-bindgen-rust"
 version = "0.51.0"
-name = "zerocopy-derive"
-version = "0.8.42"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b7c566e0f4b284dd6561c786d9cb0142da491f46a9fbed79ea69cdad5db17f21"
-checksum = "7e6cc098ea4d3bd6246687de65af3f920c430e236bee1e3bf2e441463f08a02f"
 dependencies = [
  "anyhow",
  "heck",
