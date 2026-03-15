@@ -71,4 +71,22 @@ describe("deepClone", () => {
     expect(cloned.pattern.flags).toBe("gi");
     expect(cloned.pattern).not.toBe(original.pattern);
   });
+
+  it("should prevent prototype pollution via __proto__", () => {
+    const payload = JSON.parse('{"__proto__": {"polluted": true}}');
+    const cloned = deepClone(payload);
+
+    // Should not have __proto__ property set directly
+    expect(Object.hasOwn(cloned, "__proto__")).toBe(false);
+  });
+
+  it("should prevent prototype pollution via constructor", () => {
+    const payload = JSON.parse(
+      '{"constructor": {"prototype": {"polluted": true}}}',
+    );
+    const cloned = deepClone(payload);
+
+    // Should not overwrite constructor
+    expect(cloned.constructor).toBe(Object);
+  });
 });
