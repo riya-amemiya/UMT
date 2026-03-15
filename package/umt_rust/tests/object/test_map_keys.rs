@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use umt_rust::object::{umt_map_keys, Value};
+use umt_rust::object::{Value, umt_map_keys};
 
 #[test]
 fn test_transform_keys_using_provided_function() {

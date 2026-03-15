@@ -1,5 +1,6 @@
 from src.object.object_map_keys import map_keys
 
+
 class TestMapKeys:
     def test_transform_keys_using_provided_function(self):
         result = map_keys({"a": 1, "b": 2, "c": 3}, lambda _value, key: key.upper())
