@@ -7,3 +7,4 @@
 ## 2025-02-23 - Logic Mismatch in `is_double` for Lists
 **Mismatch:** `isDouble` in `package/main` (JS) implicitly coerces single-element arrays to numbers (e.g., `[1.5]` -> `1.5`), returning `true`.
 **Resolution:** In `package/umt_python`, `is_double` explicitly returns `False` for `list` and `dict` types to maintain idiomatic Python behavior and type safety, aligning with the precedent set by `is_number`.
+## 2024-05-15 - [Deviation Value Simple] **Mismatch:** [Sequence type handling] **Resolution:** [In Python, narrowed typing and instance checking to Sequence while avoiding strings instead of limiting to list explicitly to accept tuples properly]

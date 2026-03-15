@@ -51,7 +51,7 @@ fn test_calculates_deviation_value_from_array_above_mean() {
     // mean = 50
     // population standard deviation ~= 8.165
     let scores = vec![40.0, 50.0, 60.0];
-    let result = umt_deviation_value_simple_from_array(60.0, scores);
+    let result = umt_deviation_value_simple_from_array(60.0, &scores);
     // +1.225 SD -> approximately 62.25
     assert!(
         (result - 62.25).abs() < 0.01,
@@ -63,14 +63,14 @@ fn test_calculates_deviation_value_from_array_above_mean() {
 #[test]
 fn test_calculates_deviation_value_from_array_at_mean() {
     let scores = vec![40.0, 50.0, 60.0];
-    let result = umt_deviation_value_simple_from_array(50.0, scores);
+    let result = umt_deviation_value_simple_from_array(50.0, &scores);
     assert_eq!(result, 50.0);
 }
 
 #[test]
 fn test_calculates_deviation_value_from_array_below_mean() {
     let scores = vec![40.0, 50.0, 60.0];
-    let result = umt_deviation_value_simple_from_array(40.0, scores);
+    let result = umt_deviation_value_simple_from_array(40.0, &scores);
     // -1.225 SD -> approximately 37.75
     assert!(
         (result - 37.75).abs() < 0.01,
@@ -87,7 +87,7 @@ fn test_calculates_deviation_value_from_array_below_mean() {
 fn test_returns_50_for_any_value_when_all_reference_values_same_at_mean() {
     let same_scores = vec![50.0, 50.0, 50.0];
     assert_eq!(
-        umt_deviation_value_simple_from_array(50.0, same_scores),
+        umt_deviation_value_simple_from_array(50.0, &same_scores),
         50.0
     );
 }
@@ -96,7 +96,7 @@ fn test_returns_50_for_any_value_when_all_reference_values_same_at_mean() {
 fn test_returns_50_for_zero_when_all_reference_values_same() {
     let same_scores = vec![50.0, 50.0, 50.0];
     assert_eq!(
-        umt_deviation_value_simple_from_array(0.0, same_scores),
+        umt_deviation_value_simple_from_array(0.0, &same_scores),
         50.0
     );
 }
@@ -105,7 +105,7 @@ fn test_returns_50_for_zero_when_all_reference_values_same() {
 fn test_returns_50_for_high_value_when_all_reference_values_same() {
     let same_scores = vec![50.0, 50.0, 50.0];
     assert_eq!(
-        umt_deviation_value_simple_from_array(100.0, same_scores),
+        umt_deviation_value_simple_from_array(100.0, &same_scores),
         50.0
     );
 }
@@ -117,14 +117,14 @@ fn test_returns_50_for_high_value_when_all_reference_values_same() {
 #[test]
 fn test_handles_negative_values() {
     let scores = vec![-10.0, 0.0, 10.0];
-    let result = umt_deviation_value_simple_from_array(0.0, scores);
+    let result = umt_deviation_value_simple_from_array(0.0, &scores);
     assert_eq!(result, 50.0);
 }
 
 #[test]
 fn test_handles_large_values() {
     let scores = vec![1000.0, 2000.0, 3000.0];
-    let result = umt_deviation_value_simple_from_array(2000.0, scores);
+    let result = umt_deviation_value_simple_from_array(2000.0, &scores);
     assert_eq!(result, 50.0);
 }
 
@@ -150,7 +150,7 @@ fn test_calculates_with_different_sd() {
 #[test]
 fn test_calculates_with_larger_array() {
     let scores = vec![65.0, 70.0, 75.0, 80.0, 85.0, 90.0, 95.0, 100.0, 55.0, 60.0];
-    let result = umt_deviation_value_simple_from_array(77.5, scores);
+    let result = umt_deviation_value_simple_from_array(77.5, &scores);
     // 77.5 is the mean, so deviation value should be 50
     assert_eq!(result, 50.0);
 }
