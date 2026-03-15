@@ -52,6 +52,7 @@ mod crypto {
 }
 
 mod data_structure {
+    mod test_lru_cache;
     mod test_priority_queue;
 }
 
