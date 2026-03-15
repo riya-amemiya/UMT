@@ -1,5 +1,10 @@
 import { BASE32_ALPHABET } from "./constants";
 
+// O(1) lookup table for Base32 character-to-index mapping
+const base32CharToIndex = new Map(
+  [...BASE32_ALPHABET].map((c, index) => [c, index]),
+);
+
 /**
  * Decodes a Base32 string to Uint8Array
  * @param {string} input - Base32 encoded string
@@ -7,14 +12,13 @@ import { BASE32_ALPHABET } from "./constants";
  * @example decodeBase32("JBSWY3DP"); // Uint8Array for "Hello"
  */
 export const decodeBase32 = (input: string): Uint8Array => {
-  const alphabet = BASE32_ALPHABET;
   const cleanedInput = input.replaceAll("=", "");
   const result: number[] = [];
   let buffer = 0;
   let bufferLength = 0;
 
   for (const char of cleanedInput) {
-    const value = alphabet.indexOf(char);
+    const value = base32CharToIndex.get(char) ?? 0;
 
     buffer = (buffer << 5) | value;
     bufferLength += 5;

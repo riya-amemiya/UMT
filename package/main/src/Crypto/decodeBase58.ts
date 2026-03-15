@@ -1,5 +1,10 @@
 import { BASE58_ALPHABET } from "./constants";
 
+// O(1) lookup table for Base58 character-to-index mapping
+const base58CharToIndex = new Map(
+  [...BASE58_ALPHABET].map((c, index) => [c, index]),
+);
+
 /**
  * Decodes a Base58 string to Uint8Array
  * @param {string} input - Base58 encoded string
@@ -7,19 +12,20 @@ import { BASE58_ALPHABET } from "./constants";
  * @example decodeBase58("9Ajdvzr"); // Uint8Array for "Hello"
  */
 export const decodeBase58 = (input: string): Uint8Array => {
-  const alphabet = BASE58_ALPHABET;
   let bigNumber = 0n;
 
   for (const char of input) {
-    const value = alphabet.indexOf(char);
+    const value = base58CharToIndex.get(char) ?? 0;
     bigNumber = bigNumber * 58n + BigInt(value);
   }
 
+  // Use push + reverse instead of unshift to avoid O(n²) array shifting
   const bytes: number[] = [];
   while (bigNumber > 0) {
-    bytes.unshift(Number(bigNumber % 256n));
+    bytes.push(Number(bigNumber % 256n));
     bigNumber /= 256n;
   }
+  bytes.reverse();
 
   let leadingOnes = 0;
   for (const char of input) {
