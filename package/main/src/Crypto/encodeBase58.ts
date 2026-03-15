@@ -11,7 +11,8 @@ export const encodeBase58 = (input: string | Uint8Array): string => {
   const bytes =
     typeof input === "string" ? new TextEncoder().encode(input) : input;
 
-  let encoded = "";
+  // Use array + reverse + join instead of string prepend to avoid O(n²) string concatenation
+  const chars: string[] = [];
   let bigNumber = 0n;
 
   for (const byte of bytes) {
@@ -20,9 +21,11 @@ export const encodeBase58 = (input: string | Uint8Array): string => {
 
   while (bigNumber > 0) {
     const remainder = Number(bigNumber % 58n);
-    encoded = alphabet[remainder] + encoded;
+    chars.push(alphabet[remainder]);
     bigNumber /= 58n;
   }
+  chars.reverse();
+  const encoded = chars.join("");
 
   let leadingZeros = 0;
   for (const byte of bytes) {
