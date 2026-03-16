@@ -88,6 +88,7 @@ describe("optional function", () => {
   });
 
   it("should infer correct types for optional properties", () => {
+    // biome-ignore lint/correctness/noUnusedVariables: ignore
     const validateObject = object({
       name: string(),
       age: optional(number()),
