@@ -141,7 +141,7 @@ describe("Integration test for function composition", () => {
     const results = testCases.map((input) =>
       pipe(input)
         .map(safeParseNumber)
-        .map((num) => (num !== null ? divideBy(2)(num) : null))
+        .map((num) => (num === null ? null : divideBy(2)(num)))
         .end(),
     );
 
