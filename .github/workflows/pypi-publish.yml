@@ -8,7 +8,7 @@ on:
 jobs:
     publish:
         name: Publish umt packages
-        if: github.event_name == 'workflow_dispatch' || startsWith(github.event.release.tag_name, 'main-')
+        if: github.event_name == 'workflow_dispatch' || startsWith(github.event.release.tag_name, 'python-')
         runs-on: ubuntu-latest
         timeout-minutes: 10
         permissions:
