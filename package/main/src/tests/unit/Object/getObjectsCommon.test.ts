@@ -122,4 +122,15 @@ describe("getObjectsCommon", () => {
     expect(obj1).toEqual(obj1Copy);
     expect(obj2).toEqual(obj2Copy);
   });
+
+  test("should prevent prototype pollution via __proto__", () => {
+    const obj1 = JSON.parse('{"__proto__": {"polluted": true}}');
+    const obj2 = JSON.parse('{"__proto__": {"polluted": true}}');
+
+    const result = getObjectsCommon(obj1, obj2);
+
+    expect(Object.hasOwn(result, "__proto__")).toBe(false);
+    // biome-ignore lint/suspicious/noExplicitAny: ignore
+    expect((result as any).polluted).toBeUndefined();
+  });
 });

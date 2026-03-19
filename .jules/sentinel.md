@@ -11,3 +11,7 @@
 **Vulnerability:** The `pickDeep` function did not filter out sensitive object keys (`__proto__`, `constructor`, `prototype`), allowing an attacker to traverse the prototype chain and overwrite global properties (Prototype Pollution) by passing malicious paths like `__proto__.polluted`.
 **Learning:** Utilities that deeply traverse and construct objects based on dynamic, user-controlled paths must explicitly block access to prototype-related keys to prevent Prototype Pollution attacks.
 **Prevention:** Always validate and sanitize keys during deep object traversal or assignment, explicitly ignoring or rejecting keys like `__proto__`, `constructor`, and `prototype`.
+## 2025-03-16 - Prototype Pollution in Object Utilities
+**Vulnerability:** `getObjectsCommon` and `getObjectsDiff` were vulnerable to Prototype Pollution because they iterated over and copied all keys, including `__proto__`, `constructor`, and `prototype`.
+**Learning:** Even simple object diffing or commonality utilities need explicit prototype pollution guards because they dynamically assign keys to a new object based on unsanitized input objects.
+**Prevention:** Always explicitly check and ignore `__proto__`, `constructor`, and `prototype` keys during object iteration in any utility that dynamically constructs or merges objects.
