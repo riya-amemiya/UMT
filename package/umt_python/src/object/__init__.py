@@ -3,6 +3,7 @@ from .get_objects_diff import get_objects_diff
 from .object_has import object_has
 from .object_is_empty import object_is_empty
 from .object_is_plain import object_is_plain
+from .object_key_by import object_key_by
 from .object_map_keys import map_keys
 from .object_map_values import object_map_values
 from .object_merge import object_merge
@@ -18,6 +19,7 @@ __all__ = [
     "object_has",
     "object_is_empty",
     "object_is_plain",
+    "object_key_by",
     "object_map_values",
     "object_merge",
     "object_merge_deep",
