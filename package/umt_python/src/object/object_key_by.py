@@ -6,12 +6,14 @@ PropertyName = str | int
 IterateeFunction = Callable[[T], PropertyName]
 Iteratee = IterateeFunction[T] | str | int | None
 
+
 def _normalize_iteratee(iteratee: Iteratee[T]) -> IterateeFunction[T]:
     if iteratee is None:
         return lambda value: cast(PropertyName, value)
     if callable(iteratee):
         return iteratee
     return lambda obj: cast(PropertyName, cast(Any, obj)[iteratee])
+
 
 def object_key_by(
     collection: list[T] | dict[Any, T],
