@@ -94,17 +94,17 @@ def is_deep_equal(
                 except TypeError:
                     pass
 
-                y_copy = list(y)
+                matched = [False] * len(y)
                 for item_x in x:
                     found = False
-                    for i, item_y in enumerate(y_copy):
-                        if compare(item_x, item_y):
-                            y_copy.pop(i)
+                    for i, item_y in enumerate(y):
+                        if not matched[i] and compare(item_x, item_y):
+                            matched[i] = True
                             found = True
                             break
                     if not found:
                         return False
-                return len(y_copy) == 0
+                return True
             return True
 
         if isinstance(x, set) and isinstance(y, set):
