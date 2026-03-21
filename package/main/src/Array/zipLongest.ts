@@ -28,15 +28,15 @@ export const zipLongest = <T extends unknown[][]>(
     }
   }
 
-  // Optimize: Pre-allocate outer array dynamically using loops rather than Array.from
-  // to reduce closure creation overhead and eliminate intermediate mapped arrays.
-  const result: unknown[][] = [];
+  // Optimize: Pre-allocate arrays with known lengths and use direct index assignment
+  // instead of .push() to avoid repeated capacity checks and potential reallocations.
+  const result: unknown[][] = new Array(maxLength);
   for (let index = 0; index < maxLength; index += 1) {
-    const tuple: unknown[] = [];
+    const tuple: unknown[] = new Array(arraysLength);
     for (let arrayIndex = 0; arrayIndex < arraysLength; arrayIndex += 1) {
-      tuple.push(arrays[arrayIndex][index]);
+      tuple[arrayIndex] = arrays[arrayIndex][index];
     }
-    result.push(tuple);
+    result[index] = tuple;
   }
 
   return result as unknown as ZipArrayType<T>;
