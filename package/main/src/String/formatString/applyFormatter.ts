@@ -52,7 +52,7 @@ export function applyFormatter(
  */
 function parseArguments(argumentsString: string): string[] {
   const arguments_: string[] = [];
-  let current = "";
+  const chars: string[] = [];
   let inQuotes = false;
   let quoteChar = "";
 
@@ -70,17 +70,17 @@ function parseArguments(argumentsString: string): string[] {
     }
 
     if (!inQuotes && char === ",") {
-      const trimmed = current.trim();
+      const trimmed = chars.join("").trim();
       arguments_.push(trimmed === "" ? " " : trimmed);
-      current = "";
+      chars.length = 0;
       continue;
     }
 
-    current += char;
+    chars.push(char);
   }
 
   // Handle last argument
-  const trimmed = current.trim();
+  const trimmed = chars.join("").trim();
   arguments_.push(trimmed === "" ? " " : trimmed);
 
   return arguments_;
