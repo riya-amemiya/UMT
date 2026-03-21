@@ -3,16 +3,18 @@ import { run, bench, summary, do_not_optimize, type k_state } from "mitata";
 // Pre-allocated version (optimized)
 const zipLongestOptimized = (...arrays: unknown[][]) => {
   const arraysLength = arrays.length;
-  if (arraysLength === 0) return [];
+  if (arraysLength === 0) {
+    return [];
+  }
   let maxLength = arrays[0].length;
   for (let index = 1; index < arraysLength; index += 1) {
     if (arrays[index].length > maxLength) {
       maxLength = arrays[index].length;
     }
   }
-  const result: unknown[][] = new Array(maxLength);
+  const result: unknown[][] = Array.from({ length: maxLength });
   for (let index = 0; index < maxLength; index += 1) {
-    const tuple: unknown[] = new Array(arraysLength);
+    const tuple: unknown[] = Array.from({ length: arraysLength });
     for (let arrayIndex = 0; arrayIndex < arraysLength; arrayIndex += 1) {
       tuple[arrayIndex] = arrays[arrayIndex][index];
     }
@@ -24,7 +26,9 @@ const zipLongestOptimized = (...arrays: unknown[][]) => {
 // Push-based version (original)
 const zipLongestPush = (...arrays: unknown[][]) => {
   const arraysLength = arrays.length;
-  if (arraysLength === 0) return [];
+  if (arraysLength === 0) {
+    return [];
+  }
   let maxLength = arrays[0].length;
   for (let index = 1; index < arraysLength; index += 1) {
     if (arrays[index].length > maxLength) {
@@ -43,7 +47,7 @@ const zipLongestPush = (...arrays: unknown[][]) => {
 };
 
 const arrayCounts = [3, 10, 50];
-const arrayLengths = [100, 1_000, 10_000];
+const arrayLengths = [100, 1000, 10_000];
 
 const testData = new Map<string, unknown[][]>();
 for (const count of arrayCounts) {
@@ -64,7 +68,7 @@ summary(() => {
     function* (state: k_state) {
       const count = state.get("count") as number;
       const length = state.get("length") as number;
-      const arrays = testData.get(`${count}-${length}`)!;
+      const arrays = testData.get(`${count}-${length}`) as unknown[][];
       yield () => {
         do_not_optimize(zipLongestOptimized(...arrays));
       };
@@ -78,7 +82,7 @@ summary(() => {
     function* (state: k_state) {
       const count = state.get("count") as number;
       const length = state.get("length") as number;
-      const arrays = testData.get(`${count}-${length}`)!;
+      const arrays = testData.get(`${count}-${length}`) as unknown[][];
       yield () => {
         do_not_optimize(zipLongestPush(...arrays));
       };
