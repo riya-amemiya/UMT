@@ -66,4 +66,23 @@ describe("merge", () => {
 
     expect(result).toEqual({ a: 1, b: undefined, c: null });
   });
+
+  it("should prevent prototype pollution via __proto__", () => {
+    const malicious = JSON.parse('{"__proto__": {"polluted": true}}');
+    merge({}, malicious);
+
+    // Verify the global Object prototype was not polluted
+    const clean = {};
+    expect("polluted" in clean).toBe(false);
+  });
+
+  it("should prevent prototype pollution via constructor and prototype", () => {
+    const malicious = JSON.parse(
+      '{"constructor": {"polluted": true}, "prototype": {"injected": true}}',
+    );
+    const result = merge({}, malicious);
+
+    expect(Object.keys(result)).not.toContain("constructor");
+    expect(Object.keys(result)).not.toContain("prototype");
+  });
 });

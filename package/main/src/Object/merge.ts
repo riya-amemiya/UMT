@@ -13,5 +13,15 @@ export const merge = <
   target: T,
   ...sources: U
 ): T & UnionToIntersection<U[number]> => {
-  return Object.assign({}, target, ...sources);
+  const result: Record<string, unknown> = {};
+  for (const object of [target, ...sources]) {
+    for (const key of Object.keys(object)) {
+      // Prevent prototype pollution by skipping dangerous keys
+      if (key === "__proto__" || key === "constructor" || key === "prototype") {
+        continue;
+      }
+      result[key] = object[key];
+    }
+  }
+  return result as T & UnionToIntersection<U[number]>;
 };
