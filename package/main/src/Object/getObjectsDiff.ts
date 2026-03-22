@@ -76,13 +76,14 @@ export const getObjectsDiff = <T extends Record<string, unknown>>(
     let lastUniqueValue: unknown;
     let hasUnique = false;
 
+    // Count occurrences in a single pass using a Map — O(n) instead of O(n²).
+    // Map keys use SameValueZero which matches === for all values except NaN,
+    // an acceptable trade-off for object-diff use cases.
+    const valueCounts = new Map<unknown, number>();
     for (const value of values) {
-      let count = 0;
-      for (const other of values) {
-        if (value === other) {
-          count++;
-        }
-      }
+      valueCounts.set(value, (valueCounts.get(value) ?? 0) + 1);
+    }
+    for (const [value, count] of valueCounts) {
       if (count === 1) {
         lastUniqueValue = value;
         hasUnique = true;
