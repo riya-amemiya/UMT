@@ -111,7 +111,10 @@ impl<K: Eq + Hash + Clone, V> TTLCache<K, V> {
         let expires_at_ms = self.now_ms() + effective_ttl;
 
         if let std::collections::hash_map::Entry::Occupied(mut e) = self.map.entry(key.clone()) {
-            e.insert(TTLEntry { value, expires_at_ms });
+            e.insert(TTLEntry {
+                value,
+                expires_at_ms,
+            });
             return;
         }
 
