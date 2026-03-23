@@ -180,6 +180,11 @@ mod unit_module {
     mod test_unit_converter;
 }
 
+mod url {
+    mod test_is_absolute_url;
+    mod test_join_path;
+}
+
 mod object {
     mod test_has;
     mod test_is_empty;

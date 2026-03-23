@@ -1,0 +1,11 @@
+//! URL utility module for UMT Rust.
+//!
+//! This module provides URL-related utility functions:
+//! - `is_absolute_url` - Check if a URL string is absolute (RFC 3986)
+//! - `join_path` - Join multiple path segments into a normalized path
+
+pub mod is_absolute_url;
+pub use is_absolute_url::*;
+
+pub mod join_path;
+pub use join_path::*;

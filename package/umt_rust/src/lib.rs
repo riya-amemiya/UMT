@@ -18,4 +18,5 @@ pub mod time;
 pub mod tool;
 pub mod ua;
 pub mod unit;
+pub mod url;
 pub mod validate;
