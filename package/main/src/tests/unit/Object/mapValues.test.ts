@@ -35,4 +35,11 @@ describe("mapValues", () => {
     );
     expect(result).toEqual({ a: false, b: true, c: true });
   });
+
+  it("should prevent prototype pollution by skipping dangerous keys", () => {
+    const malicious = JSON.parse('{"__proto__": 1, "a": 2}');
+    const result = mapValues(malicious, (v) => v);
+    expect(result).toEqual({ a: 2 });
+    expect(Object.hasOwn(result, "__proto__")).toBe(false);
+  });
 });

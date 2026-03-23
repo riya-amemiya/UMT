@@ -28,4 +28,17 @@ describe("mapKeys", () => {
     mapKeys(original, (_value, key) => key.toUpperCase());
     expect(original).toEqual({ a: 1, b: 2 });
   });
+
+  it("should prevent prototype pollution from source keys", () => {
+    const malicious = JSON.parse('{"__proto__": 1, "a": 2}');
+    const result = mapKeys(malicious, (_value, key) => key);
+    expect(result).toEqual({ a: 2 });
+    expect(Object.hasOwn(result, "__proto__")).toBe(false);
+  });
+
+  it("should prevent prototype pollution from transformed keys", () => {
+    const result = mapKeys({ a: 1 }, () => "__proto__");
+    expect(result).toEqual({});
+    expect(Object.hasOwn(result, "__proto__")).toBe(false);
+  });
 });
