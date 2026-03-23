@@ -88,4 +88,24 @@ describe("keyBy", () => {
     expect(output).toEqual(result);
     expect(lodashOutput).toEqual(result);
   });
+
+  it("should prevent prototype pollution when key resolves to __proto__ (array input)", () => {
+    const input = [
+      { id: "__proto__", name: "malicious" },
+      { id: "safe", name: "ok" },
+    ];
+    const output = keyBy(input, "id");
+    expect(output).toEqual({ safe: { id: "safe", name: "ok" } });
+    expect(Object.hasOwn(output, "__proto__")).toBe(false);
+  });
+
+  it("should prevent prototype pollution when key resolves to __proto__ (object input)", () => {
+    const input = {
+      first: { id: "__proto__", name: "malicious" },
+      second: { id: "safe", name: "ok" },
+    };
+    const output = keyBy(input, "id");
+    expect(output).toEqual({ safe: { id: "safe", name: "ok" } });
+    expect(Object.hasOwn(output, "__proto__")).toBe(false);
+  });
 });
