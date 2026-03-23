@@ -22,7 +22,7 @@ for (const size of arraySizes) {
       { length: size },
       (_, i) =>
         chars.charAt(Math.floor(Math.random() * chars.length)) +
-        `item${i}-${Math.random().toString(36).substring(2)}`,
+        `item${i}-${Math.random().toString(36).slice(2)}`,
     ),
   );
 }
