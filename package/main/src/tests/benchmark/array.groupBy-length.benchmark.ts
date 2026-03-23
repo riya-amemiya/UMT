@@ -19,7 +19,7 @@ for (const size of arraySizes) {
     size,
     Array.from(
       { length: size },
-      (_, i) => `item${i}-${Math.random().toString(36).substring(2)}`,
+      (_, i) => `item${i}-${Math.random().toString(36).slice(2)}`,
     ),
   );
 }

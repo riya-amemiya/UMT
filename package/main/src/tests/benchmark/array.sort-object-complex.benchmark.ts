@@ -35,7 +35,7 @@ const compareProductComplex = (a: Product, b: Product): number => {
 const arraySizes = [10, 100, 1000, 10_000, 50_000];
 
 const generateProduct = (): Product => ({
-  id: Math.random().toString(36).substring(2, 9),
+  id: Math.random().toString(36).slice(2, 9),
   name: `Product${Math.floor(Math.random() * 1000)}`,
   price: Math.floor(Math.random() * 1000) + 1,
   category: ["Electronics", "Clothing", "Food", "Books", "Toys"][
