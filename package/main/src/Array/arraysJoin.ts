@@ -9,5 +9,13 @@ export const arraysJoin = <A extends unknown[]>(
   array: unknown[],
   ...arrays: unknown[]
 ) => {
-  return [...new Set([...array, ...arrays.flat()])] as A;
+  // Build Set directly to avoid the intermediate spread-concat array.
+  // Previous: [...new Set([...array, ...arrays.flat()])] allocated a temporary
+  // combined array before constructing the Set.
+  // This approach feeds flat() results directly into the Set, skipping that copy.
+  const set = new Set(array);
+  for (const element of arrays.flat()) {
+    set.add(element);
+  }
+  return [...set] as A;
 };
