@@ -185,6 +185,15 @@ mod url {
     mod test_join_path;
 }
 
+mod predicate {
+    mod test_every;
+    mod test_is_not_nullish;
+    mod test_is_nullish;
+    mod test_matches;
+    mod test_not;
+    mod test_some;
+}
+
 mod object {
     mod test_has;
     mod test_is_empty;
