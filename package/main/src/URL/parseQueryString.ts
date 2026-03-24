@@ -28,6 +28,10 @@ export const parseQueryString = (query: string): Record<string, string> => {
   const parameters = new URLSearchParams(searchString);
   const result: Record<string, string> = {};
   for (const [key, value] of parameters) {
+    // Prevent prototype pollution by rejecting dangerous keys
+    if (key === "__proto__" || key === "constructor" || key === "prototype") {
+      continue;
+    }
     result[key] = value;
   }
   return result;
