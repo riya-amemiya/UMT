@@ -12,6 +12,7 @@ pub mod iterator;
 pub mod math;
 pub mod number;
 pub mod object;
+pub mod predicate;
 pub mod simple;
 pub mod string;
 pub mod time;
