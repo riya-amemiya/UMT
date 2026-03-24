@@ -40,4 +40,17 @@ describe("parseQueryString", () => {
     const result = parseQueryString("https://example.com/path");
     expect(result).toEqual({});
   });
+
+  it("should reject __proto__ key to prevent prototype pollution", () => {
+    const result = parseQueryString("?__proto__=polluted&safe=value");
+    expect(result).toEqual({ safe: "value" });
+    expect(result).not.toHaveProperty("__proto__", "polluted");
+    // biome-ignore lint/complexity/useLiteralKeys: accessing dynamic property to verify no prototype pollution
+    expect(({} as Record<string, unknown>)["polluted"]).toBeUndefined();
+  });
+
+  it("should reject constructor and prototype keys", () => {
+    const result = parseQueryString("?constructor=bad&prototype=bad&ok=good");
+    expect(result).toEqual({ ok: "good" });
+  });
 });
