@@ -34,6 +34,9 @@ pub fn umt_unique<T: Clone + Hash + Eq>(array: &[T]) -> Vec<T> {
 /// Removes duplicate values from a vector of f64, handling NaN values.
 /// NaN values are considered equal to each other.
 ///
+/// Uses a HashSet of bit representations for O(N) deduplication instead of
+/// O(N²) linear search via `Vec::contains`.
+///
 /// # Arguments
 ///
 /// * `array` - The array to process
@@ -42,6 +45,7 @@ pub fn umt_unique<T: Clone + Hash + Eq>(array: &[T]) -> Vec<T> {
 ///
 /// A new vector with unique values
 pub fn umt_unique_f64(array: &[f64]) -> Vec<f64> {
+    let mut seen = HashSet::new();
     let mut result = Vec::new();
     let mut has_nan = false;
 
@@ -51,7 +55,9 @@ pub fn umt_unique_f64(array: &[f64]) -> Vec<f64> {
                 result.push(item);
                 has_nan = true;
             }
-        } else if !result.contains(&item) {
+        } else if seen.insert(item.to_bits()) {
+            // Use to_bits() to convert f64 to u64 for hashing.
+            // This is safe because we already handle NaN separately.
             result.push(item);
         }
     }
