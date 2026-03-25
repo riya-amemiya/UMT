@@ -1,4 +1,4 @@
-import random
+import secrets
 import string
 
 DEFAULT_RANDOM_STRING_CHARS = string.ascii_letters + string.digits
@@ -6,7 +6,11 @@ DEFAULT_RANDOM_STRING_CHARS = string.ascii_letters + string.digits
 
 def random_string(size: int = 8, char_pool: str = DEFAULT_RANDOM_STRING_CHARS) -> str:
     """
-    Generates a random string.
+    Generates a cryptographically secure random string.
+
+    Uses the ``secrets`` module for secure randomness, matching the
+    behavior of the TypeScript implementation which uses
+    ``crypto.getRandomValues()``.
 
     Args:
         size: Length of the random string. Defaults to 8.
@@ -33,4 +37,4 @@ def random_string(size: int = 8, char_pool: str = DEFAULT_RANDOM_STRING_CHARS) -
         return ""
     if not char_pool:
         raise ValueError("char_pool cannot be empty when size > 0")
-    return "".join(random.choice(char_pool) for _ in range(size))
+    return "".join(secrets.choice(char_pool) for _ in range(size))

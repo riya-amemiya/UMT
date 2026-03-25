@@ -5,6 +5,7 @@ mod test_key_by;
 mod test_merge;
 mod test_merge_deep;
 mod test_map_keys;
+mod test_map_values;
 mod test_omit;
 mod test_pick;
 mod test_pick_deep;
