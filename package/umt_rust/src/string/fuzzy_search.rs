@@ -50,8 +50,12 @@ pub fn umt_fuzzy_search(query: &str, items: &[&str], threshold: f64) -> Vec<Fuzz
         })
         .collect();
 
-    // Sort by score descending
-    results.sort_by(|a, b| b.score.partial_cmp(&a.score).unwrap());
+    // Sort by score descending; treat NaN as less than any valid score
+    results.sort_by(|a, b| {
+        b.score
+            .partial_cmp(&a.score)
+            .unwrap_or(std::cmp::Ordering::Equal)
+    });
     results
 }
 
