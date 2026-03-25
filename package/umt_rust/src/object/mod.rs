@@ -36,3 +36,6 @@ pub use get_objects_diff::*;
 
 pub mod map_keys;
 pub use map_keys::*;
+
+pub mod map_values;
+pub use map_values::*;

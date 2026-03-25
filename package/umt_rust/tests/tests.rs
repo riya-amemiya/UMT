@@ -200,6 +200,7 @@ mod object {
     mod test_is_plain_object;
     mod test_key_by;
     mod test_map_keys;
+    mod test_map_values;
     mod test_merge;
     mod test_merge_deep;
     mod test_omit;
