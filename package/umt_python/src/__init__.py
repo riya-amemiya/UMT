@@ -234,6 +234,7 @@ from .unit import (
 from .url import (
     is_absolute_url,
     join_path,
+    parse_query_string,
 )
 from .validate import (
     EmailParts,
@@ -407,6 +408,7 @@ __all__ = [
     "pad_start",
     "parse_email",
     "parse_json",
+    "parse_query_string",
     "parse_user_agent",
     "percentile",
     "pipe",
