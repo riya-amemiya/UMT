@@ -17,10 +17,13 @@
 /// ```
 #[inline]
 pub fn umt_levenshtein_distance(s1: &str, s2: &str) -> usize {
+    if s1 == s2 {
+        return 0;
+    }
+
     let chars1: Vec<char> = s1.chars().collect();
     let chars2: Vec<char> = s2.chars().collect();
-    let len1 = chars1.len();
-    let len2 = chars2.len();
+    let (len1, len2) = (chars1.len(), chars2.len());
 
     if len1 == 0 {
         return len2;
@@ -29,20 +32,28 @@ pub fn umt_levenshtein_distance(s1: &str, s2: &str) -> usize {
         return len1;
     }
 
-    // Use single row optimization for space efficiency
-    let mut prev_row: Vec<usize> = (0..=len2).collect();
-    let mut curr_row: Vec<usize> = vec![0; len2 + 1];
-
-    for i in 1..=len1 {
-        curr_row[0] = i;
-        for j in 1..=len2 {
-            let cost = if chars1[i - 1] == chars2[j - 1] { 0 } else { 1 };
-            curr_row[j] = (prev_row[j] + 1) // deletion
-                .min(curr_row[j - 1] + 1) // insertion
-                .min(prev_row[j - 1] + cost); // substitution
-        }
-        std::mem::swap(&mut prev_row, &mut curr_row);
+    // Ensure chars1 is the shorter sequence to minimize space to O(min(n, m))
+    if len1 > len2 {
+        return umt_levenshtein_distance(s2, s1);
     }
 
-    prev_row[len2]
+    // Single-row optimization: only one row + a diagonal variable needed
+    let mut row: Vec<usize> = (0..=len1).collect();
+
+    for i in 1..=len2 {
+        let mut prev_diagonal = row[0];
+        row[0] = i;
+        let c2 = chars2[i - 1];
+
+        for j in 1..=len1 {
+            let temp = row[j];
+            let cost = if chars1[j - 1] == c2 { 0 } else { 1 };
+            row[j] = (row[j] + 1) // deletion
+                .min(row[j - 1] + 1) // insertion
+                .min(prev_diagonal + cost); // substitution
+            prev_diagonal = temp;
+        }
+    }
+
+    row[len1]
 }
