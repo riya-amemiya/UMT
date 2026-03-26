@@ -279,7 +279,14 @@ export class PriorityQueue<T> {
       this.minPriority = 0;
       return;
     }
-    this.minPriority = Math.min(...this.heap.map((item) => item.priority));
+    // Single-pass minimum without intermediate array allocation
+    let min = this.heap[0].priority;
+    for (let index = 1; index < this.heap.length; index++) {
+      if (this.heap[index].priority < min) {
+        min = this.heap[index].priority;
+      }
+    }
+    this.minPriority = min;
   }
 
   /**
