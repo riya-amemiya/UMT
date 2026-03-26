@@ -24,6 +24,19 @@ describe("PriorityQueue", () => {
       expect(queue.size).toBe(0);
       expect(queue.isEmpty).toBe(true);
     });
+
+    it("should track minimum priority when first element is not the smallest", () => {
+      const queue = new PriorityQueue<string>([
+        { value: "high", priority: 10 },
+        { value: "low", priority: 1 },
+        { value: "medium", priority: 5 },
+      ]);
+      queue.enqueueBack("back");
+      expect(queue.dequeue()).toBe("high");
+      expect(queue.dequeue()).toBe("medium");
+      expect(queue.dequeue()).toBe("low");
+      expect(queue.dequeue()).toBe("back");
+    });
   });
 
   describe("enqueue", () => {
