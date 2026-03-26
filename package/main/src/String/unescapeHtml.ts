@@ -36,11 +36,12 @@ export const unescapeHtml = (string_: string): string => {
   return string_.replaceAll(entityRegex, (match, dec, hex) => {
     if (dec !== undefined) {
       const codePoint = Number.parseInt(dec, 10);
-      return Number.isNaN(codePoint) ? match : String.fromCodePoint(codePoint);
+      // Valid Unicode code points range from 0 to 0x10FFFF
+      return codePoint > 0x10_ff_ff ? match : String.fromCodePoint(codePoint);
     }
     if (hex !== undefined) {
       const codePoint = Number.parseInt(hex, 16);
-      return Number.isNaN(codePoint) ? match : String.fromCodePoint(codePoint);
+      return codePoint > 0x10_ff_ff ? match : String.fromCodePoint(codePoint);
     }
     return htmlUnescapeMap[match];
   });
