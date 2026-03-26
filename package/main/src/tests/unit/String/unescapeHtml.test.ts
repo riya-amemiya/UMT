@@ -105,6 +105,11 @@ describe("unescapeHtml", () => {
     expect(unescapeHtml("&#xinvalid;")).toBe("&#xinvalid;");
   });
 
+  it("should leave out-of-range code points unchanged", () => {
+    expect(unescapeHtml("&#9999999;")).toBe("&#9999999;");
+    expect(unescapeHtml("&#x110000;")).toBe("&#x110000;");
+  });
+
   it("should handle malformed entities", () => {
     expect(unescapeHtml("&lt")).toBe("&lt");
     expect(unescapeHtml("&unknown;")).toBe("&unknown;");

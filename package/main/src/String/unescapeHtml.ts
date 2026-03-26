@@ -31,16 +31,17 @@ const htmlUnescapeMap: Record<string, string> = {
  */
 export const unescapeHtml = (string_: string): string => {
   const entityRegex =
-    /&(?:amp|lt|gt|quot|#39|#x27|#x2F|#x60|#x3D);|&#(\d*);|&#x([\dA-Fa-f]*);/g;
+    /&(?:amp|lt|gt|quot|#39|#x27|#x2F|#x60|#x3D);|&#(\d{1,7});|&#x([\dA-Fa-f]{1,6});/g;
 
   return string_.replaceAll(entityRegex, (match, dec, hex) => {
     if (dec !== undefined) {
       const codePoint = Number.parseInt(dec, 10);
-      return Number.isNaN(codePoint) ? match : String.fromCodePoint(codePoint);
+      // Valid Unicode code points range from 0 to 0x10FFFF
+      return codePoint > 0x10_ff_ff ? match : String.fromCodePoint(codePoint);
     }
     if (hex !== undefined) {
       const codePoint = Number.parseInt(hex, 16);
-      return Number.isNaN(codePoint) ? match : String.fromCodePoint(codePoint);
+      return codePoint > 0x10_ff_ff ? match : String.fromCodePoint(codePoint);
     }
     return htmlUnescapeMap[match];
   });
