@@ -1,19 +1,22 @@
 import type { UnionToIntersection } from "$/logic/unionToIntersection";
 import { isPlainObject } from "@/Object/isPlainObject";
 
-/**
- * Deeply merges multiple objects into a single object
- * @param target - The target object to merge into
- * @param sources - The source objects to merge from
- * @returns The deeply merged object
- */
-export const mergeDeep = <
+const MAX_MERGE_DEPTH = 100;
+
+const mergeDeepInternal = <
   T extends Record<string, unknown>,
   U extends Record<string, unknown>[],
 >(
   target: T,
-  ...sources: U
+  sources: U,
+  depth: number,
 ): T & UnionToIntersection<U[number]> => {
+  if (depth > MAX_MERGE_DEPTH) {
+    throw new Error(
+      `mergeDeep: maximum recursion depth of ${MAX_MERGE_DEPTH} exceeded`,
+    );
+  }
+
   if (sources.length === 0) {
     return target as T & UnionToIntersection<U[number]>;
   }
@@ -34,14 +37,34 @@ export const mergeDeep = <
 
         (result as Record<string, unknown>)[key] =
           isPlainObject(targetValue) && isPlainObject(sourceValue)
-            ? mergeDeep(targetValue, sourceValue)
+            ? mergeDeepInternal(targetValue, [sourceValue], depth + 1)
             : sourceValue;
       }
     }
 
-    return mergeDeep(result, ...sources) as T & UnionToIntersection<U[number]>;
+    return mergeDeepInternal(result, sources as unknown as U, depth + 1) as T &
+      UnionToIntersection<U[number]>;
   }
 
-  return mergeDeep(source as T, ...sources) as T &
-    UnionToIntersection<U[number]>;
+  return mergeDeepInternal(
+    source as T,
+    sources as unknown as U,
+    depth + 1,
+  ) as T & UnionToIntersection<U[number]>;
+};
+
+/**
+ * Deeply merges multiple objects into a single object
+ * @param target - The target object to merge into
+ * @param sources - The source objects to merge from
+ * @returns The deeply merged object
+ */
+export const mergeDeep = <
+  T extends Record<string, unknown>,
+  U extends Record<string, unknown>[],
+>(
+  target: T,
+  ...sources: U
+): T & UnionToIntersection<U[number]> => {
+  return mergeDeepInternal(target, sources, 0);
 };
