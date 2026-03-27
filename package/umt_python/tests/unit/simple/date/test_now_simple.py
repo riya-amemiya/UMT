@@ -15,19 +15,19 @@ class TestNowSimple(unittest.TestCase):
         result = now_simple()
         # UTC offset should be +09:00
         offset = result.utcoffset()
-        self.assertIsNotNone(offset)
+        assert offset is not None
         self.assertEqual(offset.total_seconds(), 9 * 3600)
 
     def test_utc_timezone(self):
         result = now_simple(0)
         offset = result.utcoffset()
-        self.assertIsNotNone(offset)
+        assert offset is not None
         self.assertEqual(offset.total_seconds(), 0)
 
     def test_string_input(self):
         result = now_simple("9")
         offset = result.utcoffset()
-        self.assertIsNotNone(offset)
+        assert offset is not None
         self.assertEqual(offset.total_seconds(), 9 * 3600)
 
     def test_invalid_string_falls_back_to_default(self):
