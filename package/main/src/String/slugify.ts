@@ -8,13 +8,17 @@
  * slugify("Japanese: こんにちは"); // "japanese"
  */
 export const slugify = (string_: string): string => {
-  return string_
-    .normalize("NFD")
-    .replaceAll(/[\u0300-\u036F]/g, "")
-    .toLowerCase()
-    .replaceAll(/[^\s\w-]/g, "-")
-    .replaceAll(/\s+/g, "-")
-    .replaceAll(/_+/g, "-")
-    .replaceAll(/-+/g, "-")
-    .replaceAll(/^-+|-+$/g, "");
+  return (
+    string_
+      .normalize("NFD")
+      // Strip combining diacritical marks (e.g. accents)
+      .replaceAll(/[\u0300-\u036F]/g, "")
+      .toLowerCase()
+      // Consolidate non-word chars, whitespace, and underscores into a single
+      // hyphen in one pass instead of three separate regex scans
+      .replaceAll(/[^\w-]+|_+/g, "-")
+      // Collapse consecutive hyphens and strip leading/trailing hyphens
+      .replaceAll(/-+/g, "-")
+      .replaceAll(/^-|-$/g, "")
+  );
 };
