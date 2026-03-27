@@ -177,6 +177,11 @@ from .object import (
 from .predicate import (
     every,
 )
+from .simple.date import (
+    birthday_simple,
+    day_of_week_simple,
+    now_simple,
+)
 from .simple.math import (
     deviation_value_simple,
 )
@@ -297,6 +302,7 @@ __all__ = [
     "average",
     "binary_search",
     "birthday",
+    "birthday_simple",
     "bitwise",
     "camel_case",
     "check_flag_alignment",
@@ -314,6 +320,7 @@ __all__ = [
     "date_now",
     "date_range",
     "day_of_week",
+    "day_of_week_simple",
     "decode_base32",
     "decode_base32_to_string",
     "decode_base58",
@@ -396,6 +403,7 @@ __all__ = [
     "new_date_int",
     "new_date_string",
     "normalize_time_unit",
+    "now_simple",
     "object_has",
     "object_is_empty",
     "object_map_values",
