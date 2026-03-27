@@ -12,8 +12,10 @@
  * ```
  */
 export const trimEndCharacters = (string_: string, chars: string): string => {
+  // Use Set for O(1) character lookups instead of O(m) string.includes()
+  const charSet = new Set(chars);
   let endIndex = string_.length - 1;
-  while (endIndex >= 0 && chars.includes(string_[endIndex])) {
+  while (endIndex >= 0 && charSet.has(string_[endIndex])) {
     endIndex--;
   }
   return string_.slice(0, endIndex + 1);
