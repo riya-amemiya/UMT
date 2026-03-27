@@ -20,6 +20,10 @@ export const buildUrl = (
 ): string => {
   const url = new URL(base);
   for (const key of Object.keys(parameters)) {
+    // Prevent prototype pollution by rejecting dangerous keys
+    if (key === "__proto__" || key === "constructor" || key === "prototype") {
+      continue;
+    }
     url.searchParams.append(key, parameters[key]);
   }
   return url.toString();
