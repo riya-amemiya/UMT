@@ -38,4 +38,17 @@ describe("buildUrl", () => {
     const result = buildUrl("https://example.com", { key: "value" });
     expect(result).toBe("https://example.com/?key=value");
   });
+
+  it("should skip prototype pollution keys", () => {
+    const result = buildUrl("https://example.com", {
+      __proto__: "evil",
+      constructor: "evil",
+      prototype: "evil",
+      safe: "value",
+    });
+    expect(result).toBe("https://example.com/?safe=value");
+    expect(result).not.toContain("__proto__");
+    expect(result).not.toContain("constructor");
+    expect(result).not.toContain("prototype");
+  });
 });
