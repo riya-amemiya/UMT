@@ -399,6 +399,8 @@ __all__ = [
     "levenshtein_distance",
     "linear_congruential_generator",
     "long_to_ip",
+    "map_result",
+    "match_result",
     "matches",
     "math_converter",
     "math_separator",
