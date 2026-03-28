@@ -14,9 +14,9 @@ class TestFlatMapResult(unittest.TestCase):
         """Test that flat_map_result can return an Error from the mapping function."""
         result = flat_map_result(
             Success(value=-1),
-            lambda n: Success(value=n * 2)
-            if n > 0
-            else Error(error=ValueError("negative")),
+            lambda n: (
+                Success(value=n * 2) if n > 0 else Error(error=ValueError("negative"))
+            ),
         )
         self.assertIsInstance(result, Error)
         self.assertIsInstance(result.error, ValueError)

@@ -7,17 +7,13 @@ class TestMatchResult(unittest.TestCase):
     def test_success_calls_on_success(self):
         """Test that match_result calls on_success for a Success result."""
         result = Success(value=42)
-        output = match_result(
-            result, lambda v: f"Got {v}", lambda e: f"Failed: {e}"
-        )
+        output = match_result(result, lambda v: f"Got {v}", lambda e: f"Failed: {e}")
         self.assertEqual(output, "Got 42")
 
     def test_error_calls_on_error(self):
         """Test that match_result calls on_error for an Error result."""
         result = Error(error=ValueError("oops"))
-        output = match_result(
-            result, lambda v: f"Got {v}", lambda e: f"Failed: {e}"
-        )
+        output = match_result(result, lambda v: f"Got {v}", lambda e: f"Failed: {e}")
         self.assertEqual(output, "Failed: oops")
 
     def test_success_returns_computed_value(self):
