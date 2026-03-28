@@ -1,7 +1,7 @@
 from collections.abc import Callable
 from typing import TypeVar
 
-from .safe_execute import Error, Result, Success
+from .safe_execute import Result, Success
 
 V = TypeVar("V")
 E = TypeVar("E", bound=Exception)

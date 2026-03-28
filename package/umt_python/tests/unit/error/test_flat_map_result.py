@@ -24,7 +24,7 @@ class TestFlatMapResult(unittest.TestCase):
     def test_error_returns_unchanged(self):
         """Test that flat_map_result returns the original error unchanged."""
         error = Error(error=ValueError("original error"))
-        result = flat_map_result(error, lambda n: Success(value=n * 2))
+        result = flat_map_result(error, lambda n: Success(value=n * 2))  # type: ignore[reportOperatorIssue]
         self.assertIsInstance(result, Error)
         self.assertEqual(str(result.error), "original error")
 

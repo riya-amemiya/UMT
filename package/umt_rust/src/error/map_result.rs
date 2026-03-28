@@ -1,4 +1,4 @@
-use super::safe_execute::{ErrorType, SafeResult, SuccessType};
+use super::safe_execute::{SafeResult, SuccessType};
 
 /// Transforms the value inside a successful SafeResult using the provided mapping function.
 /// If the SafeResult is an error, it is returned unchanged.

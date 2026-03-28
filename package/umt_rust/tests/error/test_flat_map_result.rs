@@ -3,7 +3,7 @@ use umt_rust::error::{umt_flat_map_result, ErrorType, SafeResult, SuccessType};
 #[test]
 fn test_flat_map_result_success_returns_new_success() {
     let success: SafeResult<i32, String> = SafeResult::Success(SuccessType { value: 5 });
-    let result = umt_flat_map_result(success, |n| {
+    let result: SafeResult<i32, String> = umt_flat_map_result(success, |n| {
         SafeResult::Success(SuccessType { value: n * 2 })
     });
     assert!(result.is_success());

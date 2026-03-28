@@ -19,7 +19,7 @@ class TestMapResult(unittest.TestCase):
     def test_error_returns_unchanged(self):
         """Test that map_result returns the error unchanged."""
         error = Error(error=ValueError("fail"))
-        result = map_result(error, lambda n: n * 2)
+        result = map_result(error, lambda n: n * 2)  # type: ignore[reportOperatorIssue]
         self.assertIsInstance(result, Error)
         self.assertEqual(result.type, "error")
         self.assertIsInstance(result.error, ValueError)

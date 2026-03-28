@@ -29,7 +29,7 @@ class TestMatchResult(unittest.TestCase):
     def test_error_returns_computed_value(self):
         """Test that match_result returns the computed value from on_error."""
         result = Error(error=ValueError("fail"))
-        output = match_result(result, lambda v: v * 2, lambda _e: -1)
+        output = match_result(result, lambda v: v * 2, lambda _e: -1)  # type: ignore[reportOperatorIssue]
         self.assertEqual(output, -1)
 
 
