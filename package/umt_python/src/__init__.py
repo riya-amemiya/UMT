@@ -176,6 +176,11 @@ from .object import (
 )
 from .predicate import (
     every,
+    is_not_nullish,
+    is_nullish,
+    matches,
+    not_,
+    some,
 )
 from .simple.date import (
     birthday_simple,
@@ -372,6 +377,8 @@ __all__ = [
     "is_in_range",
     "is_leap_year",
     "is_not_empty",
+    "is_not_nullish",
+    "is_nullish",
     "is_number",
     "is_perfect_square",
     "is_prime_number",
@@ -388,6 +395,7 @@ __all__ = [
     "levenshtein_distance",
     "linear_congruential_generator",
     "long_to_ip",
+    "matches",
     "math_converter",
     "math_separator",
     "max_value",
@@ -403,6 +411,7 @@ __all__ = [
     "new_date_int",
     "new_date_string",
     "normalize_time_unit",
+    "not_",
     "now_simple",
     "object_has",
     "object_is_empty",
@@ -444,6 +453,7 @@ __all__ = [
     "shuffle_2d_array",
     "slugify",
     "solve_equation",
+    "some",
     "standard_deviation",
     "string_similarity",
     "subnet_mask_to_cidr",
