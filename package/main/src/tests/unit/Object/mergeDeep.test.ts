@@ -187,4 +187,20 @@ describe("mergeDeep", () => {
     // biome-ignore lint/suspicious/noExplicitAny: ignore
     expect((result as any).prototype).toBeUndefined();
   });
+
+  it("should throw when recursion depth exceeds limit", () => {
+    // Build a deeply nested object that exceeds MAX_MERGE_DEPTH (100)
+    // biome-ignore lint/suspicious/noExplicitAny: ignore
+    let deepTarget: any = { value: "target" };
+    // biome-ignore lint/suspicious/noExplicitAny: ignore
+    let deepSource: any = { value: "source" };
+    for (let i = 0; i < 101; i++) {
+      deepTarget = { nested: deepTarget };
+      deepSource = { nested: deepSource };
+    }
+
+    expect(() => mergeDeep(deepTarget, deepSource)).toThrow(
+      "mergeDeep: maximum recursion depth of 100 exceeded",
+    );
+  });
 });
