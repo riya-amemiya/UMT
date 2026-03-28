@@ -1,4 +1,4 @@
-use umt_rust::error::{umt_match_result, ErrorType, SafeResult, SuccessType};
+use umt_rust::error::{ErrorType, SafeResult, SuccessType, umt_match_result};
 
 #[test]
 fn test_match_result_success_calls_on_success() {

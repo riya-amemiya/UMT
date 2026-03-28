@@ -1,4 +1,4 @@
-use umt_rust::error::{umt_flat_map_result, ErrorType, SafeResult, SuccessType};
+use umt_rust::error::{ErrorType, SafeResult, SuccessType, umt_flat_map_result};
 
 #[test]
 fn test_flat_map_result_success_returns_new_success() {
@@ -31,9 +31,8 @@ fn test_flat_map_result_error_returns_unchanged() {
     let error: SafeResult<i32, String> = SafeResult::Error(ErrorType {
         error: "original error".to_string(),
     });
-    let result: SafeResult<i32, String> = umt_flat_map_result(error, |n| {
-        SafeResult::Success(SuccessType { value: n * 2 })
-    });
+    let result: SafeResult<i32, String> =
+        umt_flat_map_result(error, |n| SafeResult::Success(SuccessType { value: n * 2 }));
     assert!(result.is_error());
     assert_eq!(result.error(), Some(&"original error".to_string()));
 }

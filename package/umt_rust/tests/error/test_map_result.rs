@@ -1,4 +1,4 @@
-use umt_rust::error::{umt_map_result, ErrorType, SafeResult, SuccessType};
+use umt_rust::error::{ErrorType, SafeResult, SuccessType, umt_map_result};
 
 #[test]
 fn test_map_result_success_transforms_value() {
