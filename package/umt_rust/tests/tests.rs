@@ -58,6 +58,9 @@ mod data_structure {
 }
 
 mod error {
+    mod test_flat_map_result;
+    mod test_map_result;
+    mod test_match_result;
     mod test_retry;
     mod test_safe_execute;
 }

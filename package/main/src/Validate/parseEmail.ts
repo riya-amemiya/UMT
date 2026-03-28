@@ -32,6 +32,13 @@ export const parseEmail = ({
   valid: boolean;
   parts?: { local: string; domain: string };
 } => {
+  // ReDoS mitigation: reject excessively long inputs before regex evaluation
+  // RFC 5321 specifies max 256 characters for a full email address
+  const MAX_EMAIL_LENGTH = 320;
+  if (email.length > MAX_EMAIL_LENGTH) {
+    return { valid: false };
+  }
+
   const { level } = options;
   const pattern = EMAIL_PATTERNS[level];
   const match = pattern.exec(email);

@@ -90,6 +90,9 @@ from .error import (
     Error,
     Result,
     Success,
+    flat_map_result,
+    map_result,
+    match_result,
     retry,
     safe_execute,
 )
@@ -347,6 +350,7 @@ __all__ = [
     "factorial",
     "factorize",
     "first",
+    "flat_map_result",
     "flexible_number_conversion",
     "format_string",
     "from_base64",

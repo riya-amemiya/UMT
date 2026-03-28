@@ -1,3 +1,9 @@
+pub mod flat_map_result;
+pub use flat_map_result::*;
+pub mod map_result;
+pub use map_result::*;
+pub mod match_result;
+pub use match_result::*;
 pub mod retry;
 pub use retry::*;
 pub mod safe_execute;
