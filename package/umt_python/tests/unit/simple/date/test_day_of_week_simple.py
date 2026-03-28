@@ -27,9 +27,7 @@ class TestDayOfWeekSimple(unittest.TestCase):
 
     def test_should_return_2_for_wednesday_dict(self):
         # 2022-01-05 is Wednesday -> Python weekday() = 2
-        self.assertEqual(
-            day_of_week_simple({"year": 2022, "mon": 1, "day": 5}), 2
-        )
+        self.assertEqual(day_of_week_simple({"year": 2022, "mon": 1, "day": 5}), 2)
 
     def test_should_return_3_for_thursday(self):
         self.assertEqual(day_of_week_simple("2022-01-06"), 3)
