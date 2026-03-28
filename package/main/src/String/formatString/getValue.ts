@@ -24,13 +24,17 @@
  * // Complex nested access
  * getValue({ users: [{ name: "Alice" }] }, "users[0].name") // → "Alice"
  */
+
+// Pre-compiled regex pattern for array index notation to avoid recompilation per path segment
+const ARRAY_INDEX_PATTERN = /^(.+?)\[(-?\d+)]$/;
+
 export function getValue(object: unknown, path: string): unknown {
   const segments: { key: string; index?: number }[] = [];
 
   const parts = path.split(".");
 
   for (const part of parts) {
-    const arrayMatch = /^(.+?)\[(-?\d+)]$/.exec(part);
+    const arrayMatch = ARRAY_INDEX_PATTERN.exec(part);
     if (arrayMatch) {
       const [, key, indexString] = arrayMatch;
       segments.push({ key, index: Number(indexString) });
