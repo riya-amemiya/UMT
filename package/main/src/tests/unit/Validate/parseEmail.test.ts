@@ -1055,4 +1055,33 @@ describe("email", () => {
       }
     }
   });
+
+  it("rejects excessively long inputs to mitigate ReDoS attacks", () => {
+    const levels: ParseEmailLevel[] = [
+      "basic",
+      "rfc822",
+      "rfc2822",
+      "rfc5321",
+      "rfc5322",
+    ];
+
+    for (const level of levels) {
+      expect(
+        parseEmail({
+          email: "a".repeat(321) + "@example.com",
+          options: { level },
+        }).valid,
+      ).toBe(false);
+    }
+
+    // Exactly at the limit (320 chars) should still be evaluated by regex
+    // (though likely invalid due to other RFC constraints)
+    const atLimit = "a".repeat(308) + "@example.com";
+    expect(atLimit.length).toBe(320);
+    // This should not be short-circuited by length check
+    // The regex will evaluate it (basic level has no total length constraint in regex)
+    expect(
+      parseEmail({ email: atLimit, options: { level: "basic" } }).valid,
+    ).toBeTruthy();
+  });
 });
