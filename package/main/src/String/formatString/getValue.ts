@@ -28,6 +28,10 @@
 // Pre-compiled regex pattern for array index notation to avoid recompilation per path segment
 const ARRAY_INDEX_PATTERN = /^(.+?)\[(-?\d+)]$/;
 
+// Security: Keys that must be blocked to prevent prototype pollution and
+// information leakage when traversing objects with user-controlled paths.
+const DANGEROUS_KEYS = new Set(["__proto__", "constructor", "prototype"]);
+
 export function getValue(object: unknown, path: string): unknown {
   const segments: { key: string; index?: number }[] = [];
 
@@ -47,6 +51,12 @@ export function getValue(object: unknown, path: string): unknown {
 
   for (const segment of segments) {
     if (typeof current !== "object" || current == null) {
+      return;
+    }
+
+    // Security: Block prototype pollution keys to prevent prototype chain
+    // traversal and information leakage via user-controlled paths
+    if (DANGEROUS_KEYS.has(segment.key)) {
       return;
     }
 
