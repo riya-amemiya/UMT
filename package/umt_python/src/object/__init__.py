@@ -1,3 +1,4 @@
+from .deep_clone import deep_clone
 from .get_objects_common import get_objects_common
 from .get_objects_diff import get_objects_diff
 from .object_has import object_has
@@ -13,6 +14,7 @@ from .object_pick import object_pick
 from .object_pick_deep import object_pick_deep
 
 __all__ = [
+    "deep_clone",
     "get_objects_common",
     "get_objects_diff",
     "map_keys",
