@@ -168,6 +168,7 @@ from .number import (
     to_ordinal,
 )
 from .object import (
+    deep_clone,
     object_has,
     object_is_empty,
     object_map_values,
@@ -333,6 +334,7 @@ __all__ = [
     "decode_base32_to_string",
     "decode_base58",
     "decode_base58_to_string",
+    "deep_clone",
     "deg_to_rad",
     "delete_spaces",
     "deviation_value",
@@ -464,6 +466,7 @@ __all__ = [
     "string_similarity",
     "subnet_mask_to_cidr",
     "subtraction",
+    "sum_precise",
     "tim_sort",
     "to_base64",
     "to_base_n",
