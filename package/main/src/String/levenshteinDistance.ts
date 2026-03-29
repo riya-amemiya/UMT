@@ -42,17 +42,30 @@ export const levenshteinDistance = (
     let previousDiagonal = row[0]; // Stores the value of matrix[i-1][j-1]
     row[0] = index; // Update first element for the new row (matrix[0][j])
 
-    const char2 = string2[index - 1];
+    // Use charCodeAt for integer comparison instead of string indexing,
+    // which avoids temporary single-char string allocation per cell.
+    // eslint-disable-next-line unicorn/prefer-code-point
+    const char2 = string2.charCodeAt(index - 1);
 
     for (let index = 1; index <= length1; index++) {
       const temporary = row[index]; // Store current value to become prevDiagonal for next iteration
-      const cost = string1[index - 1] === char2 ? 0 : 1;
+      // eslint-disable-next-line unicorn/prefer-code-point
+      const cost = string1.charCodeAt(index - 1) === char2 ? 0 : 1;
 
-      row[index] = Math.min(
-        row[index] + 1, // deletion (value from previous row, same column)
-        row[index - 1] + 1, // insertion (value from current row, previous column)
-        previousDiagonal + cost, // substitution (value from previous row, previous column)
-      );
+      // Manual min avoids variadic Math.min() call overhead per cell.
+      // This matches the pattern used in fuzzySearch's inline Levenshtein.
+      const deletion = row[index] + 1;
+      const insertion = row[index - 1] + 1;
+      const substitution = previousDiagonal + cost;
+
+      let value = deletion;
+      if (insertion < value) {
+        value = insertion;
+      }
+      if (substitution < value) {
+        value = substitution;
+      }
+      row[index] = value;
 
       previousDiagonal = temporary;
     }
