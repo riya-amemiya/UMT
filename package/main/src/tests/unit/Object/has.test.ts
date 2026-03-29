@@ -35,4 +35,30 @@ describe("has", () => {
     // @ts-expect-error
     expect(has(undefined, "a.b")).toBe(false);
   });
+
+  it("should block __proto__ key to prevent prototype pollution", () => {
+    const obj = { a: { b: 1 } };
+    expect(has(obj, "__proto__")).toBe(false);
+    expect(has(obj, "__proto__.polluted")).toBe(false);
+    expect(has(obj, "a.__proto__")).toBe(false);
+  });
+
+  it("should block constructor key to prevent prototype pollution", () => {
+    const obj = { a: { b: 1 } };
+    expect(has(obj, "constructor")).toBe(false);
+    expect(has(obj, "constructor.prototype")).toBe(false);
+  });
+
+  it("should block prototype key to prevent prototype pollution", () => {
+    const obj = { a: { b: 1 } };
+    expect(has(obj, "prototype")).toBe(false);
+  });
+
+  it("should block dangerous keys passed as array path", () => {
+    const obj = { a: { b: 1 } };
+    expect(has(obj, ["__proto__"])).toBe(false);
+    expect(has(obj, ["constructor"])).toBe(false);
+    expect(has(obj, ["prototype"])).toBe(false);
+    expect(has(obj, ["a", "__proto__"])).toBe(false);
+  });
 });
