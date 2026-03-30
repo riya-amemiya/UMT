@@ -13,50 +13,66 @@ export const levenshteinDistance = (
     return 0;
   }
 
-  const length1 = string1.length;
-  const length2 = string2.length;
+  let short = string1;
+  let long = string2;
+  let shortLength = short.length;
+  let longLength = long.length;
 
-  if (length1 === 0) {
-    return length2;
+  if (shortLength === 0) {
+    return longLength;
   }
-  if (length2 === 0) {
-    return length1;
+  if (longLength === 0) {
+    return shortLength;
   }
 
-  // Ensure string1 is the shorter string to minimize space complexity to O(min(N, M))
-  if (length1 > length2) {
-    return levenshteinDistance(string2, string1);
+  // Ensure short is the shorter string to minimize space complexity to O(min(N, M))
+  if (shortLength > longLength) {
+    short = string2;
+    long = string1;
+    shortLength = short.length;
+    longLength = long.length;
   }
 
   // Create a single row array to store distances
   // We only need the current row and the previous diagonal value
-  const row: number[] = Array.from({ length: length1 + 1 });
+  const row: number[] = Array.from({ length: shortLength + 1 });
 
-  // Initialize first row (0 to length1)
-  for (let index = 0; index <= length1; index++) {
+  // Initialize first row (0 to shortLength)
+  for (let index = 0; index <= shortLength; index++) {
     row[index] = index;
   }
 
-  // Iterate through each character of string2
-  for (let index = 1; index <= length2; index++) {
-    let previousDiagonal = row[0]; // Stores the value of matrix[i-1][j-1]
-    row[0] = index; // Update first element for the new row (matrix[0][j])
+  // Iterate through each character of the longer string (rows)
+  for (let rowIndex = 1; rowIndex <= longLength; rowIndex++) {
+    let previousDiagonal = row[0];
+    row[0] = rowIndex;
 
-    const char2 = string2[index - 1];
+    // eslint-disable-next-line unicorn/prefer-code-point
+    const charCode = long.charCodeAt(rowIndex - 1);
 
-    for (let index = 1; index <= length1; index++) {
-      const temporary = row[index]; // Store current value to become prevDiagonal for next iteration
-      const cost = string1[index - 1] === char2 ? 0 : 1;
+    for (let colIndex = 1; colIndex <= shortLength; colIndex++) {
+      const temporary = row[colIndex];
+      // eslint-disable-next-line unicorn/prefer-code-point
+      const cost = short.charCodeAt(colIndex - 1) === charCode ? 0 : 1;
 
-      row[index] = Math.min(
-        row[index] + 1, // deletion (value from previous row, same column)
-        row[index - 1] + 1, // insertion (value from current row, previous column)
-        previousDiagonal + cost, // substitution (value from previous row, previous column)
-      );
+      // Inline min of three values instead of Math.min() call to avoid
+      // function-call overhead in this hot loop
+      const deletion = row[colIndex] + 1;
+      const insertion = row[colIndex - 1] + 1;
+      const substitution = previousDiagonal + cost;
 
+      let value = deletion;
+      if (insertion < value) {
+        value = insertion;
+      }
+      if (substitution < value) {
+        value = substitution;
+      }
+
+      row[colIndex] = value;
       previousDiagonal = temporary;
     }
   }
 
-  return row[length1];
+  return row[shortLength];
 };
