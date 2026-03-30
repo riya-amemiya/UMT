@@ -15,3 +15,7 @@
 **Vulnerability:** `getObjectsCommon` and `getObjectsDiff` were vulnerable to Prototype Pollution because they iterated over and copied all keys, including `__proto__`, `constructor`, and `prototype`.
 **Learning:** Even simple object diffing or commonality utilities need explicit prototype pollution guards because they dynamically assign keys to a new object based on unsanitized input objects.
 **Prevention:** Always explicitly check and ignore `__proto__`, `constructor`, and `prototype` keys during object iteration in any utility that dynamically constructs or merges objects.
+## 2026-03-30 - Missing Input Validation in ipToBinaryString
+**Vulnerability:** The `ipToBinaryString` function accepted arbitrary strings without validating octet count, numeric format, or value range (0-255). Since it is the foundational function used by `ipToLong`, `isInRange`, `isPrivateIp`, `getNetworkAddress`, and `subnetMaskToCidr`, malformed inputs could cause silent incorrect results in security-critical IP-based access control decisions.
+**Learning:** Core parsing functions used by security-sensitive utilities must enforce strict input validation. Silent failures (returning garbage data instead of throwing) can lead to access control bypasses when downstream functions rely on the parsed result for allow/deny decisions.
+**Prevention:** Always validate format and value ranges in IP address parsing functions. Throw descriptive errors for malformed inputs rather than silently producing incorrect results.
