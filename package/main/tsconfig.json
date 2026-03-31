@@ -3,6 +3,8 @@
 		"allowJs": true,
 		"allowSyntheticDefaultImports": true,
 		"baseUrl": "./src",
+		"ignoreDeprecations": "6.0",
+		"rootDir": "./src",
 		"declaration": true,
 		"declarationMap": false,
 		"emitDecoratorMetadata": true,
