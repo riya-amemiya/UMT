@@ -47,6 +47,11 @@
 		"target": "ESNext",
 		"typeRoots": [
 			"node_modules/@types"
+		],
+		"types": [
+			"bun",
+			"node",
+			"jest"
 		]
 	},
 	"include": [
