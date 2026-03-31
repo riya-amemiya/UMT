@@ -169,7 +169,7 @@ jobs:
           echo "lines=$(jq '.total.lines.pct' coverage/coverage-summary.json)" >> $GITHUB_OUTPUT
       - name: Post Coverage Comment on PR
         if: always() && github.event_name == 'pull_request' && steps.check_coverage.outputs.passed == 'false'
-        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7
+        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v7
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
@@ -237,13 +237,13 @@ jobs:
             });
       - name: Upload Coverage to Codecov
         if: always()
-        uses: codecov/codecov-action@1af58845a975a7985b0beb0cbe6fbbb71a41dbad # v5.5.3
+        uses: codecov/codecov-action@57e3a136b779b570ffcdbf80b3bdc90e7fab3de2 # v6.0.0
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           slug: riya-amemiya/UMT
       - name: Upload Test Results to Codecov
         if: ${{ !cancelled() }}
-        uses: codecov/codecov-action@1af58845a975a7985b0beb0cbe6fbbb71a41dbad # v5.5.3
+        uses: codecov/codecov-action@57e3a136b779b570ffcdbf80b3bdc90e7fab3de2 # v6.0.0
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           report_type: test_results
