@@ -1068,7 +1068,7 @@ describe("email", () => {
     for (const level of levels) {
       expect(
         parseEmail({
-          email: "a".repeat(321) + "@example.com",
+          email: `${"a".repeat(321)}@example.com`,
           options: { level },
         }).valid,
       ).toBe(false);
@@ -1076,7 +1076,7 @@ describe("email", () => {
 
     // Exactly at the limit (320 chars) should still be evaluated by regex
     // (though likely invalid due to other RFC constraints)
-    const atLimit = "a".repeat(308) + "@example.com";
+    const atLimit = `${"a".repeat(308)}@example.com`;
     expect(atLimit.length).toBe(320);
     // This should not be short-circuited by length check
     // The regex will evaluate it (basic level has no total length constraint in regex)
