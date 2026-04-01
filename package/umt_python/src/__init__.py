@@ -246,6 +246,7 @@ from .unit import (
     unit_converter_initialization,
 )
 from .url import (
+    build_url,
     is_absolute_url,
     join_path,
     parse_query_string,
@@ -313,6 +314,7 @@ __all__ = [
     "birthday",
     "birthday_simple",
     "bitwise",
+    "build_url",
     "camel_case",
     "check_flag_alignment",
     "chunk",
