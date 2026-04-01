@@ -24,7 +24,7 @@ describe("escapeHtml", () => {
   it("should escape all special characters", () => {
     const input = `<script>alert("XSS & 'injection'");</script>`;
     const expected =
-      "&lt;script&gt;alert(&quot;XSS &amp; &#39;injection&#39;&quot;);&lt;/script&gt;";
+      "&lt;script&gt;alert(&quot;XSS &amp; &#39;injection&#39;&quot;);&lt;&#x2F;script&gt;";
 
     expect(escapeHtml(input)).toBe(expected);
   });
@@ -49,7 +49,7 @@ describe("escapeHtml", () => {
   it("should handle mixed content", () => {
     const input = "User input: <b>Hello & 'World'</b>";
     const expected =
-      "User input: &lt;b&gt;Hello &amp; &#39;World&#39;&lt;/b&gt;";
+      "User input: &lt;b&gt;Hello &amp; &#39;World&#39;&lt;&#x2F;b&gt;";
 
     expect(escapeHtml(input)).toBe(expected);
   });
@@ -60,6 +60,16 @@ describe("escapeHtml", () => {
       "&lt;img src=&quot;test.jpg&quot; alt=&quot;Tom &amp; Jerry&#39;s picture&quot;&gt;";
 
     expect(escapeHtml(input)).toBe(expected);
+  });
+
+  it("should escape backticks", () => {
+    expect(escapeHtml("Use `template` literals")).toBe(
+      "Use &#x60;template&#x60; literals",
+    );
+  });
+
+  it("should escape forward slashes", () => {
+    expect(escapeHtml("</script>")).toBe("&lt;&#x2F;script&gt;");
   });
 
   it("should handle JavaScript code", () => {
