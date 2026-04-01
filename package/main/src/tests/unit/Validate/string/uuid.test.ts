@@ -120,4 +120,21 @@ describe("uuid", () => {
       validateUUID.validate("123e4567-e89b-42d3-a456-4266141740001234"),
     ).toBe(false);
   });
+
+  it("should reject all UUIDs when all versions are out of range", () => {
+    const validateUUID = uuid([0, 8, 99]);
+    expect(validateUUID.validate("123e4567-e89b-42d3-a456-426614174000")).toBe(
+      false,
+    );
+    expect(validateUUID.validate("123e4567-e89b-82d3-a456-426614174000")).toBe(
+      false,
+    );
+  });
+
+  it("should filter out invalid versions and keep valid ones", () => {
+    const validateUUID = uuid([4, 99]);
+    expect(validateUUID.validate("123e4567-e89b-42d3-a456-426614174000")).toBe(
+      true,
+    );
+  });
 });
