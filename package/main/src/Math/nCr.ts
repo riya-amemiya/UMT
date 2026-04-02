@@ -19,8 +19,13 @@ export const nCr = (n: number, r: number): number => {
     return 1;
   }
 
-  const numerator = nPr(n, r);
-  const denominator = factorial(r);
+  // Performance: use symmetry property nCr(n, r) = nCr(n, n-r) to
+  // minimize the number of multiplications when r > n/2.
+  // e.g. nCr(100, 97) becomes nCr(100, 3), reducing 193 multiplications to 5.
+  const effectiveR = Math.min(r, n - r);
+
+  const numerator = nPr(n, effectiveR);
+  const denominator = factorial(effectiveR);
 
   const result = numerator / denominator;
 
