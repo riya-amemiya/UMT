@@ -3,6 +3,10 @@ import { isPlainObject } from "@/Object/isPlainObject";
 
 const MAX_MERGE_DEPTH = 100;
 
+// Performance: use an index parameter instead of Array.shift() to advance
+// through sources. shift() is O(n) because it re-indexes every remaining
+// element, making the overall merge O(n²) in the number of sources.
+// An index makes each step O(1) and avoids mutating the sources array.
 const mergeDeepInternal = <
   T extends Record<string, unknown>,
   U extends Record<string, unknown>[],
@@ -10,6 +14,7 @@ const mergeDeepInternal = <
   target: T,
   sources: U,
   depth: number,
+  sourceIndex = 0,
 ): T & UnionToIntersection<U[number]> => {
   if (depth > MAX_MERGE_DEPTH) {
     throw new Error(
@@ -17,11 +22,11 @@ const mergeDeepInternal = <
     );
   }
 
-  if (sources.length === 0) {
+  if (sourceIndex >= sources.length) {
     return target as T & UnionToIntersection<U[number]>;
   }
 
-  const source = sources.shift();
+  const source = sources[sourceIndex];
 
   if (isPlainObject(target) && isPlainObject(source)) {
     const result = { ...target };
@@ -42,14 +47,19 @@ const mergeDeepInternal = <
       }
     }
 
-    return mergeDeepInternal(result, sources as unknown as U, depth + 1) as T &
-      UnionToIntersection<U[number]>;
+    return mergeDeepInternal(
+      result,
+      sources as unknown as U,
+      depth + 1,
+      sourceIndex + 1,
+    ) as T & UnionToIntersection<U[number]>;
   }
 
   return mergeDeepInternal(
     source as T,
     sources as unknown as U,
     depth + 1,
+    sourceIndex + 1,
   ) as T & UnionToIntersection<U[number]>;
 };
 
