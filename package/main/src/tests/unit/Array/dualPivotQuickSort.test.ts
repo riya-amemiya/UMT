@@ -87,7 +87,9 @@ describe("dualPivotQuickSort", () => {
     // elements forces the two pivots to be adjacent after partitioning,
     // covering the false branch of `rightPivotIndex - leftPivotIndex > 1`.
     const array = Array.from({ length: 20 }, () => 1);
-    expect(dualPivotQuickSort([...array], undefined, 0, array.length - 1, 1)).toEqual(array);
+    expect(
+      dualPivotQuickSort([...array], undefined, 0, array.length - 1, 1),
+    ).toEqual(array);
   });
 
   test("should sort array of objects using custom comparison", () => {
