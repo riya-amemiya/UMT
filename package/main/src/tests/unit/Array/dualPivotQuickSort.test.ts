@@ -81,6 +81,15 @@ describe("dualPivotQuickSort", () => {
     ).toEqual([1, 1, 2, 3, 3, 4, 5, 5, 6, 9]);
   });
 
+  test("should handle adjacent pivots (empty middle partition)", () => {
+    // Use a low insertion sort threshold so sortRange recurses into
+    // dual-pivot partitioning on small subarrays. An array of identical
+    // elements forces the two pivots to be adjacent after partitioning,
+    // covering the false branch of `rightPivotIndex - leftPivotIndex > 1`.
+    const array = Array.from({ length: 20 }, () => 1);
+    expect(dualPivotQuickSort([...array], undefined, 0, array.length - 1, 1)).toEqual(array);
+  });
+
   test("should sort array of objects using custom comparison", () => {
     const array = [
       { id: 3, value: "c" },
