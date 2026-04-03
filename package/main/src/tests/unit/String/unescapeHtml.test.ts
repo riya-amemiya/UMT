@@ -75,21 +75,21 @@ describe("unescapeHtml", () => {
 
   it("should handle decimal numeric character references", () => {
     expect(unescapeHtml("&#65;")).toBe("A");
-    expect(unescapeHtml("&#8364;")).toBe("€");
-    expect(unescapeHtml("&#128512;")).toBe("😀");
+    expect(unescapeHtml("&#8364;")).toBe("\u20AC");
+    expect(unescapeHtml("&#128512;")).toBe("\uD83D\uDE00");
   });
 
   it("should handle hexadecimal numeric character references", () => {
     expect(unescapeHtml("&#x41;")).toBe("A");
-    expect(unescapeHtml("&#x20AC;")).toBe("€");
-    expect(unescapeHtml("&#x1F600;")).toBe("😀");
+    expect(unescapeHtml("&#x20AC;")).toBe("\u20AC");
+    expect(unescapeHtml("&#x1F600;")).toBe("\uD83D\uDE00");
   });
 
   it("should handle mixed case hexadecimal references", () => {
     expect(unescapeHtml("&#x41;")).toBe("A");
     expect(unescapeHtml("&#X41;")).toBe("&#X41;"); // Should not match uppercase X
-    expect(unescapeHtml("&#x20ac;")).toBe("€");
-    expect(unescapeHtml("&#x20AC;")).toBe("€");
+    expect(unescapeHtml("&#x20ac;")).toBe("\u20AC");
+    expect(unescapeHtml("&#x20AC;")).toBe("\u20AC");
   });
 
   it("should handle extended entities", () => {
@@ -164,14 +164,46 @@ describe("unescapeHtml", () => {
   });
 
   it("should handle Unicode characters in numeric references", () => {
-    expect(unescapeHtml("&#12354;")).toBe("あ");
-    expect(unescapeHtml("&#x3042;")).toBe("あ");
-    expect(unescapeHtml("&#8226;")).toBe("•");
-    expect(unescapeHtml("&#x2022;")).toBe("•");
+    expect(unescapeHtml("&#12354;")).toBe("\u3042");
+    expect(unescapeHtml("&#x3042;")).toBe("\u3042");
+    expect(unescapeHtml("&#8226;")).toBe("\u2022");
+    expect(unescapeHtml("&#x2022;")).toBe("\u2022");
   });
 
   it("should preserve already unescaped content", () => {
     const input = "Already < unescaped & content with 'quotes'";
     expect(unescapeHtml(input)).toBe(input);
+  });
+
+  it("should reject NULL byte code points to prevent null-byte injection", () => {
+    expect(unescapeHtml("&#0;")).toBe("&#0;");
+    expect(unescapeHtml("&#x0;")).toBe("&#x0;");
+    expect(unescapeHtml("&#x00;")).toBe("&#x00;");
+  });
+
+  it("should reject C0 control characters except TAB, LF, CR", () => {
+    // Blocked C0 control chars
+    expect(unescapeHtml("&#1;")).toBe("&#1;");
+    expect(unescapeHtml("&#8;")).toBe("&#8;");
+    expect(unescapeHtml("&#x1F;")).toBe("&#x1F;");
+    // Allowed: TAB (9), LF (10), CR (13)
+    expect(unescapeHtml("&#9;")).toBe("\t");
+    expect(unescapeHtml("&#10;")).toBe("\n");
+    expect(unescapeHtml("&#13;")).toBe("\r");
+  });
+
+  it("should reject DEL and C1 control characters", () => {
+    expect(unescapeHtml("&#127;")).toBe("&#127;");
+    expect(unescapeHtml("&#x7F;")).toBe("&#x7F;");
+    expect(unescapeHtml("&#128;")).toBe("&#128;");
+    expect(unescapeHtml("&#x9F;")).toBe("&#x9F;");
+    // 160 (non-breaking space) is allowed
+    expect(unescapeHtml("&#160;")).toBe("\u00A0");
+  });
+
+  it("should reject surrogate code points to prevent malformed strings", () => {
+    expect(unescapeHtml("&#xD800;")).toBe("&#xD800;");
+    expect(unescapeHtml("&#xDFFF;")).toBe("&#xDFFF;");
+    expect(unescapeHtml("&#55296;")).toBe("&#55296;");
   });
 });
