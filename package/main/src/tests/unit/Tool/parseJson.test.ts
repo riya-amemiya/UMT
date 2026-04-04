@@ -35,4 +35,27 @@ describe("parseJson", () => {
     const result = parseJson(jsonString);
     expect(result).toEqual({ key: true });
   });
+
+  it("should strip __proto__ keys to prevent prototype pollution", () => {
+    const malicious = '{"__proto__": {"polluted": true}, "safe": 1}';
+    const result = parseJson<Record<string, unknown>>(malicious);
+    expect(result).toEqual({ safe: 1 });
+    expect(Object.keys(result)).not.toContain("__proto__");
+    // Verify Object.prototype was not polluted
+    // biome-ignore lint/complexity/useLiteralKeys: TS strict requires bracket access on index signatures
+    expect(({} as Record<string, unknown>)["polluted"]).toBeUndefined();
+  });
+
+  it("should strip constructor and prototype keys", () => {
+    const malicious =
+      '{"constructor": {"polluted": true}, "prototype": {"bad": true}, "ok": 2}';
+    const result = parseJson<Record<string, unknown>>(malicious);
+    expect(result).toEqual({ ok: 2 });
+  });
+
+  it("should strip dangerous keys in nested objects", () => {
+    const malicious = '{"a": {"__proto__": {"x": 1}, "b": 2}}';
+    const result = parseJson<Record<string, unknown>>(malicious);
+    expect(result).toEqual({ a: { b: 2 } });
+  });
 });
