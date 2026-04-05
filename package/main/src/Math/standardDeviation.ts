@@ -1,5 +1,7 @@
 import { average } from "./average";
 
+import { addition } from "@/Math/addition";
+import { division } from "@/Math/division";
 import { multiplication } from "@/Math/multiplication";
 import { subtract } from "@/Math/subtract";
 
@@ -15,17 +17,21 @@ import { subtract } from "@/Math/subtract";
  * while a high standard deviation indicates that the values are spread out over a wider range.
  */
 export const standardDeviation = (values: number[]): number => {
+  if (values.length === 0) {
+    return 0;
+  }
+
   const avg = average(values);
 
-  // Calculate the squared differences from the mean
-  const squareDiffs = values.map((value) => {
+  // Accumulate sum of squared differences in a single pass,
+  // avoiding an intermediate array allocation and extra traversal
+  let sumSquareDiffs = 0;
+  for (const value of values) {
     const diff = subtract(value, avg);
-    return multiplication(diff, diff);
-  });
+    sumSquareDiffs = addition(sumSquareDiffs, multiplication(diff, diff));
+  }
 
-  // Calculate the mean of the squared differences
-  const avgSquareDiff = average(squareDiffs);
+  const avgSquareDiff = division(sumSquareDiffs, values.length);
 
-  // Return the square root of the mean squared differences
   return Math.sqrt(avgSquareDiff);
 };
