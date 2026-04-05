@@ -97,7 +97,9 @@ from .error import (
     safe_execute,
 )
 from .function import (
+    ThrottledFunction,
     curry,
+    throttle,
 )
 from .ip import (
     cidr_to_long,
@@ -304,6 +306,7 @@ __all__ = [
     "ReducedFraction",
     "Result",
     "Success",
+    "ThrottledFunction",
     "ValidatedSortRange",
     "addition",
     "apply_insertion_sort_if_needed",
@@ -469,6 +472,7 @@ __all__ = [
     "subnet_mask_to_cidr",
     "subtraction",
     "sum_precise",
+    "throttle",
     "tim_sort",
     "to_base64",
     "to_base_n",

@@ -13,3 +13,7 @@
 ## 2026-03-24 - Predicate Combinators Require Boxed Closures in Rust
 **Mismatch:** TypeScript's `every`/`some` accept variadic predicate arguments directly, while Rust requires `Vec<Box<dyn Fn>>` due to heterogeneous closure types.
 **Resolution:** Introduced `BoxPredicate<T>` type alias in the predicate module to keep the API ergonomic and satisfy Clippy's `type_complexity` lint. The `not` function uses generics with `Fn` trait bound instead, as it only takes a single predicate.
+
+## 2026-04-05 - Port `throttle` from Function module to umt_python
+**Ported:** `throttle` function from `package/main/src/Function/throttle.ts` to `package/umt_python/src/function/throttle.py`.
+**Adaptation:** TypeScript uses `setTimeout`/`clearTimeout` for scheduling; Python uses `threading.Timer` with a lock for thread safety. The wait parameter is in seconds (Python convention) rather than milliseconds (JS convention). The `ThrottledFunction` class wraps the callable and exposes a `cancel()` method matching the TS `ThrottledFunction` interface. Uses `time.monotonic()` instead of `Date.now()` for robust elapsed-time tracking.
