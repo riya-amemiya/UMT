@@ -36,11 +36,8 @@ describe("decodeBase58", () => {
     expect(Array.from(result)).toEqual([255, 254, 253, 252, 251]);
   });
 
-  test("treats invalid characters as 0", () => {
-    // '0' is not in the Base58 alphabet, so it should fall back to 0 via ?? 0
-    const resultWithInvalid = decodeBase58("0");
-    // Invalid char maps to index 0, bigNumber stays 0, no bytes produced,
-    // and '0' is not '1' so no leading zeros are added
-    expect(Array.from(resultWithInvalid)).toEqual([]);
+  test("throws on invalid characters", () => {
+    // '0' is not in the Base58 alphabet
+    expect(() => decodeBase58("0")).toThrow("Invalid Base58 character");
   });
 });

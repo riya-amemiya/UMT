@@ -15,7 +15,11 @@ export const decodeBase58 = (input: string): Uint8Array => {
   let bigNumber = 0n;
 
   for (const char of input) {
-    const value = base58CharToIndex.get(char) ?? 0;
+    // Security: reject invalid characters to prevent silent data corruption
+    const value = base58CharToIndex.get(char);
+    if (value === undefined) {
+      throw new Error(`Invalid Base58 character: "${char}"`);
+    }
     bigNumber = bigNumber * 58n + BigInt(value);
   }
 
