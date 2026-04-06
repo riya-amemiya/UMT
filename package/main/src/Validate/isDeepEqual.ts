@@ -83,12 +83,14 @@ export function isDeepEqual(
           }
         }
       } else {
-        const yCopy = [...y];
+        // Performance: Use Set<number> to track matched indices instead of
+        // splice(), avoiding O(n) array shifts per removal (O(n²) → O(n)).
+        const usedIndices = new Set<number>();
         for (const itemX of x) {
           let found = false;
-          for (let index = 0; index < yCopy.length; index++) {
-            if (compare(itemX, yCopy[index])) {
-              yCopy.splice(index, 1);
+          for (const [index, itemY] of y.entries()) {
+            if (!usedIndices.has(index) && compare(itemX, itemY)) {
+              usedIndices.add(index);
               found = true;
               break;
             }
@@ -97,7 +99,7 @@ export function isDeepEqual(
             return false;
           }
         }
-        return yCopy.length === 0;
+        return usedIndices.size === y.length;
       }
       return true;
     }
