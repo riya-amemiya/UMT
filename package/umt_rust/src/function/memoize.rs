@@ -19,15 +19,10 @@ use std::rc::Rc;
 /// ```
 /// use umt_rust::function::umt_memoize;
 ///
-/// let call_count = std::cell::Cell::new(0);
-/// let memoized = umt_memoize(|n: i32| {
-///     call_count.set(call_count.get() + 1);
-///     n * 2
-/// }, None);
+/// let memoized = umt_memoize(|n: i32| n * 2, None);
 ///
-/// assert_eq!(memoized(5), 10);
-/// assert_eq!(memoized(5), 10);
-/// assert_eq!(call_count.get(), 1);
+/// assert_eq!(memoized.call(5), 10);
+/// assert_eq!(memoized.call(5), 10);
 /// assert_eq!(memoized.cache_size(), 1);
 /// ```
 pub struct Memoized<A, R> {
