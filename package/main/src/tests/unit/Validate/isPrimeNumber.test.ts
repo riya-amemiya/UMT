@@ -30,6 +30,8 @@ describe("isPrimeNumber", () => {
     expect(isPrimeNumber(15)).toBe(false);
     expect(isPrimeNumber(16)).toBe(false);
     expect(isPrimeNumber(18)).toBe(false);
+    expect(isPrimeNumber(25)).toBe(false);
+    expect(isPrimeNumber(49)).toBe(false);
   });
   test("should return false for negative numbers", () => {
     expect(isPrimeNumber(-2)).toBe(false);
