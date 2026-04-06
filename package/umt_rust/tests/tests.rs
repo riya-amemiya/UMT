@@ -67,6 +67,7 @@ mod error {
 
 mod function {
     mod test_curry;
+    mod test_memoize;
     mod test_once;
 }
 
