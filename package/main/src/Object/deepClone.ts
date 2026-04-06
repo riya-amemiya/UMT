@@ -1,15 +1,25 @@
+// Security: cap recursion depth to prevent stack overflow from deeply nested
+// objects, which could be used for denial-of-service.
+const MAX_CLONE_DEPTH = 100;
+
 /**
  * Recursively clones a value.
  */
-const cloneValue = (value: unknown): unknown => {
+const cloneValue = (value: unknown, depth: number): unknown => {
   if (value === null || typeof value !== "object") {
     return value;
+  }
+
+  if (depth > MAX_CLONE_DEPTH) {
+    throw new Error(
+      `deepClone: maximum recursion depth of ${MAX_CLONE_DEPTH} exceeded`,
+    );
   }
 
   if (Array.isArray(value)) {
     const result: unknown[] = [];
     for (const element of value) {
-      result.push(cloneValue(element));
+      result.push(cloneValue(element, depth + 1));
     }
     return result;
   }
@@ -25,7 +35,7 @@ const cloneValue = (value: unknown): unknown => {
   if (value instanceof Map) {
     const result = new Map();
     for (const [k, v] of value) {
-      result.set(cloneValue(k), cloneValue(v));
+      result.set(cloneValue(k, depth + 1), cloneValue(v, depth + 1));
     }
     return result;
   }
@@ -33,7 +43,7 @@ const cloneValue = (value: unknown): unknown => {
   if (value instanceof Set) {
     const result = new Set();
     for (const v of value) {
-      result.add(cloneValue(v));
+      result.add(cloneValue(v, depth + 1));
     }
     return result;
   }
@@ -44,7 +54,10 @@ const cloneValue = (value: unknown): unknown => {
     if (key === "__proto__" || key === "constructor" || key === "prototype") {
       continue;
     }
-    result[key] = cloneValue((value as Record<string, unknown>)[key]);
+    result[key] = cloneValue(
+      (value as Record<string, unknown>)[key],
+      depth + 1,
+    );
   }
   return result;
 };
@@ -67,5 +80,5 @@ export const deepClone = <T>(value: T): T => {
   if (value === null || typeof value !== "object") {
     return value;
   }
-  return cloneValue(value) as T;
+  return cloneValue(value, 0) as T;
 };
