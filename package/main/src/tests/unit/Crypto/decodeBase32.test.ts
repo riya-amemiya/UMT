@@ -34,11 +34,8 @@ describe("decodeBase32", () => {
     expect(new TextDecoder().decode(decodeBase32("MZXW6YTB"))).toBe("fooba");
   });
 
-  test("treats invalid characters as 0", () => {
-    // '1' is not in the Base32 alphabet, so it should fall back to 0 via ?? 0
-    const resultWithInvalid = decodeBase32("1A");
-    const resultWithZero = decodeBase32("AA");
-    // Invalid char maps to 0 (same as 'A'), so results should be equal
-    expect(Array.from(resultWithInvalid)).toEqual(Array.from(resultWithZero));
+  test("throws on invalid characters", () => {
+    // '1' is not in the Base32 alphabet
+    expect(() => decodeBase32("1A")).toThrow("Invalid Base32 character");
   });
 });
