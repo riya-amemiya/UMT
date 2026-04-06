@@ -1,5 +1,5 @@
 // Security: cap recursion depth to prevent stack overflow from deeply nested
-// or circular-reference objects, which could be used for denial-of-service.
+// objects, which could be used for denial-of-service.
 const MAX_CLONE_DEPTH = 100;
 
 /**
