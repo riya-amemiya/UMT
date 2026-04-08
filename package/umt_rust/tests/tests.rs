@@ -213,6 +213,7 @@ mod object {
     mod test_pick;
     mod test_pick_deep;
     mod test_value;
+    mod test_deep_clone;
 }
 
 mod validate;
