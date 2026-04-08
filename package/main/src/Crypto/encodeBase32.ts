@@ -11,7 +11,10 @@ export const encodeBase32 = (input: string | Uint8Array): string => {
   const bytes =
     typeof input === "string" ? new TextEncoder().encode(input) : input;
 
-  let result = "";
+  // Performance: collect characters in an array and join at the end instead of
+  // repeated string concatenation, which copies the entire string on every +=
+  // and is O(n²) for large inputs. Array push + join is O(n).
+  const chars: string[] = [];
   let buffer = 0;
   let bufferLength = 0;
 
@@ -21,16 +24,18 @@ export const encodeBase32 = (input: string | Uint8Array): string => {
 
     while (bufferLength >= 5) {
       bufferLength -= 5;
-      result += alphabet[(buffer >> bufferLength) & 0x1f];
+      chars.push(alphabet[(buffer >> bufferLength) & 0x1f]);
     }
   }
 
   if (bufferLength > 0) {
-    result += alphabet[(buffer << (5 - bufferLength)) & 0x1f];
+    chars.push(alphabet[(buffer << (5 - bufferLength)) & 0x1f]);
   }
 
-  const paddingLength = (8 - (result.length % 8)) % 8;
-  result += "=".repeat(paddingLength);
+  const paddingLength = (8 - (chars.length % 8)) % 8;
+  if (paddingLength > 0) {
+    chars.push("=".repeat(paddingLength));
+  }
 
-  return result;
+  return chars.join("");
 };
