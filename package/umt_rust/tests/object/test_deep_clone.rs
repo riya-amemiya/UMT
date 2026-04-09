@@ -96,10 +96,7 @@ fn test_filters_dangerous_keys_in_nested_objects() {
 
 #[test]
 fn test_clone_empty_structures() {
-    assert_eq!(
-        umt_deep_clone(&Value::Array(vec![])),
-        Value::Array(vec![])
-    );
+    assert_eq!(umt_deep_clone(&Value::Array(vec![])), Value::Array(vec![]));
     assert_eq!(
         umt_deep_clone(&Value::Object(HashMap::new())),
         Value::Object(HashMap::new())
