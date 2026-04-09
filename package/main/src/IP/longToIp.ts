@@ -15,14 +15,7 @@ export const longToIp = (long: number): string => {
     );
   }
 
-  // Convert to binary string and ensure 32-bit length
-  const binary = long.toString(2).padStart(32, "0");
-
-  // Split into octets and convert to decimal
-  const octets = Array.from({ length: 4 }, (_, index) =>
-    Number.parseInt(binary.slice(index * 8, (index + 1) * 8), 2),
-  );
-
-  // Join octets with dots
-  return octets.join(".");
+  // Extract each octet using bitwise operations instead of string conversion.
+  // This avoids creating a 32-char binary string, slicing, and parsing it back.
+  return `${(long >>> 24) & 0xff}.${(long >>> 16) & 0xff}.${(long >>> 8) & 0xff}.${long & 0xff}`;
 };
