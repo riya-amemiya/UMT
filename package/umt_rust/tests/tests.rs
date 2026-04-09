@@ -201,6 +201,7 @@ mod predicate {
 }
 
 mod object {
+    mod test_deep_clone;
     mod test_has;
     mod test_is_empty;
     mod test_is_plain_object;
