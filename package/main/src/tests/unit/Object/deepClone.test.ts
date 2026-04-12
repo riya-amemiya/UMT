@@ -1,4 +1,5 @@
 import { deepClone } from "@/Object/deepClone";
+import { removePrototype } from "@/Object/removePrototype";
 
 describe("deepClone", () => {
   it("should deep clone a simple object", () => {
@@ -74,7 +75,7 @@ describe("deepClone", () => {
 
   it("should prevent prototype pollution via __proto__", () => {
     const payload = JSON.parse('{"__proto__": {"polluted": true}}');
-    const cloned = deepClone(payload);
+    const cloned = deepClone(removePrototype(payload));
 
     // Should not have __proto__ property set directly
     expect(Object.hasOwn(cloned, "__proto__")).toBe(false);
@@ -84,7 +85,7 @@ describe("deepClone", () => {
     const payload = JSON.parse(
       '{"constructor": {"prototype": {"polluted": true}}}',
     );
-    const cloned = deepClone(payload);
+    const cloned = deepClone(removePrototype(payload));
 
     // Should not overwrite constructor
     expect(cloned.constructor).toBe(Object);

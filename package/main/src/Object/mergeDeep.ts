@@ -32,10 +32,6 @@ const mergeDeepInternal = <
     const result = { ...target };
 
     for (const key in source) {
-      if (key === "__proto__" || key === "constructor" || key === "prototype") {
-        continue;
-      }
-
       if (Object.hasOwn(source, key)) {
         const sourceValue = source[key];
         const targetValue = result[key];
@@ -68,6 +64,16 @@ const mergeDeepInternal = <
  * @param target - The target object to merge into
  * @param sources - The source objects to merge from
  * @returns The deeply merged object
+ *
+ * @remarks
+ * **Prototype pollution warning:** This function does not filter out
+ * prototype-polluting keys (`__proto__`, `constructor`, `prototype`).
+ * If processing user-controlled input, sanitize with the appropriate
+ * `removePrototype*` helper before calling this function:
+ * - `removePrototype` — shallow sanitization of a single object
+ * - `removePrototypeDeep` — recursive sanitization of a single object (for deeply nested data)
+ * - `removePrototypeMap` — shallow sanitization of an array of objects
+ * - `removePrototypeMapDeep` — recursive sanitization of an array of objects (for deeply nested data)
  */
 export const mergeDeep = <
   T extends Record<string, unknown>,

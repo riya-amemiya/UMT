@@ -12,3 +12,7 @@ export * from "./mergeDeep";
 export * from "./omit";
 export * from "./pick";
 export * from "./pickDeep";
+export * from "./removePrototype";
+export * from "./removePrototypeDeep";
+export * from "./removePrototypeMap";
+export * from "./removePrototypeMapDeep";

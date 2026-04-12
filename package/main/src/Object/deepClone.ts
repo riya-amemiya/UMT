@@ -51,9 +51,6 @@ const cloneValue = (value: unknown, depth: number): unknown => {
   // Plain object
   const result: Record<string, unknown> = {};
   for (const key of Object.keys(value as Record<string, unknown>)) {
-    if (key === "__proto__" || key === "constructor" || key === "prototype") {
-      continue;
-    }
     result[key] = cloneValue(
       (value as Record<string, unknown>)[key],
       depth + 1,
@@ -75,6 +72,16 @@ const cloneValue = (value: unknown, depth: number): unknown => {
  * cloned.b.c = 99;
  * original.b.c; // still 2
  * ```
+ *
+ * @remarks
+ * **Prototype pollution warning:** This function does not filter out
+ * prototype-polluting keys (`__proto__`, `constructor`, `prototype`).
+ * If processing user-controlled input, sanitize with the appropriate
+ * `removePrototype*` helper before calling this function:
+ * - `removePrototype` — shallow sanitization of a single object
+ * - `removePrototypeDeep` — recursive sanitization of a single object (for deeply nested data)
+ * - `removePrototypeMap` — shallow sanitization of an array of objects
+ * - `removePrototypeMapDeep` — recursive sanitization of an array of objects (for deeply nested data)
  */
 export const deepClone = <T>(value: T): T => {
   if (value === null || typeof value !== "object") {

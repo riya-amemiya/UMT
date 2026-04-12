@@ -1,4 +1,5 @@
 import { mergeDeep } from "@/Object/mergeDeep";
+import { removePrototype } from "@/Object/removePrototype";
 
 describe("mergeDeep", () => {
   it("should deeply merge nested objects", () => {
@@ -156,7 +157,7 @@ describe("mergeDeep", () => {
   it("should prevent prototype pollution via __proto__", () => {
     const payload = JSON.parse('{"__proto__": {"polluted": true}}');
     const target = {};
-    const result = mergeDeep(target, payload);
+    const result = mergeDeep(target, removePrototype(payload));
 
     // Should not have polluted property on the result (local pollution)
     // biome-ignore lint/suspicious/noExplicitAny: ignore
@@ -170,7 +171,7 @@ describe("mergeDeep", () => {
       '{"constructor": {"prototype": {"polluted": true}}}',
     );
     const target = {};
-    const result = mergeDeep(target, payload);
+    const result = mergeDeep(target, removePrototype(payload));
 
     // Should not have polluted property on Object.prototype (global pollution)
     // biome-ignore lint/suspicious/noExplicitAny: ignore
@@ -182,7 +183,7 @@ describe("mergeDeep", () => {
   it("should prevent prototype pollution via prototype", () => {
     const payload = JSON.parse('{"prototype": {"polluted": true}}');
     const target = {};
-    const result = mergeDeep(target, payload);
+    const result = mergeDeep(target, removePrototype(payload));
 
     // biome-ignore lint/suspicious/noExplicitAny: ignore
     expect((result as any).prototype).toBeUndefined();

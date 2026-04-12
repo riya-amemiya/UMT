@@ -13,6 +13,16 @@ import { isPlainObject } from "@/Object/isPlainObject";
  * @param {...Record<string, unknown>[]} objects - Additional objects to compare.
  * @returns {Partial<T>} Object containing only the key-value pairs shared by all inputs.
  *
+ * @remarks
+ * **Prototype pollution warning:** This function does not filter out
+ * prototype-polluting keys (`__proto__`, `constructor`, `prototype`).
+ * If processing user-controlled input, sanitize with the appropriate
+ * `removePrototype*` helper before calling this function:
+ * - `removePrototype` — shallow sanitization of a single object
+ * - `removePrototypeDeep` — recursive sanitization of a single object (for deeply nested data)
+ * - `removePrototypeMap` — shallow sanitization of an array of objects
+ * - `removePrototypeMapDeep` — recursive sanitization of an array of objects (for deeply nested data)
+ *
  * @example
  * ```typescript
  * getObjectsCommon({ a: 1, b: 2 }, { a: 1, c: 3 });
@@ -33,10 +43,6 @@ export const getObjectsCommon = <T extends Record<string, unknown>>(
   const result = {} as Partial<T>;
 
   for (const [key, value] of Object.entries(object)) {
-    if (key === "__proto__" || key === "constructor" || key === "prototype") {
-      continue;
-    }
-
     let isCommon = true;
     let allPlainObjects = isPlainObject(value);
 

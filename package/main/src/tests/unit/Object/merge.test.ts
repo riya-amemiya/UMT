@@ -1,4 +1,5 @@
 import { merge } from "@/Object/merge";
+import { removePrototype } from "@/Object/removePrototype";
 
 describe("merge", () => {
   it("should merge multiple objects", () => {
@@ -80,7 +81,7 @@ describe("merge", () => {
     const malicious = JSON.parse(
       '{"constructor": {"polluted": true}, "prototype": {"injected": true}}',
     );
-    const result = merge({}, malicious);
+    const result = merge({}, removePrototype(malicious));
 
     expect(Object.keys(result)).not.toContain("constructor");
     expect(Object.keys(result)).not.toContain("prototype");

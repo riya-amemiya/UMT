@@ -12,12 +12,16 @@ describe("timeout", () => {
   });
 
   it("rejects with timeout error when promise exceeds time", async () => {
+    jest.useFakeTimers();
     const promise = new Promise<string>((resolve) => {
       setTimeout(() => {
         resolve("done");
       }, 10_000);
     });
-    await expect(timeout(promise, 50)).rejects.toThrow("Timed out after 50ms");
+    const result = timeout(promise, 50);
+    jest.advanceTimersByTime(50);
+    await expect(result).rejects.toThrow("Timed out after 50ms");
+    jest.useRealTimers();
   });
 
   it("rejects with original error when promise fails", async () => {
