@@ -35,14 +35,6 @@ export const pickDeep = <
     let target: any = result;
 
     for (const [index, part] of parts.entries()) {
-      if (
-        part === "__proto__" ||
-        part === "constructor" ||
-        part === "prototype"
-      ) {
-        continue;
-      }
-
       if (current && typeof current === "object" && part in current) {
         if (index === parts.length - 1) {
           target[part] = current[part];

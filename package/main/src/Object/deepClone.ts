@@ -51,9 +51,6 @@ const cloneValue = (value: unknown, depth: number): unknown => {
   // Plain object
   const result: Record<string, unknown> = {};
   for (const key of Object.keys(value as Record<string, unknown>)) {
-    if (key === "__proto__" || key === "constructor" || key === "prototype") {
-      continue;
-    }
     result[key] = cloneValue(
       (value as Record<string, unknown>)[key],
       depth + 1,

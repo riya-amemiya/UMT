@@ -17,10 +17,6 @@ export function keyBy<T>(
   if (Array.isArray(collection)) {
     for (const value of collection) {
       const key = getKey(value);
-      // Prevent prototype pollution by skipping dangerous keys
-      if (key === "__proto__" || key === "constructor" || key === "prototype") {
-        continue;
-      }
       result[key] = value;
     }
     return result;
@@ -28,10 +24,6 @@ export function keyBy<T>(
 
   for (const value of Object.values(collection)) {
     const key = getKey(value);
-    // Prevent prototype pollution by skipping dangerous keys
-    if (key === "__proto__" || key === "constructor" || key === "prototype") {
-      continue;
-    }
     result[key] = value;
   }
   return result;

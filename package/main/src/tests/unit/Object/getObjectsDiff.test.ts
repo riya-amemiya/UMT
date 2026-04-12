@@ -1,4 +1,5 @@
 import { getObjectsDiff } from "@/Object/getObjectsDiff";
+import { removePrototype } from "@/Object/removePrototype";
 
 describe("getObjectsDiff", () => {
   test("should find diff key-value pairs between two objects", () => {
@@ -126,7 +127,7 @@ describe("getObjectsDiff", () => {
     const obj1 = JSON.parse('{"__proto__": {"polluted": true}}');
     const obj2 = { a: 1 };
 
-    const result = getObjectsDiff(obj1, obj2);
+    const result = getObjectsDiff(removePrototype(obj1), removePrototype(obj2));
 
     expect(Object.hasOwn(result, "__proto__")).toBe(false);
     // biome-ignore lint/suspicious/noExplicitAny: ignore

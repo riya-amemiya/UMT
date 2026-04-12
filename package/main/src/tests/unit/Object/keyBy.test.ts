@@ -95,7 +95,7 @@ describe("keyBy", () => {
       { id: "safe", name: "ok" },
     ];
     const output = keyBy(input, "id");
-    expect(output).toEqual({ safe: { id: "safe", name: "ok" } });
+    expect(output).toStrictEqual({ safe: { id: "safe", name: "ok" } });
     expect(Object.hasOwn(output, "__proto__")).toBe(false);
   });
 
@@ -105,7 +105,7 @@ describe("keyBy", () => {
       second: { id: "safe", name: "ok" },
     };
     const output = keyBy(input, "id");
-    expect(output).toEqual({ safe: { id: "safe", name: "ok" } });
+    expect(output).toStrictEqual({ safe: { id: "safe", name: "ok" } });
     expect(Object.hasOwn(output, "__proto__")).toBe(false);
   });
 });

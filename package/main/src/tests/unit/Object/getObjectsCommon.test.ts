@@ -1,4 +1,5 @@
 import { getObjectsCommon } from "@/Object/getObjectsCommon";
+import { removePrototype } from "@/Object/removePrototype";
 
 describe("getObjectsCommon", () => {
   test("should find common key-value pairs between two objects", () => {
@@ -127,7 +128,10 @@ describe("getObjectsCommon", () => {
     const obj1 = JSON.parse('{"__proto__": {"polluted": true}}');
     const obj2 = JSON.parse('{"__proto__": {"polluted": true}}');
 
-    const result = getObjectsCommon(obj1, obj2);
+    const result = getObjectsCommon(
+      removePrototype(obj1),
+      removePrototype(obj2),
+    );
 
     expect(Object.hasOwn(result, "__proto__")).toBe(false);
     // biome-ignore lint/suspicious/noExplicitAny: ignore

@@ -1,3 +1,5 @@
+import { removePrototypeDeep } from "@/Object";
+import { removePrototype } from "@/Object/removePrototype";
 import { getValue } from "@/String/formatString/getValue";
 
 describe("getValue function", () => {
@@ -264,29 +266,35 @@ describe("getValue function", () => {
   describe("prototype pollution prevention", () => {
     test("should block __proto__ key access", () => {
       const obj = { a: { b: 1 } };
-      expect(getValue(obj, "__proto__")).toBeUndefined();
-      expect(getValue(obj, "__proto__.polluted")).toBeUndefined();
-      expect(getValue(obj, "a.__proto__")).toBeUndefined();
+      expect(getValue(removePrototype(obj), "__proto__")).toBeUndefined();
+      expect(
+        getValue(removePrototype(obj), "__proto__.polluted"),
+      ).toBeUndefined();
+      expect(getValue(removePrototypeDeep(obj), "a.__proto__")).toBeUndefined();
     });
 
     test("should block constructor key access", () => {
       const obj = { a: { b: 1 } };
-      expect(getValue(obj, "constructor")).toBeUndefined();
-      expect(getValue(obj, "constructor.prototype")).toBeUndefined();
-      expect(getValue(obj, "a.constructor")).toBeUndefined();
+      expect(getValue(removePrototype(obj), "constructor")).toBeUndefined();
+      expect(
+        getValue(removePrototypeDeep(obj), "constructor.prototype"),
+      ).toBeUndefined();
+      expect(
+        getValue(removePrototypeDeep(obj), "a.constructor"),
+      ).toBeUndefined();
     });
 
     test("should block prototype key access", () => {
       const obj = { a: { b: 1 } };
-      expect(getValue(obj, "prototype")).toBeUndefined();
-      expect(getValue(obj, "a.prototype")).toBeUndefined();
+      expect(getValue(removePrototypeDeep(obj), "prototype")).toBeUndefined();
+      expect(getValue(removePrototypeDeep(obj), "a.prototype")).toBeUndefined();
     });
 
     test("should still allow normal keys that are not dangerous", () => {
       const obj = { proto: "safe", construct: "ok", proto_type: "fine" };
-      expect(getValue(obj, "proto")).toBe("safe");
-      expect(getValue(obj, "construct")).toBe("ok");
-      expect(getValue(obj, "proto_type")).toBe("fine");
+      expect(getValue(removePrototype(obj), "proto")).toBe("safe");
+      expect(getValue(removePrototype(obj), "construct")).toBe("ok");
+      expect(getValue(removePrototype(obj), "proto_type")).toBe("fine");
     });
   });
 

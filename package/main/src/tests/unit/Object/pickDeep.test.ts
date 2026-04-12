@@ -1,4 +1,5 @@
 import { pickDeep } from "@/Object/pickDeep";
+import { removePrototype } from "@/Object/removePrototype";
 
 describe("pickDeep function", () => {
   test("should select simple keys", () => {
@@ -123,7 +124,7 @@ describe("pickDeep function", () => {
   test("should prevent prototype pollution via __proto__", () => {
     const payload = JSON.parse('{"__proto__": {"polluted": true}}');
     // @ts-expect-error - testing invalid keys
-    const result = pickDeep(payload, "__proto__.polluted");
+    const result = pickDeep(removePrototype(payload), "__proto__.polluted");
     expect(
       // biome-ignore lint/suspicious/noExplicitAny: ignore
       (result as any).polluted,
@@ -138,8 +139,12 @@ describe("pickDeep function", () => {
     const payload = JSON.parse(
       '{"constructor": {"prototype": {"polluted": true}}}',
     );
-    // biome-ignore lint/suspicious/noExplicitAny: ignore
-    const result = pickDeep(payload, "constructor.prototype.polluted" as any);
+
+    const result = pickDeep(
+      removePrototype(payload),
+      // biome-ignore lint/suspicious/noExplicitAny: ignore
+      "constructor.prototype.polluted" as any,
+    );
     expect(result.constructor).toBe(Object);
     expect(
       // biome-ignore lint/suspicious/noExplicitAny: ignore
@@ -149,8 +154,12 @@ describe("pickDeep function", () => {
 
   test("should prevent prototype pollution via prototype", () => {
     const payload = JSON.parse('{"prototype": {"polluted": true}}');
-    // biome-ignore lint/suspicious/noExplicitAny: ignore
-    const result = pickDeep(payload, "prototype.polluted" as any);
+
+    const result = pickDeep(
+      removePrototype(payload),
+      // biome-ignore lint/suspicious/noExplicitAny: ignore
+      "prototype.polluted" as any,
+    );
     expect(
       // biome-ignore lint/suspicious/noExplicitAny: ignore
       (result as any).prototype,

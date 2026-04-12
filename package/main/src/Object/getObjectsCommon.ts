@@ -33,10 +33,6 @@ export const getObjectsCommon = <T extends Record<string, unknown>>(
   const result = {} as Partial<T>;
 
   for (const [key, value] of Object.entries(object)) {
-    if (key === "__proto__" || key === "constructor" || key === "prototype") {
-      continue;
-    }
-
     let isCommon = true;
     let allPlainObjects = isPlainObject(value);
 
