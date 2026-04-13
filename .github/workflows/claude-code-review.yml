@@ -4,6 +4,7 @@ on:
     types: [opened, synchronize, ready_for_review, reopened]
 jobs:
   claude-review:
+    if: github.actor != 'dependabot[bot]'
     runs-on: ubuntu-latest
     permissions:
       contents: read
