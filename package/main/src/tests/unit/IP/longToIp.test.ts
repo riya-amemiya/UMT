@@ -16,5 +16,4 @@ describe("longToIp", () => {
       expect(longToIp(long)).toBe(expected);
     });
   });
-
 });

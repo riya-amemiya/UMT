@@ -33,5 +33,4 @@ describe("decodeBase32", () => {
     expect(new TextDecoder().decode(decodeBase32("JBSWY3DP"))).toBe("Hello");
     expect(new TextDecoder().decode(decodeBase32("MZXW6YTB"))).toBe("fooba");
   });
-
 });

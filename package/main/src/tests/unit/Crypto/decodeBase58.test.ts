@@ -35,5 +35,4 @@ describe("decodeBase58", () => {
     const result = decodeBase58("Vt9aq46");
     expect(Array.from(result)).toEqual([255, 254, 253, 252, 251]);
   });
-
 });

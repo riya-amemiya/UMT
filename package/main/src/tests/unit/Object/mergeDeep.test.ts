@@ -188,5 +188,4 @@ describe("mergeDeep", () => {
     // biome-ignore lint/suspicious/noExplicitAny: ignore
     expect((result as any).prototype).toBeUndefined();
   });
-
 });

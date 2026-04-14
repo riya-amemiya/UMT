@@ -29,5 +29,4 @@ describe("ipToBinaryString", () => {
       expect(ipToBinaryString(ip)).toBe(expected);
     });
   });
-
 });

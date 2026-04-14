@@ -90,5 +90,4 @@ describe("deepClone", () => {
     // Should not overwrite constructor
     expect(cloned.constructor).toBe(Object);
   });
-
 });
