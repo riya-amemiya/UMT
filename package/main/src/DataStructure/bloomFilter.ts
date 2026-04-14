@@ -224,7 +224,7 @@ export class BloomFilter {
   private getBit(bitIndex: number): boolean {
     const byteIndex = Math.floor(bitIndex / 8);
     const offset = bitIndex % 8;
-    return ((this.bits[byteIndex] ?? 0) & (1 << offset)) !== 0;
+    return (this.bits[byteIndex] & (1 << offset)) !== 0;
   }
 
   private setBit(bitIndex: number): void {
@@ -250,7 +250,7 @@ export class BloomFilter {
     const hash = new Uint32Array([BloomFilter.fnv1aOffsetBasis]);
     for (const char of string_) {
       hash[0] = Math.imul(
-        hash[0] ^ (char.codePointAt(0) ?? 0),
+        hash[0] ^ Number(char.codePointAt(0)),
         BloomFilter.fnv1aPrime,
       );
     }
@@ -262,7 +262,7 @@ export class BloomFilter {
     for (const char of string_) {
       hash[0] =
         Math.imul(hash[0], BloomFilter.djb2Multiplier) ^
-        (char.codePointAt(0) ?? 0);
+        Number(char.codePointAt(0));
     }
     return hash[0];
   }
