@@ -34,7 +34,7 @@ describe("BloomFilter", () => {
       expect(filter.numHashFunctions).toBeGreaterThanOrEqual(1);
     });
 
-    it("should produce a lower false-positive rate for larger size", () => {
+    it("should produce a larger bit array for a stricter false-positive rate", () => {
       const strict = BloomFilter.fromExpected(1000, 0.001);
       const loose = BloomFilter.fromExpected(1000, 0.1);
       expect(strict.bitSize).toBeGreaterThan(loose.bitSize);
@@ -60,10 +60,18 @@ describe("BloomFilter", () => {
   });
 
   describe("add and has", () => {
-    it("should return true for an added item", () => {
+    it("should return true for a single added item", () => {
       const filter = new BloomFilter();
       filter.add("hello");
       expect(filter.has("hello")).toBe(true);
+    });
+
+    it("should accept multiple items in one call", () => {
+      const filter = new BloomFilter();
+      filter.add("foo", "bar", "baz");
+      expect(filter.has("foo")).toBe(true);
+      expect(filter.has("bar")).toBe(true);
+      expect(filter.has("baz")).toBe(true);
     });
 
     it("should return false for an item that was never added", () => {
@@ -71,12 +79,10 @@ describe("BloomFilter", () => {
       expect(filter.has("not-added")).toBe(false);
     });
 
-    it("should handle multiple items without false negatives", () => {
+    it("should never produce false negatives for added items", () => {
       const filter = BloomFilter.fromExpected(100, 0.01);
       const items = ["apple", "banana", "cherry", "date", "elderberry"];
-      for (const item of items) {
-        filter.add(item);
-      }
+      filter.add(...items);
       for (const item of items) {
         expect(filter.has(item)).toBe(true);
       }
@@ -104,9 +110,8 @@ describe("BloomFilter", () => {
 
     it("should handle long strings", () => {
       const filter = new BloomFilter();
-      const long = "a".repeat(10000);
-      filter.add(long);
-      expect(filter.has(long)).toBe(true);
+      filter.add("a".repeat(10000));
+      expect(filter.has("a".repeat(10000))).toBe(true);
       expect(filter.has("a".repeat(9999))).toBe(false);
     });
   });
@@ -114,8 +119,7 @@ describe("BloomFilter", () => {
   describe("clear", () => {
     it("should make previously added items not found", () => {
       const filter = new BloomFilter();
-      filter.add("hello");
-      filter.add("world");
+      filter.add("hello", "world");
       filter.clear();
       expect(filter.has("hello")).toBe(false);
       expect(filter.has("world")).toBe(false);
@@ -138,43 +142,28 @@ describe("BloomFilter", () => {
 
     it("should increase as more items are inserted", () => {
       const filter = new BloomFilter({ size: 1000, hashCount: 7 });
-      const rate100 = filter.estimatedFalsePositiveRate(100);
-      const rate500 = filter.estimatedFalsePositiveRate(500);
-      expect(rate500).toBeGreaterThan(rate100);
+      expect(filter.estimatedFalsePositiveRate(500)).toBeGreaterThan(
+        filter.estimatedFalsePositiveRate(100),
+      );
     });
 
     it("should be close to the target rate when using fromExpected", () => {
-      const targetRate = 0.01;
-      const filter = BloomFilter.fromExpected(1000, targetRate);
-      const actual = filter.estimatedFalsePositiveRate(1000);
-      // Allow a small tolerance due to rounding of optimal parameters
-      expect(actual).toBeLessThan(targetRate * 1.1);
+      const filter = BloomFilter.fromExpected(1000, 0.01);
+      expect(filter.estimatedFalsePositiveRate(1000)).toBeLessThan(0.011);
     });
   });
 
   describe("false positive rate in practice", () => {
-    it("should have a low false positive rate", () => {
-      const n = 1000;
-      const targetFpr = 0.01;
-      const filter = BloomFilter.fromExpected(n, targetFpr);
-
-      // Insert n items
-      for (let i = 0; i < n; i++) {
+    it("should stay below 5% for a 1% target after inserting 1000 items", () => {
+      const filter = BloomFilter.fromExpected(1000, 0.01);
+      for (let i = 0; i < 1000; i++) {
         filter.add(`item-${i}`);
       }
-
-      // Test n unseen items and count false positives
       let falsePositives = 0;
-      const testCount = 1000;
-      for (let i = n; i < n + testCount; i++) {
-        if (filter.has(`item-${i}`)) {
-          falsePositives++;
-        }
+      for (let i = 1000; i < 2000; i++) {
+        if (filter.has(`item-${i}`)) falsePositives++;
       }
-
-      const observedFpr = falsePositives / testCount;
-      // Generous bound: observed FPR should be under 5% for a 1% target
-      expect(observedFpr).toBeLessThan(0.05);
+      expect(falsePositives / 1000).toBeLessThan(0.05);
     });
   });
 });
