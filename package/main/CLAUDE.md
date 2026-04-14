@@ -39,8 +39,7 @@ UMT (Utility Module Toolkit) is a TypeScript utility library organized into func
 
 ## Library Design Policy
 
-- **入力バリデーション禁止**: 以上入力（不正な引数・境界外の値など）に対するバリデーションは呼び出し元が担保すべきであり、このライブラリ内で入力値をバリデーションすることは禁止。無駄なバリデーションは実行速度を低下させる。
-- **`throw Error`禁止**: ライブラリのソースコード内で`throw new Error(...)`を使用することは禁止。エラーを返す必要がある場合は`Result`型（`safeExecute`/`errorFunction`/`successFunction`）を使用すること。
+Input validation is the caller's responsibility. This library must not validate inputs or throw errors for invalid arguments — unnecessary validation degrades performance. Using `throw new Error(...)` in library source code is prohibited. When an error result must be returned, use the `Result` type via `errorFunction`/`successFunction`.
 
 ## Code Style Guidelines
 
