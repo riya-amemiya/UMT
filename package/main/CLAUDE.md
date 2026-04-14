@@ -39,7 +39,7 @@ UMT (Utility Module Toolkit) is a TypeScript utility library organized into func
 
 ## Library Design Policy
 
-Input validation is the caller's responsibility. This library must not validate inputs or throw errors for invalid arguments — unnecessary validation degrades performance. Using `throw new Error(...)` in library source code is prohibited. When an error result must be returned, use the `Result` type via `errorFunction`/`successFunction`.
+Input validation is the caller's responsibility. This library must not validate inputs or throw errors for invalid arguments — unnecessary validation degrades performance. Functions whose core behavior is to throw (e.g. `unwrap`, `filterStrict`) are exempt from this rule.
 
 ## Code Style Guidelines
 
