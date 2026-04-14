@@ -36,14 +36,6 @@ describe("BloomFilter", () => {
       expect(filter.has("hello")).toBe(true);
     });
 
-    it("should accept multiple items in one call", () => {
-      const filter = new BloomFilter();
-      filter.add("foo", "bar", "baz");
-      expect(filter.has("foo")).toBe(true);
-      expect(filter.has("bar")).toBe(true);
-      expect(filter.has("baz")).toBe(true);
-    });
-
     it("should return false for an item that was never added", () => {
       const filter = new BloomFilter({ size: 10_000, hashCount: 7 });
       expect(filter.has("not-added")).toBe(false);
@@ -52,7 +44,9 @@ describe("BloomFilter", () => {
     it("should never produce false negatives for added items", () => {
       const filter = BloomFilter.fromExpected(100, 0.01);
       const items = ["apple", "banana", "cherry", "date", "elderberry"];
-      filter.add(...items);
+      for (const item of items) {
+        filter.add(item);
+      }
       for (const item of items) {
         expect(filter.has(item)).toBe(true);
       }
@@ -89,7 +83,8 @@ describe("BloomFilter", () => {
   describe("clear", () => {
     it("should make previously added items not found", () => {
       const filter = new BloomFilter();
-      filter.add("hello", "world");
+      filter.add("hello");
+      filter.add("world");
       filter.clear();
       expect(filter.has("hello")).toBe(false);
       expect(filter.has("world")).toBe(false);

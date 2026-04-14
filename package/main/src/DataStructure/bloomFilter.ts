@@ -142,24 +142,21 @@ export class BloomFilter {
   }
 
   /**
-   * Adds one or more string items to the Bloom filter.
-   * Sets `k` bits per item derived from its hash values.
+   * Adds a string item to the Bloom filter.
+   * Sets `k` bits derived from the item's hash values.
    *
-   * @param items - One or more strings to add
+   * @param item - The string to add
    *
    * @example
    * ```typescript
    * const filter = new BloomFilter();
    * filter.add("hello");
-   * filter.add("foo", "bar", "baz");
-   * filter.has("foo"); // true
+   * filter.has("hello"); // true
    * ```
    */
-  add(...items: string[]): void {
-    for (const item of items) {
-      for (const index of this.hashIndices(item)) {
-        this.setBit(index);
-      }
+  add(item: string): void {
+    for (const index of this.hashIndices(item)) {
+      this.setBit(index);
     }
   }
 
@@ -234,36 +231,35 @@ export class BloomFilter {
   }
 
   /**
-   * g_i(x) = (h1(x) + i * h2(x)) mod m
+   * g_i(x) = (fnv1a(x) + i * djb2(x)) mod m
    */
   private hashIndices(item: string): number[] {
-    const h1 = this.fnv1a(item);
-    const h2 = this.djb2(item);
+    const fnv1aHash = this.fnv1a(item);
+    const djb2Hash = this.djb2(item);
     return Array.from(
       { length: this.hashCount },
-      (_, index) => ((h1 + Math.imul(index, h2)) >>> 0) % this.size,
+      (_, index) =>
+        ((fnv1aHash + Math.imul(index, djb2Hash)) >>> 0) % this.size,
     );
   }
 
   private fnv1a(string_: string): number {
-    let hash = BloomFilter.fnv1aOffsetBasis;
-    for (const char of string_) {
-      hash =
+    return [...string_].reduce(
+      (hash, char) =>
         Math.imul(hash ^ (char.codePointAt(0) ?? 0), BloomFilter.fnv1aPrime) >>>
-        0;
-    }
-    return hash;
+        0,
+      BloomFilter.fnv1aOffsetBasis,
+    );
   }
 
   private djb2(string_: string): number {
-    let hash = BloomFilter.djb2Seed;
-    for (const char of string_) {
-      hash =
+    return [...string_].reduce(
+      (hash, char) =>
         (Math.imul(hash, BloomFilter.djb2Multiplier) ^
           (char.codePointAt(0) ?? 0)) >>>
-        0;
-    }
-    return hash;
+        0,
+      BloomFilter.djb2Seed,
+    );
   }
 
   /**
