@@ -150,11 +150,11 @@ export class BloomFilter {
    * @example
    * ```typescript
    * const filter = new BloomFilter();
-   * filter.addAll("hello", "world");
+   * filter.add("hello", "world");
    * filter.has("hello"); // true
    * ```
    */
-  addAll(...items: string[]): void {
+  add(...items: string[]): void {
     for (const item of items) {
       for (const index of this.hashIndices(item)) {
         this.setBit(index);
@@ -246,22 +246,24 @@ export class BloomFilter {
   }
 
   private fnv1a(string_: string): number {
-    return [...string_].reduce(
-      (hash, char) =>
-        Math.imul(hash ^ (char.codePointAt(0) ?? 0), BloomFilter.fnv1aPrime) >>>
-        0,
-      BloomFilter.fnv1aOffsetBasis,
-    );
+    const hash = new Uint32Array([BloomFilter.fnv1aOffsetBasis]);
+    for (const char of string_) {
+      hash[0] = Math.imul(
+        hash[0] ^ (char.codePointAt(0) ?? 0),
+        BloomFilter.fnv1aPrime,
+      );
+    }
+    return hash[0];
   }
 
   private djb2(string_: string): number {
-    return [...string_].reduce(
-      (hash, char) =>
-        (Math.imul(hash, BloomFilter.djb2Multiplier) ^
-          (char.codePointAt(0) ?? 0)) >>>
-        0,
-      BloomFilter.djb2Seed,
-    );
+    const hash = new Uint32Array([BloomFilter.djb2Seed]);
+    for (const char of string_) {
+      hash[0] =
+        Math.imul(hash[0], BloomFilter.djb2Multiplier) ^
+        (char.codePointAt(0) ?? 0);
+    }
+    return hash[0];
   }
 
   /**
