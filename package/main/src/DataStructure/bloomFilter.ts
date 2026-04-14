@@ -222,20 +222,12 @@ export class BloomFilter {
     return (1 - Math.exp(exponent)) ** this.hashCount;
   }
 
-  // ---- private helpers ----
-
-  /**
-   * Returns whether a specific bit is set.
-   */
   private getBit(bitIndex: number): boolean {
     const byteIndex = Math.floor(bitIndex / 8);
     const offset = bitIndex % 8;
     return ((this.bits[byteIndex] ?? 0) & (1 << offset)) !== 0;
   }
 
-  /**
-   * Sets a specific bit to 1.
-   */
   private setBit(bitIndex: number): void {
     const byteIndex = Math.floor(bitIndex / 8);
     const offset = bitIndex % 8;
@@ -243,8 +235,7 @@ export class BloomFilter {
   }
 
   /**
-   * Computes the k bit indices for `item` using double hashing:
-   *   g_i(x) = (h1(x) + i * h2(x)) mod m
+   * g_i(x) = (h1(x) + i * h2(x)) mod m
    */
   private hashIndices(item: string): number[] {
     const h1 = fnv1a(item);
@@ -255,7 +246,6 @@ export class BloomFilter {
   }
 
   /**
-   * Calculates the optimal bit array size.
    * m = ceil(-n * ln(p) / ln(2)^2)
    */
   private static optimalSize(n: number, p: number): number {
@@ -263,7 +253,6 @@ export class BloomFilter {
   }
 
   /**
-   * Calculates the optimal number of hash functions.
    * k = round((m / n) * ln(2))
    */
   private static optimalHashCount(m: number, n: number): number {
@@ -271,30 +260,21 @@ export class BloomFilter {
   }
 }
 
-// ---- hash functions ----
+const FNV1A_OFFSET_BASIS = 2166136261;
+const FNV1A_PRIME = 16777619;
+const DJB2_SEED = 5381;
+const DJB2_MULTIPLIER = 33;
 
-/**
- * FNV-1a 32-bit hash.
- * Good avalanche effect, fast, and low collision rate.
- */
 function fnv1a(str: string): number {
-  let hash = 2166136261; // FNV offset basis (32-bit)
-  for (let i = 0; i < str.length; i++) {
-    hash ^= str.charCodeAt(i);
-    hash = Math.imul(hash, 16777619); // FNV prime (32-bit)
-    hash >>>= 0;
-  }
-  return hash;
+  return Array.from({ length: str.length }, (_, i) => str.charCodeAt(i)).reduce(
+    (hash, code) => Math.imul(hash ^ code, FNV1A_PRIME) >>> 0,
+    FNV1A_OFFSET_BASIS,
+  );
 }
 
-/**
- * djb2 32-bit hash.
- * Complementary distribution to FNV-1a for double hashing.
- */
 function djb2(str: string): number {
-  let hash = 5381;
-  for (let i = 0; i < str.length; i++) {
-    hash = (Math.imul(hash, 33) ^ str.charCodeAt(i)) >>> 0;
-  }
-  return hash;
+  return Array.from({ length: str.length }, (_, i) => str.charCodeAt(i)).reduce(
+    (hash, code) => (Math.imul(hash, DJB2_MULTIPLIER) ^ code) >>> 0,
+    DJB2_SEED,
+  );
 }
