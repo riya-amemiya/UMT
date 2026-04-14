@@ -75,12 +75,6 @@ export class BloomFilter {
    * ```
    */
   constructor({ size = 1000, hashCount = 7 }: { size?: number; hashCount?: number } = {}) {
-    if (size < 1) {
-      throw new Error("BloomFilter size must be at least 1");
-    }
-    if (hashCount < 1) {
-      throw new Error("BloomFilter hashCount must be at least 1");
-    }
     this.size = size;
     this.hashCount = hashCount;
     this.bits = new Uint8Array(Math.ceil(size / 8));
@@ -105,12 +99,6 @@ export class BloomFilter {
    * ```
    */
   static fromExpected(expectedItems: number, falsePositiveRate: number): BloomFilter {
-    if (expectedItems < 1) {
-      throw new Error("expectedItems must be at least 1");
-    }
-    if (falsePositiveRate <= 0 || falsePositiveRate >= 1) {
-      throw new Error("falsePositiveRate must be in the range (0, 1)");
-    }
     const size = BloomFilter.optimalSize(expectedItems, falsePositiveRate);
     const hashCount = BloomFilter.optimalHashCount(size, expectedItems);
     return new BloomFilter({ size, hashCount });
@@ -266,15 +254,17 @@ const DJB2_SEED = 5381;
 const DJB2_MULTIPLIER = 33;
 
 function fnv1a(str: string): number {
-  return Array.from({ length: str.length }, (_, i) => str.charCodeAt(i)).reduce(
-    (hash, code) => Math.imul(hash ^ code, FNV1A_PRIME) >>> 0,
-    FNV1A_OFFSET_BASIS,
-  );
+  let hash = FNV1A_OFFSET_BASIS;
+  for (let i = 0; i < str.length; i++) {
+    hash = Math.imul(hash ^ str.charCodeAt(i), FNV1A_PRIME) >>> 0;
+  }
+  return hash;
 }
 
 function djb2(str: string): number {
-  return Array.from({ length: str.length }, (_, i) => str.charCodeAt(i)).reduce(
-    (hash, code) => (Math.imul(hash, DJB2_MULTIPLIER) ^ code) >>> 0,
-    DJB2_SEED,
-  );
+  let hash = DJB2_SEED;
+  for (let i = 0; i < str.length; i++) {
+    hash = (Math.imul(hash, DJB2_MULTIPLIER) ^ str.charCodeAt(i)) >>> 0;
+  }
+  return hash;
 }

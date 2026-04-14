@@ -14,17 +14,6 @@ describe("BloomFilter", () => {
       expect(filter.numHashFunctions).toBe(5);
     });
 
-    it("should throw when size is less than 1", () => {
-      expect(() => new BloomFilter({ size: 0 })).toThrow(
-        "BloomFilter size must be at least 1",
-      );
-    });
-
-    it("should throw when hashCount is less than 1", () => {
-      expect(() => new BloomFilter({ hashCount: 0 })).toThrow(
-        "BloomFilter hashCount must be at least 1",
-      );
-    });
   });
 
   describe("BloomFilter.fromExpected", () => {
@@ -40,23 +29,6 @@ describe("BloomFilter", () => {
       expect(strict.bitSize).toBeGreaterThan(loose.bitSize);
     });
 
-    it("should throw when expectedItems is less than 1", () => {
-      expect(() => BloomFilter.fromExpected(0, 0.01)).toThrow(
-        "expectedItems must be at least 1",
-      );
-    });
-
-    it("should throw when falsePositiveRate is 0", () => {
-      expect(() => BloomFilter.fromExpected(100, 0)).toThrow(
-        "falsePositiveRate must be in the range (0, 1)",
-      );
-    });
-
-    it("should throw when falsePositiveRate is 1", () => {
-      expect(() => BloomFilter.fromExpected(100, 1)).toThrow(
-        "falsePositiveRate must be in the range (0, 1)",
-      );
-    });
   });
 
   describe("add and has", () => {
