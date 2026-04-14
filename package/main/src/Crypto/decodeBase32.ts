@@ -18,7 +18,7 @@ export const decodeBase32 = (input: string): Uint8Array => {
   let bufferLength = 0;
 
   for (const char of cleanedInput) {
-    const value = base32CharToIndex.get(char) as number;
+    const value = base32CharToIndex.get(char) ?? 0;
     buffer = (buffer << 5) | value;
     bufferLength += 5;
 
