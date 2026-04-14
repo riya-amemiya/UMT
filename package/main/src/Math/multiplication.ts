@@ -25,10 +25,12 @@ export const multiplication = (...numbers: number[]) => {
     return result;
   }
 
-  return numbers.reduce((accumulator, number) => {
-    const n = 10 ** (getDecimalLength(accumulator) + getDecimalLength(number));
-    const accumulatorWithoutDot = +`${accumulator}`.replace(".", "");
+  let result = 1;
+  for (const number of numbers) {
+    const n = 10 ** (getDecimalLength(result) + getDecimalLength(number));
+    const resultWithoutDot = +`${result}`.replace(".", "");
     const numberWithoutDot = +`${number}`.replace(".", "");
-    return (accumulatorWithoutDot * numberWithoutDot) / n;
-  }, 1);
+    result = (resultWithoutDot * numberWithoutDot) / n;
+  }
+  return result;
 };

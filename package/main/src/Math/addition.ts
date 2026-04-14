@@ -21,7 +21,11 @@ export const addition = (...numbers: number[]) => {
   }
 
   if (allIntegers || maxDecimal === 0) {
-    return numbers.reduce((sum, current) => sum + current, 0);
+    let sum = 0;
+    for (const current of numbers) {
+      sum += current;
+    }
+    return sum;
   }
 
   const z = 10 ** maxDecimal;

@@ -16,14 +16,16 @@ import { multiplication } from "./multiplication";
  */
 
 export const subtract = (...numbers: number[]): number => {
-  return numbers.reduce((accumulator, current, index) => {
-    if (index === 0) {
-      return current;
-    }
+  if (numbers.length === 0) {
+    return 0;
+  }
+  let result = numbers[0];
+  for (let index = 1; index < numbers.length; index++) {
+    const current = numbers[index];
     // Get the power of 10 based on the maximum decimal places
-    const z =
-      10 ** max(getDecimalLength(accumulator), getDecimalLength(current));
+    const z = 10 ** max(getDecimalLength(result), getDecimalLength(current));
     // Scale to integers, subtract, then scale back to original decimal places
-    return (multiplication(accumulator, z) - multiplication(current, z)) / z;
-  }, 0);
+    result = (multiplication(result, z) - multiplication(current, z)) / z;
+  }
+  return result;
 };
