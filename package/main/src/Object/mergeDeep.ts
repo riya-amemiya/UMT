@@ -1,8 +1,6 @@
 import type { UnionToIntersection } from "$/logic/unionToIntersection";
 import { isPlainObject } from "@/Object/isPlainObject";
 
-const MAX_MERGE_DEPTH = 100;
-
 // Performance: use an index parameter instead of Array.shift() to advance
 // through sources. shift() is O(n) because it re-indexes every remaining
 // element, making the overall merge O(n²) in the number of sources.
@@ -16,12 +14,6 @@ const mergeDeepInternal = <
   depth: number,
   sourceIndex = 0,
 ): T & UnionToIntersection<U[number]> => {
-  if (depth > MAX_MERGE_DEPTH) {
-    throw new Error(
-      `mergeDeep: maximum recursion depth of ${MAX_MERGE_DEPTH} exceeded`,
-    );
-  }
-
   if (sourceIndex >= sources.length) {
     return target as T & UnionToIntersection<U[number]>;
   }

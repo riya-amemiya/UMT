@@ -18,12 +18,7 @@ export const decodeBase32 = (input: string): Uint8Array => {
   let bufferLength = 0;
 
   for (const char of cleanedInput) {
-    // Security: reject invalid characters to prevent silent data corruption
-    const value = base32CharToIndex.get(char);
-    if (value === undefined) {
-      throw new Error(`Invalid Base32 character: "${char}"`);
-    }
-
+    const value = base32CharToIndex.get(char)!;
     buffer = (buffer << 5) | value;
     bufferLength += 5;
 

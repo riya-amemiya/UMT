@@ -1,4 +1,8 @@
-import { safeExecute, type Result } from "@/Error/safeExecute";
+import {
+  errorFunction,
+  successFunction,
+  type Result,
+} from "@/Error/safeExecute";
 
 /**
  * A class to handle pipeline processing
@@ -47,16 +51,14 @@ export class Pipe<T> {
 
   /**
    * Strictly filters the value based on a predicate function
-   * Throws an error if the predicate returns false
    * @param predicate Condition function that determines if value should be filtered
    * @returns New Pipe instance with filtered value and narrowed type
-   * @throws Error if the predicate returns false
    */
   filterStrict<U extends T>(predicate: (input: T) => input is U): Pipe<U> {
     if (predicate(this.value)) {
       return new Pipe(this.value);
     }
-    throw new Error("Value did not match filter predicate");
+    return new Pipe(this.value as unknown as U);
   }
 
   /**
@@ -84,13 +86,11 @@ export class Pipe<T> {
   filterResult<U extends T, E extends Error = Error>(
     predicate: (input: T) => input is U,
   ): Pipe<Result<U, E>> {
+    if (predicate(this.value)) {
+      return new Pipe(successFunction<U>(this.value));
+    }
     return new Pipe(
-      safeExecute<U, E>(() => {
-        if (predicate(this.value)) {
-          return this.value;
-        }
-        throw new Error("Value did not match filter predicate");
-      }),
+      errorFunction<E>(new Error("Value did not match filter predicate") as E),
     );
   }
 

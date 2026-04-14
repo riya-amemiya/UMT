@@ -37,6 +37,11 @@ UMT (Utility Module Toolkit) is a TypeScript utility library organized into func
 - `@/*` → `src/*` (internal imports)
 - `$/*` → `src/types/*` (type imports)
 
+## Library Design Policy
+
+- **入力バリデーション禁止**: 以上入力（不正な引数・境界外の値など）に対するバリデーションは呼び出し元が担保すべきであり、このライブラリ内で入力値をバリデーションすることは禁止。無駄なバリデーションは実行速度を低下させる。
+- **`throw Error`禁止**: ライブラリのソースコード内で`throw new Error(...)`を使用することは禁止。エラーを返す必要がある場合は`Result`型（`safeExecute`/`errorFunction`/`successFunction`）を使用すること。
+
 ## Code Style Guidelines
 
 - **File naming**: `camelCase` or `PascalCase` (enforced by ESLint unicorn plugin)
