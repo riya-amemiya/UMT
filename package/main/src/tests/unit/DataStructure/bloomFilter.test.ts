@@ -29,72 +29,68 @@ describe("BloomFilter", () => {
     });
   });
 
-  describe("addAll and has", () => {
-    it("should return true for a single added item", () => {
+  describe("insert and has", () => {
+    it("should return true for a single inserted item", () => {
       const filter = new BloomFilter();
-      filter.add("hello");
+      filter.insert("hello");
       expect(filter.has("hello")).toBe(true);
     });
 
-    it("should return false for an item that was never added", () => {
+    it("should return false for an item that was never inserted", () => {
       const filter = new BloomFilter({ size: 10_000, hashCount: 7 });
-      expect(filter.has("not-added")).toBe(false);
+      expect(filter.has("not-inserted")).toBe(false);
     });
 
-    it("should never produce false negatives for added items", () => {
+    it("should never produce false negatives for inserted items", () => {
       const filter = BloomFilter.fromExpected(100, 0.01);
-      const items = ["apple", "banana", "cherry", "date", "elderberry"];
-      for (const item of items) {
-        filter.add(item);
-      }
-      for (const item of items) {
+      filter.insert("apple", "banana", "cherry", "date", "elderberry");
+      for (const item of ["apple", "banana", "cherry", "date", "elderberry"]) {
         expect(filter.has(item)).toBe(true);
       }
     });
 
     it("should be case-sensitive", () => {
       const filter = new BloomFilter();
-      filter.add("Hello");
+      filter.insert("Hello");
       expect(filter.has("Hello")).toBe(true);
       expect(filter.has("hello")).toBe(false);
     });
 
     it("should handle empty string", () => {
       const filter = new BloomFilter();
-      filter.add("");
+      filter.insert("");
       expect(filter.has("")).toBe(true);
     });
 
     it("should handle unicode strings", () => {
       const filter = new BloomFilter();
-      filter.add("こんにちは");
+      filter.insert("こんにちは");
       expect(filter.has("こんにちは")).toBe(true);
       expect(filter.has("さようなら")).toBe(false);
     });
 
     it("should handle long strings", () => {
       const filter = new BloomFilter();
-      filter.add("a".repeat(10_000));
+      filter.insert("a".repeat(10_000));
       expect(filter.has("a".repeat(10_000))).toBe(true);
       expect(filter.has("a".repeat(9999))).toBe(false);
     });
   });
 
   describe("clear", () => {
-    it("should make previously added items not found", () => {
+    it("should make previously inserted items not found", () => {
       const filter = new BloomFilter();
-      filter.add("hello");
-      filter.add("world");
+      filter.insert("hello", "world");
       filter.clear();
       expect(filter.has("hello")).toBe(false);
       expect(filter.has("world")).toBe(false);
     });
 
-    it("should allow re-adding items after clear", () => {
+    it("should allow re-inserting items after clear", () => {
       const filter = new BloomFilter();
-      filter.add("hello");
+      filter.insert("hello");
       filter.clear();
-      filter.add("hello");
+      filter.insert("hello");
       expect(filter.has("hello")).toBe(true);
     });
   });
@@ -121,9 +117,7 @@ describe("BloomFilter", () => {
   describe("false positive rate in practice", () => {
     it("should stay below 5% for a 1% target after inserting 1000 items", () => {
       const filter = BloomFilter.fromExpected(1000, 0.01);
-      for (let i = 0; i < 1000; i++) {
-        filter.add(`item-${i}`);
-      }
+      filter.insert(...Array.from({ length: 1000 }, (_, i) => `item-${i}`));
       let falsePositives = 0;
       for (let i = 1000; i < 2000; i++) {
         if (filter.has(`item-${i}`)) {

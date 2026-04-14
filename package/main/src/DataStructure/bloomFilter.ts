@@ -142,19 +142,20 @@ export class BloomFilter {
   }
 
   /**
-   * Adds one or more string items to the Bloom filter.
+   * Inserts one or more string items into the Bloom filter.
    * Sets `k` bits per item derived from its hash values.
    *
-   * @param items - The strings to add
+   * @param items - The strings to insert
    *
    * @example
    * ```typescript
    * const filter = new BloomFilter();
-   * filter.add("hello", "world");
+   * filter.insert("hello");
+   * filter.insert("apple", "banana", "cherry");
    * filter.has("hello"); // true
    * ```
    */
-  add(...items: string[]): void {
+  insert(...items: string[]): void {
     for (const item of items) {
       for (const index of this.hashIndices(item)) {
         this.setBit(index);
