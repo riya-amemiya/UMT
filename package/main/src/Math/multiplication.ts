@@ -1,4 +1,13 @@
+import { addition } from "./addition";
 import { getDecimalLength } from "./getDecimalLength";
+
+const multiplyIntegers = (numbers: number[]): number => {
+  let product = 1;
+  for (const n of numbers) {
+    product *= n;
+  }
+  return product;
+};
 
 /**
  * Performs multiplication without floating point errors for any number of arguments
@@ -7,28 +16,11 @@ import { getDecimalLength } from "./getDecimalLength";
  * @example multiplication(0.1, 0.2, 0.3); // 0.006
  */
 export const multiplication = (...numbers: number[]) => {
-  // Performance optimization: skip expensive string operations (toString,
-  // replace, split) when all inputs are integers, since integer multiplication
-  // has no floating-point precision issues.
-  let allIntegers = true;
-  for (const n of numbers) {
-    if (!Number.isInteger(n)) {
-      allIntegers = false;
-      break;
-    }
-  }
-  if (allIntegers) {
-    let result = 1;
-    for (const n of numbers) {
-      result *= n;
-    }
-    return result;
+  if (numbers.every((n) => Number.isInteger(n))) {
+    return multiplyIntegers(numbers);
   }
 
-  return numbers.reduce((accumulator, number) => {
-    const n = 10 ** (getDecimalLength(accumulator) + getDecimalLength(number));
-    const accumulatorWithoutDot = +`${accumulator}`.replace(".", "");
-    const numberWithoutDot = +`${number}`.replace(".", "");
-    return (accumulatorWithoutDot * numberWithoutDot) / n;
-  }, 1);
+  const integers = numbers.map((n) => +`${n}`.replace(".", ""));
+  const totalDecimal = addition(...numbers.map((n) => getDecimalLength(n)));
+  return multiplyIntegers(integers) / 10 ** totalDecimal;
 };

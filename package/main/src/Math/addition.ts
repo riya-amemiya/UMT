@@ -8,26 +8,17 @@ import { getDecimalLength } from "./getDecimalLength";
  */
 export const addition = (...numbers: number[]) => {
   let maxDecimal = 0;
-  let allIntegers = true;
-
   for (const number of numbers) {
-    if (!Number.isInteger(number)) {
-      allIntegers = false;
-      const length = getDecimalLength(number);
-      if (length > maxDecimal) {
-        maxDecimal = length;
-      }
+    const length = getDecimalLength(number);
+    if (length > maxDecimal) {
+      maxDecimal = length;
     }
-  }
-
-  if (allIntegers || maxDecimal === 0) {
-    return numbers.reduce((sum, current) => sum + current, 0);
   }
 
   const z = 10 ** maxDecimal;
   let sum = 0;
   for (const number of numbers) {
-    sum += Math.round(number * z);
+    sum += maxDecimal === 0 ? number : Math.round(number * z);
   }
   return sum / z;
 };

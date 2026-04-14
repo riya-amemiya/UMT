@@ -1,3 +1,4 @@
+import { addition } from "./addition";
 import { getDecimalLength } from "./getDecimalLength";
 import { max } from "./max";
 import { multiplication } from "./multiplication";
@@ -16,14 +17,8 @@ import { multiplication } from "./multiplication";
  */
 
 export const subtract = (...numbers: number[]): number => {
-  return numbers.reduce((accumulator, current, index) => {
-    if (index === 0) {
-      return current;
-    }
-    // Get the power of 10 based on the maximum decimal places
-    const z =
-      10 ** max(getDecimalLength(accumulator), getDecimalLength(current));
-    // Scale to integers, subtract, then scale back to original decimal places
-    return (multiplication(accumulator, z) - multiplication(current, z)) / z;
-  }, 0);
+  const [first, ...rest] = numbers;
+  const restSum = addition(...rest);
+  const z = 10 ** max(getDecimalLength(first), getDecimalLength(restSum));
+  return (multiplication(first, z) - multiplication(restSum, z)) / z;
 };
