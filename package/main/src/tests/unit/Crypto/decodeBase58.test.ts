@@ -35,4 +35,9 @@ describe("decodeBase58", () => {
     const result = decodeBase58("Vt9aq46");
     expect(Array.from(result)).toEqual([255, 254, 253, 252, 251]);
   });
+
+  test("treats invalid characters as 0", () => {
+    // '0' is not in the Base58 alphabet, falls back to 0
+    expect(Array.from(decodeBase58("0"))).toEqual([]);
+  });
 });
