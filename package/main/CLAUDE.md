@@ -37,6 +37,10 @@ UMT (Utility Module Toolkit) is a TypeScript utility library organized into func
 - `@/*` → `src/*` (internal imports)
 - `$/*` → `src/types/*` (type imports)
 
+## Library Design Policy
+
+Input validation is the caller's responsibility. This library must not validate inputs or throw errors for invalid arguments — unnecessary validation degrades performance. Functions whose core behavior is to throw (e.g. `unwrap`, `filterStrict`) are exempt from this rule.
+
 ## Code Style Guidelines
 
 - **File naming**: `camelCase` or `PascalCase` (enforced by ESLint unicorn plugin)

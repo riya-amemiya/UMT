@@ -90,14 +90,4 @@ describe("deepClone", () => {
     // Should not overwrite constructor
     expect(cloned.constructor).toBe(Object);
   });
-
-  it("should throw on excessively deep nesting to prevent stack overflow DoS", () => {
-    // Security: deeply nested objects must not cause unbounded recursion
-    // biome-ignore lint/suspicious/noExplicitAny: test helper
-    let deep: any = { value: "leaf" };
-    for (let i = 0; i < 150; i++) {
-      deep = { nested: deep };
-    }
-    expect(() => deepClone(deep)).toThrow("maximum recursion depth");
-  });
 });

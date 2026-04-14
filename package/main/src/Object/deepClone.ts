@@ -1,19 +1,9 @@
-// Security: cap recursion depth to prevent stack overflow from deeply nested
-// objects, which could be used for denial-of-service.
-const MAX_CLONE_DEPTH = 100;
-
 /**
  * Recursively clones a value.
  */
 const cloneValue = (value: unknown, depth: number): unknown => {
   if (value === null || typeof value !== "object") {
     return value;
-  }
-
-  if (depth > MAX_CLONE_DEPTH) {
-    throw new Error(
-      `deepClone: maximum recursion depth of ${MAX_CLONE_DEPTH} exceeded`,
-    );
   }
 
   if (Array.isArray(value)) {

@@ -16,26 +16,4 @@ describe("longToIp", () => {
       expect(longToIp(long)).toBe(expected);
     });
   });
-
-  describe("input validation", () => {
-    test("should throw for negative numbers", () => {
-      expect(() => longToIp(-1)).toThrow();
-    });
-
-    test("should throw for values exceeding 32-bit range", () => {
-      expect(() => longToIp(0x1_00_00_00_00)).toThrow();
-    });
-
-    test("should throw for NaN", () => {
-      expect(() => longToIp(Number.NaN)).toThrow();
-    });
-
-    test("should throw for Infinity", () => {
-      expect(() => longToIp(Number.POSITIVE_INFINITY)).toThrow();
-    });
-
-    test("should throw for floating point numbers", () => {
-      expect(() => longToIp(3.14)).toThrow();
-    });
-  });
 });
