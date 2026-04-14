@@ -79,7 +79,10 @@ export class BloomFilter {
    * const filter = new BloomFilter({ size: 2048, hashCount: 5 });
    * ```
    */
-  constructor({ size = 1000, hashCount = 7 }: { size?: number; hashCount?: number } = {}) {
+  constructor({
+    size = 1000,
+    hashCount = 7,
+  }: { size?: number; hashCount?: number } = {}) {
     this.size = size;
     this.hashCount = hashCount;
     this.bits = new Uint8Array(Math.ceil(size / 8));
@@ -103,7 +106,10 @@ export class BloomFilter {
    * const filter = BloomFilter.fromExpected(10_000, 0.01);
    * ```
    */
-  static fromExpected(expectedItems: number, falsePositiveRate: number): BloomFilter {
+  static fromExpected(
+    expectedItems: number,
+    falsePositiveRate: number,
+  ): BloomFilter {
     const size = BloomFilter.optimalSize(expectedItems, falsePositiveRate);
     const hashCount = BloomFilter.optimalHashCount(size, expectedItems);
     return new BloomFilter({ size, hashCount });
@@ -233,23 +239,29 @@ export class BloomFilter {
   private hashIndices(item: string): number[] {
     const h1 = this.fnv1a(item);
     const h2 = this.djb2(item);
-    return Array.from({ length: this.hashCount }, (_, i) =>
-      ((h1 + Math.imul(i, h2)) >>> 0) % this.size,
+    return Array.from(
+      { length: this.hashCount },
+      (_, index) => ((h1 + Math.imul(index, h2)) >>> 0) % this.size,
     );
   }
 
-  private fnv1a(str: string): number {
+  private fnv1a(string_: string): number {
     let hash = BloomFilter.fnv1aOffsetBasis;
-    for (const char of str) {
-      hash = Math.imul(hash ^ char.charCodeAt(0), BloomFilter.fnv1aPrime) >>> 0;
+    for (const char of string_) {
+      hash =
+        Math.imul(hash ^ (char.codePointAt(0) ?? 0), BloomFilter.fnv1aPrime) >>>
+        0;
     }
     return hash;
   }
 
-  private djb2(str: string): number {
+  private djb2(string_: string): number {
     let hash = BloomFilter.djb2Seed;
-    for (const char of str) {
-      hash = (Math.imul(hash, BloomFilter.djb2Multiplier) ^ char.charCodeAt(0)) >>> 0;
+    for (const char of string_) {
+      hash =
+        (Math.imul(hash, BloomFilter.djb2Multiplier) ^
+          (char.codePointAt(0) ?? 0)) >>>
+        0;
     }
     return hash;
   }

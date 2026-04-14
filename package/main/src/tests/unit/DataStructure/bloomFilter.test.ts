@@ -13,7 +13,6 @@ describe("BloomFilter", () => {
       expect(filter.bitSize).toBe(2048);
       expect(filter.numHashFunctions).toBe(5);
     });
-
   });
 
   describe("BloomFilter.fromExpected", () => {
@@ -28,7 +27,6 @@ describe("BloomFilter", () => {
       const loose = BloomFilter.fromExpected(1000, 0.1);
       expect(strict.bitSize).toBeGreaterThan(loose.bitSize);
     });
-
   });
 
   describe("add and has", () => {
@@ -47,7 +45,7 @@ describe("BloomFilter", () => {
     });
 
     it("should return false for an item that was never added", () => {
-      const filter = new BloomFilter({ size: 10000, hashCount: 7 });
+      const filter = new BloomFilter({ size: 10_000, hashCount: 7 });
       expect(filter.has("not-added")).toBe(false);
     });
 
@@ -82,8 +80,8 @@ describe("BloomFilter", () => {
 
     it("should handle long strings", () => {
       const filter = new BloomFilter();
-      filter.add("a".repeat(10000));
-      expect(filter.has("a".repeat(10000))).toBe(true);
+      filter.add("a".repeat(10_000));
+      expect(filter.has("a".repeat(10_000))).toBe(true);
       expect(filter.has("a".repeat(9999))).toBe(false);
     });
   });
@@ -133,7 +131,9 @@ describe("BloomFilter", () => {
       }
       let falsePositives = 0;
       for (let i = 1000; i < 2000; i++) {
-        if (filter.has(`item-${i}`)) falsePositives++;
+        if (filter.has(`item-${i}`)) {
+          falsePositives++;
+        }
       }
       expect(falsePositives / 1000).toBeLessThan(0.05);
     });
