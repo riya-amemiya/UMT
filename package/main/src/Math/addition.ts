@@ -18,7 +18,7 @@ export const addition = (...numbers: number[]) => {
   const z = 10 ** maxDecimal;
   let sum = 0;
   for (const number of numbers) {
-    sum += Math.round(number * z);
+    sum += maxDecimal === 0 ? number : Math.round(number * z);
   }
   return sum / z;
 };
