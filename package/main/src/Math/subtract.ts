@@ -17,9 +17,6 @@ import { multiplication } from "./multiplication";
  */
 
 export const subtract = (...numbers: number[]): number => {
-  if (numbers.length <= 1) {
-    return numbers[0] ?? 0;
-  }
   const [first, ...rest] = numbers;
   const restSum = addition(...rest);
   const z = 10 ** max(getDecimalLength(first), getDecimalLength(restSum));
