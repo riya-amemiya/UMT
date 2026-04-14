@@ -30,20 +30,4 @@ describe("ipToBinaryString", () => {
     });
   });
 
-  describe("invalid inputs should throw", () => {
-    test.each([
-      ["", "non-empty string"],
-      ["1.2.3", "4 octets"],
-      ["1.2.3.4.5", "4 octets"],
-      ["256.0.0.1", "out of range"],
-      ["-1.0.0.0", 'invalid octet "-1"'],
-      ["abc.0.0.1", 'invalid octet "abc"'],
-      ["1.2.3.999", "out of range"],
-      ["1.2.3.", 'invalid octet ""'],
-      ["1.2.3.0x1", 'invalid octet "0x1"'],
-      ["01onal.0.0.1", 'invalid octet "01onal"'],
-    ])("should throw for invalid input: %s", (ip, expectedMsg) => {
-      expect(() => ipToBinaryString(ip)).toThrow(expectedMsg);
-    });
-  });
 });

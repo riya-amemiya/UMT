@@ -15,7 +15,7 @@ export const decodeBase58 = (input: string): Uint8Array => {
   let bigNumber = 0n;
 
   for (const char of input) {
-    bigNumber = bigNumber * 58n + BigInt(base58CharToIndex.get(char)!);
+    bigNumber = bigNumber * 58n + BigInt(base58CharToIndex.get(char) as number);
   }
 
   // Use push + reverse instead of unshift to avoid O(n²) array shifting
