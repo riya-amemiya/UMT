@@ -6,7 +6,7 @@
  * - **No false negatives**: if `has()` returns `false`, the element is
  *   definitely not in the set.
  * - **Possible false positives**: if `has()` returns `true`, the element
- *   is *probably* in the set (small chance of collision).
+ *   is probably in the set (small chance of collision).
  * - **No deletion**: once an element is added it cannot be removed
  *   (use `clear()` to reset entirely).
  *
@@ -14,7 +14,7 @@
  * Internally maintains a bit array of `bitSize` bits.
  * `add(item)` hashes the item `k` times and sets the corresponding bits.
  * `has(item)` hashes the item the same way and returns `true` only when
- * *all* corresponding bits are set.
+ * all corresponding bits are set.
  *
  * Hash positions are derived via the Kirsch-Mitzenmacher double-hashing
  * technique:
@@ -59,6 +59,11 @@
  * ```
  */
 export class BloomFilter {
+  private static readonly fnv1aOffsetBasis = 2_166_136_261;
+  private static readonly fnv1aPrime = 16_777_619;
+  private static readonly djb2Seed = 5381;
+  private static readonly djb2Multiplier = 33;
+
   private readonly bits: Uint8Array;
   private readonly size: number;
   private readonly hashCount: number;
@@ -153,7 +158,7 @@ export class BloomFilter {
   }
 
   /**
-   * Tests whether an item is *probably* in the filter.
+   * Tests whether an item is probably in the filter.
    *
    * - Returns `false` → the item is **definitely not** in the filter.
    * - Returns `true`  → the item is **probably** in the filter
@@ -226,11 +231,27 @@ export class BloomFilter {
    * g_i(x) = (h1(x) + i * h2(x)) mod m
    */
   private hashIndices(item: string): number[] {
-    const h1 = fnv1a(item);
-    const h2 = djb2(item);
+    const h1 = this.fnv1a(item);
+    const h2 = this.djb2(item);
     return Array.from({ length: this.hashCount }, (_, i) =>
       ((h1 + Math.imul(i, h2)) >>> 0) % this.size,
     );
+  }
+
+  private fnv1a(str: string): number {
+    let hash = BloomFilter.fnv1aOffsetBasis;
+    for (const char of str) {
+      hash = Math.imul(hash ^ char.charCodeAt(0), BloomFilter.fnv1aPrime) >>> 0;
+    }
+    return hash;
+  }
+
+  private djb2(str: string): number {
+    let hash = BloomFilter.djb2Seed;
+    for (const char of str) {
+      hash = (Math.imul(hash, BloomFilter.djb2Multiplier) ^ char.charCodeAt(0)) >>> 0;
+    }
+    return hash;
   }
 
   /**
@@ -246,25 +267,4 @@ export class BloomFilter {
   private static optimalHashCount(m: number, n: number): number {
     return Math.max(1, Math.round((m / n) * Math.LN2));
   }
-}
-
-const FNV1A_OFFSET_BASIS = 2166136261;
-const FNV1A_PRIME = 16777619;
-const DJB2_SEED = 5381;
-const DJB2_MULTIPLIER = 33;
-
-function fnv1a(str: string): number {
-  let hash = FNV1A_OFFSET_BASIS;
-  for (let i = 0; i < str.length; i++) {
-    hash = Math.imul(hash ^ str.charCodeAt(i), FNV1A_PRIME) >>> 0;
-  }
-  return hash;
-}
-
-function djb2(str: string): number {
-  let hash = DJB2_SEED;
-  for (let i = 0; i < str.length; i++) {
-    hash = (Math.imul(hash, DJB2_MULTIPLIER) ^ str.charCodeAt(i)) >>> 0;
-  }
-  return hash;
 }
