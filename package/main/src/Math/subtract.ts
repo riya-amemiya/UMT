@@ -1,3 +1,4 @@
+import { addition } from "./addition";
 import { getDecimalLength } from "./getDecimalLength";
 import { max } from "./max";
 import { multiplication } from "./multiplication";
@@ -16,14 +17,11 @@ import { multiplication } from "./multiplication";
  */
 
 export const subtract = (...numbers: number[]): number => {
-  if (numbers.length === 0) {
-    return 0;
+  if (numbers.length <= 1) {
+    return numbers[0] ?? 0;
   }
-  let result = numbers[0];
-  for (let index = 1; index < numbers.length; index++) {
-    const current = numbers[index];
-    const z = 10 ** max(getDecimalLength(result), getDecimalLength(current));
-    result = (multiplication(result, z) - multiplication(current, z)) / z;
-  }
-  return result;
+  const [first, ...rest] = numbers;
+  const restSum = addition(...rest);
+  const z = 10 ** max(getDecimalLength(first), getDecimalLength(restSum));
+  return (multiplication(first, z) - multiplication(restSum, z)) / z;
 };
