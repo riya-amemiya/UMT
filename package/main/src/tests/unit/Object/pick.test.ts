@@ -62,4 +62,21 @@ describe("pick function", () => {
     const result = pick(obj, "a");
     expect(result).toEqual({ a: [1, 2, 3] });
   });
+
+  test("should skip dangerous keys to prevent prototype pollution", () => {
+    const malicious = JSON.parse(
+      '{"__proto__":{"polluted":true},"constructor":{"bad":1},"safe":42}',
+    ) as Record<string, unknown>;
+    const result = pick(
+      malicious,
+      "__proto__" as never,
+      "constructor" as never,
+      "safe" as never,
+    );
+    expect(result).toEqual({ safe: 42 });
+    // Returned object must still inherit from the unmodified Object.prototype.
+    expect(Object.getPrototypeOf(result)).toBe(Object.prototype);
+    // The global prototype must not have been tainted by the call above.
+    expect(Object.hasOwn(Object.prototype, "polluted")).toBe(false);
+  });
 });
