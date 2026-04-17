@@ -19,12 +19,6 @@ export const pick = <T extends object, K extends keyof T>(
 ): Pick<T, K> => {
   const result = {} as Pick<T, K>;
   for (const key of keys) {
-    // Security: reject prototype-polluting keys. If an attacker bypasses
-    // TypeScript's compile-time key constraint (via cast or untrusted
-    // input), assigning to result["__proto__"] would invoke the
-    // Object.prototype __proto__ setter and replace result's prototype
-    // with the attacker-supplied value, tainting every subsequent
-    // property access on the returned object.
     if (key === "__proto__" || key === "constructor" || key === "prototype") {
       continue;
     }

@@ -22,10 +22,6 @@ export const has = <T extends { [key: string]: unknown }>(
   path: string | string[],
 ): boolean => {
   const localPath = typeof path === "string" ? path.split(".") : path;
-  // Performance: traverse the object directly instead of taking a shallow
-  // copy. The copy was never written to (we only call Object.hasOwn and
-  // read nested values), so allocating a new object on every call was
-  // pure overhead proportional to the input's own-property count.
   let current: unknown = object;
   for (const key of localPath) {
     if (

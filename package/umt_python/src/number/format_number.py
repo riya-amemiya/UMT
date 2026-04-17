@@ -8,15 +8,10 @@ FormatStyle = Literal["decimal", "currency", "percent"]
 
 @dataclass(frozen=True)
 class _LocaleSpec:
-    """Separator characters used when formatting numbers for a locale."""
-
     thousands: str
     decimal: str
 
 
-# Separator tables for the handful of locales we explicitly support. Any
-# unknown locale falls back to the en-US layout below, which mirrors the
-# default behavior of `Intl.NumberFormat` when the ICU data is missing.
 _LOCALE_SEPARATORS: dict[str, _LocaleSpec] = {
     "en-US": _LocaleSpec(thousands=",", decimal="."),
     "en-GB": _LocaleSpec(thousands=",", decimal="."),
@@ -29,10 +24,6 @@ _LOCALE_SEPARATORS: dict[str, _LocaleSpec] = {
 
 _DEFAULT_LOCALE_SPEC = _LOCALE_SEPARATORS["en-US"]
 
-# Minimal symbol table so the "currency" style produces a useful prefix
-# without pulling in a full ICU / Babel dependency (the Python package is
-# zero-dependency by policy, matching package/main). Unknown currencies
-# fall back to the ISO 4217 code plus a non-breaking space.
 _CURRENCY_SYMBOLS: dict[str, str] = {
     "USD": "$",
     "EUR": "\u20ac",
@@ -42,11 +33,14 @@ _CURRENCY_SYMBOLS: dict[str, str] = {
     "KRW": "\u20a9",
 }
 
+# Currencies whose Intl.NumberFormat default minimum/maximum fraction digits
+# diverge from the standard "2 digits" rule and use 0 instead.
+_ZERO_FRACTION_CURRENCIES = frozenset({"JPY", "KRW"})
+
 
 def _resolve_locale_spec(locale: str | None) -> _LocaleSpec:
     if locale is None:
         return _DEFAULT_LOCALE_SPEC
-    # Exact match first, then language-only fallback (e.g. "fr" -> "fr-FR").
     if locale in _LOCALE_SEPARATORS:
         return _LOCALE_SEPARATORS[locale]
     language = locale.split("-", 1)[0]
@@ -60,31 +54,23 @@ def _default_fraction_digits(
     style: FormatStyle,
     currency: str | None,
 ) -> tuple[int, int]:
-    """Mirror Intl.NumberFormat defaults for minimum/maximum fraction digits."""
-
     if style == "currency":
-        # JPY and KRW historically have no fractional unit; everything else
-        # defaults to 2 digits per ECMA-402.
-        if currency in {"JPY", "KRW"}:
+        if currency in _ZERO_FRACTION_CURRENCIES:
             return (0, 0)
         return (2, 2)
     if style == "percent":
         return (0, 0)
-    # decimal (default)
     return (0, 3)
 
 
 def _round_half_away_from_zero(value: float, digits: int) -> float:
-    """Round matching Intl.NumberFormat (half away from zero)."""
-
     if digits < 0:
         msg = "digits must be non-negative"
         raise ValueError(msg)
     factor = 10**digits
     scaled = value * factor
-    # Python's round() uses banker's rounding, which diverges from the
-    # half-away-from-zero behavior used by Intl.NumberFormat. Emulate the
-    # JS semantics so the port matches package/main.
+    # Python's round() uses banker's rounding; Intl.NumberFormat rounds
+    # half away from zero, so we cannot delegate to round() here.
     rounded = int(scaled + 0.5) if scaled >= 0 else -int(-scaled + 0.5)
     return rounded / factor
 
@@ -96,8 +82,6 @@ def _format_absolute(
     spec: _LocaleSpec,
 ) -> str:
     rounded = _round_half_away_from_zero(value, max_fraction)
-    # Split into integer and fractional parts via string manipulation so we
-    # can apply locale-specific separators independently.
     integer_part = int(rounded)
     remainder = abs(rounded - integer_part)
 
@@ -106,8 +90,6 @@ def _format_absolute(
     if max_fraction == 0:
         return integer_str
 
-    # Produce exactly max_fraction digits then trim trailing zeros down to
-    # min_fraction, matching Intl.NumberFormat's default behavior.
     fraction_digits = f"{remainder:.{max_fraction}f}"[2:]
     trimmed = fraction_digits.rstrip("0")
     if len(trimmed) < min_fraction:
@@ -127,10 +109,6 @@ def format_number(
     currency: str | None = None,
 ) -> str:
     """Format a number similarly to ``Intl.NumberFormat`` in the TypeScript source.
-
-    Supports decimal, percent, and currency styles, with configurable
-    minimum/maximum fraction digits and locale-aware separators for a
-    curated list of locales. Unknown locales fall back to ``en-US``.
 
     Args:
         value: Numeric value to format.
@@ -162,8 +140,6 @@ def format_number(
     max_fraction = (
         default_max if maximum_fraction_digits is None else maximum_fraction_digits
     )
-    # Intl.NumberFormat normalizes this by treating max as the larger of
-    # the two \u2014 replicate the same forgiving behavior instead of raising.
     max_fraction = max(max_fraction, min_fraction)
 
     spec = _resolve_locale_spec(locale)
