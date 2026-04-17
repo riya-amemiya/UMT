@@ -17,3 +17,7 @@
 ## 2026-04-05 - Port `throttle` from Function module to umt_python
 **Ported:** `throttle` function from `package/main/src/Function/throttle.ts` to `package/umt_python/src/function/throttle.py`.
 **Adaptation:** TypeScript uses `setTimeout`/`clearTimeout` for scheduling; Python uses `threading.Timer` with a lock for thread safety. The wait parameter is in seconds (Python convention) rather than milliseconds (JS convention). The `ThrottledFunction` class wraps the callable and exposes a `cancel()` method matching the TS `ThrottledFunction` interface. Uses `time.monotonic()` instead of `Date.now()` for robust elapsed-time tracking.
+
+## 2026-04-16 - Intl.NumberFormat Port to Python
+**Mismatch:** `formatNumber` in `package/main` delegates to `Intl.NumberFormat`, which has full ICU locale data and supports hundreds of locales, currencies, and rounding modes. Python's zero-dependency policy rules out Babel/ICU, and the stdlib `locale` module mutates global process state so it can't be used safely in a library.
+**Resolution:** Ported a curated implementation that covers the common cases documented in the TS JSDoc examples (decimal/percent/currency styles, minimum/maximum fraction digits, en-US/de-DE/ja-JP/fr-FR/etc. locales) and falls back to en-US for unknown locales. Emulated JS `Math.round` half-away-from-zero semantics explicitly because Python's built-in `round` uses banker's rounding and would diverge on half values.
