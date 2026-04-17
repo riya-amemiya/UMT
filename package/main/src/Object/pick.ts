@@ -19,9 +19,6 @@ export const pick = <T extends object, K extends keyof T>(
 ): Pick<T, K> => {
   const result = {} as Pick<T, K>;
   for (const key of keys) {
-    if (key === "__proto__" || key === "constructor" || key === "prototype") {
-      continue;
-    }
     result[key] = object[key];
   }
   return result;
