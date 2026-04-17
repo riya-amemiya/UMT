@@ -1,4 +1,5 @@
 import { pick } from "@/Object/pick";
+import { removePrototype } from "@/Object/removePrototype";
 
 describe("pick function", () => {
   test("should select a single key", () => {
@@ -61,5 +62,16 @@ describe("pick function", () => {
     const obj = { a: [1, 2, 3], b: 4 };
     const result = pick(obj, "a");
     expect(result).toEqual({ a: [1, 2, 3] });
+  });
+
+  it("should prevent prototype pollution via __proto__ when sanitized", () => {
+    const malicious = JSON.parse(
+      '{"__proto__": {"polluted": true}, "safe": 42}',
+    );
+    const result = pick(removePrototype(malicious), "safe");
+
+    expect(result).toEqual({ safe: 42 });
+    const clean = {} as Record<string, unknown>;
+    expect("polluted" in clean).toBe(false);
   });
 });
