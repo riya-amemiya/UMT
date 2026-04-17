@@ -78,6 +78,14 @@ print(encoded)  # "SGVsbG8gV29ybGQ="
 |----------|------|-------------|---------|
 | `has_no_letters` | `(text: str) -> bool` | Check if string contains no letters (only numbers, emojis, special chars) | `has_no_letters("123!@#")  # True` / `has_no_letters("abc123")  # False` |
 
+### Number Functions
+
+| Function | Type | Description | Example |
+|----------|------|-------------|---------|
+| `format_number` | `(value: float \| int, *, locale: str \| None = None, minimum_fraction_digits: int \| None = None, maximum_fraction_digits: int \| None = None, style: Literal["decimal", "currency", "percent"] = "decimal", currency: str \| None = None) -> str` | Format a number with locale-aware separators, fraction-digit controls, and decimal/percent/currency styles. Mirrors `Intl.NumberFormat` from the TypeScript source. | `format_number(1234567.89)  # "1,234,567.89"` / `format_number(1234567.89, locale="de-DE")  # "1.234.567,89"` / `format_number(0.75, style="percent")  # "75%"` / `format_number(1234.5, style="currency", currency="USD")  # "$1,234.50"` |
+| `to_ordinal` | `(value: int \| float) -> str` | Convert a number to its English ordinal string (handles 11th/12th/13th specially) | `to_ordinal(1)  # "1st"` / `to_ordinal(11)  # "11th"` / `to_ordinal(21)  # "21st"` |
+| `to_percentage` | `(value: float \| int, total: float \| int, decimals: int = 2) -> float` | Calculate the percentage of a value relative to a total (returns 0 when total is 0) | `to_percentage(1, 3)  # 33.33` / `to_percentage(25, 100)  # 25.0` |
+
 ## Constants
 
 - `DEFAULT_RANDOM_STRING_CHARS`: Default character pool for random string generation (ASCII letters + digits)
