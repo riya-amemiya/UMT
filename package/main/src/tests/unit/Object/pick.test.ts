@@ -74,4 +74,26 @@ describe("pick function", () => {
     const clean = {} as Record<string, unknown>;
     expect("polluted" in clean).toBe(false);
   });
+
+  it("should not pollute global Object.prototype when called with __proto__ key", () => {
+    const malicious = JSON.parse('{"__proto__": {"polluted": true}}') as Record<
+      string,
+      unknown
+    >;
+    pick(malicious, "__proto__" as never);
+
+    const clean = {} as Record<string, unknown>;
+    expect("polluted" in clean).toBe(false);
+  });
+
+  it("should not pollute global Object.prototype when called with constructor and prototype keys", () => {
+    const malicious = JSON.parse(
+      '{"constructor": {"polluted": true}, "prototype": {"injected": true}}',
+    ) as Record<string, unknown>;
+    pick(malicious, "constructor" as never, "prototype" as never);
+
+    const clean = {} as Record<string, unknown>;
+    expect("polluted" in clean).toBe(false);
+    expect("injected" in clean).toBe(false);
+  });
 });
