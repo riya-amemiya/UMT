@@ -167,6 +167,7 @@ from .math import (
     xoshiro256,
 )
 from .number import (
+    format_number,
     to_ordinal,
 )
 from .object import (
@@ -359,6 +360,7 @@ __all__ = [
     "first",
     "flat_map_result",
     "flexible_number_conversion",
+    "format_number",
     "format_string",
     "from_base64",
     "fuzzy_search",

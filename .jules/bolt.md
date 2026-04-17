@@ -5,3 +5,7 @@
 ## 2026-03-16 - [Iterators and Manual While loops]
 **Learning:** [When optimizing functions that consume iterables/generators, using a manual while loop and `iterator.next()` instead of a `for...of` loop is a critical regression. The `for...of` loop natively handles early termination by automatically calling `.return()` on the underlying iterable if aborted early. A manual while loop bypasses this, leading to resource/memory leaks in generators holding cleanup logic.]
 **Action:** [Avoid replacing `for...of` loops with manual while loops when consuming iterables unless explicitly implementing complex generator handling with try/finally and `.return()` propagation. Trust `for...of` for safe iterable consumption.]
+
+## 2026-04-16 - Read-only Traversals Don't Need Defensive Copies
+**Learning:** Path-walk utilities like `Object/has` were taking a `{ ...object }` shallow copy before iterating, but only ever called `Object.hasOwn` and read nested values — never wrote to the copy. The copy produced identical results for every test case while allocating one object per call proportional to the input's own-property count.
+**Action:** When adding "defensive" copies during code review, confirm the copy is actually written to before shipping it. For pure-read traversals (lookups, `has`, nested getters), traverse the input reference directly and let the allocator breathe.
