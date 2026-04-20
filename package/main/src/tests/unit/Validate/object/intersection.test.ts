@@ -2,7 +2,7 @@ import { number } from "@/Validate/number";
 import { object } from "@/Validate/object/core";
 import { intersection } from "@/Validate/object/intersection";
 import { union } from "@/Validate/object/union";
-import { string } from "@/Validate/string";
+import { string, validateEmail } from "@/Validate/string";
 
 describe("intersection validation", () => {
   it("should accept values passing all validators", () => {
@@ -43,7 +43,7 @@ describe("intersection validation", () => {
     const validateUser = object({
       name: string(),
       profile: intersection(
-        object({ email: string() }),
+        object({ email: string([validateEmail()]) }),
         object({ age: number() }),
       ),
     });
