@@ -86,4 +86,97 @@ describe("merge", () => {
     expect(Object.keys(result)).not.toContain("constructor");
     expect(Object.keys(result)).not.toContain("prototype");
   });
+
+  it("should demonstrate local prototype pollution when __proto__ payload is merged without sanitization", () => {
+    const malicious = JSON.parse('{"__proto__":{"injected":"local"}}');
+
+    const polluted = merge({}, malicious) as Record<string, unknown>;
+
+    // The result's own prototype was replaced by the injected object.
+    expect(Object.getPrototypeOf(polluted)).toEqual({ injected: "local" });
+    expect((polluted as { injected?: unknown }).injected).toBe("local");
+
+    // Global Object.prototype must remain untouched.
+    expect(
+      // biome-ignore lint/suspicious/noExplicitAny: ignore
+      (Object.prototype as any).injected,
+    ).toBeUndefined();
+
+    // After sanitization, the result is clean.
+    const safe = merge({}, removePrototype(malicious)) as {
+      injected?: unknown;
+    };
+    expect(Object.getPrototypeOf(safe)).toBe(Object.prototype);
+    expect(safe.injected).toBeUndefined();
+  });
+
+  it("should preserve own constructor key on the result when not sanitized", () => {
+    const malicious = JSON.parse('{"constructor":{"polluted":true},"a":1}');
+
+    const result = merge({}, malicious) as {
+      constructor: { polluted?: unknown };
+    };
+
+    // Without sanitization the key flows through — demonstrating the need for removePrototype.
+    expect(Object.hasOwn(result, "constructor")).toBe(true);
+    expect(result.constructor.polluted).toBe(true);
+
+    const safe = merge({}, removePrototype(malicious));
+    expect(Object.hasOwn(safe, "constructor")).toBe(false);
+  });
+
+  it("should merge many sources in left-to-right precedence order", () => {
+    const result = merge({ a: 1 }, { a: 2 }, { a: 3 }, { a: 4 }, { a: 5 });
+
+    expect(result.a).toBe(5);
+  });
+
+  it("should only copy own enumerable string keys of each source", () => {
+    const parent = { inherited: "parent" };
+    const child = Object.create(parent);
+    child.own = "child";
+
+    const result = merge({ a: 1 }, child as Record<string, unknown>);
+
+    expect(result).toEqual({ a: 1, own: "child" });
+    expect(Object.hasOwn(result, "inherited")).toBe(false);
+  });
+
+  it("should not copy symbol keys from sources", () => {
+    const symbol = Symbol("key");
+    const source = { a: 1, [symbol]: "value" } as Record<string, unknown>;
+
+    const result = merge({}, source) as Record<string | symbol, unknown>;
+
+    expect(Object.getOwnPropertySymbols(result)).toHaveLength(0);
+    expect(result[symbol]).toBeUndefined();
+  });
+
+  it("should return a new object even when there are no sources", () => {
+    const target = { a: 1 };
+
+    const result = merge(target);
+
+    expect(result).toEqual(target);
+    expect(result).not.toBe(target);
+  });
+
+  it("should preserve reference equality for nested values (shallow merge)", () => {
+    const nested = { x: 1 };
+    const source = { nested };
+
+    const result = merge({}, source);
+
+    expect(result.nested).toBe(nested);
+  });
+
+  it("should overwrite nested objects instead of merging them (shallow)", () => {
+    const target = { a: { b: 1, c: 2 } };
+    const source = { a: { d: 3 } };
+
+    const result = merge(target, source);
+
+    expect(result.a).toEqual({ d: 3 });
+    expect(result.a).not.toHaveProperty("b");
+  });
 });

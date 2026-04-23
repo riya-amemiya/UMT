@@ -137,4 +137,87 @@ describe("getObjectsCommon", () => {
     // biome-ignore lint/suspicious/noExplicitAny: ignore
     expect((result as any).polluted).toBeUndefined();
   });
+
+  test("should return an empty result when either object lacks a key present in the other", () => {
+    expect(getObjectsCommon({ a: 1, b: 2 }, { a: 1 })).toEqual({ a: 1 });
+    expect(getObjectsCommon({ a: 1 }, { a: 1, b: 2 })).toEqual({ a: 1 });
+  });
+
+  test("should handle NaN reference equality (=== returns false for NaN)", () => {
+    expect(getObjectsCommon({ a: Number.NaN }, { a: Number.NaN })).toEqual({});
+  });
+
+  test("should compare using strict equality (no coercion)", () => {
+    expect(
+      getObjectsCommon(
+        { a: 1 } as Record<string, unknown>,
+        { a: "1" } as Record<string, unknown>,
+      ),
+    ).toEqual({});
+    expect(
+      getObjectsCommon(
+        { a: true } as Record<string, unknown>,
+        { a: 1 } as Record<string, unknown>,
+      ),
+    ).toEqual({});
+  });
+
+  test("should not copy inherited keys from the first object", () => {
+    const parent = { inherited: 1 };
+    const child: { own?: number } = Object.create(parent);
+    child.own = 2;
+
+    const result = getObjectsCommon(child as Record<string, unknown>, {
+      own: 2,
+      inherited: 1,
+    });
+
+    // getObjectsCommon iterates Object.entries, which only sees own enumerable
+    // keys on the first argument.
+    expect(Object.hasOwn(result, "own")).toBe(true);
+    expect(Object.hasOwn(result, "inherited")).toBe(false);
+  });
+
+  test("should return shared indices when comparing a plain object and an array (top-level own keys match)", () => {
+    // getObjectsCommon walks own keys and compares values strictly, so numeric
+    // string indices on a plain object that match the same positions on an
+    // array are treated as common pairs. This documents the actual behavior.
+    const object = { "0": "a", "1": "b" };
+    const array = ["a", "b"] as unknown as Record<string, unknown>;
+    expect(getObjectsCommon(object, array)).toEqual({ "0": "a", "1": "b" });
+  });
+
+  test("should skip __proto__ keys on plain objects passed unsanitized", () => {
+    // Object.entries does include JSON-parsed __proto__ own keys. The library
+    // does NOT filter dangerous keys itself — but since values are compared
+    // strictly and written via bracket notation on a result=`{}`, the result
+    // never exposes __proto__ as an own key (primitive rejected by setter;
+    // objects fall into the recursion path and assign to prototype only).
+    const obj1 = JSON.parse('{"__proto__":{"polluted":true},"a":1}');
+    const obj2 = JSON.parse('{"__proto__":{"polluted":true},"a":1}');
+
+    const result = getObjectsCommon(obj1, obj2) as { a?: number };
+
+    expect(Object.hasOwn(result, "__proto__")).toBe(false);
+    expect(result.a).toBe(1);
+  });
+
+  test("should handle many objects efficiently", () => {
+    const objects = Array.from({ length: 20 }, () => ({
+      shared: 1,
+      unique: Math.random(),
+    }));
+
+    const result = getObjectsCommon(objects[0], ...objects.slice(1));
+
+    expect(result).toEqual({ shared: 1 });
+  });
+
+  test("should return a new object, not the original", () => {
+    const source = { a: 1, b: 2 };
+    const result = getObjectsCommon(source);
+
+    expect(result).toEqual(source);
+    expect(result).not.toBe(source);
+  });
 });
