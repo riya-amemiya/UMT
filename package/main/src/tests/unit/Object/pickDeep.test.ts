@@ -122,9 +122,13 @@ describe("pickDeep function", () => {
   });
 
   test("should prevent prototype pollution via __proto__", () => {
-    const payload = JSON.parse('{"__proto__": {"polluted": true}}');
+    const payload = JSON.parse('{"__proto__": {"polluted": true}}') as Record<
+      string,
+      unknown
+    >;
+    const sanitized = removePrototype(payload) as Record<string, unknown>;
     const result = pickDeep(
-      removePrototype(payload),
+      sanitized,
       // biome-ignore lint/suspicious/noExplicitAny: testing invalid keys
       "__proto__.polluted" as any,
     );
@@ -141,10 +145,11 @@ describe("pickDeep function", () => {
   test("should prevent prototype pollution via constructor", () => {
     const payload = JSON.parse(
       '{"constructor": {"prototype": {"polluted": true}}}',
-    );
+    ) as Record<string, unknown>;
+    const sanitized = removePrototype(payload) as Record<string, unknown>;
 
     const result = pickDeep(
-      removePrototype(payload),
+      sanitized,
       // biome-ignore lint/suspicious/noExplicitAny: ignore
       "constructor.prototype.polluted" as any,
     );
@@ -156,10 +161,14 @@ describe("pickDeep function", () => {
   });
 
   test("should prevent prototype pollution via prototype", () => {
-    const payload = JSON.parse('{"prototype": {"polluted": true}}');
+    const payload = JSON.parse('{"prototype": {"polluted": true}}') as Record<
+      string,
+      unknown
+    >;
+    const sanitized = removePrototype(payload) as Record<string, unknown>;
 
     const result = pickDeep(
-      removePrototype(payload),
+      sanitized,
       // biome-ignore lint/suspicious/noExplicitAny: ignore
       "prototype.polluted" as any,
     );
