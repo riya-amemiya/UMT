@@ -114,3 +114,21 @@ fn should_lift_max_fraction_digits_to_minimum() {
     };
     assert_eq!(umt_format_number(1.5, &options), "1.500");
 }
+
+#[test]
+fn should_return_nan_string_for_nan_input() {
+    assert_eq!(umt_format_number_default(f64::NAN), "NaN");
+
+    let percent = FormatNumberOptions {
+        style: Some(FormatStyle::Percent),
+        ..FormatNumberOptions::default()
+    };
+    assert_eq!(umt_format_number(f64::NAN, &percent), "NaN");
+
+    let currency = FormatNumberOptions {
+        style: Some(FormatStyle::Currency),
+        currency: Some("USD"),
+        ..FormatNumberOptions::default()
+    };
+    assert_eq!(umt_format_number(f64::NAN, &currency), "NaN");
+}

@@ -157,6 +157,18 @@ fn format_absolute(value: f64, min_fraction: u32, max_fraction: u32, spec: &Loca
 
 /// Formats `value` according to `options`, mirroring `Intl.NumberFormat`.
 ///
+/// Returns the literal string `"NaN"` for NaN input, matching the TypeScript
+/// reference and the Python port.
+///
+/// # Arguments
+///
+/// * `value` - The number to format.
+/// * `options` - Locale, style, currency, and fraction-digit configuration.
+///
+/// # Returns
+///
+/// The formatted number as a `String`.
+///
 /// # Examples
 ///
 /// ```
@@ -188,6 +200,10 @@ fn format_absolute(value: f64, min_fraction: u32, max_fraction: u32, spec: &Loca
 /// assert_eq!(umt_format_number(1234.5, &usd), "$1,234.50");
 /// ```
 pub fn umt_format_number(value: f64, options: &FormatNumberOptions) -> String {
+    if value.is_nan() {
+        return "NaN".to_string();
+    }
+
     let style = options.style.unwrap_or_default();
     let (default_min, default_max) = default_fraction_digits(style, options.currency);
     let min_fraction = options.minimum_fraction_digits.unwrap_or(default_min);
@@ -230,6 +246,14 @@ pub fn umt_format_number(value: f64, options: &FormatNumberOptions) -> String {
 }
 
 /// Convenience wrapper that formats with all defaults (decimal, en-US layout).
+///
+/// # Arguments
+///
+/// * `value` - The number to format.
+///
+/// # Returns
+///
+/// The formatted number as a `String`.
 pub fn umt_format_number_default(value: f64) -> String {
     umt_format_number(value, &FormatNumberOptions::default())
 }
