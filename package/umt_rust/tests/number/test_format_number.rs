@@ -92,7 +92,6 @@ fn should_truncate_with_half_away_from_zero_rounding() {
         maximum_fraction_digits: Some(2),
         ..FormatNumberOptions::default()
     };
-    // 0.125 under half-away-from-zero rounds up to 0.13 (not banker's 0.12).
     assert_eq!(umt_format_number(0.125, &options), "0.13");
     assert_eq!(umt_format_number(-0.125, &options), "-0.13");
 }
