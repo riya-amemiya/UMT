@@ -11,3 +11,4 @@ mod test_pick;
 mod test_pick_deep;
 mod test_value;
 mod test_deep_clone;
+mod test_get_objects_common;
