@@ -122,9 +122,16 @@ describe("pickDeep function", () => {
   });
 
   test("should prevent prototype pollution via __proto__", () => {
-    const payload = JSON.parse('{"__proto__": {"polluted": true}}');
-    // @ts-expect-error - testing invalid keys
-    const result = pickDeep(removePrototype(payload), "__proto__.polluted");
+    const payload = JSON.parse('{"__proto__": {"polluted": true}}') as Record<
+      string,
+      unknown
+    >;
+    const sanitized = removePrototype(payload) as Record<string, unknown>;
+    const result = pickDeep(
+      sanitized,
+      // biome-ignore lint/suspicious/noExplicitAny: testing invalid keys
+      "__proto__.polluted" as any,
+    );
     expect(
       // biome-ignore lint/suspicious/noExplicitAny: ignore
       (result as any).polluted,
@@ -138,10 +145,11 @@ describe("pickDeep function", () => {
   test("should prevent prototype pollution via constructor", () => {
     const payload = JSON.parse(
       '{"constructor": {"prototype": {"polluted": true}}}',
-    );
+    ) as Record<string, unknown>;
+    const sanitized = removePrototype(payload) as Record<string, unknown>;
 
     const result = pickDeep(
-      removePrototype(payload),
+      sanitized,
       // biome-ignore lint/suspicious/noExplicitAny: ignore
       "constructor.prototype.polluted" as any,
     );
@@ -153,10 +161,14 @@ describe("pickDeep function", () => {
   });
 
   test("should prevent prototype pollution via prototype", () => {
-    const payload = JSON.parse('{"prototype": {"polluted": true}}');
+    const payload = JSON.parse('{"prototype": {"polluted": true}}') as Record<
+      string,
+      unknown
+    >;
+    const sanitized = removePrototype(payload) as Record<string, unknown>;
 
     const result = pickDeep(
-      removePrototype(payload),
+      sanitized,
       // biome-ignore lint/suspicious/noExplicitAny: ignore
       "prototype.polluted" as any,
     );
@@ -164,5 +176,68 @@ describe("pickDeep function", () => {
       // biome-ignore lint/suspicious/noExplicitAny: ignore
       (result as any).prototype,
     ).toBeUndefined();
+  });
+
+  test("should preserve reference equality for fully-picked nested objects", () => {
+    const nested = { b: 1 };
+    const object = { a: nested };
+
+    const result = pickDeep(object, "a");
+
+    expect(result.a).toBe(nested);
+  });
+
+  test("should allocate a new intermediate object when only a sub-path is picked", () => {
+    const object = { a: { b: { c: 1, d: 2 } } };
+
+    const result = pickDeep(object, "a.b.c");
+
+    expect(result.a.b).not.toBe(object.a.b);
+    expect(result.a).not.toBe(object.a);
+  });
+
+  test("should pick all requested paths independently", () => {
+    const object = {
+      a: { b: { c: 1, d: 2 }, e: 3 },
+      f: { g: 4, h: 5 },
+    };
+
+    const result = pickDeep(object, "a.b.c", "a.e", "f.g");
+
+    expect(result).toEqual({ a: { b: { c: 1 }, e: 3 }, f: { g: 4 } });
+  });
+
+  test("should create an empty placeholder when a path steps into a primitive mid-way", () => {
+    const object = { a: 1 } as Record<string, unknown>;
+
+    const result = pickDeep(
+      object,
+      // biome-ignore lint/suspicious/noExplicitAny: ignore
+      "a.b" as any,
+    );
+
+    // `a` exists but is a primitive, so pickDeep creates an empty intermediate
+    // object at `a` and stops. This documents the library's actual behavior.
+    expect(result).toEqual({ a: {} });
+  });
+
+  test("should merge sibling paths into the same intermediate object", () => {
+    const object = { a: { b: 1, c: 2, d: 3 } };
+
+    const result = pickDeep(object, "a.b", "a.c");
+
+    expect(result).toEqual({ a: { b: 1, c: 2 } });
+    // Both picks shared the same `a` intermediate — verify reference equality
+    // of the intermediate (not the original).
+    expect(result.a).not.toBe(object.a);
+  });
+
+  test("should handle undefined values as valid leaves", () => {
+    const object = { a: { b: undefined, c: 1 } };
+
+    const result = pickDeep(object, "a.b");
+
+    expect(result).toEqual({ a: { b: undefined } });
+    expect(Object.hasOwn(result.a, "b")).toBe(true);
   });
 });

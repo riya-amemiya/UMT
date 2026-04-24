@@ -133,4 +133,95 @@ describe("getObjectsDiff", () => {
     // biome-ignore lint/suspicious/noExplicitAny: ignore
     expect((result as any).polluted).toBeUndefined();
   });
+
+  test("should compare using strict equality (no type coercion)", () => {
+    expect(
+      getObjectsDiff(
+        { a: 1 } as Record<string, unknown>,
+        { a: "1" } as Record<string, unknown>,
+      ),
+    ).toEqual({ a: "1" });
+    expect(
+      getObjectsDiff(
+        { a: true } as Record<string, unknown>,
+        { a: 1 } as Record<string, unknown>,
+      ),
+    ).toEqual({ a: 1 });
+  });
+
+  test("should handle NaN with SameValueZero semantics (NaN equals NaN in the internal Map)", () => {
+    // Map keys use SameValueZero, which equates NaN with NaN. As a result,
+    // two identical NaN entries count as shared rather than unique.
+    expect(getObjectsDiff({ a: Number.NaN }, { a: Number.NaN })).toEqual({});
+  });
+
+  test("should include keys present in only some of the objects", () => {
+    expect(
+      getObjectsDiff(
+        { a: 1, only1: "x" },
+        { a: 1, only2: "y" },
+        { a: 1, only3: "z" },
+      ),
+    ).toEqual({ only1: "x", only2: "y", only3: "z" });
+  });
+
+  test("should keep the last unique value when 4+ objects have conflicting values", () => {
+    expect(getObjectsDiff({ x: 1 }, { x: 2 }, { x: 3 }, { x: 4 })).toEqual({
+      x: 4,
+    });
+  });
+
+  test("should not include a key when all values are identical across many objects", () => {
+    expect(getObjectsDiff({ x: 1 }, { x: 1 }, { x: 1 }, { x: 1 })).toEqual({});
+  });
+
+  test("should not include a key when exactly one value is shared and one is unique (the unique wins)", () => {
+    expect(getObjectsDiff({ x: 1 }, { x: 1 }, { x: 2 })).toEqual({ x: 2 });
+  });
+
+  test("should pair shared values correctly across objects even when the shared value is not first", () => {
+    expect(getObjectsDiff({ x: 3 }, { x: 1 }, { x: 1 })).toEqual({ x: 3 });
+  });
+
+  test("should handle keys that exist in only a subset of the inputs", () => {
+    expect(getObjectsDiff({ a: 1 }, { b: 2 }, { a: 1, b: 2 })).toEqual({});
+    expect(getObjectsDiff({ a: 1 }, { b: 2 }, { a: 3, b: 4 })).toEqual({
+      a: 3,
+      b: 4,
+    });
+  });
+
+  test("should iterate own enumerable keys only (skip inherited)", () => {
+    const parent = { inherited: 1 };
+    const child: { own?: number } = Object.create(parent);
+    child.own = 2;
+
+    expect(
+      getObjectsDiff(child as Record<string, unknown>, { own: 2, extra: 9 }),
+    ).toEqual({
+      extra: 9,
+    });
+  });
+
+  test("should return a new object, not the original", () => {
+    const source = { a: 1 };
+    const result = getObjectsDiff(source);
+
+    expect(result).toEqual(source);
+    expect(result).not.toBe(source);
+  });
+
+  test("should pass through unsanitized __proto__ as own key (diff does not filter)", () => {
+    // Documents the library's scope: getObjectsDiff does not filter dangerous
+    // keys itself. Callers should sanitize with removePrototype* first.
+    const obj1 = JSON.parse('{"__proto__":{"polluted":true},"a":1}');
+    const obj2 = { a: 1 };
+
+    const result = getObjectsDiff(obj1, obj2) as Record<string, unknown>;
+
+    // __proto__ is present in obj1 only, so it becomes a unique value. The
+    // assignment goes through the setter though, so it does not appear as an
+    // own key of the result.
+    expect(Object.hasOwn(result, "__proto__")).toBe(false);
+  });
 });

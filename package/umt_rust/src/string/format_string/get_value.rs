@@ -48,17 +48,14 @@ pub fn get_value<'a>(object: &'a Value, path: &str) -> Option<&'a Value> {
             current = current.get(key)?;
 
             // Then get the array element
-            if let Some(arr) = current.as_array() {
-                let actual_index = if index < 0 {
-                    (arr.len() as i64 + index) as usize
-                } else {
-                    index as usize
-                };
-
-                current = arr.get(actual_index)?;
+            let arr = current.as_array()?;
+            let actual_index = if index < 0 {
+                (arr.len() as i64 + index) as usize
             } else {
-                return None;
-            }
+                index as usize
+            };
+
+            current = arr.get(actual_index)?;
         } else {
             // Simple property access
             current = current.get(part)?;
