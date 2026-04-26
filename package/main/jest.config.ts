@@ -14,7 +14,7 @@ const config: Config = {
     "!<rootDir>/src/tests/benchmark/**/*.ts",
   ],
   coverageDirectory: "./coverage",
-  coverageReporters: ["text", "json-summary"],
+  coverageReporters: ["text", "json-summary", "lcov"],
   moduleDirectories: ["node_modules", "src"],
   moduleNameMapper: {
     "@/(.*)": "<rootDir>/src/$1",

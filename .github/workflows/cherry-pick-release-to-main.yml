@@ -1,19 +1,15 @@
 name: Sync release commits forward
-
 'on':
   push:
     branches:
       - 'release/*.*.x'
   workflow_dispatch:
-
 permissions:
   contents: write
   pull-requests: write
-
 concurrency:
   group: sync-commits-${{ github.ref_name }}
   cancel-in-progress: false
-
 jobs:
   cherry-pick:
     name: Sync commits to branches
@@ -26,7 +22,6 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
-
       - name: Create per-commit PRs to main and forward release branches
         env:
           RELEASE_BRANCH: ${{ github.ref_name }}
@@ -105,4 +100,3 @@ jobs:
               echo -e "Auto PR to sync commit ${c} from '${RELEASE_BRANCH}' into '${target}'.\n\nCommit: ${commit_url}\n\nConflicts, if any, are intentionally kept for PR-side resolution." | gh pr create --base "${target}" --head "${wbranch}" --title "${title}" --body-file - || echo "PR may already exist for ${wbranch}; skipping"
             done
           done
-
