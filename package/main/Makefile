@@ -73,7 +73,7 @@ lint-ci:
 	$(TSC)
 
 test:
-	$(JEST)
+	$(JEST) $(JEST_ARGS)
 
 test-debug:
 	cd test && $(TSC)

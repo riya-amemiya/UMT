@@ -140,7 +140,7 @@ jobs:
       - name: Run Tests with Coverage
         run: |
           set -o pipefail
-          JEST_JUNIT_CLASSNAME="{filepath}" nix develop -c bun run test --coverage --reporters=default --reporters=jest-junit 2>&1 | tee /tmp/coverage-output.txt
+          JEST_JUNIT_CLASSNAME="{filepath}" nix develop -c make test JEST_ARGS="--coverage --reporters=default --reporters=jest-junit" 2>&1 | tee /tmp/coverage-output.txt
       - name: Strip ANSI codes from coverage output
         if: always()
         run: sed 's/\x1B\[[0-9;]*[mGKHF]//g' /tmp/coverage-output.txt > /tmp/coverage-clean.txt || true

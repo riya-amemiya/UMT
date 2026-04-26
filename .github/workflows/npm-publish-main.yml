@@ -29,6 +29,10 @@ jobs:
         run: nix develop -c bun install --frozen-lockfile
       - name: Build project
         run: nix develop -c bun run build:clean:full
+      - name: Lint
+        run: nix develop -c bun run lint:ci
+      - name: Test
+        run: nix develop -c bun run test
       - name: Remove unnecessary build artifacts for accurate size measurement
         run: rm -rf module/tsconfig.tsbuildinfo module/tests
       - name: Publish umt to npm
