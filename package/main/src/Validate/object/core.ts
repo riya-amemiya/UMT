@@ -47,8 +47,7 @@ export const object = <
       return {
         validate: false,
         message: message ?? "",
-        // biome-ignore lint/suspicious/noExplicitAny: Type assertion needed for return type compatibility
-        type: value as any,
+        type: value,
       };
     }
     for (const validate in option) {

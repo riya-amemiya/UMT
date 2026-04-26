@@ -18,12 +18,13 @@ export interface Pipeline<T> {
  * pipeline(); // 1
  * pipeline((x) => x + 1)(); // 2
  */
-export const createPipeline: <T>(initialValue: T) => Pipeline<T> = <T>(
-  initialValue: T,
-) =>
-  // Accepts a transformer function as an argument and returns a new Pipeline.
-  // If no argument is provided, returns the stored value (initialValue).
-  (<U>(transformer?: (input: T) => U) =>
-    transformer
+export function createPipeline<T>(initialValue: T): Pipeline<T> {
+  function pipeline(): T;
+  function pipeline<U>(transformer: (input: T) => U): Pipeline<U>;
+  function pipeline<U>(transformer?: (input: T) => U): T | Pipeline<U> {
+    return transformer
       ? createPipeline(transformer(initialValue))
-      : initialValue) as Pipeline<T>;
+      : initialValue;
+  }
+  return pipeline;
+}

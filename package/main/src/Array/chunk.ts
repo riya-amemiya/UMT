@@ -13,7 +13,7 @@ export const chunk = <T extends unknown[], N extends number>(
   const result = Array.from({ length: Math.ceil(length / n) });
 
   for (let index = 0, k = 0; index < length; index += n, k++) {
-    result[k] = array.slice(index, index + n) as unknown as T[];
+    result[k] = array.slice(index, index + n);
   }
 
   return result as ChunkArrayType<T, N>;

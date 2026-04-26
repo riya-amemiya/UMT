@@ -24,10 +24,7 @@ export const has = <T extends { [key: string]: unknown }>(
   const localPath = typeof path === "string" ? path.split(".") : path;
   let current: unknown = object;
   for (const key of localPath) {
-    if (
-      current == null ||
-      !Object.hasOwn(current as Record<string, unknown>, key)
-    ) {
+    if (current == null || !Object.hasOwn(current, key)) {
       return false;
     }
     current = (current as Record<string, unknown>)[key];
