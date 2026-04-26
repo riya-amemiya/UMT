@@ -1,12 +1,9 @@
 name: Auto Update Dependencies
-
 on:
   workflow_dispatch:
-
 permissions:
   contents: write
   pull-requests: write
-
 jobs:
   update-dependencies:
     name: Update All Package Dependencies
@@ -14,30 +11,28 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-
+      - name: Setup Nix
+        uses: DeterminateSystems/determinate-nix-action@92ffb5400c3776307a27a1727d7e2ac3dcd9f844 # v3.18.1
+      - name: Setup Magic Nix Cache
+        uses: DeterminateSystems/magic-nix-cache-action@565684385bcd71bad329742eefe8d12f2e765b39 # v13
       - name: Setup Bun
         uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
         with:
           bun-version: latest
-
       - name: Setup Node.js
         uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
           node-version: 24.x
-
       - name: Setup Rust
         uses: dtolnay/rust-toolchain@stable
-
       - name: Setup Python and uv
         uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0
         with:
           enable-cache: true
-
       - name: Setup Go
         uses: actions/setup-go@4a3601121dd01d1626a1e23e37211e3254c1c06c # v6.4.0
         with:
           go-version: stable
-
       - name: Update Node.js packages
         run: |
           echo "Updating Node.js packages..."
@@ -50,7 +45,6 @@ jobs:
               cd - > /dev/null
             fi
           done
-
       - name: Update Rust packages
         run: |
           echo "Updating Rust packages..."
@@ -62,7 +56,6 @@ jobs:
               cd - > /dev/null
             fi
           done
-
       - name: Update Python packages
         run: |
           echo "Updating Python packages..."
@@ -72,7 +65,6 @@ jobs:
             uv lock --upgrade
             cd - > /dev/null
           fi
-
       - name: Update Go packages
         run: |
           echo "Updating Go packages..."
@@ -83,7 +75,6 @@ jobs:
             go mod tidy
             cd - > /dev/null
           fi
-
       - name: Check for changes
         id: check_changes
         run: |
@@ -94,7 +85,6 @@ jobs:
             echo "has_changes=false" >> "$GITHUB_OUTPUT"
             echo "No changes detected"
           fi
-
       - name: Create Pull Request
         if: steps.check_changes.outputs.has_changes == 'true'
         env:

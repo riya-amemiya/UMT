@@ -1,10 +1,8 @@
 name: Publish Main Package to npm
-
 on:
   release:
     types: [published]
   workflow_dispatch:
-
 jobs:
   publish:
     name: Publish umt packages
@@ -17,40 +15,24 @@ jobs:
     defaults:
       run:
         working-directory: ./package/main
-
     steps:
       - name: Checkout code
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           persist-credentials: false
           fetch-depth: 0
-
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
-        with:
-          bun-version: latest
-
-      - name: Setup Node.js for npm publish
-        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
-        with:
-          node-version: 24
-          registry-url: 'https://registry.npmjs.org'
-
+      - name: Setup Nix
+        uses: DeterminateSystems/determinate-nix-action@92ffb5400c3776307a27a1727d7e2ac3dcd9f844 # v3.18.1
+      - name: Setup Magic Nix Cache
+        uses: DeterminateSystems/magic-nix-cache-action@565684385bcd71bad329742eefe8d12f2e765b39 # v13
       - name: Install dependencies with frozen lockfile
-        run: bun install --frozen-lockfile
-
+        run: nix develop -c bun install --frozen-lockfile
       - name: Build project
-        run: bun run build:clean:full
-
+        run: nix develop -c bun run build:clean:full
       - name: Remove unnecessary build artifacts for accurate size measurement
         run: rm -rf module/tsconfig.tsbuildinfo module/tests
-
-      - name: Update npm to the latest version
-        run: npm install -g npm@latest
-
       - name: Publish umt to npm
-        run: npm publish --provenance
-
+        run: nix develop -c npm publish --provenance
       - name: Publish umt-common to npm
-        run: npm publish --provenance
+        run: nix develop -c npm publish --provenance
         working-directory: ./package/main/common-module

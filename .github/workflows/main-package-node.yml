@@ -1,5 +1,4 @@
 name: Main Package CI (Node.js)
-
 on:
   pull_request:
     branches:
@@ -18,65 +17,63 @@ on:
 permissions:
   pull-requests: write
 jobs:
-    setup:
-        name: Setup Dependencies
-        runs-on: ${{ matrix.os }}
-        strategy:
-            matrix:
-                bun-version: [latest]
-                os: [ubuntu-latest]
-                node-version: [20.x, 22.x, 24.x]
-        defaults:
-          run:
-            working-directory: ./package/main
-        steps:
-            - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-            - name: Setup Bun ${{ matrix.bun-version }}
-              uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
-              with:
-                  bun-version: ${{ matrix.bun-version }}
-            - name: Setup Node.js ${{ matrix.node-version }}
-              uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # 6.4.0
-              with:
-                node-version: ${{ matrix.node-version }}
-            - name: Restore Dependencies Cache
-              id: cache-restore-dev-depends
-              uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
-              with:
-                  path: '**/node_modules'
-                  key: dev-depends-${{ matrix.os }}-bun${{ matrix.bun-version }}-${{ hashFiles('package/main/package.json') }}
-            - name: Install Dependencies
-              if: steps.cache-restore-dev-depends.outputs.cache-hit != 'true'
-              run: bun i
-            - name: Save Dependencies Cache
-              if: steps.cache-restore-dev-depends.outputs.cache-hit != 'true'
-              id: cache-save-dev-depends
-              uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
-              with:
-                  path: '**/node_modules'
-                  key: dev-depends-${{ matrix.os }}-bun${{ matrix.bun-version }}-${{ hashFiles('package/main/package.json') }}
-    test:
-        name: Run Tests (Node.js)
-        needs: setup
-        runs-on: ${{ matrix.os }}
-        strategy:
-          matrix:
-            node-version: [20.x, 22.x, 24.x]
-            bun-version: [latest]
-            os: [ubuntu-latest]
-        defaults:
-          run:
-            working-directory: ./package/main
-        steps:
-            - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-            - name: Use Node.js ${{ matrix.node-version }}
-              uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # 6.4.0
-              with:
-                node-version: ${{ matrix.node-version }}
-            - name: Restore Dependencies Cache
-              uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
-              with:
-                  path: '**/node_modules'
-                  key: dev-depends-${{ matrix.os }}-bun${{ matrix.bun-version }}-${{ hashFiles('package/main/package.json') }}
-            - name: Run Tests with Coverage
-              run: npm run test --coverage
+  setup:
+    name: Setup Dependencies
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        node-version: [20.x, 22.x, 24.x]
+    defaults:
+      run:
+        working-directory: ./package/main
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Setup Nix
+        uses: DeterminateSystems/determinate-nix-action@92ffb5400c3776307a27a1727d7e2ac3dcd9f844 # v3.18.1
+      - name: Setup Magic Nix Cache
+        uses: DeterminateSystems/magic-nix-cache-action@565684385bcd71bad329742eefe8d12f2e765b39 # v13
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # 6.4.0
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Restore Dependencies Cache
+        id: cache-restore-dev-depends
+        uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        with:
+          path: '**/node_modules'
+          key: dev-depends-${{ matrix.os }}-node-${{ hashFiles('package/main/package.json') }}
+      - name: Install Dependencies
+        if: steps.cache-restore-dev-depends.outputs.cache-hit != 'true'
+        run: nix develop -c bun i
+      - name: Save Dependencies Cache
+        if: steps.cache-restore-dev-depends.outputs.cache-hit != 'true'
+        id: cache-save-dev-depends
+        uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        with:
+          path: '**/node_modules'
+          key: dev-depends-${{ matrix.os }}-node-${{ hashFiles('package/main/package.json') }}
+  test:
+    name: Run Tests (Node.js)
+    needs: setup
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        node-version: [20.x, 22.x, 24.x]
+        os: [ubuntu-latest]
+    defaults:
+      run:
+        working-directory: ./package/main
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # 6.4.0
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Restore Dependencies Cache
+        uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        with:
+          path: '**/node_modules'
+          key: dev-depends-${{ matrix.os }}-node-${{ hashFiles('package/main/package.json') }}
+      - name: Run Tests with Coverage
+        run: npm run test --coverage
