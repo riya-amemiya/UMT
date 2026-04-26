@@ -40,8 +40,8 @@ jobs:
             if [ -f "$dir/package.json" ]; then
               echo "Updating $dir"
               cd "$dir"
-              bun install
-              bunx @biomejs/biome migrate --write
+              nix develop -c bun install
+              nix develop -c bunx @biomejs/biome migrate --write
               cd - > /dev/null
             fi
           done
