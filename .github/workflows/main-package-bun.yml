@@ -141,6 +141,13 @@ jobs:
         run: |
           set -o pipefail
           JEST_JUNIT_CLASSNAME="{filepath}" nix develop -c make test JEST_ARGS="--coverage --reporters=default --reporters=jest-junit" 2>&1 | tee /tmp/coverage-output.txt
+      - name: List produced artifacts
+        if: always()
+        run: |
+          pwd
+          ls -la
+          ls -la coverage/ || true
+          ls -la junit.xml || true
       - name: Strip ANSI codes from coverage output
         if: always()
         run: sed 's/\x1B\[[0-9;]*[mGKHF]//g' /tmp/coverage-output.txt > /tmp/coverage-clean.txt || true
