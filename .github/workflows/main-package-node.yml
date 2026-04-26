@@ -76,4 +76,4 @@ jobs:
           path: '**/node_modules'
           key: dev-depends-${{ matrix.os }}-node-${{ hashFiles('package/main/package.json') }}
       - name: Run Tests with Coverage
-        run: npm run test --coverage
+        run: npm run jest --coverage
