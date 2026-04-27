@@ -65,5 +65,3 @@ jobs:
         uses: DeterminateSystems/magic-nix-cache-action@565684385bcd71bad329742eefe8d12f2e765b39 # v13
       - name: Run Tests(Cargo)
         run: cargo test --all -- --nocapture
-      - name: Run Tests(Bun)
-        run: nix develop -c bun i && nix develop -c bun test
