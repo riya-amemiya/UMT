@@ -12,7 +12,7 @@ export const uniqBy = <T extends unknown[], K>(
   const result: T = [] as unknown as T;
 
   for (const item of array) {
-    const key = selector(item as T);
+    const key = selector(item);
     if (!seen.has(key)) {
       seen.add(key);
       result.push(item);

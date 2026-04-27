@@ -35,20 +35,10 @@ const mergeDeepInternal = <
       }
     }
 
-    return mergeDeepInternal(
-      result,
-      sources as unknown as U,
-      depth + 1,
-      sourceIndex + 1,
-    ) as T & UnionToIntersection<U[number]>;
+    return mergeDeepInternal(result, sources, depth + 1, sourceIndex + 1);
   }
 
-  return mergeDeepInternal(
-    source as T,
-    sources as unknown as U,
-    depth + 1,
-    sourceIndex + 1,
-  ) as T & UnionToIntersection<U[number]>;
+  return mergeDeepInternal(source as T, sources, depth + 1, sourceIndex + 1);
 };
 
 /**

@@ -32,7 +32,7 @@ export class Pipe<T> {
   ): Pipe<U | T> {
     return predicate(this.value)
       ? new Pipe(function_(this.value))
-      : new Pipe(this.value as unknown as U | T);
+      : new Pipe(this.value);
   }
 
   /**

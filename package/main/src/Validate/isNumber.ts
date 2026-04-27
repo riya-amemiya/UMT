@@ -20,7 +20,7 @@ const isNumber = <T extends boolean>(
   return number !== null && typeof number !== "boolean" && loose
     ? // biome-ignore lint/suspicious/noGlobalIsFinite: ignore
       isFinite(number as number)
-    : Number.isFinite(number as number);
+    : Number.isFinite(number);
 };
 
 export { isNumber };
