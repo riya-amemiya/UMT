@@ -17,13 +17,15 @@
  * - `removePrototypeMap` — shallow sanitization of an array of objects
  * - `removePrototypeMapDeep` — recursive sanitization of an array of objects (for deeply nested data)
  */
+import { pathSegments } from "./pathSegments";
+
 export const has = <T extends { [key: string]: unknown }>(
   object: T,
   path: string | string[],
 ): boolean => {
-  const localPath = typeof path === "string" ? path.split(".") : path;
+  const segments = pathSegments(path);
   let current: unknown = object;
-  for (const key of localPath) {
+  for (const key of segments) {
     if (current == null || !Object.hasOwn(current, key)) {
       return false;
     }

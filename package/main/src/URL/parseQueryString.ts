@@ -7,6 +7,12 @@
  * @param query - The query string or URL to parse
  * @returns A record of key-value pairs from the query string
  *
+ * @remarks
+ * **Prototype pollution warning:** This function does not filter out
+ * prototype-polluting keys (`__proto__`, `constructor`, `prototype`).
+ * If processing user-controlled input, sanitize the result with
+ * `removePrototype` after calling this function.
+ *
  * @example
  * ```typescript
  * parseQueryString("?page=1&q=search");
@@ -28,10 +34,6 @@ export const parseQueryString = (query: string): Record<string, string> => {
   const parameters = new URLSearchParams(searchString);
   const result: Record<string, string> = {};
   for (const [key, value] of parameters) {
-    // Prevent prototype pollution by rejecting dangerous keys
-    if (key === "__proto__" || key === "constructor" || key === "prototype") {
-      continue;
-    }
     result[key] = value;
   }
   return result;

@@ -64,10 +64,15 @@ bun add umt
 
 | name | type | description | example |
 |------|------|-------------|---------|
+| debounceAsync | `<A, R>(function_: (...args: A) => Promise<R>, wait: number) => DebouncedAsyncFunction<A, R>` | Debounced async function; latest args win and callers in the window share resolution | `const d = debounceAsync(search, 300); await d("foo");` |
 | defer | `<T>() => Deferred<T>` | Creates a deferred promise with externally accessible resolve and reject | `const d = defer<number>(); d.resolve(42); await d.promise; // 42` |
 | parallel | `<T, U>(limit: number, items: T[], function_: (item: T, index: number) => Promise<U>) => Promise<U[]>` | Executes async functions in parallel with a concurrency limit | `await parallel(2, [1, 2, 3], async (n) => n * 2); // [2, 4, 6]` |
+| pSettled | `<T>(tasks: Iterable<Promise<T> \| (() => Promise<T>)>, limit?: number) => Promise<SettledResult<T>[]>` | Awaits all promises and returns settled results with optional concurrency limit | `await pSettled([Promise.resolve(1), Promise.reject(new Error("x"))]);` |
+| retry | `<T>(function_: () => Promise<T>, options?: RetryOptions) => Promise<T>` | Retries an async function with fixed/linear/exponential backoff, jitter, and AbortSignal | `await retry(() => fetch("/api"), { retries: 5, backoff: "exponential" });` |
 | sleep | `(ms: number) => Promise<void>` | Returns a promise that resolves after the specified milliseconds | `await sleep(1000);` |
+| throttleAsync | `<A, R>(function_: (...args: A) => Promise<R>, wait: number) => ThrottledAsyncFunction<A, R>` | Throttled async function; coalesces concurrent calls into a single inflight promise | `const t = throttleAsync(loadUser, 1000); await t();` |
 | timeout | `<T>(promise: Promise<T>, ms: number) => Promise<T>` | Wraps a promise with a timeout, rejecting if it does not resolve in time | `await timeout(fetch("/api"), 5000);` |
+| waitFor | `<T>(condition: () => T \| Promise<T>, options?: WaitForOptions) => Promise<NonNullable<T>>` | Polls a condition until truthy or timeout | `await waitFor(() => document.querySelector("#root"));` |
 
 ### DataStructure
 
@@ -103,6 +108,15 @@ bun add umt
 
 | name | type | description | example |
 |------|------|-------------|---------|
+| addDuration | `(date: Date, amount: number, unit: DurationUnit) => Date` | Adds a duration to a date; calendar-aware for months and years | `addDuration(new Date("2025-01-31"), 1, "M"); // 2025-02-28` |
+| diff | `(left: Date, right: Date, unit: DurationUnit) => number` | Returns the difference between two dates in the given unit | `diff(new Date("2025-12-31"), new Date("2025-01-01"), "d"); // 364` |
+| endOf | `(date: Date, unit: DateBoundaryUnit) => Date` | Returns a new Date set to the end of the given unit | `endOf(new Date("2025-04-15"), "month"); // 2025-04-30T23:59:59.999` |
+| formatRelative | `(date: Date, baseDate?: Date, locale?: string) => string` | Formats a date relative to a base date using Intl.RelativeTimeFormat | `formatRelative(new Date(Date.now() - 3600_000), new Date(), "en"); // "1 hour ago"` |
+| isBusinessDay | `(date: Date, holidays?: Date[]) => boolean` | Returns true when a weekday and not in the holiday list | `isBusinessDay(new Date("2025-04-21")); // true` |
+| isSameDay | `(left: Date, right: Date) => boolean` | Returns true when two dates are the same calendar day | `isSameDay(new Date("2025-04-15T01:00"), new Date("2025-04-15T23:00")); // true` |
+| isWeekend | `(date: Date) => boolean` | Returns true when Saturday or Sunday | `isWeekend(new Date("2025-04-19")); // true` |
+| startOf | `(date: Date, unit: DateBoundaryUnit) => Date` | Returns a new Date set to the start of the given unit | `startOf(new Date("2025-04-15"), "month"); // 2025-04-01T00:00:00` |
+| subDuration | `(date: Date, amount: number, unit: DurationUnit) => Date` | Subtracts a duration from a date | `subDuration(new Date("2025-03-31"), 1, "M"); // 2025-02-28` |
 | birthday | `<T extends MonTypeInt>(year: number, mon: T, day: DayTypeInt<T>, timeDifference?: HoursTypeInt) => number` | Calculate age based on birthdate | `birthday(2000, 1, 1); // Returns age of someone born on Jan 1, 2000` |
 | dateRange | `(startDate: Date, endDate: Date) => Date[]` | Generate an array containing all dates between the specified start and end dates | `dateRange(new Date('2025-01-01'), new Date('2025-01-03'))` |
 | dayOfWeek | `<T extends MonTypeInt>(properties?: { year?: number; mon?: T; day?: DayTypeInt<T> }, timeDifference?: HoursTypeInt) => number` | Get the day of the week | `dayOfWeek({ year: 2000, mon: 1, day: 1 });` |
@@ -234,6 +248,13 @@ bun add umt
 | omit | `<T extends Record<string, unknown>, K extends keyof T>(object: T, ...keys: K[]) => Omit<T, K>` | Creates an object without the specified keys | `omit({a: 1, b: 2, c: 3}, 'b'); // {a: 1, c: 3}` |
 | pick | `<T extends object, K extends keyof T>(object: T, ...keys: K[]) => Pick<T, K>` | Creates a new object with only the specified properties from the source object | `pick({ id: 1, name: 'Alice', age: 30 }, 'id', 'name'); // { id: 1, name: 'Alice' }` |
 | pickDeep | `<T extends object, K extends PickDeepKey<T>>(object: T, ...keys: K[]) => PickDeep<T>` | Creates a new object by deeply selecting properties from the source object based on specified keys | `pickDeep({ a: { b: { c: 1, d: 2 }, e: 3 }, f: 4 }, 'a.b.c', 'f'); // { a: { b: { c: 1 } }, f: 4 }` |
+| flattenObject | `<T extends Record<string, unknown>>(object: T, separator?: string) => Record<string, unknown>` | Flattens a nested object into path-keyed entries | `flattenObject({ a: { b: { c: 1 } } }); // { "a.b.c": 1 }` |
+| get | `<T>(object: unknown, path: string \| string[], defaultValue?: T) => T \| undefined` | Reads a deeply nested property by path | `get({ a: { b: 1 } }, "a.b"); // 1` |
+| invert | `<K, V>(object: Record<K, V>) => Record<V, K>` | Creates a new object with keys and values swapped | `invert({ a: 1, b: 2 }); // { 1: "a", 2: "b" }` |
+| omitBy | `<T>(object: T, predicate: (value, key) => boolean) => Partial<T>` | Removes entries for which the predicate returns true | `omitBy({ a: 1, b: undefined }, (v) => v === undefined); // { a: 1 }` |
+| pickBy | `<T>(object: T, predicate: (value, key) => boolean) => Partial<T>` | Selects entries for which the predicate returns true | `pickBy({ a: 1, b: 2 }, (v) => v > 1); // { b: 2 }` |
+| set | `<T extends object>(object: T, path: string \| string[], value: unknown) => T` | Sets a deeply nested property by path, mutating the object | `set({}, "a.b.c", 1); // { a: { b: { c: 1 } } }` |
+| unflattenObject | `(flat: Record<string, unknown>, separator?: string) => Record<string, unknown>` | Reconstructs a nested object from path-keyed input | `unflattenObject({ "a.b": 1 }); // { a: { b: 1 } }` |
 
 ### Predicate
 
@@ -244,6 +265,18 @@ bun add umt
 | matches | `(pattern: Record<string, unknown>) => (object: Record<string, unknown>) => boolean` | Creates a predicate that checks if an object matches a given pattern | `matches({role: "admin"})({name: "Alice", role: "admin"}); // true` |
 | not | `<T extends unknown[]>(function_: (...args: T) => boolean) => (...args: T) => boolean` | Creates a predicate that negates the given predicate | `const isOdd = not((n: number) => n % 2 === 0); isOdd(3); // true` |
 | some | `<T extends unknown[]>(...predicates: ((...args: T) => boolean)[]) => (...args: T) => boolean` | Creates a predicate that returns true when at least one predicate returns true | `some((n: number) => n === 0, (n) => n < 0)(0); // true` |
+
+### Random
+
+| name | type | description | example |
+|------|------|-------------|---------|
+| randomBoolean | `(probability?: number) => boolean` | Random boolean with optional weight | `randomBoolean(0.9); // true ~90% of the time` |
+| randomChoice | `<T>(items: readonly T[]) => T` | Uniformly random element from an array | `randomChoice(["a", "b", "c"]);` |
+| randomFloat | `(min: number, max: number) => number` | Random float in `[min, max)` | `randomFloat(0, 1);` |
+| randomInt | `(min: number, max: number) => number` | Random integer in `[min, max]` | `randomInt(1, 6); // 1..6` |
+| randomUUID | `() => string` | UUID v4, prefers `crypto.randomUUID` | `randomUUID();` |
+| seededRandom | `(seed: number \| string) => () => number` | Deterministic PRNG (SplitMix32) | `const rand = seededRandom("hello"); rand();` |
+| weightedChoice | `<T>(items: readonly { value: T; weight: number }[]) => T` | Weighted random pick using cumulative binary search | `weightedChoice([{ value: "a", weight: 1 }, { value: "b", weight: 4 }]);` |
 
 ### Simple
 
@@ -260,6 +293,15 @@ bun add umt
 | name | type | description | example |
 |------|------|-------------|---------|
 | camelCase | `(str: string) => string` | Converts a string to camelCase | `camelCase("hello-world"); // "helloWorld"` |
+| capitalize | `(str: string) => string` | Capitalizes the first grapheme of a string | `capitalize("hello"); // "Hello"` |
+| dedent | `(str: string \| TemplateStringsArray, ...values: unknown[]) => string` | Removes minimum common leading whitespace; works as a tag | `` dedent`  line` // "line"`` |
+| mask | `(str: string, options?: MaskOptions) => string` | Masks the middle of a string preserving leading/trailing characters | `mask("1234567890", { start: 2, end: 4 }); // "12****7890"` |
+| pascalCase | `(str: string) => string` | Converts a string to PascalCase | `pascalCase("hello-world"); // "HelloWorld"` |
+| snakeCase | `(str: string) => string` | Converts a string to snake_case | `snakeCase("helloWorld"); // "hello_world"` |
+| titleCase | `(str: string) => string` | Converts a string to Title Case | `titleCase("hello world"); // "Hello World"` |
+| uncapitalize | `(str: string) => string` | Lowercases the first grapheme of a string | `uncapitalize("Hello"); // "hello"` |
+| wordCount | `(str: string) => number` | Counts words using `words` boundaries | `wordCount("hello world"); // 2` |
+| words | `(str: string, pattern?: RegExp) => string[]` | Splits a string into words on case boundaries and non-alphanumeric separators | `words("XMLHttpRequest"); // ["XML", "Http", "Request"]` |
 | deleteSpaces | `(string_: string) => string` | Removes all whitespace characters from a string | `deleteSpaces("Hello World"); // "HelloWorld"` |
 | escapeHtml | `(str: string) => string` | Escapes HTML special characters in a string | `escapeHtml("<script>alert('XSS')</script>"); // "&lt;script&gt;alert(&#39;XSS&#39;)&lt;/script&gt;"` |
 | formatString | `(template: string, ...values: unknown[]) => string` | Replaces placeholders in a template string with specified values | `formatString("Hello, {0}!", "World"); // "Hello, World!"` |

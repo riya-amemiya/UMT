@@ -126,6 +126,11 @@
       "import": "./module/Predicate/index.js",
       "default": "./module/Predicate/index.js"
     },
+    "./Random": {
+      "types": "./module/Random/index.d.ts",
+      "import": "./module/Random/index.js",
+      "default": "./module/Random/index.js"
+    },
     "./Simple": {
       "types": "./module/Simple/index.d.ts",
       "import": "./module/Simple/index.js",

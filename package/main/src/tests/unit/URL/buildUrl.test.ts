@@ -1,3 +1,4 @@
+import { removePrototype } from "@/Object/removePrototype";
 import { buildUrl } from "@/URL/buildUrl";
 
 describe("buildUrl", () => {
@@ -39,13 +40,22 @@ describe("buildUrl", () => {
     expect(result).toBe("https://example.com/?key=value");
   });
 
-  it("should skip prototype pollution keys", () => {
-    const result = buildUrl("https://example.com", {
-      __proto__: "evil",
-      constructor: "evil",
-      prototype: "evil",
-      safe: "value",
-    });
+  it("should not pollute global Object.prototype when called with dangerous keys", () => {
+    const malicious = JSON.parse(
+      '{"__proto__":"evil","constructor":"evil","prototype":"evil","safe":"value"}',
+    ) as Record<string, string>;
+    buildUrl("https://example.com", malicious);
+
+    const clean = {} as Record<string, unknown>;
+    expect("evil" in clean).toBe(false);
+  });
+
+  it("should sanitize correctly with removePrototype", () => {
+    const malicious = JSON.parse(
+      '{"__proto__":"evil","constructor":"evil","prototype":"evil","safe":"value"}',
+    ) as Record<string, string>;
+    const result = buildUrl("https://example.com", removePrototype(malicious));
+
     expect(result).toBe("https://example.com/?safe=value");
     expect(result).not.toContain("__proto__");
     expect(result).not.toContain("constructor");

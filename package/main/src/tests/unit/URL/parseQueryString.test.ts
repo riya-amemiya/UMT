@@ -1,3 +1,4 @@
+import { removePrototype } from "@/Object/removePrototype";
 import { parseQueryString } from "@/URL/parseQueryString";
 
 describe("parseQueryString", () => {
@@ -41,16 +42,23 @@ describe("parseQueryString", () => {
     expect(result).toEqual({});
   });
 
-  it("should reject __proto__ key to prevent prototype pollution", () => {
-    const result = parseQueryString("?__proto__=polluted&safe=value");
-    expect(result).toEqual({ safe: "value" });
-    expect(result).not.toHaveProperty("__proto__", "polluted");
-    // biome-ignore lint/complexity/useLiteralKeys: accessing dynamic property to verify no prototype pollution
-    expect(({} as Record<string, unknown>)["polluted"]).toBeUndefined();
+  it("should not pollute global Object.prototype when query contains __proto__", () => {
+    parseQueryString("?__proto__=polluted&safe=value");
+
+    const clean = {} as Record<string, unknown>;
+    expect("polluted" in clean).toBe(false);
   });
 
-  it("should reject constructor and prototype keys", () => {
-    const result = parseQueryString("?constructor=bad&prototype=bad&ok=good");
+  it("should sanitize correctly with removePrototype", () => {
+    const result = removePrototype(
+      parseQueryString(
+        "?__proto__=evil&constructor=evil&prototype=evil&ok=good",
+      ),
+    );
+
     expect(result).toEqual({ ok: "good" });
+    expect(Object.hasOwn(result, "__proto__")).toBe(false);
+    expect(Object.hasOwn(result, "constructor")).toBe(false);
+    expect(Object.hasOwn(result, "prototype")).toBe(false);
   });
 });

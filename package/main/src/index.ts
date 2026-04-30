@@ -14,6 +14,7 @@ export * from "./Math/index";
 export * from "./Number/index";
 export * from "./Object/index";
 export * from "./Predicate/index";
+export * from "./Random/index";
 export * from "./Simple/index";
 export * from "./String/index";
 export * from "./Time/index";
