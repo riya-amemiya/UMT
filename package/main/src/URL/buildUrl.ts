@@ -5,6 +5,16 @@
  * @param params - An object of key-value pairs to append as query parameters
  * @returns The complete URL string with query parameters
  *
+ * @remarks
+ * **Prototype pollution warning:** This function does not filter out
+ * prototype-polluting keys (`__proto__`, `constructor`, `prototype`).
+ * If processing user-controlled input, sanitize with the appropriate
+ * `removePrototype*` helper before calling this function:
+ * - `removePrototype` — shallow sanitization of a single object
+ * - `removePrototypeDeep` — recursive sanitization of a single object (for deeply nested data)
+ * - `removePrototypeMap` — shallow sanitization of an array of objects
+ * - `removePrototypeMapDeep` — recursive sanitization of an array of objects (for deeply nested data)
+ *
  * @example
  * ```typescript
  * buildUrl("https://example.com", { page: "1", q: "search" });
@@ -20,10 +30,6 @@ export const buildUrl = (
 ): string => {
   const url = new URL(base);
   for (const key of Object.keys(parameters)) {
-    // Prevent prototype pollution by rejecting dangerous keys
-    if (key === "__proto__" || key === "constructor" || key === "prototype") {
-      continue;
-    }
     url.searchParams.append(key, parameters[key]);
   }
   return url.toString();
