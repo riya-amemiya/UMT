@@ -130,11 +130,13 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0de51e6874e94e7bf76d726fc5d13ba782deca734ff60d5bb2fb2607c7406555"
 dependencies = [
  "cfg-if",
+ "js-sys",
  "libc",
  "r-efi",
  "rand_core",
  "wasip2",
  "wasip3",
+ "wasm-bindgen",
 ]
 
 [[package]]
@@ -443,7 +445,7 @@ checksum = "1f3ccbac311fea05f86f61904b462b55fb3df8837a366dfc601a0161d0532f20"
 
 [[package]]
 name = "umt-plugin-wasm"
-version = "0.2.0"
+version = "0.3.0"
 dependencies = [
  "umt_rust",
  "wasm-bindgen",
@@ -451,12 +453,13 @@ dependencies = [
 
 [[package]]
 name = "umt_rust"
-version = "0.4.0"
+version = "0.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ce9addcd0e45ef6739f399a3c1ecc49a80edad2f311129ac85c5623a5782e5a5"
+checksum = "81036d39809ca28d98daa42cadcbf6e361e09c13c19966ad5f3603abf55ffe17"
 dependencies = [
  "base64",
  "chrono",
+ "getrandom",
  "num-bigint",
  "num-traits",
  "rand",
