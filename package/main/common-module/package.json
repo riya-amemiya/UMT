@@ -9,20 +9,20 @@
     "@babel/core": "7.29.0",
     "@babel/preset-env": "7.29.2",
     "@babel/preset-typescript": "7.28.5",
-    "@biomejs/biome": "2.4.12",
+    "@biomejs/biome": "2.4.13",
     "@codecov/bundle-analyzer": "2.0.1",
     "@eslint/js": "10.0.1",
-    "@swc/core": "1.15.30",
+    "@swc/core": "1.15.32",
     "@swc/jest": "0.2.39",
-    "@types/bun": "1.3.12",
+    "@types/bun": "1.3.13",
     "@types/jest": "30.0.0",
     "@types/lodash": "4.17.24",
     "@types/node": "25.6.0",
-    "@typescript-eslint/eslint-plugin": "8.58.2",
-    "@typescript-eslint/parser": "8.58.2",
-    "bun-types": "1.3.12",
+    "@typescript-eslint/eslint-plugin": "8.59.1",
+    "@typescript-eslint/parser": "8.59.1",
+    "bun-types": "1.3.13",
     "dependency-cruiser": "17.3.10",
-    "es-toolkit": "1.45.1",
+    "es-toolkit": "1.46.0",
     "eslint": "10.2.1",
     "eslint-plugin-baseline-js": "0.6.2",
     "eslint-plugin-import": "2.32.0",
@@ -30,7 +30,7 @@
     "fast-sort": "3.4.1",
     "gh-pages": "6.3.0",
     "jest": "30.3.0",
-    "jest-junit": "16.0.0",
+    "jest-junit": "17.0.0",
     "lodash": "4.18.1",
     "mitata": "1.0.34",
     "ts-jest": "29.4.9",
@@ -38,7 +38,7 @@
     "tsc-alias": "1.8.16",
     "typedoc": "0.28.19",
     "typescript": "6.0.3",
-    "typescript-eslint": "8.58.2"
+    "typescript-eslint": "8.59.1"
   },
   "exports": {
     ".": {
@@ -126,6 +126,11 @@
       "default": "./module/Predicate/index.js",
       "require": "./module/Predicate/index.js"
     },
+    "./Random": {
+      "types": "./module/Random/index.d.ts",
+      "default": "./module/Random/index.js",
+      "require": "./module/Random/index.js"
+    },
     "./Simple": {
       "types": "./module/Simple/index.d.ts",
       "default": "./module/Simple/index.js",
@@ -199,23 +204,23 @@
     "url": "git+https://github.com/riya-amemiya/UMT.git"
   },
   "scripts": {
-    "build": "tsc && tsc-alias -p tsconfig.json",
-    "build:cjs": "tsc -p tsconfig.cjs.json && tsc-alias -p tsconfig.cjs.json && bun run cjs.build.mjs && cp LICENSE common-module/LICENSE && cp README.md common-module/README.md && cp .npmignore common-module/.npmignore",
-    "build:babel": "babel src --extensions '.ts' --out-dir module/es5 && tsc --emitDeclarationOnly --outDir module/es5 && tsc-alias -p tsconfig.json --outDir module/es5",
-    "build:cjs:babel": "babel src --extensions '.ts' --out-dir common-module/module/es5 && tsc --emitDeclarationOnly --outDir common-module/module/es5 && tsc-alias -p tsconfig.cjs.json --outDir common-module/module/es5",
-    "build:full": "bun run build && bun run build:cjs && bun run build:babel && bun run build:cjs:babel",
-    "build:clean": "rm -rf module && bun run build",
-    "build:clean:full": "rm -rf module && rm -rf common-module && bun run build:full",
-    "deploy": "bun run typedoc && gh-pages -d doc",
-    "eslint": "eslint src",
-    "format": "biome format . --write",
-    "lint": "bun run eslint --fix && biome check . --write && tsc",
-    "lint:ci": "bun run eslint && biome ci . && tsc",
-    "test": "jest",
-    "test-debug": "cd test && tsc",
-    "ts-node": "bun run build && ts-node --project tmp/tsconfig.json tmp/src/index.ts"
+    "build": "nix develop --command make build",
+    "build:cjs": "nix develop --command make build-cjs",
+    "build:babel": "nix develop --command make build-babel",
+    "build:cjs:babel": "nix develop --command make build-cjs-babel",
+    "build:full": "nix develop --command make build-full",
+    "build:clean": "nix develop --command make build-clean",
+    "build:clean:full": "nix develop --command make build-clean-full",
+    "deploy": "nix develop --command make deploy",
+    "eslint": "nix develop --command make eslint",
+    "format": "nix develop --command make format",
+    "lint": "nix develop --command make lint",
+    "lint:ci": "nix develop --command make lint-ci",
+    "test": "nix develop --command make test",
+    "test-debug": "nix develop --command make test-debug",
+    "ts-node": "nix develop --command make ts-node"
   },
   "type": "commonjs",
   "types": "module/index.d.ts",
-  "version": "2.16.0"
+  "version": "2.17.0"
 }
