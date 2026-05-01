@@ -281,11 +281,13 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0de51e6874e94e7bf76d726fc5d13ba782deca734ff60d5bb2fb2607c7406555"
 dependencies = [
  "cfg-if",
+ "js-sys",
  "libc",
  "r-efi",
  "rand_core",
  "wasip2",
  "wasip3",
+ "wasm-bindgen",
 ]
 
 [[package]]
@@ -697,11 +699,12 @@ checksum = "1f3ccbac311fea05f86f61904b462b55fb3df8837a366dfc601a0161d0532f20"
 
 [[package]]
 name = "umt_rust"
-version = "0.4.0"
+version = "0.5.0"
 dependencies = [
  "base64",
  "chrono",
  "criterion",
+ "getrandom",
  "num-bigint",
  "num-traits",
  "rand",
