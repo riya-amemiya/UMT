@@ -37,6 +37,8 @@
     "ts-node": "10.9.2",
     "tsc-alias": "1.8.16",
     "typedoc": "0.28.19",
+    "typedoc-github-wiki-theme": "2.1.0",
+    "typedoc-plugin-markdown": "4.11.0",
     "typescript": "6.0.3",
     "typescript-eslint": "8.59.1"
   },
