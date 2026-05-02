@@ -10,4 +10,5 @@
 	"exclude": [
 		"./src/tests/**/*.(ts|js)"
 	],
+	"plugin": ["typedoc-plugin-markdown", "typedoc-github-wiki-theme"]
 }
