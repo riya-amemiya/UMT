@@ -3,6 +3,7 @@ import { number } from "@/Validate/number";
 import { object } from "@/Validate/object/core";
 import { intersection } from "@/Validate/object/intersection";
 import { nullable } from "@/Validate/object/nullable";
+import { optional } from "@/Validate/object/optional";
 import { union } from "@/Validate/object/union";
 import { string, validateEmail } from "@/Validate/string";
 
@@ -311,5 +312,96 @@ describe("nullable function", () => {
     expect(validate({ name: "John", age: null }).validate).toBe(true);
     // @ts-expect-error
     expect(validate({ name: "John", age: "30" }).validate).toBe(false);
+  });
+
+  it("should accept null, undefined, and the wrapped type when wrapped as optional(nullable())", () => {
+    const validate = optional(nullable(number()));
+    expect(validate(42).validate).toBe(true);
+    expect(validate(null).validate).toBe(true);
+    expect(validate(undefined).validate).toBe(true);
+    expect(validate().validate).toBe(true);
+    // @ts-expect-error
+    expect(validate("nope").validate).toBe(false);
+  });
+
+  it("should accept null, undefined, and the wrapped type when wrapped as nullable(optional())", () => {
+    const validate = nullable(optional(number()));
+    expect(validate(42).validate).toBe(true);
+    expect(validate(null).validate).toBe(true);
+    expect(validate(undefined).validate).toBe(true);
+    // @ts-expect-error
+    expect(validate("nope").validate).toBe(false);
+  });
+
+  it("should report the correct type tag for each branch in optional(nullable())", () => {
+    const validate = optional(nullable(number()));
+    expect(validate(42).type).toBe("number");
+    expect(validate(null).type).toBe("null");
+    expect(validate(undefined).type).toBe("undefined");
+  });
+
+  it("should report the correct type tag for each branch in nullable(optional())", () => {
+    const validate = nullable(optional(number()));
+    expect(validate(42).type).toBe("number");
+    expect(validate(null).type).toBe("null");
+    expect(validate(undefined).type).toBe("undefined");
+  });
+
+  it("should infer T | null | undefined and make property optional in object for optional(nullable())", () => {
+    const validateObject = object({
+      name: string(),
+      age: optional(nullable(number())),
+    });
+
+    type InferredType = ReturnType<typeof validateObject>["type"];
+
+    const withValue: InferredType = { name: "John", age: 30 };
+    const withNull: InferredType = { name: "John", age: null };
+    const withUndefined: InferredType = { name: "John", age: undefined };
+    const omitted: InferredType = { name: "John" };
+
+    expect(validateObject(withValue).validate).toBe(true);
+    expect(validateObject(withNull).validate).toBe(true);
+    expect(validateObject(withUndefined).validate).toBe(true);
+    expect(validateObject(omitted).validate).toBe(true);
+  });
+
+  it("should infer T | null | undefined and make property optional in object for nullable(optional())", () => {
+    const validateObject = object({
+      name: string(),
+      age: nullable(optional(number())),
+    });
+
+    type InferredType = ReturnType<typeof validateObject>["type"];
+
+    const withValue: InferredType = { name: "John", age: 30 };
+    const withNull: InferredType = { name: "John", age: null };
+    const withUndefined: InferredType = { name: "John", age: undefined };
+    const omitted: InferredType = { name: "John" };
+
+    expect(validateObject(withValue).validate).toBe(true);
+    expect(validateObject(withNull).validate).toBe(true);
+    expect(validateObject(withUndefined).validate).toBe(true);
+    expect(validateObject(omitted).validate).toBe(true);
+  });
+
+  it("should produce equivalent inferred types between optional(nullable()) and nullable(optional())", () => {
+    const validateObjectA = object({
+      age: optional(nullable(number())),
+    });
+    const validateObjectB = object({
+      age: nullable(optional(number())),
+    });
+
+    type TypeA = ReturnType<typeof validateObjectA>["type"];
+    type TypeB = ReturnType<typeof validateObjectB>["type"];
+
+    const fromA: TypeA = { age: null };
+    const fromB: TypeB = fromA;
+    const backToA: TypeA = fromB;
+
+    expect(validateObjectA(fromA).validate).toBe(true);
+    expect(validateObjectB(fromB).validate).toBe(true);
+    expect(validateObjectA(backToA).validate).toBe(true);
   });
 });
