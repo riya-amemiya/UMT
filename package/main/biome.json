@@ -48,8 +48,7 @@
       "**",
       "!**/.dependency-cruiser.js",
       "!**/eslint.config.mjs",
-      "!**/jest.config.ts",
-      "!scripts/**"
+      "!**/jest.config.ts"
     ],
     "rules": {
       "a11y": {
