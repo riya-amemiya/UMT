@@ -41,7 +41,7 @@ export const oneOf = <const T extends readonly string[]>(
     return {
       validate: isValid,
       message: isValid ? "" : (message ?? ""),
-      type: value as T[number],
+      type: value,
     };
   };
 };
