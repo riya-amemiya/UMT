@@ -24,413 +24,407 @@ bun add umt
 
 ### Advance
 
-| name | type | description | example |
-|------|------|-------------|---------|
-| rangeAdvance | `(start: number, end?: number, conditionalExpression?: (n: number) => boolean) => number[]` | Returns an array of numbers that satisfy the conditional expression | `rangeAdvance(1, 10, (n) => n % 2 === 0); // [2, 4, 6, 8]` |
+- [rangeAdvance](https://github.com/riya-amemiya/UMT/wiki/Function.rangeAdvance)
 
 ### Array
 
-| name | type | description | example |
-|------|------|-------------|---------|
-| arraysJoin | `<A extends unknown[]>(array: unknown[], ...arrays: unknown[]) => A` | Join arrays without duplicates | `arraysJoin([1, 2, 3], [2, 3, 4]); // [1, 2, 3, 4]` |
-| binarySearch | `(array: number[], target: number) => number` | Binary search implementation | `binarySearch([1, 2, 3, 4, 5], 3); // 2` |
-| checkFlagAlignment | `<T extends { flag: boolean }>(matrix: T[][]) => boolean` | Check if flags are aligned in any direction (horizontal, vertical, or diagonal) | `checkFlagAlignment([[{flag: true}, {flag: true}]]); // true` |
-| chunk | `<T extends unknown[], N extends number>(array: T, n: N) => ChunkArrayType<T, N>` | Split an array into smaller chunks of specified size | `chunk([1, 2, 3, 4, 5, 6, 7, 8, 9], 3); // [[1, 2, 3], [4, 5, 6], [7, 8, 9]]` |
-| compact | `<T>(array: T[]) => T[]` | Creates an array with all falsey values removed | `compact([0, 1, false, 2, '', 3]); // [1, 2, 3]` |
-| drop | `<T>(array: T[], n?: number, direction?: "left" \| "right" \| "between") => T[]` | Returns a new array with n elements removed from the specified direction | `drop([1, 2, 3, 4, 5], 2); // [3, 4, 5]` |
-| dualPivotQuickSort | `<T>(array: T[], compareFunction?: CompareFunction<T>, startIndex?: number, endIndex?: number, insertionSortThreshold?: number) => T[]` | Sort array using dual-pivot quicksort algorithm | `dualPivotQuickSort([3, 1, 4, 1, 5, 9, 2, 6, 5, 3]); // [1, 1, 2, 3, 3, 4, 5, 5, 6, 9]` |
-| first | `<T extends unknown[]>(array: T) => First<T>` | Returns the first element of an array | `first([1, 2, 3]); // 1` |
-| generateNumberArray | `(length: number, min?: number, max?: number, random?: boolean) => number[]` | Generates an array of numbers with the specified length | `generateNumberArray(5); // [0, 1, 2, 3, 4]` |
-| getArraysCommon | `<O, T extends unknown[]>(array: T, ...arrays: T[]) => O` | Extract common elements from multiple arrays | `getArraysCommon([1, 2, 3], [2, 3, 4], [2, 5, 3]); // [2, 3]` |
-| getArraysDiff | `<O, T extends unknown[]>(array: T, ...arrays: T[]) => O` | Extract elements that are not common between arrays | `getArraysDiff([1, 2, 3], [2, 3, 4]); // [1, 4]` |
-| groupBy | `<T, K extends string \| number>(array: T[], iteratee: (value: T, index: number, array: T[]) => K) => Record<K, T[]>` | Groups elements of an array based on a given iteratee function | `groupBy([6.1, 4.2, 6.3], Math.floor); // { '4': [4.2], '6': [6.1, 6.3] }` |
-| insertionSort | `<T>(array: T[], compareFunction?: CompareFunction<T>, start?: number, end?: number) => T[]` | Sort an array using insertion sort algorithm | `insertionSort([4, 2, 7, 1, 3]); // [1, 2, 3, 4, 7]` |
-| mergeSort | `<T>(array: T[], compareFunction?: CompareFunction<T>) => T[]` | Merge sort implementation | `mergeSort([1, 3, 2, 4, 5], (a, b) => a - b); // [1, 2, 3, 4, 5]` |
-| pop | `<T>(array: T[]) => T \| undefined` | Removes the last element from an array and returns it | `pop([1, 2, 3]); // 3` |
-| quickSort | `<T>(array: T[], compareFunction?: CompareFunction<T>, startIndex?: number, endIndex?: number, insertionSortThreshold?: number) => T[]` | Sorts an array using a hybrid algorithm combining QuickSort and InsertionSort | `quickSort([1, 3, 2, 4, 5]); // [1, 2, 3, 4, 5]` |
-| randomSelect | `<T>(array: T[], count: number, allowDuplicates?: boolean) => T[]` | Randomly selects a specified number of elements from an array | `randomSelect([1, 2, 3, 4, 5], 2); // [3, 1]` |
-| range | `(start: number, end?: number, step?: number) => number[]` | Generates an array of sequential numbers | `range(5); // [0, 1, 2, 3, 4]` |
-| shuffle | `<T>(array: T[]) => T[]` | Randomly shuffles the elements of an array | `shuffle([1, 2, 3, 4, 5]); // [3, 5, 2, 4, 1]` |
-| shuffle2DArray | `<T>(array: T[][]) => T[][]` | Shuffles all elements in a 2D array while maintaining the row lengths | `shuffle2DArray([[1, 2], [3, 4], [5, 6]]); // [[1, 3], [6, 4], [2, 5]]` |
-| sum | `(x: number[]) => number` | Returns the sum of an array of numbers | `sum([1, 2, 3]); // 6` |
-| timSort | `<T>(array: T[], compareFunction?: CompareFunction<T>, start?: number, end?: number) => T[]` | Implementation of the TimSort algorithm | `timSort([3, 1, 4, 1, 5]); // [1, 1, 3, 4, 5]` |
-| ultraNumberSort | `(array: number[], ascending?: boolean) => number[]` | Ultra-fast sorting specifically optimized for number arrays | `ultraNumberSort([3, 1, 4, 1, 5, 9, 2, 6, 5, 3]); // [1, 1, 2, 3, 3, 4, 5, 5, 6, 9]` |
-| uniqBy | `<T, K>(array: T[], selector: (item: T) => K) => T[]` | Removes duplicate values from an array based on a selector function | `uniqBy([{id: 1}, {id: 2}, {id: 1}], item => item.id); // [{id: 1}, {id: 2}]` |
-| unique | `<T>(array: T[]) => T[]` | Removes duplicate values from an array | `unique([1, 2, 2, 3, 3]); // [1, 2, 3]` |
-| zip | `<T extends unknown[][]>(...arrays: T) => ZipArrayType<T>` | Creates a new array by combining elements from multiple arrays at corresponding positions | `zip([1, 2], ['a', 'b']); // [[1, 'a'], [2, 'b']]` |
-| zipLongest | `<T extends unknown[][]>(...arrays: T) => ZipArrayType<T>` | Combines arrays of different lengths by padding shorter arrays with undefined values | `zipLongest([1, 2], ['a']); // [[1, 'a'], [2, undefined]]` |
+- [arraysJoin](https://github.com/riya-amemiya/UMT/wiki/Function.arraysJoin)
+- [binarySearch](https://github.com/riya-amemiya/UMT/wiki/Function.binarySearch)
+- [checkFlagAlignment](https://github.com/riya-amemiya/UMT/wiki/Function.checkFlagAlignment)
+- [chunk](https://github.com/riya-amemiya/UMT/wiki/Function.chunk)
+- [compact](https://github.com/riya-amemiya/UMT/wiki/Function.compact)
+- [drop](https://github.com/riya-amemiya/UMT/wiki/Function.drop)
+- [dualPivotQuickSort](https://github.com/riya-amemiya/UMT/wiki/Function.dualPivotQuickSort)
+- [first](https://github.com/riya-amemiya/UMT/wiki/Function.first)
+- [generateNumberArray](https://github.com/riya-amemiya/UMT/wiki/Function.generateNumberArray)
+- [getArraysCommon](https://github.com/riya-amemiya/UMT/wiki/Function.getArraysCommon)
+- [getArraysDiff](https://github.com/riya-amemiya/UMT/wiki/Function.getArraysDiff)
+- [groupBy](https://github.com/riya-amemiya/UMT/wiki/Function.groupBy)
+- [insertionSort](https://github.com/riya-amemiya/UMT/wiki/Function.insertionSort)
+- [mergeSort](https://github.com/riya-amemiya/UMT/wiki/Function.mergeSort)
+- [pop](https://github.com/riya-amemiya/UMT/wiki/Function.pop)
+- [quickSort](https://github.com/riya-amemiya/UMT/wiki/Function.quickSort)
+- [randomSelect](https://github.com/riya-amemiya/UMT/wiki/Function.randomSelect)
+- [range](https://github.com/riya-amemiya/UMT/wiki/Function.range)
+- [shuffle](https://github.com/riya-amemiya/UMT/wiki/Function.shuffle)
+- [shuffle2DArray](https://github.com/riya-amemiya/UMT/wiki/Function.shuffle2DArray)
+- [sum](https://github.com/riya-amemiya/UMT/wiki/Function.sum)
+- [timSort](https://github.com/riya-amemiya/UMT/wiki/Function.timSort)
+- [ultraNumberSort](https://github.com/riya-amemiya/UMT/wiki/Function.ultraNumberSort)
+- [uniqBy](https://github.com/riya-amemiya/UMT/wiki/Function.uniqBy)
+- [unique](https://github.com/riya-amemiya/UMT/wiki/Function.unique)
+- [zip](https://github.com/riya-amemiya/UMT/wiki/Function.zip)
+- [zipLongest](https://github.com/riya-amemiya/UMT/wiki/Function.zipLongest)
 
 ### Async
 
-| name | type | description | example |
-|------|------|-------------|---------|
-| debounceAsync | `<A, R>(function_: (...args: A) => Promise<R>, wait: number) => DebouncedAsyncFunction<A, R>` | Debounced async function; latest args win and callers in the window share resolution | `const d = debounceAsync(search, 300); await d("foo");` |
-| defer | `<T>() => Deferred<T>` | Creates a deferred promise with externally accessible resolve and reject | `const d = defer<number>(); d.resolve(42); await d.promise; // 42` |
-| parallel | `<T, U>(limit: number, items: T[], function_: (item: T, index: number) => Promise<U>) => Promise<U[]>` | Executes async functions in parallel with a concurrency limit | `await parallel(2, [1, 2, 3], async (n) => n * 2); // [2, 4, 6]` |
-| pSettled | `<T>(tasks: Iterable<Promise<T> \| (() => Promise<T>)>, limit?: number) => Promise<SettledResult<T>[]>` | Awaits all promises and returns settled results with optional concurrency limit | `await pSettled([Promise.resolve(1), Promise.reject(new Error("x"))]);` |
-| retry | `<T>(function_: () => Promise<T>, options?: RetryOptions) => Promise<T>` | Retries an async function with fixed/linear/exponential backoff, jitter, and AbortSignal | `await retry(() => fetch("/api"), { retries: 5, backoff: "exponential" });` |
-| sleep | `(ms: number) => Promise<void>` | Returns a promise that resolves after the specified milliseconds | `await sleep(1000);` |
-| throttleAsync | `<A, R>(function_: (...args: A) => Promise<R>, wait: number) => ThrottledAsyncFunction<A, R>` | Throttled async function; coalesces concurrent calls into a single inflight promise | `const t = throttleAsync(loadUser, 1000); await t();` |
-| timeout | `<T>(promise: Promise<T>, ms: number) => Promise<T>` | Wraps a promise with a timeout, rejecting if it does not resolve in time | `await timeout(fetch("/api"), 5000);` |
-| waitFor | `<T>(condition: () => T \| Promise<T>, options?: WaitForOptions) => Promise<NonNullable<T>>` | Polls a condition until truthy or timeout | `await waitFor(() => document.querySelector("#root"));` |
-
-### DataStructure
-
-| name | type | description | example |
-|------|------|-------------|---------|
-| LRUCache | `class LRUCache<K, V>` | Least Recently Used cache with O(1) get/set using Map and doubly linked list | `const cache = new LRUCache<string, number>(3); cache.set("a", 1); cache.get("a"); // 1` |
-| PriorityQueue | `class PriorityQueue<T>` | A priority queue implementation using a binary heap. Higher priority values are dequeued first. | `const queue = new PriorityQueue<string>(); queue.enqueue("low", 1); queue.enqueue("high", 3); queue.enqueueBack("back"); queue.dequeue(); // "high"` |
-| TTLCache | `class TTLCache<K, V>` | Time-to-live cache with lazy expiration and optional max size | `const cache = new TTLCache<string, number>({ defaultTTL: 5000 }); cache.set("a", 1); cache.get("a"); // 1` |
+- [debounceAsync](https://github.com/riya-amemiya/UMT/wiki/Function.debounceAsync)
+- [DebouncedAsyncFunction](https://github.com/riya-amemiya/UMT/wiki/Interface.DebouncedAsyncFunction)
+- [defer](https://github.com/riya-amemiya/UMT/wiki/Function.defer)
+- [Deferred](https://github.com/riya-amemiya/UMT/wiki/Interface.Deferred)
+- [parallel](https://github.com/riya-amemiya/UMT/wiki/Function.parallel)
+- [pSettled](https://github.com/riya-amemiya/UMT/wiki/Function.pSettled)
+- [retry](https://github.com/riya-amemiya/UMT/wiki/Function.retry)
+- [RetryOptions](https://github.com/riya-amemiya/UMT/wiki/Interface.RetryOptions)
+- [SettledResult](https://github.com/riya-amemiya/UMT/wiki/TypeAlias.SettledResult)
+- [sleep](https://github.com/riya-amemiya/UMT/wiki/Function.sleep)
+- [throttleAsync](https://github.com/riya-amemiya/UMT/wiki/Function.throttleAsync)
+- [ThrottledAsyncFunction](https://github.com/riya-amemiya/UMT/wiki/Interface.ThrottledAsyncFunction)
+- [timeout](https://github.com/riya-amemiya/UMT/wiki/Function.timeout)
+- [waitFor](https://github.com/riya-amemiya/UMT/wiki/Function.waitFor)
+- [WaitForOptions](https://github.com/riya-amemiya/UMT/wiki/Interface.WaitForOptions)
 
 ### Color
 
-| name | type | description | example |
-|------|------|-------------|---------|
-| cmykToRgba | `(c: number, m: number, y: number, k: number, a?: number) => { r: number; g: number; b: number; a: number }` | Convert CMYK color values to RGBA color space | `cmykToRgba(100, 100, 0, 60.78) // { r: 0, g: 0, b: 100, a: 1 }` |
-| hexaToRgba | `(hex: string) => { r: number; g: number; b: number; a: number }` | Convert hexadecimal color code to RGBA color values | `hexaToRgba("#00000000") // { r: 0, g: 0, b: 0, a: 0 }` |
-| hslaToRgba | `(h: number, s: number, l: number, a?: number) => { r: number; g: number; b: number; a: number }` | Convert HSLA color values to RGBA color space | `hslaToRgba(120, 50, 50, 1) // { r: 64, g: 191, b: 64, a: 1 }` |
-| rgbaToCmyk | `(rgba: { r: number; g: number; b: number; a?: number }) => { c: number; m: number; y: number; k: number; a: number }` | Convert RGBA color to CMYK color model | `rgbaToCmyk({ r: 0, g: 0, b: 0, a: 1 }); // { c: 0, m: 0, y: 0, k: 100, a: 1 }` |
-| rgbaToHexA | `(rgba: { r: number; g: number; b: number; a?: number }) => string` | Convert RGBA color to hexadecimal color code | `rgbaToHexA({ r: 0, g: 0, b: 0, a: 1 }); // "#000000ff"` |
-| rgbaToHsla | `(rgba: { r: number; g: number; b: number; a?: number }) => { h: number; s: number; l: number; a: number }` | Convert RGBA color values to HSLA color space | `rgbaToHsla({ r: 100, g: 100, b: 100, a: 1 }); // { h: 0, s: 0, l: 39.22, a: 1 }` |
-
-### Crypto
-
-| name | type | description | example |
-|------|------|-------------|---------|
-| decodeBase32 | `(input: string) => Uint8Array` | Decodes an uppercase Base32 string to Uint8Array. Does not validate padding placement. | `decodeBase32("JBSWY3DP"); // Uint8Array for "Hello"` |
-| decodeBase32ToString | `(input: string) => string` | Decodes an uppercase Base32 string to a UTF-8 string. Does not validate padding placement. | `decodeBase32ToString("JBSWY3DP"); // "Hello"` |
-| decodeBase58 | `(input: string) => Uint8Array` | Decodes a Base58 string to Uint8Array | `decodeBase58("9Ajdvzr"); // Uint8Array for "Hello"` |
-| decodeBase58ToString | `(input: string) => string` | Decodes a Base58 string to a UTF-8 string | `decodeBase58ToString("9Ajdvzr"); // "Hello"` |
-| encodeBase32 | `(input: string \| Uint8Array) => string` | Encodes a string or Uint8Array to Base32 format | `encodeBase32("Hello"); // "JBSWY3DP"` |
-| encodeBase58 | `(input: string \| Uint8Array) => string` | Encodes a string or Uint8Array to Base58 format | `encodeBase58("Hello"); // "9Ajdvzr"` |
-
-### Date
-
-| name | type | description | example |
-|------|------|-------------|---------|
-| addDuration | `(date: Date, amount: number, unit: DurationUnit) => Date` | Adds a duration to a date; calendar-aware for months and years | `addDuration(new Date("2025-01-31"), 1, "M"); // 2025-02-28` |
-| diff | `(left: Date, right: Date, unit: DurationUnit) => number` | Returns the difference between two dates in the given unit | `diff(new Date("2025-12-31"), new Date("2025-01-01"), "d"); // 364` |
-| endOf | `(date: Date, unit: DateBoundaryUnit) => Date` | Returns a new Date set to the end of the given unit | `endOf(new Date("2025-04-15"), "month"); // 2025-04-30T23:59:59.999` |
-| formatRelative | `(date: Date, baseDate?: Date, locale?: string) => string` | Formats a date relative to a base date using Intl.RelativeTimeFormat | `formatRelative(new Date(Date.now() - 3600_000), new Date(), "en"); // "1 hour ago"` |
-| isBusinessDay | `(date: Date, holidays?: Date[]) => boolean` | Returns true when a weekday and not in the holiday list | `isBusinessDay(new Date("2025-04-21")); // true` |
-| isSameDay | `(left: Date, right: Date) => boolean` | Returns true when two dates are the same calendar day | `isSameDay(new Date("2025-04-15T01:00"), new Date("2025-04-15T23:00")); // true` |
-| isWeekend | `(date: Date) => boolean` | Returns true when Saturday or Sunday | `isWeekend(new Date("2025-04-19")); // true` |
-| startOf | `(date: Date, unit: DateBoundaryUnit) => Date` | Returns a new Date set to the start of the given unit | `startOf(new Date("2025-04-15"), "month"); // 2025-04-01T00:00:00` |
-| subDuration | `(date: Date, amount: number, unit: DurationUnit) => Date` | Subtracts a duration from a date | `subDuration(new Date("2025-03-31"), 1, "M"); // 2025-02-28` |
-| birthday | `<T extends MonTypeInt>(year: number, mon: T, day: DayTypeInt<T>, timeDifference?: HoursTypeInt) => number` | Calculate age based on birthdate | `birthday(2000, 1, 1); // Returns age of someone born on Jan 1, 2000` |
-| dateRange | `(startDate: Date, endDate: Date) => Date[]` | Generate an array containing all dates between the specified start and end dates | `dateRange(new Date('2025-01-01'), new Date('2025-01-03'))` |
-| dayOfWeek | `<T extends MonTypeInt>(properties?: { year?: number; mon?: T; day?: DayTypeInt<T> }, timeDifference?: HoursTypeInt) => number` | Get the day of the week | `dayOfWeek({ year: 2000, mon: 1, day: 1 });` |
-| format | `(date: Date, formatString?: string) => string` | Converts a date to a string according to the specified format pattern | `format(new Date('2025-04-04'), 'YYYY-MM-DD') // Returns "2025-04-04"` |
-| getDay | `<T extends keyof DayList>(day: number, lang?: T) => ArrayToUnion<DayList[T]>` | Convert a number to a day of the week in the specified language | `getDay(0, "en"); // Returns "Sun"` |
-| getTimezoneOffsetString | `(instance: Date) => string` | Get timezone offset string in format "+HH:mm" or "-HH:mm" | `getTimezoneOffsetString(new Date()); // "+09:00" for JST` |
-| isLeapYear | `(year: number) => boolean` | Determine if a given year is a leap year | `isLeapYear(2020); // Returns true` |
-| newDateInt | `<T extends MonTypeInt>(year: number, mon: T, day: DayTypeInt<T>, hours?: HoursTypeInt, minutes?: MinutesTypeInt, seconds?: SecondsTypeInt, milliseconds?: MillisecondsTypeInt) => Date` | Create a new Date object from numeric values | `newDateInt(2021, 1, 1); // Creates date for January 1, 2021` |
-| newDateString | `<T extends MonTypeZero>(date: string, hours?: HoursType, minutes?: MinutesType, seconds?: SecondsType, milliseconds?: MillisecondsType, timeDifference?: HoursType) => Date` | Create a new Date object from a string date and time components | `newDateString("2021-01-01"); // Creates date for January 1, 2021 00:00:00` |
-| now | `(timeDifference?: HoursTypeInt) => Date` | Get the current time with a specified UTC offset | `now(); // Returns current time in JST (UTC+9)` |
-
-### Error
-
-| name | type | description | example |
-|------|------|-------------|---------|
-| flatMapResult | `<V, E, U, F>(result: Result<V, E>, function_: (value: V) => Result<U, F>) => Result<U, E \| F>` | Transforms a success Result's value using a function that returns a Result | `flatMapResult({type: "success", value: 5}, (n) => ({type: "success", value: n * 2})); // {type: "success", value: 10}` |
-| mapResult | `<V, E, U>(result: Result<V, E>, function_: (value: V) => U) => Result<U, E>` | Transforms a success Result's value using the provided function | `mapResult({type: "success", value: 5}, (n) => n * 2); // {type: "success", value: 10}` |
-| matchResult | `<V, E, S, F>(result: Result<V, E>, handlers: {onSuccess: (value: V) => S; onError: (error: E) => F}) => S \| F` | Pattern matches on a Result, applying the appropriate handler | `matchResult({type: "success", value: 42}, {onSuccess: (v) => "Got " + v, onError: (e) => "Failed"}); // "Got 42"` |
-| safeExecute | `<V, E = Error>(callback: () => V) => Result<V, E>` | Safely executes a callback function and returns a Result type | `safeExecute(() => JSON.parse('{"a": 1}')); // {type: "success", value: {a: 1}}` |
-
-### Function
-
-| name | type | description | example |
-|------|------|-------------|---------|
-| curry | `(func: (...args: unknown[]) => unknown) => Function` | Curries a function | `const add = (a, b, c) => a + b + c; curry(add)(1)(2)(3); // 6` |
-| debounce | `<T>(function_: T, wait: number, options?: DebounceOptions) => DebouncedFunction<T>` | Creates a debounced version of the provided function with leading/trailing options | `const debounced = debounce(() => console.log("called"), 300); debounced(); debounced.cancel();` |
-| memoize | `<A extends unknown[], R, K>(function_: (...args: A) => R, options?: MemoizeOptions<K>) => MemoizedFunction<A, R, K>` | Creates a memoized version of the provided function with optional maxSize | `const m = memoize((n: number) => n * 2); m(5); // 10 (computed); m(5); // 10 (cached)` |
-| once | `<A extends unknown[], R>(function_: (...args: A) => R) => (...args: A) => R` | Creates a function that is restricted to be called only once | `const init = once(() => 42); init(); // 42; init(); // 42 (cached)` |
-| throttle | `<T>(function_: T, wait: number) => ThrottledFunction<T>` | Creates a throttled version of the provided function | `const throttled = throttle(() => console.log("called"), 300); throttled(); throttled.cancel();` |
-
-### Iterator
-
-| name | type | description | example |
-|------|------|-------------|---------|
-| lazyFilter | `function*<T>(iterable: Iterable<T>, predicate: (value: T, index: number) => boolean) => Generator<T>` | Lazily filters values from an iterable using a generator | `[...lazyFilter([1, 2, 3, 4], (n) => n % 2 === 0)]; // [2, 4]` |
-| lazyMap | `function*<T, U>(iterable: Iterable<T>, function_: (value: T, index: number) => U) => Generator<U>` | Lazily maps values from an iterable using a generator | `[...lazyMap([1, 2, 3], (n) => n * 2)]; // [2, 4, 6]` |
-| lazyTake | `function*<T>(iterable: Iterable<T>, n: number) => Generator<T>` | Lazily takes the first n values from an iterable | `[...lazyTake([1, 2, 3, 4, 5], 3)]; // [1, 2, 3]` |
-
-### IP
-
-| name | type | description | example |
-|------|------|-------------|---------|
-| cidrToLong | `(cidr: number) => number` | Converts CIDR notation to a subnet mask number | `cidrToLong(24); // 4294967040` |
-| cidrToSubnetMask | `(cidr: number) => string` | Converts CIDR notation to a subnet mask | `cidrToSubnetMask(24); // "255.255.255.0"` |
-| getIpClass | `(ip: string) => string` | Gets the IP address class (A, B, C, D, or E) | `getIpClass("192.168.1.1"); // "C"` |
-| getNetworkAddress | `(ip: string, subnetMask: string) => number` | Calculates the network address from an IP address and subnet mask | `getNetworkAddress("192.168.1.1", "255.255.255.0"); // 3232235776` |
-| ipToBinaryString | `(ip: string) => string` | Converts an IPv4 address to its binary string representation | `ipToBinaryString("192.168.1.1"); // "11000000101010000000000100000001"` |
-| ipToLong | `(ip: string) => number` | Converts an IPv4 address to a 32-bit number | `ipToLong("192.168.1.1"); // 3232235777` |
-| isInRange | `(remoteIp: string, networkIp: string, cidr: number) => boolean` | Checks if an IP address is within a specified network range | `isInRange("192.168.1.100", "192.168.1.0", 24); // true` |
-| isPrivateIp | `(ip: string) => boolean` | Checks if an IP address is within private IP ranges | `isPrivateIp("192.168.1.1"); // true` |
-| longToIp | `(long: number) => string` | Converts a 32-bit number to an IPv4 address | `longToIp(3232235777); // "192.168.1.1"` |
-| subnetMaskToCidr | `(subnetMask: string) => number` | Converts a subnet mask to CIDR notation | `subnetMaskToCidr("255.255.255.0"); // 24` |
-
-### Math
-
-| name | type | description | example |
-|------|------|-------------|---------|
-| addition | `(...numbers: number[]) => number` | Addition without floating point errors | `addition(0.1, 0.2); // 0.3` |
-| average | `(numbers: number[]) => number` | Calculates the arithmetic mean of an array of numbers | `average([1, 2, 3]); // 2` |
-| clamp | `(value: number, min: number, max: number) => number` | Clamps a number between a minimum and maximum value | `clamp(-3, 0, 10); // 0` |
-| correlationCoefficient | `(x: number[], y: number[]) => number` | Calculate the Pearson correlation coefficient between two arrays | `correlationCoefficient([1, 2, 3, 4, 5], [2, 4, 6, 8, 10]); // 1` |
-| bitwise | `(x: number, k: number, direction?: "left" \| "right") => number` | Performs bit rotation on a number | `bitwise(0x12345678, 8); // 0x34567812` |
-| calculator | `<T extends Record<string, string \| number>>(expression: string, exchange?: T) => string` | Calculator function that handles mathematical expressions and simple equations | `calculator("1+2"); // "3"` |
-| calculatorInitialization | `<T extends { [key: string]: string \| number }>(exchange: T) => (x: string) => string` | Initializes a calculator function with exchange rates | `calculatorInitialization({ $: 100 })("$1"); // "100"` |
-| convertCurrency | `<T extends { [key: string]: number \| string }>(inputString: string, conversionRates?: T) => string` | Converts currency amounts in a string using currency symbols | `convertCurrency("¥100", { "¥": 0.01 }); // "1"` |
-| degToRad | `(x: number) => number` | Converts degrees to radians | `degToRad(180); // 3.141592653589793` |
-| deviationValue | `(value: number, averageValue: number, standardDeviationValue: number) => number` | Calculate standard score (deviation value) | `deviationValue(10, 5, 2); // 75` |
-| division | `<T extends boolean = true>(x: number, y: number, isFloor?: T) => T extends true ? number : number[]` | Performs division without floating point errors | `division(0.1, 0.2); // 0.5` |
-| factorial | `(x: number) => number` | Calculate factorial of a number | `factorial(5); // 120` |
-| factorize | `(n: number) => number[]` | Prime factorization of a number | `factorize(12); // [2, 2, 3]` |
-| flexibleNumberConversion | `(value: unknown) => number` | Flexible function to convert various inputs to numbers whenever possible | `flexibleNumberConversion("456"); // 456` |
-| gcd | `(x: number, y: number, ...z: number[]) => number` | Greatest Common Divisor (GCD) | `gcd(12, 18); // 6` |
-| getDecimalLength | `(value: number) => number` | Gets the number of decimal places in a number | `getDecimalLength(1.23); // 2` |
-| inRange | `(value: number, start: number, end?: number) => boolean` | Checks if a number is within a specified range | `inRange(3, 5); // true (range: [0, 5))` |
-| lcm | `(x: number, y: number) => number` | Least Common Multiple (LCM) | `lcm(2, 3); // 6` |
-| linearCongruentialGenerator | `(seed: number, max?: number, multiplier?: number, increment?: number) => number` | Linear Congruential Generator for random number generation | `linearCongruentialGenerator(12345);` |
-| literalExpression | `(x: string) => string` | Solves literal equations with variables | `literalExpression("x+1=2"); // "1"` |
-| mathConverter | `(equation: string) => string` | Expands square of n into a sum of simpler multiplications | `mathConverter("1250*1250"); // "1500*1000+400*100+200*100+50*50"` |
-| mathSeparator | `(input: string \| number) => [number, number]` | Separates a number at its highest place value | `mathSeparator(1250); // [1000, 250]` |
-| max | `(...number_: number[]) => number` | Returns the maximum value from the input numbers | `max(1, 2, 3); // 3` |
-| median | `(array: number[]) => number` | Calculate the median of an array of numbers | `median([1, 3, 3, 6, 7, 8, 9]); // 6` |
-| min | `(...number_: number[]) => number` | Returns the minimum value from the input numbers | `min(1, 2, 3); // 1` |
-| mode | `(array: number[]) => number[]` | Finds the most frequently occurring value(s) in an array | `mode([1, 2, 2, 3, 3, 3]); // [3]` |
-| multiples | `(x: number, n: number) => number[]` | Generate an array of multiples of a number | `multiples(2, 5); // [2, 4, 6, 8, 10]` |
-| multiplication | `(...numbers: number[]) => number` | Performs multiplication without floating point errors for any number of arguments | `multiplication(0.1, 0.2, 0.3); // 0.006` |
-| nCr | `(n: number, r: number) => number` | Calculates combinations (nCr) - number of ways to choose r items from n items | `nCr(5, 2); // 10` |
-| nHr | `(n: number, r: number) => number` | Calculates combinations with repetition (nHr) | `nHr(5, 2); // 15` |
-| nPr | `(n: number, r: number) => number` | Calculates permutations (nPr) - number of ways to arrange r items from n items | `nPr(5, 2); // 20` |
-| percentile | `(array: number[], percentile: number) => number` | Calculate the nth percentile of values in an array | `percentile([1, 2, 3, 4, 5], 50); // 3` |
-| primeFactorization | `(x: number) => Array<{number: number; count: number}>` | Performs prime factorization of a number | `primeFactorization(12); // [{number: 2, count: 2}, {number: 3, count: 1}]` |
-| quotient | `(x: number, y: number) => number[]` | Computes quotient and remainder of division | `quotient(5, 2); // [2, 1]` |
-| radToDeg | `(x: number) => number` | Converts radians to degrees | `radToDeg(Math.PI); // 180` |
-| random | `(max: number, min?: number) => number` | Generates a random integer between min and max (inclusive) | `random(10); // returns number between 0 and 10` |
-| reduce | `(x: number, y: number) => {x: number, y: number, gcd: number}` | Reduces a fraction to its lowest terms | `reduce(2, 4); // {x: 1, y: 2, gcd: 2}` |
-| repeatedTrial | `(n: number, r: number, p: {x: number; y: number}) => number[]` | Calculate probability in repeated trials | `repeatedTrial(5, 2, {x: 1/3, y: 2/3}); // [10, 27]` |
-| roundOf | `(value: number, precision?: number) => number` | Rounds a number to specified decimal places | `roundOf(1.234, 2); // 1.23` |
-| solveEquation | `(coefficients: number[][], constants: number[]) => number[]` | Solves a system of linear equations using Gaussian elimination | `solveEquation([[1, 1], [1, 2]], [4, 10]); // [-2, 6]` |
-| standardDeviation | `(values: number[]) => number` | Calculates the standard deviation of a set of values | `standardDeviation([1, 2, 3]); // 0.816496580927726` |
-| subtract | `(...numbers: number[]) => number` | Performs subtraction with arbitrary number of arguments without floating point errors | `subtract(0.1, 0.2); // -0.1` |
-| sumPrecise | `(numbers: number[]) => number` | Calculates the sum using Neumaier summation for improved floating-point precision | `sumPrecise([1e20, 1, -1e20]); // 1` |
-| toBaseN | `(value: number, radix?: number) => string` | Converts a number to a string representation in the specified base | `toBaseN(10); // "1010" (binary)` |
-| toCelsius | `(kelvin: number) => number` | Converts temperature from Kelvin to Celsius | `toCelsius(300); // 26.85` |
-| toKelvin | `(celsius: number) => number` | Converts temperature from Celsius to Kelvin | `toKelvin(26.85); // 300` |
-| uuidv7 | `() => string` | Generates a UUID v7 (Universally Unique Identifier version 7) | `uuidv7(); // e.g. "018d6e78-e1e5-7c3c-8bf9-ae5942f2ba1c"` |
-| valueSwap | `(x: number, y: number) => [number, number]` | Swaps two numbers to ensure x < y | `valueSwap(2, 1); // [1, 2]` |
-| xoshiro256 | `(state: [number, number, number, number], min?: number, max?: number) => number` | Generates random numbers using the Xoshiro256** algorithm | `xoshiro256([1, 2, 3, 4]); // random number between 0 and 1` |
-
-### Number
-
-| name | type | description | example |
-|------|------|-------------|---------|
-| formatNumber | `(value: number, options?: FormatNumberOptions) => string` | Formats a number using Intl.NumberFormat | `formatNumber(1234567.89); // "1,234,567.89"` |
-| toOrdinal | `(value: number) => string` | Converts a number to its English ordinal string representation | `toOrdinal(1); // "1st"` |
-| toPercentage | `(value: number, total: number, decimals?: number) => number` | Calculates the percentage of a value relative to a total | `toPercentage(1, 3); // 33.33` |
-
-### Object
-
-| name | type | description | example |
-|------|------|-------------|---------|
-| deepClone | `<T>(value: T) => T` | Creates a deep clone of the given value using structuredClone | `const cloned = deepClone({a: {b: 1}}); cloned.a.b = 99; // original unchanged` |
-| has | `<T extends { [key: string]: unknown }>(object: T, path: string \| string[]) => boolean` | Determines if an object has a specified path | `has({ a: { b: 1 } }, "a.b"); // true` |
-| isPlainObject | `(value: unknown) => value is Record<string, unknown>` | Checks if a value is a plain object | `isPlainObject({}); // true; isPlainObject(new Map()); // false` |
-| isEmpty | `(object: Record<string, unknown>) => boolean` | Checks if an object is empty (has no own properties) | `isEmpty({}); // true` |
-| keyBy | `<T>(collection: T[] \| Record<PropertyName, T>, iteratee?: Iteratee<T>) => Record<PropertyName, T>` | Creates an object composed of keys generated from the results of running each element of collection through iteratee | `keyBy([{id: 1, name: 'a'}, {id: 2, name: 'b'}], 'id'); // {1: {id: 1, name: 'a'}, 2: {id: 2, name: 'b'}}` |
-| mapKeys | `<T extends Record<string, unknown>>(object: T, function_: (value: T[keyof T], key: string) => string) => Record<string, T[keyof T]>` | Creates an object with the same values but keys transformed by the provided function | `mapKeys({a: 1, b: 2}, (_v, k) => k.toUpperCase()); // {A: 1, B: 2}` |
-| mapValues | `<T extends Record<string, unknown>, R>(object: T, function_: (value: T[keyof T], key: string) => R) => Record<keyof T, R>` | Creates an object with the same keys but values transformed by the provided function | `mapValues({a: 1, b: 2}, (v) => v * 2); // {a: 2, b: 4}` |
-| merge | `<T extends Record<string, unknown>>(target: T, ...sources: Partial<T>[]) => T` | Merges multiple objects into a single object (shallow merge) | `merge({a: 1}, {b: 2}); // {a: 1, b: 2}` |
-| mergeDeep | `<T extends Record<string, unknown>>(target: T, ...sources: Partial<T>[]) => T` | Deeply merges multiple objects into a single object | `mergeDeep({a: {b: 1}}, {a: {c: 2}}); // {a: {b: 1, c: 2}}` |
-| omit | `<T extends Record<string, unknown>, K extends keyof T>(object: T, ...keys: K[]) => Omit<T, K>` | Creates an object without the specified keys | `omit({a: 1, b: 2, c: 3}, 'b'); // {a: 1, c: 3}` |
-| pick | `<T extends object, K extends keyof T>(object: T, ...keys: K[]) => Pick<T, K>` | Creates a new object with only the specified properties from the source object | `pick({ id: 1, name: 'Alice', age: 30 }, 'id', 'name'); // { id: 1, name: 'Alice' }` |
-| pickDeep | `<T extends object, K extends PickDeepKey<T>>(object: T, ...keys: K[]) => PickDeep<T>` | Creates a new object by deeply selecting properties from the source object based on specified keys | `pickDeep({ a: { b: { c: 1, d: 2 }, e: 3 }, f: 4 }, 'a.b.c', 'f'); // { a: { b: { c: 1 } }, f: 4 }` |
-| flattenObject | `<T extends Record<string, unknown>>(object: T, separator?: string) => Record<string, unknown>` | Flattens a nested object into path-keyed entries | `flattenObject({ a: { b: { c: 1 } } }); // { "a.b.c": 1 }` |
-| get | `<T>(object: unknown, path: string \| string[], defaultValue?: T) => T \| undefined` | Reads a deeply nested property by path | `get({ a: { b: 1 } }, "a.b"); // 1` |
-| invert | `<K, V>(object: Record<K, V>) => Record<V, K>` | Creates a new object with keys and values swapped | `invert({ a: 1, b: 2 }); // { 1: "a", 2: "b" }` |
-| omitBy | `<T>(object: T, predicate: (value, key) => boolean) => Partial<T>` | Removes entries for which the predicate returns true | `omitBy({ a: 1, b: undefined }, (v) => v === undefined); // { a: 1 }` |
-| pickBy | `<T>(object: T, predicate: (value, key) => boolean) => Partial<T>` | Selects entries for which the predicate returns true | `pickBy({ a: 1, b: 2 }, (v) => v > 1); // { b: 2 }` |
-| set | `<T extends object>(object: T, path: string \| string[], value: unknown) => T` | Sets a deeply nested property by path, mutating the object | `set({}, "a.b.c", 1); // { a: { b: { c: 1 } } }` |
-| unflattenObject | `(flat: Record<string, unknown>, separator?: string) => Record<string, unknown>` | Reconstructs a nested object from path-keyed input | `unflattenObject({ "a.b": 1 }); // { a: { b: 1 } }` |
-
-### Predicate
-
-| name | type | description | example |
-|------|------|-------------|---------|
-| every | `<T extends unknown[]>(...predicates: ((...args: T) => boolean)[]) => (...args: T) => boolean` | Creates a predicate that returns true only when all given predicates return true | `every((n: number) => n > 0, (n) => n % 2 === 0)(4); // true` |
-| isNullish | `(value: unknown) => value is null \| undefined` | Checks if a value is null or undefined | `isNullish(null); // true; isNullish(0); // false` |
-| matches | `(pattern: Record<string, unknown>) => (object: Record<string, unknown>) => boolean` | Creates a predicate that checks if an object matches a given pattern | `matches({role: "admin"})({name: "Alice", role: "admin"}); // true` |
-| not | `<T extends unknown[]>(function_: (...args: T) => boolean) => (...args: T) => boolean` | Creates a predicate that negates the given predicate | `const isOdd = not((n: number) => n % 2 === 0); isOdd(3); // true` |
-| some | `<T extends unknown[]>(...predicates: ((...args: T) => boolean)[]) => (...args: T) => boolean` | Creates a predicate that returns true when at least one predicate returns true | `some((n: number) => n === 0, (n) => n < 0)(0); // true` |
-
-### Random
-
-| name | type | description | example |
-|------|------|-------------|---------|
-| randomBoolean | `(probability?: number) => boolean` | Random boolean with optional weight | `randomBoolean(0.9); // true ~90% of the time` |
-| randomChoice | `<T>(items: readonly T[]) => T` | Uniformly random element from an array | `randomChoice(["a", "b", "c"]);` |
-| randomFloat | `(min: number, max: number) => number` | Random float in `[min, max)` | `randomFloat(0, 1);` |
-| randomInt | `(min: number, max: number) => number` | Random integer in `[min, max]` | `randomInt(1, 6); // 1..6` |
-| randomUUID | `() => string` | UUID v4, prefers `crypto.randomUUID` | `randomUUID();` |
-| seededRandom | `(seed: number \| string) => () => number` | Deterministic PRNG (SplitMix32) | `const rand = seededRandom("hello"); rand();` |
-| weightedChoice | `<T>(items: readonly { value: T; weight: number }[]) => T` | Weighted random pick using cumulative binary search | `weightedChoice([{ value: "a", weight: 1 }, { value: "b", weight: 4 }]);` |
-
-### Simple
-
-| name | type | description | example |
-|------|------|-------------|---------|
-| quickSortSimple | `<T>(array: T[], compareFunction?: CompareFunction<T>, startID?: number, endID?: number) => T[]` | Quick sort implementation for arrays | `quickSort([1, 3, 2, 4, 5], (a, b) => a - b); // [1, 2, 3, 4, 5]` |
-| birthdaySimple | `(birthdays: Date \| string \| { year: number; mon: number; day: number }, timeDifference?: HoursTypeInt) => number` | Calculate age from birthdate | `birthdaySimple("2000-01-01");` |
-| dayOfWeekSimple | `(properties?: Date \| string \| { year?: number; mon?: T; day?: DayTypeInt<T> }, timeDifference?: HoursTypeInt) => number` | Get day of the week | `dayOfWeekSimple("2000-01-01");` |
-| nowSimple | `(timeDifference?: HoursTypeInt \| HoursType) => Date` | Get current date and time | `nowSimple(); // 2021-01-01T00:00:00.000Z` |
-| deviationValueSimple | `(value: number, averageValue: number[] \| number, standardDeviationValue?: number) => number` | Calculate deviation score (T-score) | `deviationValueSimple(60, 50, 10); // 60` |
-
-### String
-
-| name | type | description | example |
-|------|------|-------------|---------|
-| camelCase | `(str: string) => string` | Converts a string to camelCase | `camelCase("hello-world"); // "helloWorld"` |
-| capitalize | `(str: string) => string` | Capitalizes the first grapheme of a string | `capitalize("hello"); // "Hello"` |
-| dedent | `(str: string \| TemplateStringsArray, ...values: unknown[]) => string` | Removes minimum common leading whitespace; works as a tag | `` dedent`  line` // "line"`` |
-| mask | `(str: string, options?: MaskOptions) => string` | Masks the middle of a string preserving leading/trailing characters | `mask("1234567890", { start: 2, end: 4 }); // "12****7890"` |
-| pascalCase | `(str: string) => string` | Converts a string to PascalCase | `pascalCase("hello-world"); // "HelloWorld"` |
-| snakeCase | `(str: string) => string` | Converts a string to snake_case | `snakeCase("helloWorld"); // "hello_world"` |
-| titleCase | `(str: string) => string` | Converts a string to Title Case | `titleCase("hello world"); // "Hello World"` |
-| uncapitalize | `(str: string) => string` | Lowercases the first grapheme of a string | `uncapitalize("Hello"); // "hello"` |
-| wordCount | `(str: string) => number` | Counts words using `words` boundaries | `wordCount("hello world"); // 2` |
-| words | `(str: string, pattern?: RegExp) => string[]` | Splits a string into words on case boundaries and non-alphanumeric separators | `words("XMLHttpRequest"); // ["XML", "Http", "Request"]` |
-| deleteSpaces | `(string_: string) => string` | Removes all whitespace characters from a string | `deleteSpaces("Hello World"); // "HelloWorld"` |
-| escapeHtml | `(str: string) => string` | Escapes HTML special characters in a string | `escapeHtml("<script>alert('XSS')</script>"); // "&lt;script&gt;alert(&#39;XSS&#39;)&lt;/script&gt;"` |
-| formatString | `(template: string, ...values: unknown[]) => string` | Replaces placeholders in a template string with specified values | `formatString("Hello, {0}!", "World"); // "Hello, World!"` |
-| fuzzySearch | `(query: string, items: string[], threshold?: number) => Array<{ item: string; score: number }>` | Perform fuzzy string matching on an array of strings | `fuzzySearch("hello", ["hello", "world", "helo", "help"]); // [{ item: "hello", score: 1 }, { item: "helo", score: 0.8 }, { item: "help", score: 0.6 }]` |
-| fromBase64 | `(base64String: string) => string` | Converts Base64 to string | `fromBase64("SGVsbG8="); // "Hello"` |
-| hasNoLetters | `(text: string) => boolean` | Checks if the string contains no letters (contains only emojis, numbers, or special characters) | `hasNoLetters("123"); // true` |
-| kebabCase | `(str: string) => string` | Converts a string to kebab-case | `kebabCase("helloWorld"); // "hello-world"` |
-| levenshteinDistance | `(string1: string, string2: string) => number` | Calculates the Levenshtein distance between two strings (minimum number of single-character edits) | `levenshteinDistance("kitten", "sitting"); // 3` |
-| padEnd | `(string_: string, targetLength: number, padString: string) => string` | Adds the specified string to the end of the string until it reaches the specified length | `padEnd("123", 5, "0"); // "12300"` |
-| padStart | `(string_: string, targetLength: number, padString: string) => string` | Pads the start of a string with another string until the target length is reached | `padStart("123", 5, "0"); // "00123"` |
-| randomString | `(size?: number, char?: string) => string` | Generates a random string | `randomString(8); // "aB3dEf9h"` |
-| randomStringInitialization | `(char?: string) => (size: number) => string` | Initializes a function that generates random strings | `const gen = randomStringInitialization("ABC"); gen(5); // "ABCAB"` |
-| reverseString | `(char: string) => string` | Reverses a string | `reverseString("Hello"); // "olleH"` |
-| slugify | `(str: string) => string` | Convert a string to a URL-friendly slug | `slugify("Hello World!"); // "hello-world"` |
-| stringSimilarity | `(string1: string, string2: string) => number` | Calculates the similarity between two strings as a percentage (0-1) using Levenshtein distance | `stringSimilarity("hello", "hallo"); // 0.8` |
-| toBase64 | `(char: string) => string` | Convert string to Base64 | `toBase64("Hello"); // "SGVsbG8="` |
-| toHalfWidth | `(str: string) => string` | Convert full-width characters to half-width characters | `toHalfWidth("１２３ＡＢＣ"); // "123ABC"` |
-| trimCharacters | `(string_: string, chars: string) => string` | Removes specified characters from both ends of a string | `trimCharacters("!!!hello!!!", "!"); // "hello"` |
-| trimEndCharacters | `(string_: string, chars: string) => string` | Removes specified characters from the end of a string | `trimEndCharacters("hello!!!", "!"); // "hello"` |
-| trimStartCharacters | `(string_: string, chars: string) => string` | Removes specified characters from the start of a string | `trimStartCharacters("!!!hello", "!"); // "hello"` |
-| truncate | `(str: string, length: number, suffix?: string) => string` | Truncate a string to a specified length | `truncate("Hello World", 5); // "Hello..."` |
-| unescapeHtml | `(str: string) => string` | Unescapes HTML entities in a string | `unescapeHtml("&lt;script&gt;alert(&quot;Hello&quot;);&lt;/script&gt;"); // "<script>alert("Hello");</script>"` |
-
-### Time
-
-| name | type | description | example |
-|------|------|-------------|---------|
-| convertTime | `(value: string \| number, fromUnit: TimeUnit \| TimeUnitShort, toUnit: TimeUnit \| TimeUnitShort) => number` | Converts time between different units | `convertTime(1, "hours", "minutes"); // 60` |
-| normalizeTimeUnit | `(unit: TimeUnit \| TimeUnitShort, to: "long" \| "short") => TimeUnit \| TimeUnitShort` | Normalize time unit | `normalizeTimeUnit("h", "long"); // "hours"` |
-
-### Tool
-
-| name | type | description | example |
-|------|------|-------------|---------|
-| createPipeline | `<T>(initialValue: T) => Pipeline<T>` | Function that creates a Pipeline instance | `createPipeline(1)((x) => x + 1)(); // 2` |
-| parseJson | `<T = unknown>(json: string) => T` | Parses a JSON string into a typed JavaScript value | `parseJson<{a: number}>('{"a": 1}'); // {a: 1}` |
-| pipe | `<T>(initialValue: T) => Pipe<T>` | Creates a new Pipe instance with an initial value | `pipe(1).map(x => x + 1).end(); // 2` |
-
-### UA
-
-| name | type | description | example |
-|------|------|-------------|---------|
-| extractBrowserFromUserAgent | `(ua: string) => SimplifiedUserAgentInfoBrowser` | Extracts browser information from a User-Agent string | `extractBrowserFromUserAgent(navigator.userAgent); // "chrome"` |
-| extractDeviceFromUserAgent | `(ua: string) => SimplifiedUserAgentInfoDevice` | Extracts device type information from a User-Agent string | `extractDeviceFromUserAgent(navigator.userAgent); // "desktop"` |
-| extractOsFromUserAgent | `(ua: string) => SimplifiedUserAgentInfoOs` | Extracts operating system information from a User-Agent string | `extractOsFromUserAgent(navigator.userAgent); // "macos"` |
-| parseUserAgent | `(userAgent: string) => SimplifiedUserAgentInfo` | Parse a User-Agent string to extract browser, device, and OS information | `parseUserAgent(navigator.userAgent); // {browser: "chrome", device: "desktop", os: "macos"}` |
-
-### URL
-
-| name | type | description | example |
-|------|------|-------------|---------|
-| buildUrl | `(base: string, parameters?: Record<string, string>) => string` | Builds a URL with query parameters appended | `buildUrl("https://example.com", {page: "1", q: "search"}); // "https://example.com/?page=1&q=search"` |
-| isAbsoluteUrl | `(url: string) => boolean` | Checks if a URL is absolute (RFC 3986) | `isAbsoluteUrl("https://example.com"); // true; isAbsoluteUrl("/path"); // false` |
-| joinPath | `(...segments: string[]) => string` | Joins multiple path segments into one path, normalizing slashes | `joinPath("https://example.com/", "/api/", "/users"); // "https://example.com/api/users"` |
-| parseQueryString | `(query: string) => Record<string, string>` | Parses a query string into a key-value record | `parseQueryString("?page=1&q=search"); // {page: "1", q: "search"}` |
-
-### Unit
-
-| name | type | description | example |
-|------|------|-------------|---------|
-| unitConverterInitialization | `<T extends { [k in K]: number }, K extends string \| number \| symbol>(toBaseUnitRatios: T) => (value: number, from: keyof T, to: keyof T) => number` | Unit converter initialization function | `const converter = unitConverterInitialization({meters: 1, kilometers: 1000}); converter(5, "kilometers", "meters"); // 5000` |
-
-### Validate
-
-| name | type | description | example |
-|------|------|-------------|---------|
-| array | `<A extends string \| number \| boolean, O extends {}>(option?: O, message?: string) => (values: A[]) => ValidateCoreReturnType<A[]>` | Creates an array validator with type-specific validation rules | `array()([1, 2, 3]); // {validate: true, message: "", type: [1, 2, 3]}` |
-| boolean | `(message?: string) => (value: boolean) => ValidateCoreReturnType<boolean>` | Creates a boolean validator | `boolean()(true); // {validate: true, message: "", type: true}` |
-| number | `<T extends ValidateReturnType<number>[]>(option?: T, message?: string) => (value: number) => ValidateCoreReturnType<number>` | Creates a number validator with optional validation rules | `number()(42); // {validate: true, message: "", type: 42}` |
-| object | `<T extends {}>(option?: T, message?: string) => (value: Types<{}>) => ValidateCoreReturnType<{}>` | Creates an object validator with property-specific validation rules | `object({id: number()})({id: 1}); // {validate: true, message: "", type: {id: 1}}` |
-| string | `<T extends ValidateReturnType<string>[]>(option?: T, message?: string) => (value: string) => ValidateCoreReturnType<string>` | Creates a string validator with optional validation rules | `string()("hello"); // {validate: true, message: "", type: "hello"}` |
-| isArray | `<T>(array: unknown) => array is T[]` | Determines if the value is an array | `isArray([1, 2, 3]); // true` |
-| isBrowser | `() => boolean` | Determines if the current environment is a browser | `isBrowser(); // true in browser` |
-| isBun | `() => boolean` | Determines if the current environment is Bun runtime | `isBun(); // true in Bun` |
-| isDeepEqual | `(a: unknown, b: unknown, options?: IsDeepEqualOptions) => boolean` | Performs deep equality comparison between two values with support for nested objects, arrays, Sets, Maps, and circular references | `isDeepEqual({ a: 1, b: [2, 3] }, { b: [2, 3], a: 1 }); // true` |
-| isDictionaryObject | `<T extends { [key: string]: unknown }>(object: unknown) => object is T` | Determines if the value is a dictionary-type object | `isDictionaryObject({}); // true` |
-| isDouble | `<T extends boolean = true>(x: unknown, loose?: T) => x is T extends true ? number \| string : number` | Determines if the value is a decimal number | `isDouble(0.1); // true` |
-| isEqual | `(a: unknown, b: unknown) => boolean` | Evaluates true strict equality | `isEqual(1, 1); // true` |
-| isNode | `() => boolean` | Determines if the current environment is Node.js | `isNode(); // true in Node.js` |
-| isNodeWebkit | `() => boolean` | Determines if the current environment is Node-Webkit | `isNodeWebkit(); // true in Node-Webkit` |
-| isNotEmpty | `(object: object) => boolean` | Checks if an object is not empty | `isNotEmpty({ a: 1 }); // true` |
-| isNumber | `<T extends boolean>(number: unknown, loose?: T) => number is T extends true ? number \| string : number` | Determines if the value represents a number | `isNumber(0.1); // true` |
-| isPerfectSquare | `(number_: number) => boolean` | Determines if a given integer is a perfect square | `isPerfectSquare(16); // true` |
-| isPrimeNumber | `(n: number) => boolean` | Determines if a number is prime | `isPrimeNumber(17); // true` |
-| isString | `(value: unknown) => value is string` | Determines if the value is a string | `isString("test"); // true` |
-| isValueNaN | `(value: unknown, loose?: boolean) => boolean` | Determines if a value is NaN | `isValueNaN(parseInt("not a number")); // true` |
-| parseEmail | `(email: string, options: ParseEmailOptions) => { valid: boolean; parts?: { local: string; domain: string } }` | Parses an email address into its local and domain parts | `parseEmail("test@example.com", { level: "basic" }); // { valid: true, parts: { local: "test", domain: "example.com" } }` |
-
-#### Validate Number Options
-
-| name | type | description | example |
-|------|------|-------------|---------|
-| double | `(message?: string) => ValidateReturnType<number>` | Creates a validator for checking if a number is a floating point value | `number([double()])(-0.5); // valid` |
-| even | `(message?: string) => ValidateReturnType<number>` | Creates a validator for checking if a number is even | `number([even()])(4); // valid` |
-| maxValue | `(maxValue: number, message?: string) => ValidateReturnType<number>` | Creates a validator for checking if a number is less than or equal to a maximum value | `number([maxValue(100)])(50); // valid` |
-| minValue | `(minValue: number, message?: string) => ValidateReturnType<number>` | Creates a validator for checking if a number is greater than or equal to a minimum value | `number([minValue(0)])(10); // valid` |
-| odd | `(message?: string) => ValidateReturnType<number>` | Creates a validator for checking if a number is odd | `number([odd()])(3); // valid` |
-| prime | `(message?: string) => ValidateReturnType<number>` | Creates a validator for checking if a number is prime | `number([prime()])(7); // valid` |
-
-#### Validate String Options
-
-| name | type | description | example |
-|------|------|-------------|---------|
-| validateEmail | `(message?: string, options?: ParseEmailOptions) => ValidateReturnType<string>` | Creates a validator for checking if a string is a valid email address | `string([validateEmail()])("test@example.com"); // valid` |
-| length_ | `(length: number, message?: string) => ValidateReturnType<string>` | Creates a validator for checking if a string has an exact length | `string([length_(5)])("hello"); // valid` |
-| maxLength | `(maxLength: number, message?: string) => ValidateReturnType<string>` | Creates a validator for checking if a string's length is less than or equal to a maximum value | `string([maxLength(10)])("hello"); // valid` |
-| minLength | `(minLength: number, message?: string) => ValidateReturnType<string>` | Creates a validator for checking if a string's length is greater than or equal to a minimum value | `string([minLength(3)])("hello"); // valid` |
-| numberString | `(message?: string) => ValidateReturnType<string>` | Creates a validator for checking if a string represents a valid number | `string([numberString()])("123.45"); // valid` |
-| regexMatch | `(pattern: RegExp, message?: string) => ValidateReturnType<string>` | Creates a validator for checking if a string matches a regular expression pattern | `string([regexMatch(/^[A-Z]/)])("Hello"); // valid` |
-| uuid | `(versions?: number[], message?: string) => ValidateReturnType<string>` | Creates a validator for checking if a string is a valid UUID | `string([uuid()])("550e8400-e29b-41d4-a716-446655440000"); // valid` |
+- [cmykToRgba](https://github.com/riya-amemiya/UMT/wiki/Function.cmykToRgba)
+- [hexaToRgba](https://github.com/riya-amemiya/UMT/wiki/Function.hexaToRgba)
+- [hslaToRgba](https://github.com/riya-amemiya/UMT/wiki/Function.hslaToRgba)
+- [rgbaToCmyk](https://github.com/riya-amemiya/UMT/wiki/Function.rgbaToCmyk)
+- [rgbaToHexA](https://github.com/riya-amemiya/UMT/wiki/Function.rgbaToHexA)
+- [rgbaToHsla](https://github.com/riya-amemiya/UMT/wiki/Function.rgbaToHsla)
 
 ### Consts
 
-| name | type | description | example |
-|------|------|-------------|---------|
-| OneSecondMs | `1000` | Number of milliseconds in one second | `OneSecondMs; // 1000` |
-| OneMinuteMs | `60000` | Number of milliseconds in one minute | `OneMinuteMs; // 60000` |
-| OneHourMs | `3600000` | Number of milliseconds in one hour | `OneHourMs; // 3600000` |
-| OneDayMs | `86400000` | Number of milliseconds in one day | `OneDayMs; // 86400000` |
-| OneWeekMs | `604800000` | Number of milliseconds in one week | `OneWeekMs; // 604800000` |
-| OneMonthMs28 | `2419200000` | Number of milliseconds in one month (28 days) | `OneMonthMs28; // 2419200000` |
-| OneMonthMs29 | `2505600000` | Number of milliseconds in one month (29 days) | `OneMonthMs29; // 2505600000` |
-| OneMonthMs | `2592000000` | Number of milliseconds in one month (30 days) | `OneMonthMs; // 2592000000` |
-| OneMonthMs31 | `2678400000` | Number of milliseconds in one month (31 days) | `OneMonthMs31; // 2678400000` |
-| OneYearMs | `31536000000` | Number of milliseconds in one year (365 days) | `OneYearMs; // 31536000000` |
-| OneYearMs366 | `31622400000` | Number of milliseconds in one year (366 days) | `OneYearMs366; // 31622400000` |
-| HttpStatus | `Object` | All HTTP status codes | `HttpStatus.OK; // 200` |
-| HttpInformationalStatus | `Object` | HTTP 1xx Informational Status Codes | `HttpInformationalStatus.CONTINUE; // 100` |
-| HttpSuccessStatus | `Object` | HTTP 2xx Success Status Codes | `HttpSuccessStatus.OK; // 200` |
-| HttpRedirectionStatus | `Object` | HTTP 3xx Redirection Status Codes | `HttpRedirectionStatus.MOVED_PERMANENTLY; // 301` |
-| HttpClientErrorStatus | `Object` | HTTP 4xx Client Error Status Codes | `HttpClientErrorStatus.NOT_FOUND; // 404` |
-| HttpServerErrorStatus | `Object` | HTTP 5xx Server Error Status Codes | `HttpServerErrorStatus.INTERNAL_SERVER_ERROR; // 500` |
+- [HttpClientErrorStatus](https://github.com/riya-amemiya/UMT/wiki/Variable.HttpClientErrorStatus)
+- [HttpInformationalStatus](https://github.com/riya-amemiya/UMT/wiki/Variable.HttpInformationalStatus)
+- [HttpRedirectionStatus](https://github.com/riya-amemiya/UMT/wiki/Variable.HttpRedirectionStatus)
+- [HttpServerErrorStatus](https://github.com/riya-amemiya/UMT/wiki/Variable.HttpServerErrorStatus)
+- [HttpStatus](https://github.com/riya-amemiya/UMT/wiki/Variable.HttpStatus)
+- [HttpSuccessStatus](https://github.com/riya-amemiya/UMT/wiki/Variable.HttpSuccessStatus)
+- [OneDayMs](https://github.com/riya-amemiya/UMT/wiki/Variable.OneDayMs)
+- [OneHourMs](https://github.com/riya-amemiya/UMT/wiki/Variable.OneHourMs)
+- [OneMinuteMs](https://github.com/riya-amemiya/UMT/wiki/Variable.OneMinuteMs)
+- [OneMonthMs](https://github.com/riya-amemiya/UMT/wiki/Variable.OneMonthMs)
+- [OneMonthMs28](https://github.com/riya-amemiya/UMT/wiki/Variable.OneMonthMs28)
+- [OneMonthMs29](https://github.com/riya-amemiya/UMT/wiki/Variable.OneMonthMs29)
+- [OneMonthMs31](https://github.com/riya-amemiya/UMT/wiki/Variable.OneMonthMs31)
+- [OneSecondMs](https://github.com/riya-amemiya/UMT/wiki/Variable.OneSecondMs)
+- [OneWeekMs](https://github.com/riya-amemiya/UMT/wiki/Variable.OneWeekMs)
+- [OneYearMs](https://github.com/riya-amemiya/UMT/wiki/Variable.OneYearMs)
+- [OneYearMs366](https://github.com/riya-amemiya/UMT/wiki/Variable.OneYearMs366)
+
+### Crypto
+
+- [decodeBase32](https://github.com/riya-amemiya/UMT/wiki/Function.decodeBase32)
+- [decodeBase32ToString](https://github.com/riya-amemiya/UMT/wiki/Function.decodeBase32ToString)
+- [decodeBase58](https://github.com/riya-amemiya/UMT/wiki/Function.decodeBase58)
+- [decodeBase58ToString](https://github.com/riya-amemiya/UMT/wiki/Function.decodeBase58ToString)
+- [encodeBase32](https://github.com/riya-amemiya/UMT/wiki/Function.encodeBase32)
+- [encodeBase58](https://github.com/riya-amemiya/UMT/wiki/Function.encodeBase58)
+
+### DataStructure
+
+- [LRUCache](https://github.com/riya-amemiya/UMT/wiki/Class.LRUCache)
+- [PriorityQueue](https://github.com/riya-amemiya/UMT/wiki/Class.PriorityQueue)
+- [TTLCache](https://github.com/riya-amemiya/UMT/wiki/Class.TTLCache)
+- [TTLCacheOptions](https://github.com/riya-amemiya/UMT/wiki/Interface.TTLCacheOptions)
+
+### Date
+
+- [addDuration](https://github.com/riya-amemiya/UMT/wiki/Function.addDuration)
+- [birthday](https://github.com/riya-amemiya/UMT/wiki/Function.birthday)
+- [DateBoundaryUnit](https://github.com/riya-amemiya/UMT/wiki/TypeAlias.DateBoundaryUnit)
+- [dateRange](https://github.com/riya-amemiya/UMT/wiki/Function.dateRange)
+- [dayOfWeek](https://github.com/riya-amemiya/UMT/wiki/Function.dayOfWeek)
+- [diff](https://github.com/riya-amemiya/UMT/wiki/Function.diff)
+- [DurationUnit](https://github.com/riya-amemiya/UMT/wiki/TypeAlias.DurationUnit)
+- [endOf](https://github.com/riya-amemiya/UMT/wiki/Function.endOf)
+- [format](https://github.com/riya-amemiya/UMT/wiki/Function.format)
+- [formatRelative](https://github.com/riya-amemiya/UMT/wiki/Function.formatRelative)
+- [getDay](https://github.com/riya-amemiya/UMT/wiki/Function.getDay)
+- [getTimezoneOffsetString](https://github.com/riya-amemiya/UMT/wiki/Function.getTimezoneOffsetString)
+- [isBusinessDay](https://github.com/riya-amemiya/UMT/wiki/Function.isBusinessDay)
+- [isLeapYear](https://github.com/riya-amemiya/UMT/wiki/Function.isLeapYear)
+- [isSameDay](https://github.com/riya-amemiya/UMT/wiki/Function.isSameDay)
+- [isWeekend](https://github.com/riya-amemiya/UMT/wiki/Function.isWeekend)
+- [newDateInt](https://github.com/riya-amemiya/UMT/wiki/Function.newDateInt)
+- [newDateString](https://github.com/riya-amemiya/UMT/wiki/Function.newDateString)
+- [now](https://github.com/riya-amemiya/UMT/wiki/Function.now)
+- [startOf](https://github.com/riya-amemiya/UMT/wiki/Function.startOf)
+- [subDuration](https://github.com/riya-amemiya/UMT/wiki/Function.subDuration)
+
+### Error
+
+- [errorFunction](https://github.com/riya-amemiya/UMT/wiki/Function.errorFunction)
+- [ErrorType](https://github.com/riya-amemiya/UMT/wiki/Interface.ErrorType)
+- [flatMapResult](https://github.com/riya-amemiya/UMT/wiki/Function.flatMapResult)
+- [mapResult](https://github.com/riya-amemiya/UMT/wiki/Function.mapResult)
+- [matchResult](https://github.com/riya-amemiya/UMT/wiki/Function.matchResult)
+- [Result](https://github.com/riya-amemiya/UMT/wiki/TypeAlias.Result)
+- [safeExecute](https://github.com/riya-amemiya/UMT/wiki/Function.safeExecute)
+- [successFunction](https://github.com/riya-amemiya/UMT/wiki/Function.successFunction)
+- [SuccessType](https://github.com/riya-amemiya/UMT/wiki/Interface.SuccessType)
+
+### Function
+
+- [curry](https://github.com/riya-amemiya/UMT/wiki/Function.curry)
+- [debounce](https://github.com/riya-amemiya/UMT/wiki/Function.debounce)
+- [DebouncedFunction](https://github.com/riya-amemiya/UMT/wiki/Interface.DebouncedFunction)
+- [DebounceOptions](https://github.com/riya-amemiya/UMT/wiki/Interface.DebounceOptions)
+- [memoize](https://github.com/riya-amemiya/UMT/wiki/Function.memoize)
+- [MemoizedFunction](https://github.com/riya-amemiya/UMT/wiki/Interface.MemoizedFunction)
+- [MemoizeOptions](https://github.com/riya-amemiya/UMT/wiki/Interface.MemoizeOptions)
+- [once](https://github.com/riya-amemiya/UMT/wiki/Function.once)
+- [throttle](https://github.com/riya-amemiya/UMT/wiki/Function.throttle)
+- [ThrottledFunction](https://github.com/riya-amemiya/UMT/wiki/Interface.ThrottledFunction)
+
+### IP
+
+- [cidrToLong](https://github.com/riya-amemiya/UMT/wiki/Function.cidrToLong)
+- [cidrToSubnetMask](https://github.com/riya-amemiya/UMT/wiki/Function.cidrToSubnetMask)
+- [getIpClass](https://github.com/riya-amemiya/UMT/wiki/Function.getIpClass)
+- [getNetworkAddress](https://github.com/riya-amemiya/UMT/wiki/Function.getNetworkAddress)
+- [ipToBinaryString](https://github.com/riya-amemiya/UMT/wiki/Function.ipToBinaryString)
+- [ipToLong](https://github.com/riya-amemiya/UMT/wiki/Function.ipToLong)
+- [isInRange](https://github.com/riya-amemiya/UMT/wiki/Function.isInRange)
+- [isPrivateIp](https://github.com/riya-amemiya/UMT/wiki/Function.isPrivateIp)
+- [longToIp](https://github.com/riya-amemiya/UMT/wiki/Function.longToIp)
+- [subnetMaskToCidr](https://github.com/riya-amemiya/UMT/wiki/Function.subnetMaskToCidr)
+
+### Iterator
+
+- [lazyFilter](https://github.com/riya-amemiya/UMT/wiki/Function.lazyFilter)
+- [lazyMap](https://github.com/riya-amemiya/UMT/wiki/Function.lazyMap)
+- [lazyTake](https://github.com/riya-amemiya/UMT/wiki/Function.lazyTake)
+
+### Math
+
+- [addition](https://github.com/riya-amemiya/UMT/wiki/Function.addition)
+- [average](https://github.com/riya-amemiya/UMT/wiki/Function.average)
+- [bitwise](https://github.com/riya-amemiya/UMT/wiki/Function.bitwise)
+- [calculator](https://github.com/riya-amemiya/UMT/wiki/Function.calculator)
+- [calculatorCore](https://github.com/riya-amemiya/UMT/wiki/Function.calculatorCore)
+- [calculatorInitialization](https://github.com/riya-amemiya/UMT/wiki/Function.calculatorInitialization)
+- [clamp](https://github.com/riya-amemiya/UMT/wiki/Function.clamp)
+- [convertCurrency](https://github.com/riya-amemiya/UMT/wiki/Function.convertCurrency)
+- [correlationCoefficient](https://github.com/riya-amemiya/UMT/wiki/Function.correlationCoefficient)
+- [degToRad](https://github.com/riya-amemiya/UMT/wiki/Function.degToRad)
+- [deviationValue](https://github.com/riya-amemiya/UMT/wiki/Function.deviationValue)
+- [division](https://github.com/riya-amemiya/UMT/wiki/Function.division)
+- [factorial](https://github.com/riya-amemiya/UMT/wiki/Function.factorial)
+- [factorize](https://github.com/riya-amemiya/UMT/wiki/Function.factorize)
+- [flexibleNumberConversion](https://github.com/riya-amemiya/UMT/wiki/Function.flexibleNumberConversion)
+- [gcd](https://github.com/riya-amemiya/UMT/wiki/Function.gcd)
+- [getDecimalLength](https://github.com/riya-amemiya/UMT/wiki/Function.getDecimalLength)
+- [inRange](https://github.com/riya-amemiya/UMT/wiki/Function.inRange)
+- [lcm](https://github.com/riya-amemiya/UMT/wiki/Function.lcm)
+- [linearCongruentialGenerator](https://github.com/riya-amemiya/UMT/wiki/Function.linearCongruentialGenerator)
+- [literalExpression](https://github.com/riya-amemiya/UMT/wiki/Function.literalExpression)
+- [mathConverter](https://github.com/riya-amemiya/UMT/wiki/Function.mathConverter)
+- [mathSeparator](https://github.com/riya-amemiya/UMT/wiki/Function.mathSeparator)
+- [max](https://github.com/riya-amemiya/UMT/wiki/Function.max)
+- [median](https://github.com/riya-amemiya/UMT/wiki/Function.median)
+- [min](https://github.com/riya-amemiya/UMT/wiki/Function.min)
+- [mode](https://github.com/riya-amemiya/UMT/wiki/Function.mode)
+- [multiples](https://github.com/riya-amemiya/UMT/wiki/Function.multiples)
+- [multiplication](https://github.com/riya-amemiya/UMT/wiki/Function.multiplication)
+- [nCr](https://github.com/riya-amemiya/UMT/wiki/Function.nCr)
+- [nHr](https://github.com/riya-amemiya/UMT/wiki/Function.nHr)
+- [nPr](https://github.com/riya-amemiya/UMT/wiki/Function.nPr)
+- [percentile](https://github.com/riya-amemiya/UMT/wiki/Function.percentile)
+- [primeFactorization](https://github.com/riya-amemiya/UMT/wiki/Function.primeFactorization)
+- [quotient](https://github.com/riya-amemiya/UMT/wiki/Function.quotient)
+- [radToDeg](https://github.com/riya-amemiya/UMT/wiki/Function.radToDeg)
+- [random](https://github.com/riya-amemiya/UMT/wiki/Function.random)
+- [reduce](https://github.com/riya-amemiya/UMT/wiki/Function.reduce)
+- [repeatedTrial](https://github.com/riya-amemiya/UMT/wiki/Function.repeatedTrial)
+- [roundOf](https://github.com/riya-amemiya/UMT/wiki/Function.roundOf)
+- [solveEquation](https://github.com/riya-amemiya/UMT/wiki/Function.solveEquation)
+- [standardDeviation](https://github.com/riya-amemiya/UMT/wiki/Function.standardDeviation)
+- [subtract](https://github.com/riya-amemiya/UMT/wiki/Function.subtract)
+- [sumPrecise](https://github.com/riya-amemiya/UMT/wiki/Function.sumPrecise)
+- [toBaseN](https://github.com/riya-amemiya/UMT/wiki/Function.toBaseN)
+- [toCelsius](https://github.com/riya-amemiya/UMT/wiki/Function.toCelsius)
+- [toKelvin](https://github.com/riya-amemiya/UMT/wiki/Function.toKelvin)
+- [uuidv7](https://github.com/riya-amemiya/UMT/wiki/Function.uuidv7)
+- [valueSwap](https://github.com/riya-amemiya/UMT/wiki/Function.valueSwap)
+- [xoshiro256](https://github.com/riya-amemiya/UMT/wiki/Function.xoshiro256)
+
+### Number
+
+- [formatNumber](https://github.com/riya-amemiya/UMT/wiki/Function.formatNumber)
+- [FormatNumberOptions](https://github.com/riya-amemiya/UMT/wiki/Interface.FormatNumberOptions)
+- [toOrdinal](https://github.com/riya-amemiya/UMT/wiki/Function.toOrdinal)
+- [toPercentage](https://github.com/riya-amemiya/UMT/wiki/Function.toPercentage)
+
+### Object
+
+- [deepClone](https://github.com/riya-amemiya/UMT/wiki/Function.deepClone)
+- [flattenObject](https://github.com/riya-amemiya/UMT/wiki/Function.flattenObject)
+- [get](https://github.com/riya-amemiya/UMT/wiki/Function.get)
+- [getObjectsCommon](https://github.com/riya-amemiya/UMT/wiki/Function.getObjectsCommon)
+- [getObjectsDiff](https://github.com/riya-amemiya/UMT/wiki/Function.getObjectsDiff)
+- [has](https://github.com/riya-amemiya/UMT/wiki/Function.has)
+- [invert](https://github.com/riya-amemiya/UMT/wiki/Function.invert)
+- [isEmpty](https://github.com/riya-amemiya/UMT/wiki/Function.isEmpty)
+- [isPlainObject](https://github.com/riya-amemiya/UMT/wiki/Function.isPlainObject)
+- [keyBy](https://github.com/riya-amemiya/UMT/wiki/Function.keyBy)
+- [mapKeys](https://github.com/riya-amemiya/UMT/wiki/Function.mapKeys)
+- [mapValues](https://github.com/riya-amemiya/UMT/wiki/Function.mapValues)
+- [merge](https://github.com/riya-amemiya/UMT/wiki/Function.merge)
+- [mergeDeep](https://github.com/riya-amemiya/UMT/wiki/Function.mergeDeep)
+- [omit](https://github.com/riya-amemiya/UMT/wiki/Function.omit)
+- [omitBy](https://github.com/riya-amemiya/UMT/wiki/Function.omitBy)
+- [pathSegments](https://github.com/riya-amemiya/UMT/wiki/Function.pathSegments)
+- [pick](https://github.com/riya-amemiya/UMT/wiki/Function.pick)
+- [pickBy](https://github.com/riya-amemiya/UMT/wiki/Function.pickBy)
+- [pickDeep](https://github.com/riya-amemiya/UMT/wiki/Function.pickDeep)
+- [removePrototype](https://github.com/riya-amemiya/UMT/wiki/Function.removePrototype)
+- [removePrototypeDeep](https://github.com/riya-amemiya/UMT/wiki/Function.removePrototypeDeep)
+- [removePrototypeMap](https://github.com/riya-amemiya/UMT/wiki/Function.removePrototypeMap)
+- [removePrototypeMapDeep](https://github.com/riya-amemiya/UMT/wiki/Function.removePrototypeMapDeep)
+- [set](https://github.com/riya-amemiya/UMT/wiki/Function.set)
+- [unflattenObject](https://github.com/riya-amemiya/UMT/wiki/Function.unflattenObject)
+
+### Predicate
+
+- [every](https://github.com/riya-amemiya/UMT/wiki/Function.every)
+- [isNotNullish](https://github.com/riya-amemiya/UMT/wiki/Function.isNotNullish)
+- [isNullish](https://github.com/riya-amemiya/UMT/wiki/Function.isNullish)
+- [matches](https://github.com/riya-amemiya/UMT/wiki/Function.matches)
+- [not](https://github.com/riya-amemiya/UMT/wiki/Function.not)
+- [some](https://github.com/riya-amemiya/UMT/wiki/Function.some)
+
+### Random
+
+- [randomBoolean](https://github.com/riya-amemiya/UMT/wiki/Function.randomBoolean)
+- [randomChoice](https://github.com/riya-amemiya/UMT/wiki/Function.randomChoice)
+- [randomFloat](https://github.com/riya-amemiya/UMT/wiki/Function.randomFloat)
+- [randomInt](https://github.com/riya-amemiya/UMT/wiki/Function.randomInt)
+- [randomUUID](https://github.com/riya-amemiya/UMT/wiki/Function.randomUUID)
+- [seededRandom](https://github.com/riya-amemiya/UMT/wiki/Function.seededRandom)
+- [weightedChoice](https://github.com/riya-amemiya/UMT/wiki/Function.weightedChoice)
+- [WeightedItem](https://github.com/riya-amemiya/UMT/wiki/Interface.WeightedItem)
+
+### Simple
+
+- [BIRTHDAYSIMPLE](https://github.com/riya-amemiya/UMT/wiki/TypeAlias.BIRTHDAYSIMPLE)
+- [birthdaySimple](https://github.com/riya-amemiya/UMT/wiki/Variable.birthdaySimple)
+- [dayOfWeekSimple](https://github.com/riya-amemiya/UMT/wiki/Function.dayOfWeekSimple)
+- [deviationValueSimple](https://github.com/riya-amemiya/UMT/wiki/Function.deviationValueSimple)
+- [nowSimple](https://github.com/riya-amemiya/UMT/wiki/Function.nowSimple)
+- [quickSortSimple](https://github.com/riya-amemiya/UMT/wiki/Function.quickSortSimple)
+
+### String
+
+- [camelCase](https://github.com/riya-amemiya/UMT/wiki/Function.camelCase)
+- [capitalize](https://github.com/riya-amemiya/UMT/wiki/Function.capitalize)
+- [capitalizeWord](https://github.com/riya-amemiya/UMT/wiki/Function.capitalizeWord)
+- [dedent](https://github.com/riya-amemiya/UMT/wiki/Function.dedent)
+- [deleteSpaces](https://github.com/riya-amemiya/UMT/wiki/Function.deleteSpaces)
+- [escapeHtml](https://github.com/riya-amemiya/UMT/wiki/Function.escapeHtml)
+- [formatString](https://github.com/riya-amemiya/UMT/wiki/Function.formatString)
+- [fromBase64](https://github.com/riya-amemiya/UMT/wiki/Function.fromBase64)
+- [fuzzySearch](https://github.com/riya-amemiya/UMT/wiki/Function.fuzzySearch)
+- [hasNoLetters](https://github.com/riya-amemiya/UMT/wiki/Function.hasNoLetters)
+- [kebabCase](https://github.com/riya-amemiya/UMT/wiki/Function.kebabCase)
+- [levenshteinDistance](https://github.com/riya-amemiya/UMT/wiki/Function.levenshteinDistance)
+- [mask](https://github.com/riya-amemiya/UMT/wiki/Function.mask)
+- [MaskOptions](https://github.com/riya-amemiya/UMT/wiki/Interface.MaskOptions)
+- [padEnd](https://github.com/riya-amemiya/UMT/wiki/Function.padEnd)
+- [padStart](https://github.com/riya-amemiya/UMT/wiki/Function.padStart)
+- [pascalCase](https://github.com/riya-amemiya/UMT/wiki/Function.pascalCase)
+- [randomString](https://github.com/riya-amemiya/UMT/wiki/Function.randomString)
+- [randomStringInitialization](https://github.com/riya-amemiya/UMT/wiki/Function.randomStringInitialization)
+- [reverseString](https://github.com/riya-amemiya/UMT/wiki/Function.reverseString)
+- [slugify](https://github.com/riya-amemiya/UMT/wiki/Function.slugify)
+- [snakeCase](https://github.com/riya-amemiya/UMT/wiki/Function.snakeCase)
+- [stringSimilarity](https://github.com/riya-amemiya/UMT/wiki/Function.stringSimilarity)
+- [titleCase](https://github.com/riya-amemiya/UMT/wiki/Function.titleCase)
+- [toBase64](https://github.com/riya-amemiya/UMT/wiki/Function.toBase64)
+- [toHalfWidth](https://github.com/riya-amemiya/UMT/wiki/Function.toHalfWidth)
+- [trimCharacters](https://github.com/riya-amemiya/UMT/wiki/Function.trimCharacters)
+- [trimEndCharacters](https://github.com/riya-amemiya/UMT/wiki/Function.trimEndCharacters)
+- [trimStartCharacters](https://github.com/riya-amemiya/UMT/wiki/Function.trimStartCharacters)
+- [truncate](https://github.com/riya-amemiya/UMT/wiki/Function.truncate)
+- [uncapitalize](https://github.com/riya-amemiya/UMT/wiki/Function.uncapitalize)
+- [unescapeHtml](https://github.com/riya-amemiya/UMT/wiki/Function.unescapeHtml)
+- [wordCount](https://github.com/riya-amemiya/UMT/wiki/Function.wordCount)
+- [words](https://github.com/riya-amemiya/UMT/wiki/Function.words)
+
+### Time
+
+- [convertTime](https://github.com/riya-amemiya/UMT/wiki/Function.convertTime)
+- [normalizeTimeUnit](https://github.com/riya-amemiya/UMT/wiki/Function.normalizeTimeUnit)
+
+### Tool
+
+- [createPipeline](https://github.com/riya-amemiya/UMT/wiki/Function.createPipeline)
+- [escapeRegExp](https://github.com/riya-amemiya/UMT/wiki/Function.escapeRegExp)
+- [parseJson](https://github.com/riya-amemiya/UMT/wiki/Function.parseJson)
+- [Pipe](https://github.com/riya-amemiya/UMT/wiki/Class.Pipe)
+- [pipe](https://github.com/riya-amemiya/UMT/wiki/Function.pipe)
+- [Pipeline](https://github.com/riya-amemiya/UMT/wiki/Interface.Pipeline)
+- [unwrap](https://github.com/riya-amemiya/UMT/wiki/Function.unwrap)
+
+### UA
+
+- [extractBrowserFromUserAgent](https://github.com/riya-amemiya/UMT/wiki/Function.extractBrowserFromUserAgent)
+- [extractDeviceFromUserAgent](https://github.com/riya-amemiya/UMT/wiki/Function.extractDeviceFromUserAgent)
+- [extractOsFromUserAgent](https://github.com/riya-amemiya/UMT/wiki/Function.extractOsFromUserAgent)
+- [parseUserAgent](https://github.com/riya-amemiya/UMT/wiki/Function.parseUserAgent)
+
+### Unit
+
+- [unitConverterInitialization](https://github.com/riya-amemiya/UMT/wiki/Function.unitConverterInitialization)
+
+### URL
+
+- [buildUrl](https://github.com/riya-amemiya/UMT/wiki/Function.buildUrl)
+- [isAbsoluteUrl](https://github.com/riya-amemiya/UMT/wiki/Function.isAbsoluteUrl)
+- [joinPath](https://github.com/riya-amemiya/UMT/wiki/Function.joinPath)
+- [parseQueryString](https://github.com/riya-amemiya/UMT/wiki/Function.parseQueryString)
+
+### Validate
+
+- [_Types](https://github.com/riya-amemiya/UMT/wiki/TypeAlias._Types)
+- [_Types2](https://github.com/riya-amemiya/UMT/wiki/TypeAlias._Types2)
+- [_ValidateType](https://github.com/riya-amemiya/UMT/wiki/TypeAlias._ValidateType)
+- [_ValidateType2](https://github.com/riya-amemiya/UMT/wiki/TypeAlias._ValidateType2)
+- [array](https://github.com/riya-amemiya/UMT/wiki/Function.array)
+- [boolean](https://github.com/riya-amemiya/UMT/wiki/Function.boolean)
+- [double](https://github.com/riya-amemiya/UMT/wiki/Function.double)
+- [even](https://github.com/riya-amemiya/UMT/wiki/Function.even)
+- [intersection](https://github.com/riya-amemiya/UMT/wiki/Function.intersection)
+- [isArray](https://github.com/riya-amemiya/UMT/wiki/Function.isArray)
+- [isBrowser](https://github.com/riya-amemiya/UMT/wiki/Function.isBrowser)
+- [isBun](https://github.com/riya-amemiya/UMT/wiki/Function.isBun)
+- [isDeepEqual](https://github.com/riya-amemiya/UMT/wiki/Function.isDeepEqual)
+- [IsDeepEqualOptions](https://github.com/riya-amemiya/UMT/wiki/Interface.IsDeepEqualOptions)
+- [isDictionaryObject](https://github.com/riya-amemiya/UMT/wiki/Function.isDictionaryObject)
+- [isDouble](https://github.com/riya-amemiya/UMT/wiki/Function.isDouble)
+- [isEqual](https://github.com/riya-amemiya/UMT/wiki/Function.isEqual)
+- [isNode](https://github.com/riya-amemiya/UMT/wiki/Function.isNode)
+- [isNodeWebkit](https://github.com/riya-amemiya/UMT/wiki/Function.isNodeWebkit)
+- [isNotEmpty](https://github.com/riya-amemiya/UMT/wiki/Function.isNotEmpty)
+- [isNumber](https://github.com/riya-amemiya/UMT/wiki/Function.isNumber)
+- [isPerfectSquare](https://github.com/riya-amemiya/UMT/wiki/Function.isPerfectSquare)
+- [isPrimeNumber](https://github.com/riya-amemiya/UMT/wiki/Function.isPrimeNumber)
+- [isString](https://github.com/riya-amemiya/UMT/wiki/Function.isString)
+- [isValueNaN](https://github.com/riya-amemiya/UMT/wiki/Function.isValueNaN)
+- [length_](https://github.com/riya-amemiya/UMT/wiki/Function.length_)
+- [maxLength](https://github.com/riya-amemiya/UMT/wiki/Function.maxLength)
+- [maxValue](https://github.com/riya-amemiya/UMT/wiki/Function.maxValue)
+- [minLength](https://github.com/riya-amemiya/UMT/wiki/Function.minLength)
+- [minValue](https://github.com/riya-amemiya/UMT/wiki/Function.minValue)
+- [number](https://github.com/riya-amemiya/UMT/wiki/Function.number)
+- [numberString](https://github.com/riya-amemiya/UMT/wiki/Function.numberString)
+- [object](https://github.com/riya-amemiya/UMT/wiki/Function.object)
+- [odd](https://github.com/riya-amemiya/UMT/wiki/Function.odd)
+- [optional](https://github.com/riya-amemiya/UMT/wiki/Function.optional)
+- [OptionalKeys](https://github.com/riya-amemiya/UMT/wiki/TypeAlias.OptionalKeys)
+- [parseEmail](https://github.com/riya-amemiya/UMT/wiki/Function.parseEmail)
+- [ParseEmailLevel](https://github.com/riya-amemiya/UMT/wiki/TypeAlias.ParseEmailLevel)
+- [ParseEmailOptions](https://github.com/riya-amemiya/UMT/wiki/Interface.ParseEmailOptions)
+- [prime](https://github.com/riya-amemiya/UMT/wiki/Function.prime)
+- [regexMatch](https://github.com/riya-amemiya/UMT/wiki/Function.regexMatch)
+- [SchemaToInterface](https://github.com/riya-amemiya/UMT/wiki/TypeAlias.SchemaToInterface)
+- [string](https://github.com/riya-amemiya/UMT/wiki/Function.string)
+- [Types](https://github.com/riya-amemiya/UMT/wiki/TypeAlias.Types)
+- [union](https://github.com/riya-amemiya/UMT/wiki/Function.union)
+- [uuid](https://github.com/riya-amemiya/UMT/wiki/Function.uuid)
+- [ValidateCoreReturnType](https://github.com/riya-amemiya/UMT/wiki/Interface.ValidateCoreReturnType)
+- [validateEmail](https://github.com/riya-amemiya/UMT/wiki/Function.validateEmail)
+- [ValidateFunctionType](https://github.com/riya-amemiya/UMT/wiki/TypeAlias.ValidateFunctionType)
+- [ValidateReturnType](https://github.com/riya-amemiya/UMT/wiki/Interface.ValidateReturnType)
+- [ValidateType](https://github.com/riya-amemiya/UMT/wiki/TypeAlias.ValidateType)

@@ -219,6 +219,7 @@
     "format": "nix develop --command make format",
     "lint": "nix develop --command make lint",
     "lint:ci": "nix develop --command make lint-ci",
+    "readme": "nix develop --command make readme",
     "test": "nix develop --command make test",
     "test-debug": "nix develop --command make test-debug",
     "ts-node": "nix develop --command make ts-node"
