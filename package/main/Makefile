@@ -1,6 +1,6 @@
 .PHONY: build build-cjs build-babel build-cjs-babel build-full \
 	build-clean build-clean-full deploy eslint format \
-	lint lint-ci test test-debug ts-node
+	lint lint-ci readme test test-debug ts-node
 
 BUNX      := bunx
 TSC       := $(BUNX) tsc
@@ -71,6 +71,9 @@ lint-ci:
 	$(ESLINT) src
 	$(BIOME) ci .
 	$(TSC)
+
+readme:
+	bun run scripts/generateReadmeFunctionList.ts
 
 test:
 	$(JEST) $(JEST_ARGS)
