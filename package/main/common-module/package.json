@@ -37,6 +37,8 @@
     "ts-node": "10.9.2",
     "tsc-alias": "1.8.16",
     "typedoc": "0.28.19",
+    "typedoc-github-wiki-theme": "2.1.0",
+    "typedoc-plugin-markdown": "4.11.0",
     "typescript": "6.0.3",
     "typescript-eslint": "8.59.1"
   },
@@ -216,11 +218,12 @@
     "format": "nix develop --command make format",
     "lint": "nix develop --command make lint",
     "lint:ci": "nix develop --command make lint-ci",
+    "readme": "nix develop --command make readme",
     "test": "nix develop --command make test",
     "test-debug": "nix develop --command make test-debug",
     "ts-node": "nix develop --command make ts-node"
   },
   "type": "commonjs",
   "types": "module/index.d.ts",
-  "version": "2.17.0"
+  "version": "2.18.0"
 }
