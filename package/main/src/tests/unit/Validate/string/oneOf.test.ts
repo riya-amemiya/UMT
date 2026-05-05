@@ -1,9 +1,11 @@
-import { oneOf } from "@/Validate/string";
-import type { ValidateCoreReturnType } from "@/Validate/type";
+import { number } from "@/Validate/number";
+import { object } from "@/Validate/object/core";
+import { intersection } from "@/Validate/object/intersection";
+import { union } from "@/Validate/object/union";
+import { oneOf, string } from "@/Validate/string";
+import type { OneOfReturnType } from "@/Validate/string/oneOf";
 
-type ExtractOneOfType<F> = F extends (
-  value: string,
-) => ValidateCoreReturnType<infer T>
+type ExtractOneOfType<F> = F extends (value: string) => OneOfReturnType<infer T>
   ? T
   : never;
 
@@ -46,10 +48,10 @@ describe("oneOf", () => {
     expect(validate("tall").validate).toBe(false);
   });
 
-  it("returns 'string' as the type tag", () => {
+  it("exposes the value through the type field for downstream inference", () => {
     const validate = oneOf(["a", "b"]);
-    expect(validate("a").type).toBe("string");
-    expect(validate("c").type).toBe("string");
+    expect(validate("a").type).toBe("a");
+    expect(validate("b").type).toBe("b");
   });
 
   it("preserves the literal union so it can be extracted via infer", () => {
@@ -70,5 +72,122 @@ describe("oneOf", () => {
     // @ts-expect-error - "wine" is not part of the union
     const reject: BottleShapeId = "wine";
     expect(reject).toBe("wine");
+  });
+});
+
+describe("oneOf inside object()", () => {
+  it("validates a property whose type is a string literal union", () => {
+    const validateBottle = object({
+      shape: oneOf(["standard", "squat", "decanter", "round", "tall", "flask"]),
+      name: string(),
+    });
+
+    const valid: ReturnType<typeof validateBottle>["type"] = {
+      shape: "standard",
+      name: "wine bottle",
+    };
+    expect(validateBottle(valid).validate).toBe(true);
+
+    const invalid = { shape: "unknown", name: "wine bottle" };
+    // @ts-expect-error - "unknown" is not part of the shape union
+    expect(validateBottle(invalid).validate).toBe(false);
+  });
+
+  it("propagates the failure message from oneOf when used in object()", () => {
+    const validateBottle = object({
+      shape: oneOf(["standard", "squat"], "invalid bottle shape"),
+    });
+
+    const invalid = { shape: "wine" };
+    // @ts-expect-error - "wine" is not part of the shape union
+    const result = validateBottle(invalid);
+    expect(result.validate).toBe(false);
+    expect(result.message).toBe("invalid bottle shape");
+  });
+
+  it("infers the literal union for the property type", () => {
+    const validateBottle = object({
+      shape: oneOf(["standard", "squat", "decanter", "round", "tall", "flask"]),
+    });
+    type Inferred = ReturnType<typeof validateBottle>["type"];
+
+    const ok: Inferred = { shape: "standard" };
+    expect(ok).toBeDefined();
+
+    // @ts-expect-error - "wine" is not assignable to the shape union
+    const ng: Inferred = { shape: "wine" };
+    expect(ng).toBeDefined();
+  });
+});
+
+describe("oneOf composed with union()", () => {
+  it("accepts values matching the oneOf branch", () => {
+    const validate = union(oneOf(["standard", "squat"]), number());
+    expect(validate("standard").validate).toBe(true);
+    expect(validate("squat").validate).toBe(true);
+  });
+
+  it("accepts values matching the other branch", () => {
+    const validate = union(oneOf(["standard", "squat"]), number());
+    expect(validate(42).validate).toBe(true);
+  });
+
+  it("rejects values matching neither branch", () => {
+    const validate = union(oneOf(["standard", "squat"]), number());
+    // @ts-expect-error - "wine" is not part of the union
+    expect(validate("wine").validate).toBe(false);
+  });
+
+  it("merges the literal union into the validator's accepted parameter type", () => {
+    const validate = union(oneOf(["standard", "squat"]), number());
+    type Param = Parameters<typeof validate>[0];
+
+    const fromOneOf: Param = "standard";
+    const fromNumber: Param = 42;
+    expect(fromOneOf).toBeDefined();
+    expect(fromNumber).toBeDefined();
+
+    // @ts-expect-error - "wine" is not part of the merged union
+    const reject: Param = "wine";
+    expect(reject).toBe("wine");
+  });
+});
+
+describe("oneOf composed with intersection()", () => {
+  it("works inside intersection() of objects", () => {
+    const validate = intersection(
+      object({
+        shape: oneOf(["standard", "squat", "decanter"]),
+      }),
+      object({ size: number() }),
+    );
+
+    const valid: ReturnType<typeof validate>["type"] = {
+      shape: "standard",
+      size: 30,
+    };
+    expect(validate(valid).validate).toBe(true);
+
+    const invalid = { shape: "wine", size: 30 };
+    // @ts-expect-error - "wine" is not part of the shape union
+    expect(validate(invalid).validate).toBe(false);
+  });
+
+  it("preserves the literal union for intersected object property", () => {
+    const validate = intersection(
+      object({ shape: oneOf(["standard", "squat"]) }),
+      object({ size: number() }),
+    );
+    type Inferred = ReturnType<typeof validate>["type"];
+
+    const ok: Inferred = {
+      shape: "standard",
+      size: 30,
+    };
+    expect(ok).toBeDefined();
+
+    // @ts-expect-error - "wine" is not assignable to the shape union
+    const ng: Inferred = { shape: "wine", size: 30 };
+    expect(ng).toBeDefined();
   });
 });

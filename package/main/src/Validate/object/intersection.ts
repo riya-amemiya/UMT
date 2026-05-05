@@ -1,10 +1,17 @@
 import type { UnionToIntersection } from "$/logic";
-import type { Types, ValidateCoreReturnType } from "@/Validate/type";
+import type {
+  Types,
+  ValidateCoreReturnType,
+  ValidateType,
+} from "@/Validate/type";
 
-type ExtractValidatedType<V> = V extends (
-  value: never,
-) => ValidateCoreReturnType<infer T>
-  ? T
+// Extract the validated value type by reading the validator's `type` field
+// (and applying `ValidateType` to map type tags like "string" back to the
+// runtime type). Reading the field directly lets validators that expose the
+// literal union via the `type` field (such as `oneOf`) flow through
+// intersection without being collapsed by `Types<T>`.
+type ExtractValidatedType<V> = V extends (value: never) => { type: infer T }
+  ? ValidateType<T>
   : never;
 
 /**
