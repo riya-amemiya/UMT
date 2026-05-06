@@ -32,7 +32,7 @@ jobs:
         with:
           fetch-depth: 1
       - name: Setup Nix
-        uses: DeterminateSystems/determinate-nix-action@92ffb5400c3776307a27a1727d7e2ac3dcd9f844 # v3.18.1
+        uses: DeterminateSystems/determinate-nix-action@7c4cc317e802185875512bfcb68259257279d767 # v3.19.1
       - name: Setup Magic Nix Cache
         uses: DeterminateSystems/magic-nix-cache-action@565684385bcd71bad329742eefe8d12f2e765b39 # v13
       - name: Setup Bun ${{ matrix.bun-version }}
@@ -48,7 +48,7 @@ jobs:
           components: clippy, rustfmt
       - name: Run Claude Code
         id: claude
-        uses: anthropics/claude-code-action@ef50f123a3a9be95b60040d042717517407c7256 # v1.0.110
+        uses: anthropics/claude-code-action@7d7d3055f1fdc9a97a040c69ead9ba392fa6326a # v1.0.113
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           additional_permissions: |
