@@ -42,7 +42,7 @@ jobs:
         uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
         with:
           path: '**/node_modules'
-          key: dev-depends-${{ matrix.os }}-node-${{ hashFiles('package/main/package.json') }}
+          key: dev-depends-${{ matrix.os }}-node-${{ matrix.node-version }}-${{ hashFiles('package/main/package.json') }}
       - name: Install Dependencies
         if: steps.cache-restore-dev-depends.outputs.cache-hit != 'true'
         run: nix develop -c bun i
@@ -52,7 +52,7 @@ jobs:
         uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
         with:
           path: '**/node_modules'
-          key: dev-depends-${{ matrix.os }}-node-${{ hashFiles('package/main/package.json') }}
+          key: dev-depends-${{ matrix.os }}-node-${{ matrix.node-version }}-${{ hashFiles('package/main/package.json') }}
   test:
     name: Run Tests (Node.js)
     needs: setup
@@ -74,6 +74,6 @@ jobs:
         uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
         with:
           path: '**/node_modules'
-          key: dev-depends-${{ matrix.os }}-node-${{ hashFiles('package/main/package.json') }}
+          key: dev-depends-${{ matrix.os }}-node-${{ matrix.node-version }}-${{ hashFiles('package/main/package.json') }}
       - name: Run Tests with Coverage
         run: npx jest --coverage
