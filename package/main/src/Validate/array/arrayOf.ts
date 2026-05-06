@@ -1,8 +1,3 @@
-/**
- * Array validation module for arrays whose elements are validated by a single validator
- * Useful for expressing arrays of objects, arrays of unions, and other structured element types
- */
-
 import { isArray } from "@/Validate/isArray";
 import type {
   Types,
@@ -10,10 +5,6 @@ import type {
   ValidateType,
 } from "@/Validate/type";
 
-// Extract the validated element type by reading the validator's `type` field
-// (and applying `ValidateType` to map type tags like "string" back to the
-// runtime type). Reading the field directly preserves literal unions and
-// object shapes that would otherwise be collapsed by `Types<T>`.
 type ExtractValidatedType<V> = V extends (value: never) => { type: infer T }
   ? ValidateType<T>
   : never;
