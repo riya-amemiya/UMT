@@ -13,16 +13,21 @@ export type _Types2<T> = T extends undefined
     ? "null"
     : T;
 
+// TS can only infer deeply with up to 3 extends, so we split it to avoid the limit
+export type _Types3<T> = T extends bigint ? "bigint" : T;
+
 /**
  * Maps TypeScript types to their string literal representations
  * @template T - The type to map
- * @returns "string" for string, "number" for number, "boolean" for boolean, or the original type T otherwise
+ * @returns "string" for string, "number" for number, "boolean" for boolean, "bigint" for bigint, or the original type T otherwise
  */
 export type Types<T> = T extends string | number | boolean
   ? _Types<T>
   : T extends undefined | null
     ? _Types2<T>
-    : T;
+    : T extends bigint
+      ? _Types3<T>
+      : T;
 
 /**
  * Core validation result type including validation status, message, and type information
@@ -65,16 +70,30 @@ export type _ValidateType2<T> = T extends "undefined"
     ? null
     : T;
 
+// TS can only infer deeply with up to 3 extends, so we split it to avoid the limit
+export type _ValidateType3<T> = T extends "bigint"
+  ? bigint
+  : T extends "any"
+    ? // biome-ignore lint/suspicious/noExplicitAny: tag must map back to any
+      any
+    : T extends "unknown"
+      ? unknown
+      : T extends "never"
+        ? never
+        : T;
+
 /**
  * Maps string literal type names back to their TypeScript types
- * @template T - The string literal type name ("string", "number", "boolean")
- * @returns The corresponding TypeScript type (string, number, boolean) or the original type T
+ * @template T - The string literal type name ("string", "number", "boolean", "bigint", "undefined", "null", "any", "unknown", "never")
+ * @returns The corresponding TypeScript type or the original type T when no tag matches
  */
 export type ValidateType<T> = T extends "string" | "number" | "boolean"
   ? _ValidateType<T>
   : T extends "undefined" | "null"
     ? _ValidateType2<T>
-    : T;
+    : T extends "bigint" | "any" | "unknown" | "never"
+      ? _ValidateType3<T>
+      : T;
 
 export type SchemaToInterface<
   // biome-ignore lint/suspicious/noExplicitAny: ignore
