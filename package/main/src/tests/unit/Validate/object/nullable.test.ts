@@ -6,6 +6,7 @@ import { nullable } from "@/Validate/object/nullable";
 import { optional } from "@/Validate/object/optional";
 import { union } from "@/Validate/object/union";
 import { string, validateEmail } from "@/Validate/string";
+import type { SchemaToInterface } from "@/Validate/type";
 
 describe("nullable function", () => {
   it("should allow null values for nullable properties in objects", () => {
@@ -403,5 +404,50 @@ describe("nullable function", () => {
     expect(validateObjectA(fromA).validate).toBe(true);
     expect(validateObjectB(fromB).validate).toBe(true);
     expect(validateObjectA(backToA).validate).toBe(true);
+  });
+
+  it("should infer nullable(string()) as string | null via SchemaToInterface", () => {
+    const validate = nullable(string());
+    type Schema = SchemaToInterface<typeof validate>;
+    const s: Schema = "hello";
+    const n: Schema = null;
+    expect(validate(s).validate).toBe(true);
+    expect(validate(n).validate).toBe(true);
+    // @ts-expect-error number is not assignable to string | null
+    const wrong: Schema = 1;
+    expect(wrong).toBe(1);
+  });
+
+  it("should infer nullable(number()) as number | null via SchemaToInterface", () => {
+    const validate = nullable(number());
+    type Schema = SchemaToInterface<typeof validate>;
+    const v: Schema = 42;
+    const n: Schema = null;
+    expect(validate(v).validate).toBe(true);
+    expect(validate(n).validate).toBe(true);
+    // @ts-expect-error string is not assignable to number | null
+    const wrong: Schema = "nope";
+    expect(wrong).toBe("nope");
+  });
+
+  it("should infer nullable(boolean()) as boolean | null via SchemaToInterface", () => {
+    const validate = nullable(boolean());
+    type Schema = SchemaToInterface<typeof validate>;
+    const v: Schema = true;
+    const n: Schema = null;
+    expect(validate(v).validate).toBe(true);
+    expect(validate(n).validate).toBe(true);
+  });
+
+  it("should infer nullable wrapping object as the object shape or null via SchemaToInterface", () => {
+    const validate = nullable(object({ name: string(), age: number() }));
+    type Schema = SchemaToInterface<typeof validate>;
+    const v: Schema = { name: "John", age: 30 };
+    const n: Schema = null;
+    expect(validate(v).validate).toBe(true);
+    expect(validate(n).validate).toBe(true);
+    // @ts-expect-error missing age
+    const wrong: Schema = { name: "John" };
+    expect(wrong).toBeDefined();
   });
 });
