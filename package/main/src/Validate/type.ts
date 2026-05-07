@@ -79,7 +79,7 @@ export type ValidateType<T> = T extends "string" | "number" | "boolean"
 export type SchemaToInterface<
   // biome-ignore lint/suspicious/noExplicitAny: ignore
   T extends (value: any) => ValidateCoreReturnType<any>,
-> = ReturnType<T>["type"];
+> = ValidateType<ReturnType<T>["type"]>;
 
 export type OptionalKeys<T> = {
   [K in keyof T]: undefined extends T[K] ? K : never;

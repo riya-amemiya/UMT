@@ -2,6 +2,7 @@ import { number } from "@/Validate/number";
 import { object } from "@/Validate/object/core";
 import { optional } from "@/Validate/object/optional";
 import { string } from "@/Validate/string";
+import type { SchemaToInterface } from "@/Validate/type";
 
 describe("optional function", () => {
   it("should allow omitting optional properties in objects", () => {
@@ -120,5 +121,35 @@ describe("optional function", () => {
     expect(test2).toBeDefined();
     expect(test3).toBeDefined();
     expect(test4).toBeDefined();
+  });
+
+  it("should infer optional(string()) as string | undefined via SchemaToInterface", () => {
+    const validate = optional(string());
+    type Schema = SchemaToInterface<typeof validate>;
+    const s: Schema = "hello";
+    const u: Schema = undefined;
+    expect(validate(s).validate).toBe(true);
+    expect(validate(u).validate).toBe(true);
+    // @ts-expect-error number is not assignable to string | undefined
+    const wrong: Schema = 1;
+    expect(wrong).toBe(1);
+  });
+
+  it("should infer optional(number()) as number | undefined via SchemaToInterface", () => {
+    const validate = optional(number());
+    type Schema = SchemaToInterface<typeof validate>;
+    const v: Schema = 42;
+    const u: Schema = undefined;
+    expect(validate(v).validate).toBe(true);
+    expect(validate(u).validate).toBe(true);
+  });
+
+  it("should infer optional wrapping object as the object shape or undefined via SchemaToInterface", () => {
+    const validate = optional(object({ name: string(), age: number() }));
+    type Schema = SchemaToInterface<typeof validate>;
+    const v: Schema = { name: "John", age: 30 };
+    const u: Schema = undefined;
+    expect(validate(v).validate).toBe(true);
+    expect(validate(u).validate).toBe(true);
   });
 });
