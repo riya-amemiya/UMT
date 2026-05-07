@@ -86,6 +86,61 @@ describe("function_ validation", () => {
     expect(() => wrapped(1)).toThrow(TypeError);
   });
 
+  it("falls back to a default message when input validation fails without one", () => {
+    const validator = function_({
+      input: [number()],
+      output: number(),
+    });
+    const wrapped = validator.implement((n) => n);
+    // @ts-expect-error string is not number
+    expect(() => wrapped("nope")).toThrow(
+      "function input at index 0 failed validation",
+    );
+  });
+
+  it("falls back to a default message when output validation fails without one", () => {
+    const validator = function_({
+      input: [number()],
+      output: number(),
+    });
+    const wrapped = validator.implement((n) => `${n}` as unknown as number);
+    expect(() => wrapped(1)).toThrow("function output failed validation");
+  });
+
+  it("throws when implement() receives a non-function with the default message", () => {
+    const validator = function_();
+    expect(() =>
+      // @ts-expect-error string is not function
+      validator.implement("not a function"),
+    ).toThrow("value is not a function");
+  });
+
+  it("throws when implement() receives a non-function with a custom message", () => {
+    const validator = function_(undefined, "must be callable");
+    expect(() =>
+      // @ts-expect-error string is not function
+      validator.implement("not a function"),
+    ).toThrow("must be callable");
+  });
+
+  it("skips input checks when implement() runs with no input schema", () => {
+    const validator = function_({ output: number() });
+    const wrapped = validator.implement(() => 1);
+    expect(wrapped()).toBe(1);
+  });
+
+  it("skips output checks when implement() runs with no output schema", () => {
+    const validator = function_({ input: [number()] });
+    const wrapped = validator.implement((n) => n);
+    expect(wrapped(2)).toBe(2);
+  });
+
+  it("returns the value untouched when implement() runs with no schema", () => {
+    const validator = function_();
+    const wrapped = validator.implement((value: number) => value * 2);
+    expect(wrapped(3)).toBe(6);
+  });
+
   it("returns a wrapper that does not change call results", () => {
     const validator = function_({
       input: [number()],

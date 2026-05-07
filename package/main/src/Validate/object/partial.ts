@@ -37,11 +37,10 @@ export const partial = <T extends ObjectShape>(
   const nextShape = {} as ObjectShape;
   for (const key of Object.keys(sourceShape)) {
     const current = sourceShape[key];
-    if (current && (current as { isOptional?: boolean }).isOptional === true) {
-      nextShape[key] = current;
-    } else if (current) {
-      nextShape[key] = optional(current);
-    }
+    nextShape[key] =
+      (current as { isOptional?: boolean }).isOptional === true
+        ? current
+        : optional(current);
   }
   return object(nextShape, message) as unknown as ObjectValidator<
     PartialShape<T>

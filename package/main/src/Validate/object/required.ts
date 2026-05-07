@@ -33,17 +33,15 @@ export const required = <T extends ObjectShape>(
   const nextShape = {} as ObjectShape;
   for (const key of Object.keys(sourceShape)) {
     const current = sourceShape[key];
-    if (
-      current &&
-      (current as unknown as { isOptional?: boolean }).isOptional === true &&
-      typeof (current as unknown as { inner?: unknown }).inner === "function"
-    ) {
-      nextShape[key] = (
-        current as unknown as { inner: ObjectShape[string] }
-      ).inner;
-    } else if (current) {
-      nextShape[key] = current;
-    }
+    const optionalLike = current as unknown as {
+      isOptional?: boolean;
+      inner?: ObjectShape[string];
+    };
+    nextShape[key] =
+      optionalLike.isOptional === true &&
+      typeof optionalLike.inner === "function"
+        ? optionalLike.inner
+        : current;
   }
   return object(nextShape, message) as unknown as ObjectValidator<
     RequiredShape<T>

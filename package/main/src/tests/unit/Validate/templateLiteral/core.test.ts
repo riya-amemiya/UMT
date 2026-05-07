@@ -72,6 +72,21 @@ describe("templateLiteral validation", () => {
     expect(validator("xanythingy").validate).toBe(false);
   });
 
+  it("falls back to a permissive pattern for validators with no detectable tag", () => {
+    const customValidator = (() => ({
+      validate: true,
+      message: "",
+      type: "custom" as const,
+    })) as (value: string) => {
+      validate: boolean;
+      message: string;
+      type: "custom";
+    };
+    const validator = templateLiteral(["prefix-", customValidator]);
+    expect(validator("prefix-anything" as never).validate).toBe(true);
+    expect(validator("noprefix" as never).validate).toBe(false);
+  });
+
   it("composes inside object()", () => {
     const validator = object({
       slug: templateLiteral(["user-", number()]),

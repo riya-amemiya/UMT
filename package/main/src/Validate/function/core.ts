@@ -118,9 +118,6 @@ export const function_ = <const S extends FunctionSchema = FunctionSchema>(
     const wrapped = (...arguments_: InferInputs<Inputs>) => {
       if (inputs) {
         for (const [index, inputValidator] of inputs.entries()) {
-          if (!inputValidator) {
-            continue;
-          }
           const result = inputValidator(arguments_[index]);
           if (!result.validate) {
             throw new TypeError(

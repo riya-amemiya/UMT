@@ -41,6 +41,15 @@ describe("bigint validation", () => {
     expect(validator(BigInt(-1)).message).toBe("must be positive");
   });
 
+  it("falls back to an empty message when a rule has no message", () => {
+    const positive = {
+      type: "bigint" as const,
+      validate: (value: bigint) => value > BigInt(0),
+    };
+    const validator = bigint([positive]);
+    expect(validator(BigInt(-1)).message).toBe("");
+  });
+
   it("propagates the bigint type tag through union", () => {
     const validator = union(bigint(), string());
     expect(validator(BigInt(1)).validate).toBe(true);
