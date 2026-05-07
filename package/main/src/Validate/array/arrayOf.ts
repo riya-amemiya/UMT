@@ -4,12 +4,16 @@ import type { ValidateCoreReturnType } from "@/Validate/type";
 /**
  * Creates an array validator that validates every element with a single validator
  * @template T - Element type validated by the wrapped validator
+ * @template R - The return type of the wrapped validator (preserved so the inner type tag flows through)
  * @param {Function} validator - Validator applied to each element (e.g. an object validator)
  * @param {string} [message] - Custom error message for array type validation
  * @returns {Function} - Validator function for arrays whose elements satisfy the given validator
  */
-export const arrayOf = <T>(
-  validator: (value: T) => ValidateCoreReturnType<T>,
+export const arrayOf = <
+  T,
+  R extends { type: unknown; message: string; validate: boolean },
+>(
+  validator: (value: T) => R,
   message?: string,
 ) => {
   return (values: T[]): ValidateCoreReturnType<T[]> => {

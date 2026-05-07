@@ -1,10 +1,21 @@
 // Validate Function
+export * from "./any";
 export * from "./array";
+export * from "./bigint";
 export * from "./boolean";
+export * from "./date";
+export * from "./file";
+export * from "./function";
+export * from "./instanceof";
+export * from "./map";
+export * from "./never";
 export * from "./number";
 export * from "./object";
+export * from "./set";
 export * from "./string";
+export * from "./templateLiteral";
 export * from "./type";
+export * from "./unknown";
 
 // Other Validate
 export * from "./isDeepEqual";
