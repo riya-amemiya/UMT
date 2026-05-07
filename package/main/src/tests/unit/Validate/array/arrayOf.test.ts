@@ -7,7 +7,10 @@ import { nullable } from "@/Validate/object/nullable";
 import { optional } from "@/Validate/object/optional";
 import { union } from "@/Validate/object/union";
 import { string } from "@/Validate/string";
-import type { SchemaToInterface } from "@/Validate/type";
+import type {
+  SchemaToInterface,
+  ValidateCoreReturnType,
+} from "@/Validate/type";
 
 describe("arrayOf validation", () => {
   it("should validate an empty array", () => {
@@ -188,12 +191,14 @@ describe("arrayOf validation", () => {
 
   it("should stop at the first failing element", () => {
     const calls: number[] = [];
-    const trackingValidator = (value: number) => {
+    const trackingValidator = (
+      value: number,
+    ): ValidateCoreReturnType<number> => {
       calls.push(value);
       return {
         validate: value >= 0,
         message: value >= 0 ? "" : "negative",
-        type: value,
+        type: "number",
       };
     };
     const validator = arrayOf(trackingValidator);
