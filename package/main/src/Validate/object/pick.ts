@@ -12,8 +12,7 @@ import { object, type ObjectShape, type ObjectValidator } from "./core";
 
 /**
  * Picks the given keys from an existing object validator and returns a new
- * object validator covering only those keys. Throws when an unknown key is
- * supplied so authoring mistakes are caught at construction time.
+ * object validator covering only those keys.
  * @template T - Original object shape
  * @template K - Tuple of keys to pick from the original shape
  * @param {ObjectValidator<T>} validator - Source object validator
@@ -29,9 +28,6 @@ export const pick_ = <T extends ObjectShape, K extends readonly (keyof T)[]>(
   const sourceShape = validator.shape;
   const nextShape = {} as Pick<T, K[number]>;
   for (const key of keys) {
-    if (!(key in sourceShape)) {
-      throw new TypeError(`pick: unknown key "${String(key)}" in object shape`);
-    }
     nextShape[key] = sourceShape[key];
   }
   return object(nextShape, message);

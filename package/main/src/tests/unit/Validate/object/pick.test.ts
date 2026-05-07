@@ -37,13 +37,6 @@ describe("pick_", () => {
     expect(validator({ age: "30" }).validate).toBe(false);
   });
 
-  it("throws on unknown picked keys", () => {
-    expect(() =>
-      // @ts-expect-error unknown key
-      pick_(baseValidator, ["unknown"]),
-    ).toThrow(TypeError);
-  });
-
   it("composes with union", () => {
     const validator = union(pick_(baseValidator, ["name"]), string());
     expect(validator({ name: "John" }).validate).toBe(true);
