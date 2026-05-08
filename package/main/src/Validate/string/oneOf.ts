@@ -5,21 +5,25 @@
  * such as `'standard' | 'squat' | 'decanter' | 'round' | 'tall' | 'flask'`.
  *
  * The validator's return type carries the literal union through its `type`
- * field directly (instead of going through `Types<T>` which would collapse
- * to `"string"`), so consumers like `object()`, `union()`, and `intersection()`
- * can preserve the literal union in their inferred types.
+ * field as a `LiteralBrand<T>` so that consumers like `object()`, `union()`,
+ * and `intersection()` can preserve the literal union in their inferred types.
+ * The brand also prevents collisions with reserved type tags such as
+ * `"string"`, `"number"`, or `"boolean"` when an allowed value happens to
+ * match one of those tag strings.
  */
+
+import type { LiteralBrand } from "@/Validate/type";
 
 /**
  * Return type produced by a `oneOf` validator. Structurally compatible with
- * `ValidateCoreReturnType<unknown>`, but exposes the literal union directly
- * via the `type` field so the inferred type can flow through `object()`,
- * `union()`, and `intersection()` without being collapsed to `string`.
+ * `ValidateCoreReturnType<unknown>`, but exposes the literal union via a
+ * `LiteralBrand` so the inferred type can flow through `object()`, `union()`,
+ * and `intersection()` without being collapsed by `ValidateType`.
  */
 export interface OneOfReturnType<T extends string> {
   validate: boolean;
   message: string;
-  type: T;
+  type: LiteralBrand<T>;
 }
 
 /**
@@ -41,7 +45,7 @@ export const oneOf = <const T extends readonly string[]>(
     return {
       validate: isValid,
       message: isValid ? "" : (message ?? ""),
-      type: value,
+      type: value as LiteralBrand<T[number]>,
     };
   };
 };

@@ -55,13 +55,13 @@ describe("Integration: array, map, and set composition", () => {
     const validator = arrayOf(
       union(
         object({ kind: oneOf(["text"]), value: string() }),
-        object({ kind: oneOf(["num"]), value: number() }),
+        object({ kind: oneOf(["number"]), value: number() }),
       ),
     );
     expect(
       validator([
         { kind: "text", value: "ok" },
-        { kind: "num", value: 1 },
+        { kind: "number", value: 1 },
       ]).validate,
     ).toBe(true);
     expect(

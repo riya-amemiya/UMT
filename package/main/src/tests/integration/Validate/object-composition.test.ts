@@ -37,13 +37,13 @@ describe("Integration: object/union/intersection composition", () => {
     const validator = arrayOf(
       union(
         object({ kind: oneOf(["text"]), value: string() }),
-        object({ kind: oneOf(["num"]), value: number() }),
+        object({ kind: oneOf(["number"]), value: number() }),
       ),
     );
     type Schema = SchemaToInterface<typeof validator>;
     const valid: Schema = [
       { kind: "text", value: "hello" },
-      { kind: "num", value: 42 },
+      { kind: "number", value: 42 },
     ];
     expect(validator(valid).validate).toBe(true);
     expect(
@@ -79,6 +79,16 @@ describe("Integration: object/union/intersection composition", () => {
     expect(validator({ kind: "b", value: 42 }).validate).toBe(true);
     // @ts-expect-error kind=a expects string value
     expect(validator({ kind: "a", value: 1 }).validate).toBe(false);
+  });
+
+  it("validates an intersection of a union with a concrete object", () => {
+    const left = union(object({ name: string() }), object({ id: number() }));
+    const right = object({ extra: string() });
+    const validator = intersection(left, right);
+    expect(validator({ name: "John", extra: "tag" }).validate).toBe(true);
+    expect(validator({ id: 1, extra: "tag" }).validate).toBe(true);
+    // @ts-expect-error extra is missing
+    expect(validator({ name: "John" }).validate).toBe(false);
   });
 
   it("validates an object whose property is a union, then intersected with another object", () => {
