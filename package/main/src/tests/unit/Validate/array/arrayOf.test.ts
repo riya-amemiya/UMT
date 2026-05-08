@@ -7,6 +7,7 @@ import { nullable } from "@/Validate/object/nullable";
 import { optional } from "@/Validate/object/optional";
 import { union } from "@/Validate/object/union";
 import { string } from "@/Validate/string";
+import { oneOf } from "@/Validate/string/oneOf";
 import type {
   SchemaToInterface,
   ValidateCoreReturnType,
@@ -316,5 +317,18 @@ describe("arrayOf validation", () => {
     // @ts-expect-error inner element must be number
     const wrong: Schema = [["a"]];
     expect(wrong).toHaveLength(1);
+  });
+
+  it("should preserve the oneOf literal union as the element type", () => {
+    const iconData = { home: 0, search: 1, settings: 2 } as const;
+    const validator = arrayOf(
+      oneOf(Object.keys(iconData) as (keyof typeof iconData)[]),
+    );
+    type Schema = SchemaToInterface<typeof validator>;
+    const valid: Schema = ["home", "search", "settings"];
+    expect(validator(valid).validate).toBe(true);
+    // @ts-expect-error "unknown" is not part of the literal union
+    const wrong: Schema = ["home", "unknown"];
+    expect(wrong).toHaveLength(2);
   });
 });

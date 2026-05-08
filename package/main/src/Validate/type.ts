@@ -55,6 +55,19 @@ export interface ValidateReturnType<T> {
  */
 export type ValidateFunctionType<T> = (value: T) => boolean;
 
+declare const LITERAL_BRAND: unique symbol;
+
+/**
+ * Branded literal type used by validators (such as `oneOf`) that need to keep
+ * a string literal verbatim through `ValidateType`. The brand prevents the
+ * literal from colliding with reserved type tags like `"string"`, `"number"`,
+ * or `"boolean"` when the same string also happens to name a primitive type.
+ * @template T - The literal value preserved by the brand
+ */
+export type LiteralBrand<T extends string> = T & {
+  readonly [LITERAL_BRAND]: T;
+};
+
 // TS can only infer deeply with up to 3 extends, so we split it to avoid the limit
 export type _ValidateType<T> = T extends "string"
   ? string
@@ -85,15 +98,18 @@ export type _ValidateType3<T> = T extends "bigint"
 /**
  * Maps string literal type names back to their TypeScript types
  * @template T - The string literal type name ("string", "number", "boolean", "bigint", "undefined", "null", "any", "unknown", "never")
- * @returns The corresponding TypeScript type or the original type T when no tag matches
+ * @returns The corresponding TypeScript type, the unwrapped literal when `T` is a `LiteralBrand`, or the original type `T` when no tag matches
  */
-export type ValidateType<T> = T extends "string" | "number" | "boolean"
-  ? _ValidateType<T>
-  : T extends "undefined" | "null"
-    ? _ValidateType2<T>
-    : T extends "bigint" | "any" | "unknown" | "never"
-      ? _ValidateType3<T>
-      : T;
+export type ValidateType<T> =
+  T extends LiteralBrand<infer L>
+    ? L
+    : T extends "string" | "number" | "boolean"
+      ? _ValidateType<T>
+      : T extends "undefined" | "null"
+        ? _ValidateType2<T>
+        : T extends "bigint" | "any" | "unknown" | "never"
+          ? _ValidateType3<T>
+          : T;
 
 export type SchemaToInterface<
   // biome-ignore lint/suspicious/noExplicitAny: ignore

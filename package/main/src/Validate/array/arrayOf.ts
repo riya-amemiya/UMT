@@ -1,22 +1,34 @@
 import { isArray } from "@/Validate/isArray";
-import type { ValidateCoreReturnType } from "@/Validate/type";
+import type { ValidateCoreReturnType, ValidateType } from "@/Validate/type";
+
+// Extract the validated value type by reading the validator's `type` field
+// (and applying `ValidateType` to map type tags like "string" back to the
+// runtime type). Reading the field directly lets validators that expose the
+// literal union via the `type` field (such as `oneOf`) flow through arrayOf
+// without being collapsed to `string`.
+type ExtractValidatedType<V> = V extends (value: never) => { type: infer T }
+  ? ValidateType<T>
+  : never;
 
 /**
  * Creates an array validator that validates every element with a single validator
- * @template T - Element type validated by the wrapped validator
- * @template R - The return type of the wrapped validator (preserved so the inner type tag flows through)
- * @param {Function} validator - Validator applied to each element (e.g. an object validator)
+ * @template V - The validator function applied to each element (its return `type` field carries the element type)
+ * @param {V} validator - Validator applied to each element (e.g. an object validator)
  * @param {string} [message] - Custom error message for array type validation
  * @returns {Function} - Validator function for arrays whose elements satisfy the given validator
  */
 export const arrayOf = <
-  T,
-  R extends { type: unknown; message: string; validate: boolean },
+  V extends (value: never) => {
+    type: unknown;
+    message: string;
+    validate: boolean;
+  },
 >(
-  validator: (value: T) => R,
+  validator: V,
   message?: string,
 ) => {
-  return (values: T[]): ValidateCoreReturnType<T[]> => {
+  type Element = ExtractValidatedType<V>;
+  return (values: Element[]): ValidateCoreReturnType<Element[]> => {
     if (!isArray(values)) {
       return {
         validate: false,
@@ -25,7 +37,12 @@ export const arrayOf = <
       };
     }
     for (const value of values) {
-      const result = validator(value);
+      const result = (
+        validator as unknown as (v: Element) => {
+          validate: boolean;
+          message: string;
+        }
+      )(value);
       if (!result.validate) {
         return {
           validate: false,

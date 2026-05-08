@@ -1,6 +1,7 @@
-import { array } from "@/Validate";
+import { arrayOf } from "@/Validate/array/arrayOf";
 import { number } from "@/Validate/number";
 import { object } from "@/Validate/object/core";
+import { union } from "@/Validate/object/union";
 import { string } from "@/Validate/string";
 
 describe("object validation", () => {
@@ -20,11 +21,8 @@ describe("object validation", () => {
       {
         name: string([], "string"),
         age: number([], "number"),
-        array: array<string | number>(
-          {
-            string: string([], "string"),
-            number: number([], "number"),
-          },
+        array: arrayOf(
+          union(string([], "string"), number([], "number")),
           "array",
         ),
       },
