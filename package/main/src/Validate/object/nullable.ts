@@ -1,9 +1,3 @@
-interface NullReturn {
-  validate: boolean;
-  message: string;
-  type: "null";
-}
-
 /**
  * Wraps a validator to accept null values
  * @template T - The type of value the wrapped validator expects
@@ -16,8 +10,12 @@ export const nullable = <
   R extends { type: unknown; message: string; validate: boolean },
 >(
   validator: (value: T) => R,
-): ((value: T | null) => R | NullReturn) => {
-  const nullableValidator = (value: T | null): R | NullReturn => {
+): ((
+  value: T | null,
+) => R | { validate: boolean; message: string; type: "null" }) => {
+  const nullableValidator = (
+    value: T | null,
+  ): R | { validate: boolean; message: string; type: "null" } => {
     if (value === null) {
       return {
         validate: true,

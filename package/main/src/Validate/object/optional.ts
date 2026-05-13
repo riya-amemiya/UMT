@@ -1,9 +1,3 @@
-interface UndefinedReturn {
-  validate: boolean;
-  message: string;
-  type: "undefined";
-}
-
 /**
  * Optional validator augmented with a reference to the wrapped validator,
  * used by `required()` to unwrap optional layers when rebuilding a shape
@@ -17,7 +11,9 @@ export type OptionalValidator<
     message: string;
     validate: boolean;
   },
-> = ((value?: T) => R | UndefinedReturn) & {
+> = ((
+  value?: T,
+) => R | { validate: boolean; message: string; type: "undefined" }) & {
   inner: (value: T) => R;
   isOptional: true;
 };
@@ -35,7 +31,9 @@ export const optional = <
 >(
   validator: (value: T) => R,
 ): OptionalValidator<T, R> => {
-  const optionalValidator = ((value?: T): R | UndefinedReturn => {
+  const optionalValidator = ((
+    value?: T,
+  ): R | { validate: boolean; message: string; type: "undefined" } => {
     if (value === undefined) {
       return {
         validate: true,
