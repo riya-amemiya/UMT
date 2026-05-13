@@ -10,14 +10,17 @@
 import type { ValidateType } from "@/Validate/type";
 
 // biome-ignore lint/suspicious/noExplicitAny: validator signatures vary
-export type TemplateLiteralValidator = (value?: any) => { type: unknown };
+type AnyValidator = (value?: any) => { type: unknown };
 
 /**
  * Allowed parts of a template literal definition. Each element is either a
  * string literal that must appear verbatim, or a primitive validator whose
  * accepted shape is converted to a regex fragment at construction time.
  */
-export type TemplateLiteralPart = string | TemplateLiteralValidator;
+export type TemplateLiteralPart =
+  | string
+  // biome-ignore lint/suspicious/noExplicitAny: validator signatures vary
+  | ((value?: any) => { type: unknown });
 
 type ExtractValidatorTag<V> = V extends (value: never) => { type: infer T }
   ? T
@@ -85,7 +88,7 @@ const tagToPattern = (tag: unknown): string => {
   }
 };
 
-const detectValidatorTag = (validator: TemplateLiteralValidator): unknown => {
+const detectValidatorTag = (validator: AnyValidator): unknown => {
   const result = validator();
   return result?.type;
 };
