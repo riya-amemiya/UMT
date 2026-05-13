@@ -25,7 +25,10 @@ type ConstructNestedObject<
   : { [K in P]: V };
 
 // Helper to process a tuple of keys with PickDeepKey constraint
-type ProcessKeys<T extends object, K extends readonly PickDeepKey<T>[]> = {
+export type ProcessKeys<
+  T extends object,
+  K extends readonly PickDeepKey<T>[],
+> = {
   [I in keyof K]: K[I] extends string
     ? ConstructNestedObject<K[I], GetValueAtPath<T, K[I]>>
     : never;

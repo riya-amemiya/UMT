@@ -18,7 +18,7 @@ type ExtractValidatedType<V> = V extends (value: never) => { type: infer T }
 // validator (e.g. `union(A, B)`), unlike `UnionToIntersection` over
 // `Vs[number]` which would distribute over the inner union and collapse
 // `(A | B) & C` into `A & B & C`.
-type IntersectValidatedTypes<Vs> = Vs extends readonly [
+export type IntersectValidatedTypes<Vs> = Vs extends readonly [
   infer Head,
   ...infer Tail,
 ]

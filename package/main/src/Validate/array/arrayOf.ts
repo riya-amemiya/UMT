@@ -1,14 +1,14 @@
 import { isArray } from "@/Validate/isArray";
-import type { ValidateCoreReturnType, ValidateType } from "@/Validate/type";
+import type {
+  ExtractValidatedType,
+  ValidateCoreReturnType,
+} from "@/Validate/type";
 
 // Extract the validated value type by reading the validator's `type` field
 // (and applying `ValidateType` to map type tags like "string" back to the
 // runtime type). Reading the field directly lets validators that expose the
 // literal union via the `type` field (such as `oneOf`) flow through arrayOf
 // without being collapsed to `string`.
-type ExtractValidatedType<V> = V extends (value: never) => { type: infer T }
-  ? ValidateType<T>
-  : never;
 
 /**
  * Creates an array validator that validates every element with a single validator

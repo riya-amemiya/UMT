@@ -14,18 +14,18 @@
 import type { ValidateCoreReturnType, ValidateType } from "@/Validate/type";
 
 // biome-ignore lint/suspicious/noExplicitAny: validator signatures vary
-type AnyValidator = (value: any) => ValidateCoreReturnType<unknown>;
+export type AnyValidator = (value: any) => ValidateCoreReturnType<unknown>;
 
 type ExtractValidatedType<V> = V extends (value: never) => { type: infer T }
   ? ValidateType<T>
   : never;
 
-type InferInputs<Inputs> = Inputs extends readonly AnyValidator[]
+export type InferInputs<Inputs> = Inputs extends readonly AnyValidator[]
   ? { [K in keyof Inputs]: ExtractValidatedType<Inputs[K]> }
   : // biome-ignore lint/suspicious/noExplicitAny: open signature when no schema provided
     any[];
 
-type InferOutput<Output> = Output extends AnyValidator
+export type InferOutput<Output> = Output extends AnyValidator
   ? ExtractValidatedType<Output>
   : // biome-ignore lint/suspicious/noExplicitAny: open signature when no schema provided
     any;
@@ -40,8 +40,8 @@ export interface FunctionSchema {
   output?: AnyValidator;
 }
 
-type ExtractInput<S> = S extends { input: infer I } ? I : undefined;
-type ExtractOutput<S> = S extends { output: infer O } ? O : undefined;
+export type ExtractInput<S> = S extends { input: infer I } ? I : undefined;
+export type ExtractOutput<S> = S extends { output: infer O } ? O : undefined;
 
 /**
  * Inferred function signature from a `FunctionSchema`. Used by callers via

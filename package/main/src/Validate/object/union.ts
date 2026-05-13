@@ -1,7 +1,7 @@
 import type {
+  ExtractValidatedType,
   Types,
   ValidateCoreReturnType,
-  ValidateType,
 } from "@/Validate/type";
 
 // Extract the validated value type by reading the validator's `type` field
@@ -9,9 +9,6 @@ import type {
 // runtime type). Reading the field directly lets validators that expose the
 // literal union via the `type` field (such as `oneOf`) flow through union
 // without being collapsed by `Types<T>`.
-type ExtractValidatedType<V> = V extends (value: never) => { type: infer T }
-  ? ValidateType<T>
-  : never;
 
 /**
  * Creates a union validator that passes if any of the given validators pass

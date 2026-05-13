@@ -5,11 +5,10 @@
  * `arrayOf()` validates each element of an array.
  */
 
-import type { ValidateCoreReturnType, ValidateType } from "@/Validate/type";
-
-type ExtractValidatedType<V> = V extends (value: never) => { type: infer T }
-  ? ValidateType<T>
-  : never;
+import type {
+  ExtractValidatedType,
+  ValidateCoreReturnType,
+} from "@/Validate/type";
 
 /**
  * Creates a Map validator. The validator can optionally accept per-entry key

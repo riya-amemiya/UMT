@@ -1,6 +1,6 @@
-type PropertyName = string | number | symbol;
+export type PropertyName = string | number | symbol;
 type IterateeFunction<T> = (value: T) => PropertyName;
-type Iteratee<T> = IterateeFunction<T> | keyof T;
+export type Iteratee<T> = IterateeFunction<T> | keyof T;
 
 /**
  * Creates an object composed of keys generated from the results of running each element of collection through iteratee

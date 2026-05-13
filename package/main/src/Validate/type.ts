@@ -119,3 +119,14 @@ export type SchemaToInterface<
 export type OptionalKeys<T> = {
   [K in keyof T]: undefined extends T[K] ? K : never;
 }[keyof T];
+
+/**
+ * Extracts the validated TypeScript type from a validator function's return tag
+ * @template V - The validator function
+ * @returns The TypeScript type encoded in the validator's return `type` tag
+ */
+export type ExtractValidatedType<V> = V extends (value: never) => {
+  type: infer T;
+}
+  ? ValidateType<T>
+  : never;

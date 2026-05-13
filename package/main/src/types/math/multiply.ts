@@ -5,7 +5,7 @@ import type { Subtract } from "./subtract";
 export type Multiply<A extends number, B extends number> = MultiHelper<A, B>;
 
 // Helper type for multiplication operation
-type MultiHelper<
+export type MultiHelper<
   X extends number,
   Y extends number,
   A extends number = 0,

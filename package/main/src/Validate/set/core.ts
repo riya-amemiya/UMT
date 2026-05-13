@@ -8,11 +8,10 @@
  * already exposes a `set` runtime helper.
  */
 
-import type { ValidateCoreReturnType, ValidateType } from "@/Validate/type";
-
-type ExtractValidatedType<V> = V extends (value: never) => { type: infer T }
-  ? ValidateType<T>
-  : never;
+import type {
+  ExtractValidatedType,
+  ValidateCoreReturnType,
+} from "@/Validate/type";
 
 /**
  * Creates a Set validator. When a per-element validator is supplied, every
