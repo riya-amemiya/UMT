@@ -39,7 +39,9 @@ export const union = <
         return {
           validate: true,
           message: "",
-          type: value as unknown as Types<UnionExtractValidatedType<Vs[number]>>,
+          type: value as unknown as Types<
+            UnionExtractValidatedType<Vs[number]>
+          >,
         };
       }
       lastMessage = result.message;

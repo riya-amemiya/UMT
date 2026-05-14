@@ -7,8 +7,4 @@ export type Binary1bitNor<
 export type Binary1bitNorParser<
   X extends string,
   Y extends string,
-> = X extends "1"
-  ? "0"
-  : Y extends "1"
-    ? "0"
-    : "1";
+> = X extends "1" ? "0" : Y extends "1" ? "0" : "1";

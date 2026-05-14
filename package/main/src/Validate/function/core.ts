@@ -13,8 +13,10 @@
 
 import type { ValidateCoreReturnType, ValidateType } from "@/Validate/type";
 
-// biome-ignore lint/suspicious/noExplicitAny: validator signatures vary
-export type FunctionAnyValidator = (value: any) => ValidateCoreReturnType<unknown>;
+export type FunctionAnyValidator = (
+  // biome-ignore lint/suspicious/noExplicitAny: validator signatures vary
+  value: any,
+) => ValidateCoreReturnType<unknown>;
 
 export type FunctionExtractValidatedType<V> = V extends (value: never) => {
   type: infer T;

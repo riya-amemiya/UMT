@@ -87,7 +87,9 @@ const tagToPattern = (tag: unknown): string => {
   }
 };
 
-const detectValidatorTag = (validator: TemplateLiteralAnyValidator): unknown => {
+const detectValidatorTag = (
+  validator: TemplateLiteralAnyValidator,
+): unknown => {
   const result = validator();
   return result?.type;
 };
