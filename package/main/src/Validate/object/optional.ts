@@ -1,4 +1,4 @@
-interface UndefinedReturn {
+export interface UndefinedReturn {
   validate: boolean;
   message: string;
   type: "undefined";

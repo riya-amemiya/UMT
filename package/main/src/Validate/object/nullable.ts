@@ -1,4 +1,4 @@
-interface NullReturn {
+export interface NullReturn {
   validate: boolean;
   message: string;
   type: "null";

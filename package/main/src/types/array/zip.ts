@@ -1,4 +1,7 @@
-type ZIP<T, O extends unknown[] = []> = T extends [infer Head, ...infer Tail]
+export type ZIP<T, O extends unknown[] = []> = T extends [
+  infer Head,
+  ...infer Tail,
+]
   ? Head extends unknown[]
     ? ZIP<Tail, [...O, Head[number]]>
     : never

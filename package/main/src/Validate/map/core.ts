@@ -7,7 +7,9 @@
 
 import type { ValidateCoreReturnType, ValidateType } from "@/Validate/type";
 
-type ExtractValidatedType<V> = V extends (value: never) => { type: infer T }
+export type MapExtractValidatedType<V> = V extends (value: never) => {
+  type: infer T;
+}
   ? ValidateType<T>
   : never;
 
@@ -32,8 +34,8 @@ export const map = <
   VV extends (value: any) => ValidateCoreReturnType<unknown> = (
     value: unknown,
   ) => ValidateCoreReturnType<unknown>,
-  K = ExtractValidatedType<KV>,
-  V = ExtractValidatedType<VV>,
+  K = MapExtractValidatedType<KV>,
+  V = MapExtractValidatedType<VV>,
 >(
   keyValidator?: KV,
   valueValidator?: VV,

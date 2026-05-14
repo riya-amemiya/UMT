@@ -8,7 +8,7 @@
 import { object, type ObjectShape, type ObjectValidator } from "./core";
 import { optional, type OptionalValidator } from "./optional";
 
-type PartialShape<T extends ObjectShape> = {
+export type PartialShape<T extends ObjectShape> = {
   [K in keyof T]: OptionalValidator<
     Parameters<T[K]>[0],
     ReturnType<T[K]> extends {
