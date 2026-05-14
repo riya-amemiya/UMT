@@ -3,7 +3,7 @@ import type { PickDeepKey } from "./pickDeepKey";
 import type { UnionToIntersection } from "$/logic/unionToIntersection";
 
 // Helper type to get value at nested path
-type GetValueAtPath<
+export type GetValueAtPath<
   T,
   P extends string,
 > = P extends `${infer Key}.${infer Rest}`
@@ -17,7 +17,7 @@ type GetValueAtPath<
     : never;
 
 // Helper type to construct nested object from dot-notation path
-type ConstructNestedObject<
+export type ConstructNestedObject<
   P extends string,
   V,
 > = P extends `${infer Key}.${infer Rest}`
@@ -25,7 +25,10 @@ type ConstructNestedObject<
   : { [K in P]: V };
 
 // Helper to process a tuple of keys with PickDeepKey constraint
-type ProcessKeys<T extends object, K extends readonly PickDeepKey<T>[]> = {
+export type ProcessKeys<
+  T extends object,
+  K extends readonly PickDeepKey<T>[],
+> = {
   [I in keyof K]: K[I] extends string
     ? ConstructNestedObject<K[I], GetValueAtPath<T, K[I]>>
     : never;

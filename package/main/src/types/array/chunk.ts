@@ -1,6 +1,6 @@
 import type { Length } from "$/logic/length";
 
-type Chunk<
+export type Chunk<
   T,
   N extends number,
   C extends unknown[] = [],
