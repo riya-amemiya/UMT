@@ -1,6 +1,6 @@
 import type { ArrayToUnion } from "$/logic/arrayToUnion";
 
-interface DayList {
+export interface DayList {
   de: ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"];
   ko: ["일", "월", "화", "수", "목", "금", "토"];
   en: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];

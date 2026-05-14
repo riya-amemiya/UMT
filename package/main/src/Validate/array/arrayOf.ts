@@ -6,7 +6,9 @@ import type { ValidateCoreReturnType, ValidateType } from "@/Validate/type";
 // runtime type). Reading the field directly lets validators that expose the
 // literal union via the `type` field (such as `oneOf`) flow through arrayOf
 // without being collapsed to `string`.
-type ExtractValidatedType<V> = V extends (value: never) => { type: infer T }
+export type ArrayOfExtractValidatedType<V> = V extends (value: never) => {
+  type: infer T;
+}
   ? ValidateType<T>
   : never;
 
@@ -27,7 +29,7 @@ export const arrayOf = <
   validator: V,
   message?: string,
 ) => {
-  type Element = ExtractValidatedType<V>;
+  type Element = ArrayOfExtractValidatedType<V>;
   return (values: Element[]): ValidateCoreReturnType<Element[]> => {
     if (!isArray(values)) {
       return {

@@ -26,7 +26,7 @@ export type BinaryFullAdder<
     : never;
 
 // Type for multi-byte adder operation
-type BinaryFullAdderParser<
+export type BinaryFullAdderParser<
   X extends string,
   Y extends string,
   A extends string = "",

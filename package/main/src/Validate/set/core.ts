@@ -10,7 +10,9 @@
 
 import type { ValidateCoreReturnType, ValidateType } from "@/Validate/type";
 
-type ExtractValidatedType<V> = V extends (value: never) => { type: infer T }
+export type SetExtractValidatedType<V> = V extends (value: never) => {
+  type: infer T;
+}
   ? ValidateType<T>
   : never;
 
@@ -28,7 +30,7 @@ export const set_ = <
   IV extends (value: any) => ValidateCoreReturnType<unknown> = (
     value: unknown,
   ) => ValidateCoreReturnType<unknown>,
-  T = ExtractValidatedType<IV>,
+  T = SetExtractValidatedType<IV>,
 >(
   itemValidator?: IV,
   message?: string,

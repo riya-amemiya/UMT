@@ -4,7 +4,10 @@ export type Binary1bitNor<
   Y extends `${0 | 1}`,
 > = Binary1bitNorParser<X, Y>;
 
-type Binary1bitNorParser<X extends string, Y extends string> = X extends "1"
+export type Binary1bitNorParser<
+  X extends string,
+  Y extends string,
+> = X extends "1"
   ? "0"
   : Y extends "1"
     ? "0"

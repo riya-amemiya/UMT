@@ -8,10 +8,10 @@
 import { object, type ObjectShape, type ObjectValidator } from "./core";
 import type { OptionalValidator } from "./optional";
 
-type UnwrapOptional<V> =
+export type UnwrapOptional<V> =
   V extends OptionalValidator<infer Inner, infer R> ? (value: Inner) => R : V;
 
-type RequiredShape<T extends ObjectShape> = {
+export type RequiredShape<T extends ObjectShape> = {
   [K in keyof T]: UnwrapOptional<T[K]> extends ObjectShape[string]
     ? UnwrapOptional<T[K]>
     : T[K];

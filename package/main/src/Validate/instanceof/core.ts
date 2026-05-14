@@ -8,7 +8,7 @@
 import type { Types, ValidateCoreReturnType } from "@/Validate/type";
 
 // biome-ignore lint/suspicious/noExplicitAny: a constructor signature must accept any tuple
-type Constructor<T> = new (...arguments_: any[]) => T;
+export type Constructor<T> = new (...arguments_: any[]) => T;
 
 /**
  * Creates a validator that checks whether a value is an instance of the given

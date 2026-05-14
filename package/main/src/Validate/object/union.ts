@@ -9,7 +9,9 @@ import type {
 // runtime type). Reading the field directly lets validators that expose the
 // literal union via the `type` field (such as `oneOf`) flow through union
 // without being collapsed by `Types<T>`.
-type ExtractValidatedType<V> = V extends (value: never) => { type: infer T }
+export type UnionExtractValidatedType<V> = V extends (value: never) => {
+  type: infer T;
+}
   ? ValidateType<T>
   : never;
 
@@ -24,20 +26,20 @@ export const union = <
   ...validators: [...Vs]
 ) => {
   return (
-    value: ExtractValidatedType<Vs[number]>,
-  ): ValidateCoreReturnType<ExtractValidatedType<Vs[number]>> => {
+    value: UnionExtractValidatedType<Vs[number]>,
+  ): ValidateCoreReturnType<UnionExtractValidatedType<Vs[number]>> => {
     let lastMessage = "";
     for (const validator of validators) {
       const result = (
         validator as unknown as (
-          v: ExtractValidatedType<Vs[number]>,
-        ) => ValidateCoreReturnType<ExtractValidatedType<Vs[number]>>
+          v: UnionExtractValidatedType<Vs[number]>,
+        ) => ValidateCoreReturnType<UnionExtractValidatedType<Vs[number]>>
       )(value);
       if (result.validate) {
         return {
           validate: true,
           message: "",
-          type: value as unknown as Types<ExtractValidatedType<Vs[number]>>,
+          type: value as unknown as Types<UnionExtractValidatedType<Vs[number]>>,
         };
       }
       lastMessage = result.message;
@@ -45,7 +47,7 @@ export const union = <
     return {
       validate: false,
       message: lastMessage,
-      type: value as unknown as Types<ExtractValidatedType<Vs[number]>>,
+      type: value as unknown as Types<UnionExtractValidatedType<Vs[number]>>,
     };
   };
 };
