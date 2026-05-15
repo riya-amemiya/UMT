@@ -172,6 +172,7 @@ from .number import (
 )
 from .object import (
     deep_clone,
+    object_get,
     object_has,
     object_is_empty,
     object_map_values,
@@ -428,6 +429,7 @@ __all__ = [
     "normalize_time_unit",
     "not_",
     "now_simple",
+    "object_get",
     "object_has",
     "object_is_empty",
     "object_map_values",

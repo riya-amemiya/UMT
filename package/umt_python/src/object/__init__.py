@@ -1,6 +1,7 @@
 from .deep_clone import deep_clone
 from .get_objects_common import get_objects_common
 from .get_objects_diff import get_objects_diff
+from .object_get import object_get
 from .object_has import object_has
 from .object_is_empty import object_is_empty
 from .object_is_plain import object_is_plain
@@ -18,6 +19,7 @@ __all__ = [
     "get_objects_common",
     "get_objects_diff",
     "map_keys",
+    "object_get",
     "object_has",
     "object_is_empty",
     "object_is_plain",
