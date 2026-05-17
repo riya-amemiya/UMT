@@ -1,3 +1,7 @@
+import {
+  attachStandard,
+  type StandardSchemaV1,
+} from "@/Validate/standardSchema";
 import type {
   Types,
   ValidateCoreReturnType,
@@ -36,8 +40,14 @@ export const intersection = <
   Vs extends ((value: never) => ValidateCoreReturnType<unknown>)[],
 >(
   ...validators: [...Vs]
-) => {
-  return (
+): ((
+  value: IntersectValidatedTypes<Vs>,
+) => ValidateCoreReturnType<IntersectValidatedTypes<Vs>>) &
+  StandardSchemaV1<
+    IntersectValidatedTypes<Vs>,
+    IntersectValidatedTypes<Vs>
+  > => {
+  const intersectionValidator = (
     value: IntersectValidatedTypes<Vs>,
   ): ValidateCoreReturnType<IntersectValidatedTypes<Vs>> => {
     for (const validator of validators) {
@@ -60,4 +70,9 @@ export const intersection = <
       type: value as unknown as Types<IntersectValidatedTypes<Vs>>,
     };
   };
+  return attachStandard<
+    IntersectValidatedTypes<Vs>,
+    IntersectValidatedTypes<Vs>,
+    typeof intersectionValidator
+  >(intersectionValidator);
 };

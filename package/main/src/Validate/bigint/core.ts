@@ -3,6 +3,10 @@
  * Provides the base validation functionality for bigint values
  */
 
+import {
+  attachStandard,
+  type StandardSchemaV1,
+} from "@/Validate/standardSchema";
 import type { ValidateReturnType } from "@/Validate/type";
 
 /**
@@ -27,8 +31,8 @@ export interface BigIntReturnType {
 export const bigint = <T extends ValidateReturnType<bigint>[]>(
   option: T = [] as unknown as T,
   message?: string,
-) => {
-  return (value: bigint): BigIntReturnType => {
+): ((value: bigint) => BigIntReturnType) & StandardSchemaV1<bigint, bigint> => {
+  const validator = (value: bigint): BigIntReturnType => {
     if (typeof value !== "bigint") {
       return {
         validate: false,
@@ -51,4 +55,5 @@ export const bigint = <T extends ValidateReturnType<bigint>[]>(
       type: "bigint",
     };
   };
+  return attachStandard<bigint, bigint, typeof validator>(validator);
 };

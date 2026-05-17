@@ -5,6 +5,11 @@
  * union members that should be unreachable at the type level).
  */
 
+import {
+  attachStandard,
+  type StandardSchemaV1,
+} from "@/Validate/standardSchema";
+
 /**
  * Return type produced by a `never` validator. Exposes the literal `"never"`
  * tag through the `type` field so `ValidateType<"never">` can map it back to
@@ -21,14 +26,18 @@ export interface NeverReturnType {
  * @param {string} [message] - Custom error message for validation failure
  * @returns {Function} - Validator that always returns a failing result
  */
-// biome-ignore lint/suspicious/noExplicitAny: never() is widened to accept any input from union/intersection
-export const never = (message?: string): ((value: any) => NeverReturnType) => {
+export const never = (
+  message?: string,
+): ((
+  // biome-ignore lint/suspicious/noExplicitAny: never() is widened to accept any input from union/intersection
+  value: any,
+) => NeverReturnType) &
+  StandardSchemaV1<never, never> => {
   // biome-ignore lint/suspicious/noExplicitAny: signature mirrors the public type
-  return (_value: any): NeverReturnType => {
-    return {
-      validate: false,
-      message: message ?? "",
-      type: "never",
-    };
-  };
+  const neverValidator = (_value: any): NeverReturnType => ({
+    validate: false,
+    message: message ?? "",
+    type: "never",
+  });
+  return attachStandard<never, never, typeof neverValidator>(neverValidator);
 };

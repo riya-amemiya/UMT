@@ -5,6 +5,11 @@
  * `union()`, `intersection()`, and other compositional helpers.
  */
 
+import {
+  attachStandard,
+  type StandardSchemaV1,
+} from "@/Validate/standardSchema";
+
 /**
  * Return type produced by an `any` validator. Exposes the literal `"any"`
  * tag through the `type` field so `ValidateType<"any">` can map it back to
@@ -23,9 +28,21 @@ const anyValidator = (_value: any): AnyReturnType => ({
   type: "any",
 });
 
+const standardAnyValidator = attachStandard<
+  // biome-ignore lint/suspicious/noExplicitAny: any() carries any through Standard Schema
+  any,
+  // biome-ignore lint/suspicious/noExplicitAny: any() carries any through Standard Schema
+  any,
+  typeof anyValidator
+>(anyValidator);
+
 /**
  * Creates a validator that accepts any value
  * @returns {Function} - Validator that always succeeds
  */
-// biome-ignore lint/suspicious/noExplicitAny: any() must accept and infer any value
-export const any = (): ((value: any) => AnyReturnType) => anyValidator;
+export const any = (): ((
+  // biome-ignore lint/suspicious/noExplicitAny: any() must accept and infer any value
+  value: any,
+) => AnyReturnType) &
+  // biome-ignore lint/suspicious/noExplicitAny: Standard Schema infers any in/out for any()
+  StandardSchemaV1<any, any> => standardAnyValidator;

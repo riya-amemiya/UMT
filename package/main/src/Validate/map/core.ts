@@ -5,6 +5,10 @@
  * `arrayOf()` validates each element of an array.
  */
 
+import {
+  attachStandard,
+  type StandardSchemaV1,
+} from "@/Validate/standardSchema";
 import type { ValidateCoreReturnType, ValidateType } from "@/Validate/type";
 
 export type MapExtractValidatedType<V> = V extends (value: never) => {
@@ -40,8 +44,11 @@ export const map = <
   keyValidator?: KV,
   valueValidator?: VV,
   message?: string,
-) => {
-  return (value: Map<K, V>): ValidateCoreReturnType<Map<K, V>> => {
+): ((value: Map<K, V>) => ValidateCoreReturnType<Map<K, V>>) &
+  StandardSchemaV1<Map<K, V>, Map<K, V>> => {
+  const mapValidator = (
+    value: Map<K, V>,
+  ): ValidateCoreReturnType<Map<K, V>> => {
     if (!(value instanceof Map)) {
       return {
         validate: false,
@@ -84,4 +91,7 @@ export const map = <
       type: value,
     };
   };
+  return attachStandard<Map<K, V>, Map<K, V>, typeof mapValidator>(
+    mapValidator,
+  );
 };

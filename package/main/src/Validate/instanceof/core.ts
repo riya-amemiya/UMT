@@ -5,6 +5,10 @@
  * `instanceof_` because `instanceof` is a reserved keyword in JavaScript.
  */
 
+import {
+  attachStandard,
+  type StandardSchemaV1,
+} from "@/Validate/standardSchema";
 import type { Types, ValidateCoreReturnType } from "@/Validate/type";
 
 // biome-ignore lint/suspicious/noExplicitAny: a constructor signature must accept any tuple
@@ -22,8 +26,8 @@ export type Constructor<T> = new (...arguments_: any[]) => T;
 export const instanceof_ = <T>(
   classConstructor: Constructor<T>,
   message?: string,
-) => {
-  return (value: T): ValidateCoreReturnType<T> => {
+): ((value: T) => ValidateCoreReturnType<T>) & StandardSchemaV1<T, T> => {
+  const validator = (value: T): ValidateCoreReturnType<T> => {
     if (!(value instanceof classConstructor)) {
       return {
         validate: false,
@@ -37,4 +41,5 @@ export const instanceof_ = <T>(
       type: value as unknown as Types<T>,
     };
   };
+  return attachStandard<T, T, typeof validator>(validator);
 };

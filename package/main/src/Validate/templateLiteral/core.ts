@@ -7,6 +7,10 @@
  * inferred type is the corresponding TypeScript template literal type.
  */
 
+import {
+  attachStandard,
+  type StandardSchemaV1,
+} from "@/Validate/standardSchema";
 import type { ValidateType } from "@/Validate/type";
 
 // biome-ignore lint/suspicious/noExplicitAny: validator signatures vary
@@ -109,7 +113,13 @@ export const templateLiteral = <
 >(
   parts: Parts,
   message?: string,
-) => {
+): ((
+  value: BuildTemplateLiteral<Parts>,
+) => TemplateLiteralReturnType<BuildTemplateLiteral<Parts>>) &
+  StandardSchemaV1<
+    BuildTemplateLiteral<Parts>,
+    BuildTemplateLiteral<Parts>
+  > => {
   let pattern = "^";
   for (const part of parts) {
     pattern +=
@@ -120,7 +130,7 @@ export const templateLiteral = <
   pattern += "$";
   const regex = new RegExp(pattern);
 
-  return (
+  const templateValidator = (
     value: BuildTemplateLiteral<Parts>,
   ): TemplateLiteralReturnType<BuildTemplateLiteral<Parts>> => {
     if (typeof value !== "string" || !regex.test(value)) {
@@ -136,4 +146,9 @@ export const templateLiteral = <
       type: value,
     };
   };
+  return attachStandard<
+    BuildTemplateLiteral<Parts>,
+    BuildTemplateLiteral<Parts>,
+    typeof templateValidator
+  >(templateValidator);
 };

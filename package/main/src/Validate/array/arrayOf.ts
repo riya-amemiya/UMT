@@ -1,4 +1,8 @@
 import { isArray } from "@/Validate/isArray";
+import {
+  attachStandard,
+  type StandardSchemaV1,
+} from "@/Validate/standardSchema";
 import type { ValidateCoreReturnType, ValidateType } from "@/Validate/type";
 
 // Extract the validated value type by reading the validator's `type` field
@@ -28,9 +32,17 @@ export const arrayOf = <
 >(
   validator: V,
   message?: string,
-) => {
+): ((
+  values: ArrayOfExtractValidatedType<V>[],
+) => ValidateCoreReturnType<ArrayOfExtractValidatedType<V>[]>) &
+  StandardSchemaV1<
+    ArrayOfExtractValidatedType<V>[],
+    ArrayOfExtractValidatedType<V>[]
+  > => {
   type Element = ArrayOfExtractValidatedType<V>;
-  return (values: Element[]): ValidateCoreReturnType<Element[]> => {
+  const arrayValidator = (
+    values: Element[],
+  ): ValidateCoreReturnType<Element[]> => {
     if (!isArray(values)) {
       return {
         validate: false,
@@ -59,4 +71,7 @@ export const arrayOf = <
       type: values,
     };
   };
+  return attachStandard<Element[], Element[], typeof arrayValidator>(
+    arrayValidator,
+  );
 };

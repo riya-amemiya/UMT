@@ -4,6 +4,10 @@
  */
 
 import { core } from "@/Validate/core";
+import {
+  attachStandard,
+  type StandardSchemaV1,
+} from "@/Validate/standardSchema";
 import type { ValidateCoreReturnType } from "@/Validate/type";
 
 /**
@@ -11,7 +15,11 @@ import type { ValidateCoreReturnType } from "@/Validate/type";
  * @param {string} [message] - Custom error message for type validation
  * @returns {Function} - Validator function that checks if the value is a boolean
  */
-export const boolean = (message?: string) => {
-  return (value: boolean): ValidateCoreReturnType<boolean> =>
+export const boolean = (
+  message?: string,
+): ((value: boolean) => ValidateCoreReturnType<boolean>) &
+  StandardSchemaV1<boolean, boolean> => {
+  const validator = (value: boolean): ValidateCoreReturnType<boolean> =>
     core<boolean>("boolean")(value, [], message);
+  return attachStandard<boolean, boolean, typeof validator>(validator);
 };
