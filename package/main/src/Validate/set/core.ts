@@ -8,6 +8,10 @@
  * already exposes a `set` runtime helper.
  */
 
+import {
+  attachStandard,
+  type StandardSchemaV1,
+} from "@/Validate/standardSchema";
 import type { ValidateCoreReturnType, ValidateType } from "@/Validate/type";
 
 export type SetExtractValidatedType<V> = V extends (value: never) => {
@@ -34,8 +38,9 @@ export const set_ = <
 >(
   itemValidator?: IV,
   message?: string,
-) => {
-  return (value: Set<T>): ValidateCoreReturnType<Set<T>> => {
+): ((value: Set<T>) => ValidateCoreReturnType<Set<T>>) &
+  StandardSchemaV1<Set<T>, Set<T>> => {
+  const setValidator = (value: Set<T>): ValidateCoreReturnType<Set<T>> => {
     if (!(value instanceof Set)) {
       return {
         validate: false,
@@ -66,4 +71,5 @@ export const set_ = <
       type: value,
     };
   };
+  return attachStandard<Set<T>, Set<T>, typeof setValidator>(setValidator);
 };

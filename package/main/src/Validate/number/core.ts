@@ -4,7 +4,14 @@
  */
 
 import { core } from "@/Validate/core";
-import type { ValidateReturnType } from "@/Validate/type";
+import {
+  attachStandard,
+  type StandardSchemaV1,
+} from "@/Validate/standardSchema";
+import type {
+  ValidateCoreReturnType,
+  ValidateReturnType,
+} from "@/Validate/type";
 
 /**
  * Creates a number validator with optional validation rules
@@ -16,6 +23,9 @@ import type { ValidateReturnType } from "@/Validate/type";
 export const number = <T extends ValidateReturnType<number>[]>(
   option?: T,
   message?: string,
-) => {
-  return (value: number) => core<number>("number")(value, option, message);
+): ((value: number) => ValidateCoreReturnType<number>) &
+  StandardSchemaV1<number, number> => {
+  const validator = (value: number) =>
+    core<number>("number")(value, option, message);
+  return attachStandard<number, number, typeof validator>(validator);
 };

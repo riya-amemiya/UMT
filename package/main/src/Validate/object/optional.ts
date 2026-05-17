@@ -1,3 +1,8 @@
+import {
+  attachStandard,
+  type StandardSchemaV1,
+} from "@/Validate/standardSchema";
+
 export interface UndefinedReturn {
   validate: boolean;
   message: string;
@@ -34,7 +39,7 @@ export const optional = <
   R extends { type: unknown; message: string; validate: boolean },
 >(
   validator: (value: T) => R,
-): OptionalValidator<T, R> => {
+): OptionalValidator<T, R> & StandardSchemaV1<T | undefined, T | undefined> => {
   const optionalValidator = ((value?: T): R | UndefinedReturn => {
     if (value === undefined) {
       return {
@@ -49,5 +54,7 @@ export const optional = <
   optionalValidator.inner = validator;
   optionalValidator.isOptional = true;
 
-  return optionalValidator;
+  return attachStandard<T | undefined, T | undefined, typeof optionalValidator>(
+    optionalValidator,
+  );
 };

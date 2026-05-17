@@ -1,3 +1,7 @@
+import {
+  attachStandard,
+  type StandardSchemaV1,
+} from "@/Validate/standardSchema";
 import type {
   Types,
   ValidateCoreReturnType,
@@ -24,8 +28,14 @@ export const union = <
   Vs extends ((value: never) => ValidateCoreReturnType<unknown>)[],
 >(
   ...validators: [...Vs]
-) => {
-  return (
+): ((
+  value: UnionExtractValidatedType<Vs[number]>,
+) => ValidateCoreReturnType<UnionExtractValidatedType<Vs[number]>>) &
+  StandardSchemaV1<
+    UnionExtractValidatedType<Vs[number]>,
+    UnionExtractValidatedType<Vs[number]>
+  > => {
+  const unionValidator = (
     value: UnionExtractValidatedType<Vs[number]>,
   ): ValidateCoreReturnType<UnionExtractValidatedType<Vs[number]>> => {
     let lastMessage = "";
@@ -52,4 +62,9 @@ export const union = <
       type: value as unknown as Types<UnionExtractValidatedType<Vs[number]>>,
     };
   };
+  return attachStandard<
+    UnionExtractValidatedType<Vs[number]>,
+    UnionExtractValidatedType<Vs[number]>,
+    typeof unionValidator
+  >(unionValidator);
 };

@@ -5,6 +5,10 @@
 
 import type { PickPartial } from "$/object";
 import { isDictionaryObject } from "@/Validate/isDictionaryObject";
+import {
+  attachStandard,
+  type StandardSchemaV1,
+} from "@/Validate/standardSchema";
 import type {
   OptionalKeys,
   ValidateCoreReturnType,
@@ -55,7 +59,7 @@ export type ObjectValidator<
 export const object = <T extends ObjectShape>(
   option: T = {} as T,
   message?: string,
-): ObjectValidator<T> => {
+): ObjectValidator<T> & StandardSchemaV1<unknown, unknown> => {
   type U = {
     [key in keyof T]: ValidateType<ReturnType<T[key]>["type"]>;
   };
@@ -96,5 +100,5 @@ export const object = <T extends ObjectShape>(
   }) as ObjectValidator<T>;
 
   validator.shape = option;
-  return validator;
+  return attachStandard<Inferred, Inferred, typeof validator>(validator);
 };

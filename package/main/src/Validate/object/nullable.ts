@@ -1,3 +1,8 @@
+import {
+  attachStandard,
+  type StandardSchemaV1,
+} from "@/Validate/standardSchema";
+
 export interface NullReturn {
   validate: boolean;
   message: string;
@@ -16,7 +21,8 @@ export const nullable = <
   R extends { type: unknown; message: string; validate: boolean },
 >(
   validator: (value: T) => R,
-): ((value: T | null) => R | NullReturn) => {
+): ((value: T | null) => R | NullReturn) &
+  StandardSchemaV1<T | null, T | null> => {
   const nullableValidator = (value: T | null): R | NullReturn => {
     if (value === null) {
       return {
@@ -28,5 +34,7 @@ export const nullable = <
     return validator(value);
   };
 
-  return nullableValidator;
+  return attachStandard<T | null, T | null, typeof nullableValidator>(
+    nullableValidator,
+  );
 };
