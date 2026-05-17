@@ -12,6 +12,7 @@ export * from "./never";
 export * from "./number";
 export * from "./object";
 export * from "./set";
+export * from "./standardSchema";
 export * from "./string";
 export * from "./templateLiteral";
 export * from "./type";

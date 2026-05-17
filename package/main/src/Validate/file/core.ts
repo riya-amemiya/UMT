@@ -4,6 +4,10 @@
  * the global `File` constructor is unavailable.
  */
 
+import {
+  attachStandard,
+  type StandardSchemaV1,
+} from "@/Validate/standardSchema";
 import type { ValidateCoreReturnType } from "@/Validate/type";
 
 const hasFileConstructor = typeof File !== "undefined";
@@ -15,8 +19,11 @@ const hasBlobConstructor = typeof Blob !== "undefined";
  * @param {string} [message] - Custom error message for type validation
  * @returns {Function} - Validator function for File / Blob instances
  */
-export const file = (message?: string) => {
-  return (value: File): ValidateCoreReturnType<File> => {
+export const file = (
+  message?: string,
+): ((value: File) => ValidateCoreReturnType<File>) &
+  StandardSchemaV1<File, File> => {
+  const validator = (value: File): ValidateCoreReturnType<File> => {
     const isFile = hasFileConstructor && value instanceof File;
     const isBlob = hasBlobConstructor && value instanceof Blob;
     if (!(isFile || isBlob)) {
@@ -32,4 +39,5 @@ export const file = (message?: string) => {
       type: value,
     };
   };
+  return attachStandard<File, File, typeof validator>(validator);
 };

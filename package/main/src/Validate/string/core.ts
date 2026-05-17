@@ -4,7 +4,14 @@
  */
 
 import { core } from "@/Validate/core";
-import type { ValidateReturnType } from "@/Validate/type";
+import {
+  attachStandard,
+  type StandardSchemaV1,
+} from "@/Validate/standardSchema";
+import type {
+  ValidateCoreReturnType,
+  ValidateReturnType,
+} from "@/Validate/type";
 
 /**
  * Creates a string validator with optional validation rules
@@ -13,7 +20,12 @@ import type { ValidateReturnType } from "@/Validate/type";
  * @param {string} [message] - Custom error message for type validation
  * @returns {Function} - Validator function that checks if the value is a string and applies validation rules
  */
-export const string =
-  <T extends ValidateReturnType<string>[]>(option?: T, message?: string) =>
-  (value: string) =>
+export const string = <T extends ValidateReturnType<string>[]>(
+  option?: T,
+  message?: string,
+): ((value: string) => ValidateCoreReturnType<string>) &
+  StandardSchemaV1<string, string> => {
+  const validator = (value: string) =>
     core<string>("string")(value, option, message);
+  return attachStandard<string, string, typeof validator>(validator);
+};

@@ -3,6 +3,10 @@
  * Provides the base validation functionality for Date instances
  */
 
+import {
+  attachStandard,
+  type StandardSchemaV1,
+} from "@/Validate/standardSchema";
 import type { ValidateCoreReturnType } from "@/Validate/type";
 
 /**
@@ -13,8 +17,11 @@ import type { ValidateCoreReturnType } from "@/Validate/type";
  * @param {string} [message] - Custom error message for type validation
  * @returns {Function} - Validator function that checks if the value is a Date instance
  */
-export const date = (message?: string) => {
-  return (value: Date): ValidateCoreReturnType<Date> => {
+export const date = (
+  message?: string,
+): ((value: Date) => ValidateCoreReturnType<Date>) &
+  StandardSchemaV1<Date, Date> => {
+  const validator = (value: Date): ValidateCoreReturnType<Date> => {
     if (!(value instanceof Date) || Number.isNaN(value.getTime())) {
       return {
         validate: false,
@@ -28,4 +35,5 @@ export const date = (message?: string) => {
       type: value,
     };
   };
+  return attachStandard<Date, Date, typeof validator>(validator);
 };

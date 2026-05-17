@@ -11,6 +11,10 @@
  * the schema on every call.
  */
 
+import {
+  attachStandard,
+  type StandardSchemaV1,
+} from "@/Validate/standardSchema";
 import type { ValidateCoreReturnType, ValidateType } from "@/Validate/type";
 
 export type FunctionAnyValidator = (
@@ -94,7 +98,11 @@ export interface FunctionValidator<Inputs, Output> {
 export const function_ = <const S extends FunctionSchema = FunctionSchema>(
   schema?: S,
   message?: string,
-): FunctionValidator<ExtractInput<S>, ExtractOutput<S>> => {
+): FunctionValidator<ExtractInput<S>, ExtractOutput<S>> &
+  StandardSchemaV1<
+    InferFunction<ExtractInput<S>, ExtractOutput<S>>,
+    InferFunction<ExtractInput<S>, ExtractOutput<S>>
+  > => {
   type Inputs = ExtractInput<S>;
   type Output = ExtractOutput<S>;
   const inputs = schema?.input;
@@ -147,5 +155,9 @@ export const function_ = <const S extends FunctionSchema = FunctionSchema>(
     return wrapped;
   };
 
-  return validator;
+  return attachStandard<
+    InferFunction<Inputs, Output>,
+    InferFunction<Inputs, Output>,
+    typeof validator
+  >(validator);
 };

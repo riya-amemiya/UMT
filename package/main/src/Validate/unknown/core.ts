@@ -4,6 +4,11 @@
  * to keep callers honest about narrowing before use.
  */
 
+import {
+  attachStandard,
+  type StandardSchemaV1,
+} from "@/Validate/standardSchema";
+
 /**
  * Return type produced by an `unknown` validator. Exposes the literal
  * `"unknown"` tag through the `type` field so `ValidateType<"unknown">` can
@@ -22,9 +27,15 @@ const unknownValidator = (_value: unknown): UnknownReturnType => ({
   type: "unknown",
 });
 
+const standardUnknownValidator = attachStandard<
+  unknown,
+  unknown,
+  typeof unknownValidator
+>(unknownValidator);
+
 /**
  * Creates a validator that accepts any value but typed as unknown
  * @returns {Function} - Validator that always succeeds
  */
-export const unknown = (): ((value: unknown) => UnknownReturnType) =>
-  unknownValidator;
+export const unknown = (): ((value: unknown) => UnknownReturnType) &
+  StandardSchemaV1<unknown, unknown> => standardUnknownValidator;
