@@ -2,7 +2,7 @@
 // multiple runtimes and emit a Markdown report suitable for a PR comment.
 //
 // Usage:
-//   node scripts/benchmark/compare.mjs <config.json> <out.md>
+//   bun scripts/benchmark/compare.mjs <config.json> <out.md>
 //
 // config.json shape:
 //   {
@@ -14,23 +14,20 @@
 //       ...
 //     ]
 //   }
+// biome-ignore lint/correctness/noNodejsModules: readFileSync/writeFileSync are needed for sync I/O
 import { readFileSync, writeFileSync } from "node:fs";
+// biome-ignore lint/correctness/noNodejsModules: process.exit has no Bun-native equivalent
+import process from "node:process";
 
-const [, , configPath, outPath] = process.argv;
-if (!configPath || !outPath) {
+const [, , configPath, outPath] = Bun.argv;
+if (!(configPath && outPath)) {
   console.error("usage: compare.mjs <config.json> <out.md>");
   process.exit(2);
 }
 
-const REGRESSION_THRESHOLD = Number(
-  process.env.BENCH_REGRESSION_PCT ?? 5,
-); // percent
-const IMPROVEMENT_THRESHOLD = Number(
-  process.env.BENCH_IMPROVEMENT_PCT ?? 5,
-); // percent
-const COMMENT_BUDGET = Number(
-  process.env.BENCH_COMMENT_BUDGET ?? 60_000,
-); // chars
+const REGRESSION_THRESHOLD = Number(Bun.env.BENCH_REGRESSION_PCT ?? 5); // percent
+const IMPROVEMENT_THRESHOLD = Number(Bun.env.BENCH_IMPROVEMENT_PCT ?? 5); // percent
+const COMMENT_BUDGET = Number(Bun.env.BENCH_COMMENT_BUDGET ?? 60_000); // chars
 
 const cfg = JSON.parse(readFileSync(configPath, "utf-8"));
 
@@ -44,11 +41,12 @@ const loadJson = (p) => {
 
 // Build map: file -> bench-key -> runtime -> { base, head }
 // bench-key encodes (alias, args) so different argument combos are separated.
-const buildKey = (alias, args) =>
-  `${alias}::${JSON.stringify(args ?? {})}`;
+const buildKey = (alias, args) => `${alias}::${JSON.stringify(args ?? {})}`;
 
 const formatArgs = (args) => {
-  if (!args || Object.keys(args).length === 0) return "";
+  if (!args || Object.keys(args).length === 0) {
+    return "";
+  }
   return Object.entries(args)
     .map(([k, v]) => `${k}=${v}`)
     .join(", ");
@@ -59,13 +57,17 @@ const indexResults = (resultJson) => {
   const out = new Map();
   for (const fileEntry of resultJson?.files ?? []) {
     const d = fileEntry.data;
-    if (!d) continue;
+    if (!d) {
+      continue;
+    }
     const benches = d.benchmarks ?? [];
     const perFile = new Map();
     for (const b of benches) {
       const alias = b.alias ?? b.name ?? "(anonymous)";
       for (const r of b.runs ?? []) {
-        if (!r.stats) continue;
+        if (!r.stats) {
+          continue;
+        }
         const key = buildKey(alias, r.args);
         perFile.set(key, {
           alias,
@@ -100,8 +102,12 @@ for (const rt of cfg.runtimes) {
   const headRes = loadJson(rt.head);
   const base = indexResults(baseRes);
   const head = indexResults(headRes);
-  for (const f of base.keys()) allFiles.add(f);
-  for (const f of head.keys()) allFiles.add(f);
+  for (const f of base.keys()) {
+    allFiles.add(f);
+  }
+  for (const f of head.keys()) {
+    allFiles.add(f);
+  }
   indexed.set(rt.id, { label: rt.label, base, head });
 }
 
@@ -110,23 +116,39 @@ const sortedFiles = [...allFiles].sort();
 // Format helpers ------------------------------------------------------------
 
 const formatNs = (ns) => {
-  if (ns == null || !Number.isFinite(ns)) return "-";
-  if (ns < 1) return `${ns.toFixed(3)} ns`;
-  if (ns < 1_000) return `${ns.toFixed(2)} ns`;
-  if (ns < 1_000_000) return `${(ns / 1_000).toFixed(2)} µs`;
-  if (ns < 1_000_000_000) return `${(ns / 1_000_000).toFixed(2)} ms`;
+  if (ns == null || !Number.isFinite(ns)) {
+    return "-";
+  }
+  if (ns < 1) {
+    return `${ns.toFixed(3)} ns`;
+  }
+  if (ns < 1000) {
+    return `${ns.toFixed(2)} ns`;
+  }
+  if (ns < 1_000_000) {
+    return `${(ns / 1000).toFixed(2)} µs`;
+  }
+  if (ns < 1_000_000_000) {
+    return `${(ns / 1_000_000).toFixed(2)} ms`;
+  }
   return `${(ns / 1_000_000_000).toFixed(2)} s`;
 };
 
 const formatDelta = (base, head) => {
-  if (base == null || head == null) return { text: "-", pct: null, kind: "na" };
-  if (!Number.isFinite(base) || base === 0)
+  if (base == null || head == null) {
     return { text: "-", pct: null, kind: "na" };
+  }
+  if (!Number.isFinite(base) || base === 0) {
+    return { text: "-", pct: null, kind: "na" };
+  }
   const pct = ((head - base) / base) * 100;
   const sign = pct >= 0 ? "+" : "";
   let kind = "neutral";
-  if (pct >= REGRESSION_THRESHOLD) kind = "regression";
-  else if (pct <= -IMPROVEMENT_THRESHOLD) kind = "improvement";
+  if (pct >= REGRESSION_THRESHOLD) {
+    kind = "regression";
+  } else if (pct <= -IMPROVEMENT_THRESHOLD) {
+    kind = "improvement";
+  }
   return { text: `${sign}${pct.toFixed(2)}%`, pct, kind };
 };
 
@@ -150,10 +172,16 @@ for (const file of sortedFiles) {
     const bFile = base.get(file);
     const hFile = head.get(file);
     perRuntime.set(rtId, { base: bFile, head: hFile });
-    if (bFile)
-      for (const k of bFile.benches.keys()) benchKeys.add(k);
-    if (hFile)
-      for (const k of hFile.benches.keys()) benchKeys.add(k);
+    if (bFile) {
+      for (const k of bFile.benches.keys()) {
+        benchKeys.add(k);
+      }
+    }
+    if (hFile) {
+      for (const k of hFile.benches.keys()) {
+        benchKeys.add(k);
+      }
+    }
   }
   const perBench = new Map();
   for (const k of [...benchKeys].sort()) {
@@ -192,7 +220,10 @@ const flagged = [];
 for (const [file, byBench] of rows) {
   for (const [, { alias, args, perRuntime }] of byBench) {
     for (const [rtId, entry] of perRuntime) {
-      if (entry.delta.kind === "regression" || entry.delta.kind === "improvement") {
+      if (
+        entry.delta.kind === "regression" ||
+        entry.delta.kind === "improvement"
+      ) {
         flagged.push({
           file,
           alias,
@@ -210,19 +241,22 @@ for (const [file, byBench] of rows) {
 flagged.sort((a, b) => Math.abs(b.delta.pct ?? 0) - Math.abs(a.delta.pct ?? 0));
 
 // Build markdown ------------------------------------------------------------
-const runtimeIds = cfg.runtimes.map((r) => r.id);
-const runtimeLabels = new Map(cfg.runtimes.map((r) => [r.id, r.label]));
-
 const out = [];
 out.push("## 🏎️ Benchmark Report");
 out.push("");
 const baseHeadLine = [
-  cfg.baseRef ? `**base** \`${cfg.baseRef}\` @ \`${(cfg.baseSha ?? "").slice(0, 7)}\`` : null,
-  cfg.headRef ? `**head** \`${cfg.headRef}\` @ \`${(cfg.headSha ?? "").slice(0, 7)}\`` : null,
+  cfg.baseRef
+    ? `**base** \`${cfg.baseRef}\` @ \`${(cfg.baseSha ?? "").slice(0, 7)}\``
+    : null,
+  cfg.headRef
+    ? `**head** \`${cfg.headRef}\` @ \`${(cfg.headSha ?? "").slice(0, 7)}\``
+    : null,
 ]
   .filter(Boolean)
   .join(" → ");
-if (baseHeadLine) out.push(baseHeadLine);
+if (baseHeadLine) {
+  out.push(baseHeadLine);
+}
 out.push("");
 out.push(
   `Threshold: regression \`+${REGRESSION_THRESHOLD}%\` / improvement \`-${IMPROVEMENT_THRESHOLD}%\` (based on \`avg\` ns/iter).`,
@@ -234,7 +268,8 @@ const versionLines = [];
 for (const rt of cfg.runtimes) {
   const baseSample = [...(indexed.get(rt.id)?.base.values() ?? [])][0];
   const headSample = [...(indexed.get(rt.id)?.head.values() ?? [])][0];
-  const version = headSample?.runtimeVersion ?? baseSample?.runtimeVersion ?? "?";
+  const version =
+    headSample?.runtimeVersion ?? baseSample?.runtimeVersion ?? "?";
   versionLines.push(`- ${rt.label}: \`${version}\``);
 }
 if (versionLines.length > 0) {
@@ -288,16 +323,18 @@ const renderFileBlock = (file, byBench) => {
   for (const rt of cfg.runtimes) {
     const baseMeta = indexed.get(rt.id)?.base.get(file)?.meta;
     const headMeta = indexed.get(rt.id)?.head.get(file)?.meta;
-    if (baseMeta?.parseError)
+    if (baseMeta?.parseError) {
       issues.push(`base/${rt.label}: ${baseMeta.parseError}`);
-    if (headMeta?.parseError)
+    }
+    if (headMeta?.parseError) {
       issues.push(`head/${rt.label}: ${headMeta.parseError}`);
-    if (baseMeta?.exitCode != null && baseMeta.exitCode !== 0)
-      issues.push(
-        `base/${rt.label}: non-zero exit (${baseMeta.exitCode})`,
-      );
-    if (headMeta?.exitCode != null && headMeta.exitCode !== 0)
+    }
+    if (baseMeta?.exitCode != null && baseMeta.exitCode !== 0) {
+      issues.push(`base/${rt.label}: non-zero exit (${baseMeta.exitCode})`);
+    }
+    if (headMeta?.exitCode != null && headMeta.exitCode !== 0) {
       issues.push(`head/${rt.label}: non-zero exit (${headMeta.exitCode})`);
+    }
   }
 
   lines.push(`<details><summary><code>${file}</code></summary>`);
@@ -305,7 +342,9 @@ const renderFileBlock = (file, byBench) => {
   if (issues.length > 0) {
     lines.push("**Issues:**");
     lines.push("");
-    for (const iss of issues) lines.push(`- ${iss}`);
+    for (const iss of issues) {
+      lines.push(`- ${iss}`);
+    }
     lines.push("");
   }
   // header row
@@ -313,7 +352,7 @@ const renderFileBlock = (file, byBench) => {
   for (const rt of cfg.runtimes) {
     header.push(`${rt.label} base`);
     header.push(`${rt.label} head`);
-    header.push(`Δ`);
+    header.push("Δ");
   }
   lines.push(`| ${header.join(" | ")} |`);
   lines.push(`|${header.map(() => "---").join("|")}|`);

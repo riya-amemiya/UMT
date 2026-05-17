@@ -212,7 +212,7 @@ jobs:
           ls -R bench-results || true
       - name: Generate Markdown report
         run: |
-          node package/main/scripts/benchmark/compare.mjs compare-config.json report.md
+          bun package/main/scripts/benchmark/compare.mjs compare-config.json report.md
       - name: Upload Markdown report
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:

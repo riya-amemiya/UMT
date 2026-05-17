@@ -1,21 +1,26 @@
-// Run every compiled benchmark file under module/tests/benchmark with the
-// given runtime (bun or node), capture mitata's JSON output, and aggregate the
+// Run every bundled benchmark file under benchmark-bundles with the given
+// runtime (bun or node), capture mitata's JSON output, and aggregate the
 // results into a single JSON file.
 //
-// Usage: <runtime> bun scripts/benchmark/runAll.mjs <cmd> <out.json>
-//   cmd: command to execute each benchmark (e.g. "bun", "node")
+// Usage: bun scripts/benchmark/runAll.mjs <cmd> <out.json>
+//   cmd: command to execute each benchmark ("bun" or "node")
 //   out: path of aggregated JSON result file
+// biome-ignore lint/correctness/noNodejsModules: spawnSync is needed for the timeout option which Bun.spawnSync does not expose on every release
 import { spawnSync } from "node:child_process";
+// biome-ignore lint/correctness/noNodejsModules: node:fs APIs have no Bun-native equivalent
 import { readdirSync, readFileSync, writeFileSync } from "node:fs";
+// biome-ignore lint/correctness/noNodejsModules: node:path has no Bun-native equivalent
 import { basename, join } from "node:path";
+// biome-ignore lint/correctness/noNodejsModules: process.exit has no Bun-native equivalent
+import process from "node:process";
 
-const BENCH_DIR = process.env.BENCH_DIR ?? "benchmark-bundles";
-const CMD = process.argv[2];
-const OUT = process.argv[3];
-const TIMEOUT_MS = Number(process.env.BENCH_TIMEOUT_MS ?? 20 * 60 * 1000);
-const FILTER = process.env.BENCH_FILTER;
+const BENCH_DIR = Bun.env.BENCH_DIR ?? "benchmark-bundles";
+const CMD = Bun.argv[2];
+const OUT = Bun.argv[3];
+const TIMEOUT_MS = Number(Bun.env.BENCH_TIMEOUT_MS ?? 20 * 60 * 1000);
+const FILTER = Bun.env.BENCH_FILTER;
 
-if (!CMD || !OUT) {
+if (!(CMD && OUT)) {
   console.error("usage: runAll.mjs <cmd> <out.json>");
   process.exit(2);
 }
@@ -24,8 +29,7 @@ if (!CMD || !OUT) {
 // instead of its colored TTY table. The original benchmark sources call
 // `await run()` with no arguments; replace those call sites in the bundled
 // output only so the source tree stays untouched.
-const RUN_OPTS =
-  "{colors:false,format:{json:{debug:false,samples:false}}}";
+const RUN_OPTS = "{colors:false,format:{json:{debug:false,samples:false}}}";
 const RUN_RE = /\bawait\s+run\s*\(\s*\)/g;
 
 const files = readdirSync(BENCH_DIR)
@@ -51,15 +55,12 @@ const results = [];
 for (let i = 0; i < files.length; i++) {
   const file = files[i];
   const path = join(BENCH_DIR, file);
-  const label = `[${i + 1}/${files.length}] ${file}`;
-  process.stderr.write(`${label} ... `);
-
   const startedAt = Date.now();
   const proc = spawnSync(CMD, [path], {
     encoding: "utf-8",
     maxBuffer: 512 * 1024 * 1024,
     timeout: TIMEOUT_MS,
-    env: { ...process.env, NO_COLOR: "1", FORCE_COLOR: "0" },
+    env: { ...Bun.env, NO_COLOR: "1", FORCE_COLOR: "0" },
   });
   const elapsedMs = Date.now() - startedAt;
 
@@ -83,10 +84,9 @@ for (let i = 0; i < files.length; i++) {
     }
   }
 
-  process.stderr.write(
-    `${(elapsedMs / 1000).toFixed(1)}s exit=${proc.status}` +
-      (parseError ? ` (parse error: ${parseError})` : "") +
-      "\n",
+  const tail = parseError ? ` (parse error: ${parseError})` : "";
+  console.error(
+    `[${i + 1}/${files.length}] ${file} ${(elapsedMs / 1000).toFixed(1)}s exit=${proc.status}${tail}`,
   );
 
   results.push({
