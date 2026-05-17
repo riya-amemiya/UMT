@@ -1,0 +1,260 @@
+name: PR Benchmark
+on:
+  pull_request:
+    types: [labeled]
+permissions:
+  contents: read
+  pull-requests: write
+concurrency:
+  group: benchmark-pr-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+jobs:
+  prepare:
+    name: Prepare benchmark run
+    if: github.event.label.name == 'benchmark'
+    runs-on: ubuntu-latest
+    outputs:
+      baseSha: ${{ steps.refs.outputs.baseSha }}
+      headSha: ${{ steps.refs.outputs.headSha }}
+      baseRef: ${{ steps.refs.outputs.baseRef }}
+      headRef: ${{ steps.refs.outputs.headRef }}
+      commentMarker: ${{ steps.refs.outputs.commentMarker }}
+    steps:
+      - name: Collect refs
+        id: refs
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          BASE_REF: ${{ github.event.pull_request.base.ref }}
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
+        run: |
+          echo "baseSha=$BASE_SHA" >> "$GITHUB_OUTPUT"
+          echo "headSha=$HEAD_SHA" >> "$GITHUB_OUTPUT"
+          echo "baseRef=$BASE_REF" >> "$GITHUB_OUTPUT"
+          echo "headRef=$HEAD_REF" >> "$GITHUB_OUTPUT"
+          echo "commentMarker=<!-- pr-benchmark-report -->" >> "$GITHUB_OUTPUT"
+      - name: Post pending comment
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const marker = '<!-- pr-benchmark-report -->';
+            const body = [
+              marker,
+              '## 🏎️ Benchmark Report',
+              '',
+              `⏳ Benchmarks are running across **Bun latest**, **Node 22**, **Node 24**, **Node 26** for base \`${{ steps.refs.outputs.baseRef }}\` @ \`${process.env.BASE_SHA.slice(0,7)}\` → head \`${{ steps.refs.outputs.headRef }}\` @ \`${process.env.HEAD_SHA.slice(0,7)}\`.`,
+              '',
+              `Run: ${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
+            ].join('\n');
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              per_page: 100,
+            });
+            const existing = comments.find((c) => c.body && c.body.includes(marker));
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existing.id,
+                body,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body,
+              });
+            }
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+
+  benchmark:
+    name: Benchmark (${{ matrix.runtime.label }} / ${{ matrix.variant.id }})
+    needs: prepare
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      matrix:
+        runtime:
+          - { id: bun, label: 'Bun latest', kind: bun }
+          - { id: node22, label: 'Node 22', kind: node, version: '22.x' }
+          - { id: node24, label: 'Node 24', kind: node, version: '24.x' }
+          - { id: node26, label: 'Node 26', kind: node, version: '26.x' }
+        variant:
+          - { id: base }
+          - { id: head }
+    defaults:
+      run:
+        working-directory: ./package/main
+    steps:
+      - name: Checkout benchmark variant
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          ref: ${{ matrix.variant.id == 'base' && needs.prepare.outputs.baseSha || needs.prepare.outputs.headSha }}
+          persist-credentials: false
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+        with:
+          bun-version: latest
+      - name: Setup Node.js
+        if: matrix.runtime.kind == 'node'
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: ${{ matrix.runtime.version }}
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+      - name: Ensure benchmark runner exists
+        id: runner
+        run: |
+          if [ -f scripts/benchmark/runAll.mjs ] && [ -f scripts/benchmark/bundleBenchmarks.mjs ]; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::Benchmark runner scripts missing on this ref; restoring from PR head."
+          fi
+      - name: Restore runner from PR head
+        if: steps.runner.outputs.exists == 'false'
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          ref: ${{ needs.prepare.outputs.headSha }}
+          path: __runner__
+          persist-credentials: false
+          sparse-checkout: |
+            package/main/scripts/benchmark
+          sparse-checkout-cone-mode: false
+      - name: Copy runner files
+        if: steps.runner.outputs.exists == 'false'
+        run: |
+          mkdir -p scripts/benchmark
+          cp -R "$GITHUB_WORKSPACE/__runner__/package/main/scripts/benchmark/." scripts/benchmark/
+      - name: Build module output with full paths
+        run: |
+          bunx tsc
+          bunx tsc-alias -p tsconfig.json --resolve-full-paths
+      - name: Bundle benchmarks for both runtimes
+        run: bun scripts/benchmark/bundleBenchmarks.mjs
+      - name: Print versions
+        run: |
+          bun --version
+          if [ "${{ matrix.runtime.kind }}" = "node" ]; then node --version; fi
+      - name: Run benchmarks
+        env:
+          BENCH_TIMEOUT_MS: '1800000'
+        run: |
+          CMD=${{ matrix.runtime.kind == 'bun' && 'bun' || 'node' }}
+          bun scripts/benchmark/runAll.mjs "$CMD" "result.json"
+      - name: Upload benchmark result
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: bench-${{ matrix.variant.id }}-${{ matrix.runtime.id }}
+          path: package/main/result.json
+          if-no-files-found: error
+
+  compare:
+    name: Compare and comment
+    needs: [prepare, benchmark]
+    if: always() && needs.prepare.result == 'success'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Checkout PR head for scripts
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          ref: ${{ needs.prepare.outputs.headSha }}
+          persist-credentials: false
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+        with:
+          bun-version: latest
+      - name: Download benchmark artifacts
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          path: bench-results
+          pattern: bench-*
+      - name: Build comparison config
+        id: cfg
+        env:
+          BASE_SHA: ${{ needs.prepare.outputs.baseSha }}
+          HEAD_SHA: ${{ needs.prepare.outputs.headSha }}
+          BASE_REF: ${{ needs.prepare.outputs.baseRef }}
+          HEAD_REF: ${{ needs.prepare.outputs.headRef }}
+        run: |
+          cat > compare-config.json <<EOF
+          {
+            "baseSha": "${BASE_SHA}",
+            "headSha": "${HEAD_SHA}",
+            "baseRef": "${BASE_REF}",
+            "headRef": "${HEAD_REF}",
+            "runtimes": [
+              { "id": "bun",    "label": "Bun latest",
+                "base": "bench-results/bench-base-bun/result.json",
+                "head": "bench-results/bench-head-bun/result.json" },
+              { "id": "node22", "label": "Node 22",
+                "base": "bench-results/bench-base-node22/result.json",
+                "head": "bench-results/bench-head-node22/result.json" },
+              { "id": "node24", "label": "Node 24",
+                "base": "bench-results/bench-base-node24/result.json",
+                "head": "bench-results/bench-head-node24/result.json" },
+              { "id": "node26", "label": "Node 26",
+                "base": "bench-results/bench-base-node26/result.json",
+                "head": "bench-results/bench-head-node26/result.json" }
+            ]
+          }
+          EOF
+          ls -R bench-results || true
+      - name: Generate Markdown report
+        run: |
+          node package/main/scripts/benchmark/compare.mjs compare-config.json report.md
+      - name: Upload Markdown report
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: benchmark-report
+          path: |
+            report.md
+            compare-config.json
+            bench-results
+      - name: Post or update PR comment
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('node:fs');
+            const marker = '<!-- pr-benchmark-report -->';
+            let report = '';
+            try {
+              report = fs.readFileSync('report.md', 'utf-8');
+            } catch (e) {
+              report = '⚠️ Benchmark report file was not produced. See workflow logs.';
+            }
+            const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+            const body = [marker, report, '', `Run: ${runUrl}`].join('\n');
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              per_page: 100,
+            });
+            const existing = comments.find((c) => c.body && c.body.includes(marker));
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existing.id,
+                body,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body,
+              });
+            }

@@ -88,6 +88,8 @@ build
 /module/*
 /common-module/*
 !/common-module/package.json
+/benchmark-bundles/
+/bench-results/
 
 lib
 
