@@ -35,15 +35,24 @@ jobs:
           echo "commentMarker=<!-- pr-benchmark-report -->" >> "$GITHUB_OUTPUT"
       - name: Post pending comment
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          BASE_REF: ${{ github.event.pull_request.base.ref }}
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const marker = '<!-- pr-benchmark-report -->';
+            const baseRef = process.env.BASE_REF;
+            const headRef = process.env.HEAD_REF;
+            const baseSha = process.env.BASE_SHA.slice(0, 7);
+            const headSha = process.env.HEAD_SHA.slice(0, 7);
             const body = [
               marker,
               '## 🏎️ Benchmark Report',
               '',
-              `⏳ Benchmarks are running across **Bun latest**, **Node 22**, **Node 24**, **Node 26** for base \`${{ steps.refs.outputs.baseRef }}\` @ \`${process.env.BASE_SHA.slice(0,7)}\` → head \`${{ steps.refs.outputs.headRef }}\` @ \`${process.env.HEAD_SHA.slice(0,7)}\`.`,
+              `⏳ Benchmarks are running across **Bun latest**, **Node 22**, **Node 24**, **Node 26** for base \`${baseRef}\` @ \`${baseSha}\` → head \`${headRef}\` @ \`${headSha}\`.`,
               '',
               `Run: ${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
             ].join('\n');
@@ -69,9 +78,6 @@ jobs:
                 body,
               });
             }
-        env:
-          BASE_SHA: ${{ github.event.pull_request.base.sha }}
-          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
 
   benchmark:
     name: Benchmark (${{ matrix.runtime.label }} / ${{ matrix.variant.id }})
