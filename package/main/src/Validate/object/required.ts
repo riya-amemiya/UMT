@@ -5,7 +5,13 @@
  * see all properties as required again.
  */
 
-import { object, type ObjectShape, type ObjectValidator } from "./core";
+import {
+  type InferObject,
+  object,
+  type ObjectShape,
+  type ObjectValidator,
+  type StandardSchemaV1,
+} from "./core";
 import type { OptionalValidator } from "./optional";
 
 export type UnwrapOptional<V> =
@@ -28,7 +34,11 @@ export type RequiredShape<T extends ObjectShape> = {
 export const required = <T extends ObjectShape>(
   validator: ObjectValidator<T>,
   message?: string,
-): ObjectValidator<RequiredShape<T>> => {
+): ObjectValidator<RequiredShape<T>> &
+  StandardSchemaV1<
+    InferObject<RequiredShape<T>>,
+    InferObject<RequiredShape<T>>
+  > => {
   const sourceShape = validator.shape;
   const nextShape = {} as ObjectShape;
   for (const key of Object.keys(sourceShape)) {
@@ -45,5 +55,9 @@ export const required = <T extends ObjectShape>(
   }
   return object(nextShape, message) as unknown as ObjectValidator<
     RequiredShape<T>
-  >;
+  > &
+    StandardSchemaV1<
+      InferObject<RequiredShape<T>>,
+      InferObject<RequiredShape<T>>
+    >;
 };

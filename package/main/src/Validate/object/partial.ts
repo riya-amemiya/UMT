@@ -5,7 +5,13 @@
  * optional.
  */
 
-import { object, type ObjectShape, type ObjectValidator } from "./core";
+import {
+  type InferObject,
+  object,
+  type ObjectShape,
+  type ObjectValidator,
+  type StandardSchemaV1,
+} from "./core";
 import { optional, type OptionalValidator } from "./optional";
 
 export type PartialShape<T extends ObjectShape> = {
@@ -32,7 +38,11 @@ export type PartialShape<T extends ObjectShape> = {
 export const partial = <T extends ObjectShape>(
   validator: ObjectValidator<T>,
   message?: string,
-): ObjectValidator<PartialShape<T>> => {
+): ObjectValidator<PartialShape<T>> &
+  StandardSchemaV1<
+    InferObject<PartialShape<T>>,
+    InferObject<PartialShape<T>>
+  > => {
   const sourceShape = validator.shape;
   const nextShape = {} as ObjectShape;
   for (const key of Object.keys(sourceShape)) {
@@ -44,5 +54,9 @@ export const partial = <T extends ObjectShape>(
   }
   return object(nextShape, message) as unknown as ObjectValidator<
     PartialShape<T>
-  >;
+  > &
+    StandardSchemaV1<
+      InferObject<PartialShape<T>>,
+      InferObject<PartialShape<T>>
+    >;
 };
