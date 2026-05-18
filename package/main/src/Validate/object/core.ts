@@ -24,28 +24,37 @@ export interface ObjectShape {
 }
 
 /**
+ * Resolved property map produced by applying `ValidateType` to every shape
+ * entry. Each property maps a `ValidateType` tag (such as `"string"`,
+ * `"number"`) back to the runtime type expected at that key.
+ */
+export type ObjectShapeProperties<T extends ObjectShape> = {
+  [key in keyof T]: ValidateType<ReturnType<T[key]>["type"]>;
+};
+
+/**
+ * Inferred object type produced by `object()`. Splits the property map into
+ * required and optional halves via `PickPartial` + `OptionalKeys` so optional
+ * properties surface with `?:` in the resulting type.
+ */
+export type InferObject<T extends ObjectShape> = {
+  [key in keyof PickPartial<
+    ObjectShapeProperties<T>,
+    OptionalKeys<ObjectShapeProperties<T>>
+  >]: PickPartial<
+    ObjectShapeProperties<T>,
+    OptionalKeys<ObjectShapeProperties<T>>
+  >[key];
+};
+
+/**
  * Object validator augmented with the original `shape` map. The shape map is
  * exposed so derived helpers such as `pick()`, `omit()`, `partial()`, and
  * `required()` can compose new object validators from existing ones.
  */
-export type ObjectValidator<
-  T extends ObjectShape,
-  U = {
-    [key in keyof T]: ValidateType<ReturnType<T[key]>["type"]>;
-  },
-> = ((
-  value: {
-    [key in keyof PickPartial<U, OptionalKeys<U>>]: PickPartial<
-      U,
-      OptionalKeys<U>
-    >[key];
-  },
-) => ValidateCoreReturnType<{
-  [key in keyof PickPartial<U, OptionalKeys<U>>]: PickPartial<
-    U,
-    OptionalKeys<U>
-  >[key];
-}>) & {
+export type ObjectValidator<T extends ObjectShape> = ((
+  value: InferObject<T>,
+) => ValidateCoreReturnType<InferObject<T>>) & {
   shape: T;
 };
 
@@ -59,16 +68,8 @@ export type ObjectValidator<
 export const object = <T extends ObjectShape>(
   option: T = {} as T,
   message?: string,
-): ObjectValidator<T> & StandardSchemaV1<unknown, unknown> => {
-  type U = {
-    [key in keyof T]: ValidateType<ReturnType<T[key]>["type"]>;
-  };
-  type Inferred = {
-    [key in keyof PickPartial<U, OptionalKeys<U>>]: PickPartial<
-      U,
-      OptionalKeys<U>
-    >[key];
-  };
+): ObjectValidator<T> & StandardSchemaV1<InferObject<T>, InferObject<T>> => {
+  type Inferred = InferObject<T>;
 
   const validator = ((value: Inferred): ValidateCoreReturnType<Inferred> => {
     if (!isDictionaryObject(value)) {
