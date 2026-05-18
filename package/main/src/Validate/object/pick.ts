@@ -8,7 +8,13 @@
  * already exposes a `pick` runtime helper.
  */
 
-import { object, type ObjectShape, type ObjectValidator } from "./core";
+import {
+  type InferObject,
+  object,
+  type ObjectShape,
+  type ObjectValidator,
+  type StandardSchemaV1,
+} from "./core";
 
 /**
  * Picks the given keys from an existing object validator and returns a new
@@ -24,7 +30,11 @@ export const pick_ = <T extends ObjectShape, K extends readonly (keyof T)[]>(
   validator: ObjectValidator<T>,
   keys: K,
   message?: string,
-): ObjectValidator<Pick<T, K[number]>> => {
+): ObjectValidator<Pick<T, K[number]>> &
+  StandardSchemaV1<
+    InferObject<Pick<T, K[number]>>,
+    InferObject<Pick<T, K[number]>>
+  > => {
   const sourceShape = validator.shape;
   const nextShape = {} as Pick<T, K[number]>;
   for (const key of keys) {

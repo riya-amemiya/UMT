@@ -15,6 +15,8 @@ import type {
   ValidateType,
 } from "@/Validate/type";
 
+export type { StandardSchemaV1 } from "@/Validate/standardSchema";
+
 /**
  * Shape map describing per-property validators consumed by `object()`
  */
