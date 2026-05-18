@@ -9,7 +9,13 @@
  * already exposes an `omit` runtime helper.
  */
 
-import { object, type ObjectShape, type ObjectValidator } from "./core";
+import {
+  type InferObject,
+  object,
+  type ObjectShape,
+  type ObjectValidator,
+  type StandardSchemaV1,
+} from "./core";
 
 /**
  * Removes the given keys from an existing object validator and returns a new
@@ -25,7 +31,11 @@ export const omit_ = <T extends ObjectShape, K extends readonly (keyof T)[]>(
   validator: ObjectValidator<T>,
   keys: K,
   message?: string,
-): ObjectValidator<Omit<T, K[number]>> => {
+): ObjectValidator<Omit<T, K[number]>> &
+  StandardSchemaV1<
+    InferObject<Omit<T, K[number]>>,
+    InferObject<Omit<T, K[number]>>
+  > => {
   const sourceShape = validator.shape;
   const omittedKeys = new Set<keyof T>(keys);
   const nextShape = {} as ObjectShape;
@@ -36,5 +46,9 @@ export const omit_ = <T extends ObjectShape, K extends readonly (keyof T)[]>(
   }
   return object(nextShape, message) as unknown as ObjectValidator<
     Omit<T, K[number]>
-  >;
+  > &
+    StandardSchemaV1<
+      InferObject<Omit<T, K[number]>>,
+      InferObject<Omit<T, K[number]>>
+    >;
 };
