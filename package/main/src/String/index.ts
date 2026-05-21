@@ -17,6 +17,7 @@ export * from "./pascalCase";
 export * from "./randomString";
 export * from "./randomStringInitialization";
 export * from "./reverseString";
+export * from "./sanitizeString";
 export * from "./slugify";
 export * from "./snakeCase";
 export * from "./stringSimilarity";
