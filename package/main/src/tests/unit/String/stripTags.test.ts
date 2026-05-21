@@ -17,6 +17,10 @@ describe("stripTags", () => {
     expect(stripTags("line1<br/>line2")).toBe("line1line2");
   });
 
+  it("should remove nested tag injections that survive a single pass", () => {
+    expect(stripTags("<sc<script>ript>")).toBe("");
+  });
+
   it("should leave text without tags unchanged", () => {
     expect(stripTags("plain text")).toBe("plain text");
   });
