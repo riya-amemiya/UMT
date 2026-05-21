@@ -1,0 +1,45 @@
+import { sanitizeString } from "@/String/sanitizeString";
+
+describe("sanitizeString", () => {
+  it("should keep printable ASCII characters", () => {
+    expect(sanitizeString("Hello, World!")).toBe("Hello, World!");
+  });
+
+  it("should keep all printable ASCII range from space to tilde", () => {
+    const printable =
+      " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
+    expect(sanitizeString(printable)).toBe(printable);
+  });
+
+  it("should keep newlines, carriage returns, and tabs", () => {
+    expect(sanitizeString("line1\nline2\r\n\tindented")).toBe(
+      "line1\nline2\r\n\tindented",
+    );
+  });
+
+  it("should remove ANSI escape sequences", () => {
+    expect(sanitizeString("\u001B[31mred\u001B[0m")).toBe("[31mred[0m");
+  });
+
+  it("should remove NULL bytes", () => {
+    expect(sanitizeString("a\u0000b")).toBe("ab");
+  });
+
+  it("should remove C0 control characters except TAB, LF, CR", () => {
+    expect(sanitizeString("a\u0001b\u0002c\u001Fd")).toBe("abcd");
+  });
+
+  it("should remove the DEL character", () => {
+    expect(sanitizeString("a\u007Fb")).toBe("ab");
+  });
+
+  it("should remove non-ASCII characters", () => {
+    expect(sanitizeString("héllo")).toBe("hllo");
+    expect(sanitizeString("日本語")).toBe("");
+    expect(sanitizeString("emoji\u{1F600}here")).toBe("emojihere");
+  });
+
+  it("should handle empty string", () => {
+    expect(sanitizeString("")).toBe("");
+  });
+});
