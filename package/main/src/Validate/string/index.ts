@@ -1,6 +1,6 @@
 export * from "./core";
 export * from "./validateEmail";
-export * from "./length";
+export * from "./exactLength";
 export * from "./minLength";
 export * from "./maxLength";
 export * from "./numberString";

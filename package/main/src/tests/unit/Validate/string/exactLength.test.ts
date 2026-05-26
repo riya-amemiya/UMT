@@ -1,8 +1,8 @@
-import { length_, string } from "@/Validate/string";
+import { exactLength, string } from "@/Validate/string";
 
-describe("length", () => {
-  it("length with message", () => {
-    const lengthValidatorWithMessage = length_(3, "Length must be 3");
+describe("exactLength", () => {
+  it("exactLength with message", () => {
+    const lengthValidatorWithMessage = exactLength(3, "Length must be 3");
     const validateStringWithMessage = string([lengthValidatorWithMessage]);
     expect(validateStringWithMessage("abcd").message).toEqual(
       "Length must be 3",
@@ -11,8 +11,8 @@ describe("length", () => {
     expect(validateStringWithMessage("ab").validate).toBeFalsy();
   });
 
-  it("length without message", () => {
-    const lengthValidatorWithoutMessage = length_(3);
+  it("exactLength without message", () => {
+    const lengthValidatorWithoutMessage = exactLength(3);
     const validateStringWithoutMessage = string([
       lengthValidatorWithoutMessage,
     ]);

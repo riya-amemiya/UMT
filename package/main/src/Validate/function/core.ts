@@ -95,7 +95,8 @@ export interface FunctionValidator<Inputs, Output> {
  * @param {string} [message] - Custom error message for type validation
  * @returns {FunctionValidator} - Validator augmented with `implement()`
  */
-export const function_ = <const S extends FunctionSchema = FunctionSchema>(
+// eslint-disable-next-line unicorn/prevent-abbreviations
+export const func = <const S extends FunctionSchema = FunctionSchema>(
   schema?: S,
   message?: string,
 ): FunctionValidator<ExtractInput<S>, ExtractOutput<S>> &

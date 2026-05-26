@@ -3,10 +3,10 @@ import { number } from "@/Validate/number";
 import { object } from "@/Validate/object/core";
 import { intersection } from "@/Validate/object/intersection";
 import { nullable } from "@/Validate/object/nullable";
-import { omit_ } from "@/Validate/object/omit";
+import { omitKeys } from "@/Validate/object/omitKeys";
 import { optional } from "@/Validate/object/optional";
 import { partial } from "@/Validate/object/partial";
-import { pick_ } from "@/Validate/object/pick";
+import { pickKeys } from "@/Validate/object/pickKeys";
 import { required } from "@/Validate/object/required";
 import { string } from "@/Validate/string";
 
@@ -76,7 +76,7 @@ describe("Integration: optional, nullable, and shape derivation", () => {
 
   it("derives a smaller validator via pick", () => {
     const base = object({ id: number(), name: string(), age: number() });
-    const onlyId = pick_(base, ["id"]);
+    const onlyId = pickKeys(base, ["id"]);
     expect(onlyId({ id: 1 }).validate).toBe(true);
     // The picked validator only checks `id`, so unknown extra keys pass through.
     expect(onlyId({ id: 2, name: "x" } as { id: number }).validate).toBe(true);
@@ -84,7 +84,7 @@ describe("Integration: optional, nullable, and shape derivation", () => {
 
   it("derives a smaller validator via omit", () => {
     const base = object({ id: number(), name: string(), age: number() });
-    const noAge = omit_(base, ["age"]);
+    const noAge = omitKeys(base, ["age"]);
     expect(noAge({ id: 1, name: "x" }).validate).toBe(true);
     expect(
       // @ts-expect-error name expected to be string
@@ -94,7 +94,7 @@ describe("Integration: optional, nullable, and shape derivation", () => {
 
   it("composes pick + partial + required to surgically toggle optionality", () => {
     const base = object({ id: number(), name: string(), age: number() });
-    const lax = partial(pick_(base, ["name", "age"]));
+    const lax = partial(pickKeys(base, ["name", "age"]));
     expect(lax({}).validate).toBe(true);
 
     const strict = required(lax);

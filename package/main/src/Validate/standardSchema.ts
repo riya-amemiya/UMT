@@ -99,7 +99,7 @@ export interface UmtValidatorResult {
 /**
  * Attaches a Standard Schema V1 `~standard` property to a UMT validator
  * function in place. The validator's existing call signature, attached
- * helpers (such as `shape` on `object()` or `implement` on `function_()`),
+ * helpers (such as `shape` on `object()` or `implement` on `func()`),
  * and return type are preserved untouched; only the `~standard` property is
  * added.
  *

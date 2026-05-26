@@ -1,4 +1,4 @@
-import { instanceof_ } from "@/Validate/instanceof";
+import { instanceOf } from "@/Validate/instanceof";
 import { number } from "@/Validate/number";
 import { object } from "@/Validate/object/core";
 import { intersection } from "@/Validate/object/intersection";
@@ -21,25 +21,25 @@ class Dog extends Animal {
   }
 }
 
-describe("instanceof_ validation", () => {
+describe("instanceOf validation", () => {
   it("accepts instances of the constructor", () => {
-    const validator = instanceof_(Animal);
+    const validator = instanceOf(Animal);
     expect(validator(new Animal("rex")).validate).toBe(true);
   });
 
   it("accepts instances of subclasses", () => {
-    const validator = instanceof_(Animal);
+    const validator = instanceOf(Animal);
     expect(validator(new Dog("rex")).validate).toBe(true);
   });
 
   it("rejects instances of unrelated constructors", () => {
-    const validator = instanceof_(Dog);
+    const validator = instanceOf(Dog);
     // @ts-expect-error Animal is not Dog
     expect(validator(new Animal("rex")).validate).toBe(false);
   });
 
   it("rejects non-objects", () => {
-    const validator = instanceof_(Animal);
+    const validator = instanceOf(Animal);
     // @ts-expect-error string is not an Animal
     expect(validator("rex").validate).toBe(false);
     // @ts-expect-error number is not an Animal
@@ -49,14 +49,14 @@ describe("instanceof_ validation", () => {
   });
 
   it("returns the configured message on failure", () => {
-    const validator = instanceof_(Animal, "must be an Animal");
+    const validator = instanceOf(Animal, "must be an Animal");
     // @ts-expect-error string is not an Animal
     expect(validator("rex").message).toBe("must be an Animal");
   });
 
   it("composes inside object()", () => {
     const validator = object({
-      pet: instanceof_(Animal),
+      pet: instanceOf(Animal),
       name: string(),
     });
     const valid: ReturnType<typeof validator>["type"] = {
@@ -67,7 +67,7 @@ describe("instanceof_ validation", () => {
   });
 
   it("composes with union", () => {
-    const validator = union(instanceof_(Animal), string());
+    const validator = union(instanceOf(Animal), string());
     expect(validator(new Animal("rex")).validate).toBe(true);
     expect(validator("rex").validate).toBe(true);
     // @ts-expect-error number is not in the union
@@ -76,24 +76,24 @@ describe("instanceof_ validation", () => {
 
   it("composes with intersection of objects", () => {
     const validator = intersection(
-      object({ pet: instanceof_(Animal) }),
+      object({ pet: instanceOf(Animal) }),
       object({ id: number() }),
     );
     expect(validator({ pet: new Animal("rex"), id: 1 }).validate).toBe(true);
   });
 
   it("composes with nullable and optional", () => {
-    const nullableAnimal = nullable(instanceof_(Animal));
+    const nullableAnimal = nullable(instanceOf(Animal));
     expect(nullableAnimal(null).validate).toBe(true);
     expect(nullableAnimal(new Animal("rex")).validate).toBe(true);
 
-    const optionalAnimal = optional(instanceof_(Animal));
+    const optionalAnimal = optional(instanceOf(Animal));
     expect(optionalAnimal(undefined).validate).toBe(true);
     expect(optionalAnimal(new Animal("rex")).validate).toBe(true);
   });
 
   it("infers the instance type via SchemaToInterface", () => {
-    const validator = instanceof_(Animal);
+    const validator = instanceOf(Animal);
     type Schema = SchemaToInterface<typeof validator>;
     const value: Schema = new Animal("rex");
     expect(validator(value).validate).toBe(true);

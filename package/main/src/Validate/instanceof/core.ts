@@ -2,7 +2,7 @@
  * instanceof validation core module
  * Provides a validator that checks whether a value is an instance of a
  * specific constructor, including subclasses. The validator is exported as
- * `instanceof_` because `instanceof` is a reserved keyword in JavaScript.
+ * `instanceOf` because `instanceof` is a reserved keyword in JavaScript.
  */
 
 import {
@@ -23,7 +23,7 @@ export type Constructor<T> = new (...arguments_: any[]) => T;
  * @param {string} [message] - Custom error message for validation failure
  * @returns {Function} - Validator function for instances of the constructor
  */
-export const instanceof_ = <T>(
+export const instanceOf = <T>(
   classConstructor: Constructor<T>,
   message?: string,
 ): ((value: T) => ValidateCoreReturnType<T>) & StandardSchemaV1<T, T> => {

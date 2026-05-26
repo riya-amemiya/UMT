@@ -1,4 +1,4 @@
-import { function_ } from "@/Validate/function";
+import { func } from "@/Validate/function";
 import { number } from "@/Validate/number";
 import { object } from "@/Validate/object/core";
 import { intersection } from "@/Validate/object/intersection";
@@ -8,14 +8,14 @@ import { union } from "@/Validate/object/union";
 import { string } from "@/Validate/string";
 import type { SchemaToInterface } from "@/Validate/type";
 
-describe("function_ validation", () => {
+describe("func validation", () => {
   it("accepts function values", () => {
-    const validator = function_();
+    const validator = func();
     expect(validator(() => 0).validate).toBe(true);
   });
 
   it("rejects non-function values", () => {
-    const validator = function_();
+    const validator = func();
     // @ts-expect-error string is not function
     expect(validator("nope").validate).toBe(false);
     // @ts-expect-error number is not function
@@ -23,14 +23,14 @@ describe("function_ validation", () => {
   });
 
   it("returns the configured message on failure", () => {
-    const validator = function_(undefined, "must be a function");
+    const validator = func(undefined, "must be a function");
     // @ts-expect-error string is not function
     expect(validator("nope").message).toBe("must be a function");
   });
 
   it("composes inside object()", () => {
     const validator = object({
-      handler: function_(),
+      handler: func(),
       name: string(),
     });
     const valid: ReturnType<typeof validator>["type"] = {
@@ -41,31 +41,31 @@ describe("function_ validation", () => {
   });
 
   it("composes with union", () => {
-    const validator = union(function_(), string());
+    const validator = union(func(), string());
     expect(validator(() => 1).validate).toBe(true);
     expect(validator("hello").validate).toBe(true);
   });
 
   it("composes with intersection of objects", () => {
     const validator = intersection(
-      object({ handler: function_() }),
+      object({ handler: func() }),
       object({ id: number() }),
     );
     expect(validator({ handler: () => 1, id: 1 }).validate).toBe(true);
   });
 
   it("composes with nullable and optional", () => {
-    const nullableFn = nullable(function_());
+    const nullableFn = nullable(func());
     expect(nullableFn(null).validate).toBe(true);
     expect(nullableFn(() => 1).validate).toBe(true);
 
-    const optionalFn = optional(function_());
+    const optionalFn = optional(func());
     expect(optionalFn(undefined).validate).toBe(true);
     expect(optionalFn(() => 1).validate).toBe(true);
   });
 
   it("validates input arguments via implement()", () => {
-    const validator = function_({
+    const validator = func({
       input: [string(), number()],
       output: number(),
     });
@@ -78,7 +78,7 @@ describe("function_ validation", () => {
   });
 
   it("validates output via implement()", () => {
-    const validator = function_({
+    const validator = func({
       input: [number()],
       output: string(),
     });
@@ -87,7 +87,7 @@ describe("function_ validation", () => {
   });
 
   it("falls back to a default message when input validation fails without one", () => {
-    const validator = function_({
+    const validator = func({
       input: [number()],
       output: number(),
     });
@@ -99,7 +99,7 @@ describe("function_ validation", () => {
   });
 
   it("falls back to a default message when output validation fails without one", () => {
-    const validator = function_({
+    const validator = func({
       input: [number()],
       output: number(),
     });
@@ -108,7 +108,7 @@ describe("function_ validation", () => {
   });
 
   it("throws when implement() receives a non-function with the default message", () => {
-    const validator = function_();
+    const validator = func();
     expect(() =>
       // @ts-expect-error string is not function
       validator.implement("not a function"),
@@ -116,7 +116,7 @@ describe("function_ validation", () => {
   });
 
   it("throws when implement() receives a non-function with a custom message", () => {
-    const validator = function_(undefined, "must be callable");
+    const validator = func(undefined, "must be callable");
     expect(() =>
       // @ts-expect-error string is not function
       validator.implement("not a function"),
@@ -124,25 +124,25 @@ describe("function_ validation", () => {
   });
 
   it("skips input checks when implement() runs with no input schema", () => {
-    const validator = function_({ output: number() });
+    const validator = func({ output: number() });
     const wrapped = validator.implement(() => 1);
     expect(wrapped()).toBe(1);
   });
 
   it("skips output checks when implement() runs with no output schema", () => {
-    const validator = function_({ input: [number()] });
+    const validator = func({ input: [number()] });
     const wrapped = validator.implement((n) => n);
     expect(wrapped(2)).toBe(2);
   });
 
   it("returns the value untouched when implement() runs with no schema", () => {
-    const validator = function_();
+    const validator = func();
     const wrapped = validator.implement((value: number) => value * 2);
     expect(wrapped(3)).toBe(6);
   });
 
   it("returns a wrapper that does not change call results", () => {
-    const validator = function_({
+    const validator = func({
       input: [number()],
       output: number(),
     });
@@ -152,7 +152,7 @@ describe("function_ validation", () => {
   });
 
   it("infers the function signature via SchemaToInterface", () => {
-    const validator = function_({
+    const validator = func({
       input: [string(), number()],
       output: number(),
     });

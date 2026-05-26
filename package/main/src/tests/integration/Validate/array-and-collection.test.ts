@@ -4,7 +4,7 @@ import { number } from "@/Validate/number";
 import { object } from "@/Validate/object/core";
 import { intersection } from "@/Validate/object/intersection";
 import { union } from "@/Validate/object/union";
-import { set_ } from "@/Validate/set/core";
+import { setOf } from "@/Validate/set/core";
 import { string } from "@/Validate/string";
 import { oneOf } from "@/Validate/string/oneOf";
 import type { SchemaToInterface } from "@/Validate/type";
@@ -100,7 +100,7 @@ describe("Integration: array, map, and set composition", () => {
   });
 
   it("validates a Set of literal union elements", () => {
-    const validator = set_(oneOf(["red", "green", "blue"]));
+    const validator = setOf(oneOf(["red", "green", "blue"]));
     const valid = new Set<"red" | "green" | "blue">(["red", "blue"]);
     expect(validator(valid).validate).toBe(true);
     const invalid = new Set<"red" | "green" | "blue">([
@@ -127,7 +127,7 @@ describe("Integration: array, map, and set composition", () => {
     const validator = arrayOf(
       object({
         id: number(),
-        tags: set_(oneOf(["new", "hot", "sale"])),
+        tags: setOf(oneOf(["new", "hot", "sale"])),
       }),
     );
     const valid = [

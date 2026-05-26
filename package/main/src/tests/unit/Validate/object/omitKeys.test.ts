@@ -3,13 +3,13 @@ import { number } from "@/Validate/number";
 import { object } from "@/Validate/object/core";
 import { intersection } from "@/Validate/object/intersection";
 import { nullable } from "@/Validate/object/nullable";
-import { omit_ } from "@/Validate/object/omit";
+import { omitKeys } from "@/Validate/object/omitKeys";
 import { optional } from "@/Validate/object/optional";
 import { union } from "@/Validate/object/union";
 import { string } from "@/Validate/string";
 import type { SchemaToInterface } from "@/Validate/type";
 
-describe("omit_", () => {
+describe("omitKeys", () => {
   const baseValidator = object({
     name: string(),
     age: number(),
@@ -17,7 +17,7 @@ describe("omit_", () => {
   });
 
   it("creates a validator covering only the remaining keys", () => {
-    const validator = omit_(baseValidator, ["active"]);
+    const validator = omitKeys(baseValidator, ["active"]);
     const valid: ReturnType<typeof validator>["type"] = {
       name: "John",
       age: 30,
@@ -26,26 +26,26 @@ describe("omit_", () => {
   });
 
   it("ignores keys outside the omitted set", () => {
-    const validator = omit_(baseValidator, ["age", "active"]);
+    const validator = omitKeys(baseValidator, ["age", "active"]);
     const valid: ReturnType<typeof validator>["type"] = { name: "John" };
     expect(validator(valid).validate).toBe(true);
   });
 
   it("rejects values failing remaining validators", () => {
-    const validator = omit_(baseValidator, ["active"]);
+    const validator = omitKeys(baseValidator, ["active"]);
     // @ts-expect-error wrong type for age
     expect(validator({ name: "John", age: "30" }).validate).toBe(false);
   });
 
   it("composes with union", () => {
-    const validator = union(omit_(baseValidator, ["active"]), string());
+    const validator = union(omitKeys(baseValidator, ["active"]), string());
     expect(validator({ name: "John", age: 30 }).validate).toBe(true);
     expect(validator("hello").validate).toBe(true);
   });
 
   it("composes with intersection", () => {
     const validator = intersection(
-      omit_(baseValidator, ["active"]),
+      omitKeys(baseValidator, ["active"]),
       object({ active: boolean() }),
     );
     expect(validator({ name: "John", age: 30, active: true }).validate).toBe(
@@ -54,17 +54,17 @@ describe("omit_", () => {
   });
 
   it("composes with nullable and optional", () => {
-    const nullableOmit = nullable(omit_(baseValidator, ["active"]));
+    const nullableOmit = nullable(omitKeys(baseValidator, ["active"]));
     expect(nullableOmit(null).validate).toBe(true);
     expect(nullableOmit({ name: "John", age: 30 }).validate).toBe(true);
 
-    const optionalOmit = optional(omit_(baseValidator, ["active"]));
+    const optionalOmit = optional(omitKeys(baseValidator, ["active"]));
     expect(optionalOmit(undefined).validate).toBe(true);
     expect(optionalOmit({ name: "John", age: 30 }).validate).toBe(true);
   });
 
   it("infers the omitted shape via SchemaToInterface", () => {
-    const validator = omit_(baseValidator, ["active"]);
+    const validator = omitKeys(baseValidator, ["active"]);
     type Schema = SchemaToInterface<typeof validator>;
     const value: Schema = { name: "John", age: 30 };
     expect(validator(value).validate).toBe(true);

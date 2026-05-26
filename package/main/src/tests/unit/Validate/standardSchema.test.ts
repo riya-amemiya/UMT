@@ -4,8 +4,8 @@ import { bigint } from "@/Validate/bigint";
 import { boolean } from "@/Validate/boolean";
 import { date } from "@/Validate/date";
 import { file } from "@/Validate/file";
-import { function_ } from "@/Validate/function";
-import { instanceof_ } from "@/Validate/instanceof";
+import { func } from "@/Validate/function";
+import { instanceOf } from "@/Validate/instanceof";
 import { map } from "@/Validate/map";
 import { never } from "@/Validate/never";
 import { number } from "@/Validate/number";
@@ -14,7 +14,7 @@ import { intersection } from "@/Validate/object/intersection";
 import { nullable } from "@/Validate/object/nullable";
 import { optional } from "@/Validate/object/optional";
 import { union } from "@/Validate/object/union";
-import { set_ } from "@/Validate/set";
+import { setOf } from "@/Validate/set";
 import {
   STANDARD_SCHEMA_VENDOR,
   type StandardSchemaV1,
@@ -92,13 +92,13 @@ describe("Standard Schema V1 compatibility", () => {
     ).toBe("never message");
   });
 
-  it("instanceof / arrayOf / set_ / map validators implement the spec", () => {
+  it("instanceof / arrayOf / setOf / map validators implement the spec", () => {
     class Sample {
       readonly id = 1;
     }
-    expect(instanceof_(Sample)["~standard"]).toMatchObject(expectedProps);
+    expect(instanceOf(Sample)["~standard"]).toMatchObject(expectedProps);
     expect(arrayOf(string())["~standard"]).toMatchObject(expectedProps);
-    expect(set_(string())["~standard"]).toMatchObject(expectedProps);
+    expect(setOf(string())["~standard"]).toMatchObject(expectedProps);
     expect(map(string(), number())["~standard"]).toMatchObject(expectedProps);
   });
 
@@ -146,8 +146,8 @@ describe("Standard Schema V1 compatibility", () => {
     expect(syncValidate(stringOrNull, "x").issues).toBeUndefined();
   });
 
-  it("function_ validator implements the spec", () => {
-    const validator = function_({
+  it("func validator implements the spec", () => {
+    const validator = func({
       input: [string()],
       output: number(),
     });
