@@ -10,6 +10,7 @@ export * from "./Error/index";
 export * from "./Function/index";
 export * from "./IP/index";
 export * from "./Iterator/index";
+export * from "./Map/index";
 export * from "./Math/index";
 export * from "./Number/index";
 export * from "./Object/index";
