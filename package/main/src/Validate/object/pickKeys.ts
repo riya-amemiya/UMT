@@ -1,11 +1,12 @@
 /**
- * Object validation - pick
+ * Object validation - pickKeys
  * Returns a new object validator that only checks the specified keys of the
  * source validator. Mirrors `Pick<T, K>` at the type level so consumers like
  * `union()`, `intersection()`, and `SchemaToInterface` see the narrowed shape.
  *
- * The function is exported as `pick_` because the top-level `Object` module
- * already exposes a `pick` runtime helper.
+ * The function is named `pickKeys` to avoid conflicting with the top-level
+ * `Object` module's `pick` runtime helper while making the keys-based
+ * semantics explicit.
  */
 
 import {
@@ -26,7 +27,7 @@ import {
  * @param {string} [message] - Custom error message for the picked validator
  * @returns {ObjectValidator<Pick<T, K[number]>>} - New validator scoped to picked keys
  */
-export const pick_ = <T extends ObjectShape, K extends readonly (keyof T)[]>(
+export const pickKeys = <T extends ObjectShape, K extends readonly (keyof T)[]>(
   validator: ObjectValidator<T>,
   keys: K,
   message?: string,

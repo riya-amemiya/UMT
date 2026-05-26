@@ -1,12 +1,13 @@
 /**
- * Object validation - omit
+ * Object validation - omitKeys
  * Returns a new object validator that drops the specified keys from the
  * source validator. Mirrors `Omit<T, K>` at the type level so consumers
  * like `union()`, `intersection()`, and `SchemaToInterface` see the
  * narrowed shape.
  *
- * The function is exported as `omit_` because the top-level `Object` module
- * already exposes an `omit` runtime helper.
+ * The function is named `omitKeys` to avoid conflicting with the top-level
+ * `Object` module's `omit` runtime helper while making the keys-based
+ * semantics explicit.
  */
 
 import {
@@ -27,7 +28,7 @@ import {
  * @param {string} [message] - Custom error message for the omitted validator
  * @returns {ObjectValidator<Omit<T, K[number]>>} - New validator without omitted keys
  */
-export const omit_ = <T extends ObjectShape, K extends readonly (keyof T)[]>(
+export const omitKeys = <T extends ObjectShape, K extends readonly (keyof T)[]>(
   validator: ObjectValidator<T>,
   keys: K,
   message?: string,

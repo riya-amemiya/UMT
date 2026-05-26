@@ -1,5 +1,5 @@
 import { arrayOf } from "@/Validate/array/arrayOf";
-import { function_ } from "@/Validate/function/core";
+import { func } from "@/Validate/function/core";
 import { number } from "@/Validate/number";
 import { object } from "@/Validate/object/core";
 import { intersection } from "@/Validate/object/intersection";
@@ -10,8 +10,8 @@ import { templateLiteral } from "@/Validate/templateLiteral/core";
 
 /**
  * Integration tests covering literal validators (oneOf, templateLiteral) and
- * the function_ validator combined with object/union/intersection/arrayOf.
- * Verifies that literal unions flow through compositions and that function_
+ * the func validator combined with object/union/intersection/arrayOf.
+ * Verifies that literal unions flow through compositions and that func
  * implement() runs nested validators on inputs and outputs.
  */
 describe("Integration: literal, template literal, and function composition", () => {
@@ -61,8 +61,8 @@ describe("Integration: literal, template literal, and function composition", () 
     expect(validator("vAlpha").validate).toBe(false);
   });
 
-  it("composes function_ with object input and arrayOf output via implement", () => {
-    const validator = function_({
+  it("composes func with object input and arrayOf output via implement", () => {
+    const validator = func({
       input: [object({ name: string(), age: number() })],
       output: arrayOf(string()),
     });
@@ -77,8 +77,8 @@ describe("Integration: literal, template literal, and function composition", () 
     ).toThrow(TypeError);
   });
 
-  it("composes function_ with union input and templateLiteral output", () => {
-    const validator = function_({
+  it("composes func with union input and templateLiteral output", () => {
+    const validator = func({
       input: [union(string(), number())],
       output: templateLiteral(["wrapped:", string()]),
     });
@@ -91,11 +91,11 @@ describe("Integration: literal, template literal, and function composition", () 
     expect(() => wrapped(true)).toThrow(TypeError);
   });
 
-  it("validates an array of objects, each with a function_ value", () => {
+  it("validates an array of objects, each with a func value", () => {
     const validator = arrayOf(
       object({
         name: string(),
-        handler: function_({ input: [number()], output: number() }),
+        handler: func({ input: [number()], output: number() }),
       }),
     );
     const valid = [
@@ -130,8 +130,8 @@ describe("Integration: literal, template literal, and function composition", () 
     ).toBe(false);
   });
 
-  it("rejects function_ implement output that does not match the schema", () => {
-    const validator = function_({
+  it("rejects func implement output that does not match the schema", () => {
+    const validator = func({
       input: [number()],
       output: oneOf(["even", "odd"]),
     });

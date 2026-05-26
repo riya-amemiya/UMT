@@ -6,10 +6,10 @@ import { number } from "@/Validate/number";
 import { object } from "@/Validate/object/core";
 import { intersection } from "@/Validate/object/intersection";
 import { nullable } from "@/Validate/object/nullable";
-import { omit_ } from "@/Validate/object/omit";
+import { omitKeys } from "@/Validate/object/omitKeys";
 import { optional } from "@/Validate/object/optional";
 import { partial } from "@/Validate/object/partial";
-import { pick_ } from "@/Validate/object/pick";
+import { pickKeys } from "@/Validate/object/pickKeys";
 import { required } from "@/Validate/object/required";
 import { union } from "@/Validate/object/union";
 import { string } from "@/Validate/string";
@@ -134,9 +134,9 @@ describe("Integration: UMT validators with @hono/standard-validator", () => {
     expect(await res.json()).toStrictEqual({ id: "i1", label: "l1" });
   });
 
-  it("types c.req.valid('json') from an omit_() derived schema", async () => {
+  it("types c.req.valid('json') from an omitKeys() derived schema", async () => {
     const Base = object({ id: string(), name: string(), age: number() });
-    const Schema = omit_(Base, ["age"]);
+    const Schema = omitKeys(Base, ["age"]);
     const app = new Hono().post("/u", sValidator("json", Schema), (c) => {
       const input = c.req.valid("json");
       const id: string = input.id;
@@ -152,9 +152,9 @@ describe("Integration: UMT validators with @hono/standard-validator", () => {
     expect(await res.json()).toStrictEqual({ id: "x", name: "n" });
   });
 
-  it("types c.req.valid('json') from a pick_() derived schema", async () => {
+  it("types c.req.valid('json') from a pickKeys() derived schema", async () => {
     const Base = object({ id: string(), name: string(), age: number() });
-    const Schema = pick_(Base, ["id"]);
+    const Schema = pickKeys(Base, ["id"]);
     const app = new Hono().post("/u", sValidator("json", Schema), (c) => {
       const input = c.req.valid("json");
       const id: string = input.id;
@@ -205,9 +205,9 @@ describe("Integration: UMT validators with @hono/standard-validator", () => {
     expect(await res.json()).toStrictEqual({ id: "x", nick: "n" });
   });
 
-  it("types c.req.valid('json') from a partial(omit_()) chained derivation", async () => {
+  it("types c.req.valid('json') from a partial(omitKeys()) chained derivation", async () => {
     const Base = object({ id: string(), name: string(), age: number() });
-    const Schema = partial(omit_(Base, ["age"]));
+    const Schema = partial(omitKeys(Base, ["age"]));
     const app = new Hono().post("/u", sValidator("json", Schema), (c) => {
       const input = c.req.valid("json");
       const id: string | undefined = input.id;

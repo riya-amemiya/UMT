@@ -4,8 +4,9 @@
  * delegate to a per-element validator, mirroring how `arrayOf()` validates
  * each element of an array.
  *
- * The function is exported as `set_` because the top-level `Object` module
- * already exposes a `set` runtime helper.
+ * The function is named `setOf` to avoid conflicting with the top-level
+ * `Object` module's `set` runtime helper, and mirrors `arrayOf()` for
+ * consistency.
  */
 
 import {
@@ -29,7 +30,7 @@ export type SetExtractValidatedType<V> = V extends (value: never) => {
  * @param {string} [message] - Custom error message for type validation
  * @returns {Function} - Validator function for Set instances
  */
-export const set_ = <
+export const setOf = <
   // biome-ignore lint/suspicious/noExplicitAny: validator inputs vary
   IV extends (value: any) => ValidateCoreReturnType<unknown> = (
     value: unknown,
