@@ -21,3 +21,7 @@
 ## 2026-04-16 - Intl.NumberFormat Port to Python
 **Mismatch:** `formatNumber` in `package/main` delegates to `Intl.NumberFormat`, which has full ICU locale data and supports hundreds of locales, currencies, and rounding modes. Python's zero-dependency policy rules out Babel/ICU, and the stdlib `locale` module mutates global process state so it can't be used safely in a library.
 **Resolution:** Ported a curated implementation that covers the common cases documented in the TS JSDoc examples (decimal/percent/currency styles, minimum/maximum fraction digits, en-US/de-DE/ja-JP/fr-FR/etc. locales) and falls back to en-US for unknown locales. Emulated JS `Math.round` half-away-from-zero semantics explicitly because Python's built-in `round` uses banker's rounding and would diverge on half values.
+
+## 2026-05-28 - Map Module Port to Python
+**Mismatch:** TS `Map/zipToMap` and `Map/groupByToMap` rely on JS `Map`, which preserves insertion order and accepts any object as a key (including mutable objects via reference equality). Python's stdlib `dict` only accepts hashable keys, but it does preserve insertion order since 3.7.
+**Resolution:** Ported both functions to a new `umt_python/src/map` module returning plain `dict[K, V]` instances and constrained the key TypeVar with `bound=Hashable` to keep parity with Python semantics. Tests substituted tuple keys for the TS object-key cases because unhashable types like `dict` cannot be used as Python dict keys, while still validating the "non-string key" branch.
