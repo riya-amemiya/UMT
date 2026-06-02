@@ -20,41 +20,71 @@ for (let i = 0; i < 1000; i++) {
 
 const transform = (_v: unknown, k: string) => k.toUpperCase();
 
+// Each key-count tier is benchmarked in its own group so the three libraries
+// are compared on the same input. The repetition count per tier is chosen so
+// that one measured sample takes roughly ~500ms, keeping timer resolution and
+// scheduling jitter negligible. The count is shared across variants in a tier.
+const SMALL_ITERATIONS = 430_000;
+const MEDIUM_ITERATIONS = 28_000;
+const LARGE_ITERATIONS = 2250;
+
 summary(() => {
   bench("customMapKeys (10 keys)", () => {
-    do_not_optimize(customMapKeys(smallObj, transform));
+    for (let i = 0; i < SMALL_ITERATIONS; i++) {
+      do_not_optimize(customMapKeys(smallObj, transform));
+    }
   });
 
   bench("lodashMapKeys (10 keys)", () => {
-    do_not_optimize(lodashMapKeys(smallObj, transform));
+    for (let i = 0; i < SMALL_ITERATIONS; i++) {
+      do_not_optimize(lodashMapKeys(smallObj, transform));
+    }
   });
 
   bench("esToolkitMapKeys (10 keys)", () => {
-    do_not_optimize(esToolkitMapKeys(smallObj, transform));
+    for (let i = 0; i < SMALL_ITERATIONS; i++) {
+      do_not_optimize(esToolkitMapKeys(smallObj, transform));
+    }
   });
+});
 
+summary(() => {
   bench("customMapKeys (100 keys)", () => {
-    do_not_optimize(customMapKeys(mediumObj, transform));
+    for (let i = 0; i < MEDIUM_ITERATIONS; i++) {
+      do_not_optimize(customMapKeys(mediumObj, transform));
+    }
   });
 
   bench("lodashMapKeys (100 keys)", () => {
-    do_not_optimize(lodashMapKeys(mediumObj, transform));
+    for (let i = 0; i < MEDIUM_ITERATIONS; i++) {
+      do_not_optimize(lodashMapKeys(mediumObj, transform));
+    }
   });
 
   bench("esToolkitMapKeys (100 keys)", () => {
-    do_not_optimize(esToolkitMapKeys(mediumObj, transform));
+    for (let i = 0; i < MEDIUM_ITERATIONS; i++) {
+      do_not_optimize(esToolkitMapKeys(mediumObj, transform));
+    }
   });
+});
 
+summary(() => {
   bench("customMapKeys (1000 keys)", () => {
-    do_not_optimize(customMapKeys(largeObj, transform));
+    for (let i = 0; i < LARGE_ITERATIONS; i++) {
+      do_not_optimize(customMapKeys(largeObj, transform));
+    }
   });
 
   bench("lodashMapKeys (1000 keys)", () => {
-    do_not_optimize(lodashMapKeys(largeObj, transform));
+    for (let i = 0; i < LARGE_ITERATIONS; i++) {
+      do_not_optimize(lodashMapKeys(largeObj, transform));
+    }
   });
 
   bench("esToolkitMapKeys (1000 keys)", () => {
-    do_not_optimize(esToolkitMapKeys(largeObj, transform));
+    for (let i = 0; i < LARGE_ITERATIONS; i++) {
+      do_not_optimize(esToolkitMapKeys(largeObj, transform));
+    }
   });
 });
 

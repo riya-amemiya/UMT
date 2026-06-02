@@ -49,21 +49,38 @@ const itemsLarge = Array.from({ length: 1000 }, (_, index) => {
   return `randomstring${index}`; // diff length
 });
 
+// The small input runs in well under two microseconds and the large input in a
+// few hundred microseconds, both noise-dominated. Each group repeats its search
+// enough times for one measured sample to take roughly ~500ms, keeping fixed
+// overhead negligible. The count is shared across variants within a group.
+const SMALL_ITERATIONS = 560_000;
+const LARGE_ITERATIONS = 2200;
+
 summary(() => {
   bench("legacyFuzzySearch (small)", () => {
-    do_not_optimize(legacyFuzzySearch(query, itemsSmall));
+    for (let i = 0; i < SMALL_ITERATIONS; i++) {
+      do_not_optimize(legacyFuzzySearch(query, itemsSmall));
+    }
   });
 
   bench("fuzzySearch (small)", () => {
-    do_not_optimize(fuzzySearch(query, itemsSmall));
+    for (let i = 0; i < SMALL_ITERATIONS; i++) {
+      do_not_optimize(fuzzySearch(query, itemsSmall));
+    }
   });
+});
 
+summary(() => {
   bench("legacyFuzzySearch (large)", () => {
-    do_not_optimize(legacyFuzzySearch(query, itemsLarge));
+    for (let i = 0; i < LARGE_ITERATIONS; i++) {
+      do_not_optimize(legacyFuzzySearch(query, itemsLarge));
+    }
   });
 
   bench("fuzzySearch (large)", () => {
-    do_not_optimize(fuzzySearch(query, itemsLarge));
+    for (let i = 0; i < LARGE_ITERATIONS; i++) {
+      do_not_optimize(fuzzySearch(query, itemsLarge));
+    }
   });
 });
 

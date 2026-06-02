@@ -5,22 +5,34 @@ import { inRange as esToolkitInRange } from "es-toolkit";
 
 const testValues = [-10, 0, 3, 5, 10, 50];
 
+// A single inRange call runs in a handful of nanoseconds, which is buried in
+// timer resolution and CPU jitter. Repeating it this many times makes one
+// measured sample take roughly ~500ms so that fixed overhead is negligible.
+// The same count is shared across all variants to keep the comparison fair.
+const ITERATIONS = 40_000_000;
+
 summary(() => {
   bench("customInRange", () => {
-    for (const value of testValues) {
-      do_not_optimize(customInRange(value, 0, 10));
+    for (let i = 0; i < ITERATIONS; i++) {
+      for (const value of testValues) {
+        do_not_optimize(customInRange(value, 0, 10));
+      }
     }
   });
 
   bench("lodashInRange", () => {
-    for (const value of testValues) {
-      do_not_optimize(lodashInRange(value, 0, 10));
+    for (let i = 0; i < ITERATIONS; i++) {
+      for (const value of testValues) {
+        do_not_optimize(lodashInRange(value, 0, 10));
+      }
     }
   });
 
   bench("esToolkitInRange", () => {
-    for (const value of testValues) {
-      do_not_optimize(esToolkitInRange(value, 0, 10));
+    for (let i = 0; i < ITERATIONS; i++) {
+      for (const value of testValues) {
+        do_not_optimize(esToolkitInRange(value, 0, 10));
+      }
     }
   });
 });
