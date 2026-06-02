@@ -6,6 +6,7 @@ export * from "./Consts/index";
 export * from "./Crypto/index";
 export * from "./DataStructure/index";
 export * from "./Date/index";
+export * from "./Decorator/index";
 export * from "./Error/index";
 export * from "./Function/index";
 export * from "./IP/index";
