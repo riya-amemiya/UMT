@@ -12,29 +12,50 @@ const deepObj = {
   h: new Date(),
 };
 
+// Cloning these small objects costs from under a microsecond (shallow) to a few
+// microseconds (deep), which is noise-dominated. Each group repeats the clone
+// enough times to bring one measured sample to roughly ~500ms so that fixed
+// overhead is negligible. The count is shared across variants within a group.
+const SHALLOW_ITERATIONS = 1_100_000;
+const DEEP_ITERATIONS = 120_000;
+
 summary(() => {
   bench("customDeepClone (shallow)", () => {
-    do_not_optimize(customDeepClone(shallowObj));
+    for (let i = 0; i < SHALLOW_ITERATIONS; i++) {
+      do_not_optimize(customDeepClone(shallowObj));
+    }
   });
 
   bench("lodashCloneDeep (shallow)", () => {
-    do_not_optimize(lodashCloneDeep(shallowObj));
+    for (let i = 0; i < SHALLOW_ITERATIONS; i++) {
+      do_not_optimize(lodashCloneDeep(shallowObj));
+    }
   });
 
   bench("esToolkitCloneDeep (shallow)", () => {
-    do_not_optimize(esToolkitCloneDeep(shallowObj));
+    for (let i = 0; i < SHALLOW_ITERATIONS; i++) {
+      do_not_optimize(esToolkitCloneDeep(shallowObj));
+    }
   });
+});
 
+summary(() => {
   bench("customDeepClone (deep)", () => {
-    do_not_optimize(customDeepClone(deepObj));
+    for (let i = 0; i < DEEP_ITERATIONS; i++) {
+      do_not_optimize(customDeepClone(deepObj));
+    }
   });
 
   bench("lodashCloneDeep (deep)", () => {
-    do_not_optimize(lodashCloneDeep(deepObj));
+    for (let i = 0; i < DEEP_ITERATIONS; i++) {
+      do_not_optimize(lodashCloneDeep(deepObj));
+    }
   });
 
   bench("esToolkitCloneDeep (deep)", () => {
-    do_not_optimize(esToolkitCloneDeep(deepObj));
+    for (let i = 0; i < DEEP_ITERATIONS; i++) {
+      do_not_optimize(esToolkitCloneDeep(deepObj));
+    }
   });
 });
 

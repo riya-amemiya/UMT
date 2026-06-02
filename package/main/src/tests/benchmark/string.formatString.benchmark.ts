@@ -21,25 +21,43 @@ const customFormatters = {
   },
 };
 
+// A single format call ranges from one to forty microseconds depending on the
+// spec, which is noise-dominated. A single repetition count is shared across
+// all cases so their relative cost stays comparable; it is sized so the most
+// expensive case takes roughly ~500ms, keeping fixed overhead negligible.
+const ITERATIONS = 14_000;
+
 summary(() => {
   bench("formatString - currency(locale,code)", () => {
-    do_not_optimize(formatString(simpleTemplate, simpleData));
+    for (let i = 0; i < ITERATIONS; i++) {
+      do_not_optimize(formatString(simpleTemplate, simpleData));
+    }
   });
 
   bench("formatString - number(locale,min,max)", () => {
-    do_not_optimize(formatString(multiArgTemplate, multiArgData));
+    for (let i = 0; i < ITERATIONS; i++) {
+      do_not_optimize(formatString(multiArgTemplate, multiArgData));
+    }
   });
 
   bench("formatString - pad(width,char)", () => {
-    do_not_optimize(formatString(padTemplate, padData));
+    for (let i = 0; i < ITERATIONS; i++) {
+      do_not_optimize(formatString(padTemplate, padData));
+    }
   });
 
   bench("formatString - plural(singular,plural)", () => {
-    do_not_optimize(formatString(pluralTemplate, pluralData));
+    for (let i = 0; i < ITERATIONS; i++) {
+      do_not_optimize(formatString(pluralTemplate, pluralData));
+    }
   });
 
   bench("formatString - custom wrap('quoted','args')", () => {
-    do_not_optimize(formatString(quotedTemplate, quotedData, customFormatters));
+    for (let i = 0; i < ITERATIONS; i++) {
+      do_not_optimize(
+        formatString(quotedTemplate, quotedData, customFormatters),
+      );
+    }
   });
 });
 
