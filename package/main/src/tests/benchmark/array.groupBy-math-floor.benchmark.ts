@@ -23,6 +23,22 @@ for (const size of arraySizes) {
 
 const byMathFloor = (item: number): number => Math.floor(item);
 
+// Small/medium inputs run in microseconds, which is buried in CI-runner jitter
+// and produces meaningless base/head diffs. Repeating the operation a fixed
+// number of times lifts one measured sample to a few milliseconds so it stays
+// well above that jitter. The count is fixed (not derived from measured speed)
+// so the comparison still reflects real per-operation differences. From 100k
+// upward a single call already takes long enough and runs once.
+const repsForSize = (size: number): number => {
+  if (size <= 1000) {
+    return 100;
+  }
+  if (size <= 10_000) {
+    return 10;
+  }
+  return 1;
+};
+
 summary(() => {
   lineplot(() => {
     bench(
@@ -33,13 +49,11 @@ summary(() => {
         if (!originalArray) {
           throw new Error(`No shared array found for size: ${size}`);
         }
-        yield {
-          0() {
-            return [...originalArray];
-          },
-          bench(arr: number[]) {
-            do_not_optimize(customGroupBy(arr, byMathFloor));
-          },
+        const reps = repsForSize(size);
+        yield () => {
+          for (let r = 0; r < reps; r++) {
+            do_not_optimize(customGroupBy(originalArray, byMathFloor));
+          }
         };
       },
     )
@@ -54,13 +68,11 @@ summary(() => {
         if (!originalArray) {
           throw new Error(`No shared array found for size: ${size}`);
         }
-        yield {
-          0() {
-            return [...originalArray];
-          },
-          bench(arr: number[]) {
-            do_not_optimize(lodashGroupBy(arr, byMathFloor));
-          },
+        const reps = repsForSize(size);
+        yield () => {
+          for (let r = 0; r < reps; r++) {
+            do_not_optimize(lodashGroupBy(originalArray, byMathFloor));
+          }
         };
       },
     )
@@ -75,13 +87,11 @@ summary(() => {
         if (!originalArray) {
           throw new Error(`No shared array found for size: ${size}`);
         }
-        yield {
-          0() {
-            return [...originalArray];
-          },
-          bench(arr: number[]) {
-            do_not_optimize(esToolkitGroupBy(arr, byMathFloor));
-          },
+        const reps = repsForSize(size);
+        yield () => {
+          for (let r = 0; r < reps; r++) {
+            do_not_optimize(esToolkitGroupBy(originalArray, byMathFloor));
+          }
         };
       },
     )
@@ -96,13 +106,11 @@ summary(() => {
         if (!originalArray) {
           throw new Error(`No shared array found for size: ${size}`);
         }
-        yield {
-          0() {
-            return [...originalArray];
-          },
-          bench(arr: number[]) {
-            do_not_optimize(Object.groupBy(arr, byMathFloor));
-          },
+        const reps = repsForSize(size);
+        yield () => {
+          for (let r = 0; r < reps; r++) {
+            do_not_optimize(Object.groupBy(originalArray, byMathFloor));
+          }
         };
       },
     )

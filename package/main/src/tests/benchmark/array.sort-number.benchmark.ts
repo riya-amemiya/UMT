@@ -25,6 +25,27 @@ for (const size of arraySizes) {
   );
 }
 
+// Small arrays sort in nanoseconds to a few microseconds, which is buried in
+// CI-runner jitter and produces meaningless base/head diffs. Repeating the sort
+// a fixed number of times lifts one measured sample to a few milliseconds so it
+// stays well above that jitter. The count is fixed (not derived from measured
+// speed) so the comparison still reflects real per-operation differences. Only
+// the small sizes are repeated: from 10k upward a single sort already takes
+// long enough, and some algorithms become pathologically slow on adversarial
+// inputs, so repeating them there would explode the run time.
+const repsForSize = (size: number): number => {
+  if (size <= 10) {
+    return 20_000;
+  }
+  if (size <= 100) {
+    return 2000;
+  }
+  if (size <= 1000) {
+    return 200;
+  }
+  return 1;
+};
+
 summary(() => {
   lineplot(() => {
     bench(
@@ -37,13 +58,11 @@ summary(() => {
           throw new Error(`No shared array found for size: ${size}`);
         }
 
-        yield {
-          0() {
-            return [...original_array];
-          },
-          bench(arr: number[]) {
-            do_not_optimize(arr.sort(compareFunction));
-          },
+        const reps = repsForSize(size);
+        yield () => {
+          for (let r = 0; r < reps; r++) {
+            do_not_optimize([...original_array].sort(compareFunction));
+          }
         };
       },
     )
@@ -58,13 +77,11 @@ summary(() => {
         throw new Error(`No shared array found for size: ${size}`);
       }
 
-      yield {
-        0() {
-          return [...original_array];
-        },
-        bench(arr: number[]) {
-          do_not_optimize(sort(arr).asc());
-        },
+      const reps = repsForSize(size);
+      yield () => {
+        for (let r = 0; r < reps; r++) {
+          do_not_optimize(sort([...original_array]).asc());
+        }
       };
     })
       .args("size", arraySizes)
@@ -78,13 +95,11 @@ summary(() => {
         throw new Error(`No shared array found for size: ${size}`);
       }
 
-      yield {
-        0() {
-          return [...original_array];
-        },
-        bench(arr: number[]) {
-          do_not_optimize(quickSort(arr, compareFunction));
-        },
+      const reps = repsForSize(size);
+      yield () => {
+        for (let r = 0; r < reps; r++) {
+          do_not_optimize(quickSort([...original_array], compareFunction));
+        }
       };
     })
       .args("size", arraySizes)
@@ -100,13 +115,13 @@ summary(() => {
           throw new Error(`No shared array found for size: ${size}`);
         }
 
-        yield {
-          0() {
-            return [...original_array];
-          },
-          bench(arr: number[]) {
-            do_not_optimize(dualPivotQuickSort(arr, compareFunction));
-          },
+        const reps = repsForSize(size);
+        yield () => {
+          for (let r = 0; r < reps; r++) {
+            do_not_optimize(
+              dualPivotQuickSort([...original_array], compareFunction),
+            );
+          }
         };
       },
     )
@@ -121,13 +136,11 @@ summary(() => {
         throw new Error(`No shared array found for size: ${size}`);
       }
 
-      yield {
-        0() {
-          return [...original_array];
-        },
-        bench(arr: number[]) {
-          do_not_optimize(timSort(arr, compareFunction));
-        },
+      const reps = repsForSize(size);
+      yield () => {
+        for (let r = 0; r < reps; r++) {
+          do_not_optimize(timSort([...original_array], compareFunction));
+        }
       };
     })
       .args("size", arraySizes)
@@ -141,13 +154,11 @@ summary(() => {
         throw new Error(`No shared array found for size: ${size}`);
       }
 
-      yield {
-        0() {
-          return [...original_array];
-        },
-        bench(arr: number[]) {
-          do_not_optimize(mergeSort(arr, compareFunction));
-        },
+      const reps = repsForSize(size);
+      yield () => {
+        for (let r = 0; r < reps; r++) {
+          do_not_optimize(mergeSort([...original_array], compareFunction));
+        }
       };
     })
       .args("size", arraySizes)
@@ -163,13 +174,11 @@ summary(() => {
           throw new Error(`No shared array found for size: ${size}`);
         }
 
-        yield {
-          0() {
-            return [...original_array];
-          },
-          bench(arr: number[]) {
-            do_not_optimize(ultraNumberSort(arr, true));
-          },
+        const reps = repsForSize(size);
+        yield () => {
+          for (let r = 0; r < reps; r++) {
+            do_not_optimize(ultraNumberSort([...original_array], true));
+          }
         };
       },
     )
