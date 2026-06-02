@@ -62,6 +62,22 @@ for (const count of arrayCounts) {
   }
 }
 
+// The smaller inputs zip in microseconds, which is buried in CI-runner jitter
+// and produces meaningless base/head diffs. Repeating the operation a fixed
+// number of times lifts one measured sample to a few milliseconds so it stays
+// well above that jitter. The count is fixed (not derived from measured speed)
+// so the comparison still reflects real per-operation differences and is keyed
+// off the array length, which dominates the cost.
+const repsForLength = (length: number): number => {
+  if (length <= 100) {
+    return 1000;
+  }
+  if (length <= 1000) {
+    return 100;
+  }
+  return 10;
+};
+
 summary(() => {
   bench(
     "zipLongest-prealloc(arrays: $count, length: $length)",
@@ -69,8 +85,11 @@ summary(() => {
       const count = state.get("count") as number;
       const length = state.get("length") as number;
       const arrays = testData.get(`${count}-${length}`) as unknown[][];
+      const reps = repsForLength(length);
       yield () => {
-        do_not_optimize(zipLongestOptimized(...arrays));
+        for (let r = 0; r < reps; r++) {
+          do_not_optimize(zipLongestOptimized(...arrays));
+        }
       };
     },
   )
@@ -83,8 +102,11 @@ summary(() => {
       const count = state.get("count") as number;
       const length = state.get("length") as number;
       const arrays = testData.get(`${count}-${length}`) as unknown[][];
+      const reps = repsForLength(length);
       yield () => {
-        do_not_optimize(zipLongestPush(...arrays));
+        for (let r = 0; r < reps; r++) {
+          do_not_optimize(zipLongestPush(...arrays));
+        }
       };
     },
   )
