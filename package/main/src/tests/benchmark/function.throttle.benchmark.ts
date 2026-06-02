@@ -7,41 +7,62 @@ const noop = () => {
   /* intentionally empty */
 };
 
+// Creation costs nanoseconds while a 100-call invocation burst costs a few
+// microseconds, so each group uses its own repetition count to bring one
+// measured sample to roughly ~500ms. This keeps fixed measurement overhead
+// negligible, and the count is shared across variants within a group.
+const CREATION_ITERATIONS = 5_000_000;
+const INVOCATION_ITERATIONS = 14_500;
+
 summary(() => {
   bench("customThrottle creation", () => {
-    do_not_optimize(customThrottle(noop, 100));
+    for (let i = 0; i < CREATION_ITERATIONS; i++) {
+      do_not_optimize(customThrottle(noop, 100));
+    }
   });
 
   bench("lodashThrottle creation", () => {
-    do_not_optimize(lodashThrottle(noop, 100));
+    for (let i = 0; i < CREATION_ITERATIONS; i++) {
+      do_not_optimize(lodashThrottle(noop, 100));
+    }
   });
 
   bench("esToolkitThrottle creation", () => {
-    do_not_optimize(esToolkitThrottle(noop, 100));
-  });
-
-  bench("customThrottle invocation", () => {
-    const throttled = customThrottle(noop, 100);
-    for (let i = 0; i < 100; i++) {
-      throttled();
+    for (let i = 0; i < CREATION_ITERATIONS; i++) {
+      do_not_optimize(esToolkitThrottle(noop, 100));
     }
-    throttled.cancel();
+  });
+});
+
+summary(() => {
+  bench("customThrottle invocation", () => {
+    for (let i = 0; i < INVOCATION_ITERATIONS; i++) {
+      const throttled = customThrottle(noop, 100);
+      for (let j = 0; j < 100; j++) {
+        throttled();
+      }
+      throttled.cancel();
+    }
   });
 
   bench("lodashThrottle invocation", () => {
-    const throttled = lodashThrottle(noop, 100);
-    for (let i = 0; i < 100; i++) {
-      throttled();
+    for (let i = 0; i < INVOCATION_ITERATIONS; i++) {
+      const throttled = lodashThrottle(noop, 100);
+      for (let j = 0; j < 100; j++) {
+        throttled();
+      }
+      throttled.cancel();
     }
-    throttled.cancel();
   });
 
   bench("esToolkitThrottle invocation", () => {
-    const throttled = esToolkitThrottle(noop, 100);
-    for (let i = 0; i < 100; i++) {
-      throttled();
+    for (let i = 0; i < INVOCATION_ITERATIONS; i++) {
+      const throttled = esToolkitThrottle(noop, 100);
+      for (let j = 0; j < 100; j++) {
+        throttled();
+      }
+      throttled.cancel();
     }
-    throttled.cancel();
   });
 });
 

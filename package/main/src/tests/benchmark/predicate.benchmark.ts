@@ -17,44 +17,64 @@ const inlineNot = (n: number) => !(n > 0);
 
 const testValues = Array.from({ length: 10_000 }, (_, i) => i - 5000);
 
+// One pass over the 10k values already runs in tens to a hundred microseconds,
+// but that is still noise-dominated. Each group repeats the pass enough times
+// for one measured sample to take roughly ~500ms, keeping fixed overhead
+// negligible. The count is shared between the composed and inline variants.
+const EVERY_ITERATIONS = 4500;
+const SOME_ITERATIONS = 4500;
+const NOT_ITERATIONS = 38_000;
+
 summary(() => {
   bench("UMT every composition", () => {
-    for (const v of testValues) {
-      do_not_optimize(umtEvery(v));
+    for (let i = 0; i < EVERY_ITERATIONS; i++) {
+      for (const v of testValues) {
+        do_not_optimize(umtEvery(v));
+      }
     }
   });
 
   bench("Inline arrow every", () => {
-    for (const v of testValues) {
-      do_not_optimize(inlineEvery(v));
+    for (let i = 0; i < EVERY_ITERATIONS; i++) {
+      for (const v of testValues) {
+        do_not_optimize(inlineEvery(v));
+      }
     }
   });
 });
 
 summary(() => {
   bench("UMT some composition", () => {
-    for (const v of testValues) {
-      do_not_optimize(umtSome(v));
+    for (let i = 0; i < SOME_ITERATIONS; i++) {
+      for (const v of testValues) {
+        do_not_optimize(umtSome(v));
+      }
     }
   });
 
   bench("Inline arrow some", () => {
-    for (const v of testValues) {
-      do_not_optimize(inlineSome(v));
+    for (let i = 0; i < SOME_ITERATIONS; i++) {
+      for (const v of testValues) {
+        do_not_optimize(inlineSome(v));
+      }
     }
   });
 });
 
 summary(() => {
   bench("UMT not composition", () => {
-    for (const v of testValues) {
-      do_not_optimize(umtNot(v));
+    for (let i = 0; i < NOT_ITERATIONS; i++) {
+      for (const v of testValues) {
+        do_not_optimize(umtNot(v));
+      }
     }
   });
 
   bench("Inline arrow not", () => {
-    for (const v of testValues) {
-      do_not_optimize(inlineNot(v));
+    for (let i = 0; i < NOT_ITERATIONS; i++) {
+      for (const v of testValues) {
+        do_not_optimize(inlineNot(v));
+      }
     }
   });
 });

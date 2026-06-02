@@ -1,4 +1,4 @@
-import { bench, run, summary } from "mitata";
+import { bench, run, summary, do_not_optimize } from "mitata";
 import { calculatorCore } from "@/Math/calculator/core";
 
 // Use many currency symbols
@@ -45,9 +45,16 @@ for (let i = 1; i <= 5; i++) {
 }
 const expression = parts.join(" + ");
 
+// A single evaluation takes around twenty microseconds, so repeating it this
+// many times makes one measured sample take roughly ~500ms, keeping fixed
+// measurement overhead negligible.
+const ITERATIONS = 27_000;
+
 summary(() => {
   bench("calculatorCore multi-currency", () => {
-    calculatorCore(expression, rates);
+    for (let i = 0; i < ITERATIONS; i++) {
+      do_not_optimize(calculatorCore(expression, rates));
+    }
   });
 });
 

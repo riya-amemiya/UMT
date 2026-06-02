@@ -11,49 +11,70 @@ const expensive = (n: number) => {
   return result;
 };
 
+// The cache-hit and cache-miss paths differ by an order of magnitude in cost,
+// so each group repeats its work enough to bring one measured sample to
+// roughly ~500ms. This keeps fixed measurement overhead negligible, and the
+// count is shared across variants within a group to keep the comparison fair.
+const CACHE_HIT_ITERATIONS = 56_000;
+const CACHE_MISS_ITERATIONS = 22_000;
+
 summary(() => {
   bench("customMemoize (cache hit)", () => {
-    const memoized = customMemoize(expensive);
-    memoized(42);
-    for (let i = 0; i < 1000; i++) {
-      do_not_optimize(memoized(42));
+    for (let r = 0; r < CACHE_HIT_ITERATIONS; r++) {
+      const memoized = customMemoize(expensive);
+      memoized(42);
+      for (let i = 0; i < 1000; i++) {
+        do_not_optimize(memoized(42));
+      }
     }
   });
 
   bench("lodashMemoize (cache hit)", () => {
-    const memoized = lodashMemoize(expensive);
-    memoized(42);
-    for (let i = 0; i < 1000; i++) {
-      do_not_optimize(memoized(42));
+    for (let r = 0; r < CACHE_HIT_ITERATIONS; r++) {
+      const memoized = lodashMemoize(expensive);
+      memoized(42);
+      for (let i = 0; i < 1000; i++) {
+        do_not_optimize(memoized(42));
+      }
     }
   });
 
   bench("esToolkitMemoize (cache hit)", () => {
-    const memoized = esToolkitMemoize(expensive);
-    memoized(42);
-    for (let i = 0; i < 1000; i++) {
-      do_not_optimize(memoized(42));
+    for (let r = 0; r < CACHE_HIT_ITERATIONS; r++) {
+      const memoized = esToolkitMemoize(expensive);
+      memoized(42);
+      for (let i = 0; i < 1000; i++) {
+        do_not_optimize(memoized(42));
+      }
     }
   });
+});
 
+summary(() => {
   bench("customMemoize (cache miss)", () => {
-    const memoized = customMemoize(expensive);
-    for (let i = 0; i < 100; i++) {
-      do_not_optimize(memoized(i));
+    for (let r = 0; r < CACHE_MISS_ITERATIONS; r++) {
+      const memoized = customMemoize(expensive);
+      for (let i = 0; i < 100; i++) {
+        do_not_optimize(memoized(i));
+      }
     }
   });
 
   bench("lodashMemoize (cache miss)", () => {
-    const memoized = lodashMemoize(expensive);
-    for (let i = 0; i < 100; i++) {
-      do_not_optimize(memoized(i));
+    for (let r = 0; r < CACHE_MISS_ITERATIONS; r++) {
+      const memoized = lodashMemoize(expensive);
+      for (let i = 0; i < 100; i++) {
+        do_not_optimize(memoized(i));
+      }
     }
   });
 
   bench("esToolkitMemoize (cache miss)", () => {
-    const memoized = esToolkitMemoize(expensive);
-    for (let i = 0; i < 100; i++) {
-      do_not_optimize(memoized(i));
+    for (let r = 0; r < CACHE_MISS_ITERATIONS; r++) {
+      const memoized = esToolkitMemoize(expensive);
+      for (let i = 0; i < 100; i++) {
+        do_not_optimize(memoized(i));
+      }
     }
   });
 });
