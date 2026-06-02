@@ -42,7 +42,9 @@ export const ultraNumberSort = (
     return result;
   }
 
-  // Check if all numbers are integers and find range
+  // Check if all numbers are integers and find range.
+  // min/max are only needed by the counting-sort branch, which requires
+  // allIntegers, so stop tracking them once a non-integer is seen.
   let allIntegers = true;
   let min = result[0];
   let max = result[0];
@@ -55,14 +57,14 @@ export const ultraNumberSort = (
       hasNaN = true;
       break;
     }
-    if (value < min) {
-      min = value;
-    }
-    if (value > max) {
-      max = value;
-    }
-    if (allIntegers && value !== Math.floor(value)) {
-      allIntegers = false;
+    if (allIntegers) {
+      if (value !== Math.floor(value)) {
+        allIntegers = false;
+      } else if (value < min) {
+        min = value;
+      } else if (value > max) {
+        max = value;
+      }
     }
   }
 
@@ -76,9 +78,13 @@ export const ultraNumberSort = (
     return countingSort(result, min, max, ascending);
   }
 
-  // For medium arrays, quicksort is faster than radix sort
-  // due to typed array allocation overhead
-  if (length < 4096) {
+  // Below the crossover, quicksort beats radix sort because of the radix
+  // setup and typed-array allocation overhead. The measured crossover
+  // depends on the element kind: all-integer input stays faster under
+  // quicksort up to roughly twice the size of floating-point input, so it
+  // gets a higher threshold.
+  const radixThreshold = allIntegers ? 2048 : 1024;
+  if (length < radixThreshold) {
     if (hasNaN) {
       return handleNaNSort(result, ascending);
     }
@@ -112,6 +118,15 @@ const float64RadixSort = (
   const sourceF64 = new Float64Array(sourceBuffer);
   const sourceU32 = new Uint32Array(sourceBuffer);
 
+  // Eight 256-entry histograms (one per byte) packed into a single array.
+  // Histogram for pass p occupies the range [p << 8, (p << 8) + 256).
+  const histograms = new Uint32Array(256 * 8);
+
+  // Single pass: copy each value into the typed buffer, transform its IEEE 754
+  // bit pattern into a sortable unsigned form, and tally all eight byte
+  // histograms at once. The byte multiset at each position is invariant under
+  // the stable reorderings the radix passes perform, so counting up front is
+  // equivalent to counting per pass.
   let validLength: number;
 
   if (hasNaN) {
@@ -119,14 +134,56 @@ const float64RadixSort = (
     for (let index = 0; index < length; index++) {
       const v = array[index];
       // biome-ignore lint/suspicious/noSelfCompare: NaN detection
-      if (v === v) {
-        sourceF64[writeIndex++] = v;
+      if (v !== v) {
+        continue;
       }
+      sourceF64[writeIndex] = v;
+      const loIndex = writeIndex * 2;
+      const hiIndex = loIndex + 1;
+      let lo = sourceU32[loIndex];
+      let hi = sourceU32[hiIndex];
+      if (hi & 0x80_00_00_00) {
+        hi = ~hi >>> 0;
+        lo = ~lo >>> 0;
+      } else {
+        hi = (hi ^ 0x80_00_00_00) >>> 0;
+      }
+      sourceU32[loIndex] = lo;
+      sourceU32[hiIndex] = hi;
+      histograms[lo & 0xff]++;
+      histograms[256 + ((lo >>> 8) & 0xff)]++;
+      histograms[512 + ((lo >>> 16) & 0xff)]++;
+      histograms[768 + ((lo >>> 24) & 0xff)]++;
+      histograms[1024 + (hi & 0xff)]++;
+      histograms[1280 + ((hi >>> 8) & 0xff)]++;
+      histograms[1536 + ((hi >>> 16) & 0xff)]++;
+      histograms[1792 + ((hi >>> 24) & 0xff)]++;
+      writeIndex++;
     }
     validLength = writeIndex;
   } else {
     for (let index = 0; index < length; index++) {
       sourceF64[index] = array[index];
+      const loIndex = index * 2;
+      const hiIndex = loIndex + 1;
+      let lo = sourceU32[loIndex];
+      let hi = sourceU32[hiIndex];
+      if (hi & 0x80_00_00_00) {
+        hi = ~hi >>> 0;
+        lo = ~lo >>> 0;
+      } else {
+        hi = (hi ^ 0x80_00_00_00) >>> 0;
+      }
+      sourceU32[loIndex] = lo;
+      sourceU32[hiIndex] = hi;
+      histograms[lo & 0xff]++;
+      histograms[256 + ((lo >>> 8) & 0xff)]++;
+      histograms[512 + ((lo >>> 16) & 0xff)]++;
+      histograms[768 + ((lo >>> 24) & 0xff)]++;
+      histograms[1024 + (hi & 0xff)]++;
+      histograms[1280 + ((hi >>> 8) & 0xff)]++;
+      histograms[1536 + ((hi >>> 16) & 0xff)]++;
+      histograms[1792 + ((hi >>> 24) & 0xff)]++;
     }
     validLength = length;
   }
@@ -135,22 +192,8 @@ const float64RadixSort = (
     return array;
   }
 
-  // Transform IEEE 754 bit patterns to sortable unsigned form
-  for (let index = 0; index < validLength; index++) {
-    const hiIndex = index * 2 + 1;
-    const loIndex = index * 2;
-    if (sourceU32[hiIndex] & 0x80_00_00_00) {
-      sourceU32[hiIndex] = ~sourceU32[hiIndex] >>> 0;
-      sourceU32[loIndex] = ~sourceU32[loIndex] >>> 0;
-    } else {
-      sourceU32[hiIndex] ^= 0x80_00_00_00;
-    }
-  }
-
   const destinationBuffer = new ArrayBuffer(validLength * 8);
   const destinationU32 = new Uint32Array(destinationBuffer);
-
-  const count = new Uint32Array(256);
 
   let currentSource = sourceU32;
   let currentDestination = destinationU32;
@@ -160,19 +203,14 @@ const float64RadixSort = (
   // Passes 0-3: low 32-bit word (index i*2)
   // Passes 4-7: high 32-bit word (index i*2+1)
   for (let pass = 0; pass < 8; pass++) {
-    count.fill(0);
-
+    const base = pass << 8;
     const wordOffset = pass < 4 ? 0 : 1;
-    const shift = (pass % 4) * 8;
-
-    for (let index = 0; index < validLength; index++) {
-      count[(currentSource[index * 2 + wordOffset] >>> shift) & 0xff]++;
-    }
+    const shift = (pass & 3) << 3;
 
     // Skip pass if all elements have the same byte value
     let skipPass = false;
     for (let index = 0; index < 256; index++) {
-      if (count[index] === validLength) {
+      if (histograms[base + index] === validLength) {
         skipPass = true;
         break;
       }
@@ -184,20 +222,23 @@ const float64RadixSort = (
     // Prefix sum (reverse for descending sort)
     if (ascending) {
       for (let index = 1; index < 256; index++) {
-        count[index] += count[index - 1];
+        histograms[base + index] += histograms[base + index - 1];
       }
     } else {
       for (let index = 254; index >= 0; index--) {
-        count[index] += count[index + 1];
+        histograms[base + index] += histograms[base + index + 1];
       }
     }
 
     // Scatter (backward for stability)
     for (let index = validLength - 1; index >= 0; index--) {
-      const byte = (currentSource[index * 2 + wordOffset] >>> shift) & 0xff;
-      const pos = --count[byte];
-      currentDestination[pos * 2] = currentSource[index * 2];
-      currentDestination[pos * 2 + 1] = currentSource[index * 2 + 1];
+      const elementIndex = index * 2;
+      const byte = (currentSource[elementIndex + wordOffset] >>> shift) & 0xff;
+      const pos = --histograms[base + byte];
+      const destinationIndex = pos * 2;
+      currentDestination[destinationIndex] = currentSource[elementIndex];
+      currentDestination[destinationIndex + 1] =
+        currentSource[elementIndex + 1];
     }
 
     // Ping-pong swap
@@ -212,19 +253,17 @@ const float64RadixSort = (
   const resultBuffer = resultInSource ? sourceBuffer : destinationBuffer;
   const resultF64 = new Float64Array(resultBuffer);
 
-  // Reverse bit transformation
+  // Reverse the bit transformation and copy each value back in one pass
   for (let index = 0; index < validLength; index++) {
-    const hiIndex = index * 2 + 1;
-    if (resultU32[hiIndex] & 0x80_00_00_00) {
-      resultU32[hiIndex] ^= 0x80_00_00_00;
+    const loIndex = index * 2;
+    const hiIndex = loIndex + 1;
+    const hi = resultU32[hiIndex];
+    if (hi & 0x80_00_00_00) {
+      resultU32[hiIndex] = hi ^ 0x80_00_00_00;
     } else {
-      resultU32[hiIndex] = ~resultU32[hiIndex] >>> 0;
-      resultU32[index * 2] = ~resultU32[index * 2] >>> 0;
+      resultU32[hiIndex] = ~hi >>> 0;
+      resultU32[loIndex] = ~resultU32[loIndex] >>> 0;
     }
-  }
-
-  // Copy results back
-  for (let index = 0; index < validLength; index++) {
     array[index] = resultF64[index];
   }
 

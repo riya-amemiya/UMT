@@ -513,6 +513,20 @@ describe("ultraNumberSort", () => {
     expect(ultraNumberSort([...arr], false)).toEqual(sorted);
   });
 
+  it("should handle NaN mixed with negative numbers in arrays >= 4096 elements", () => {
+    const arr = Array.from({ length: 5000 }, (_, i) => i - 2500);
+    arr[200] = Number.NaN;
+    arr[4000] = Number.NaN;
+    const sorted = ultraNumberSort([...arr]);
+    expect(Number.isNaN(sorted[sorted.length - 1])).toBe(true);
+    expect(Number.isNaN(sorted[sorted.length - 2])).toBe(true);
+    const nonNaN = sorted.slice(0, -2);
+    const expected = Array.from({ length: 5000 }, (_, i) => i - 2500)
+      .filter((_, i) => i !== 200 && i !== 4000)
+      .sort((a, b) => a - b);
+    expect(nonNaN).toEqual(expected);
+  });
+
   it("should handle all-NaN array >= 4096 elements", () => {
     const arr = new Array(4096).fill(Number.NaN);
     const sorted = ultraNumberSort([...arr]);
