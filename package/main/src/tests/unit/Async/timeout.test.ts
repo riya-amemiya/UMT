@@ -19,8 +19,9 @@ describe("timeout", () => {
       }, 10_000);
     });
     const result = timeout(promise, 50);
+    const assertion = expect(result).rejects.toThrow("Timed out after 50ms");
     jest.advanceTimersByTime(50);
-    await expect(result).rejects.toThrow("Timed out after 50ms");
+    await assertion;
     jest.useRealTimers();
   });
 
