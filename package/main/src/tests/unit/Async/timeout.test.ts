@@ -1,27 +1,36 @@
 import { timeout } from "@/Async/timeout";
 
 describe("timeout", () => {
+  beforeEach(() => {
+    jest.useFakeTimers();
+  });
+
+  afterEach(() => {
+    jest.clearAllTimers();
+    jest.useRealTimers();
+  });
+
   it("resolves when promise completes before timeout", async () => {
     const promise = new Promise<string>((resolve) => {
       setTimeout(() => {
         resolve("done");
       }, 10);
     });
-    const result = await timeout(promise, 1000);
-    expect(result).toBe("done");
+    const result = timeout(promise, 1000);
+    await jest.advanceTimersByTimeAsync(10);
+    await expect(result).resolves.toBe("done");
   });
 
   it("rejects with timeout error when promise exceeds time", async () => {
-    jest.useFakeTimers();
     const promise = new Promise<string>((resolve) => {
       setTimeout(() => {
         resolve("done");
       }, 10_000);
     });
     const result = timeout(promise, 50);
-    jest.advanceTimersByTime(50);
-    await expect(result).rejects.toThrow("Timed out after 50ms");
-    jest.useRealTimers();
+    const assertion = expect(result).rejects.toThrow("Timed out after 50ms");
+    await jest.advanceTimersByTimeAsync(50);
+    await assertion;
   });
 
   it("rejects with original error when promise fails", async () => {
@@ -30,7 +39,10 @@ describe("timeout", () => {
         reject(new Error("original error"));
       }, 10);
     });
-    await expect(timeout(promise, 1000)).rejects.toThrow("original error");
+    const result = timeout(promise, 1000);
+    const assertion = expect(result).rejects.toThrow("original error");
+    await jest.advanceTimersByTimeAsync(10);
+    await assertion;
   });
 
   it("clears timeout after resolution", async () => {
