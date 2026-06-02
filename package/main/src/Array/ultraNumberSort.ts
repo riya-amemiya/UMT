@@ -78,9 +78,13 @@ export const ultraNumberSort = (
     return countingSort(result, min, max, ascending);
   }
 
-  // For medium arrays, quicksort is faster than radix sort
-  // due to typed array allocation overhead
-  if (length < 4096) {
+  // Below the crossover, quicksort beats radix sort because of the radix
+  // setup and typed-array allocation overhead. The measured crossover
+  // depends on the element kind: all-integer input stays faster under
+  // quicksort up to roughly twice the size of floating-point input, so it
+  // gets a higher threshold.
+  const radixThreshold = allIntegers ? 2048 : 1024;
+  if (length < radixThreshold) {
     if (hasNaN) {
       return handleNaNSort(result, ascending);
     }
