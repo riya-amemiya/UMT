@@ -144,6 +144,31 @@ bun add umt
 - [startOf](https://github.com/riya-amemiya/UMT/wiki/Function.startOf)
 - [subDuration](https://github.com/riya-amemiya/UMT/wiki/Function.subDuration)
 
+### Decorator
+
+- [addFieldRule](https://github.com/riya-amemiya/UMT/wiki/Function.addFieldRule)
+- [collectRules](https://github.com/riya-amemiya/UMT/wiki/Function.collectRules)
+- [FieldMeta](https://github.com/riya-amemiya/UMT/wiki/Interface.FieldMeta)
+- [FieldRule](https://github.com/riya-amemiya/UMT/wiki/Interface.FieldRule)
+- [getFieldMeta](https://github.com/riya-amemiya/UMT/wiki/Function.getFieldMeta)
+- [IsArray](https://github.com/riya-amemiya/UMT/wiki/Function.IsArray)
+- [IsBoolean](https://github.com/riya-amemiya/UMT/wiki/Function.IsBoolean)
+- [IsNumber](https://github.com/riya-amemiya/UMT/wiki/Function.IsNumber)
+- [IsString](https://github.com/riya-amemiya/UMT/wiki/Function.IsString)
+- [LengthBetween](https://github.com/riya-amemiya/UMT/wiki/Function.LengthBetween)
+- [markNullable](https://github.com/riya-amemiya/UMT/wiki/Function.markNullable)
+- [markOptional](https://github.com/riya-amemiya/UMT/wiki/Function.markOptional)
+- [Max](https://github.com/riya-amemiya/UMT/wiki/Function.Max)
+- [Min](https://github.com/riya-amemiya/UMT/wiki/Function.Min)
+- [Nullable](https://github.com/riya-amemiya/UMT/wiki/Function.Nullable)
+- [Optional](https://github.com/riya-amemiya/UMT/wiki/Function.Optional)
+- [Schema](https://github.com/riya-amemiya/UMT/wiki/Function.Schema)
+- [storage](https://github.com/riya-amemiya/UMT/wiki/Variable.storage)
+- [Validatable](https://github.com/riya-amemiya/UMT/wiki/Function.Validatable)
+- [validateField](https://github.com/riya-amemiya/UMT/wiki/Function.validateField)
+- [validateInstance](https://github.com/riya-amemiya/UMT/wiki/Function.validateInstance)
+- [ValidationIssue](https://github.com/riya-amemiya/UMT/wiki/Interface.ValidationIssue)
+
 ### Error
 
 - [errorFunction](https://github.com/riya-amemiya/UMT/wiki/Function.errorFunction)
@@ -307,7 +332,7 @@ bun add umt
 
 ### Simple
 
-- [BIRTHDAYSIMPLE](https://github.com/riya-amemiya/UMT/wiki/TypeAlias.BIRTHDAYSIMPLE)
+- [BIRTHDAYSIMPLE](https://github.com/riya-amemiya/UMT/wiki/Variable.BIRTHDAYSIMPLE)
 - [birthdaySimple](https://github.com/riya-amemiya/UMT/wiki/Variable.birthdaySimple)
 - [dayOfWeekSimple](https://github.com/riya-amemiya/UMT/wiki/Function.dayOfWeekSimple)
 - [deviationValueSimple](https://github.com/riya-amemiya/UMT/wiki/Function.deviationValueSimple)
@@ -375,7 +400,7 @@ bun add umt
 - [createPipeline](https://github.com/riya-amemiya/UMT/wiki/Function.createPipeline)
 - [escapeRegExp](https://github.com/riya-amemiya/UMT/wiki/Function.escapeRegExp)
 - [parseJson](https://github.com/riya-amemiya/UMT/wiki/Function.parseJson)
-- [Pipe](https://github.com/riya-amemiya/UMT/wiki/Class.Pipe)
+- [Pipe](https://github.com/riya-amemiya/UMT/wiki/Function.Pipe)
 - [pipe](https://github.com/riya-amemiya/UMT/wiki/Function.pipe)
 - [Pipeline](https://github.com/riya-amemiya/UMT/wiki/Interface.Pipeline)
 - [unwrap](https://github.com/riya-amemiya/UMT/wiki/Function.unwrap)

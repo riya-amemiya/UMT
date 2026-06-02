@@ -44,6 +44,7 @@ Input validation is the caller's responsibility. This library must not validate 
 ## Code Style Guidelines
 
 - **File naming**: `camelCase` or `PascalCase` (enforced by ESLint unicorn plugin)
+- **One export per file**: Each file has exactly one function and exactly one `export`, and the exported name must be identical to the file name. A `type` export does not count separately from the function — it is still counted toward the single export, so a file must not export both a function and a `type`. This single-export rule holds in every situation, with no exceptions.
 - **Imports**: Ordered by builtin → external → internal → parent → sibling → index (auto-sorted by ESLint)
 - **Formatting**:
   - Indentation: 2 spaces

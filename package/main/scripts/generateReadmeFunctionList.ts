@@ -94,7 +94,7 @@ const buildKindMap = async (): Promise<Map<string, string>> => {
   for await (const file of new Bun.Glob("*.md").scan({ cwd: DOC })) {
     const dot = file.indexOf(".");
     const kind = file.slice(0, dot);
-    const name = file.slice(dot + 1, -3);
+    const name = file.slice(dot + 1, -3).toLowerCase();
     if (!KINDS.includes(kind)) {
       continue;
     }
@@ -122,7 +122,7 @@ const generate = async (): Promise<string> => {
   const sections = await Promise.all(
     modules.map(async (mod) => {
       const names = [...(await collect(join(SRC, mod, "index.ts")))]
-        .filter((n) => kinds.has(n))
+        .filter((n) => kinds.has(n.toLowerCase()))
         .sort(cmp);
       if (names.length === 0) {
         return null;
@@ -130,7 +130,7 @@ const generate = async (): Promise<string> => {
       const lines = [`### ${mod}`, ""];
       for (const n of names) {
         lines.push(
-          `- [${n}](${WIKI}/${kinds.get(n)}.${encodeURIComponent(n)})`,
+          `- [${n}](${WIKI}/${kinds.get(n.toLowerCase())}.${encodeURIComponent(n)})`,
         );
       }
       lines.push("");
