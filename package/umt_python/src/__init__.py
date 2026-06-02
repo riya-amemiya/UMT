@@ -118,6 +118,10 @@ from .iterator import (
     lazy_map,
     lazy_take,
 )
+from .map import (
+    group_by_to_map,
+    zip_to_map,
+)
 from .math import (
     PrimeFactor,
     ProbabilityFraction,
@@ -375,6 +379,7 @@ __all__ = [
     "get_network_address",
     "get_timezone_offset_string",
     "group_by",
+    "group_by_to_map",
     "has_no_letters",
     "hexa_to_rgba",
     "hsla_to_rgba",
@@ -499,4 +504,5 @@ __all__ = [
     "xoshiro256",
     "zip_arrays",
     "zip_longest",
+    "zip_to_map",
 ]
