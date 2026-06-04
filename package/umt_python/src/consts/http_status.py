@@ -74,3 +74,85 @@ class HttpServerErrorStatus:
     SERVICE_UNAVAILABLE = 503
     GATEWAY_TIMEOUT = 504
     HTTP_VERSION_NOT_SUPPORTED = 505
+
+
+class HttpStatus:
+    """All HTTP status codes (1xx through 5xx) merged into a single container.
+
+    Combines :class:`HttpInformationalStatus`, :class:`HttpSuccessStatus`,
+    :class:`HttpRedirectionStatus`, :class:`HttpClientErrorStatus`, and
+    :class:`HttpServerErrorStatus`, mirroring the TypeScript ``HttpStatus``
+    object that spreads every status group together.
+
+    Example:
+        >>> HttpStatus.CONTINUE
+        100
+        >>> HttpStatus.OK
+        200
+        >>> HttpStatus.MOVED_PERMANENTLY
+        301
+        >>> HttpStatus.NOT_FOUND
+        404
+        >>> HttpStatus.INTERNAL_SERVER_ERROR
+        500
+    """
+
+    # 1xx Informational
+    CONTINUE = HttpInformationalStatus.CONTINUE
+    SWITCHING_PROTOCOLS = HttpInformationalStatus.SWITCHING_PROTOCOLS
+    PROCESSING = HttpInformationalStatus.PROCESSING
+    EARLYHINTS = HttpInformationalStatus.EARLYHINTS
+
+    # 2xx Success
+    OK = HttpSuccessStatus.OK
+    CREATED = HttpSuccessStatus.CREATED
+    ACCEPTED = HttpSuccessStatus.ACCEPTED
+    NON_AUTHORITATIVE_INFORMATION = HttpSuccessStatus.NON_AUTHORITATIVE_INFORMATION
+    NO_CONTENT = HttpSuccessStatus.NO_CONTENT
+    RESET_CONTENT = HttpSuccessStatus.RESET_CONTENT
+    PARTIAL_CONTENT = HttpSuccessStatus.PARTIAL_CONTENT
+
+    # 3xx Redirection
+    AMBIGUOUS = HttpRedirectionStatus.AMBIGUOUS
+    MOVED_PERMANENTLY = HttpRedirectionStatus.MOVED_PERMANENTLY
+    FOUND = HttpRedirectionStatus.FOUND
+    SEE_OTHER = HttpRedirectionStatus.SEE_OTHER
+    NOT_MODIFIED = HttpRedirectionStatus.NOT_MODIFIED
+    TEMPORARY_REDIRECT = HttpRedirectionStatus.TEMPORARY_REDIRECT
+    PERMANENT_REDIRECT = HttpRedirectionStatus.PERMANENT_REDIRECT
+
+    # 4xx Client Error
+    BAD_REQUEST = HttpClientErrorStatus.BAD_REQUEST
+    UNAUTHORIZED = HttpClientErrorStatus.UNAUTHORIZED
+    PAYMENT_REQUIRED = HttpClientErrorStatus.PAYMENT_REQUIRED
+    FORBIDDEN = HttpClientErrorStatus.FORBIDDEN
+    NOT_FOUND = HttpClientErrorStatus.NOT_FOUND
+    METHOD_NOT_ALLOWED = HttpClientErrorStatus.METHOD_NOT_ALLOWED
+    NOT_ACCEPTABLE = HttpClientErrorStatus.NOT_ACCEPTABLE
+    PROXY_AUTHENTICATION_REQUIRED = HttpClientErrorStatus.PROXY_AUTHENTICATION_REQUIRED
+    REQUEST_TIMEOUT = HttpClientErrorStatus.REQUEST_TIMEOUT
+    CONFLICT = HttpClientErrorStatus.CONFLICT
+    GONE = HttpClientErrorStatus.GONE
+    LENGTH_REQUIRED = HttpClientErrorStatus.LENGTH_REQUIRED
+    PRECONDITION_FAILED = HttpClientErrorStatus.PRECONDITION_FAILED
+    PAYLOAD_TOO_LARGE = HttpClientErrorStatus.PAYLOAD_TOO_LARGE
+    URI_TOO_LONG = HttpClientErrorStatus.URI_TOO_LONG
+    UNSUPPORTED_MEDIA_TYPE = HttpClientErrorStatus.UNSUPPORTED_MEDIA_TYPE
+    REQUESTED_RANGE_NOT_SATISFIABLE = (
+        HttpClientErrorStatus.REQUESTED_RANGE_NOT_SATISFIABLE
+    )
+    EXPECTATION_FAILED = HttpClientErrorStatus.EXPECTATION_FAILED
+    I_AM_A_TEAPOT = HttpClientErrorStatus.I_AM_A_TEAPOT
+    MISDIRECTED = HttpClientErrorStatus.MISDIRECTED
+    UNPROCESSABLE_ENTITY = HttpClientErrorStatus.UNPROCESSABLE_ENTITY
+    FAILED_DEPENDENCY = HttpClientErrorStatus.FAILED_DEPENDENCY
+    PRECONDITION_REQUIRED = HttpClientErrorStatus.PRECONDITION_REQUIRED
+    TOO_MANY_REQUESTS = HttpClientErrorStatus.TOO_MANY_REQUESTS
+
+    # 5xx Server Error
+    INTERNAL_SERVER_ERROR = HttpServerErrorStatus.INTERNAL_SERVER_ERROR
+    NOT_IMPLEMENTED = HttpServerErrorStatus.NOT_IMPLEMENTED
+    BAD_GATEWAY = HttpServerErrorStatus.BAD_GATEWAY
+    SERVICE_UNAVAILABLE = HttpServerErrorStatus.SERVICE_UNAVAILABLE
+    GATEWAY_TIMEOUT = HttpServerErrorStatus.GATEWAY_TIMEOUT
+    HTTP_VERSION_NOT_SUPPORTED = HttpServerErrorStatus.HTTP_VERSION_NOT_SUPPORTED

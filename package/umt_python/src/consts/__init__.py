@@ -16,6 +16,7 @@ from .http_status import (
     HttpInformationalStatus,
     HttpRedirectionStatus,
     HttpServerErrorStatus,
+    HttpStatus,
     HttpSuccessStatus,
 )
 
@@ -35,5 +36,6 @@ __all__ = [
     "HttpInformationalStatus",
     "HttpRedirectionStatus",
     "HttpServerErrorStatus",
+    "HttpStatus",
     "HttpSuccessStatus",
 ]
