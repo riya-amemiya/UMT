@@ -36,7 +36,7 @@ class Deferred(Generic[T]):
             self.future.set_exception(Exception(reason))
 
 
-def defer() -> Deferred[T]:
+def defer() -> Deferred[T]:  # pyright: ignore[reportInvalidTypeVarUse]
     """Create a deferred future whose resolve and reject can be called
     externally.
 

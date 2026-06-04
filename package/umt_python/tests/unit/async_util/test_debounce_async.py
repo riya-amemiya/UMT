@@ -14,9 +14,7 @@ class TestDebounceAsync(unittest.IsolatedAsyncioTestCase):
             return value * 2
 
         debounced = debounce_async(fn, 0.01)
-        results = await asyncio.gather(
-            debounced(1), debounced(2), debounced(3)
-        )
+        results = await asyncio.gather(debounced(1), debounced(2), debounced(3))
         self.assertEqual(state["calls"], 1)
         self.assertEqual(state["last_arg"], 3)
         self.assertEqual(results, [6, 6, 6])

@@ -54,9 +54,7 @@ class TestWaitFor(unittest.IsolatedAsyncioTestCase):
         loop = asyncio.get_event_loop()
         loop.call_later(0.005, lambda: signal.abort(Exception("stopped")))
         with self.assertRaises(Exception) as ctx:
-            await wait_for(
-                lambda: None, signal=signal, interval=0.002, timeout=1.0
-            )
+            await wait_for(lambda: None, signal=signal, interval=0.002, timeout=1.0)
         self.assertEqual(str(ctx.exception), "stopped")
 
     async def test_aborts_without_explicit_reason(self):
@@ -64,9 +62,7 @@ class TestWaitFor(unittest.IsolatedAsyncioTestCase):
         loop = asyncio.get_event_loop()
         loop.call_later(0.005, signal.abort)
         with self.assertRaises(Exception):
-            await wait_for(
-                lambda: None, signal=signal, interval=0.05, timeout=1.0
-            )
+            await wait_for(lambda: None, signal=signal, interval=0.05, timeout=1.0)
 
     async def test_falls_back_to_generic_aborted_error(self):
         signal = AbortSignal()

@@ -2,7 +2,8 @@ from typing import TypeVar
 
 from .safe_execute import Error
 
-E = TypeVar("E", bound=Exception)
+# Unconstrained: errorFunction wraps any thrown value, including non-Exceptions.
+E = TypeVar("E")
 
 
 def error_function(error: E) -> Error[E]:

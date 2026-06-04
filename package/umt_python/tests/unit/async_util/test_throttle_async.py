@@ -31,9 +31,7 @@ class TestThrottleAsync(unittest.IsolatedAsyncioTestCase):
         await throttled(1)
         with self.assertRaises(Exception) as ctx:
             await throttled(2)
-        self.assertEqual(
-            str(ctx.exception), "throttleAsync window not elapsed"
-        )
+        self.assertEqual(str(ctx.exception), "throttleAsync window not elapsed")
         self.assertEqual(state["calls"], 1)
 
     async def test_allows_a_new_invocation_after_the_wait_window(self):
