@@ -470,3 +470,609 @@ func TestGetTimezoneOffsetString(t *testing.T) {
 		}
 	})
 }
+
+// --- MsByUnit tests ---
+
+func TestMsByUnit(t *testing.T) {
+	t.Run("fixed-length units return their millisecond length", func(t *testing.T) {
+		cases := []struct {
+			unit date.DurationUnit
+			want int64
+		}{
+			{date.UnitMillisecond, 1},
+			{date.UnitSecond, 1000},
+			{date.UnitMinute, 60_000},
+			{date.UnitHour, 3_600_000},
+			{date.UnitDay, 86_400_000},
+			{date.UnitWeek, 604_800_000},
+		}
+		for _, c := range cases {
+			got, ok := date.MsByUnit(c.unit)
+			if !ok || got != c.want {
+				t.Errorf("MsByUnit(%q) = (%d, %v), want (%d, true)", c.unit, got, ok, c.want)
+			}
+		}
+	})
+
+	t.Run("calendar-aware and unknown units are absent", func(t *testing.T) {
+		for _, u := range []date.DurationUnit{date.UnitMonth, date.UnitYear, date.DurationUnit("unknown")} {
+			if got, ok := date.MsByUnit(u); ok {
+				t.Errorf("MsByUnit(%q) = (%d, true), want (_, false)", u, got)
+			}
+		}
+	})
+}
+
+// --- AddDuration tests ---
+
+func TestAddDuration(t *testing.T) {
+	base := time.Date(2025, 1, 1, 0, 0, 0, 0, time.UTC)
+
+	t.Run("adds milliseconds", func(t *testing.T) {
+		got := date.AddDuration(base, 500, date.UnitMillisecond)
+		if got.UnixMilli() != base.UnixMilli()+500 {
+			t.Errorf("got %d, want %d", got.UnixMilli(), base.UnixMilli()+500)
+		}
+	})
+
+	t.Run("adds seconds", func(t *testing.T) {
+		got := date.AddDuration(base, 30, date.UnitSecond)
+		if got.UnixMilli() != base.UnixMilli()+30_000 {
+			t.Errorf("got %d, want %d", got.UnixMilli(), base.UnixMilli()+30_000)
+		}
+	})
+
+	t.Run("adds minutes", func(t *testing.T) {
+		got := date.AddDuration(base, 5, date.UnitMinute)
+		if got.UnixMilli() != base.UnixMilli()+5*60_000 {
+			t.Errorf("got %d, want %d", got.UnixMilli(), base.UnixMilli()+5*60_000)
+		}
+	})
+
+	t.Run("adds hours", func(t *testing.T) {
+		got := date.AddDuration(base, 2, date.UnitHour)
+		if got.UnixMilli() != base.UnixMilli()+2*3_600_000 {
+			t.Errorf("got %d, want %d", got.UnixMilli(), base.UnixMilli()+2*3_600_000)
+		}
+	})
+
+	t.Run("adds days", func(t *testing.T) {
+		got := date.AddDuration(base, 7, date.UnitDay)
+		if got.UnixMilli() != base.UnixMilli()+7*86_400_000 {
+			t.Errorf("got %d, want %d", got.UnixMilli(), base.UnixMilli()+7*86_400_000)
+		}
+	})
+
+	t.Run("adds weeks", func(t *testing.T) {
+		got := date.AddDuration(base, 2, date.UnitWeek)
+		if got.UnixMilli() != base.UnixMilli()+14*86_400_000 {
+			t.Errorf("got %d, want %d", got.UnixMilli(), base.UnixMilli()+14*86_400_000)
+		}
+	})
+
+	t.Run("adds months and clamps to last day of target month", func(t *testing.T) {
+		got := date.AddDuration(time.Date(2025, 1, 31, 0, 0, 0, 0, time.UTC), 1, date.UnitMonth)
+		if got.Year() != 2025 || got.Month() != time.February || got.Day() != 28 {
+			t.Errorf("got %v, want 2025-02-28", got)
+		}
+	})
+
+	t.Run("adds months across year boundary", func(t *testing.T) {
+		got := date.AddDuration(time.Date(2025, 12, 15, 0, 0, 0, 0, time.UTC), 2, date.UnitMonth)
+		if got.Year() != 2026 || got.Month() != time.February || got.Day() != 15 {
+			t.Errorf("got %v, want 2026-02-15", got)
+		}
+	})
+
+	t.Run("subtracts via negative amount", func(t *testing.T) {
+		got := date.AddDuration(time.Date(2025, 3, 15, 0, 0, 0, 0, time.UTC), -1, date.UnitMonth)
+		if got.Month() != time.February {
+			t.Errorf("got month %v, want February", got.Month())
+		}
+	})
+
+	t.Run("adds years preserving month and day with clamp", func(t *testing.T) {
+		got := date.AddDuration(time.Date(2024, 2, 29, 0, 0, 0, 0, time.UTC), 1, date.UnitYear)
+		if got.Year() != 2025 || got.Month() != time.February || got.Day() != 28 {
+			t.Errorf("got %v, want 2025-02-28", got)
+		}
+	})
+
+	t.Run("adds years across leap year boundary", func(t *testing.T) {
+		got := date.AddDuration(time.Date(2024, 2, 29, 0, 0, 0, 0, time.UTC), 4, date.UnitYear)
+		if got.Year() != 2028 || got.Month() != time.February || got.Day() != 29 {
+			t.Errorf("got %v, want 2028-02-29", got)
+		}
+	})
+
+	t.Run("does not mutate the input date", func(t *testing.T) {
+		input := time.Date(2025, 1, 1, 0, 0, 0, 0, time.UTC)
+		snapshot := input.UnixMilli()
+		date.AddDuration(input, 5, date.UnitMonth)
+		if input.UnixMilli() != snapshot {
+			t.Errorf("input mutated: got %d, want %d", input.UnixMilli(), snapshot)
+		}
+	})
+}
+
+// --- SubDuration tests ---
+
+func TestSubDuration(t *testing.T) {
+	t.Run("subtracts milliseconds", func(t *testing.T) {
+		base := time.Date(2025, 1, 1, 0, 0, 0, 0, time.UTC)
+		got := date.SubDuration(base, 1000, date.UnitMillisecond)
+		if got.UnixMilli() != base.UnixMilli()-1000 {
+			t.Errorf("got %d, want %d", got.UnixMilli(), base.UnixMilli()-1000)
+		}
+	})
+
+	t.Run("subtracts months and clamps to last day", func(t *testing.T) {
+		got := date.SubDuration(time.Date(2025, 3, 31, 0, 0, 0, 0, time.UTC), 1, date.UnitMonth)
+		if got.Month() != time.February || got.Day() != 28 {
+			t.Errorf("got %v, want 2025-02-28", got)
+		}
+	})
+
+	t.Run("subtracts years across leap year", func(t *testing.T) {
+		got := date.SubDuration(time.Date(2025, 2, 28, 0, 0, 0, 0, time.UTC), 1, date.UnitYear)
+		if got.Year() != 2024 || got.Month() != time.February || got.Day() != 28 {
+			t.Errorf("got %v, want 2024-02-28", got)
+		}
+	})
+
+	t.Run("subtracts seconds", func(t *testing.T) {
+		base := time.Date(2025, 6, 1, 12, 0, 0, 0, time.UTC)
+		got := date.SubDuration(base, 30, date.UnitSecond)
+		if got.UnixMilli() != base.UnixMilli()-30_000 {
+			t.Errorf("got %d, want %d", got.UnixMilli(), base.UnixMilli()-30_000)
+		}
+	})
+
+	t.Run("subtracts minutes", func(t *testing.T) {
+		base := time.Date(2025, 6, 1, 12, 0, 0, 0, time.UTC)
+		got := date.SubDuration(base, 5, date.UnitMinute)
+		if got.UnixMilli() != base.UnixMilli()-300_000 {
+			t.Errorf("got %d, want %d", got.UnixMilli(), base.UnixMilli()-300_000)
+		}
+	})
+
+	t.Run("subtracts hours", func(t *testing.T) {
+		base := time.Date(2025, 6, 1, 12, 0, 0, 0, time.UTC)
+		got := date.SubDuration(base, 1, date.UnitHour)
+		if got.UnixMilli() != base.UnixMilli()-3_600_000 {
+			t.Errorf("got %d, want %d", got.UnixMilli(), base.UnixMilli()-3_600_000)
+		}
+	})
+
+	t.Run("subtracts days", func(t *testing.T) {
+		base := time.Date(2025, 6, 1, 12, 0, 0, 0, time.UTC)
+		got := date.SubDuration(base, 1, date.UnitDay)
+		if got.UnixMilli() != base.UnixMilli()-86_400_000 {
+			t.Errorf("got %d, want %d", got.UnixMilli(), base.UnixMilli()-86_400_000)
+		}
+	})
+
+	t.Run("subtracts weeks", func(t *testing.T) {
+		base := time.Date(2025, 6, 15, 12, 0, 0, 0, time.UTC)
+		got := date.SubDuration(base, 1, date.UnitWeek)
+		if got.UnixMilli() != base.UnixMilli()-7*86_400_000 {
+			t.Errorf("got %d, want %d", got.UnixMilli(), base.UnixMilli()-7*86_400_000)
+		}
+	})
+}
+
+// --- Diff tests ---
+
+func TestDiff(t *testing.T) {
+	mustParse := func(s string) time.Time {
+		parsed, err := time.Parse(time.RFC3339Nano, s)
+		if err != nil {
+			t.Fatalf("parse %q: %v", s, err)
+		}
+		return parsed
+	}
+
+	t.Run("computes day difference", func(t *testing.T) {
+		got := date.Diff(time.Date(2025, 12, 31, 0, 0, 0, 0, time.UTC), time.Date(2025, 1, 1, 0, 0, 0, 0, time.UTC), date.UnitDay)
+		if got != 364 {
+			t.Errorf("got %d, want 364", got)
+		}
+	})
+
+	t.Run("computes hour difference", func(t *testing.T) {
+		got := date.Diff(mustParse("2025-01-01T05:00:00Z"), mustParse("2025-01-01T00:00:00Z"), date.UnitHour)
+		if got != 5 {
+			t.Errorf("got %d, want 5", got)
+		}
+	})
+
+	t.Run("computes minute difference", func(t *testing.T) {
+		got := date.Diff(mustParse("2025-01-01T00:30:00Z"), mustParse("2025-01-01T00:00:00Z"), date.UnitMinute)
+		if got != 30 {
+			t.Errorf("got %d, want 30", got)
+		}
+	})
+
+	t.Run("computes second difference", func(t *testing.T) {
+		got := date.Diff(mustParse("2025-01-01T00:00:30Z"), mustParse("2025-01-01T00:00:00Z"), date.UnitSecond)
+		if got != 30 {
+			t.Errorf("got %d, want 30", got)
+		}
+	})
+
+	t.Run("computes millisecond difference", func(t *testing.T) {
+		got := date.Diff(mustParse("2025-01-01T00:00:00.500Z"), mustParse("2025-01-01T00:00:00Z"), date.UnitMillisecond)
+		if got != 500 {
+			t.Errorf("got %d, want 500", got)
+		}
+	})
+
+	t.Run("computes week difference", func(t *testing.T) {
+		got := date.Diff(time.Date(2025, 1, 15, 0, 0, 0, 0, time.UTC), time.Date(2025, 1, 1, 0, 0, 0, 0, time.UTC), date.UnitWeek)
+		if got != 2 {
+			t.Errorf("got %d, want 2", got)
+		}
+	})
+
+	t.Run("computes positive month difference adjusting for incomplete month", func(t *testing.T) {
+		if got := date.Diff(time.Date(2025, 3, 14, 0, 0, 0, 0, time.UTC), time.Date(2025, 1, 15, 0, 0, 0, 0, time.UTC), date.UnitMonth); got != 1 {
+			t.Errorf("got %d, want 1", got)
+		}
+		if got := date.Diff(time.Date(2025, 3, 16, 0, 0, 0, 0, time.UTC), time.Date(2025, 1, 15, 0, 0, 0, 0, time.UTC), date.UnitMonth); got != 2 {
+			t.Errorf("got %d, want 2", got)
+		}
+	})
+
+	t.Run("computes negative month difference adjusting for incomplete month", func(t *testing.T) {
+		if got := date.Diff(time.Date(2025, 1, 15, 0, 0, 0, 0, time.UTC), time.Date(2025, 3, 14, 0, 0, 0, 0, time.UTC), date.UnitMonth); got != -1 {
+			t.Errorf("got %d, want -1", got)
+		}
+		if got := date.Diff(time.Date(2025, 1, 15, 0, 0, 0, 0, time.UTC), time.Date(2025, 3, 16, 0, 0, 0, 0, time.UTC), date.UnitMonth); got != -2 {
+			t.Errorf("got %d, want -2", got)
+		}
+	})
+
+	t.Run("respects time-of-day for month boundary on positive diff", func(t *testing.T) {
+		got := date.Diff(time.Date(2025, 2, 15, 10, 0, 0, 0, time.UTC), time.Date(2025, 1, 15, 11, 0, 0, 0, time.UTC), date.UnitMonth)
+		if got != 0 {
+			t.Errorf("got %d, want 0", got)
+		}
+	})
+
+	t.Run("respects time-of-day for month boundary on negative diff", func(t *testing.T) {
+		got := date.Diff(time.Date(2025, 1, 15, 11, 0, 0, 0, time.UTC), time.Date(2025, 2, 15, 10, 0, 0, 0, time.UTC), date.UnitMonth)
+		if got != 0 {
+			t.Errorf("got %d, want 0", got)
+		}
+	})
+
+	t.Run("computes year difference", func(t *testing.T) {
+		if got := date.Diff(time.Date(2026, 1, 1, 0, 0, 0, 0, time.UTC), time.Date(2025, 1, 1, 0, 0, 0, 0, time.UTC), date.UnitYear); got != 1 {
+			t.Errorf("got %d, want 1", got)
+		}
+		if got := date.Diff(time.Date(2025, 1, 1, 0, 0, 0, 0, time.UTC), time.Date(2026, 1, 1, 0, 0, 0, 0, time.UTC), date.UnitYear); got != -1 {
+			t.Errorf("got %d, want -1", got)
+		}
+	})
+
+	t.Run("returns zero for identical dates", func(t *testing.T) {
+		d := time.Date(2025, 1, 1, 0, 0, 0, 0, time.UTC)
+		for _, u := range []date.DurationUnit{date.UnitDay, date.UnitMonth, date.UnitYear} {
+			if got := date.Diff(d, d, u); got != 0 {
+				t.Errorf("Diff(d, d, %q) = %d, want 0", u, got)
+			}
+		}
+	})
+
+	t.Run("truncates fractional fixed-unit differences toward zero", func(t *testing.T) {
+		left := time.UnixMilli(1500)
+		right := time.UnixMilli(0)
+		if got := date.Diff(left, right, date.UnitSecond); got != 1 {
+			t.Errorf("got %d, want 1", got)
+		}
+		if got := date.Diff(right, left, date.UnitSecond); got != -1 {
+			t.Errorf("got %d, want -1", got)
+		}
+	})
+}
+
+// --- StartOf tests ---
+
+func TestStartOf(t *testing.T) {
+	t.Run("zeros milliseconds for second", func(t *testing.T) {
+		got := date.StartOf(time.Date(2025, 4, 15, 10, 30, 45, 123*int(time.Millisecond), time.UTC), date.BoundarySecond)
+		if got.Nanosecond() != 0 || got.Second() != 45 {
+			t.Errorf("got %v, want second=45 ms=0", got)
+		}
+	})
+
+	t.Run("zeros seconds for minute", func(t *testing.T) {
+		got := date.StartOf(time.Date(2025, 4, 15, 10, 30, 45, 123*int(time.Millisecond), time.UTC), date.BoundaryMinute)
+		if got.Second() != 0 || got.Nanosecond() != 0 {
+			t.Errorf("got %v, want second=0 ms=0", got)
+		}
+	})
+
+	t.Run("zeros minutes for hour", func(t *testing.T) {
+		got := date.StartOf(time.Date(2025, 4, 15, 10, 30, 45, 123*int(time.Millisecond), time.UTC), date.BoundaryHour)
+		if got.Minute() != 0 || got.Second() != 0 || got.Nanosecond() != 0 {
+			t.Errorf("got %v, want minute=second=ms=0", got)
+		}
+	})
+
+	t.Run("zeros hours for day", func(t *testing.T) {
+		got := date.StartOf(time.Date(2025, 4, 15, 10, 30, 0, 0, time.UTC), date.BoundaryDay)
+		if got.Hour() != 0 || got.Minute() != 0 || got.Second() != 0 || got.Nanosecond() != 0 {
+			t.Errorf("got %v, want all zero time-of-day", got)
+		}
+	})
+
+	t.Run("returns Sunday for week", func(t *testing.T) {
+		got := date.StartOf(time.Date(2025, 4, 16, 0, 0, 0, 0, time.UTC), date.BoundaryWeek)
+		if got.Weekday() != time.Sunday || got.Hour() != 0 {
+			t.Errorf("got %v (weekday %v), want Sunday 00:00", got, got.Weekday())
+		}
+	})
+
+	t.Run("returns first day for month", func(t *testing.T) {
+		got := date.StartOf(time.Date(2025, 4, 15, 0, 0, 0, 0, time.UTC), date.BoundaryMonth)
+		if got.Day() != 1 || got.Month() != time.April || got.Hour() != 0 {
+			t.Errorf("got %v, want 2025-04-01 00:00", got)
+		}
+	})
+
+	t.Run("returns first day of quarter", func(t *testing.T) {
+		cases := []struct {
+			in        time.Time
+			wantMonth time.Month
+		}{
+			{time.Date(2025, 1, 31, 0, 0, 0, 0, time.UTC), time.January},
+			{time.Date(2025, 5, 31, 0, 0, 0, 0, time.UTC), time.April},
+			{time.Date(2025, 8, 31, 0, 0, 0, 0, time.UTC), time.July},
+			{time.Date(2025, 11, 30, 0, 0, 0, 0, time.UTC), time.October},
+		}
+		for _, c := range cases {
+			got := date.StartOf(c.in, date.BoundaryQuarter)
+			if got.Month() != c.wantMonth || got.Day() != 1 {
+				t.Errorf("StartOf(%v, quarter) = %v, want month %v day 1", c.in, got, c.wantMonth)
+			}
+		}
+	})
+
+	t.Run("returns Jan 1 for year", func(t *testing.T) {
+		got := date.StartOf(time.Date(2025, 6, 15, 0, 0, 0, 0, time.UTC), date.BoundaryYear)
+		if got.Month() != time.January || got.Day() != 1 || got.Hour() != 0 {
+			t.Errorf("got %v, want 2025-01-01 00:00", got)
+		}
+	})
+
+	t.Run("returns the date unchanged for an unknown unit", func(t *testing.T) {
+		input := time.Date(2025, 4, 15, 10, 30, 0, 0, time.UTC)
+		got := date.StartOf(input, date.DateBoundaryUnit("unknown"))
+		if !got.Equal(input) {
+			t.Errorf("got %v, want unchanged %v", got, input)
+		}
+	})
+}
+
+// --- EndOf tests ---
+
+func TestEndOf(t *testing.T) {
+	ms := func(tm time.Time) int { return tm.Nanosecond() / int(time.Millisecond) }
+
+	t.Run("sets milliseconds to 999 for second", func(t *testing.T) {
+		got := date.EndOf(time.Date(2025, 4, 15, 10, 30, 45, 0, time.UTC), date.BoundarySecond)
+		if ms(got) != 999 || got.Second() != 45 {
+			t.Errorf("got %v, want second=45 ms=999", got)
+		}
+	})
+
+	t.Run("sets to 59.999 for minute", func(t *testing.T) {
+		got := date.EndOf(time.Date(2025, 4, 15, 10, 30, 0, 0, time.UTC), date.BoundaryMinute)
+		if got.Second() != 59 || ms(got) != 999 {
+			t.Errorf("got %v, want second=59 ms=999", got)
+		}
+	})
+
+	t.Run("sets to xx:59:59.999 for hour", func(t *testing.T) {
+		got := date.EndOf(time.Date(2025, 4, 15, 10, 0, 0, 0, time.UTC), date.BoundaryHour)
+		if got.Minute() != 59 || got.Second() != 59 || ms(got) != 999 {
+			t.Errorf("got %v, want minute=59 second=59 ms=999", got)
+		}
+	})
+
+	t.Run("sets to 23:59:59.999 for day", func(t *testing.T) {
+		got := date.EndOf(time.Date(2025, 4, 15, 0, 0, 0, 0, time.UTC), date.BoundaryDay)
+		if got.Hour() != 23 || got.Minute() != 59 || got.Second() != 59 || ms(got) != 999 {
+			t.Errorf("got %v, want 23:59:59.999", got)
+		}
+	})
+
+	t.Run("returns Saturday end for week", func(t *testing.T) {
+		got := date.EndOf(time.Date(2025, 4, 16, 0, 0, 0, 0, time.UTC), date.BoundaryWeek)
+		if got.Weekday() != time.Saturday || got.Hour() != 23 {
+			t.Errorf("got %v (weekday %v), want Saturday 23:xx", got, got.Weekday())
+		}
+	})
+
+	t.Run("returns last day for month", func(t *testing.T) {
+		got := date.EndOf(time.Date(2025, 4, 1, 0, 0, 0, 0, time.UTC), date.BoundaryMonth)
+		if got.Day() != 30 || got.Month() != time.April {
+			t.Errorf("got %v, want April 30", got)
+		}
+	})
+
+	t.Run("returns Feb 28 for non-leap February", func(t *testing.T) {
+		got := date.EndOf(time.Date(2025, 2, 1, 0, 0, 0, 0, time.UTC), date.BoundaryMonth)
+		if got.Day() != 28 {
+			t.Errorf("got day %d, want 28", got.Day())
+		}
+	})
+
+	t.Run("returns Feb 29 for leap February", func(t *testing.T) {
+		got := date.EndOf(time.Date(2024, 2, 1, 0, 0, 0, 0, time.UTC), date.BoundaryMonth)
+		if got.Day() != 29 {
+			t.Errorf("got day %d, want 29", got.Day())
+		}
+	})
+
+	t.Run("returns last day of each quarter", func(t *testing.T) {
+		cases := []struct {
+			in        time.Time
+			wantMonth time.Month
+			wantDay   int
+		}{
+			{time.Date(2025, 1, 1, 0, 0, 0, 0, time.UTC), time.March, 31},
+			{time.Date(2025, 4, 1, 0, 0, 0, 0, time.UTC), time.June, 30},
+			{time.Date(2025, 7, 1, 0, 0, 0, 0, time.UTC), time.September, 30},
+			{time.Date(2025, 10, 1, 0, 0, 0, 0, time.UTC), time.December, 31},
+		}
+		for _, c := range cases {
+			got := date.EndOf(c.in, date.BoundaryQuarter)
+			if got.Month() != c.wantMonth || got.Day() != c.wantDay {
+				t.Errorf("EndOf(%v, quarter) = %v, want %v %d", c.in, got, c.wantMonth, c.wantDay)
+			}
+		}
+	})
+
+	t.Run("returns Dec 31 for year", func(t *testing.T) {
+		got := date.EndOf(time.Date(2025, 6, 15, 0, 0, 0, 0, time.UTC), date.BoundaryYear)
+		if got.Month() != time.December || got.Day() != 31 || got.Hour() != 23 {
+			t.Errorf("got %v, want Dec 31 23:xx", got)
+		}
+	})
+
+	t.Run("returns the date unchanged for an unknown unit", func(t *testing.T) {
+		input := time.Date(2025, 4, 15, 10, 30, 0, 0, time.UTC)
+		got := date.EndOf(input, date.DateBoundaryUnit("unknown"))
+		if !got.Equal(input) {
+			t.Errorf("got %v, want unchanged %v", got, input)
+		}
+	})
+}
+
+// --- IsWeekend tests ---
+
+func TestIsWeekend(t *testing.T) {
+	cases := []struct {
+		in   time.Time
+		want bool
+		name string
+	}{
+		{time.Date(2025, 4, 19, 0, 0, 0, 0, time.UTC), true, "Saturday"},
+		{time.Date(2025, 4, 20, 0, 0, 0, 0, time.UTC), true, "Sunday"},
+		{time.Date(2025, 4, 21, 0, 0, 0, 0, time.UTC), false, "Monday"},
+		{time.Date(2025, 4, 18, 0, 0, 0, 0, time.UTC), false, "Friday"},
+	}
+	for _, c := range cases {
+		t.Run(c.name, func(t *testing.T) {
+			if got := date.IsWeekend(c.in); got != c.want {
+				t.Errorf("IsWeekend(%s) = %v, want %v", c.name, got, c.want)
+			}
+		})
+	}
+}
+
+// --- IsSameDay tests ---
+
+func TestIsSameDay(t *testing.T) {
+	t.Run("returns true for same date with different times", func(t *testing.T) {
+		if !date.IsSameDay(time.Date(2025, 4, 15, 1, 0, 0, 0, time.UTC), time.Date(2025, 4, 15, 23, 59, 0, 0, time.UTC)) {
+			t.Error("want true for same day")
+		}
+	})
+
+	t.Run("returns false for adjacent days", func(t *testing.T) {
+		if date.IsSameDay(time.Date(2025, 4, 15, 0, 0, 0, 0, time.UTC), time.Date(2025, 4, 16, 0, 0, 0, 0, time.UTC)) {
+			t.Error("want false for adjacent days")
+		}
+	})
+
+	t.Run("returns false for different month", func(t *testing.T) {
+		if date.IsSameDay(time.Date(2025, 4, 15, 0, 0, 0, 0, time.UTC), time.Date(2025, 5, 15, 0, 0, 0, 0, time.UTC)) {
+			t.Error("want false for different month")
+		}
+	})
+
+	t.Run("returns false for different year", func(t *testing.T) {
+		if date.IsSameDay(time.Date(2024, 4, 15, 0, 0, 0, 0, time.UTC), time.Date(2025, 4, 15, 0, 0, 0, 0, time.UTC)) {
+			t.Error("want false for different year")
+		}
+	})
+}
+
+// --- IsBusinessDay tests ---
+
+func TestIsBusinessDay(t *testing.T) {
+	t.Run("returns true for Monday with no holidays", func(t *testing.T) {
+		if !date.IsBusinessDay(time.Date(2025, 4, 21, 0, 0, 0, 0, time.UTC)) {
+			t.Error("want true for Monday")
+		}
+	})
+
+	t.Run("returns false for Saturday", func(t *testing.T) {
+		if date.IsBusinessDay(time.Date(2025, 4, 19, 0, 0, 0, 0, time.UTC)) {
+			t.Error("want false for Saturday")
+		}
+	})
+
+	t.Run("returns false for Sunday", func(t *testing.T) {
+		if date.IsBusinessDay(time.Date(2025, 4, 20, 0, 0, 0, 0, time.UTC)) {
+			t.Error("want false for Sunday")
+		}
+	})
+
+	t.Run("returns false for weekday listed as holiday", func(t *testing.T) {
+		d := time.Date(2025, 4, 21, 0, 0, 0, 0, time.UTC)
+		if date.IsBusinessDay(d, time.Date(2025, 4, 21, 12, 0, 0, 0, time.UTC)) {
+			t.Error("want false for holiday weekday")
+		}
+	})
+
+	t.Run("returns true for weekday not in holiday list", func(t *testing.T) {
+		d := time.Date(2025, 4, 22, 0, 0, 0, 0, time.UTC)
+		if !date.IsBusinessDay(d, time.Date(2025, 4, 21, 0, 0, 0, 0, time.UTC)) {
+			t.Error("want true for non-holiday weekday")
+		}
+	})
+}
+
+// --- FormatRelative tests ---
+
+func TestFormatRelative(t *testing.T) {
+	base := time.Date(2025, 4, 15, 12, 0, 0, 0, time.UTC)
+
+	cases := []struct {
+		name   string
+		target time.Time
+		locale string
+		want   string
+	}{
+		{"now for delta below one second", base.Add(500 * time.Millisecond), "en", "now"},
+		{"seconds in the past", base.Add(-5 * time.Second), "en", "5 seconds ago"},
+		{"minutes in the future", base.Add(5 * time.Minute), "en", "in 5 minutes"},
+		{"hours", base.Add(-3 * time.Hour), "en", "3 hours ago"},
+		{"days", base.Add(24 * time.Hour), "en", "tomorrow"},
+		{"weeks", base.Add(-14 * 24 * time.Hour), "en", "2 weeks ago"},
+		{"months", base.Add(90 * 24 * time.Hour), "en", "in 3 months"},
+		{"years", base.Add(-2 * 365 * 24 * time.Hour), "en", "2 years ago"},
+		{"japanese tomorrow", base.Add(24 * time.Hour), "ja", "明日"},
+		{"japanese seconds ago", base.Add(-5 * time.Second), "ja", "5 秒前"},
+		{"japanese minutes after", base.Add(5 * time.Minute), "ja", "5 分後"},
+		{"japanese now", base.Add(500 * time.Millisecond), "ja", "今"},
+	}
+
+	for _, c := range cases {
+		t.Run(c.name, func(t *testing.T) {
+			if got := date.FormatRelative(c.target, base, c.locale); got != c.want {
+				t.Errorf("FormatRelative = %q, want %q", got, c.want)
+			}
+		})
+	}
+
+	t.Run("falls back to en for empty locale", func(t *testing.T) {
+		if got := date.FormatRelative(base.Add(-5*time.Second), base, ""); got != "5 seconds ago" {
+			t.Errorf("got %q, want \"5 seconds ago\"", got)
+		}
+	})
+}

@@ -1,8 +1,8 @@
 package math
 
 import (
-	"math/big"
 	stdmath "math"
+	"math/big"
 	"strconv"
 )
 
@@ -237,4 +237,44 @@ func Min[T Numeric](values ...T) T {
 //	// a == 2, b == 1
 func ValueSwap[T any](a, b *T) {
 	*a, *b = *b, *a
+}
+
+// Clamp constrains value to the inclusive range [min, max].
+//
+// Example:
+//
+//	Clamp(5, 0, 10)   // 5
+//	Clamp(-3, 0, 10)  // 0
+//	Clamp(15, 0, 10)  // 10
+func Clamp[T Numeric](value, min, max T) T {
+	v := value
+	if v < min {
+		v = min
+	}
+	if v > max {
+		v = max
+	}
+	return v
+}
+
+// InRange reports whether value lies within a half-open range.
+// With no end argument the range is [min(start, 0), max(start, 0)).
+// With an end argument the range is [min(start, end), max(start, end)).
+//
+// Example:
+//
+//	InRange(3, 5)    // true  (range [0, 5))
+//	InRange(5, 5)    // false (range [0, 5))
+//	InRange(3, 2, 5) // true  (range [2, 5))
+//	InRange(3, 5, 2) // true  (range [2, 5))
+func InRange[T Numeric](value, start T, end ...T) bool {
+	var lower, upper T
+	if len(end) == 0 {
+		lower = Min(start, 0)
+		upper = Max(start, 0)
+	} else {
+		lower = Min(start, end[0])
+		upper = Max(start, end[0])
+	}
+	return value >= lower && value < upper
 }

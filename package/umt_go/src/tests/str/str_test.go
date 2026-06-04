@@ -1201,3 +1201,558 @@ func TestRandomStringInitialization(t *testing.T) {
 		}
 	})
 }
+
+// =============================================================================
+// Tests for ported String functions
+// =============================================================================
+
+func TestCapitalize(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		expected string
+	}{
+		{"uppercases the first letter", "hello", "Hello"},
+		{"preserves the rest of the string", "hELLO", "HELLO"},
+		{"handles accented first letter", "éclair", "Éclair"},
+		{"returns empty for empty input", "", ""},
+		{"handles surrogate pair first character", "\U0001F600abc", "\U0001F600abc"},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := str.Capitalize(tt.input); got != tt.expected {
+				t.Errorf("Capitalize(%q) = %q, want %q", tt.input, got, tt.expected)
+			}
+		})
+	}
+}
+
+func TestUncapitalize(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		expected string
+	}{
+		{"lowercases the first letter", "Hello", "hello"},
+		{"preserves the rest of the string", "ÉCLAIR", "éCLAIR"},
+		{"returns empty for empty input", "", ""},
+		{"handles surrogate pair first character", "\U0001F600ABC", "\U0001F600ABC"},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := str.Uncapitalize(tt.input); got != tt.expected {
+				t.Errorf("Uncapitalize(%q) = %q, want %q", tt.input, got, tt.expected)
+			}
+		})
+	}
+}
+
+func TestCapitalizeWord(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		expected string
+	}{
+		{"uppercases first lowercases rest", "hello", "Hello"},
+		{"normalizes mixed case input", "hELLO", "Hello"},
+		{"returns empty for empty input", "", ""},
+		{"preserves single-character input", "a", "A"},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := str.CapitalizeWord(tt.input); got != tt.expected {
+				t.Errorf("CapitalizeWord(%q) = %q, want %q", tt.input, got, tt.expected)
+			}
+		})
+	}
+}
+
+func TestWords(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		expected []string
+	}{
+		{"splits camelCase", "helloWorld", []string{"hello", "World"}},
+		{"splits acronym followed by word", "XMLHttpRequest", []string{"XML", "Http", "Request"}},
+		{"splits on dashes and underscores", "foo-bar_baz", []string{"foo", "bar", "baz"}},
+		{"splits on whitespace", "hello world", []string{"hello", "world"}},
+		{"returns empty for empty string", "", []string{}},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := str.Words(tt.input)
+			if !equalStringSlices(got, tt.expected) {
+				t.Errorf("Words(%q) = %v, want %v", tt.input, got, tt.expected)
+			}
+		})
+	}
+}
+
+func TestWordsWithPattern(t *testing.T) {
+	t.Run("uses a custom pattern when provided", func(t *testing.T) {
+		got := str.WordsWithPattern("a1 b2 c3", regexp.MustCompile(`[a-z]\d`))
+		want := []string{"a1", "b2", "c3"}
+		if !equalStringSlices(got, want) {
+			t.Errorf("WordsWithPattern = %v, want %v", got, want)
+		}
+	})
+	t.Run("returns empty array when custom pattern matches nothing", func(t *testing.T) {
+		got := str.WordsWithPattern("hello", regexp.MustCompile(`\d+`))
+		if len(got) != 0 {
+			t.Errorf("WordsWithPattern = %v, want empty", got)
+		}
+	})
+}
+
+func TestWordCount(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		expected int
+	}{
+		{"counts space-separated words", "hello world", 2},
+		{"counts camelCase boundaries", "camelCaseSplit", 3},
+		{"returns zero for empty string", "", 0},
+		{"counts words across punctuation", "foo, bar! baz?", 3},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := str.WordCount(tt.input); got != tt.expected {
+				t.Errorf("WordCount(%q) = %d, want %d", tt.input, got, tt.expected)
+			}
+		})
+	}
+}
+
+func TestPascalCase(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		expected string
+	}{
+		{"converts kebab-case", "hello-world", "HelloWorld"},
+		{"converts snake_case", "hello_world", "HelloWorld"},
+		{"converts space-separated words", "hello world", "HelloWorld"},
+		{"converts camelCase to PascalCase", "helloWorld", "HelloWorld"},
+		{"returns empty for empty string", "", ""},
+		{"handles acronyms", "XMLHttpRequest", "XmlHttpRequest"},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := str.PascalCase(tt.input); got != tt.expected {
+				t.Errorf("PascalCase(%q) = %q, want %q", tt.input, got, tt.expected)
+			}
+		})
+	}
+}
+
+func TestSnakeCase(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		expected string
+	}{
+		{"converts camelCase", "helloWorld", "hello_world"},
+		{"converts space-separated words", "Hello World", "hello_world"},
+		{"converts kebab-case", "foo-bar-baz", "foo_bar_baz"},
+		{"converts PascalCase", "FooBar", "foo_bar"},
+		{"returns empty for empty string", "", ""},
+		{"handles acronyms", "XMLHttpRequest", "xml_http_request"},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := str.SnakeCase(tt.input); got != tt.expected {
+				t.Errorf("SnakeCase(%q) = %q, want %q", tt.input, got, tt.expected)
+			}
+		})
+	}
+}
+
+func TestConstantCase(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		expected string
+	}{
+		{"converts camelCase to CONSTANT_CASE", "helloWorld", "HELLO_WORLD"},
+		{"converts space-separated words", "Hello World", "HELLO_WORLD"},
+		{"converts kebab-case", "foo-bar-baz", "FOO_BAR_BAZ"},
+		{"handles a single word", "hello", "HELLO"},
+		{"handles empty string", "", ""},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := str.ConstantCase(tt.input); got != tt.expected {
+				t.Errorf("ConstantCase(%q) = %q, want %q", tt.input, got, tt.expected)
+			}
+		})
+	}
+}
+
+func TestTitleCase(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		expected string
+	}{
+		{"converts plain sentence", "hello world", "Hello World"},
+		{"converts mixed separators", "a-quick brown_fox", "A Quick Brown Fox"},
+		{"converts camelCase", "helloWorld", "Hello World"},
+		{"returns empty for empty string", "", ""},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := str.TitleCase(tt.input); got != tt.expected {
+				t.Errorf("TitleCase(%q) = %q, want %q", tt.input, got, tt.expected)
+			}
+		})
+	}
+}
+
+func TestSwapCase(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		expected string
+	}{
+		{"swaps the case of each letter", "Hello World", "hELLO wORLD"},
+		{"turns all uppercase into lowercase", "ABC", "abc"},
+		{"turns all lowercase into uppercase", "abc", "ABC"},
+		{"leaves characters without case unchanged", "abc123-日本", "ABC123-日本"},
+		{"handles empty string", "", ""},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := str.SwapCase(tt.input); got != tt.expected {
+				t.Errorf("SwapCase(%q) = %q, want %q", tt.input, got, tt.expected)
+			}
+		})
+	}
+}
+
+func TestDeburr(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		expected string
+	}{
+		{"removes acute accents", "déjà vu", "deja vu"},
+		{"removes multiple diacritical marks", "Crème brûlée", "Creme brulee"},
+		{"handles a mix of accented and plain characters", "résumé café", "resume cafe"},
+		{"leaves plain ASCII unchanged", "hello world", "hello world"},
+		{"handles empty string", "", ""},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := str.Deburr(tt.input); got != tt.expected {
+				t.Errorf("Deburr(%q) = %q, want %q", tt.input, got, tt.expected)
+			}
+		})
+	}
+}
+
+func TestNormalizeWhitespace(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		expected string
+	}{
+		{"collapses consecutive spaces into one", "hello   world", "hello world"},
+		{"collapses mixed whitespace into single spaces", "hello \t\n world", "hello world"},
+		{"trims leading and trailing whitespace", "  hello world  ", "hello world"},
+		{"handles a string of only whitespace", "  \t\n ", ""},
+		{"leaves a single-spaced string unchanged", "a b c", "a b c"},
+		{"handles empty string", "", ""},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := str.NormalizeWhitespace(tt.input); got != tt.expected {
+				t.Errorf("NormalizeWhitespace(%q) = %q, want %q", tt.input, got, tt.expected)
+			}
+		})
+	}
+}
+
+func TestSanitizeString(t *testing.T) {
+	printable := " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~"
+	tests := []struct {
+		name     string
+		input    string
+		expected string
+	}{
+		{"keeps printable ASCII characters", "Hello, World!", "Hello, World!"},
+		{"keeps all printable ASCII range", printable, printable},
+		{"keeps newlines carriage returns and tabs", "line1\nline2\r\n\tindented", "line1\nline2\r\n\tindented"},
+		{"removes ANSI escape sequences", "\x1b[31mred\x1b[0m", "[31mred[0m"},
+		{"removes NULL bytes", "a\x00b", "ab"},
+		{"removes C0 control characters except TAB LF CR", "a\x01b\x02c\x1fd", "abcd"},
+		{"removes the DEL character", "a\x7fb", "ab"},
+		{"removes accented non-ASCII", "héllo", "hllo"},
+		{"removes CJK characters", "日本語", ""},
+		{"removes emoji", "emoji\U0001F600here", "emojihere"},
+		{"handles empty string", "", ""},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := str.SanitizeString(tt.input); got != tt.expected {
+				t.Errorf("SanitizeString(%q) = %q, want %q", tt.input, got, tt.expected)
+			}
+		})
+	}
+}
+
+func TestStripAnsi(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		expected string
+	}{
+		{"removes SGR color codes", "\x1b[31mred\x1b[0m", "red"},
+		{"removes multiple sequences", "\x1b[1m\x1b[32mbold green\x1b[0m", "bold green"},
+		{"removes cursor movement sequences", "a\x1b[2Ab", "ab"},
+		{"leaves plain text unchanged", "plain text", "plain text"},
+		{"handles empty string", "", ""},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := str.StripAnsi(tt.input); got != tt.expected {
+				t.Errorf("StripAnsi(%q) = %q, want %q", tt.input, got, tt.expected)
+			}
+		})
+	}
+}
+
+func TestStripTags(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		expected string
+	}{
+		{"removes simple tags", "<p>Hello</p>", "Hello"},
+		{"removes nested tags but keeps text", "<p>Hello <b>World</b></p>", "Hello World"},
+		{"removes tags with attributes", `<a href="https://example.com">link</a>`, "link"},
+		{"removes self-closing tags", "line1<br/>line2", "line1line2"},
+		{"removes nested tag injections", "<sc<script>ript>", ""},
+		{"leaves text without tags unchanged", "plain text", "plain text"},
+		{"handles empty string", "", ""},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := str.StripTags(tt.input); got != tt.expected {
+				t.Errorf("StripTags(%q) = %q, want %q", tt.input, got, tt.expected)
+			}
+		})
+	}
+}
+
+func TestToFullWidth(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		expected string
+	}{
+		{"converts half-width digits", "123", "１２３"},
+		{"converts half-width uppercase letters", "ABC", "ＡＢＣ"},
+		{"converts half-width lowercase letters", "abc", "ａｂｃ"},
+		{"converts mixed alphanumeric characters", "Abc123", "Ａｂｃ１２３"},
+		{"leaves non-alphanumeric characters unchanged", "a-b!", "ａ-ｂ!"},
+		{"handles empty string", "", ""},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := str.ToFullWidth(tt.input); got != tt.expected {
+				t.Errorf("ToFullWidth(%q) = %q, want %q", tt.input, got, tt.expected)
+			}
+		})
+	}
+}
+
+func TestCountOccurrences(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		search   string
+		expected int
+	}{
+		{"counts non-overlapping occurrences", "ababab", "ab", 3},
+		{"does not count overlapping occurrences", "aaaa", "aa", 2},
+		{"counts single-character occurrences", "banana", "a", 3},
+		{"returns 0 when the substring is absent", "hello", "z", 0},
+		{"returns 0 for an empty search string", "hello", "", 0},
+		{"returns 0 for an empty input string", "", "a", 0},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := str.CountOccurrences(tt.input, tt.search); got != tt.expected {
+				t.Errorf("CountOccurrences(%q, %q) = %d, want %d", tt.input, tt.search, got, tt.expected)
+			}
+		})
+	}
+}
+
+func TestSplitByLength(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		length   int
+		expected []string
+	}{
+		{"splits into equal chunks", "abcdef", 2, []string{"ab", "cd", "ef"}},
+		{"keeps the remainder in the last chunk", "abcdefg", 3, []string{"abc", "def", "g"}},
+		{"returns a single chunk when length exceeds the string", "abc", 10, []string{"abc"}},
+		{"is surrogate-pair safe", "😀😁😂😃", 2, []string{"😀😁", "😂😃"}},
+		{"returns an empty slice for an empty string", "", 3, []string{}},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := str.SplitByLength(tt.input, tt.length)
+			if !equalStringSlices(got, tt.expected) {
+				t.Errorf("SplitByLength(%q, %d) = %v, want %v", tt.input, tt.length, got, tt.expected)
+			}
+		})
+	}
+}
+
+func TestMask(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		options  str.MaskOptions
+		expected string
+	}{
+		{"masks the middle with default options", "secret", str.MaskOptions{}, "s****t"},
+		{"masks with custom start and end", "1234567890", str.MaskOptions{Start: 2, End: 4}, "12****7890"},
+		{"uses custom mask character", "secret", str.MaskOptions{Char: "#"}, "s####t"},
+		{"returns input unchanged when start+end == length", "abc", str.MaskOptions{Start: 2, End: 1}, "abc"},
+		{"returns input unchanged when start+end exceeds length", "abc", str.MaskOptions{Start: 5, End: 5}, "abc"},
+		{"handles surrogate pairs as single graphemes", "\U0001F600abcde\U0001F600", str.MaskOptions{Start: 1, End: 1}, "\U0001F600*****\U0001F600"},
+		{"returns input unchanged for empty string", "", str.MaskOptions{}, ""},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := str.Mask(tt.input, tt.options); got != tt.expected {
+				t.Errorf("Mask(%q, %+v) = %q, want %q", tt.input, tt.options, got, tt.expected)
+			}
+		})
+	}
+}
+
+func TestDedent(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		expected string
+	}{
+		{"removes minimum common indentation", "    line1\n      line2\n    line3", "line1\n  line2\nline3"},
+		{"ignores blank lines when computing minimum", "    a\n\n    b", "a\n\nb"},
+		{"returns the input unchanged when no indentation exists", "no indent", "no indent"},
+		{"handles all-blank input", "\n  \n", "\n  \n"},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := str.Dedent(tt.input); got != tt.expected {
+				t.Errorf("Dedent(%q) = %q, want %q", tt.input, got, tt.expected)
+			}
+		})
+	}
+}
+
+func TestEnsurePrefix(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		prefix   string
+		expected string
+	}{
+		{"prepends the prefix when missing", "example.com", "https://", "https://example.com"},
+		{"does not duplicate an existing prefix", "https://example.com", "https://", "https://example.com"},
+		{"handles empty input string", "", "/", "/"},
+		{"returns the string unchanged for an empty prefix", "abc", "", "abc"},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := str.EnsurePrefix(tt.input, tt.prefix); got != tt.expected {
+				t.Errorf("EnsurePrefix(%q, %q) = %q, want %q", tt.input, tt.prefix, got, tt.expected)
+			}
+		})
+	}
+}
+
+func TestEnsureSuffix(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		suffix   string
+		expected string
+	}{
+		{"appends the suffix when missing", "file", ".txt", "file.txt"},
+		{"does not duplicate an existing suffix", "file.txt", ".txt", "file.txt"},
+		{"handles empty input string", "", "/", "/"},
+		{"returns the string unchanged for an empty suffix", "abc", "", "abc"},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := str.EnsureSuffix(tt.input, tt.suffix); got != tt.expected {
+				t.Errorf("EnsureSuffix(%q, %q) = %q, want %q", tt.input, tt.suffix, got, tt.expected)
+			}
+		})
+	}
+}
+
+func TestRemovePrefix(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		prefix   string
+		expected string
+	}{
+		{"removes the prefix when present", "https://example.com", "https://", "example.com"},
+		{"leaves the string unchanged when the prefix is absent", "example.com", "https://", "example.com"},
+		{"removes the prefix only once", "//path", "/", "/path"},
+		{"returns the string unchanged for an empty prefix", "abc", "", "abc"},
+		{"handles empty input string", "", "x", ""},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := str.RemovePrefix(tt.input, tt.prefix); got != tt.expected {
+				t.Errorf("RemovePrefix(%q, %q) = %q, want %q", tt.input, tt.prefix, got, tt.expected)
+			}
+		})
+	}
+}
+
+func TestRemoveSuffix(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		suffix   string
+		expected string
+	}{
+		{"removes the suffix when present", "file.txt", ".txt", "file"},
+		{"leaves the string unchanged when the suffix is absent", "file", ".txt", "file"},
+		{"removes the suffix only once", "path//", "/", "path/"},
+		{"returns the string unchanged for an empty suffix", "abc", "", "abc"},
+		{"handles empty input string", "", "x", ""},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := str.RemoveSuffix(tt.input, tt.suffix); got != tt.expected {
+				t.Errorf("RemoveSuffix(%q, %q) = %q, want %q", tt.input, tt.suffix, got, tt.expected)
+			}
+		})
+	}
+}
+
+// equalStringSlices reports whether two string slices have identical contents.
+func equalStringSlices(a, b []string) bool {
+	if len(a) != len(b) {
+		return false
+	}
+	for i := range a {
+		if a[i] != b[i] {
+			return false
+		}
+	}
+	return true
+}

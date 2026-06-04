@@ -105,7 +105,7 @@ func StandardDeviation(nums ...float64) float64 {
 func DeviationValue(scores []float64, target float64) float64 {
 	avg := Average(scores...)
 	sd := StandardDeviation(scores...)
-	return ((target - avg) / sd) * 10 + 50
+	return ((target-avg)/sd)*10 + 50
 }
 
 // Percentile calculates the nth percentile of values in the data slice.
@@ -174,4 +174,28 @@ func CorrelationCoefficient(x, y []float64) float64 {
 	}
 
 	return numerator / denominator
+}
+
+// SumPrecise computes the sum of a slice of numbers using the Neumaier
+// summation algorithm for improved floating-point precision.
+//
+// Example:
+//
+//	SumPrecise([]float64{0.1, 0.2, 0.3}) // 0.6
+//	SumPrecise([]float64{1e20, 1, -1e20}) // 1
+func SumPrecise(numbers []float64) float64 {
+	sum := 0.0
+	compensation := 0.0
+
+	for _, number := range numbers {
+		t := sum + number
+		if stdmath.Abs(sum) >= stdmath.Abs(number) {
+			compensation += sum - t + number
+		} else {
+			compensation += number - t + sum
+		}
+		sum = t
+	}
+
+	return sum + compensation
 }

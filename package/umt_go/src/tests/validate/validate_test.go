@@ -341,6 +341,51 @@ func TestIsValueNaN(t *testing.T) {
 	})
 }
 
+// --- IsBrowser tests ---
+
+func TestIsBrowser(t *testing.T) {
+	// The default (non-js/wasm) build is never a browser environment, so
+	// IsBrowser always reports false there. The TypeScript original checks the
+	// `window` and `document` globals, which only exist inside a browser.
+	if validate.IsBrowser() {
+		t.Error("IsBrowser() should be false outside a browser environment")
+	}
+}
+
+// --- IsNode tests ---
+
+func TestIsNode(t *testing.T) {
+	// The default (non-js/wasm) build is never a Node.js environment, so
+	// IsNode always reports false there. The TypeScript original checks the
+	// `process` and `require` globals, which only exist inside Node.js.
+	if validate.IsNode() {
+		t.Error("IsNode() should be false outside a Node.js environment")
+	}
+}
+
+// --- IsNodeWebkit tests ---
+
+func TestIsNodeWebkit(t *testing.T) {
+	// The default (non-js/wasm) build is neither a browser nor a Node.js
+	// environment, so IsNodeWebkit always reports false there. The TypeScript
+	// original requires both conditions (isBrowser() && isNode()), a
+	// combination unique to the NW.js hybrid environment.
+	if validate.IsNodeWebkit() {
+		t.Error("IsNodeWebkit() should be false outside a Node-Webkit environment")
+	}
+}
+
+// --- IsBun tests ---
+
+func TestIsBun(t *testing.T) {
+	// The default (non-js/wasm) build never runs inside the Bun runtime, so
+	// IsBun always reports false there. The TypeScript original checks the
+	// runtime-specific `Bun` global, which only exists inside Bun.
+	if validate.IsBun() {
+		t.Error("IsBun() should be false outside the Bun runtime")
+	}
+}
+
 // --- IsDictionaryObject tests ---
 
 func TestIsDictionaryObject(t *testing.T) {
