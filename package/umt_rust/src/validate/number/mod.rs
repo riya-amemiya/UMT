@@ -52,6 +52,34 @@ pub fn umt_validate_number(
     }
 }
 
+/// Creates a number validator with optional validation rules
+///
+/// Mirrors the TypeScript `number()` factory: returns a closure that validates
+/// a number against the supplied rules.
+///
+/// # Arguments
+/// * `options` - Validation rules to apply
+/// * `message` - Custom error message for type validation
+///
+/// # Returns
+/// A closure that validates an `f64` and returns a `ValidateCoreReturnType<f64>`
+///
+/// # Examples
+/// ```
+/// use umt_rust::validate::number::{umt_number_validator, umt_min_value, umt_max_value};
+///
+/// let validator = umt_number_validator(vec![umt_min_value(0.0, None), umt_max_value(10.0, None)], None);
+/// assert!(validator(5.0).validate);
+/// assert!(!validator(11.0).validate);
+/// ```
+#[inline]
+pub fn umt_number_validator(
+    options: Vec<ValidateReturnType<f64>>,
+    message: Option<String>,
+) -> impl Fn(f64) -> ValidateCoreReturnType<f64> {
+    move |value: f64| umt_validate_number(value, &options, message.as_deref())
+}
+
 /// Creates a validator for checking if a number is a floating point value
 ///
 /// # Arguments

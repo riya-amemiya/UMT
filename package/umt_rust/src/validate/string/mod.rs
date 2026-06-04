@@ -54,6 +54,34 @@ pub fn umt_validate_string(
     }
 }
 
+/// Creates a string validator with optional validation rules
+///
+/// Mirrors the TypeScript `string()` factory: returns a closure that validates
+/// a string against the supplied rules.
+///
+/// # Arguments
+/// * `options` - Validation rules to apply
+/// * `message` - Custom error message for type validation
+///
+/// # Returns
+/// A closure that validates a `&str` and returns a `ValidateCoreReturnType<String>`
+///
+/// # Examples
+/// ```
+/// use umt_rust::validate::string::{umt_string_validator, umt_min_length, umt_max_length};
+///
+/// let validator = umt_string_validator(vec![umt_min_length(2, None), umt_max_length(4, None)], None);
+/// assert!(validator("abc").validate);
+/// assert!(!validator("abcde").validate);
+/// ```
+#[inline]
+pub fn umt_string_validator(
+    options: Vec<ValidateReturnType<String>>,
+    message: Option<String>,
+) -> impl Fn(&str) -> ValidateCoreReturnType<String> {
+    move |value: &str| umt_validate_string(value, &options, message.as_deref())
+}
+
 /// Creates a validator for checking if a string has an exact length
 ///
 /// # Arguments
