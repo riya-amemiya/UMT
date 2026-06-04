@@ -27,6 +27,33 @@ func FromBase64(s string) (string, error) {
 	return string(decoded), nil
 }
 
+// ToFullWidth converts half-width alphanumeric characters to full-width.
+// It is the inverse of ToHalfWidth; only digits, uppercase, and lowercase ASCII
+// letters are converted.
+//
+// Example:
+//
+//	ToFullWidth("Abc123") // "Ａｂｃ１２３"
+func ToFullWidth(s string) string {
+	var b strings.Builder
+	b.Grow(len(s))
+
+	for _, r := range s {
+		switch {
+		case r >= '0' && r <= '9':
+			b.WriteRune(r + 0xFEE0)
+		case r >= 'A' && r <= 'Z':
+			b.WriteRune(r + 0xFEE0)
+		case r >= 'a' && r <= 'z':
+			b.WriteRune(r + 0xFEE0)
+		default:
+			b.WriteRune(r)
+		}
+	}
+
+	return b.String()
+}
+
 // ToHalfWidth converts full-width alphanumeric characters to half-width.
 // This handles full-width digits (0-9), uppercase (A-Z), and lowercase (a-z).
 func ToHalfWidth(s string) string {

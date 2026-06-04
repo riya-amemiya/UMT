@@ -472,7 +472,7 @@ func TestDeviationValue(t *testing.T) {
 		}
 
 		result := umt_math.DeviationValue(scores, 100)
-		expected := ((100 - avg) / sd) * 10 + 50
+		expected := ((100-avg)/sd)*10 + 50
 		if stdmath.Abs(result-expected) > 1e-10 {
 			t.Errorf("DeviationValue(scores, 100) = %v, want %v", result, expected)
 		}
@@ -2192,4 +2192,284 @@ func TestBitwiseRotate(t *testing.T) {
 		}()
 		umt_math.BitwiseRotate(0x12345678, 8, "up")
 	})
+}
+
+// ============================================================
+// Clamp tests (from clamp.go)
+// ============================================================
+
+func TestClamp(t *testing.T) {
+	t.Run("integers", func(t *testing.T) {
+		tests := []struct {
+			name            string
+			value, min, max int
+			expected        int
+		}{
+			{"within range", 5, 0, 10, 5},
+			{"below range", -3, 0, 10, 0},
+			{"above range", 15, 0, 10, 10},
+			{"equals min", 0, 0, 10, 0},
+			{"equals max", 10, 0, 10, 10},
+			{"negative within", -5, -10, -1, -5},
+			{"negative above", 0, -10, -1, -1},
+			{"negative below", -20, -10, -1, -10},
+			{"min equals max above", 5, 3, 3, 3},
+			{"min equals max below", 1, 3, 3, 3},
+		}
+		for _, tt := range tests {
+			t.Run(tt.name, func(t *testing.T) {
+				if got := umt_math.Clamp(tt.value, tt.min, tt.max); got != tt.expected {
+					t.Errorf("Clamp(%v, %v, %v) = %v, want %v", tt.value, tt.min, tt.max, got, tt.expected)
+				}
+			})
+		}
+	})
+
+	t.Run("floats", func(t *testing.T) {
+		tests := []struct {
+			name            string
+			value, min, max float64
+			expected        float64
+		}{
+			{"within", 0.5, 0, 1, 0.5},
+			{"above", 1.5, 0, 1, 1},
+			{"below", -0.5, 0, 1, 0},
+		}
+		for _, tt := range tests {
+			t.Run(tt.name, func(t *testing.T) {
+				if got := umt_math.Clamp(tt.value, tt.min, tt.max); got != tt.expected {
+					t.Errorf("Clamp(%v, %v, %v) = %v, want %v", tt.value, tt.min, tt.max, got, tt.expected)
+				}
+			})
+		}
+	})
+}
+
+// ============================================================
+// InRange tests (from inRange.go)
+// ============================================================
+
+func TestInRange(t *testing.T) {
+	t.Run("two-arg form", func(t *testing.T) {
+		tests := []struct {
+			name         string
+			value, start int
+			expected     bool
+		}{
+			{"within [0, end)", 3, 5, true},
+			{"equals end", 5, 5, false},
+			{"equals 0", 0, 5, true},
+			{"negative value", -1, 5, false},
+			{"negative range in", -3, -5, true},
+			{"negative range zero out", 0, -5, false},
+			{"negative range equals start", -5, -5, true},
+		}
+		for _, tt := range tests {
+			t.Run(tt.name, func(t *testing.T) {
+				if got := umt_math.InRange(tt.value, tt.start); got != tt.expected {
+					t.Errorf("InRange(%v, %v) = %v, want %v", tt.value, tt.start, got, tt.expected)
+				}
+			})
+		}
+	})
+
+	t.Run("three-arg form", func(t *testing.T) {
+		tests := []struct {
+			name              string
+			value, start, end int
+			expected          bool
+		}{
+			{"within [start, end)", 3, 2, 5, true},
+			{"swap start and end", 3, 5, 2, true},
+			{"equals upper bound", 5, 2, 5, false},
+			{"equals lower bound", 2, 2, 5, true},
+			{"negative within", -3, -5, -1, true},
+			{"negative lower bound", -5, -5, -1, true},
+			{"negative upper bound", -1, -5, -1, false},
+		}
+		for _, tt := range tests {
+			t.Run(tt.name, func(t *testing.T) {
+				if got := umt_math.InRange(tt.value, tt.start, tt.end); got != tt.expected {
+					t.Errorf("InRange(%v, %v, %v) = %v, want %v", tt.value, tt.start, tt.end, got, tt.expected)
+				}
+			})
+		}
+	})
+
+	t.Run("floats", func(t *testing.T) {
+		if got := umt_math.InRange(0.5, 0.0, 1.0); got != true {
+			t.Errorf("InRange(0.5, 0, 1) = %v, want true", got)
+		}
+		if got := umt_math.InRange(1.5, 0.0, 1.0); got != false {
+			t.Errorf("InRange(1.5, 0, 1) = %v, want false", got)
+		}
+	})
+}
+
+// ============================================================
+// SumPrecise tests (from sumPrecise.go)
+// ============================================================
+
+func TestSumPrecise(t *testing.T) {
+	t.Run("exact", func(t *testing.T) {
+		tests := []struct {
+			name     string
+			numbers  []float64
+			expected float64
+		}{
+			{"simple integers", []float64{1, 2, 3, 4, 5}, 15},
+			{"large small cancellation", []float64{1e20, 1, -1e20}, 1},
+			{"empty array", []float64{}, 0},
+			{"single element", []float64{42}, 42},
+			{"all negative", []float64{-1, -2, -3}, -6},
+			{"mixed signs", []float64{10, -3, 5, -2}, 10},
+		}
+		for _, tt := range tests {
+			t.Run(tt.name, func(t *testing.T) {
+				if got := umt_math.SumPrecise(tt.numbers); got != tt.expected {
+					t.Errorf("SumPrecise(%v) = %v, want %v", tt.numbers, got, tt.expected)
+				}
+			})
+		}
+	})
+
+	t.Run("floating point precision", func(t *testing.T) {
+		got := umt_math.SumPrecise([]float64{0.1, 0.2, 0.3})
+		if stdmath.Abs(got-0.6) > 1e-15 {
+			t.Errorf("SumPrecise([0.1, 0.2, 0.3]) = %v, want close to 0.6", got)
+		}
+	})
+
+	t.Run("many small values", func(t *testing.T) {
+		arr := make([]float64, 1000)
+		for i := range arr {
+			arr[i] = 0.001
+		}
+		got := umt_math.SumPrecise(arr)
+		if stdmath.Abs(got-1) > 1e-10 {
+			t.Errorf("SumPrecise(1000x 0.001) = %v, want close to 1", got)
+		}
+	})
+}
+
+// ============================================================
+// Calculator tests (from calculator.go)
+// ============================================================
+
+func TestCalculator(t *testing.T) {
+	tests := []struct {
+		name       string
+		expression string
+		exchange   map[string]any
+		expected   string
+	}{
+		{"addition partial", "1+", nil, "1+"},
+		{"addition", "1+1", nil, "2"},
+		{"addition 3", "1+1+1", nil, "3"},
+		{"addition 4", "1+1+1+1", nil, "4"},
+		{"addition 5", "1+1+1+1+1", nil, "5"},
+		{"subtraction partial", "1-", nil, "1-"},
+		{"subtraction", "1-1", nil, "0"},
+		{"subtraction 3", "1-1-1", nil, "-1"},
+		{"subtraction 4", "1-1-1-1", nil, "-2"},
+		{"subtraction 5", "1-1-1-1-1", nil, "-3"},
+		{"multiplication partial", "2*", nil, "2*"},
+		{"multiplication", "2*2", nil, "4"},
+		{"multiplication 3", "2*2*2", nil, "8"},
+		{"multiplication 4", "2*2*2*2", nil, "16"},
+		{"multiplication 5", "2*2*2*2*2", nil, "32"},
+		{"division partial", "2/", nil, "2/"},
+		{"division", "2/2", nil, "1"},
+		{"division 3", "2/2/2", nil, "0.5"},
+		{"division 4", "2/2/2/2", nil, "0.25"},
+		{"division 5", "2/2/2/2/2", nil, "0.125"},
+		{"exponent partial", "2^", nil, "2^"},
+		{"exponent", "2^2", nil, "4"},
+		{"exponent right assoc", "2^2^2", nil, "16"},
+		{"exponent 4", "2^2^2^2", nil, "65536"},
+		{"exponent overflow", "2^2^2^2^2", nil, "Infinity"},
+		{"exponent 3^4", "3^4", nil, "81"},
+		{"exponent 3^4^2", "3^4^2", nil, "43046721"},
+		{"parentheses", "(1+1)", nil, "2"},
+		{"open paren only", "(1", nil, "(1"},
+		{"open paren plus", "(1+", nil, "(1+"},
+		{"close paren only", "1)", nil, "1)"},
+		{"single in paren", "(1)", nil, "(1)"},
+		{"two parens", "(1+1)+(1+1)", nil, "4"},
+		{"equation with parens", "2x=(1+1)+(1+1)+(1+1)", nil, "3"},
+		{"currency before", "$10*2", map[string]any{"$": 100}, "2000"},
+		{"currency after", "2*$10", map[string]any{"$": 100}, "2000"},
+		{"whitespace stripped", "1 + 1", nil, "2"},
+		{"redos plus symbol", "A+B100", map[string]any{"A+B": 2}, "200"},
+		{"redos dollar symbol", "US$100", map[string]any{"US$": 1}, "100"},
+		{"redos bracket symbol", "[X]100", map[string]any{"[X]": 2}, "200"},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := umt_math.Calculator(tt.expression, tt.exchange); got != tt.expected {
+				t.Errorf("Calculator(%q, %v) = %q, want %q", tt.expression, tt.exchange, got, tt.expected)
+			}
+		})
+	}
+}
+
+// ============================================================
+// CalculatorInitialization tests (from calculator.go)
+// ============================================================
+
+func TestCalculatorInitialization(t *testing.T) {
+	t.Run("single exchange rate", func(t *testing.T) {
+		calc := umt_math.CalculatorInitialization(map[string]any{"$": 100})
+		if got := calc("$1"); got != "100" {
+			t.Errorf("calc(\"$1\") = %q, want \"100\"", got)
+		}
+		if got := calc("100 + $1"); got != "200" {
+			t.Errorf("calc(\"100 + $1\") = %q, want \"200\"", got)
+		}
+	})
+
+	t.Run("multiple exchange rates", func(t *testing.T) {
+		calc := umt_math.CalculatorInitialization(map[string]any{"$": 100, "EUR": 120})
+		if got := calc("$1"); got != "100" {
+			t.Errorf("calc(\"$1\") = %q, want \"100\"", got)
+		}
+		if got := calc("EUR1"); got != "120" {
+			t.Errorf("calc(\"EUR1\") = %q, want \"120\"", got)
+		}
+		if got := calc("$1 + EUR1"); got != "220" {
+			t.Errorf("calc(\"$1 + EUR1\") = %q, want \"220\"", got)
+		}
+	})
+}
+
+// ============================================================
+// ConvertCurrency tests (from convertCurrency.go)
+// ============================================================
+
+func TestConvertCurrency(t *testing.T) {
+	tests := []struct {
+		name        string
+		inputString string
+		rates       map[string]any
+		expected    string
+	}{
+		{"nil rates", "¥1000", nil, "¥1000"},
+		{"symbol mismatch", "¥1000", map[string]any{"$": 1.1}, "¥1000"},
+		{"symbol matches numeric rate", "¥1000", map[string]any{"¥": 1.1}, "1100"},
+		{"rate not a number", "¥1000", map[string]any{"¥": "invalid"}, "¥1000"},
+		{"conversion result NaN", "¥NaN", map[string]any{"¥": 1.1}, "¥NaN"},
+		{"yen one percent", "¥100", map[string]any{"¥": 0.01}, "1"},
+		{"dollar rate", "$50", map[string]any{"$": 1.2}, "60"},
+		{"euro rate", "€200", map[string]any{"€": 1.1}, "220"},
+		{"numeric string rate", "¥1000", map[string]any{"¥": "1.1"}, "1100"},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := umt_math.ConvertCurrency(tt.inputString, tt.rates); got != tt.expected {
+				t.Errorf("ConvertCurrency(%q, %v) = %q, want %q", tt.inputString, tt.rates, got, tt.expected)
+			}
+		})
+	}
 }

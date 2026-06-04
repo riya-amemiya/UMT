@@ -331,3 +331,61 @@ func TestPipelineThenWithZero(t *testing.T) {
 		t.Errorf("expected 2, got %v", result)
 	}
 }
+
+// ---------------------------------------------------------------------------
+// EscapeRegExp tests
+// ---------------------------------------------------------------------------
+
+func TestEscapeRegExpAllSpecialChars(t *testing.T) {
+	specialChars := ".*+?^${}()|[]\\"
+	expected := "\\.\\*\\+\\?\\^\\$\\{\\}\\(\\)\\|\\[\\]\\\\"
+	if result := tool.EscapeRegExp(specialChars); result != expected {
+		t.Errorf("expected %q, got %q", expected, result)
+	}
+}
+
+func TestEscapeRegExpEachCharIndividually(t *testing.T) {
+	cases := []struct {
+		input    string
+		expected string
+	}{
+		{".", "\\."},
+		{"*", "\\*"},
+		{"+", "\\+"},
+		{"?", "\\?"},
+		{"^", "\\^"},
+		{"$", "\\$"},
+		{"{", "\\{"},
+		{"}", "\\}"},
+		{"(", "\\("},
+		{")", "\\)"},
+		{"|", "\\|"},
+		{"[", "\\["},
+		{"]", "\\]"},
+		{"\\", "\\\\"},
+	}
+	for _, c := range cases {
+		if result := tool.EscapeRegExp(c.input); result != c.expected {
+			t.Errorf("EscapeRegExp(%q): expected %q, got %q", c.input, c.expected, result)
+		}
+	}
+}
+
+func TestEscapeRegExpAlphanumericUnchanged(t *testing.T) {
+	input := "abcABC123"
+	if result := tool.EscapeRegExp(input); result != input {
+		t.Errorf("expected %q, got %q", input, result)
+	}
+}
+
+func TestEscapeRegExpMixedString(t *testing.T) {
+	if result := tool.EscapeRegExp("a.b+c"); result != "a\\.b\\+c" {
+		t.Errorf("expected %q, got %q", "a\\.b\\+c", result)
+	}
+}
+
+func TestEscapeRegExpEmptyString(t *testing.T) {
+	if result := tool.EscapeRegExp(""); result != "" {
+		t.Errorf("expected empty string, got %q", result)
+	}
+}

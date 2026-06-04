@@ -460,3 +460,644 @@ func TestDynamicReEnqueue(t *testing.T) {
 		t.Errorf("expected task3 (re-enqueued), got %s", val.Name)
 	}
 }
+
+// ===========================================================================
+// LRUCache
+// ===========================================================================
+
+// ---------------------------------------------------------------------------
+// Constructor
+// ---------------------------------------------------------------------------
+
+func TestLRUCacheEmpty(t *testing.T) {
+	cache := datastructure.NewLRUCache[string, int](3)
+	if cache.Size() != 0 {
+		t.Errorf("expected size 0, got %d", cache.Size())
+	}
+}
+
+// ---------------------------------------------------------------------------
+// Set and Get
+// ---------------------------------------------------------------------------
+
+func TestLRUCacheSetAndGet(t *testing.T) {
+	cache := datastructure.NewLRUCache[string, int](3)
+	cache.Set("a", 1)
+	cache.Set("b", 2)
+	cache.Set("c", 3)
+
+	if val, ok := cache.Get("a"); !ok || val != 1 {
+		t.Errorf("expected 1, got %d (ok=%v)", val, ok)
+	}
+	if val, ok := cache.Get("b"); !ok || val != 2 {
+		t.Errorf("expected 2, got %d (ok=%v)", val, ok)
+	}
+	if val, ok := cache.Get("c"); !ok || val != 3 {
+		t.Errorf("expected 3, got %d (ok=%v)", val, ok)
+	}
+}
+
+func TestLRUCacheGetMissing(t *testing.T) {
+	cache := datastructure.NewLRUCache[string, int](3)
+	if val, ok := cache.Get("missing"); ok || val != 0 {
+		t.Errorf("expected (0, false), got (%d, %v)", val, ok)
+	}
+}
+
+func TestLRUCacheUpdateExistingValue(t *testing.T) {
+	cache := datastructure.NewLRUCache[string, int](3)
+	cache.Set("a", 1)
+	cache.Set("a", 10)
+	if val, ok := cache.Get("a"); !ok || val != 10 {
+		t.Errorf("expected 10, got %d (ok=%v)", val, ok)
+	}
+	if cache.Size() != 1 {
+		t.Errorf("expected size 1, got %d", cache.Size())
+	}
+}
+
+// ---------------------------------------------------------------------------
+// Eviction
+// ---------------------------------------------------------------------------
+
+func TestLRUCacheEvictLeastRecentlyUsed(t *testing.T) {
+	cache := datastructure.NewLRUCache[string, int](3)
+	cache.Set("a", 1)
+	cache.Set("b", 2)
+	cache.Set("c", 3)
+	cache.Set("d", 4)
+
+	if cache.Has("a") {
+		t.Error("expected 'a' to be evicted")
+	}
+	if val, ok := cache.Get("b"); !ok || val != 2 {
+		t.Errorf("expected 2, got %d (ok=%v)", val, ok)
+	}
+	if val, ok := cache.Get("c"); !ok || val != 3 {
+		t.Errorf("expected 3, got %d (ok=%v)", val, ok)
+	}
+	if val, ok := cache.Get("d"); !ok || val != 4 {
+		t.Errorf("expected 4, got %d (ok=%v)", val, ok)
+	}
+	if cache.Size() != 3 {
+		t.Errorf("expected size 3, got %d", cache.Size())
+	}
+}
+
+func TestLRUCachePromoteAccessedEntries(t *testing.T) {
+	cache := datastructure.NewLRUCache[string, int](3)
+	cache.Set("a", 1)
+	cache.Set("b", 2)
+	cache.Set("c", 3)
+
+	cache.Get("a")
+	cache.Set("d", 4)
+
+	if !cache.Has("a") {
+		t.Error("expected 'a' to remain (promoted)")
+	}
+	if cache.Has("b") {
+		t.Error("expected 'b' to be evicted")
+	}
+	if !cache.Has("c") {
+		t.Error("expected 'c' to remain")
+	}
+	if !cache.Has("d") {
+		t.Error("expected 'd' to remain")
+	}
+}
+
+func TestLRUCachePromoteUpdatedEntries(t *testing.T) {
+	cache := datastructure.NewLRUCache[string, int](3)
+	cache.Set("a", 1)
+	cache.Set("b", 2)
+	cache.Set("c", 3)
+
+	cache.Set("a", 10)
+	cache.Set("d", 4)
+
+	if !cache.Has("a") {
+		t.Error("expected 'a' to remain (promoted)")
+	}
+	if val, ok := cache.Get("a"); !ok || val != 10 {
+		t.Errorf("expected 10, got %d (ok=%v)", val, ok)
+	}
+	if cache.Has("b") {
+		t.Error("expected 'b' to be evicted")
+	}
+}
+
+// ---------------------------------------------------------------------------
+// Has
+// ---------------------------------------------------------------------------
+
+func TestLRUCacheHas(t *testing.T) {
+	cache := datastructure.NewLRUCache[string, int](3)
+	cache.Set("a", 1)
+	if !cache.Has("a") {
+		t.Error("expected Has('a') == true")
+	}
+	if cache.Has("b") {
+		t.Error("expected Has('b') == false")
+	}
+}
+
+// ---------------------------------------------------------------------------
+// Delete
+// ---------------------------------------------------------------------------
+
+func TestLRUCacheDeleteExisting(t *testing.T) {
+	cache := datastructure.NewLRUCache[string, int](3)
+	cache.Set("a", 1)
+	cache.Set("b", 2)
+
+	if !cache.Delete("a") {
+		t.Error("expected Delete('a') == true")
+	}
+	if cache.Has("a") {
+		t.Error("expected 'a' removed")
+	}
+	if cache.Size() != 1 {
+		t.Errorf("expected size 1, got %d", cache.Size())
+	}
+}
+
+func TestLRUCacheDeleteMissing(t *testing.T) {
+	cache := datastructure.NewLRUCache[string, int](3)
+	if cache.Delete("missing") {
+		t.Error("expected Delete('missing') == false")
+	}
+}
+
+func TestLRUCacheDeleteHeadNode(t *testing.T) {
+	cache := datastructure.NewLRUCache[string, int](3)
+	cache.Set("a", 1)
+	cache.Set("b", 2)
+	cache.Set("c", 3)
+
+	if !cache.Delete("c") {
+		t.Error("expected Delete('c') == true")
+	}
+	if cache.Size() != 2 {
+		t.Errorf("expected size 2, got %d", cache.Size())
+	}
+	if val, ok := cache.Get("a"); !ok || val != 1 {
+		t.Errorf("expected 1, got %d (ok=%v)", val, ok)
+	}
+	if val, ok := cache.Get("b"); !ok || val != 2 {
+		t.Errorf("expected 2, got %d (ok=%v)", val, ok)
+	}
+}
+
+func TestLRUCacheDeleteTailNode(t *testing.T) {
+	cache := datastructure.NewLRUCache[string, int](3)
+	cache.Set("a", 1)
+	cache.Set("b", 2)
+	cache.Set("c", 3)
+
+	if !cache.Delete("a") {
+		t.Error("expected Delete('a') == true")
+	}
+	if cache.Size() != 2 {
+		t.Errorf("expected size 2, got %d", cache.Size())
+	}
+	if val, ok := cache.Get("b"); !ok || val != 2 {
+		t.Errorf("expected 2, got %d (ok=%v)", val, ok)
+	}
+	if val, ok := cache.Get("c"); !ok || val != 3 {
+		t.Errorf("expected 3, got %d (ok=%v)", val, ok)
+	}
+}
+
+func TestLRUCacheDeleteOnlyEntry(t *testing.T) {
+	cache := datastructure.NewLRUCache[string, int](3)
+	cache.Set("a", 1)
+	if !cache.Delete("a") {
+		t.Error("expected Delete('a') == true")
+	}
+	if cache.Size() != 0 {
+		t.Errorf("expected size 0, got %d", cache.Size())
+	}
+}
+
+// ---------------------------------------------------------------------------
+// Clear
+// ---------------------------------------------------------------------------
+
+func TestLRUCacheClear(t *testing.T) {
+	cache := datastructure.NewLRUCache[string, int](3)
+	cache.Set("a", 1)
+	cache.Set("b", 2)
+	cache.Set("c", 3)
+
+	cache.Clear()
+
+	if cache.Size() != 0 {
+		t.Errorf("expected size 0, got %d", cache.Size())
+	}
+	if _, ok := cache.Get("a"); ok {
+		t.Error("expected 'a' gone after clear")
+	}
+	if _, ok := cache.Get("b"); ok {
+		t.Error("expected 'b' gone after clear")
+	}
+	if _, ok := cache.Get("c"); ok {
+		t.Error("expected 'c' gone after clear")
+	}
+}
+
+// ---------------------------------------------------------------------------
+// Size
+// ---------------------------------------------------------------------------
+
+func TestLRUCacheSizeTracking(t *testing.T) {
+	cache := datastructure.NewLRUCache[string, int](5)
+	if cache.Size() != 0 {
+		t.Errorf("expected size 0, got %d", cache.Size())
+	}
+
+	cache.Set("a", 1)
+	if cache.Size() != 1 {
+		t.Errorf("expected size 1, got %d", cache.Size())
+	}
+
+	cache.Set("b", 2)
+	if cache.Size() != 2 {
+		t.Errorf("expected size 2, got %d", cache.Size())
+	}
+
+	cache.Delete("a")
+	if cache.Size() != 1 {
+		t.Errorf("expected size 1, got %d", cache.Size())
+	}
+}
+
+// ---------------------------------------------------------------------------
+// Edge cases
+// ---------------------------------------------------------------------------
+
+func TestLRUCacheCapacityOne(t *testing.T) {
+	cache := datastructure.NewLRUCache[string, int](1)
+	cache.Set("a", 1)
+	if val, ok := cache.Get("a"); !ok || val != 1 {
+		t.Errorf("expected 1, got %d (ok=%v)", val, ok)
+	}
+
+	cache.Set("b", 2)
+	if _, ok := cache.Get("a"); ok {
+		t.Error("expected 'a' evicted")
+	}
+	if val, ok := cache.Get("b"); !ok || val != 2 {
+		t.Errorf("expected 2, got %d (ok=%v)", val, ok)
+	}
+	if cache.Size() != 1 {
+		t.Errorf("expected size 1, got %d", cache.Size())
+	}
+}
+
+func TestLRUCacheNumericKeys(t *testing.T) {
+	cache := datastructure.NewLRUCache[int, string](3)
+	cache.Set(1, "one")
+	cache.Set(2, "two")
+	cache.Set(3, "three")
+
+	if val, ok := cache.Get(1); !ok || val != "one" {
+		t.Errorf("expected 'one', got %q (ok=%v)", val, ok)
+	}
+	if val, ok := cache.Get(2); !ok || val != "two" {
+		t.Errorf("expected 'two', got %q (ok=%v)", val, ok)
+	}
+	if val, ok := cache.Get(3); !ok || val != "three" {
+		t.Errorf("expected 'three', got %q (ok=%v)", val, ok)
+	}
+}
+
+func TestLRUCacheManyOperations(t *testing.T) {
+	cache := datastructure.NewLRUCache[int, int](100)
+	for i := 0; i < 1000; i++ {
+		cache.Set(i, i*2)
+	}
+	if cache.Size() != 100 {
+		t.Errorf("expected size 100, got %d", cache.Size())
+	}
+
+	for i := 900; i < 1000; i++ {
+		if val, ok := cache.Get(i); !ok || val != i*2 {
+			t.Errorf("expected %d, got %d (ok=%v)", i*2, val, ok)
+		}
+	}
+
+	if _, ok := cache.Get(0); ok {
+		t.Error("expected key 0 to be evicted")
+	}
+}
+
+// ===========================================================================
+// TTLCache
+// ===========================================================================
+
+// advanceableTTLCache wires a TTLCache to a controllable clock so expiration
+// can be exercised deterministically, mirroring the fake timers of the TS test.
+func advanceableTTLCache[V any](opts datastructure.TTLCacheOptions, now *int64) *datastructure.TTLCache[string, V] {
+	cache := datastructure.NewTTLCache[string, V](opts)
+	cache.Now = func() int64 { return *now }
+	return cache
+}
+
+// ---------------------------------------------------------------------------
+// Constructor
+// ---------------------------------------------------------------------------
+
+func TestTTLCacheEmpty(t *testing.T) {
+	cache := datastructure.NewTTLCache[string, int](datastructure.TTLCacheOptions{DefaultTTL: 5000})
+	if cache.Size() != 0 {
+		t.Errorf("expected size 0, got %d", cache.Size())
+	}
+}
+
+// ---------------------------------------------------------------------------
+// Set and Get
+// ---------------------------------------------------------------------------
+
+func TestTTLCacheSetAndGet(t *testing.T) {
+	now := int64(0)
+	cache := advanceableTTLCache[int](datastructure.TTLCacheOptions{DefaultTTL: 5000}, &now)
+	cache.Set("a", 1)
+	cache.Set("b", 2)
+
+	if val, ok := cache.Get("a"); !ok || val != 1 {
+		t.Errorf("expected 1, got %d (ok=%v)", val, ok)
+	}
+	if val, ok := cache.Get("b"); !ok || val != 2 {
+		t.Errorf("expected 2, got %d (ok=%v)", val, ok)
+	}
+}
+
+func TestTTLCacheGetMissing(t *testing.T) {
+	cache := datastructure.NewTTLCache[string, int](datastructure.TTLCacheOptions{DefaultTTL: 5000})
+	if val, ok := cache.Get("missing"); ok || val != 0 {
+		t.Errorf("expected (0, false), got (%d, %v)", val, ok)
+	}
+}
+
+func TestTTLCacheUpdateExistingValue(t *testing.T) {
+	now := int64(0)
+	cache := advanceableTTLCache[int](datastructure.TTLCacheOptions{DefaultTTL: 5000}, &now)
+	cache.Set("a", 1)
+	cache.Set("a", 10)
+	if val, ok := cache.Get("a"); !ok || val != 10 {
+		t.Errorf("expected 10, got %d (ok=%v)", val, ok)
+	}
+	if cache.Size() != 1 {
+		t.Errorf("expected size 1, got %d", cache.Size())
+	}
+}
+
+// ---------------------------------------------------------------------------
+// TTL expiration
+// ---------------------------------------------------------------------------
+
+func TestTTLCacheExpireAfterDefaultTTL(t *testing.T) {
+	now := int64(0)
+	cache := advanceableTTLCache[int](datastructure.TTLCacheOptions{DefaultTTL: 5000}, &now)
+	cache.Set("a", 1)
+
+	if val, ok := cache.Get("a"); !ok || val != 1 {
+		t.Errorf("expected 1, got %d (ok=%v)", val, ok)
+	}
+
+	now += 5000
+
+	if _, ok := cache.Get("a"); ok {
+		t.Error("expected 'a' to be expired")
+	}
+}
+
+func TestTTLCacheNotExpireBeforeTTL(t *testing.T) {
+	now := int64(0)
+	cache := advanceableTTLCache[int](datastructure.TTLCacheOptions{DefaultTTL: 5000}, &now)
+	cache.Set("a", 1)
+
+	now += 4999
+
+	if val, ok := cache.Get("a"); !ok || val != 1 {
+		t.Errorf("expected 1, got %d (ok=%v)", val, ok)
+	}
+}
+
+func TestTTLCachePerEntryTTLOverride(t *testing.T) {
+	now := int64(0)
+	cache := advanceableTTLCache[int](datastructure.TTLCacheOptions{DefaultTTL: 5000}, &now)
+	cache.SetWithTTL("short", 1, 1000)
+	cache.SetWithTTL("long", 2, 10000)
+
+	now += 1000
+
+	if _, ok := cache.Get("short"); ok {
+		t.Error("expected 'short' to be expired")
+	}
+	if val, ok := cache.Get("long"); !ok || val != 2 {
+		t.Errorf("expected 2, got %d (ok=%v)", val, ok)
+	}
+
+	now += 9000
+
+	if _, ok := cache.Get("long"); ok {
+		t.Error("expected 'long' to be expired")
+	}
+}
+
+func TestTTLCacheExpireViaHas(t *testing.T) {
+	now := int64(0)
+	cache := advanceableTTLCache[int](datastructure.TTLCacheOptions{DefaultTTL: 5000}, &now)
+	cache.Set("a", 1)
+
+	if !cache.Has("a") {
+		t.Error("expected Has('a') == true")
+	}
+
+	now += 5000
+
+	if cache.Has("a") {
+		t.Error("expected Has('a') == false after expiration")
+	}
+}
+
+func TestTTLCacheCleanupOnGet(t *testing.T) {
+	now := int64(0)
+	cache := advanceableTTLCache[int](datastructure.TTLCacheOptions{DefaultTTL: 5000}, &now)
+	cache.Set("a", 1)
+
+	now += 5000
+
+	if cache.Size() != 1 {
+		t.Errorf("expected size 1, got %d", cache.Size())
+	}
+	cache.Get("a")
+	if cache.Size() != 0 {
+		t.Errorf("expected size 0, got %d", cache.Size())
+	}
+}
+
+func TestTTLCacheCleanupOnHas(t *testing.T) {
+	now := int64(0)
+	cache := advanceableTTLCache[int](datastructure.TTLCacheOptions{DefaultTTL: 5000}, &now)
+	cache.Set("a", 1)
+
+	now += 5000
+
+	if cache.Size() != 1 {
+		t.Errorf("expected size 1, got %d", cache.Size())
+	}
+	cache.Has("a")
+	if cache.Size() != 0 {
+		t.Errorf("expected size 0, got %d", cache.Size())
+	}
+}
+
+// ---------------------------------------------------------------------------
+// maxSize
+// ---------------------------------------------------------------------------
+
+func TestTTLCacheEvictOldestOnMaxSize(t *testing.T) {
+	now := int64(0)
+	cache := advanceableTTLCache[int](datastructure.TTLCacheOptions{DefaultTTL: 5000, MaxSize: 2, HasMaxSize: true}, &now)
+	cache.Set("a", 1)
+	cache.Set("b", 2)
+	cache.Set("c", 3)
+
+	if cache.Size() != 2 {
+		t.Errorf("expected size 2, got %d", cache.Size())
+	}
+	if _, ok := cache.Get("a"); ok {
+		t.Error("expected 'a' to be evicted")
+	}
+	if val, ok := cache.Get("b"); !ok || val != 2 {
+		t.Errorf("expected 2, got %d (ok=%v)", val, ok)
+	}
+	if val, ok := cache.Get("c"); !ok || val != 3 {
+		t.Errorf("expected 3, got %d (ok=%v)", val, ok)
+	}
+}
+
+func TestTTLCacheNoEvictOnUpdate(t *testing.T) {
+	now := int64(0)
+	cache := advanceableTTLCache[int](datastructure.TTLCacheOptions{DefaultTTL: 5000, MaxSize: 2, HasMaxSize: true}, &now)
+	cache.Set("a", 1)
+	cache.Set("b", 2)
+	cache.Set("a", 10)
+
+	if cache.Size() != 2 {
+		t.Errorf("expected size 2, got %d", cache.Size())
+	}
+	if val, ok := cache.Get("a"); !ok || val != 10 {
+		t.Errorf("expected 10, got %d (ok=%v)", val, ok)
+	}
+	if val, ok := cache.Get("b"); !ok || val != 2 {
+		t.Errorf("expected 2, got %d (ok=%v)", val, ok)
+	}
+}
+
+// ---------------------------------------------------------------------------
+// Has
+// ---------------------------------------------------------------------------
+
+func TestTTLCacheHas(t *testing.T) {
+	cache := datastructure.NewTTLCache[string, int](datastructure.TTLCacheOptions{DefaultTTL: 5000})
+	cache.Set("a", 1)
+	if !cache.Has("a") {
+		t.Error("expected Has('a') == true")
+	}
+	if cache.Has("b") {
+		t.Error("expected Has('b') == false")
+	}
+}
+
+// ---------------------------------------------------------------------------
+// Delete
+// ---------------------------------------------------------------------------
+
+func TestTTLCacheDeleteExisting(t *testing.T) {
+	cache := datastructure.NewTTLCache[string, int](datastructure.TTLCacheOptions{DefaultTTL: 5000})
+	cache.Set("a", 1)
+	if !cache.Delete("a") {
+		t.Error("expected Delete('a') == true")
+	}
+	if cache.Has("a") {
+		t.Error("expected 'a' removed")
+	}
+	if cache.Size() != 0 {
+		t.Errorf("expected size 0, got %d", cache.Size())
+	}
+}
+
+func TestTTLCacheDeleteMissing(t *testing.T) {
+	cache := datastructure.NewTTLCache[string, int](datastructure.TTLCacheOptions{DefaultTTL: 5000})
+	if cache.Delete("missing") {
+		t.Error("expected Delete('missing') == false")
+	}
+}
+
+// ---------------------------------------------------------------------------
+// Clear
+// ---------------------------------------------------------------------------
+
+func TestTTLCacheClear(t *testing.T) {
+	cache := datastructure.NewTTLCache[string, int](datastructure.TTLCacheOptions{DefaultTTL: 5000})
+	cache.Set("a", 1)
+	cache.Set("b", 2)
+	cache.Set("c", 3)
+
+	cache.Clear()
+
+	if cache.Size() != 0 {
+		t.Errorf("expected size 0, got %d", cache.Size())
+	}
+	if _, ok := cache.Get("a"); ok {
+		t.Error("expected 'a' gone after clear")
+	}
+}
+
+// ---------------------------------------------------------------------------
+// Edge cases
+// ---------------------------------------------------------------------------
+
+func TestTTLCacheMaxSizeOne(t *testing.T) {
+	now := int64(0)
+	cache := advanceableTTLCache[int](datastructure.TTLCacheOptions{DefaultTTL: 5000, MaxSize: 1, HasMaxSize: true}, &now)
+	cache.Set("a", 1)
+	cache.Set("b", 2)
+
+	if cache.Size() != 1 {
+		t.Errorf("expected size 1, got %d", cache.Size())
+	}
+	if _, ok := cache.Get("a"); ok {
+		t.Error("expected 'a' to be evicted")
+	}
+	if val, ok := cache.Get("b"); !ok || val != 2 {
+		t.Errorf("expected 2, got %d (ok=%v)", val, ok)
+	}
+}
+
+func TestTTLCacheTTLZeroImmediateExpiration(t *testing.T) {
+	now := int64(0)
+	cache := advanceableTTLCache[int](datastructure.TTLCacheOptions{DefaultTTL: 0}, &now)
+	cache.Set("a", 1)
+
+	if _, ok := cache.Get("a"); ok {
+		t.Error("expected 'a' to expire immediately with TTL 0")
+	}
+}
+
+func TestTTLCacheNumericKeys(t *testing.T) {
+	cache := datastructure.NewTTLCache[int, string](datastructure.TTLCacheOptions{DefaultTTL: 5000})
+	cache.Set(1, "one")
+	cache.Set(2, "two")
+
+	if val, ok := cache.Get(1); !ok || val != "one" {
+		t.Errorf("expected 'one', got %q (ok=%v)", val, ok)
+	}
+	if val, ok := cache.Get(2); !ok || val != "two" {
+		t.Errorf("expected 'two', got %q (ok=%v)", val, ok)
+	}
+}

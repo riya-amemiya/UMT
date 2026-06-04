@@ -38,6 +38,18 @@ mod array {
     }
 }
 
+mod async_util {
+    mod test_debounce_async;
+    mod test_defer;
+    mod test_p_settled;
+    mod test_parallel;
+    mod test_retry;
+    mod test_sleep;
+    mod test_throttle_async;
+    mod test_timeout;
+    mod test_wait_for;
+}
+
 mod color;
 mod consts;
 mod date;
@@ -58,17 +70,21 @@ mod data_structure {
 }
 
 mod error {
+    mod test_error_function;
     mod test_flat_map_result;
     mod test_map_result;
     mod test_match_result;
     mod test_retry;
     mod test_safe_execute;
+    mod test_success_function;
 }
 
 mod function {
     mod test_curry;
+    mod test_debounce;
     mod test_memoize;
     mod test_once;
+    mod test_throttle;
 }
 
 mod integration;
@@ -87,6 +103,8 @@ mod ip {
     mod test_long_to_ip;
     mod test_subnet_mask_to_cidr;
 }
+
+mod map;
 
 mod math {
     mod test_addition;
@@ -146,6 +164,16 @@ mod math {
 
 mod number;
 
+mod random {
+    mod test_random_boolean;
+    mod test_random_choice;
+    mod test_random_float;
+    mod test_random_int;
+    mod test_random_uuid;
+    mod test_seeded_random;
+    mod test_weighted_choice;
+}
+
 mod simple {
     mod test_birthday_simple;
     mod test_day_of_week_simple;
@@ -186,6 +214,7 @@ mod unit_module {
 }
 
 mod url {
+    mod test_build_url;
     mod test_is_absolute_url;
     mod test_join_path;
     mod test_parse_query_string;
@@ -202,8 +231,11 @@ mod predicate {
 
 mod object {
     mod test_deep_clone;
+    mod test_flatten_object;
+    mod test_get;
     mod test_get_objects_common;
     mod test_has;
+    mod test_invert;
     mod test_is_empty;
     mod test_is_plain_object;
     mod test_key_by;
@@ -212,8 +244,17 @@ mod object {
     mod test_merge;
     mod test_merge_deep;
     mod test_omit;
+    mod test_omit_by;
+    mod test_path_segments;
     mod test_pick;
+    mod test_pick_by;
     mod test_pick_deep;
+    mod test_remove_prototype;
+    mod test_remove_prototype_deep;
+    mod test_remove_prototype_map;
+    mod test_remove_prototype_map_deep;
+    mod test_set;
+    mod test_unflatten_object;
     mod test_value;
 }
 

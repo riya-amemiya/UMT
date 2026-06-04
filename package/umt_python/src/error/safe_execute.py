@@ -3,7 +3,9 @@ from dataclasses import dataclass
 from typing import Generic, TypeVar
 
 V = TypeVar("V")
-E = TypeVar("E", bound=Exception)
+# Not bound to Exception: the TS Result error slot holds any thrown value
+# (errorFunction accepts non-Exception values too), so E stays unconstrained.
+E = TypeVar("E")
 
 
 @dataclass

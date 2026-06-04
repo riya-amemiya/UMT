@@ -515,3 +515,67 @@ func TestHttpStatusCodesAreUniqueBetweenCategories(t *testing.T) {
 		}
 	}
 }
+
+// ---------------------------------------------------------------------------
+// HttpStatus (combined map)
+// ---------------------------------------------------------------------------
+
+func TestHttpStatusCombinedLookups(t *testing.T) {
+	cases := []struct {
+		code int
+		want string
+	}{
+		{100, "CONTINUE"},
+		{103, "EARLYHINTS"},
+		{200, "OK"},
+		{206, "PARTIAL_CONTENT"},
+		{300, "AMBIGUOUS"},
+		{308, "PERMANENT_REDIRECT"},
+		{404, "NOT_FOUND"},
+		{418, "I_AM_A_TEAPOT"},
+		{429, "TOO_MANY_REQUESTS"},
+		{500, "INTERNAL_SERVER_ERROR"},
+		{505, "HTTP_VERSION_NOT_SUPPORTED"},
+	}
+	for _, c := range cases {
+		if got := consts.HttpStatus[c.code]; got != c.want {
+			t.Errorf("HttpStatus[%d] = %q, want %q", c.code, got, c.want)
+		}
+	}
+}
+
+func TestHttpStatusUnknownCode(t *testing.T) {
+	if got := consts.HttpStatus[999]; got != "" {
+		t.Errorf("HttpStatus[999] = %q, want empty string", got)
+	}
+}
+
+func TestHttpStatusLength(t *testing.T) {
+	want := len(consts.HttpInformationalStatus) +
+		len(consts.HttpSuccessStatus) +
+		len(consts.HttpRedirectionStatus) +
+		len(consts.HttpClientErrorStatus) +
+		len(consts.HttpServerErrorStatus)
+	if len(consts.HttpStatus) != want {
+		t.Errorf("expected %d entries, got %d", want, len(consts.HttpStatus))
+	}
+	if len(consts.HttpStatus) != 48 {
+		t.Errorf("expected 48 entries, got %d", len(consts.HttpStatus))
+	}
+}
+
+func TestHttpStatusContainsEveryCategoryEntry(t *testing.T) {
+	for _, group := range []map[int]string{
+		consts.HttpInformationalStatus,
+		consts.HttpSuccessStatus,
+		consts.HttpRedirectionStatus,
+		consts.HttpClientErrorStatus,
+		consts.HttpServerErrorStatus,
+	} {
+		for code, name := range group {
+			if got := consts.HttpStatus[code]; got != name {
+				t.Errorf("HttpStatus[%d] = %q, want %q", code, got, name)
+			}
+		}
+	}
+}

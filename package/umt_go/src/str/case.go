@@ -102,6 +102,185 @@ func Slugify(s string) string {
 	return result
 }
 
+// wordsBoundary1 inserts a boundary between a lowercase/number and an uppercase letter.
+var wordsBoundary1 = regexp.MustCompile(`([\p{Ll}\p{N}])(\p{Lu})`)
+
+// wordsBoundary2 inserts a boundary inside an acronym followed by a capitalized word.
+var wordsBoundary2 = regexp.MustCompile(`(\p{Lu})(\p{Lu}\p{Ll})`)
+
+// wordsSeparator splits on runs of non-letter, non-number characters.
+var wordsSeparator = regexp.MustCompile(`[^\p{L}\p{N}]+`)
+
+// Words splits a string into words on case boundaries and non-alphanumeric separators.
+// It uses Unicode property classes so CJK and other letters are preserved.
+//
+// Example:
+//
+//	Words("helloWorld foo-bar") // []string{"hello", "World", "foo", "bar"}
+//	Words("XMLHttpRequest")     // []string{"XML", "Http", "Request"}
+func Words(s string) []string {
+	withBoundaries := wordsBoundary1.ReplaceAllString(s, "$1 $2")
+	withBoundaries = wordsBoundary2.ReplaceAllString(withBoundaries, "$1 $2")
+	parts := wordsSeparator.Split(withBoundaries, -1)
+	result := make([]string, 0, len(parts))
+	for _, part := range parts {
+		if part != "" {
+			result = append(result, part)
+		}
+	}
+	return result
+}
+
+// WordsWithPattern splits a string into words using a custom pattern.
+// It returns every match of the pattern, mirroring JavaScript's String.match
+// with a global regular expression.
+//
+// Example:
+//
+//	WordsWithPattern("a1 b2 c3", regexp.MustCompile(`[a-z]\d`)) // []string{"a1", "b2", "c3"}
+func WordsWithPattern(s string, pattern *regexp.Regexp) []string {
+	matches := pattern.FindAllString(s, -1)
+	if matches == nil {
+		return []string{}
+	}
+	return matches
+}
+
+// WordCount counts words in a string using the same boundaries as Words.
+//
+// Example:
+//
+//	WordCount("hello world")     // 2
+//	WordCount("camelCase split") // 3
+func WordCount(s string) int {
+	return len(Words(s))
+}
+
+// Capitalize uppercases the first rune of a string. It is surrogate-pair safe
+// and does not lowercase the rest of the string.
+//
+// Example:
+//
+//	Capitalize("hello")  // "Hello"
+//	Capitalize("éclair") // "Éclair"
+//	Capitalize("")       // ""
+func Capitalize(s string) string {
+	for _, first := range s {
+		return string(unicode.ToUpper(first)) + s[len(string(first)):]
+	}
+	return s
+}
+
+// Uncapitalize lowercases the first rune of a string. It is surrogate-pair safe
+// and does not change the rest of the string.
+//
+// Example:
+//
+//	Uncapitalize("Hello")  // "hello"
+//	Uncapitalize("ÉCLAIR") // "éCLAIR"
+//	Uncapitalize("")       // ""
+func Uncapitalize(s string) string {
+	for _, first := range s {
+		return string(unicode.ToLower(first)) + s[len(string(first)):]
+	}
+	return s
+}
+
+// CapitalizeWord uppercases the first rune and lowercases the rest of a word.
+//
+// Example:
+//
+//	CapitalizeWord("hELLO") // "Hello"
+//	CapitalizeWord("a")     // "A"
+func CapitalizeWord(word string) string {
+	runes := []rune(word)
+	if len(runes) == 0 {
+		return word
+	}
+	return string(unicode.ToUpper(runes[0])) + strings.ToLower(string(runes[1:]))
+}
+
+// PascalCase converts a string to PascalCase.
+//
+// Example:
+//
+//	PascalCase("hello-world") // "HelloWorld"
+//	PascalCase("hello_world") // "HelloWorld"
+func PascalCase(s string) string {
+	w := Words(s)
+	var b strings.Builder
+	for _, word := range w {
+		b.WriteString(CapitalizeWord(word))
+	}
+	return b.String()
+}
+
+// SnakeCase converts a string to snake_case.
+//
+// Example:
+//
+//	SnakeCase("helloWorld") // "hello_world"
+//	SnakeCase("Hello World") // "hello_world"
+func SnakeCase(s string) string {
+	w := Words(s)
+	for i, word := range w {
+		w[i] = strings.ToLower(word)
+	}
+	return strings.Join(w, "_")
+}
+
+// ConstantCase converts a string to CONSTANT_CASE.
+//
+// Example:
+//
+//	ConstantCase("helloWorld")  // "HELLO_WORLD"
+//	ConstantCase("Hello World") // "HELLO_WORLD"
+func ConstantCase(s string) string {
+	w := Words(s)
+	for i, word := range w {
+		w[i] = strings.ToUpper(word)
+	}
+	return strings.Join(w, "_")
+}
+
+// TitleCase converts a string to Title Case, capitalizing each word and
+// separating words with single spaces.
+//
+// Example:
+//
+//	TitleCase("hello world")        // "Hello World"
+//	TitleCase("a-quick brown_fox")  // "A Quick Brown Fox"
+func TitleCase(s string) string {
+	w := Words(s)
+	for i, word := range w {
+		w[i] = CapitalizeWord(word)
+	}
+	return strings.Join(w, " ")
+}
+
+// SwapCase swaps the case of each letter, turning uppercase letters into
+// lowercase and vice versa. Characters without case are left unchanged.
+//
+// Example:
+//
+//	SwapCase("Hello World") // "hELLO wORLD"
+func SwapCase(s string) string {
+	var b strings.Builder
+	b.Grow(len(s))
+	for _, r := range s {
+		if !unicode.IsLetter(r) {
+			b.WriteRune(r)
+			continue
+		}
+		if unicode.IsLower(r) {
+			b.WriteRune(unicode.ToUpper(r))
+		} else {
+			b.WriteRune(unicode.ToLower(r))
+		}
+	}
+	return b.String()
+}
+
 // normalizeNFD performs NFD normalization for common accented characters.
 // This is a simplified approach that handles the most common Latin diacritics.
 func normalizeNFD(s string) string {

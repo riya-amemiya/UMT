@@ -5,6 +5,22 @@ use std::collections::HashMap;
 
 use super::core::ValidateCoreReturnType;
 
+mod intersection;
+mod nullable;
+mod omit_keys;
+mod partial;
+mod pick_keys;
+mod required;
+mod union;
+
+pub use intersection::*;
+pub use nullable::*;
+pub use omit_keys::*;
+pub use partial::*;
+pub use pick_keys::*;
+pub use required::*;
+pub use union::*;
+
 /// Validates a HashMap with optional property validators
 ///
 /// # Arguments

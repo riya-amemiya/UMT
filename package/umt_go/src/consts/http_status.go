@@ -75,3 +75,28 @@ var HttpServerErrorStatus = map[int]string{
 	504: "GATEWAY_TIMEOUT",
 	505: "HTTP_VERSION_NOT_SUPPORTED",
 }
+
+// HttpStatus maps every HTTP status code to its name. It is the combination of
+// the informational (1xx), success (2xx), redirection (3xx), client error (4xx),
+// and server error (5xx) status code maps.
+//
+// Example:
+//
+//	consts.HttpStatus[200] // "OK"
+//	consts.HttpStatus[404] // "NOT_FOUND"
+//	consts.HttpStatus[500] // "INTERNAL_SERVER_ERROR"
+var HttpStatus = func() map[int]string {
+	all := make(map[int]string)
+	for _, group := range []map[int]string{
+		HttpInformationalStatus,
+		HttpSuccessStatus,
+		HttpRedirectionStatus,
+		HttpClientErrorStatus,
+		HttpServerErrorStatus,
+	} {
+		for code, name := range group {
+			all[code] = name
+		}
+	}
+	return all
+}()

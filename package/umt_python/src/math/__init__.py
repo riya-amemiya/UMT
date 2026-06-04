@@ -1,7 +1,11 @@
 from .addition import addition
 from .average import average
 from .bitwise import bitwise
+from .calculator import calculator
+from .calculator_core import calculator_core
+from .calculator_initialization import calculator_initialization
 from .clamp import clamp
+from .convert_currency import convert_currency
 from .correlation_coefficient import correlation_coefficient
 from .deg_to_rad import deg_to_rad
 from .deviation_value import deviation_value
@@ -17,6 +21,7 @@ from .is_perfect_square import is_perfect_square
 from .is_prime_number import is_prime_number
 from .lcm import lcm
 from .linear_congruential_generator import linear_congruential_generator
+from .literal_expression import literal_expression
 from .math_converter import math_converter
 from .math_separator import math_separator
 from .max_value import max_value
@@ -54,7 +59,11 @@ __all__ = [
     "addition",
     "average",
     "bitwise",
+    "calculator",
+    "calculator_core",
+    "calculator_initialization",
     "clamp",
+    "convert_currency",
     "correlation_coefficient",
     "deg_to_rad",
     "deviation_value",
@@ -70,6 +79,7 @@ __all__ = [
     "is_prime_number",
     "lcm",
     "linear_congruential_generator",
+    "literal_expression",
     "math_converter",
     "math_separator",
     "max_value",

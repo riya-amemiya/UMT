@@ -1,6 +1,10 @@
 pub mod curry;
+pub mod debounce;
 pub mod memoize;
 pub mod once;
+pub mod throttle;
 pub use curry::*;
+pub use debounce::*;
 pub use memoize::*;
 pub use once::*;
+pub use throttle::*;
