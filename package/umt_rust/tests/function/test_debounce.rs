@@ -3,7 +3,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use std::thread;
 use std::time::Duration;
-use umt_rust::function::{umt_debounce, DebounceOptions};
+use umt_rust::function::{DebounceOptions, umt_debounce};
 
 const WAIT: Duration = Duration::from_millis(50);
 

@@ -3,17 +3,13 @@ use umt_rust::map::umt_group_by_to_map;
 #[test]
 fn test_should_group_numbers_into_odd_and_even() {
     let array = [1, 2, 3, 4, 5];
-    let result = umt_group_by_to_map(&array, |num, _, _| {
-        if num % 2 == 0 {
-            "even"
-        } else {
-            "odd"
-        }
-    });
-    assert_eq!(
-        result,
-        vec![("odd", vec![1, 3, 5]), ("even", vec![2, 4])]
+    let result = umt_group_by_to_map(
+        &array,
+        |num, _, _| {
+            if num % 2 == 0 { "even" } else { "odd" }
+        },
     );
+    assert_eq!(result, vec![("odd", vec![1, 3, 5]), ("even", vec![2, 4])]);
 }
 
 #[test]
@@ -35,8 +31,12 @@ fn test_should_accept_object_keys() {
         tag: Tag,
         value: i32,
     }
-    let a = Tag { id: "a".to_string() };
-    let b = Tag { id: "b".to_string() };
+    let a = Tag {
+        id: "a".to_string(),
+    };
+    let b = Tag {
+        id: "b".to_string(),
+    };
     let array = vec![
         Item {
             tag: a.clone(),
@@ -115,12 +115,11 @@ fn test_should_pass_index_and_array_to_the_iteratee() {
 #[test]
 fn test_should_return_an_empty_map_for_an_empty_array() {
     let array: Vec<i32> = vec![];
-    let result = umt_group_by_to_map(&array, |num, _, _| {
-        if num % 2 == 0 {
-            "even"
-        } else {
-            "odd"
-        }
-    });
+    let result = umt_group_by_to_map(
+        &array,
+        |num, _, _| {
+            if num % 2 == 0 { "even" } else { "odd" }
+        },
+    );
     assert_eq!(result.len(), 0);
 }

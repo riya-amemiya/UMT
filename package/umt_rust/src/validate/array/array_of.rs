@@ -49,9 +49,7 @@ use super::super::core::ValidateCoreReturnType;
 /// assert_eq!(bad.message, "negative");
 /// ```
 #[allow(clippy::type_complexity)]
-pub fn umt_array_of<T, E, F>(
-    validator: F,
-) -> Box<dyn Fn(&Vec<T>) -> ValidateCoreReturnType<Vec<T>>>
+pub fn umt_array_of<T, E, F>(validator: F) -> Box<dyn Fn(&Vec<T>) -> ValidateCoreReturnType<Vec<T>>>
 where
     T: Clone + 'static,
     F: Fn(&T) -> ValidateCoreReturnType<E> + 'static,

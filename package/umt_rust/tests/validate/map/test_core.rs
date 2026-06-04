@@ -12,9 +12,7 @@ fn string_validator(message: &'static str) -> impl Fn(&String) -> ValidateCoreRe
     }
 }
 
-fn number_validator(
-    message: &'static str,
-) -> impl Fn(&i32) -> ValidateCoreReturnType<i32> {
+fn number_validator(message: &'static str) -> impl Fn(&i32) -> ValidateCoreReturnType<i32> {
     move |v: &i32| ValidateCoreReturnType {
         validate: true,
         message: message.to_string(),
