@@ -6,6 +6,12 @@ use regex::Regex;
 use super::core::{ValidateCoreReturnType, ValidateReturnType};
 use super::{ParseEmailLevel, ParseEmailOptions, umt_is_number_str, umt_parse_email};
 
+mod exact_length;
+mod one_of;
+
+pub use exact_length::*;
+pub use one_of::*;
+
 /// Validates a string value with optional validation rules
 ///
 /// # Arguments

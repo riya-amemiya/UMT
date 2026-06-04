@@ -1,3 +1,5 @@
+pub mod error_function;
+pub use error_function::*;
 pub mod flat_map_result;
 pub use flat_map_result::*;
 pub mod map_result;
@@ -8,3 +10,5 @@ pub mod retry;
 pub use retry::*;
 pub mod safe_execute;
 pub use safe_execute::*;
+pub mod success_function;
+pub use success_function::*;

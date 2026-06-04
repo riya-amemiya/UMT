@@ -1,6 +1,10 @@
 //! Array validation module
 //! Provides validation functionality for arrays with type-specific validation rules
 
+mod array_of;
+
+pub use array_of::*;
+
 use super::core::ValidateCoreReturnType;
 
 /// Validates an array of values
