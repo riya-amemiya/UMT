@@ -18,10 +18,10 @@
 /// ```
 #[inline]
 pub fn umt_remove_suffix(s: &str, suffix: &str) -> String {
-    if !suffix.is_empty() {
-        if let Some(rest) = s.strip_suffix(suffix) {
-            return rest.to_string();
-        }
+    if !suffix.is_empty()
+        && let Some(rest) = s.strip_suffix(suffix)
+    {
+        return rest.to_string();
     }
     s.to_string()
 }

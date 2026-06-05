@@ -18,10 +18,10 @@
 /// ```
 #[inline]
 pub fn umt_remove_prefix(s: &str, prefix: &str) -> String {
-    if !prefix.is_empty() {
-        if let Some(rest) = s.strip_prefix(prefix) {
-            return rest.to_string();
-        }
+    if !prefix.is_empty()
+        && let Some(rest) = s.strip_prefix(prefix)
+    {
+        return rest.to_string();
     }
     s.to_string()
 }
