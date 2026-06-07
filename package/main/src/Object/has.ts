@@ -1,3 +1,5 @@
+import { pathSegments } from "./pathSegments";
+
 /**
  * Determines if an object has a specified path
  * @param {T} object - Object to check
@@ -17,8 +19,6 @@
  * - `removePrototypeMap` — shallow sanitization of an array of objects
  * - `removePrototypeMapDeep` — recursive sanitization of an array of objects (for deeply nested data)
  */
-import { pathSegments } from "./pathSegments";
-
 export const has = <T extends { [key: string]: unknown }>(
   object: T,
   path: string | string[],
