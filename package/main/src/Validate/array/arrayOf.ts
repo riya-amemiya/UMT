@@ -50,13 +50,13 @@ export const arrayOf = <
         type: values,
       };
     }
-    for (const value of values) {
-      const result = (
-        validator as unknown as (v: Element) => {
-          validate: boolean;
-          message: string;
-        }
-      )(value);
+    const elementValidator = validator as unknown as (v: Element) => {
+      validate: boolean;
+      message: string;
+    };
+    const length = values.length;
+    for (let index = 0; index < length; index++) {
+      const result = elementValidator(values[index]);
       if (!result.validate) {
         return {
           validate: false,

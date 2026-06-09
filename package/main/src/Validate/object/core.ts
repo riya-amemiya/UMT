@@ -73,6 +73,10 @@ export const object = <T extends ObjectShape>(
 ): ObjectValidator<T> & StandardSchemaV1<InferObject<T>, InferObject<T>> => {
   type Inferred = InferObject<T>;
 
+  const keys = Object.keys(option);
+  const validators = keys.map((key) => option[key]);
+  const length = keys.length;
+
   const validator = ((value: Inferred): ValidateCoreReturnType<Inferred> => {
     if (!isDictionaryObject(value)) {
       return {
@@ -81,13 +85,13 @@ export const object = <T extends ObjectShape>(
         type: value,
       };
     }
-    for (const validate in option) {
+    for (let index = 0; index < length; index++) {
       // biome-ignore lint/suspicious/noExplicitAny: Index access requires any cast
-      if (!option[validate]((value as any)[validate]).validate) {
+      const result = validators[index]((value as any)[keys[index]]);
+      if (!result.validate) {
         return {
           validate: false,
-          // biome-ignore lint/suspicious/noExplicitAny: Index access requires any cast
-          message: option[validate](value as any).message,
+          message: result.message,
           // biome-ignore lint/suspicious/noExplicitAny: Type assertion needed for return type compatibility
           type: value as any,
         };

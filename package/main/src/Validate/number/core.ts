@@ -25,7 +25,8 @@ export const number = <T extends ValidateReturnType<number>[]>(
   message?: string,
 ): ((value: number) => ValidateCoreReturnType<number>) &
   StandardSchemaV1<number, number> => {
-  const validator = (value: number) =>
-    core<number>("number")(value, option, message);
+  const rules = option ?? [];
+  const run = core<number>("number");
+  const validator = (value: number) => run(value, rules, message);
   return attachStandard<number, number, typeof validator>(validator);
 };
