@@ -25,8 +25,6 @@ export const number = <T extends ValidateReturnType<number>[]>(
   message?: string,
 ): ((value: number) => ValidateCoreReturnType<number>) &
   StandardSchemaV1<number, number> => {
-  // Build the core validator and resolve the rules array once so each call
-  // avoids re-creating the curried closure and a fresh default array.
   const rules = option ?? [];
   const run = core<number>("number");
   const validator = (value: number) => run(value, rules, message);

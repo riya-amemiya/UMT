@@ -73,9 +73,6 @@ export const object = <T extends ObjectShape>(
 ): ObjectValidator<T> & StandardSchemaV1<InferObject<T>, InferObject<T>> => {
   type Inferred = InferObject<T>;
 
-  // Resolve the property keys and their validators once at factory time so the
-  // hot path iterates a fixed-length array instead of walking the prototype
-  // chain with `for...in` on every call.
   const keys = Object.keys(option);
   const validators = keys.map((key) => option[key]);
   const length = keys.length;
