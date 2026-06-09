@@ -25,7 +25,10 @@ export const string = <T extends ValidateReturnType<string>[]>(
   message?: string,
 ): ((value: string) => ValidateCoreReturnType<string>) &
   StandardSchemaV1<string, string> => {
-  const validator = (value: string) =>
-    core<string>("string")(value, option, message);
+  // Build the core validator and resolve the rules array once so each call
+  // avoids re-creating the curried closure and a fresh default array.
+  const rules = option ?? [];
+  const run = core<string>("string");
+  const validator = (value: string) => run(value, rules, message);
   return attachStandard<string, string, typeof validator>(validator);
 };

@@ -30,11 +30,13 @@ export const core =
         type,
       };
     }
-    for (const validate of option) {
-      if (!validate.validate(value)) {
+    const length = option.length;
+    for (let index = 0; index < length; index++) {
+      const rule = option[index];
+      if (!rule.validate(value)) {
         return {
           validate: false,
-          message: validate.message ?? "",
+          message: rule.message ?? "",
           type,
         };
       }

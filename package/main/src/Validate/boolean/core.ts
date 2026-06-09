@@ -19,7 +19,11 @@ export const boolean = (
   message?: string,
 ): ((value: boolean) => ValidateCoreReturnType<boolean>) &
   StandardSchemaV1<boolean, boolean> => {
+  // Build the core validator once so each call avoids re-creating the curried
+  // closure and a fresh empty rules array.
+  const rules: [] = [];
+  const run = core<boolean>("boolean");
   const validator = (value: boolean): ValidateCoreReturnType<boolean> =>
-    core<boolean>("boolean")(value, [], message);
+    run(value, rules, message);
   return attachStandard<boolean, boolean, typeof validator>(validator);
 };
