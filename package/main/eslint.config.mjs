@@ -65,18 +65,22 @@ export default defineConfig(
       "no-constant-condition": "off",
       "unicorn/better-regex": "error",
       "unicorn/consistent-destructuring": "error",
-      "unicorn/filename-case": "off",
-      "unicorn/no-array-from-fill": "off",
+      "unicorn/filename-case": [
+        "error",
+        {
+          cases: {
+            camelCase: true,
+            pascalCase: true,
+          },
+        },
+      ],
       "unicorn/no-array-reduce": "error",
       "unicorn/no-array-reverse": "off",
       "unicorn/no-nested-ternary": "off",
       "unicorn/no-null": "off",
-      "unicorn/no-this-outside-of-class": "off",
       "unicorn/no-unused-properties": "error",
       "unicorn/number-literal-case": "off",
-      "unicorn/prefer-includes-over-repeated-comparisons": "off",
       "unicorn/prefer-number-properties": "off",
-      "unicorn/prefer-split-limit": "off",
     },
   },
 );
