@@ -78,16 +78,9 @@ export default defineConfig(
       "unicorn/no-array-reverse": "off",
       "unicorn/no-nested-ternary": "off",
       "unicorn/no-null": "off",
-      "unicorn/no-this-outside-of-class": "off",
       "unicorn/no-unused-properties": "error",
       "unicorn/number-literal-case": "off",
       "unicorn/prefer-number-properties": "off",
-    },
-  },
-  {
-    files: ["src/IP/**", "src/UA/**", "src/URL/**"],
-    rules: {
-      "unicorn/filename-case": "off",
     },
   },
 );
