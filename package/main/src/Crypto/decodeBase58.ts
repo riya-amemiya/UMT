@@ -35,7 +35,7 @@ export const decodeBase58 = (input: string): Uint8Array => {
   }
 
   return new Uint8Array([
-    ...Array.from({ length: leadingOnes }, () => 0),
+    ...(Array.from({ length: leadingOnes }).fill(0) as number[]),
     ...bytes,
   ]);
 };
