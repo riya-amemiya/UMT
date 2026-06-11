@@ -3,7 +3,7 @@ const DIGITS = "0123456789abcdef";
 const bytesToUuid = (bytes: Uint8Array): string => {
   let result = "";
   for (let index = 0; index < 16; index += 1) {
-    if (index === 4 || index === 6 || index === 8 || index === 10) {
+    if ([4, 6, 8, 10].includes(index)) {
       result += "-";
     }
     const byte = bytes[index];
