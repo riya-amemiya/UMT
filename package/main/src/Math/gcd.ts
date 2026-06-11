@@ -19,7 +19,7 @@ export const gcd = (x: number, y: number, ...z: number[]) => {
     // Find maximum decimal places
     const getDecimalPlaces = (number_: number) => {
       const string_ = number_.toString();
-      return string_.includes(".") ? string_.split(".", 2)[1].length : 0;
+      return string_.includes(".") ? string_.split(".")[1].length : 0;
     };
 
     const maxDecimalPlaces = Math.max(
