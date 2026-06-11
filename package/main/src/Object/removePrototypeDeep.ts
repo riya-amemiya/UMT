@@ -43,7 +43,7 @@ export const removePrototypeDeep = <T extends Record<string, unknown>>(
 
     const target = destination as Record<string, unknown>;
     for (const key of Object.keys(source)) {
-      if (key === "__proto__" || key === "constructor" || key === "prototype") {
+      if (["__proto__", "constructor", "prototype"].includes(key)) {
         continue;
       }
       const value = source[key];
