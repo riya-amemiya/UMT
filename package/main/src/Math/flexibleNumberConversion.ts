@@ -32,7 +32,7 @@ export const flexibleNumberConversion = (value: unknown): number => {
   }
 
   // Handle special cases
-  if (([null, undefined, ""] as unknown[]).includes(value)) {
+  if (value === null || value === undefined || value === "") {
     return 0;
   }
 
