@@ -44,7 +44,19 @@ function dayOfWeekSimple<
     | MonthsWithout31DaysInt,
 >(
   properties?:
-    | {
+    `${number}-${T}-${T extends MonthsWith31Days | MonthsWithout31Days
+        ? DayType<T>
+        : T extends MonthsWith31DaysInt | MonthsWithout31DaysInt
+          ? DayTypeInt<T>
+          : never}` | `${number}:${T}:${T extends MonthsWith31Days | MonthsWithout31Days
+        ? DayType<T>
+        : T extends MonthsWith31DaysInt | MonthsWithout31DaysInt
+          ? DayTypeInt<T>
+          : never}` | `${number}/${T}/${T extends MonthsWith31Days | MonthsWithout31Days
+        ? DayType<T>
+        : T extends MonthsWith31DaysInt | MonthsWithout31DaysInt
+          ? DayTypeInt<T>
+          : never}` | Date | {
         year?: number;
         mon?: T;
         day?: T extends MonthsWith31Days | MonthsWithout31Days
@@ -52,23 +64,7 @@ function dayOfWeekSimple<
           : T extends MonthsWith31DaysInt | MonthsWithout31DaysInt
             ? DayTypeInt<T>
             : never;
-      }
-    | `${number}-${T}-${T extends MonthsWith31Days | MonthsWithout31Days
-        ? DayType<T>
-        : T extends MonthsWith31DaysInt | MonthsWithout31DaysInt
-          ? DayTypeInt<T>
-          : never}`
-    | `${number}:${T}:${T extends MonthsWith31Days | MonthsWithout31Days
-        ? DayType<T>
-        : T extends MonthsWith31DaysInt | MonthsWithout31DaysInt
-          ? DayTypeInt<T>
-          : never}`
-    | `${number}/${T}/${T extends MonthsWith31Days | MonthsWithout31Days
-        ? DayType<T>
-        : T extends MonthsWith31DaysInt | MonthsWithout31DaysInt
-          ? DayTypeInt<T>
-          : never}`
-    | Date,
+      },
   timeDifference: HoursTypeInt = 9,
 ): number {
   if (typeof properties === "string") {

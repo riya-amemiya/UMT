@@ -13,7 +13,7 @@ import { gcd } from "./gcd";
  */
 export const reduce = (x: number, y: number) => {
   if (y === 0) {
-    return { x: Number.NaN, y: Number.NaN };
+    return { x: NaN, y: NaN };
   }
   if (x === 0) {
     return { x: 0, y: 1, gcd: Math.abs(y) };

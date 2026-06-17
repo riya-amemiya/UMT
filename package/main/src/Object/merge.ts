@@ -25,8 +25,8 @@ export const merge = <
 ): T & UnionToIntersection<U[number]> => {
   const result: Record<string, unknown> = {};
   for (const object of [target, ...sources]) {
-    for (const key of Object.keys(object)) {
-      result[key] = object[key];
+    for (const [key, value] of Object.entries(object)) {
+      result[key] = value;
     }
   }
   return result as T & UnionToIntersection<U[number]>;

@@ -16,7 +16,7 @@ export const division = <T extends boolean = true>(
 ): T extends true ? number : number[] => {
   if (y === 0) {
     // biome-ignore lint/suspicious/noExplicitAny: ignore
-    return isFloor ? (Number.NaN as any) : ([Number.NaN, Number.NaN] as any);
+    return isFloor ? (NaN as any) : ([NaN, NaN] as any);
   }
 
   const sign = Math.sign(x) * Math.sign(y);

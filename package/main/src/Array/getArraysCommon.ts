@@ -24,8 +24,8 @@ export const getArraysCommon = <O, T extends unknown[] = unknown[]>(
 
   // Use a Set to track seen items for uniqueness if the input array is large,
   // otherwise just check the result array which is faster for small sizes.
-  const useSeenSet = array.length > THRESHOLD;
-  const seen = useSeenSet ? new Set<unknown>() : undefined;
+  const isUseSeenSet = array.length > THRESHOLD;
+  const seen = isUseSeenSet ? new Set<unknown>() : undefined;
 
   for (const item of array) {
     // Check uniqueness

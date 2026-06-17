@@ -53,23 +53,23 @@ export function applyFormatter(
 function parseArguments(argumentsString: string): string[] {
   const arguments_: string[] = [];
   const chars: string[] = [];
-  let inQuotes = false;
+  let isInQuotes = false;
   let quoteChar = "";
 
   for (const char of argumentsString) {
-    if (!inQuotes && (char === '"' || char === "'")) {
-      inQuotes = true;
+    if (!isInQuotes && (char === '"' || char === "'")) {
+      isInQuotes = true;
       quoteChar = char;
       continue;
     }
 
-    if (inQuotes && char === quoteChar) {
-      inQuotes = false;
+    if (isInQuotes && char === quoteChar) {
+      isInQuotes = false;
       quoteChar = "";
       continue;
     }
 
-    if (!inQuotes && char === ",") {
+    if (!isInQuotes && char === ",") {
       const trimmed = chars.join("").trim();
       arguments_.push(trimmed === "" ? " " : trimmed);
       chars.length = 0;

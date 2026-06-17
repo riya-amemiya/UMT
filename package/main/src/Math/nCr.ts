@@ -13,7 +13,7 @@ import { nPr } from "./nPr";
  */
 export const nCr = (n: number, r: number): number => {
   if (n < r || n < 0 || r < 0) {
-    return Number.NaN;
+    return NaN;
   }
   if (r === 0 || n === r) {
     return 1;

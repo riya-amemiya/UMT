@@ -69,9 +69,9 @@ export const getObjectsDiff = <T extends Record<string, unknown>>(
       continue;
     }
 
-    const allPlain = values.every((value) => isPlainObject(value));
+    const isAllPlain = values.every((value) => isPlainObject(value));
 
-    if (allPlain) {
+    if (isAllPlain) {
       const nested = getObjectsDiff(values[0] as T, ...values.slice(1));
 
       if (Object.keys(nested).length > 0) {

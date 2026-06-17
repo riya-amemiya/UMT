@@ -32,9 +32,6 @@ export const parseQueryString = (query: string): Record<string, string> => {
   }
 
   const parameters = new URLSearchParams(searchString);
-  const result: Record<string, string> = {};
-  for (const [key, value] of parameters) {
-    result[key] = value;
-  }
+  const result: Record<string, string> = Object.fromEntries(parameters);
   return result;
 };

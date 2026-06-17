@@ -18,12 +18,12 @@
 export const once = <A extends unknown[], R>(
   function_: (...arguments_: A) => R,
 ): ((...arguments_: A) => R) => {
-  let called = false;
+  let isCalled = false;
   let result: R;
 
   return function (this: unknown, ...arguments_: A): R {
-    if (!called) {
-      called = true;
+    if (!isCalled) {
+      isCalled = true;
       result = function_.apply(this, arguments_);
     }
     return result;

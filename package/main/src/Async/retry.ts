@@ -48,7 +48,7 @@ export const retry = async <T>(
     retries = 3,
     delay = 1000,
     backoff = "fixed",
-    jitter = false,
+    jitter: isJitter = false,
     shouldRetry = () => true,
     onRetry,
     signal,
@@ -68,7 +68,7 @@ export const retry = async <T>(
         throw error;
       }
       onRetry?.(error, attemptNumber);
-      await sleep(computeDelay(delay, attemptNumber + 1, backoff, jitter));
+      await sleep(computeDelay(delay, attemptNumber + 1, backoff, isJitter));
       attemptNumber += 1;
     }
   }

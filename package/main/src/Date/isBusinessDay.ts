@@ -14,5 +14,5 @@ export const isBusinessDay = (date: Date, holidays: Date[] = []): boolean => {
   if (isWeekend(date)) {
     return false;
   }
-  return !holidays.some((holiday) => isSameDay(holiday, date));
+  return holidays.every((holiday) => !isSameDay(holiday, date));
 };

@@ -44,7 +44,7 @@ export const getObjectsCommon = <T extends Record<string, unknown>>(
 
   for (const [key, value] of Object.entries(object)) {
     let isCommon = true;
-    let allPlainObjects = isPlainObject(value);
+    let isAllPlainObjects = isPlainObject(value);
 
     for (const other of objects) {
       if (!Object.hasOwn(other, key)) {
@@ -53,10 +53,10 @@ export const getObjectsCommon = <T extends Record<string, unknown>>(
       }
 
       if (!isPlainObject(other[key])) {
-        allPlainObjects = false;
+        isAllPlainObjects = false;
       }
 
-      if (!allPlainObjects && other[key] !== value) {
+      if (!isAllPlainObjects && other[key] !== value) {
         isCommon = false;
         break;
       }
@@ -66,7 +66,7 @@ export const getObjectsCommon = <T extends Record<string, unknown>>(
       continue;
     }
 
-    if (allPlainObjects) {
+    if (isAllPlainObjects) {
       const nested = getObjectsCommon(
         value as Record<string, unknown>,
         ...objects.map((other) => other[key] as Record<string, unknown>),

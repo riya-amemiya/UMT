@@ -7,10 +7,7 @@ const cloneValue = (value: unknown, depth: number): unknown => {
   }
 
   if (Array.isArray(value)) {
-    const result: unknown[] = [];
-    for (const element of value) {
-      result.push(cloneValue(element, depth + 1));
-    }
+    const result: unknown[] = Array.from(value, element => cloneValue(element, depth + 1));
     return result;
   }
 
@@ -40,9 +37,9 @@ const cloneValue = (value: unknown, depth: number): unknown => {
 
   // Plain object
   const result: Record<string, unknown> = {};
-  for (const key of Object.keys(value)) {
+  for (const [key, value_] of Object.entries(value)) {
     result[key] = cloneValue(
-      (value as Record<string, unknown>)[key],
+      value_,
       depth + 1,
     );
   }
