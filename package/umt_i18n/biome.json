@@ -82,7 +82,7 @@
         "noDelete": "error",
         "noNamespaceImport": "error"
       },
-      "recommended": true,
+      "preset": "recommended",
       "style": {
         "noCommonJs": "error",
         "noDefaultExport": "error",
