@@ -6,7 +6,7 @@
   "description": "UMT Main Package is written in TypeScript and is a collection of useful functions for various tasks.",
   "devDependencies": {
     "@babel/cli": "7.29.7",
-    "@babel/core": "7.29.7",
+    "@babel/core": "8.0.0",
     "@babel/plugin-proposal-decorators": "7.29.7",
     "@babel/preset-env": "7.29.7",
     "@babel/preset-typescript": "7.29.7",
@@ -31,7 +31,7 @@
     "eslint-plugin-unicorn": "64.0.0",
     "fast-sort": "3.4.1",
     "gh-pages": "6.3.0",
-    "hono": "4.12.23",
+    "hono": "4.12.25",
     "jest": "30.4.2",
     "jest-junit": "17.0.0",
     "lodash": "4.18.1",
