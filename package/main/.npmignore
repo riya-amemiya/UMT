@@ -1,7 +1,6 @@
 node_modules
 src
 .gitignore
-.babelrc
 .prettierrc
 .vscode
 test
@@ -13,8 +12,6 @@ lib
 python/
 coverage_dir
 module/tests/
-module/es5/tests/
 tsconfig.tsbuildinfo
 tmp
 .plandex
-common-module
