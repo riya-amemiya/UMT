@@ -29,8 +29,8 @@ export const buildUrl = (
   parameters: Record<string, string> = {},
 ): string => {
   const url = new URL(base);
-  for (const key of Object.keys(parameters)) {
-    url.searchParams.append(key, parameters[key]);
+  for (const [key, value] of Object.entries(parameters)) {
+    url.searchParams.append(key, value);
   }
-  return url.toString();
+  return url.href;
 };

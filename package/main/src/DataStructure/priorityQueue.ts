@@ -68,11 +68,13 @@ export class PriorityQueue<T> {
    * ```
    */
   constructor(initialElements?: { value: T; priority: number }[]) {
-    if (initialElements) {
-      this.heap = [...initialElements];
-      this.updateMinPriority();
-      this.buildHeap();
+    if (!initialElements) {
+      return;
     }
+
+    this.heap = [...initialElements];
+    this.updateMinPriority();
+    this.buildHeap();
   }
 
   /**

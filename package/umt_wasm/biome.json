@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.4.16/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.5.0/schema.json",
   "files": {
     "includes": [
       "**",
@@ -70,7 +70,7 @@
         "noSwitchDeclarations": "error"
       },
       "nursery": {},
-      "recommended": true,
+      "preset": "recommended",
       "style": {
         "noDefaultExport": "error",
         "noDoneCallback": "error",

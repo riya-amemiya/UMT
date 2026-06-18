@@ -20,13 +20,14 @@ export const generateNumberArray = (
   random = false,
 ): number[] => {
   const actualLength = Math.floor(length);
-  const actualMax = max ?? actualLength - 1;
   if (actualLength <= 0) {
     return [];
   }
   if (actualLength === 1) {
     return [min];
   }
+
+  const actualMax = max ?? actualLength - 1;
 
   const isIntegerInputs =
     Number.isSafeInteger(min) && Number.isSafeInteger(actualMax);

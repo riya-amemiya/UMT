@@ -33,10 +33,12 @@ export const throttleAsync = <A extends unknown[], R>(
     const current = function_(...arguments_);
     inflight = current;
     const cleanup = (): void => {
-      if (inflight === current) {
-        inflight = undefined;
-        lockedUntil = Date.now() + wait;
+      if (inflight !== current) {
+        return;
       }
+
+      inflight = undefined;
+      lockedUntil = Date.now() + wait;
     };
     current.then(cleanup, cleanup);
     return current;

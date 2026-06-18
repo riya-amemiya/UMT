@@ -32,10 +32,7 @@ export const hslaToRgba = (
     r = g = b = lightness;
   } else {
     const hueToRgb = (p: number, q: number, t: number) => {
-      let tAdjusted = t;
-      if (t < 0) {
-        tAdjusted = addition(t, 1);
-      }
+      let tAdjusted = t < 0 ? addition(t, 1) : t;
       if (t > 1) {
         tAdjusted = subtract(t, 1);
       }

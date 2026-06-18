@@ -109,8 +109,8 @@ export function formatString(
   ...restValues: FormatValue[]
 ): string {
   const escapedTemplate = template
-    .replaceAll("{{", "\u0000")
-    .replaceAll("}}", "\u0001");
+    .replaceAll("{{", "\u{0}")
+    .replaceAll("}}", "\u{1}");
 
   const { data, options } = detectMode(
     dataOrFirstValue,
@@ -152,5 +152,5 @@ export function formatString(
     },
   );
 
-  return result.replaceAll("\u0000", "{").replaceAll("\u0001", "}");
+  return result.replaceAll("\u{0}", "{").replaceAll("\u{1}", "}");
 }

@@ -44,7 +44,7 @@ export const debounce = <T extends (...arguments_: unknown[]) => unknown>(
   wait: number,
   options: DebounceOptions = {},
 ): DebouncedFunction<T> => {
-  const { leading = false, trailing = true } = options;
+  const { leading: isLeading = false, trailing: isTrailing = true } = options;
   let timerId: ReturnType<typeof setTimeout> | undefined;
   let lastArguments: Parameters<T> | undefined;
   const thisReference = { value: undefined as unknown };
@@ -57,7 +57,7 @@ export const debounce = <T extends (...arguments_: unknown[]) => unknown>(
         const remaining = wait - elapsed;
         if (remaining <= 0) {
           timerId = undefined;
-          if (trailing && lastArguments !== undefined) {
+          if (isTrailing && lastArguments !== undefined) {
             function_.apply(thisReference.value, lastArguments);
             lastArguments = undefined;
           }
@@ -79,7 +79,7 @@ export const debounce = <T extends (...arguments_: unknown[]) => unknown>(
 
     const isFirstCall = timerId === undefined;
 
-    if (leading && isFirstCall) {
+    if (isLeading && isFirstCall) {
       function_.apply(thisReference.value, lastArguments);
       lastArguments = undefined;
     }

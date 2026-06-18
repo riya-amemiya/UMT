@@ -20,7 +20,7 @@ export const multiplication = (...numbers: number[]) => {
     return multiplyIntegers(numbers);
   }
 
-  const integers = numbers.map((n) => +`${n}`.replace(".", ""));
+  const integers = numbers.map((n) => +String(n).replace(".", ""));
   const totalDecimal = addition(...numbers.map((n) => getDecimalLength(n)));
   return multiplyIntegers(integers) / 10 ** totalDecimal;
 };

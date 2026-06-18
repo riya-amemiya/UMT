@@ -45,7 +45,7 @@ export const ultraNumberSort = (
   // Check if all numbers are integers and find range.
   // min/max are only needed by the counting-sort branch, which requires
   // allIntegers, so stop tracking them once a non-integer is seen.
-  let allIntegers = true;
+  let isAllIntegers = true;
   let min = result[0];
   let max = result[0];
   let hasNaN = false;
@@ -57,9 +57,9 @@ export const ultraNumberSort = (
       hasNaN = true;
       break;
     }
-    if (allIntegers) {
+    if (isAllIntegers) {
       if (value !== Math.floor(value)) {
-        allIntegers = false;
+        isAllIntegers = false;
       } else if (value < min) {
         min = value;
       } else if (value > max) {
@@ -71,7 +71,7 @@ export const ultraNumberSort = (
   // For small integer ranges, use counting sort
   if (
     !hasNaN &&
-    allIntegers &&
+    isAllIntegers &&
     max - min < length * 2 &&
     max - min < 1_000_000
   ) {
@@ -83,7 +83,7 @@ export const ultraNumberSort = (
   // depends on the element kind: all-integer input stays faster under
   // quicksort up to roughly twice the size of floating-point input, so it
   // gets a higher threshold.
-  const radixThreshold = allIntegers ? 2048 : 1024;
+  const radixThreshold = isAllIntegers ? 2048 : 1024;
   if (length < radixThreshold) {
     if (hasNaN) {
       return handleNaNSort(result, ascending);
@@ -197,7 +197,7 @@ const float64RadixSort = (
 
   let currentSource = sourceU32;
   let currentDestination = destinationU32;
-  let resultInSource = true;
+  let isResultInSource = true;
 
   // 8-pass LSD radix sort (8 bits per pass)
   // Passes 0-3: low 32-bit word (index i*2)
@@ -208,14 +208,14 @@ const float64RadixSort = (
     const shift = (pass & 3) << 3;
 
     // Skip pass if all elements have the same byte value
-    let skipPass = false;
+    let isSkipPass = false;
     for (let index = 0; index < 256; index++) {
       if (histograms[base + index] === validLength) {
-        skipPass = true;
+        isSkipPass = true;
         break;
       }
     }
-    if (skipPass) {
+    if (isSkipPass) {
       continue;
     }
 
@@ -245,12 +245,12 @@ const float64RadixSort = (
     const temporary = currentSource;
     currentSource = currentDestination;
     currentDestination = temporary;
-    resultInSource = !resultInSource;
+    isResultInSource = !isResultInSource;
   }
 
   // Determine which buffer holds the result
   const resultU32 = currentSource;
-  const resultBuffer = resultInSource ? sourceBuffer : destinationBuffer;
+  const resultBuffer = isResultInSource ? sourceBuffer : destinationBuffer;
   const resultF64 = new Float64Array(resultBuffer);
 
   // Reverse the bit transformation and copy each value back in one pass

@@ -28,8 +28,8 @@ export const division = <T extends boolean = true>(
   const decimalLengthY = getDecimalLength(absY);
 
   // Remove decimal points
-  const xInt = +`${absX}`.replace(".", "");
-  const yInt = +`${absY}`.replace(".", "");
+  const xInt = +String(absX).replace(".", "");
+  const yInt = +String(absY).replace(".", "");
 
   // Calculate scaling factor based on the actual decimal difference
   const scalingFactor = 10 ** (decimalLengthY - decimalLengthX);

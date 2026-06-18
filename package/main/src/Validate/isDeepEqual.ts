@@ -31,7 +31,7 @@ export function isDeepEqual(
   b: unknown,
   options: IsDeepEqualOptions = {},
 ): boolean {
-  const { strictOrder = true } = options;
+  const { strictOrder: isStrictOrder = true } = options;
   const visited = new WeakSet<object>();
 
   function compare(x: unknown, y: unknown): boolean {
@@ -76,7 +76,7 @@ export function isDeepEqual(
         return false;
       }
 
-      if (strictOrder) {
+      if (isStrictOrder) {
         for (const [index, element] of x.entries()) {
           if (!compare(element, y[index])) {
             return false;
@@ -87,15 +87,15 @@ export function isDeepEqual(
         // splice(), avoiding O(n) array shifts per removal (O(n²) → O(n)).
         const usedIndices = new Set<number>();
         for (const itemX of x) {
-          let found = false;
+          let isFound = false;
           for (const [index, itemY] of y.entries()) {
             if (!usedIndices.has(index) && compare(itemX, itemY)) {
               usedIndices.add(index);
-              found = true;
+              isFound = true;
               break;
             }
           }
-          if (!found) {
+          if (!isFound) {
             return false;
           }
         }
@@ -110,14 +110,14 @@ export function isDeepEqual(
       }
 
       for (const item of x) {
-        let found = false;
+        let isFound = false;
         for (const otherItem of y) {
           if (compare(item, otherItem)) {
-            found = true;
+            isFound = true;
             break;
           }
         }
-        if (!found) {
+        if (!isFound) {
           return false;
         }
       }
@@ -130,14 +130,14 @@ export function isDeepEqual(
       }
 
       for (const [key, value] of x) {
-        let found = false;
+        let isFound = false;
         for (const [otherKey, otherValue] of y) {
           if (compare(key, otherKey) && compare(value, otherValue)) {
-            found = true;
+            isFound = true;
             break;
           }
         }
-        if (!found) {
+        if (!isFound) {
           return false;
         }
       }
