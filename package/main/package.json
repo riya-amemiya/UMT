@@ -5,11 +5,6 @@
   },
   "description": "UMT Main Package is written in TypeScript and is a collection of useful functions for various tasks.",
   "devDependencies": {
-    "@babel/cli": "7.29.7",
-    "@babel/core": "7.29.7",
-    "@babel/plugin-proposal-decorators": "7.29.7",
-    "@babel/preset-env": "7.29.7",
-    "@babel/preset-typescript": "7.29.7",
     "@biomejs/biome": "2.4.16",
     "@codecov/bundle-analyzer": "2.0.1",
     "@eslint/js": "10.0.1",
@@ -192,8 +187,7 @@
   "files": [
     "module",
     "!module/tests",
-    "!module/tsconfig.tsbuildinfo",
-    "!module/es5/tests"
+    "!module/tsconfig.tsbuildinfo"
   ],
   "homepage": "https://github.com/riya-amemiya/UMT#readme",
   "keywords": [
@@ -218,12 +212,7 @@
   },
   "scripts": {
     "build": "nix develop --command make build",
-    "build:cjs": "nix develop --command make build-cjs",
-    "build:babel": "nix develop --command make build-babel",
-    "build:cjs:babel": "nix develop --command make build-cjs-babel",
-    "build:full": "nix develop --command make build-full",
     "build:clean": "nix develop --command make build-clean",
-    "build:clean:full": "nix develop --command make build-clean-full",
     "deploy": "nix develop --command make deploy",
     "eslint": "nix develop --command make eslint",
     "format": "nix develop --command make format",

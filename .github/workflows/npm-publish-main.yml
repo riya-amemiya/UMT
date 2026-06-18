@@ -33,7 +33,7 @@ jobs:
       - name: Install dependencies with frozen lockfile
         run: nix develop -c bun install --frozen-lockfile
       - name: Build project
-        run: nix develop -c bun run build:clean:full
+        run: nix develop -c bun run build:clean
       - name: Lint
         run: nix develop -c bun run lint:ci
       - name: Test
@@ -42,6 +42,3 @@ jobs:
         run: rm -rf module/tsconfig.tsbuildinfo module/tests
       - name: Publish umt to npm
         run: npm publish --provenance
-      - name: Publish umt-common to npm
-        run: npm publish --provenance
-        working-directory: ./package/main/common-module
