@@ -3,7 +3,7 @@ import type {
   DeepRequired,
   PickDeepKey,
   ShallowObjectValue,
-} from "umt/module/types";
+} from "umt/types";
 
 type NestedObject = {
   [key: string]: string | NestedObject;

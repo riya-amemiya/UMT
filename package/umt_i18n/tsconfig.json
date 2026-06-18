@@ -2,7 +2,7 @@
 	"compilerOptions": {
 		"allowJs": true,
 		"allowSyntheticDefaultImports": true,
-		"baseUrl": "./src",
+		"rootDir": "./src",
 		"declaration": true,
 		"declarationMap": false,
 		"emitDecoratorMetadata": true,
@@ -19,7 +19,7 @@
 			"esnext"
 		],
 		"module": "ESNext",
-		"moduleResolution": "node",
+		"moduleResolution": "bundler",
 		"noEmit": false,
 		"noFallthroughCasesInSwitch": true,
 		"noImplicitOverride": true,
@@ -30,10 +30,10 @@
 		"outDir": "./module",
 		"paths": {
 			"$/*": [
-				"./types/*"
+				"./src/types/*"
 			],
 			"@/*": [
-				"./*"
+				"./src/*"
 			]
 		},
 		"preserveSymlinks": true,
@@ -45,6 +45,10 @@
 		"target": "ESNext",
 		"typeRoots": [
 			"node_modules/@types"
+		],
+		"types": [
+			"node",
+			"jest"
 		]
 	},
 	"include": [

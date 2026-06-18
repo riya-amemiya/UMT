@@ -2,8 +2,6 @@
 	"compilerOptions": {
 		"allowJs": true,
 		"allowSyntheticDefaultImports": true,
-		"baseUrl": "./src",
-		"ignoreDeprecations": "6.0",
 		"rootDir": "./src",
 		"declaration": true,
 		"declarationMap": false,
@@ -21,7 +19,7 @@
 			"esnext"
 		],
 		"module": "ESNext",
-		"moduleResolution": "node",
+		"moduleResolution": "bundler",
 		"noEmit": false,
 		"noFallthroughCasesInSwitch": true,
 		"noImplicitOverride": true,
@@ -32,10 +30,10 @@
 		"outDir": "./module",
 		"paths": {
 			"$/*": [
-				"./types/*"
+				"./src/types/*"
 			],
 			"@/*": [
-				"./*"
+				"./src/*"
 			]
 		},
 		"preserveSymlinks": true,
