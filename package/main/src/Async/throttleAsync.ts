@@ -34,7 +34,7 @@ export const throttleAsync = <A extends unknown[], R>(
     inflight = current;
     const cleanup = (): void => {
       if (inflight !== current) {
-      	return;
+        return;
       }
 
       inflight = undefined;

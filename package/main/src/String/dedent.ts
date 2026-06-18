@@ -37,7 +37,7 @@ export const dedent = (
   }
 
   const lines = raw.split("\n");
-  let minIndent = Infinity;
+  let minIndent = Number.POSITIVE_INFINITY;
   for (const line of lines) {
     if (line.trim().length === 0) {
       continue;

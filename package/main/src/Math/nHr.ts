@@ -12,7 +12,7 @@ import { nCr } from "./nCr";
  */
 export const nHr = (n: number, r: number): number => {
   if (n === 0 || r === 0 || n < 0 || r < 0) {
-    return NaN;
+    return Number.NaN;
   }
 
   const result = nCr(n + r - 1, r);

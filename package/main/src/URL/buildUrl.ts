@@ -32,5 +32,5 @@ export const buildUrl = (
   for (const [key, value] of Object.entries(parameters)) {
     url.searchParams.append(key, value);
   }
-  return url.toString();
+  return url.href;
 };

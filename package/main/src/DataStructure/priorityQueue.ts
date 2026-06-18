@@ -69,7 +69,7 @@ export class PriorityQueue<T> {
    */
   constructor(initialElements?: { value: T; priority: number }[]) {
     if (!initialElements) {
-    	return;
+      return;
     }
 
     this.heap = [...initialElements];

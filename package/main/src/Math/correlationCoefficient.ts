@@ -12,11 +12,11 @@ import { average } from "./average";
  */
 export const correlationCoefficient = (x: number[], y: number[]): number => {
   if (x.length === 0) {
-    return NaN;
+    return Number.NaN;
   }
 
   if (x.length === 1) {
-    return NaN;
+    return Number.NaN;
   }
 
   const meanX = average(x);
@@ -38,7 +38,7 @@ export const correlationCoefficient = (x: number[], y: number[]): number => {
   const denominator = Math.sqrt(sumSquaredX * sumSquaredY);
 
   if (denominator === 0) {
-    return NaN;
+    return Number.NaN;
   }
 
   return numerator / denominator;
