@@ -16,7 +16,7 @@ export const division = <T extends boolean = true>(
 ): T extends true ? number : number[] => {
   if (y === 0) {
     // biome-ignore lint/suspicious/noExplicitAny: ignore
-    return isFloor ? (NaN as any) : ([NaN, NaN] as any);
+    return isFloor ? (Number.NaN as any) : ([Number.NaN, Number.NaN] as any);
   }
 
   const sign = Math.sign(x) * Math.sign(y);
@@ -28,8 +28,8 @@ export const division = <T extends boolean = true>(
   const decimalLengthY = getDecimalLength(absY);
 
   // Remove decimal points
-  const xInt = +`${absX}`.replace(".", "");
-  const yInt = +`${absY}`.replace(".", "");
+  const xInt = +String(absX).replace(".", "");
+  const yInt = +String(absY).replace(".", "");
 
   // Calculate scaling factor based on the actual decimal difference
   const scalingFactor = 10 ** (decimalLengthY - decimalLengthX);

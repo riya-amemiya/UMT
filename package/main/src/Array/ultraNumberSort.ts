@@ -269,7 +269,7 @@ const float64RadixSort = (
 
   // Append NaN values at the end
   for (let index = validLength; index < length; index++) {
-    array[index] = NaN;
+    array[index] = Number.NaN;
   }
 
   return array;
@@ -346,7 +346,7 @@ const handleNaNSort = (array: number[], ascending: boolean): number[] => {
 
   // NaN values go to the end
   for (let index = 0; index < nanCount; index++) {
-    valid.push(NaN);
+    valid.push(Number.NaN);
   }
 
   // Copy back

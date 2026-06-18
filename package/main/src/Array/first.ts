@@ -9,7 +9,5 @@ import type { First } from "$/logic/first";
 export const first = <T extends unknown[]>(
   array: T,
 ): First<T> extends never ? T[number] | undefined : First<T> => {
-  return (array.length > 0 ? array[0] : undefined) as First<T> extends never
-    ? T[number] | undefined
-    : First<T>;
+  return array[0] as First<T> extends never ? T[number] | undefined : First<T>;
 };

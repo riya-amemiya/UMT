@@ -28,7 +28,7 @@ import { isValueNaN } from "@/Validate/isValueNaN";
 export const flexibleNumberConversion = (value: unknown): number => {
   // Return NaN for objects
   if (typeof value === "object" && value !== null) {
-    return NaN;
+    return Number.NaN;
   }
 
   // Handle special cases
@@ -46,7 +46,7 @@ export const flexibleNumberConversion = (value: unknown): number => {
 
   // Handle infinity
   if (stringValue === "infinity" || stringValue === "+infinity") {
-    return Infinity;
+    return Number.POSITIVE_INFINITY;
   }
   if (stringValue === "-infinity") {
     return Number.NEGATIVE_INFINITY;
@@ -68,5 +68,5 @@ export const flexibleNumberConversion = (value: unknown): number => {
   }
 
   // When conversion is not possible
-  return NaN;
+  return Number.NaN;
 };

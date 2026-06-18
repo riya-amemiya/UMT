@@ -44,19 +44,23 @@ function dayOfWeekSimple<
     | MonthsWithout31DaysInt,
 >(
   properties?:
-    `${number}-${T}-${T extends MonthsWith31Days | MonthsWithout31Days
+    | `${number}-${T}-${T extends MonthsWith31Days | MonthsWithout31Days
         ? DayType<T>
         : T extends MonthsWith31DaysInt | MonthsWithout31DaysInt
           ? DayTypeInt<T>
-          : never}` | `${number}:${T}:${T extends MonthsWith31Days | MonthsWithout31Days
+          : never}`
+    | `${number}:${T}:${T extends MonthsWith31Days | MonthsWithout31Days
         ? DayType<T>
         : T extends MonthsWith31DaysInt | MonthsWithout31DaysInt
           ? DayTypeInt<T>
-          : never}` | `${number}/${T}/${T extends MonthsWith31Days | MonthsWithout31Days
+          : never}`
+    | `${number}/${T}/${T extends MonthsWith31Days | MonthsWithout31Days
         ? DayType<T>
         : T extends MonthsWith31DaysInt | MonthsWithout31DaysInt
           ? DayTypeInt<T>
-          : never}` | Date | {
+          : never}`
+    | Date
+    | {
         year?: number;
         mon?: T;
         day?: T extends MonthsWith31Days | MonthsWithout31Days

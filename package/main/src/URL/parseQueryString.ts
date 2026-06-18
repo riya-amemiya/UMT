@@ -26,10 +26,7 @@
  * ```
  */
 export const parseQueryString = (query: string): Record<string, string> => {
-  let searchString = query;
-  if (query.includes("://")) {
-    searchString = new URL(query).search;
-  }
+  const searchString = query.includes("://") ? new URL(query).search : query;
 
   const parameters = new URLSearchParams(searchString);
   const result: Record<string, string> = Object.fromEntries(parameters);

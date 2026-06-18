@@ -12,7 +12,7 @@ import { ultraNumberSort } from "@/Array/ultraNumberSort";
  */
 export const percentile = (array: number[], percentile: number): number => {
   if (array.length === 0) {
-    return NaN;
+    return Number.NaN;
   }
 
   const sortedArray = ultraNumberSort(array);
