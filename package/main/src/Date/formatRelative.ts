@@ -40,10 +40,12 @@ export const formatRelative = (
   const formatter = new Intl.RelativeTimeFormat(locale, { numeric: "auto" });
 
   for (const { unit, ms } of THRESHOLDS) {
-    if (absDelta >= ms) {
-      const value = Math.round(deltaMs / ms);
-      return formatter.format(value, unit);
+    if (absDelta < ms) {
+      continue;
     }
+
+    const value = Math.round(deltaMs / ms);
+    return formatter.format(value, unit);
   }
   return formatter.format(0, "second");
 };

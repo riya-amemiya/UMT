@@ -13,9 +13,5 @@ export const isEmpty = (object: Record<string, unknown>): boolean => {
 
   // Check symbol properties
   const symbolKeys = Object.getOwnPropertySymbols(object);
-  if (symbolKeys.length > 0) {
-    return false;
-  }
-
-  return true;
+  return symbolKeys.length === 0;
 };

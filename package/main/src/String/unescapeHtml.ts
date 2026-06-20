@@ -40,10 +40,7 @@ const isSafeCodePoint = (codePoint: number): boolean => {
   if (codePoint === 0x7f) {
     return false;
   }
-  if (codePoint >= 0x80 && codePoint <= 0x9f) {
-    return false;
-  }
-  return true;
+  return !(codePoint >= 0x80 && codePoint <= 0x9f);
 };
 
 /**

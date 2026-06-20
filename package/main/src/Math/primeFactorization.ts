@@ -12,14 +12,16 @@ export const primeFactorization = (x: number) => {
   let copyX = x;
   const out: { number: number; count: number }[] = [];
   for (let index = 2; index * index <= copyX; index++) {
-    if (copyX % index === 0) {
-      n = 0;
-      while (copyX % index === 0) {
-        n++;
-        copyX /= index;
-      }
-      out.push({ number: index, count: n });
+    if (copyX % index !== 0) {
+      continue;
     }
+
+    n = 0;
+    while (copyX % index === 0) {
+      n++;
+      copyX /= index;
+    }
+    out.push({ number: index, count: n });
   }
   // If remaining value is greater than 1, it's a prime factor
   if (copyX > 1) {

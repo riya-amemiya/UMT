@@ -20,6 +20,7 @@ export const defer = <T>(): Deferred<T> => {
   let resolve!: (value: T | PromiseLike<T>) => void;
   let reject!: (reason?: unknown) => void;
 
+  // eslint-disable-next-line unicorn/prefer-promise-with-resolvers -- Promise.withResolvers is not baseline-widely-available
   const promise = new Promise<T>((resolver, rejector) => {
     resolve = resolver;
     reject = rejector;

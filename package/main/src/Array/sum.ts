@@ -21,11 +21,13 @@ export const sum = (x: number[]): number => {
   let maxDecimal = 0;
 
   for (let index = 0; index < length; index++) {
-    if (!Number.isInteger(x[index])) {
-      const decLength = getDecimalLength(x[index]);
-      if (decLength > maxDecimal) {
-        maxDecimal = decLength;
-      }
+    if (Number.isInteger(x[index])) {
+      continue;
+    }
+
+    const decLength = getDecimalLength(x[index]);
+    if (decLength > maxDecimal) {
+      maxDecimal = decLength;
     }
   }
 

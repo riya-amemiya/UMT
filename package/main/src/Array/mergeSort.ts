@@ -82,6 +82,7 @@ function merge<T>(
       array[k] = aux[rightIndex++];
     } else if (rightIndex >= end) {
       array[k] = aux[leftIndex++];
+      // eslint-disable-next-line unicorn/no-duplicate-if-branches -- "right exhausted" vs "left wins comparison" are semantically distinct
     } else if (compareFunction(aux[leftIndex], aux[rightIndex]) <= 0) {
       array[k] = aux[leftIndex++];
     } else {

@@ -24,17 +24,19 @@ export const convertCurrency = <
   }
 
   for (const currencySymbol in conversionRates) {
-    if (inputString.startsWith(currencySymbol)) {
-      const amountString = inputString.slice(currencySymbol.length);
-      const rate: string | number = conversionRates[currencySymbol];
+    if (!inputString.startsWith(currencySymbol)) {
+      continue;
+    }
 
-      if (isNumber(rate)) {
-        const amount = Number(amountString);
-        const convertedAmount = multiplication(amount, Number(rate));
-        return Number.isNaN(convertedAmount)
-          ? inputString
-          : String(convertedAmount);
-      }
+    const amountString = inputString.slice(currencySymbol.length);
+    const rate: string | number = conversionRates[currencySymbol];
+
+    if (isNumber(rate)) {
+      const amount = Number(amountString);
+      const convertedAmount = multiplication(amount, Number(rate));
+      return Number.isNaN(convertedAmount)
+        ? inputString
+        : String(convertedAmount);
     }
   }
   return inputString;

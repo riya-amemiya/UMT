@@ -83,8 +83,8 @@ export const calculatorCore = <T extends { [key: string]: string | number }>(
   }
 };
 
-const sanitizeSigns = (expr: string): string => {
-  return expr
+const sanitizeSigns = (expression: string): string => {
+  return expression
     .replaceAll("--", "+")
     .replaceAll("++", "+")
     .replaceAll("+-", "+0-")
@@ -104,31 +104,38 @@ const getCurrencyRegex = (currencySymbol: string): RegExp => {
 };
 
 const applyCurrencyExchange = <T extends { [key: string]: string | number }>(
-  expr: string,
+  expression: string,
   rates: T,
 ): string => {
-  let returnExpr = expr;
+  let returnExpression = expression;
   // Currency exchange logic
   for (const index in rates) {
-    if (returnExpr.includes(index)) {
-      const $ = getCurrencyRegex(index).exec(returnExpr);
-      if ($) {
-        returnExpr = returnExpr.replace($[0], convertCurrency($[0], rates));
-      }
+    if (!returnExpression.includes(index)) {
+      continue;
+    }
+
+    const $ = getCurrencyRegex(index).exec(returnExpression);
+    if ($) {
+      returnExpression = returnExpression.replace(
+        $[0],
+        convertCurrency($[0], rates),
+      );
     }
   }
-  return returnExpr;
+  return returnExpression;
 };
 
-const containsParentheses = (expr: string): boolean => {
-  return expr.includes("(") || expr.includes(")");
+const containsParentheses = (expression: string): boolean => {
+  return expression.includes("(") || expression.includes(")");
 };
 
-const resolveParentheses = (expr: string): string => {
+const resolveParentheses = (expression: string): string => {
   // Logic for calculations inside parentheses
-  const match = /\((-?\d+(?:\.\d+)?)([*+/-])(-?\d+(?:\.\d+)?)\)/.exec(expr);
+  const match = /\((-?\d+(?:\.\d+)?)([*+/-])(-?\d+(?:\.\d+)?)\)/.exec(
+    expression,
+  );
   if (match) {
-    return expr.replace(
+    return expression.replace(
       match[0],
       calculatorCore(match[0].replaceAll(/\(|\)/g, "")),
     );
@@ -136,17 +143,19 @@ const resolveParentheses = (expr: string): string => {
   return Number.NaN.toString();
 };
 
-const containsMulExp = (expr: string): boolean => {
-  return expr.includes("^") || expr.includes("*");
+const containsMulExp = (expression: string): boolean => {
+  return expression.includes("^") || expression.includes("*");
 };
 
-const containsDiv = (expr: string): boolean => {
-  return expr.includes("/");
+const containsDiv = (expression: string): boolean => {
+  return expression.includes("/");
 };
 
-const resolveMulExp = (expr: string): string => {
+const resolveMulExp = (expression: string): string => {
   // Logic for multiplication and exponentiation
-  const match = /(.*?)(-?\d+(?:\.\d+)?)([*^])(-?\d+(?:\.\d+)?)$/.exec(expr);
+  const match = /(.*?)(-?\d+(?:\.\d+)?)([*^])(-?\d+(?:\.\d+)?)$/.exec(
+    expression,
+  );
   if (match) {
     const result =
       match[3] === "^"
@@ -157,29 +166,29 @@ const resolveMulExp = (expr: string): string => {
   return Number.NaN.toString();
 };
 
-const resolveDiv = (expr: string): string => {
+const resolveDiv = (expression: string): string => {
   // Logic for division
-  const match = /(-?\d+(?:\.\d+)?)\/(-?\d+(?:\.\d+)?)/.exec(expr);
+  const match = /(-?\d+(?:\.\d+)?)\/(-?\d+(?:\.\d+)?)/.exec(expression);
   if (match) {
     const result = division(Number(match[1]), Number(match[2]));
-    return expr.replace(match[0], String(result));
+    return expression.replace(match[0], String(result));
   }
   return Number.NaN.toString();
 };
 
-const containsAddSub = (expr: string): boolean => {
-  return expr.includes("+") || expr.includes("-");
+const containsAddSub = (expression: string): boolean => {
+  return expression.includes("+") || expression.includes("-");
 };
 
-const resolveAddSub = (expr: string): string => {
+const resolveAddSub = (expression: string): string => {
   // Logic for addition and subtraction
-  const match = /(-?\d+(?:\.\d+)?)(\+|-)(-?\d+(?:\.\d+)?)/.exec(expr);
+  const match = /(-?\d+(?:\.\d+)?)(\+|-)(-?\d+(?:\.\d+)?)/.exec(expression);
   if (match) {
     const result =
       match[2] === "+"
         ? addition(Number(match[1]), Number(match[3]))
         : subtract(Number(match[1]), Number(match[3]));
-    return expr.replace(match[0], String(result));
+    return expression.replace(match[0], String(result));
   }
   return Number.NaN.toString();
 };

@@ -58,10 +58,12 @@ export const getObjectsDiff = <T extends Record<string, unknown>>(
     const presentIn: number[] = [];
 
     for (const [index, currentObject] of allObjects.entries()) {
-      if (Object.hasOwn(currentObject, key)) {
-        values.push(currentObject[key]);
-        presentIn.push(index);
+      if (!Object.hasOwn(currentObject, key)) {
+        continue;
       }
+
+      values.push(currentObject[key]);
+      presentIn.push(index);
     }
 
     if (values.length === 1) {
@@ -91,10 +93,12 @@ export const getObjectsDiff = <T extends Record<string, unknown>>(
       valueCounts.set(value, (valueCounts.get(value) ?? 0) + 1);
     }
     for (const [value, count] of valueCounts) {
-      if (count === 1) {
-        lastUniqueValue = value;
-        hasUnique = true;
+      if (count !== 1) {
+        continue;
       }
+
+      lastUniqueValue = value;
+      hasUnique = true;
     }
 
     if (hasUnique) {
