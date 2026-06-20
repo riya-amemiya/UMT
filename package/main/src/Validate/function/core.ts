@@ -95,7 +95,8 @@ export interface FunctionValidator<Inputs, Output> {
  * @param {string} [message] - Custom error message for type validation
  * @returns {FunctionValidator} - Validator augmented with `implement()`
  */
-// eslint-disable-next-line unicorn/prevent-abbreviations
+
+// eslint-disable-next-line unicorn/name-replacements -- public API name, renaming would be a breaking change
 export const func = <const S extends FunctionSchema = FunctionSchema>(
   schema?: S,
   message?: string,

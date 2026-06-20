@@ -210,10 +210,12 @@ const float64RadixSort = (
     // Skip pass if all elements have the same byte value
     let isSkipPass = false;
     for (let index = 0; index < 256; index++) {
-      if (histograms[base + index] === validLength) {
-        isSkipPass = true;
-        break;
+      if (histograms[base + index] !== validLength) {
+        continue;
       }
+
+      isSkipPass = true;
+      break;
     }
     if (isSkipPass) {
       continue;

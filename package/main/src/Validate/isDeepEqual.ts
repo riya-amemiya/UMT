@@ -89,11 +89,13 @@ export function isDeepEqual(
         for (const itemX of x) {
           let isFound = false;
           for (const [index, itemY] of y.entries()) {
-            if (!usedIndices.has(index) && compare(itemX, itemY)) {
-              usedIndices.add(index);
-              isFound = true;
-              break;
+            if (!(!usedIndices.has(index) && compare(itemX, itemY))) {
+              continue;
             }
+
+            usedIndices.add(index);
+            isFound = true;
+            break;
           }
           if (!isFound) {
             return false;
@@ -112,10 +114,12 @@ export function isDeepEqual(
       for (const item of x) {
         let isFound = false;
         for (const otherItem of y) {
-          if (compare(item, otherItem)) {
-            isFound = true;
-            break;
+          if (!compare(item, otherItem)) {
+            continue;
           }
+
+          isFound = true;
+          break;
         }
         if (!isFound) {
           return false;
@@ -132,10 +136,12 @@ export function isDeepEqual(
       for (const [key, value] of x) {
         let isFound = false;
         for (const [otherKey, otherValue] of y) {
-          if (compare(key, otherKey) && compare(value, otherValue)) {
-            isFound = true;
-            break;
+          if (!(compare(key, otherKey) && compare(value, otherValue))) {
+            continue;
           }
+
+          isFound = true;
+          break;
         }
         if (!isFound) {
           return false;

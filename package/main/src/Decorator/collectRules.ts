@@ -10,10 +10,10 @@ import { storage } from "@/Decorator/storage";
  */
 export const collectRules = (instance: object): Map<PropertyKey, FieldMeta> => {
   const chain: object[] = [];
-  let proto: object | null = Object.getPrototypeOf(instance);
-  while (proto && proto !== Object.prototype) {
-    chain.push(proto);
-    proto = Object.getPrototypeOf(proto);
+  let prototype: object | null = Object.getPrototypeOf(instance);
+  while (prototype && prototype !== Object.prototype) {
+    chain.push(prototype);
+    prototype = Object.getPrototypeOf(prototype);
   }
   const merged = new Map<PropertyKey, FieldMeta>();
   for (let index = chain.length - 1; index >= 0; index--) {

@@ -30,10 +30,12 @@ export const solveEquation = (
     let maxElement = Math.abs(coefficients[index][index]);
     let maxRow = index;
     for (let row = index + 1; row < n; row++) {
-      if (Math.abs(coefficients[row][index]) > maxElement) {
-        maxElement = Math.abs(coefficients[row][index]);
-        maxRow = row;
+      if (Math.abs(coefficients[row][index]) <= maxElement) {
+        continue;
       }
+
+      maxElement = Math.abs(coefficients[row][index]);
+      maxRow = row;
     }
 
     // Swap the row with the max element to the top of the matrix

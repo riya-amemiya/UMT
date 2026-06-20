@@ -37,9 +37,5 @@ export const checkFlagAlignment = <T extends { flag: boolean }>(
   }
 
   // Check diagonal alignment (bottom-left to top-right)
-  if (matrix.every((row, index) => row[cols - index - 1].flag)) {
-    return true;
-  }
-
-  return false;
+  return matrix.every((row, index) => row[cols - index - 1].flag);
 };

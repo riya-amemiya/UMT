@@ -24,15 +24,17 @@ const mergeDeepInternal = <
     const result = { ...target };
 
     for (const key in source) {
-      if (Object.hasOwn(source, key)) {
-        const sourceValue = source[key];
-        const targetValue = result[key];
-
-        (result as Record<string, unknown>)[key] =
-          isPlainObject(targetValue) && isPlainObject(sourceValue)
-            ? mergeDeepInternal(targetValue, [sourceValue], depth + 1)
-            : sourceValue;
+      if (!Object.hasOwn(source, key)) {
+        continue;
       }
+
+      const sourceValue = source[key];
+      const targetValue = result[key];
+
+      (result as Record<string, unknown>)[key] =
+        isPlainObject(targetValue) && isPlainObject(sourceValue)
+          ? mergeDeepInternal(targetValue, [sourceValue], depth + 1)
+          : sourceValue;
     }
 
     return mergeDeepInternal(result, sources, depth + 1, sourceIndex + 1);
