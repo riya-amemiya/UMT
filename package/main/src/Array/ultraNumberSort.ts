@@ -11,10 +11,16 @@ export const ultraNumberSort = (
   const length = array.length;
 
   if (length <= 1) {
-    return [...array];
+    // eslint-disable-next-line unicorn/prefer-spread -- slice() preserves the source element kind; see below
+    return array.slice();
   }
 
-  const result = [...array];
+  // slice() copies through V8's fast CopyElements path and preserves the
+  // source element kind (PACKED_SMI / PACKED_DOUBLE). Spread ([...array])
+  // goes through the iterator protocol and can transition the result to a
+  // more general element kind, which makes every later element access slower.
+  // eslint-disable-next-line unicorn/prefer-spread -- intentional: preserves element kind for speed
+  const result = array.slice();
 
   if (length === 2) {
     if (result[0] > result[1] === ascending) {
@@ -78,12 +84,15 @@ export const ultraNumberSort = (
     return countingSort(result, min, max, ascending);
   }
 
-  // Below the crossover, quicksort beats radix sort because of the radix
-  // setup and typed-array allocation overhead. The measured crossover
-  // depends on the element kind: all-integer input stays faster under
-  // quicksort up to roughly twice the size of floating-point input, so it
-  // gets a higher threshold.
-  const radixThreshold = isAllIntegers ? 2048 : 1024;
+  // Below the crossover, quicksort beats radix sort because the radix path
+  // pays a fixed cost regardless of input order: two typed-array buffer
+  // allocations plus eight LSD passes over every element. The measured
+  // crossover where that fixed cost is finally amortized sits around 4096
+  // elements for both integer and floating-point input. Quicksort wins below
+  // it not only on raw size but because it adapts to existing order — on
+  // nearly-sorted or reversed input the insertion-sort base case runs in
+  // near-linear time, while radix can never beat its fixed eight passes.
+  const radixThreshold = 4096;
   if (length < radixThreshold) {
     if (hasNaN) {
       return handleNaNSort(result, ascending);
