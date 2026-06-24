@@ -21,14 +21,14 @@ jobs:
       run:
         working-directory: ./package/main
     steps:
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
       - name: Setup Nix
-        uses: DeterminateSystems/determinate-nix-action@9adf02b41cfdac2632e1c16f0480ff5bf3b05dd6 # v3.21.1
+        uses: DeterminateSystems/determinate-nix-action@629b284231c2a82554b724e357e47fc6020833c8 # v3.21.2
       - name: Setup Magic Nix Cache
         uses: DeterminateSystems/magic-nix-cache-action@908b263ff629f4cc17666315b7fd3ec127c6244d # v14
       - name: Restore Dependencies Cache
         id: cache-restore-dev-depends
-        uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        uses: actions/cache/restore@2c8a9bd7457de244a408f35966fab2fb45fda9c8 # v6.0.0
         with:
           path: '**/node_modules'
           key: dev-depends-${{ matrix.os }}-bun-${{ hashFiles('package/main/bun.lock') }}
@@ -38,7 +38,7 @@ jobs:
       - name: Save Dependencies Cache
         if: steps.cache-restore-dev-depends.outputs.cache-hit != 'true'
         id: cache-save-dev-depends
-        uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        uses: actions/cache/save@2c8a9bd7457de244a408f35966fab2fb45fda9c8 # v6.0.0
         with:
           path: '**/node_modules'
           key: dev-depends-${{ matrix.os }}-bun-${{ hashFiles('package/main/bun.lock') }}
@@ -53,14 +53,14 @@ jobs:
       run:
         working-directory: ./package/main
     steps:
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
       - name: Setup Nix
-        uses: DeterminateSystems/determinate-nix-action@9adf02b41cfdac2632e1c16f0480ff5bf3b05dd6 # v3.21.1
+        uses: DeterminateSystems/determinate-nix-action@629b284231c2a82554b724e357e47fc6020833c8 # v3.21.2
       - name: Setup Magic Nix Cache
         uses: DeterminateSystems/magic-nix-cache-action@908b263ff629f4cc17666315b7fd3ec127c6244d # v14
       - name: Restore Dependencies Cache
         id: cache-restore-dev-depends
-        uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        uses: actions/cache/restore@2c8a9bd7457de244a408f35966fab2fb45fda9c8 # v6.0.0
         with:
           path: '**/node_modules'
           key: dev-depends-${{ matrix.os }}-bun-${{ hashFiles('package/main/bun.lock') }}
