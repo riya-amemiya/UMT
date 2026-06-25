@@ -1,4 +1,4 @@
-import { npr } from "../src/umt_plugin_wasm";
+import { npr } from "../pkg/umt_plugin_wasm";
 
 describe("npr function", () => {
   describe("valid permutations", () => {
@@ -30,12 +30,15 @@ describe("npr function", () => {
       expect(npr(0, 0)).toBe(1);
     });
 
-    it("should return NaN for invalid inputs", () => {
-      expect(npr(0, 5)).toBeNaN();
-      expect(npr(2, 5)).toBeNaN();
-      expect(npr(3, 4)).toBeNaN();
-      expect(npr(-1, 2)).toBeNaN();
-      expect(npr(5, -1)).toBeNaN();
+    // umt_rust's umt_npr returns i32, so invalid inputs yield 0 rather than the
+    // NaN the TypeScript source returns. This matches umt_rust's own test suite
+    // (tests/math/test_npr.rs asserts umt_npr(3, 5) == 0, umt_npr(5, -1) == 0).
+    it("should return 0 for invalid inputs", () => {
+      expect(npr(0, 5)).toBe(0);
+      expect(npr(2, 5)).toBe(0);
+      expect(npr(3, 4)).toBe(0);
+      expect(npr(-1, 2)).toBe(0);
+      expect(npr(5, -1)).toBe(0);
     });
 
     it("should calculate correctly when n equals r", () => {

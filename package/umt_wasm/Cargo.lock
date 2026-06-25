@@ -404,8 +404,6 @@ dependencies = [
 [[package]]
 name = "umt_rust"
 version = "0.6.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "67cd55dc23b0aad9707ba6c36ea4fd6a9a0fccee5ce4bf0017eddecfcbb119be"
 dependencies = [
  "base64",
  "chrono",

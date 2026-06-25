@@ -7,7 +7,9 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "jest"
+    "gen": "cargo run --manifest-path codegen/Cargo.toml && cargo +nightly fmt",
+    "build:wasm": "wasm-pack build --target nodejs --out-dir pkg",
+    "test": "bun run build:wasm && jest"
   },
   "keywords": [],
   "author": "",
