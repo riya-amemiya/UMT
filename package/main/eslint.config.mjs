@@ -89,6 +89,7 @@ export default defineConfig(
       "unicorn/prefer-number-properties": "off",
       "unicorn/prefer-object-iterable-methods": "off",
       "unicorn/prefer-unicode-code-point-escapes": "off",
+      "unicorn/prefer-promise-try": "off",
     },
   },
 );
