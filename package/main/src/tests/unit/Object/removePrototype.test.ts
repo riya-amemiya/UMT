@@ -40,6 +40,7 @@ describe("removePrototype", () => {
     const result = removePrototype(object);
 
     expect(result).toEqual({ a: 1 });
+    // biome-ignore lint/suspicious/noProto: ignore
     expect(object.__proto__).toEqual({ polluted: true });
     expect(object.a).toBe(1);
   });
