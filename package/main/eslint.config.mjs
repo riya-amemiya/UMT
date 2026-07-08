@@ -90,6 +90,8 @@ export default defineConfig(
       "unicorn/prefer-object-iterable-methods": "off",
       "unicorn/prefer-unicode-code-point-escapes": "off",
       "unicorn/prefer-promise-try": "off",
+      "unicorn/prefer-short-arrow-method": "error",
+      "unicorn/prefer-error-is-error": "error",
     },
   },
 );
