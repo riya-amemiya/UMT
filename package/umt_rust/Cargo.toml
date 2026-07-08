@@ -16,7 +16,7 @@ path = "src/lib.rs"
 [dependencies]
 base64 = "0.22.1"
 chrono = "0.4.45"
-num-bigint = "0.4.6"
+num-bigint = "0.5.1"
 num-traits = "0.2.19"
 rand = "0.10.1"
 regex = "1.12.4"
