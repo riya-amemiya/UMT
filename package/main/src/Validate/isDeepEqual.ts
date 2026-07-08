@@ -89,7 +89,7 @@ export function isDeepEqual(
         for (const itemX of x) {
           let isFound = false;
           for (const [index, itemY] of y.entries()) {
-            if (!(!usedIndices.has(index) && compare(itemX, itemY))) {
+            if (usedIndices.has(index) || !compare(itemX, itemY)) {
               continue;
             }
 
