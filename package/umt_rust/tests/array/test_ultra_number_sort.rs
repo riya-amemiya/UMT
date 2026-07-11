@@ -367,3 +367,122 @@ fn test_all_permutations_of_three_descending() {
         assert_eq!(arr, expected);
     }
 }
+
+#[test]
+fn test_nan_in_arrays_over_128() {
+    let mut arr: Vec<f64> = (0..200).map(|i| i as f64).collect();
+    arr[50] = f64::NAN;
+    arr[150] = f64::NAN;
+    umt_ultra_number_sort(&mut arr, true);
+    assert!(arr[198].is_nan());
+    assert!(arr[199].is_nan());
+    assert_eq!(
+        &arr[..198],
+        &(0..200)
+            .filter(|&i| i != 50 && i != 150)
+            .map(|i| i as f64)
+            .collect::<Vec<_>>()
+    );
+}
+
+#[test]
+fn test_counting_sort_large_small_range() {
+    let mut arr: Vec<f64> = (0..200).map(|i| (i % 10) as f64).collect();
+    let mut expected = arr.clone();
+    expected.sort_by(|a, b| a.partial_cmp(b).unwrap());
+    umt_ultra_number_sort(&mut arr, true);
+    assert_eq!(arr, expected);
+
+    let mut arr2: Vec<f64> = (0..200).map(|i| (i % 10) as f64).collect();
+    let mut expected2 = arr2.clone();
+    expected2.sort_by(|a, b| b.partial_cmp(a).unwrap());
+    umt_ultra_number_sort(&mut arr2, false);
+    assert_eq!(arr2, expected2);
+}
+
+#[test]
+fn test_float64_radix_large_floats() {
+    use rand::rng;
+    let mut rng = rng();
+    let mut arr: Vec<f64> = (0..5000)
+        .map(|_| rng.random_range(-1000.0..1000.0))
+        .collect();
+    let mut expected = arr.clone();
+    expected.sort_by(|a, b| a.partial_cmp(b).unwrap());
+    umt_ultra_number_sort(&mut arr, true);
+    assert_eq!(arr, expected);
+
+    let mut arr2: Vec<f64> = (0..5000)
+        .map(|_| rng.random_range(-1000.0..1000.0))
+        .collect();
+    let mut expected2 = arr2.clone();
+    expected2.sort_by(|a, b| b.partial_cmp(a).unwrap());
+    umt_ultra_number_sort(&mut arr2, false);
+    assert_eq!(arr2, expected2);
+}
+
+#[test]
+fn test_float64_radix_with_infinity() {
+    use rand::rng;
+    let mut rng = rng();
+    let mut arr: Vec<f64> = (0..5000)
+        .map(|i| {
+            if i == 0 {
+                f64::INFINITY
+            } else if i == 1 {
+                f64::NEG_INFINITY
+            } else {
+                rng.random_range(0.0..100.0)
+            }
+        })
+        .collect();
+    let mut expected = arr.clone();
+    expected.sort_by(|a, b| a.partial_cmp(b).unwrap());
+    umt_ultra_number_sort(&mut arr, true);
+    assert_eq!(arr, expected);
+}
+
+#[test]
+fn test_nan_in_arrays_ge_4096() {
+    let mut arr: Vec<f64> = (0..5000).map(|i| i as f64).collect();
+    arr[100] = f64::NAN;
+    arr[3000] = f64::NAN;
+    umt_ultra_number_sort(&mut arr, true);
+    assert!(arr[4998].is_nan());
+    assert!(arr[4999].is_nan());
+    let non_nan: Vec<f64> = arr[..4998].to_vec();
+    let expected: Vec<f64> = (0..5000)
+        .filter(|&i| i != 100 && i != 3000)
+        .map(|i| i as f64)
+        .collect();
+    assert_eq!(non_nan, expected);
+}
+
+#[test]
+fn test_all_nan_ge_4096() {
+    let mut arr = vec![f64::NAN; 4096];
+    umt_ultra_number_sort(&mut arr, true);
+    assert_eq!(arr.len(), 4096);
+    assert!(arr.iter().all(|x| x.is_nan()));
+}
+
+#[test]
+fn test_float64_radix_large_integers() {
+    use rand::rng;
+    let mut rng = rng();
+    let mut arr: Vec<f64> = (0..5000)
+        .map(|_| (rng.random_range(0..1_000_000) - 500_000) as f64)
+        .collect();
+    let mut expected = arr.clone();
+    expected.sort_by(|a, b| a.partial_cmp(b).unwrap());
+    umt_ultra_number_sort(&mut arr, true);
+    assert_eq!(arr, expected);
+
+    let mut arr2: Vec<f64> = (0..5000)
+        .map(|_| (rng.random_range(0..1_000_000) - 500_000) as f64)
+        .collect();
+    let mut expected2 = arr2.clone();
+    expected2.sort_by(|a, b| b.partial_cmp(a).unwrap());
+    umt_ultra_number_sort(&mut arr2, false);
+    assert_eq!(arr2, expected2);
+}
