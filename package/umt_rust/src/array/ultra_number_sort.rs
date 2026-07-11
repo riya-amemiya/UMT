@@ -6,6 +6,7 @@
 ///
 /// # Returns
 /// Sorted array
+#[inline]
 pub fn umt_ultra_number_sort(array: &mut Vec<f64>, ascending: bool) -> &mut Vec<f64> {
     let length = array.len();
 
@@ -13,7 +14,6 @@ pub fn umt_ultra_number_sort(array: &mut Vec<f64>, ascending: bool) -> &mut Vec<
         return array;
     }
 
-    // For tiny arrays, use optimized inline sort
     if length == 2 {
         if (array[0] > array[1]) == ascending {
             array.swap(0, 1);
@@ -26,49 +26,120 @@ pub fn umt_ultra_number_sort(array: &mut Vec<f64>, ascending: bool) -> &mut Vec<
         return array;
     }
 
-    // Check if all numbers are integers and find range
-    let mut all_integers = true;
-    let mut min = array[0];
-    let mut max = array[0];
-    let mut has_nan = false;
-
-    for &value in array.iter() {
-        if value.is_nan() {
-            has_nan = true;
-            break;
-        }
-        if value < min {
-            min = value;
-        }
-        if value > max {
-            max = value;
-        }
-        if all_integers && value.fract() != 0.0 {
-            all_integers = false;
-        }
+    // Cheap linear probe: NaN presence + already-ordered / reversed input.
+    // Pays for itself on sorted/reversed data and keeps the hot random path
+    // from doing integer analysis when radix/comparison is the real work.
+    let (has_nan, sorted_asc, sorted_desc) = probe_order(array);
+    if !has_nan && try_already_ordered(array, ascending, sorted_asc, sorted_desc) {
+        return array;
     }
 
-    // Handle NaN values
-    if has_nan {
-        return handle_nan_sort(array, ascending);
+    // Small-medium arrays: skip integer/range analysis
+    if length <= 128 {
+        if has_nan {
+            return handle_nan_sort(array, ascending);
+        }
+        comparison_sort(array, ascending);
+        return array;
+    }
+
+    // Integer range analysis for counting-sort eligibility
+    let mut all_integers = true;
+    let mut min = f64::INFINITY;
+    let mut max = f64::NEG_INFINITY;
+
+    if !has_nan {
+        for &value in array.iter() {
+            if all_integers {
+                if value.fract() != 0.0 {
+                    all_integers = false;
+                } else {
+                    if value < min {
+                        min = value;
+                    }
+                    if value > max {
+                        max = value;
+                    }
+                }
+            } else {
+                break;
+            }
+        }
+    } else {
+        all_integers = false;
     }
 
     // For small integer ranges, use counting sort
-    if all_integers && max - min < (length * 2) as f64 && max - min < 1_000_000.0 {
+    if !has_nan && all_integers && max - min < (length * 2) as f64 && max - min < 1_000_000.0 {
         return counting_sort(array, min, max, ascending);
     }
 
-    // For larger arrays, use radix sort if applicable
-    if all_integers && length > 100 {
-        return radix_sort(array, ascending);
+    // Below the crossover, comparison sort beats radix sort because the radix
+    // path pays a fixed cost (buffer allocation + LSD passes). Measured
+    // crossover sits around 4096 for both integer and floating-point input.
+    const RADIX_THRESHOLD: usize = 4096;
+    if length < RADIX_THRESHOLD {
+        if has_nan {
+            return handle_nan_sort(array, ascending);
+        }
+        comparison_sort(array, ascending);
+        return array;
     }
 
-    // Fall back to optimized quicksort for floating point
-    numeric_quick_sort(array, 0, (length - 1) as isize, ascending);
+    float64_radix_sort(array, ascending, has_nan);
     array
 }
 
+/// Probe for NaN and whether the array is already sorted ascending/descending.
+#[inline]
+fn probe_order(array: &[f64]) -> (bool, bool, bool) {
+    let mut sorted_asc = true;
+    let mut sorted_desc = true;
+    let mut prev = array[0];
+    if prev.is_nan() {
+        return (true, false, false);
+    }
+    for &value in &array[1..] {
+        if value.is_nan() {
+            return (true, false, false);
+        }
+        if value < prev {
+            sorted_asc = false;
+        }
+        if value > prev {
+            sorted_desc = false;
+        }
+        prev = value;
+    }
+    (false, sorted_asc, sorted_desc)
+}
+
+#[inline]
+fn try_already_ordered(
+    array: &mut [f64],
+    ascending: bool,
+    sorted_asc: bool,
+    sorted_desc: bool,
+) -> bool {
+    if ascending {
+        if sorted_asc {
+            return true;
+        }
+        if sorted_desc {
+            array.reverse();
+            return true;
+        }
+    } else if sorted_desc {
+        return true;
+    } else if sorted_asc {
+        array.reverse();
+        return true;
+    }
+    false
+}
+
 /// Inline sort for 3 elements
+#[inline]
 fn inline_sort3(array: &mut [f64], ascending: bool) {
     let mut a = array[0];
     let mut b = array[1];
@@ -101,29 +172,22 @@ fn inline_sort3(array: &mut [f64], ascending: bool) {
     array[2] = c;
 }
 
-/// Handle arrays with NaN values
+/// Handle arrays with NaN values (NaNs go to the end)
 fn handle_nan_sort(array: &mut Vec<f64>, ascending: bool) -> &mut Vec<f64> {
-    let mut valid: Vec<f64> = Vec::new();
-    let mut nan_count = 0;
-
-    for &element in array.iter() {
-        if !element.is_nan() {
-            valid.push(element);
-        } else {
-            nan_count += 1;
+    let mut write = 0;
+    let len = array.len();
+    for read in 0..len {
+        if !array[read].is_nan() {
+            if write != read {
+                array[write] = array[read];
+            }
+            write += 1;
         }
     }
-
-    let valid_len = valid.len() as isize;
-    numeric_quick_sort(&mut valid, 0, valid_len - 1, ascending);
-
-    // NaN values go to the end
-    for _ in 0..nan_count {
-        valid.push(f64::NAN);
-    }
-
-    // Copy back
-    *array = valid;
+    let nan_count = len - write;
+    array.truncate(write);
+    comparison_sort(array, ascending);
+    array.resize(write + nan_count, f64::NAN);
     array
 }
 
@@ -132,259 +196,159 @@ fn counting_sort(array: &mut Vec<f64>, min: f64, max: f64, ascending: bool) -> &
     let range = (max - min + 1.0) as usize;
     let mut count = vec![0u32; range];
 
-    // Count occurrences
     for &element in array.iter() {
         count[(element - min) as usize] += 1;
     }
 
-    // Reconstruct array
     let mut index = 0;
     if ascending {
-        for (i, &cnt) in count.iter().enumerate().take(range) {
+        for (i, &cnt) in count.iter().enumerate() {
             let value = i as f64 + min;
-            for _ in 0..cnt {
-                array[index] = value;
-                index += 1;
-            }
+            let end = index + cnt as usize;
+            array[index..end].fill(value);
+            index = end;
         }
     } else {
         for i in (0..range).rev() {
             let cnt = count[i];
             let value = i as f64 + min;
-            for _ in 0..cnt {
-                array[index] = value;
-                index += 1;
-            }
+            let end = index + cnt as usize;
+            array[index..end].fill(value);
+            index = end;
         }
     }
 
     array
 }
 
-/// Radix sort for integers
-fn radix_sort(array: &mut Vec<f64>, ascending: bool) -> &mut Vec<f64> {
-    // Separate positive and negative numbers
-    let mut positive: Vec<f64> = Vec::new();
-    let mut negative: Vec<f64> = Vec::new();
-    let mut zero_count = 0;
-
-    for &value in array.iter() {
-        if value > 0.0 {
-            positive.push(value);
-        } else if value < 0.0 {
-            negative.push(-value);
-        } else {
-            zero_count += 1;
-        }
-    }
-
-    // Sort positive numbers
-    if !positive.is_empty() {
-        radix_sort_positive(&mut positive);
-    }
-
-    // Sort negative numbers
-    if !negative.is_empty() {
-        radix_sort_positive(&mut negative);
-    }
-
-    // Merge results
-    array.clear();
-    if ascending {
-        // Negative numbers first (in reverse order)
-        for i in (0..negative.len()).rev() {
-            array.push(-negative[i]);
-        }
-        // Zeros
-        for _ in 0..zero_count {
-            array.push(0.0);
-        }
-        // Positive numbers
-        array.extend(positive);
+/// Transform IEEE 754 f64 bits so that unsigned integer order matches
+/// numerical order (NaNs should be filtered first).
+#[inline]
+fn to_sortable_bits(v: f64) -> u64 {
+    let bits = v.to_bits();
+    if (bits as i64) < 0 {
+        !bits
     } else {
-        // Positive numbers first (in reverse order)
-        for i in (0..positive.len()).rev() {
-            array.push(positive[i]);
-        }
-        // Zeros
-        for _ in 0..zero_count {
-            array.push(0.0);
-        }
-        // Negative numbers
-        for value in negative {
-            array.push(-value);
-        }
+        bits ^ 0x8000_0000_0000_0000
     }
-
-    array
 }
 
-/// Radix sort for positive integers
-fn radix_sort_positive(array: &mut [f64]) {
+/// Reverse the sortable-bit transform back to a floating-point value.
+#[inline]
+fn from_sortable_bits(bits: u64) -> f64 {
+    let bits = if (bits as i64) < 0 {
+        bits ^ 0x8000_0000_0000_0000
+    } else {
+        !bits
+    };
+    f64::from_bits(bits)
+}
+
+/// IEEE 754 Float64 LSD radix sort using 11-bit digits (6 passes).
+/// Works on integers and floats by sorting the transformed bit patterns.
+fn float64_radix_sort(array: &mut [f64], ascending: bool, has_nan: bool) {
+    const RADIX_BITS: u32 = 11;
+    const RADIX: usize = 1 << RADIX_BITS;
+    const PASSES: usize = 6;
+    const MASK: u64 = (RADIX as u64) - 1;
+
     let length = array.len();
-    if length <= 1 {
+    let mut source = vec![0u64; length];
+    let mut histograms = vec![0u32; PASSES * RADIX];
+
+    let valid_length = if has_nan {
+        let mut write_index = 0;
+        for &v in array.iter() {
+            if v.is_nan() {
+                continue;
+            }
+            let bits = to_sortable_bits(v);
+            source[write_index] = bits;
+            histograms[(bits & MASK) as usize] += 1;
+            histograms[RADIX + ((bits >> 11) & MASK) as usize] += 1;
+            histograms[2 * RADIX + ((bits >> 22) & MASK) as usize] += 1;
+            histograms[3 * RADIX + ((bits >> 33) & MASK) as usize] += 1;
+            histograms[4 * RADIX + ((bits >> 44) & MASK) as usize] += 1;
+            histograms[5 * RADIX + ((bits >> 55) & 0x1ff) as usize] += 1;
+            write_index += 1;
+        }
+        write_index
+    } else {
+        for (index, &v) in array.iter().enumerate() {
+            let bits = to_sortable_bits(v);
+            source[index] = bits;
+            histograms[(bits & MASK) as usize] += 1;
+            histograms[RADIX + ((bits >> 11) & MASK) as usize] += 1;
+            histograms[2 * RADIX + ((bits >> 22) & MASK) as usize] += 1;
+            histograms[3 * RADIX + ((bits >> 33) & MASK) as usize] += 1;
+            histograms[4 * RADIX + ((bits >> 44) & MASK) as usize] += 1;
+            histograms[5 * RADIX + ((bits >> 55) & 0x1ff) as usize] += 1;
+        }
+        length
+    };
+
+    if valid_length == 0 {
         return;
     }
 
-    // Find maximum to determine number of digits
-    let max = array.iter().fold(f64::NEG_INFINITY, |a, &b| a.max(b)) as u64;
+    source.truncate(valid_length);
+    let mut destination = vec![0u64; valid_length];
 
-    // Use vectors for output and count
-    let mut output = vec![0.0; length];
-    let mut count = vec![0usize; 256];
+    let mut current_source = &mut source[..];
+    let mut current_destination = &mut destination[..];
 
-    // Process 8 bits at a time
-    let mut shift = 0;
-    while max >> shift > 0 {
-        // Reset count array
-        count.fill(0);
+    for pass in 0..PASSES {
+        let base = pass * RADIX;
+        let shift = pass as u32 * RADIX_BITS;
+        let digit_mask = if pass == PASSES - 1 { 0x1ff } else { MASK };
+        let bucket_count = (digit_mask as usize) + 1;
 
-        // Count occurrences
-        for &value in array.iter() {
-            let digit = ((value as u64 >> shift) & 0xff) as usize;
-            count[digit] += 1;
+        let mut skip_pass = false;
+        for index in 0..bucket_count {
+            if histograms[base + index] == valid_length as u32 {
+                skip_pass = true;
+                break;
+            }
         }
-
-        // Change count[i] to actual position
-        for i in 1..256 {
-            count[i] += count[i - 1];
-        }
-
-        // Build output array
-        for i in (0..length).rev() {
-            let digit = ((array[i] as u64 >> shift) & 0xff) as usize;
-            count[digit] -= 1;
-            output[count[digit]] = array[i];
-        }
-
-        // Copy back
-        array.copy_from_slice(&output);
-
-        shift += 8;
-    }
-}
-
-/// Optimized quicksort for numbers
-fn numeric_quick_sort(array: &mut [f64], low: isize, high: isize, ascending: bool) {
-    let mut stack = Vec::new();
-    stack.push((low, high));
-
-    while let Some((l, h)) = stack.pop() {
-        if h <= l {
+        if skip_pass {
             continue;
         }
 
-        // For small subarrays, use insertion sort
-        if h - l < 16 {
-            numeric_insertion_sort(array, l as usize, h as usize, ascending);
-            continue;
-        }
-
-        // Partition
-        let pivot = numeric_partition(array, l as usize, h as usize, ascending);
-
-        // Push larger partition first to limit stack depth
-        if pivot as isize - l > h - pivot as isize {
-            stack.push((l, pivot as isize - 1));
-            stack.push((pivot as isize + 1, h));
+        if ascending {
+            for index in 1..bucket_count {
+                histograms[base + index] += histograms[base + index - 1];
+            }
         } else {
-            stack.push((pivot as isize + 1, h));
-            stack.push((l, pivot as isize - 1));
+            for index in (0..bucket_count - 1).rev() {
+                histograms[base + index] += histograms[base + index + 1];
+            }
         }
+
+        for index in (0..valid_length).rev() {
+            let bits = current_source[index];
+            let digit = ((bits >> shift) & digit_mask) as usize;
+            histograms[base + digit] -= 1;
+            let pos = histograms[base + digit] as usize;
+            current_destination[pos] = bits;
+        }
+
+        std::mem::swap(&mut current_source, &mut current_destination);
     }
+
+    for (slot, &bits) in array.iter_mut().zip(current_source.iter()) {
+        *slot = from_sortable_bits(bits);
+    }
+    array[valid_length..].fill(f64::NAN);
 }
 
-/// Numeric insertion sort
-fn numeric_insertion_sort(array: &mut [f64], low: usize, high: usize, ascending: bool) {
+/// Comparison-based sort used below the radix threshold.
+/// Uses the stdlib unstable sort, which is typically faster than a
+/// hand-rolled quicksort on modern Rust for general floating-point input.
+#[inline]
+fn comparison_sort(array: &mut [f64], ascending: bool) {
     if ascending {
-        for i in (low + 1)..=high {
-            let key = array[i];
-            let mut j = i as isize - 1;
-            while j >= low as isize && array[j as usize] > key {
-                array[(j + 1) as usize] = array[j as usize];
-                j -= 1;
-            }
-            array[(j + 1) as usize] = key;
-        }
+        array.sort_unstable_by(|a, b| a.partial_cmp(b).unwrap_or(std::cmp::Ordering::Equal));
     } else {
-        for i in (low + 1)..=high {
-            let key = array[i];
-            let mut j = i as isize - 1;
-            while j >= low as isize && array[j as usize] < key {
-                array[(j + 1) as usize] = array[j as usize];
-                j -= 1;
-            }
-            array[(j + 1) as usize] = key;
-        }
+        array.sort_unstable_by(|a, b| b.partial_cmp(a).unwrap_or(std::cmp::Ordering::Equal));
     }
-}
-
-/// Numeric partition with median-of-three pivot
-fn numeric_partition(array: &mut [f64], low: usize, high: usize, ascending: bool) -> usize {
-    // Median-of-three pivot selection
-    let mid = low + ((high - low) >> 1);
-
-    if ascending {
-        if array[mid] < array[low] {
-            array.swap(low, mid);
-        }
-        if array[high] < array[low] {
-            array.swap(low, high);
-        }
-        if array[high] < array[mid] {
-            array.swap(mid, high);
-        }
-    } else {
-        if array[mid] > array[low] {
-            array.swap(low, mid);
-        }
-        if array[high] > array[low] {
-            array.swap(low, high);
-        }
-        if array[high] > array[mid] {
-            array.swap(mid, high);
-        }
-    }
-
-    // Move pivot to end-1
-    array.swap(mid, high - 1);
-    let pivot = array[high - 1];
-
-    let mut i = low;
-    let mut j = high - 1;
-
-    if ascending {
-        loop {
-            i += 1;
-            while array[i] < pivot {
-                i += 1;
-            }
-            j -= 1;
-            while array[j] > pivot {
-                j -= 1;
-            }
-            if i >= j {
-                break;
-            }
-            array.swap(i, j);
-        }
-    } else {
-        loop {
-            i += 1;
-            while array[i] > pivot {
-                i += 1;
-            }
-            j -= 1;
-            while array[j] < pivot {
-                j -= 1;
-            }
-            if i >= j {
-                break;
-            }
-            array.swap(i, j);
-        }
-    }
-
-    array.swap(i, high - 1);
-    i
 }
