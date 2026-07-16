@@ -40,10 +40,7 @@ const range = (start: number, end?: number, step = 1) => {
     }
   }
 
-  if (writeIndex !== array.length) {
-    array.length = writeIndex;
-  }
-
+  array.length = writeIndex;
   return array;
 };
 export { range };
