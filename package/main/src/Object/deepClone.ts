@@ -7,9 +7,11 @@ const cloneValue = (value: unknown, depth: number): unknown => {
   }
 
   if (Array.isArray(value)) {
-    const result: unknown[] = Array.from(value, (element) =>
-      cloneValue(element, depth + 1),
-    );
+    const length = value.length;
+    const result = new Array(length);
+    for (let index = 0; index < length; index++) {
+      result[index] = cloneValue(value[index], depth + 1);
+    }
     return result;
   }
 

@@ -91,7 +91,7 @@ export const timSort = <T>(
   start = 0,
   end: number = array.length - 1,
 ): T[] => {
-  const result = [...array];
+  const result = array.slice();
   const n = end - start + 1;
   const minRun = getMinRunLength(n);
 

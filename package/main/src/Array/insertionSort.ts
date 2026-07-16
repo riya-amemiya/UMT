@@ -30,7 +30,7 @@ export const insertionSort = <T>(
   start = 0,
   end: number = array.length - 1,
 ): T[] => {
-  const result = [...array];
+  const result = array.slice();
   insertionSortRange(result, compareFunction, start, end);
   return result;
 };

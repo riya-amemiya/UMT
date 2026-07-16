@@ -26,5 +26,10 @@ export const getArraysDiff = <O, T extends unknown[] = unknown[]>(
     }
   }
 
-  return [...allValues] as unknown as O;
+  const result: unknown[] = new Array(allValues.size);
+  let index = 0;
+  for (const value of allValues) {
+    result[index++] = value;
+  }
+  return result as unknown as O;
 };

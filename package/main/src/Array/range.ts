@@ -8,41 +8,40 @@
  * @example range(2, 10, 2); // [2, 4, 6, 8]
  */
 const range = (start: number, end?: number, step = 1) => {
-  const array: number[] = [];
-
-  // Handle invalid step
   if (step === 0) {
-    return array;
+    return [];
   }
 
   const actualStart = end === undefined ? 0 : start;
   const actualEnd = end ?? start;
 
-  // Return empty array if invalid range
   if (
     (step > 0 && actualStart >= actualEnd) ||
     (step < 0 && actualStart <= actualEnd)
   ) {
-    return array;
+    return [];
   }
 
-  // Handle both positive and negative steps
+  const estimatedLength = Math.ceil((actualEnd - actualStart) / step);
+  const array = new Array<number>(Math.max(estimatedLength, 0));
+  let writeIndex = 0;
+
   if (step > 0) {
     for (let index = actualStart; index < actualEnd; index += step) {
-      // Handle floating point precision
-      const roundedValue = Number(
+      array[writeIndex++] = Number(
         (Math.round(index * 1e10) / 1e10).toFixed(10),
       );
-      array.push(roundedValue);
     }
   } else {
     for (let index = actualStart; index > actualEnd; index += step) {
-      // Handle floating point precision
-      const roundedValue = Number(
+      array[writeIndex++] = Number(
         (Math.round(index * 1e10) / 1e10).toFixed(10),
       );
-      array.push(roundedValue);
     }
+  }
+
+  if (writeIndex !== array.length) {
+    array.length = writeIndex;
   }
 
   return array;

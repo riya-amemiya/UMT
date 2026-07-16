@@ -23,15 +23,13 @@ export const zip = <T extends unknown[][]>(...arrays: T): ZipArrayType<T> => {
     }
   }
 
-  // Optimize: Pre-allocate outer array dynamically using loops rather than Array.from
-  // to reduce closure creation overhead and eliminate intermediate mapped arrays.
-  const result: unknown[][] = [];
+  const result: unknown[][] = new Array(minLength);
   for (let index = 0; index < minLength; index += 1) {
-    const tuple: unknown[] = [];
+    const tuple: unknown[] = new Array(arraysLength);
     for (let arrayIndex = 0; arrayIndex < arraysLength; arrayIndex += 1) {
-      tuple.push(arrays[arrayIndex][index]);
+      tuple[arrayIndex] = arrays[arrayIndex][index];
     }
-    result.push(tuple);
+    result[index] = tuple;
   }
 
   return result as unknown as ZipArrayType<T>;

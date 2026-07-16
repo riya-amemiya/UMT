@@ -18,7 +18,7 @@ export const pSettled = <T>(
   limit?: number,
 ): Promise<SettledResult<T>[]> => {
   const items = [...tasks];
-  const results: SettledResult<T>[] = Array.from({ length: items.length });
+  const results: SettledResult<T>[] = new Array(items.length);
   if (items.length === 0) {
     return Promise.resolve(results);
   }

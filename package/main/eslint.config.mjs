@@ -71,6 +71,12 @@ export default defineConfig(
       "unicorn/max-nested-calls": "off",
       "unicorn/no-array-reduce": "error",
       "unicorn/no-array-reverse": "off",
+      // new Array(n) is the fast path for pre-sized buffers; Array.from({length})
+      // is substantially slower and was autofixing performance-critical code.
+      "unicorn/no-new-array": "off",
+      // spread is slower than slice()/concat() for array clone and join; keeping
+      // this rule on causes --fix to rewrite hot paths into slower forms.
+      "unicorn/prefer-spread": "off",
       "unicorn/no-break-in-nested-loop": "off",
       "unicorn/no-computed-property-existence-check": "off",
       "unicorn/no-nested-ternary": "off",

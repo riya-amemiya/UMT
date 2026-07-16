@@ -148,7 +148,7 @@ export const quickSort = <T>(
   endIndex = array.length - 1,
   insertionSortThreshold = 10,
 ): T[] => {
-  const result = [...array];
+  const result = array.slice();
   const {
     startIndex: validStartIndex,
     endIndex: validEndIndex,

@@ -18,8 +18,8 @@ export const mergeSort = <T>(
   }
 
   const length = array.length;
-  const result = [...array];
-  const aux = [...array];
+  const result = array.slice();
+  const aux = array.slice();
 
   mergeSortRecursive(result, aux, 0, length, compareFunction);
 
