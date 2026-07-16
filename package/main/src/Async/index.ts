@@ -1,5 +1,6 @@
 export * from "./debounceAsync";
 export * from "./defer";
+export * from "./mapSeries";
 export * from "./parallel";
 export * from "./pSettled";
 export * from "./retry";

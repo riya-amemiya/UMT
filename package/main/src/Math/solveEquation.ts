@@ -69,7 +69,8 @@ export const solveEquation = (
       }
     }
   }
-  const solution: number[] = [];
+  const solution = new Array<number>(n);
+  let solutionWrite = 0;
 
   // Back substitute to find the solution
   for (let row = n - 1; row >= 0; row--) {
@@ -81,11 +82,16 @@ export const solveEquation = (
       );
     }
 
-    solution.push(
-      division(subtract(constants[row], sum), coefficients[row][row]),
+    solution[solutionWrite++] = division(
+      subtract(constants[row], sum),
+      coefficients[row][row],
     );
   }
 
   // Return the solution vector with values rounded to 1 decimal place
-  return [...solution].reverse().map((value) => roundOf(value, 1));
+  const result = new Array<number>(n);
+  for (let index = 0; index < n; index++) {
+    result[index] = roundOf(solution[n - 1 - index], 1);
+  }
+  return result;
 };

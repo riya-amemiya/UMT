@@ -7,24 +7,38 @@
  * // Result: [[1, 3], [6, 4], [2, 5]]
  */
 export const shuffle2DArray = <T>(array: T[][]): T[][] => {
-  // Flatten the 2D array into 1D and shuffle it
-  const flatArray: T[] = [];
-  for (const subArray of array) {
-    flatArray.push(...subArray);
-  }
-  for (let index = flatArray.length - 1; index > 0; index--) {
-    const index_ = Math.floor(Math.random() * (index + 1));
-    [flatArray[index], flatArray[index_]] = [
-      flatArray[index_],
-      flatArray[index],
-    ];
+  const rowCount = array.length;
+  let totalLength = 0;
+  for (let row = 0; row < rowCount; row++) {
+    totalLength += array[row].length;
   }
 
-  // Reconstruct the 2D array from the shuffled flat array
+  const flatArray = new Array<T>(totalLength);
+  let writeIndex = 0;
+  for (let row = 0; row < rowCount; row++) {
+    const subArray = array[row];
+    const subLength = subArray.length;
+    for (let column = 0; column < subLength; column++) {
+      flatArray[writeIndex++] = subArray[column];
+    }
+  }
+
+  for (let index = flatArray.length - 1; index > 0; index--) {
+    const index_ = Math.floor(Math.random() * (index + 1));
+    const temporary = flatArray[index];
+    flatArray[index] = flatArray[index_];
+    flatArray[index_] = temporary;
+  }
+
+  const result = new Array<T[]>(rowCount);
   let rowIndex = 0;
-  return array.map((subArray) => {
-    const newRow = flatArray.slice(rowIndex, rowIndex + subArray.length);
-    rowIndex += subArray.length;
-    return newRow;
-  });
+  for (let row = 0; row < rowCount; row++) {
+    const rowLength = array[row].length;
+    const newRow = new Array<T>(rowLength);
+    for (let column = 0; column < rowLength; column++) {
+      newRow[column] = flatArray[rowIndex++];
+    }
+    result[row] = newRow;
+  }
+  return result;
 };

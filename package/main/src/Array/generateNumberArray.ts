@@ -28,6 +28,7 @@ export const generateNumberArray = (
   }
 
   const actualMax = max ?? actualLength - 1;
+  const result = new Array<number>(actualLength);
 
   const isIntegerInputs =
     Number.isSafeInteger(min) && Number.isSafeInteger(actualMax);
@@ -35,19 +36,20 @@ export const generateNumberArray = (
   if (random) {
     if (isIntegerInputs) {
       const range = actualMax - min + 1;
-      return Array.from(
-        { length: actualLength },
-        () => Math.floor(Math.random() * range) + min,
-      );
+      for (let index = 0; index < actualLength; index++) {
+        result[index] = Math.floor(Math.random() * range) + min;
+      }
+      return result;
     }
-    return Array.from({ length: actualLength }, () =>
-      addition(
+    for (let index = 0; index < actualLength; index++) {
+      result[index] = addition(
         Math.floor(
           multiplication(Math.random(), addition(subtract(actualMax, min), 1)),
         ),
         min,
-      ),
-    );
+      );
+    }
+    return result;
   }
 
   if (isIntegerInputs) {
@@ -55,15 +57,16 @@ export const generateNumberArray = (
     const steps = actualLength - 1;
     if (range % steps === 0) {
       const step = range / steps;
-      return Array.from(
-        { length: actualLength },
-        (_, index) => min + index * step,
-      );
+      for (let index = 0; index < actualLength; index++) {
+        result[index] = min + index * step;
+      }
+      return result;
     }
   }
 
   const step = division(subtract(actualMax, min), subtract(actualLength, 1));
-  return Array.from({ length: actualLength }, (_, index) =>
-    addition(min, multiplication(index, step)),
-  );
+  for (let index = 0; index < actualLength; index++) {
+    result[index] = addition(min, multiplication(index, step));
+  }
+  return result;
 };

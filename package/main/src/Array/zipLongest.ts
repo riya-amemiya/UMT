@@ -28,11 +28,9 @@ export const zipLongest = <T extends unknown[][]>(
     }
   }
 
-  // Optimize: Pre-allocate arrays with known lengths and use direct index assignment
-  // instead of .push() to avoid repeated capacity checks and potential reallocations.
-  const result: unknown[][] = Array.from({ length: maxLength });
+  const result: unknown[][] = new Array(maxLength);
   for (let index = 0; index < maxLength; index += 1) {
-    const tuple: unknown[] = Array.from({ length: arraysLength });
+    const tuple: unknown[] = new Array(arraysLength);
     for (let arrayIndex = 0; arrayIndex < arraysLength; arrayIndex += 1) {
       tuple[arrayIndex] = arrays[arrayIndex][index];
     }

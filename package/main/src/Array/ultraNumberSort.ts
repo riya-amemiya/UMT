@@ -11,7 +11,6 @@ export const ultraNumberSort = (
   const length = array.length;
 
   if (length <= 1) {
-    // eslint-disable-next-line unicorn/prefer-spread -- slice() preserves the source element kind; see below
     return array.slice();
   }
 
@@ -19,7 +18,6 @@ export const ultraNumberSort = (
   // source element kind (PACKED_SMI / PACKED_DOUBLE). Spread ([...array])
   // goes through the iterator protocol and can transition the result to a
   // more general element kind, which makes every later element access slower.
-  // eslint-disable-next-line unicorn/prefer-spread -- intentional: preserves element kind for speed
   const result = array.slice();
 
   if (length === 2) {

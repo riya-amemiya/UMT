@@ -12,7 +12,7 @@ export const parallel = <T, U>(
   items: T[],
   function_: (item: T, index: number) => Promise<U>,
 ): Promise<U[]> => {
-  const results: U[] = Array.from({ length: items.length });
+  const results: U[] = new Array(items.length);
   let nextIndex = 0;
   let resolvedCount = 0;
 

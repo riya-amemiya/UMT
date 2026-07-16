@@ -17,5 +17,10 @@ export const arraysJoin = <A extends unknown[]>(
   for (const element of arrays.flat()) {
     set.add(element);
   }
-  return [...set] as A;
+  const result: unknown[] = new Array(set.size);
+  let index = 0;
+  for (const element of set) {
+    result[index++] = element;
+  }
+  return result as A;
 };

@@ -72,7 +72,7 @@ export class PriorityQueue<T> {
       return;
     }
 
-    this.heap = [...initialElements];
+    this.heap = initialElements.slice();
     this.updateMinPriority();
     this.buildHeap();
   }
@@ -260,7 +260,7 @@ export class PriorityQueue<T> {
    * ```
    */
   toArrayWithPriorities(): { value: T; priority: number }[] {
-    return [...this.heap];
+    return this.heap.slice();
   }
 
   /**
