@@ -30,10 +30,10 @@ const isSafeCodePoint = (codePoint: number): boolean => {
     return false;
   }
   if (
-    codePoint <= 0x1f &&
     codePoint !== 0x09 &&
     codePoint !== 0x0a &&
-    codePoint !== 0x0d
+    codePoint !== 0x0d &&
+    codePoint <= 0x1f
   ) {
     return false;
   }

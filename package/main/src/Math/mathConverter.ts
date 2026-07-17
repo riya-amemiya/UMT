@@ -22,7 +22,7 @@ export const mathConverter = (equation: string): string => {
     }
 
     const [operand1, operator, operand2] =
-      multiplicationOrExponentiation[0].split(/(\*|\^)/);
+      multiplicationOrExponentiation[0].split(/(\*|\^)/, 3);
 
     if (operand1 === operand2 || (operand2 && operator === "^")) {
       const [primary, remainder] = mathSeparator(operand1);

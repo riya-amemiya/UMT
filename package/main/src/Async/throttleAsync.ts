@@ -40,7 +40,7 @@ export const throttleAsync = <A extends unknown[], R>(
       inflight = undefined;
       lockedUntil = Date.now() + wait;
     };
-    current.then(cleanup, cleanup);
+    current.then(cleanup).catch(cleanup);
     return current;
   }) as ThrottledAsyncFunction<A, R>;
 
