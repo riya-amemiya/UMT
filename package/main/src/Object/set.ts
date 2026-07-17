@@ -31,7 +31,7 @@ export const set = <T extends object>(
   for (let index = 0; index < segments.length - 1; index += 1) {
     const key = segments[index];
     const next = current[key];
-    if (next == null || typeof next !== "object") {
+    if (typeof next !== "object" || next == null) {
       current[key] = {};
     }
     current = current[key] as Record<string, unknown>;

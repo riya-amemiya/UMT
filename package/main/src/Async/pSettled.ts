@@ -40,14 +40,12 @@ export const pSettled = <T>(
           : Promise.resolve(task);
 
       promise
-        .then(
-          (value) => {
-            results[currentIndex] = { status: "fulfilled", value };
-          },
-          (error) => {
-            results[currentIndex] = { status: "rejected", reason: error };
-          },
-        )
+        .then((value) => {
+          results[currentIndex] = { status: "fulfilled", value };
+        })
+        .catch((error) => {
+          results[currentIndex] = { status: "rejected", reason: error };
+        })
         .then(() => {
           resolvedCount += 1;
           if (resolvedCount === items.length) {

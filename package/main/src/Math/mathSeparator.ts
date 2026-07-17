@@ -16,7 +16,7 @@ export const mathSeparator = (input: string | number): [number, number] => {
     return [0, 0];
   }
 
-  const [integerPart, fractionalPart] = String(input).split(".");
+  const [integerPart, fractionalPart] = String(input).split(".", 2);
   const decimalPart = fractionalPart ? Number(`0.${fractionalPart}`) : 0;
 
   const numberOfDigits = integerPart.length - 1;

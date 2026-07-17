@@ -45,18 +45,17 @@ export const debounceAsync = <A extends unknown[], R>(
       timer = setTimeout(() => {
         timer = undefined;
         const { resolvers, rejecters } = flushPromises();
-        function_(...arguments_).then(
-          (value) => {
+        function_(...arguments_)
+          .then((value) => {
             for (const resolver of resolvers) {
               resolver(value);
             }
-          },
-          (error) => {
+          })
+          .catch((error) => {
             for (const rejecter of rejecters) {
               rejecter(error);
             }
-          },
-        );
+          });
       }, wait);
     });
   }) as DebouncedAsyncFunction<A, R>;

@@ -17,9 +17,12 @@ describe("isInRange", () => {
       ["192.168.1.4", "192.168.1.0", 30, false], // Outside small subnet
       ["0.0.0.1", "0.0.0.0", 0, true], // All IPs in range (CIDR 0)
       ["255.255.255.255", "0.0.0.0", 0, true], // All IPs in range (CIDR 0)
-    ])("should evaluate if %s is in network %s/%i => %s", (remoteIp, networkIp, cidr, expected) => {
-      expect(isInRange(remoteIp, networkIp, cidr)).toBe(expected);
-    });
+    ])(
+      "should evaluate if %s is in network %s/%i => %s",
+      (remoteIp, networkIp, cidr, expected) => {
+        expect(isInRange(remoteIp, networkIp, cidr)).toBe(expected);
+      },
+    );
 
     test.each([
       // [remoteIp, networkIp, cidr, description]
