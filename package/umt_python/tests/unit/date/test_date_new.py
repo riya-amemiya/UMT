@@ -6,14 +6,16 @@ from src.date import new_date_int, new_date_string
 
 class TestNewDateInt(unittest.TestCase):
     def test_basic_date(self):
-        result = new_date_int(2021, 1, 1, 0)
+        result = new_date_int(2021, 1, 1, hours=0)
         self.assertEqual(result.year, 2021)
         self.assertEqual(result.month, 1)
         self.assertEqual(result.day, 1)
         self.assertEqual(result.hour, 0)
 
     def test_full_datetime(self):
-        result = new_date_int(2021, 6, 15, 12, 30, 45, 500)
+        result = new_date_int(
+            2021, 6, 15, hours=12, minutes=30, seconds=45, milliseconds=500
+        )
         self.assertEqual(result.year, 2021)
         self.assertEqual(result.month, 6)
         self.assertEqual(result.day, 15)
@@ -30,7 +32,7 @@ class TestNewDateInt(unittest.TestCase):
         self.assertLessEqual(result.hour, 23)
 
     def test_returns_datetime_object(self):
-        result = new_date_int(2021, 1, 1, 0)
+        result = new_date_int(2021, 1, 1, hours=0)
         self.assertIsInstance(result, datetime)
 
 
@@ -42,7 +44,14 @@ class TestNewDateString(unittest.TestCase):
         self.assertEqual(result.day, 1)
 
     def test_full_datetime_string(self):
-        result = new_date_string("2021-06-15", "12", "30", "45", "500", "09")
+        result = new_date_string(
+            "2021-06-15",
+            hours="12",
+            minutes="30",
+            seconds="45",
+            milliseconds="500",
+            time_difference="09",
+        )
         self.assertEqual(result.year, 2021)
         self.assertEqual(result.month, 6)
         self.assertEqual(result.day, 15)
@@ -51,7 +60,9 @@ class TestNewDateString(unittest.TestCase):
         self.assertEqual(result.second, 45)
 
     def test_with_time_components(self):
-        result = new_date_string("2021-01-01", "23", "59", "59", "999")
+        result = new_date_string(
+            "2021-01-01", hours="23", minutes="59", seconds="59", milliseconds="999"
+        )
         self.assertEqual(result.hour, 23)
         self.assertEqual(result.minute, 59)
         self.assertEqual(result.second, 59)
