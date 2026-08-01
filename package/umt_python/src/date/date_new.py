@@ -5,6 +5,7 @@ def new_date_int(
     year: int,
     mon: int,
     day: int,
+    *,
     hours: int | None = None,
     minutes: int = 0,
     seconds: int = 0,
@@ -48,6 +49,7 @@ def new_date_int(
 
 def new_date_string(
     date_str: str,
+    *,
     hours: str = "00",
     minutes: str = "00",
     seconds: str = "00",
