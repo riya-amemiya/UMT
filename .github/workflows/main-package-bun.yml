@@ -65,10 +65,14 @@ jobs:
       - name: Setup Magic Nix Cache
         uses: DeterminateSystems/magic-nix-cache-action@908b263ff629f4cc17666315b7fd3ec127c6244d # v14
       - name: Restore Dependencies Cache
+        id: cache-restore-dev-depends
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: '**/node_modules'
           key: dev-depends-${{ matrix.os }}-bun-${{ hashFiles('package/main/bun.lock') }}
+      - name: Install Dependencies
+        if: steps.cache-restore-dev-depends.outputs.cache-hit != 'true'
+        run: nix develop -c bun i
       - name: Run Lint
         run: nix develop -c bun run lint:ci
   build:
@@ -88,10 +92,14 @@ jobs:
       - name: Setup Magic Nix Cache
         uses: DeterminateSystems/magic-nix-cache-action@908b263ff629f4cc17666315b7fd3ec127c6244d # v14
       - name: Restore Dependencies Cache
+        id: cache-restore-dev-depends
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: '**/node_modules'
           key: dev-depends-${{ matrix.os }}-bun-${{ hashFiles('package/main/bun.lock') }}
+      - name: Install Dependencies
+        if: steps.cache-restore-dev-depends.outputs.cache-hit != 'true'
+        run: nix develop -c bun i
       - name: Restore Build Cache
         id: cache-restore-prod
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
@@ -133,10 +141,14 @@ jobs:
       - name: Setup Magic Nix Cache
         uses: DeterminateSystems/magic-nix-cache-action@908b263ff629f4cc17666315b7fd3ec127c6244d # v14
       - name: Restore Dependencies Cache
+        id: cache-restore-dev-depends
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: '**/node_modules'
           key: dev-depends-${{ matrix.os }}-bun-${{ hashFiles('package/main/bun.lock') }}
+      - name: Install Dependencies
+        if: steps.cache-restore-dev-depends.outputs.cache-hit != 'true'
+        run: nix develop -c bun i
       - name: Run Tests with Coverage
         run: |
           set -o pipefail
