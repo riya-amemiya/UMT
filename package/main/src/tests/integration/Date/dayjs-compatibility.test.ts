@@ -40,6 +40,17 @@ const boundaryUnits: DateBoundaryUnit[] = [
   "year",
 ];
 
+const dayjsIsSame = (
+  left: Date,
+  right: Date,
+  unit: DateBoundaryUnit,
+): boolean => {
+  if (unit === "quarter") {
+    return dayjs(left).isSame(right, "quarter");
+  }
+  return dayjs(left).isSame(right, unit);
+};
+
 describe("dayjs compatibility for Date utilities", () => {
   describe("isSame", () => {
     const left = new Date(2025, 3, 15, 10, 30, 45, 123);
@@ -68,7 +79,7 @@ describe("dayjs compatibility for Date utilities", () => {
         [new Date(2024, 11, 31), new Date(2025, 0, 1)],
       ];
       for (const [a, b] of pairs) {
-        expect(isSame(a, b, unit)).toBe(dayjs(a).isSame(b, unit));
+        expect(isSame(a, b, unit)).toBe(dayjsIsSame(a, b, unit));
       }
     });
   });
