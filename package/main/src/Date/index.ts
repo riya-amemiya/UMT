@@ -11,6 +11,7 @@ export * from "./getDay";
 export * from "./getTimezoneOffsetString";
 export * from "./isBusinessDay";
 export * from "./isLeapYear";
+export * from "./isSame";
 export * from "./isSameDay";
 export * from "./isWeekend";
 export * from "./new";

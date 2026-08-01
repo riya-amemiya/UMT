@@ -140,6 +140,7 @@ bun add umt
 - [getTimezoneOffsetString](https://github.com/riya-amemiya/UMT/wiki/Function.getTimezoneOffsetString)
 - [isBusinessDay](https://github.com/riya-amemiya/UMT/wiki/Function.isBusinessDay)
 - [isLeapYear](https://github.com/riya-amemiya/UMT/wiki/Function.isLeapYear)
+- [isSame](https://github.com/riya-amemiya/UMT/wiki/Function.isSame)
 - [isSameDay](https://github.com/riya-amemiya/UMT/wiki/Function.isSameDay)
 - [isWeekend](https://github.com/riya-amemiya/UMT/wiki/Function.isWeekend)
 - [newDateInt](https://github.com/riya-amemiya/UMT/wiki/Function.newDateInt)
