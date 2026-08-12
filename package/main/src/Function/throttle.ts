@@ -5,7 +5,9 @@ export interface ThrottledFunction<
   T extends (...arguments_: unknown[]) => unknown,
 > {
   (...arguments_: Parameters<T>): void;
-  /** Cancels any pending throttled invocation. */
+  /**
+  Cancels any pending throttled invocation.
+  */
   cancel: () => void;
 }
 

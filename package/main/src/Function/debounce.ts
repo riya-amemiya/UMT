@@ -2,9 +2,13 @@
  * Options for the debounce function.
  */
 export interface DebounceOptions {
-  /** Whether to invoke on the leading edge of the timeout. */
+  /**
+  Whether to invoke on the leading edge of the timeout.
+  */
   leading?: boolean;
-  /** Whether to invoke on the trailing edge of the timeout. */
+  /**
+  Whether to invoke on the trailing edge of the timeout.
+  */
   trailing?: boolean;
 }
 
@@ -15,7 +19,9 @@ export interface DebouncedFunction<
   T extends (...arguments_: unknown[]) => unknown,
 > {
   (...arguments_: Parameters<T>): void;
-  /** Cancels any pending debounced invocation. */
+  /**
+  Cancels any pending debounced invocation.
+  */
   cancel: () => void;
 }
 

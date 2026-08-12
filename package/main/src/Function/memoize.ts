@@ -2,9 +2,13 @@
  * Options for the memoize function.
  */
 export interface MemoizeOptions<K> {
-  /** Maximum number of entries to store in the cache. */
+  /**
+  Maximum number of entries to store in the cache.
+  */
   maxSize?: number;
-  /** Custom function to generate cache keys from arguments. */
+  /**
+  Custom function to generate cache keys from arguments.
+  */
   resolver?: (...arguments_: unknown[]) => K;
 }
 
@@ -13,7 +17,9 @@ export interface MemoizeOptions<K> {
  */
 export interface MemoizedFunction<A extends unknown[], R, K = unknown> {
   (...arguments_: A): R;
-  /** The underlying cache Map. */
+  /**
+  The underlying cache Map.
+  */
   cache: Map<K, R>;
 }
 

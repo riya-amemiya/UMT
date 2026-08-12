@@ -14,42 +14,62 @@
  * `@standard-schema/spec`.
  */
 
-/** The Standard Schema V1 interface. */
+/**
+The Standard Schema V1 interface.
+*/
 export interface StandardSchemaV1<Input = unknown, Output = Input> {
   readonly "~standard": StandardSchemaV1Properties<Input, Output>;
 }
 
-/** The Standard Schema V1 properties interface. */
+/**
+The Standard Schema V1 properties interface.
+*/
 export interface StandardSchemaV1Properties<Input = unknown, Output = Input> {
-  /** The version number of the standard. */
+  /**
+  The version number of the standard.
+  */
   readonly version: 1;
-  /** The vendor name of the schema library. */
+  /**
+  The vendor name of the schema library.
+  */
   readonly vendor: string;
-  /** Validates unknown input values. */
+  /**
+  Validates unknown input values.
+  */
   readonly validate: (
     value: unknown,
   ) => StandardSchemaV1Result<Output> | Promise<StandardSchemaV1Result<Output>>;
-  /** Inferred types associated with the schema. */
+  /**
+  Inferred types associated with the schema.
+  */
   readonly types?: StandardSchemaV1Types<Input, Output> | undefined;
 }
 
-/** The result type produced by `Props.validate`. */
+/**
+The result type produced by `Props.validate`.
+*/
 export type StandardSchemaV1Result<Output> =
   | StandardSchemaV1SuccessResult<Output>
   | StandardSchemaV1FailureResult;
 
-/** The result interface when validation succeeds. */
+/**
+The result interface when validation succeeds.
+*/
 export interface StandardSchemaV1SuccessResult<Output> {
   readonly value: Output;
   readonly issues?: undefined;
 }
 
-/** The result interface when validation fails. */
+/**
+The result interface when validation fails.
+*/
 export interface StandardSchemaV1FailureResult {
   readonly issues: readonly StandardSchemaV1Issue[];
 }
 
-/** The issue interface returned on failure. */
+/**
+The issue interface returned on failure.
+*/
 export interface StandardSchemaV1Issue {
   readonly message: string;
   readonly path?:
@@ -57,26 +77,38 @@ export interface StandardSchemaV1Issue {
     | undefined;
 }
 
-/** The path segment interface for nested issues. */
+/**
+The path segment interface for nested issues.
+*/
 export interface StandardSchemaV1PathSegment {
   readonly key: PropertyKey;
 }
 
-/** The Standard Schema V1 types interface. */
+/**
+The Standard Schema V1 types interface.
+*/
 export interface StandardSchemaV1Types<Input = unknown, Output = Input> {
-  /** The input type of the schema. */
+  /**
+  The input type of the schema.
+  */
   readonly input: Input;
-  /** The output type of the schema. */
+  /**
+  The output type of the schema.
+  */
   readonly output: Output;
 }
 
-/** Infers the input type of a Standard Schema V1 implementation. */
+/**
+Infers the input type of a Standard Schema V1 implementation.
+*/
 export type StandardSchemaV1InferInput<
   // biome-ignore lint/suspicious/noExplicitAny: schema may be any spec-compliant value
   Schema extends StandardSchemaV1<any, any>,
 > = NonNullable<Schema["~standard"]["types"]>["input"];
 
-/** Infers the output type of a Standard Schema V1 implementation. */
+/**
+Infers the output type of a Standard Schema V1 implementation.
+*/
 export type StandardSchemaV1InferOutput<
   // biome-ignore lint/suspicious/noExplicitAny: schema may be any spec-compliant value
   Schema extends StandardSchemaV1<any, any>,
@@ -89,7 +121,9 @@ export type StandardSchemaV1InferOutput<
  */
 export const STANDARD_SCHEMA_VENDOR = "umt";
 
-/** Minimal shape of UMT validator results consumed by `attachStandard`. */
+/**
+Minimal shape of UMT validator results consumed by `attachStandard`.
+*/
 export interface UmtValidatorResult {
   validate: boolean;
   message: string;

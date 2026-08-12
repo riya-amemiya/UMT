@@ -59,7 +59,9 @@ const gcdInteger = (x: number, y: number, ...z: number[]) => {
 
   [copyX, copyY] = [Math.max(copyX, copyY), Math.min(copyX, copyY)];
 
-  /* Euclidean algorithm */
+  /*
+  Euclidean algorithm
+  */
   let r = copyY % copyX;
   while (r !== 0) {
     copyY = copyX;
