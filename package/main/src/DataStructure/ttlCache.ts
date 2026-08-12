@@ -2,9 +2,13 @@
  * Configuration options for TTLCache.
  */
 export interface TTLCacheOptions {
-  /** Default time-to-live in milliseconds for cache entries */
+  /**
+  Default time-to-live in milliseconds for cache entries
+  */
   defaultTTL: number;
-  /** Optional maximum number of entries */
+  /**
+  Optional maximum number of entries
+  */
   maxSize?: number;
 }
 

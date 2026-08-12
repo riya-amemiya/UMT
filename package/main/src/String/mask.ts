@@ -1,9 +1,15 @@
 export interface MaskOptions {
-  /** Number of leading characters to keep visible. Default: 1 */
+  /**
+  Number of leading characters to keep visible. Default: 1
+  */
   start?: number;
-  /** Number of trailing characters to keep visible. Default: 1 */
+  /**
+  Number of trailing characters to keep visible. Default: 1
+  */
   end?: number;
-  /** Mask character. Default: "*" */
+  /**
+  Mask character. Default: "*"
+  */
   char?: string;
 }
 

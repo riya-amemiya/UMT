@@ -2,15 +2,25 @@
  * Options for formatting a number.
  */
 export interface FormatNumberOptions {
-  /** The locale to use for formatting (e.g., "en-US", "ja-JP") */
+  /**
+  The locale to use for formatting (e.g., "en-US", "ja-JP")
+  */
   locale?: string;
-  /** Minimum number of fraction digits */
+  /**
+  Minimum number of fraction digits
+  */
   minimumFractionDigits?: number;
-  /** Maximum number of fraction digits */
+  /**
+  Maximum number of fraction digits
+  */
   maximumFractionDigits?: number;
-  /** The formatting style */
+  /**
+  The formatting style
+  */
   style?: "decimal" | "currency" | "percent";
-  /** The currency code (required when style is "currency") */
+  /**
+  The currency code (required when style is "currency")
+  */
   currency?: string;
 }
 
