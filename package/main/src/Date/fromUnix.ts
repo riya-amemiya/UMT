@@ -20,9 +20,7 @@ export const fromUnix = (value: number, unit: UnixTimeUnit = "s"): Date => {
       return new Date(value);
     }
     default: {
-      const _exhaustive: never = unit;
-      void _exhaustive;
-      return new Date(value * 1000);
+      return ((_unit: never) => new Date(value * 1000))(unit);
     }
   }
 };
