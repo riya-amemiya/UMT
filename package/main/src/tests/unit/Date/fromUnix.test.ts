@@ -7,9 +7,7 @@ describe("fromUnix", () => {
   });
 
   it("creates a Date from milliseconds when unit is ms", () => {
-    expect(fromUnix(1_700_000_000_123, "ms").getTime()).toBe(
-      1_700_000_000_123,
-    );
+    expect(fromUnix(1_700_000_000_123, "ms").getTime()).toBe(1_700_000_000_123);
   });
 
   it("creates a Date from seconds when unit is s", () => {

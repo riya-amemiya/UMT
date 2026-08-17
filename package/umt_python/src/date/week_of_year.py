@@ -23,6 +23,7 @@ def week_of_year(date: datetime) -> int:
         2
     """
     week_start = start_of(date, "week")
-    year_start_week = start_of(datetime(date.year, 1, 1), "week")
+    year_start = date.replace(month=1, day=1, hour=0, minute=0, second=0, microsecond=0)
+    year_start_week = start_of(year_start, "week")
     days = round((week_start - year_start_week).total_seconds() / 86_400)
     return days // 7 + 1

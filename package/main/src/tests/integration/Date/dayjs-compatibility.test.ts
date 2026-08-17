@@ -243,9 +243,7 @@ describe("dayjs compatibility for Date utilities", () => {
     const inclusivities = ["()", "[]", "[)", "(]"] as const;
 
     it("matches exclusive default bounds", () => {
-      expect(isBetween(mid, start, end)).toBe(
-        dayjs(mid).isBetween(start, end),
-      );
+      expect(isBetween(mid, start, end)).toBe(dayjs(mid).isBetween(start, end));
       expect(isBetween(start, start, end)).toBe(
         dayjs(start).isBetween(start, end),
       );
@@ -261,8 +259,9 @@ describe("dayjs compatibility for Date utilities", () => {
     });
 
     it.each(boundaryUnits)("matches unit granularity for %s", (unit) => {
+      const dayjsUnit = unit === "quarter" ? "quarter" : unit;
       expect(isBetween(mid, start, end, unit, "[]")).toBe(
-        dayjs(mid).isBetween(start, end, unit, "[]"),
+        dayjs(mid).isBetween(start, end, dayjsUnit as "day", "[]"),
       );
     });
   });

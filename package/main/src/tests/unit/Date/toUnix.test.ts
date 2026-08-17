@@ -12,6 +12,6 @@ describe("toUnix", () => {
   });
 
   it("returns floored seconds when unit is s", () => {
-    expect(toUnix(new Date(1_500), "s")).toBe(1);
+    expect(toUnix(new Date(1500), "s")).toBe(1);
   });
 });

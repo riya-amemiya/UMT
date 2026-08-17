@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 
 from .unix_time_unit import UnixTimeUnit
 
@@ -22,4 +22,5 @@ def from_unix(value: int | float, unit: UnixTimeUnit = "s") -> datetime:
         0.0
     """
     milliseconds = value * 1000 if unit == "s" else value
-    return datetime.fromtimestamp(milliseconds / 1000)
+    aware = datetime.fromtimestamp(milliseconds / 1000, tz=timezone.utc)
+    return aware.astimezone().replace(tzinfo=None)
