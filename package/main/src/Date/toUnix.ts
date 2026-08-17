@@ -21,7 +21,8 @@ export const toUnix = (date: Date, unit: UnixTimeUnit = "s"): number => {
     }
     default: {
       const _exhaustive: never = unit;
-      return _exhaustive;
+      void _exhaustive;
+      return Math.floor(date.getTime() / 1000);
     }
   }
 };

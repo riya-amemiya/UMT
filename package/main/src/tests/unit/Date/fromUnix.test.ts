@@ -13,4 +13,11 @@ describe("fromUnix", () => {
   it("creates a Date from seconds when unit is s", () => {
     expect(fromUnix(1_700_000_000, "s").getTime()).toBe(1_700_000_000_000);
   });
+
+  it("treats an unknown unit as seconds", () => {
+    // @ts-expect-error
+    expect(fromUnix(1_700_000_000, "unknown").getTime()).toBe(
+      1_700_000_000_000,
+    );
+  });
 });
