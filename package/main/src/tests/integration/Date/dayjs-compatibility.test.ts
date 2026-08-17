@@ -1,4 +1,5 @@
 import dayjs from "dayjs";
+import isBetweenPlugin from "dayjs/plugin/isBetween";
 import quarterOfYear from "dayjs/plugin/quarterOfYear";
 
 import { addDuration } from "@/Date/addDuration";
@@ -6,13 +7,18 @@ import { diff } from "@/Date/diff";
 import type { DurationUnit } from "@/Date/durationUnit";
 import { endOf } from "@/Date/endOf";
 import { format } from "@/Date/format";
+import { fromUnix } from "@/Date/fromUnix";
+import { getQuarter } from "@/Date/getQuarter";
+import { isBetween } from "@/Date/isBetween";
 import { isSame } from "@/Date/isSame";
 import { isSameDay } from "@/Date/isSameDay";
 import { isWeekend } from "@/Date/isWeekend";
 import type { DateBoundaryUnit } from "@/Date/startOf";
 import { startOf } from "@/Date/startOf";
 import { subDuration } from "@/Date/subDuration";
+import { toUnix } from "@/Date/toUnix";
 
+dayjs.extend(isBetweenPlugin);
 dayjs.extend(quarterOfYear);
 
 const durationUnitToDayjs: Record<
@@ -227,6 +233,64 @@ describe("dayjs compatibility for Date utilities", () => {
         const day = dayjs(date).day();
         expect(isWeekend(date)).toBe(day === 0 || day === 6);
       }
+    });
+  });
+
+  describe("isBetween", () => {
+    const start = new Date(2025, 3, 10, 10, 0, 0, 0);
+    const mid = new Date(2025, 3, 15, 12, 0, 0, 0);
+    const end = new Date(2025, 3, 20, 18, 0, 0, 0);
+    const inclusivities = ["()", "[]", "[)", "(]"] as const;
+
+    it("matches exclusive default bounds", () => {
+      expect(isBetween(mid, start, end)).toBe(
+        dayjs(mid).isBetween(start, end),
+      );
+      expect(isBetween(start, start, end)).toBe(
+        dayjs(start).isBetween(start, end),
+      );
+    });
+
+    it.each(inclusivities)("matches inclusivity %s", (inclusivity) => {
+      expect(isBetween(start, start, end, undefined, inclusivity)).toBe(
+        dayjs(start).isBetween(start, end, null, inclusivity),
+      );
+      expect(isBetween(end, start, end, undefined, inclusivity)).toBe(
+        dayjs(end).isBetween(start, end, null, inclusivity),
+      );
+    });
+
+    it.each(boundaryUnits)("matches unit granularity for %s", (unit) => {
+      expect(isBetween(mid, start, end, unit, "[]")).toBe(
+        dayjs(mid).isBetween(start, end, unit, "[]"),
+      );
+    });
+  });
+
+  describe("getQuarter", () => {
+    it("matches dayjs quarter", () => {
+      const dates = [
+        new Date(2025, 0, 1),
+        new Date(2025, 3, 15),
+        new Date(2025, 6, 1),
+        new Date(2025, 11, 31),
+      ];
+      for (const date of dates) {
+        expect(getQuarter(date)).toBe(dayjs(date).quarter());
+      }
+    });
+  });
+
+  describe("fromUnix / toUnix", () => {
+    it("matches dayjs.unix for seconds", () => {
+      const seconds = 1_700_000_000;
+      expect(fromUnix(seconds).getTime()).toBe(dayjs.unix(seconds).valueOf());
+      expect(toUnix(fromUnix(seconds))).toBe(dayjs.unix(seconds).unix());
+    });
+
+    it("matches dayjs valueOf for millisecond unit", () => {
+      const date = new Date(1_700_000_000_123);
+      expect(toUnix(date, "ms")).toBe(dayjs(date).valueOf());
     });
   });
 });
