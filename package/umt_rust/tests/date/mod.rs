@@ -1,5 +1,6 @@
 //! Date module tests.
 
+mod test_add_business_days;
 mod test_add_duration;
 mod test_birthday;
 mod test_date_mod;
@@ -9,8 +10,11 @@ mod test_diff;
 mod test_end_of;
 mod test_format;
 mod test_format_relative;
+mod test_from_unix;
 mod test_get_day;
+mod test_get_quarter;
 mod test_get_timezone_offset_string;
+mod test_is_between;
 mod test_is_business_day;
 mod test_is_leap_year;
 mod test_is_same_day;
@@ -19,4 +23,7 @@ mod test_ms_by_unit;
 mod test_new_date;
 mod test_now;
 mod test_start_of;
+mod test_sub_business_days;
 mod test_sub_duration;
+mod test_to_unix;
+mod test_week_of_year;

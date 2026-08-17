@@ -125,9 +125,11 @@ bun add umt
 
 ### Date
 
+- [addBusinessDays](https://github.com/riya-amemiya/UMT/wiki/Function.addBusinessDays)
 - [addDuration](https://github.com/riya-amemiya/UMT/wiki/Function.addDuration)
 - [birthday](https://github.com/riya-amemiya/UMT/wiki/Function.birthday)
 - [DateBoundaryUnit](https://github.com/riya-amemiya/UMT/wiki/TypeAlias.DateBoundaryUnit)
+- [DateInclusivity](https://github.com/riya-amemiya/UMT/wiki/TypeAlias.DateInclusivity)
 - [dateRange](https://github.com/riya-amemiya/UMT/wiki/Function.dateRange)
 - [DayList](https://github.com/riya-amemiya/UMT/wiki/Interface.DayList)
 - [dayOfWeek](https://github.com/riya-amemiya/UMT/wiki/Function.dayOfWeek)
@@ -136,8 +138,11 @@ bun add umt
 - [endOf](https://github.com/riya-amemiya/UMT/wiki/Function.endOf)
 - [format](https://github.com/riya-amemiya/UMT/wiki/Function.format)
 - [formatRelative](https://github.com/riya-amemiya/UMT/wiki/Function.formatRelative)
+- [fromUnix](https://github.com/riya-amemiya/UMT/wiki/Function.fromUnix)
 - [getDay](https://github.com/riya-amemiya/UMT/wiki/Function.getDay)
+- [getQuarter](https://github.com/riya-amemiya/UMT/wiki/Function.getQuarter)
 - [getTimezoneOffsetString](https://github.com/riya-amemiya/UMT/wiki/Function.getTimezoneOffsetString)
+- [isBetween](https://github.com/riya-amemiya/UMT/wiki/Function.isBetween)
 - [isBusinessDay](https://github.com/riya-amemiya/UMT/wiki/Function.isBusinessDay)
 - [isLeapYear](https://github.com/riya-amemiya/UMT/wiki/Function.isLeapYear)
 - [isSame](https://github.com/riya-amemiya/UMT/wiki/Function.isSame)
@@ -147,7 +152,11 @@ bun add umt
 - [newDateString](https://github.com/riya-amemiya/UMT/wiki/Function.newDateString)
 - [now](https://github.com/riya-amemiya/UMT/wiki/Function.now)
 - [startOf](https://github.com/riya-amemiya/UMT/wiki/Function.startOf)
+- [subBusinessDays](https://github.com/riya-amemiya/UMT/wiki/Function.subBusinessDays)
 - [subDuration](https://github.com/riya-amemiya/UMT/wiki/Function.subDuration)
+- [toUnix](https://github.com/riya-amemiya/UMT/wiki/Function.toUnix)
+- [UnixTimeUnit](https://github.com/riya-amemiya/UMT/wiki/TypeAlias.UnixTimeUnit)
+- [weekOfYear](https://github.com/riya-amemiya/UMT/wiki/Function.weekOfYear)
 
 ### Decorator
 

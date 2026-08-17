@@ -33,4 +33,12 @@ fn test_module_exports() {
     let date = Utc.with_ymd_and_hms(2025, 1, 1, 0, 0, 0).unwrap();
     let _ = umt_format(&date, "YYYY-MM-DD", 0);
     let _ = umt_format_iso(&date, 0);
+
+    let _ = umt_is_between(&date, &date, &date, None, DateInclusivity::Exclusive);
+    let _ = umt_add_business_days(&date, 1, &[]);
+    let _ = umt_sub_business_days(&date, 1, &[]);
+    let _ = umt_get_quarter(&date);
+    let _ = umt_week_of_year(&date);
+    let unix = umt_from_unix(0.0, UnixTimeUnit::Second);
+    let _ = umt_to_unix(&unix, UnixTimeUnit::Second);
 }
