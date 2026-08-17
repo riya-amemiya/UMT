@@ -2,7 +2,7 @@
 
 This file is produced by `codegen/`. Do not edit by hand.
 
-Generated 150 wrappers. 267 functions are not auto-exposable and are listed below for future hand-written adapters.
+Generated 150 wrappers. 274 functions are not auto-exposable and are listed below for future hand-written adapters.
 
 ## Generated
 
@@ -230,6 +230,7 @@ Generated 150 wrappers. 267 functions are not auto-exposable and are listed belo
 | `umt_rust::crypto::decode_base58_to_string::umt_decode_base58_to_string` | unsupported return type `Result < String , Base58Error >` |
 | `umt_rust::crypto::encode_base32::umt_encode_base32` | generic type parameters |
 | `umt_rust::crypto::encode_base58::umt_encode_base58` | generic type parameters |
+| `umt_rust::date::add_business_days::umt_add_business_days` | unsupported parameter type `& DateTime < Utc >` |
 | `umt_rust::date::add_duration::umt_add_duration` | unsupported parameter type `& DateTime < Utc >` |
 | `umt_rust::date::date_range::umt_date_range` | unsupported parameter type `DateTime < Utc >` |
 | `umt_rust::date::date_range::umt_date_range_with_step` | unsupported parameter type `DateTime < Utc >` |
@@ -238,9 +239,12 @@ Generated 150 wrappers. 267 functions are not auto-exposable and are listed belo
 | `umt_rust::date::format::umt_format` | unsupported parameter type `& DateTime < Utc >` |
 | `umt_rust::date::format::umt_format_iso` | unsupported parameter type `& DateTime < Utc >` |
 | `umt_rust::date::format_relative::umt_format_relative` | unsupported parameter type `& DateTime < Utc >` |
+| `umt_rust::date::from_unix::umt_from_unix` | unsupported parameter type `UnixTimeUnit` |
 | `umt_rust::date::get_day::umt_get_day` | unsupported parameter type `DayLanguage` |
 | `umt_rust::date::get_day::umt_get_day_en` | unsupported return type `& 'static str` |
 | `umt_rust::date::get_day::umt_get_day_ja` | unsupported return type `& 'static str` |
+| `umt_rust::date::get_quarter::umt_get_quarter` | unsupported parameter type `& DateTime < Utc >` |
+| `umt_rust::date::is_between::umt_is_between` | unsupported parameter type `& DateTime < Utc >` |
 | `umt_rust::date::is_business_day::umt_is_business_day` | unsupported parameter type `& DateTime < Utc >` |
 | `umt_rust::date::is_same_day::umt_is_same_day` | unsupported parameter type `& DateTime < Utc >` |
 | `umt_rust::date::is_weekend::umt_is_weekend` | unsupported parameter type `& DateTime < Utc >` |
@@ -250,7 +254,10 @@ Generated 150 wrappers. 267 functions are not auto-exposable and are listed belo
 | `umt_rust::date::now::umt_now` | unsupported return type `DateTime < Utc >` |
 | `umt_rust::date::now::umt_now_jst` | unsupported return type `DateTime < Utc >` |
 | `umt_rust::date::start_of::umt_start_of` | unsupported parameter type `& DateTime < Utc >` |
+| `umt_rust::date::sub_business_days::umt_sub_business_days` | unsupported parameter type `& DateTime < Utc >` |
 | `umt_rust::date::sub_duration::umt_sub_duration` | unsupported parameter type `& DateTime < Utc >` |
+| `umt_rust::date::to_unix::umt_to_unix` | unsupported parameter type `& DateTime < Utc >` |
+| `umt_rust::date::week_of_year::umt_week_of_year` | unsupported parameter type `& DateTime < Utc >` |
 | `umt_rust::error::error_function::umt_error_function` | generic type parameters |
 | `umt_rust::error::flat_map_result::umt_flat_map_result` | generic type parameters |
 | `umt_rust::error::map_result::umt_map_result` | generic type parameters |
