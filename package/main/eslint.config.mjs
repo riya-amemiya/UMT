@@ -19,7 +19,6 @@ export default defineConfig(
       "tmp/",
       "src/tests/",
       ".dependency-cruiser.js",
-      "cjs.build.mjs",
       "eslint.config.mjs",
     ],
   },

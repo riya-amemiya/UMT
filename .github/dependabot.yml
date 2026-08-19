@@ -28,9 +28,6 @@ updates:
     directory: "package/umt_i18n"
     patterns: ["*"]
     multi-ecosystem-group: "bun-dependencies"
-    # Generated CJS publish manifest; not a Bun workspace.
-    exclude-paths:
-      - "common-module/**"
   - package-ecosystem: "uv"
     directory: "package/umt_python"
     patterns: ["*"]
