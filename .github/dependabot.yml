@@ -16,6 +16,9 @@ multi-ecosystem-groups:
   github-actions-dependencies:
     schedule:
       interval: "weekly"
+  nix-dependencies:
+    schedule:
+      interval: "weekly"
 updates:
   - package-ecosystem: "bun"
     directory: "package/main"
@@ -45,3 +48,19 @@ updates:
     directory: "/"
     patterns: ["*"]
     multi-ecosystem-group: "github-actions-dependencies"
+  - package-ecosystem: "nix"
+    directory: "/"
+    patterns: ["*"]
+    multi-ecosystem-group: "nix-dependencies"
+  - package-ecosystem: "nix"
+    directory: "package/main"
+    patterns: ["*"]
+    multi-ecosystem-group: "nix-dependencies"
+  - package-ecosystem: "nix"
+    directory: "package/umt_i18n"
+    patterns: ["*"]
+    multi-ecosystem-group: "nix-dependencies"
+  - package-ecosystem: "nix"
+    directory: "package/umt_wasm"
+    patterns: ["*"]
+    multi-ecosystem-group: "nix-dependencies"

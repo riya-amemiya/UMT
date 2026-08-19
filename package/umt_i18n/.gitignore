@@ -85,8 +85,6 @@ build
 
 
 /module/*
-/common-module/*
-!/common-module/package.json
 
 lib
 

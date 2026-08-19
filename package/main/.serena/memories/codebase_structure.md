@@ -34,7 +34,6 @@ src/
 ## Build Output
 
 - `./module/` - TypeScript compilation output
-- `./common-module/` - CommonJS version output
 
 ## Path Aliases
 
