@@ -83,6 +83,15 @@ Located in `package/umt_rust`.
     *   Benchmarks are integration tests in `tests/benchmark/` using `std::time::Instant`.
     *   Integration tests in subdirectories must be registered in a root test file (e.g., `tests/integration/mod.rs`).
 
+## Package: umt_wasm (WebAssembly)
+
+Located in `package/umt_wasm`. Auto-generated wasm-bindgen wrappers over `umt_rust`.
+
+* **Generate bindings**: from `package/umt_wasm`, `bun run gen` (or `cargo run --manifest-path codegen/Cargo.toml` then `cargo fmt`).
+* **Do not edit** `src/generated.rs` or `doc/generated.md` by hand. After changing `umt_rust` public `umt_*` functions, regenerate and commit both files.
+* Functions whose signatures are not wasm-bindgen-friendly (`DateTime<Utc>`, custom enums, generics, closures) are listed as skipped in `doc/generated.md`. Hand-written adapters go in `src/manual.rs`.
+* **CI**: `.github/workflows/wasm-plugin-ci.yml` includes a `codegen-sync` job that fails if generated files drift.
+
 ## Algorithms & Specific Implementations
 *   **String Distance**: Implement Levenshtein and similar algorithms using O(min(N, M)) space complexity (two-row strategy).
 *   **Sorting**: When sorting lists with `NaN`, use a single-pass partition (valid vs. NaN) followed by sorting the valid partition.

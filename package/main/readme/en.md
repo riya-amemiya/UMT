@@ -31,3 +31,5 @@ pnpm add umt
 
 bun add umt
 ```
+
+v5 is ESM-only (`import`, not `require`). See [COMPATIBILITY.md](../COMPATIBILITY.md) for supported runtimes and the Date helper notes in the main [README](../README.md).

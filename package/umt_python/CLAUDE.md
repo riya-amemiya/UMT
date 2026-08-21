@@ -6,86 +6,56 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-UMT Python Package is a collection of utility functions for string manipulation and formatting. The project follows a modular architecture where each function is implemented in its own module file.
+UMT Python is a port of the TypeScript package in `package/main`. Behavior and API should match that source of truth where applicable. Each function lives in its own module file; public names are re-exported from `src/__init__.py`.
 
 ## Development Commands
 
 ```bash
-# Install dependencies
-uv sync
+make install      # uv sync
+make test         # uv run pytest
+make lint         # ruff format --check && ruff check
+make format       # uv run ruff format
+make typecheck    # uv run pyright
+make all          # format, lint, typecheck, test
 
-# Run all tests
-uv run pytest
-
-# Run a specific test class
-uv run pytest tests/test_string_utils.py::TestDeleteSpaces
-
-# Run a specific test method
-uv run pytest tests/test_string_utils.py::TestDeleteSpaces::test_basic_cases
-
-# Format code
-uv run ruff format
-
-# Lint code
-uv run ruff check
-
-# Fix linting issues automatically
-uv run ruff check --fix
-
-# Type check with Pyright
-uv run pyright
+# Single test file
+uv run pytest tests/unit/date/test_is_between.py
 ```
 
 ## Architecture and Structure
 
 ### Module Organization
 
-Each utility function is implemented in its own Python file under `src/`:
-
-- One function per file pattern (e.g., `delete_spaces.py` contains only the `delete_spaces` function)
-- All functions are imported and re-exported through `src/__init__.py`
-- Functions use pure Python with no external dependencies
+- One function per file under `src/<module>/` (for example `src/date/is_between.py`)
+- Barrel exports in `src/<module>/__init__.py` and `src/__init__.py`
+- No runtime dependencies
 
 ### Testing Approach
 
-- All tests are in `tests/test_string_utils.py`
-- Each function has its own test class (e.g., `TestDeleteSpaces` for `delete_spaces`)
-- Test classes include:
-  - Basic functionality tests
-  - Edge case tests
-  - Docstring example verification
-
-### Import Pattern
-
-When testing or using functions from this package:
+- Unit tests: `tests/unit/<module>/test_<function>.py`
+- Benchmarks: `tests/benchmark/` (`timeit`; `__file__` is not defined inside timeit strings)
+- Import from `src`, not the installed package name:
 
 ```python
-from package.umt_python.src import function_name
+from src.date import is_between
+from src.validate import is_number
 ```
 
 ### Code Style Guidelines
 
-- Use type hints for all function parameters and return values
-- Include comprehensive docstrings with examples
-- Follow existing naming conventions (snake_case for functions and variables)
-- Keep functions pure (no side effects)
-- Handle edge cases gracefully
+- `int | float` pipe unions for numeric arguments (Python 3.10+)
+- Avoid `typing.Any`; use `object` if needed
+- Reject `isinstance(n, bool)` in numeric validators (`bool` is an `int`)
+- Use `decimal.Decimal` from strings for exact math parity with JavaScript
+- Import `Callable` / `Iterable` from `collections.abc`
+- Do not put `try`/`except` inside loops (`PERF203`)
 
 ### Adding New Functions
 
-1. Create a new file in `src/` with the function name
-2. Implement the function with type hints and docstring
-3. Add the import to `src/__init__.py`
-4. Add the function name to `__all__` in `src/__init__.py`
-5. Create a test class in `tests/test_string_utils.py`
-6. Update README.md with the new function in the appropriate table
+1. Implement in `src/<module>/<name>.py` with types and a docstring example
+2. Re-export from `src/<module>/__init__.py` and `src/__init__.py` (`__all__`)
+3. Add `tests/unit/<module>/test_<name>.py`
+4. Update `README.md` when the public surface or constraints change
+5. Run `make format lint typecheck test`
 
-### Common Development Tasks
-
-When making changes:
-
-1. Always run `uv run ruff format` before committing
-2. Ensure `uv run ruff check` passes
-3. Ensure `uv run pyright` passes for type checking
-4. Run tests with `uv run pytest` to verify functionality
-5. Update README.md if adding new functions or changing signatures
+Date, array, and math ports must follow `package/main` tests for Sunday-start weeks, NaN partitioning in sorts, and exclusivity defaults on `is_between`.

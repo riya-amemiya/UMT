@@ -1,6 +1,6 @@
 # UMT Python Package
 
-UMT Python Package is a collection of useful utility functions for various tasks in Python, focusing on string manipulation and formatting.
+UMT Python Package is a Python port of the TypeScript [`umt`](https://github.com/riya-amemiya/UMT/tree/main/package/main) utility library. `package/main` is the source of truth; this package mirrors those modules (`array`, `date`, `math`, `string`, `validate`, …) with `snake_case` names.
 
 ## Install
 
@@ -17,20 +17,78 @@ poetry add umt-python
 ## Quick Start
 
 ```python
-from umt_python import random_string, format_string, to_base64
+from umt_python import (
+    add_business_days,
+    format_string,
+    is_between,
+    random_string,
+    to_base64,
+)
 
-# Generate a random string
-random_str = random_string(10)
-print(random_str)  # e.g., "aBcD3fGh1j"
+random_string(10)  # e.g. "aBcD3fGh1j"
+format_string("Hello, {0}! Today is {1}.", "World", "Monday")
+to_base64("Hello World")  # "SGVsbG8gV29ybGQ="
 
-# Format a string with placeholders
-formatted = format_string("Hello, {0}! Today is {1}.", "World", "Monday")
-print(formatted)  # "Hello, World! Today is Monday."
+from datetime import datetime
 
-# Encode string to Base64
-encoded = to_base64("Hello World")
-print(encoded)  # "SGVsbG8gV29ybGQ="
+is_between(datetime(2025, 4, 15), datetime(2025, 4, 10), datetime(2025, 4, 20))
+add_business_days(datetime(2025, 4, 18, 9, 30), 1)  # 2025-04-21 09:30
 ```
+
+Import the published package as `umt_python`. Unit tests in this repo import from `src` (for example `from src.date import is_between`).
+
+## Modules
+
+Public names are re-exported from `src/__init__.py`. Grouped the same way as TypeScript:
+
+| Module | Examples |
+| --- | --- |
+| `advance` | `range_advance` |
+| `array` | `chunk`, `unique`, `ultra_number_sort`, `zip_arrays` |
+| `async_util` | `sleep`, `parallel`, `timeout`, `debounce_async` |
+| `color` | `hexa_to_rgba`, `rgba_to_hsla` |
+| `consts` | `ONE_DAY_MS`, `HttpStatus` |
+| `crypto` | `encode_base32`, `decode_base58` |
+| `data_structure` | `LRUCache`, `TTLCache`, `PriorityQueue` |
+| `date` | `is_between`, `add_business_days`, `from_unix` (see below) |
+| `error` | `safe_execute`, `match_result` |
+| `function` | `debounce`, `memoize`, `throttle` |
+| `ip` | `ip_to_long`, `is_private_ip` |
+| `iterator` | `lazy_map`, `lazy_filter`, `lazy_take` |
+| `map` | `group_by_to_map`, `zip_to_map` |
+| `math` | `gcd`, `n_cr`, `sum_precise` |
+| `number` | `format_number`, `to_ordinal`, `to_percentage` |
+| `object` | `object_get`, `deep_clone`, `flatten_object` |
+| `predicate` | `every`, `some`, `is_nullish` |
+| `random` | `random_choice`, `seeded_random` |
+| `simple` | `birthday_simple`, `now_simple` |
+| `string` | `format_string`, `slugify`, `levenshtein_distance` |
+| `time` | `convert_time` |
+| `tool` | `pipe`, `unwrap`, `parse_json` |
+| `ua` | `parse_user_agent` |
+| `unit` | `to_celsius`, `to_kelvin` |
+| `url` | `build_url`, `parse_query_string` |
+| `validate` | `is_number`, `array_of`, `parse_email` |
+
+Not every TypeScript helper is ported yet (for example there is no `is_same`; use `is_same_day` or compare truncated values with `start_of`).
+
+## Date helpers
+
+Local-time calendar helpers aligned with TypeScript `package/main/src/Date`. Week boundaries are Sunday-start (JavaScript `Date#getDay()` 0, not Python `weekday()` Monday=0). There are no UTC variants.
+
+| Function | Type | Description | Example |
+| --- | --- | --- | --- |
+| `is_between` | `(date, start, end, unit=None, inclusivity="()") -> bool` | Range check. Default inclusivity is exclusive on both ends. Ranges are **not** swapped. Omit `unit` for exact timestamps; with a unit, all three dates are truncated with `start_of` first. | `is_between(datetime(2025, 4, 15), datetime(2025, 4, 10), datetime(2025, 4, 20))  # True` / `is_between(datetime(2025, 4, 10), datetime(2025, 4, 10), datetime(2025, 4, 20))  # False` / `is_between(datetime(2025, 4, 10), datetime(2025, 4, 10), datetime(2025, 4, 20), None, "[]")  # True` |
+| `add_business_days` | `(date, amount, holidays=None) -> datetime` | Walk calendar days until `amount` weekdays (minus optional holidays compared with `is_same_day`) have been counted. Start date is not counted: Friday + 1 is Monday. `0` returns a clone and does not snap to a business day. | `add_business_days(datetime(2025, 4, 18, 9, 30), 1)  # datetime(2025, 4, 21, 9, 30)` |
+| `sub_business_days` | `(date, amount, holidays=None) -> datetime` | `add_business_days(date, -amount, holidays)` | `sub_business_days(datetime(2025, 4, 21, 9, 30), 1)  # datetime(2025, 4, 18, 9, 30)` |
+| `is_business_day` | `(date, holidays=None) -> bool` | Weekday and not in `holidays` | `is_business_day(datetime(2025, 4, 21))  # True` |
+| `get_quarter` | `(date) -> int` | Local month → 1–4 (Jan–Mar = 1) | `get_quarter(datetime(2025, 4, 15))  # 2` |
+| `week_of_year` | `(date) -> int` | Sunday-start week index. Week 1 contains January 1 of that year. Not ISO-8601. | `week_of_year(datetime(2025, 1, 1))  # 1` / `week_of_year(datetime(2025, 1, 5))  # 2` |
+| `from_unix` | `(value, unit="s") -> datetime` | Epoch to naive local datetime whose timestamp matches JavaScript `Date.getTime()` | `from_unix(0).timestamp()  # 0.0` |
+| `to_unix` | `(date, unit="s") -> float` | Default seconds, floored | `to_unix(datetime(1970, 1, 1, tzinfo=timezone.utc))  # 0.0` |
+| `start_of` / `end_of` | `(date, unit) -> datetime` | Boundary truncation. `unit` is `second` \| `minute` \| `hour` \| `day` \| `week` \| `month` \| `quarter` \| `year` | `start_of(datetime(2025, 4, 15, 10, 30), "day")  # datetime(2025, 4, 15, 0, 0)` |
+
+`DateInclusivity` is `"()"` \| `"[]"` \| `"[)"` \| `"(]"`. `UnixTimeUnit` is `"s"` \| `"ms"`.
 
 ## Function List
 
@@ -90,26 +148,30 @@ print(encoded)  # "SGVsbG8gV29ybGQ="
 
 - `DEFAULT_RANDOM_STRING_CHARS`: Default character pool for random string generation (ASCII letters + digits)
 
-## Requirements
+## Constraints
 
-- Python 3.9 or higher
+- **Python 3.10+** (`requires-python = ">=3.10"`). CI currently runs 3.10–3.15.
+- `bool` is a subclass of `int` in Python. Numeric validators must reject `True` / `False` explicitly so they do not treat them as `1` / `0`.
+- Exact arithmetic in math helpers uses `decimal.Decimal` constructed from strings, to match JavaScript number-string behavior.
+- Date week math uses Sunday-start weeks. Do not assume ISO weeks (`datetime.isocalendar()`).
 
 ## Development
 
-This project uses `uv` for dependency management.
+This project uses `uv`. Prefer the Makefile targets (same commands as CI):
 
 ```bash
-# Install dependencies
-uv sync
+make install      # uv sync
+make test         # uv run pytest
+make lint         # ruff format --check && ruff check
+make format       # uv run ruff format
+make typecheck    # uv run pyright
+make all          # format, lint, typecheck, test
+```
 
-# Run tests
-uv run pytest
+Tests live under `tests/unit/` (mirroring `src/`) and import from `src`:
 
-# Format code
-uv run ruff format
-
-# Lint code
-uv run ruff check
+```python
+from src.date import is_between
 ```
 
 ## License
