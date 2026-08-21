@@ -19,7 +19,7 @@ classifiers = [
   "Topic :: Software Development :: Libraries :: Python Modules",
   "Topic :: Utilities",
 ]
-description = "A collection of useful utility functions for various tasks in Python, focusing on string manipulation and formatting."
+description = "A Python port of the UMT utility library (array, date, math, string, validate, and related helpers)."
 license = "MIT"
 name = "umt_python"
 readme = "README.md"

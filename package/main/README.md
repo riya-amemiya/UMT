@@ -20,6 +20,58 @@ pnpm add umt
 bun add umt
 ```
 
+v5 is ESM-only. Use `import`; `require("umt")` is not supported. Runtime matrix and migration notes: [COMPATIBILITY.md](./COMPATIBILITY.md).
+
+```ts
+import { isBetween, addBusinessDays, fromUnix } from "umt";
+// or a subpath:
+import { weekOfYear } from "umt/Date";
+```
+
+## Date helpers
+
+Local-time calendar helpers. Week boundaries are Sunday-start (JavaScript `Date#getDay()` 0). There are no UTC variants.
+
+| Function | Behavior |
+| --- | --- |
+| `isBetween(date, start, end, unit?, inclusivity?)` | Default `inclusivity` is `"()"` (exclusive both ends, matching dayjs). Ranges are **not** swapped: if `start` is after `end`, the result is `false`. Omit `unit` for millisecond timestamps; with a unit, all three dates are truncated via `startOf` first. |
+| `isSame(left, right, unit?)` | Same truncation rules as `isBetween`. Omit `unit` for exact `getTime()` equality. |
+| `addBusinessDays(date, amount, holidays?)` / `subBusinessDays` | Walks calendar days until `amount` weekdays (minus optional holidays compared with `isSameDay`) have been counted. The start date is not counted: Friday + 1 is Monday, Saturday + 1 is Monday. `0` returns a clone and does not snap to a business day. Does not mutate the input. |
+| `getQuarter(date)` | Local month → `1`–`4` (Jan–Mar = 1), matching `startOf(..., "quarter")`. |
+| `weekOfYear(date)` | Sunday-start week index. Week 1 contains January 1 of that local year. Uses day-count rounding so DST does not shift the week number. Not ISO-8601 (Monday-start) week numbering. |
+| `fromUnix(value, unit?)` / `toUnix(date, unit?)` | Default unit is `"s"`. `toUnix(..., "s")` is `Math.floor(date.getTime() / 1000)`. |
+
+`DateInclusivity` is `"()"` \| `"[]"` \| `"[)"` \| `"(]"`. `UnixTimeUnit` is `"s"` \| `"ms"`. `DateBoundaryUnit` is `second` \| `minute` \| `hour` \| `day` \| `week` \| `month` \| `quarter` \| `year`.
+
+```ts
+import {
+  addBusinessDays,
+  fromUnix,
+  getQuarter,
+  isBetween,
+  toUnix,
+  weekOfYear,
+} from "umt/Date";
+
+const start = new Date(2025, 3, 10);
+const mid = new Date(2025, 3, 15);
+const end = new Date(2025, 3, 20);
+
+isBetween(mid, start, end); // true
+isBetween(start, start, end); // false (exclusive default)
+isBetween(start, start, end, undefined, "[]"); // true
+
+addBusinessDays(new Date(2025, 3, 18), 1); // 2025-04-21 (Monday)
+getQuarter(new Date(2025, 3, 15)); // 2
+weekOfYear(new Date(2025, 0, 1)); // 1
+weekOfYear(new Date(2025, 0, 5)); // 2 (Sunday)
+
+fromUnix(0).getTime(); // 0
+toUnix(new Date(1_700_000_000_999)); // 1700000000
+```
+
+Python and Rust ports of these helpers live in `package/umt_python` and `package/umt_rust`. Rust treats `DateTime<Utc>` calendar fields as wall-clock values except `fromUnix` / `toUnix`, which use real epoch timestamps. `isSame` exists in TypeScript only.
+
 ## Function List
 
 ### Advance
