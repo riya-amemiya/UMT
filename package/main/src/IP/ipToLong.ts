@@ -4,11 +4,6 @@
  * @returns {number} 32-bit unsigned integer
  */
 export const ipToLong = (ip: string): number => {
-  // Performance: pack octets with bitwise shifts instead of building a
-  // 32-character binary string (split → toString(2) → padStart → join →
-  // parseInt). Inverse of the bitwise longToIp path. Avoids five string
-  // allocations per call. Measured ~10× faster on IPv4 literals
-  // (477 ns → 47 ns per call, 500k ops, Bun 1.3).
   const parts = ip.split(".");
   let result = 0;
   for (const part of parts) {
