@@ -100,15 +100,7 @@ jobs:
       - name: Install Dependencies
         if: steps.cache-restore-dev-depends.outputs.cache-hit != 'true'
         run: nix develop -c bun i
-      - name: Restore Build Cache
-        id: cache-restore-prod
-        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          enableCrossOsArchive: true
-          path: '**/module'
-          key: bun-${{ hashFiles('package/main/module/tsconfig.tsbuildinfo') }}
       - name: Build Package
-        if: steps.cache-restore-prod.outputs.cache-hit != 'true'
         run: nix develop -c bun run build
       - name: Remove unnecessary build artifacts for accurate size measurement
         run: rm -rf module/tsconfig.tsbuildinfo module/tests
@@ -117,13 +109,6 @@ jobs:
       - name: Upload Bundle Analysis to Codecov
         if: github.actor != 'dependabot[bot]'
         run: nix develop -c bunx @codecov/bundle-analyzer ./module --bundle-name=umt --upload-token=${{ secrets.CODECOV_TOKEN }}
-      - name: Save Build Cache
-        if: steps.cache-restore-prod.outputs.cache-hit != 'true'
-        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          enableCrossOsArchive: true
-          path: '**/module'
-          key: bun-${{ hashFiles('package/main/module/tsconfig.tsbuildinfo') }}
   test:
     name: Run Tests
     needs: setup
