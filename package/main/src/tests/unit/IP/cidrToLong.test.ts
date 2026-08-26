@@ -15,4 +15,11 @@ describe("cidrToLong", () => {
       expect(cidrToLong(cidr)).toBe(expected);
     });
   });
+
+  it("should match 2^32 - 2^(32-cidr) for every prefix length 0–32", () => {
+    for (let cidr = 0; cidr <= 32; cidr++) {
+      const expected = Number(2n ** 32n - 2n ** (32n - BigInt(cidr)));
+      expect(cidrToLong(cidr)).toBe(expected);
+    }
+  });
 });
