@@ -12,6 +12,14 @@ class TestCidrToLong(unittest.TestCase):
     def test_common_cidrs(self):
         self.assertEqual(cidr_to_long(8), 4278190080)
         self.assertEqual(cidr_to_long(16), 4294901760)
+        self.assertEqual(cidr_to_long(1), 2147483648)
+        self.assertEqual(cidr_to_long(31), 4294967294)
+
+    def test_every_prefix_length(self):
+        # 2^32 - 2^(32-cidr) is the numeric mask for every prefix 0-32.
+        for cidr in range(33):
+            expected = (1 << 32) - (1 << (32 - cidr))
+            self.assertEqual(cidr_to_long(cidr), expected)
 
     def test_invalid_cidr(self):
         with self.assertRaises(ValueError):
