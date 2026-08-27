@@ -1,3 +1,4 @@
+import { cidrToSubnetMask } from "@/IP/cidrToSubnetMask";
 import { subnetMaskToCidr } from "@/IP/subnetMaskToCidr";
 
 describe("subnetMaskToCidr", () => {
@@ -16,5 +17,11 @@ describe("subnetMaskToCidr", () => {
     ])("should convert %s to /%i", (mask, expected) => {
       expect(subnetMaskToCidr(mask)).toBe(expected);
     });
+  });
+
+  it("should round-trip cidrToSubnetMask for every prefix length 0–32", () => {
+    for (let cidr = 0; cidr <= 32; cidr++) {
+      expect(subnetMaskToCidr(cidrToSubnetMask(cidr))).toBe(cidr);
+    }
   });
 });
