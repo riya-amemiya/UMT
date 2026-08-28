@@ -22,5 +22,4 @@ def cidr_to_long(cidr: int) -> int:
     if not isinstance(cidr, int) or cidr < 0 or cidr > 32:
         raise ValueError("CIDR must be an integer between 0 and 32")
 
-    binary_str = "1" * cidr + "0" * (32 - cidr)
-    return int(binary_str, 2)
+    return ((1 << cidr) - 1) << (32 - cidr)

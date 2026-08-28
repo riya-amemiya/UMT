@@ -12,6 +12,7 @@ UMT is a collection of useful utility functions. The primary implementation and 
 2.  **No TODOs**: Do not leave TODO comments in the code.
 3.  **No Git Conflict Markers**: Ensure all conflict markers (`<<<<<<<`, `=======`, `>>>>>>>`) are resolved and removed. Their presence will fail CI immediately.
 4.  **Verification**: Always verify changes by running the appropriate test and lint commands for the specific package.
+5.  **No benchmark comments**: Do not put timing numbers, "~Nx faster", ns/call, op counts, or runtime versions in source comments. Put measurements in the PR description only. Comments should explain non-obvious behavior, not recap a microbenchmark.
 
 ## Package: main (TypeScript)
 
