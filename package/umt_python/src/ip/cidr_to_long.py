@@ -22,9 +22,4 @@ def cidr_to_long(cidr: int) -> int:
     if not isinstance(cidr, int) or cidr < 0 or cidr > 32:
         raise ValueError("CIDR must be an integer between 0 and 32")
 
-    # Bitwise mask of `cidr` leading 1s instead of allocating a 32-char
-    # binary string and parsing it. Matches TS cidrToLong / Rust
-    # cidr_to_long. cidr=0 -> 0; cidr=32 -> 0xFFFFFFFF.
-    # ~2x faster (~228 ns -> ~115 ns / call, 2M mixed CIDR 0-32,
-    # CPython 3.12.3).
     return ((1 << cidr) - 1) << (32 - cidr)
