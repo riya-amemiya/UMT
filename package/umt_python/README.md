@@ -53,7 +53,7 @@ Public names are re-exported from `src/__init__.py`. Grouped the same way as Typ
 | `date` | `is_between`, `add_business_days`, `from_unix` (see below) |
 | `error` | `safe_execute`, `match_result` |
 | `function` | `debounce`, `memoize`, `throttle` |
-| `ip` | `ip_to_long`, `is_private_ip` |
+| `ip` | `ip_to_long`, `cidr_to_long`, `is_in_range`, `is_private_ip` (see below) |
 | `iterator` | `lazy_map`, `lazy_filter`, `lazy_take` |
 | `map` | `group_by_to_map`, `zip_to_map` |
 | `math` | `gcd`, `n_cr`, `sum_precise` |
@@ -89,6 +89,21 @@ Local-time calendar helpers aligned with TypeScript `package/main/src/Date`. Wee
 | `start_of` / `end_of` | `(date, unit) -> datetime` | Boundary truncation. `unit` is `second` \| `minute` \| `hour` \| `day` \| `week` \| `month` \| `quarter` \| `year` | `start_of(datetime(2025, 4, 15, 10, 30), "day")  # datetime(2025, 4, 15, 0, 0)` |
 
 `DateInclusivity` is `"()"` \| `"[]"` \| `"[)"` \| `"(]"`. `UnixTimeUnit` is `"s"` \| `"ms"`.
+
+## IP helpers
+
+IPv4 dotted-decimal only, aligned with TypeScript `package/main/src/IP`. Unlike TypeScript, these functions validate input and raise `ValueError` (or `TypeError` from `get_network_address`) on malformed values.
+
+| Function | Type | Description | Example |
+| --- | --- | --- | --- |
+| `ip_to_long` / `long_to_ip` | `(ip: str) -> int` / `(long: int \| float) -> str` | Pack or unpack four octets. Rejects leading zeros (`"192.168.01.1"`). | `ip_to_long("192.168.1.1")  # 3232235777` / `long_to_ip(3232235777)  # "192.168.1.1"` |
+| `cidr_to_long` / `cidr_to_subnet_mask` | `(cidr: int) -> int` / `(cidr: int) -> str` | Prefix `0`–`32`. Outside that range raises `ValueError`. | `cidr_to_long(24)  # 4294967040` / `cidr_to_subnet_mask(24)  # "255.255.255.0"` |
+| `subnet_mask_to_cidr` | `(subnet_mask: str) -> int` | Requires contiguous `1` bits then `0` bits. `"255.0.255.0"` raises. TypeScript `subnetMaskToCidr` only counts bits. | `subnet_mask_to_cidr("255.255.255.0")  # 24` |
+| `is_in_range` | `(remote_ip, network_ip, cidr) -> bool` | `(ip & mask) == (network & mask)`. CIDR `0` matches every IPv4 address. | `is_in_range("192.168.1.2", "192.168.1.0", 24)  # True` |
+| `is_private_ip` | `(ip: str) -> bool` | RFC 1918 only: `10.0.0.0/8`, `172.16.0.0/12`, `192.168.0.0/16`. Loopback and link-local are not private. | `is_private_ip("10.0.0.1")  # True` / `is_private_ip("127.0.0.1")  # False` |
+| `get_ip_class` | `(ip: str) -> str` | Classful first-octet lookup (`A`–`E`). `0.0.0.0` and malformed input return `""`. | `get_ip_class("10.0.0.1")  # "A"` |
+| `get_network_address` | `(ip: str, subnet_mask: str) -> int` | Returns an unsigned 32-bit **int**, not a dotted string. | `get_network_address("192.168.1.1", "255.255.255.0")  # 3232235776` |
+| `ip_to_binary_string` | `(ip: str) -> str` | 32-character `0`/`1` string, eight bits per octet. | `ip_to_binary_string("192.168.0.1")  # "11000000101010000000000000000001"` |
 
 ## Function List
 
@@ -154,6 +169,7 @@ Local-time calendar helpers aligned with TypeScript `package/main/src/Date`. Wee
 - `bool` is a subclass of `int` in Python. Numeric validators must reject `True` / `False` explicitly so they do not treat them as `1` / `0`.
 - Exact arithmetic in math helpers uses `decimal.Decimal` constructed from strings, to match JavaScript number-string behavior.
 - Date week math uses Sunday-start weeks. Do not assume ISO weeks (`datetime.isocalendar()`).
+- IP helpers are IPv4 only. They validate input (TypeScript does not). `subnet_mask_to_cidr` requires a contiguous mask; TypeScript `subnetMaskToCidr` only counts set bits. `is_private_ip` is RFC 1918 only (not loopback or link-local).
 
 ## Development
 

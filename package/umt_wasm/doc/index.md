@@ -41,13 +41,15 @@ The crate uses Rust edition 2024 and the nightly toolchain (same as `umt_rust`).
 
 ## What gets skipped
 
-Codegen only wraps signatures that map onto the wasm-bindgen ABI (scalars, `String`, `Vec` of those, `Result` of those). Typical skip reasons, listed in `doc/generated.md`:
+Codegen only considers `pub fn umt_*`. Functions without that prefix are **invisible** — they are not generated and do not appear in the skipped table. The entire `umt_rust::ip` module (`cidr_to_long`, `ip_to_long`, `is_private_ip`, …) is in that category; IPv4 helpers are available from TypeScript and Python, not from this wasm package.
+
+Of the `umt_*` functions it does see, codegen only wraps signatures that map onto the wasm-bindgen ABI (scalars, `String`, `Vec` of those, `Result` of those). Typical skip reasons, listed in `doc/generated.md`:
 
 - `&DateTime<Utc>` / `DateTime<Utc>` — most Date helpers including `umt_is_between`, `umt_add_business_days`, `umt_from_unix`, `umt_week_of_year`
 - Custom enums such as `UnixTimeUnit`, `DateInclusivity`, `DurationUnit`
 - Generics, closures, async, and reference returns (`&'static str`)
 
-To expose a skipped function, add an adapter in `src/manual.rs` (usually converting through strings, `f64` epoch millis, or serde) and `pub use` it from `src/lib.rs`. Do not try to force it through codegen.
+To expose a skipped or unprefixed function, add an adapter in `src/manual.rs` (usually converting through strings, `f64` epoch millis, or serde) and `pub use` it from `src/lib.rs`. Do not try to force it through codegen. Rename a Rust function to `umt_*` only if you intend the wasm wrapper to pick it up automatically.
 
 A few Date helpers that already use wasm-friendly types (`umt_is_leap_year`, `umt_day_of_week`, timezone offset strings) are generated automatically.
 

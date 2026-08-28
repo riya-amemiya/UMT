@@ -25,6 +25,8 @@ Subpath exports match source modules (`umt/Array`, `umt/Date`, `umt/Validate`, â
 
 Input validation is the caller's responsibility. Functions do not throw on invalid arguments unless throwing is the function's purpose (for example `unwrap`).
 
+IP helpers (`umt/IP`) are IPv4 only. TypeScript does not validate dotted-decimal strings; the Python and Rust ports raise / return `Err` on malformed addresses and reject non-contiguous subnet masks. `isPrivateIp` is RFC 1918 only (not loopback or link-local).
+
 ## Versioning
 
 This package follows [Semantic Versioning (SemVer)](https://semver.org/):

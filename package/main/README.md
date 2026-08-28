@@ -72,6 +72,44 @@ toUnix(new Date(1_700_000_000_999)); // 1700000000
 
 Python and Rust ports of these helpers live in `package/umt_python` and `package/umt_rust`. Rust treats `DateTime<Utc>` calendar fields as wall-clock values except `fromUnix` / `toUnix`, which use real epoch timestamps. `isSame` exists in TypeScript only.
 
+## IP helpers
+
+IPv4 dotted-decimal only (no IPv6). Numeric results are unsigned 32-bit values. `getNetworkAddress` returns a number, not a dotted string — pass it through `longToIp`.
+
+Input validation is the caller's responsibility. These functions do not throw on malformed strings (see [COMPATIBILITY.md](./COMPATIBILITY.md)). Python and Rust ports **do** validate.
+
+| Function | Behavior |
+| --- | --- |
+| `ipToLong(ip)` / `longToIp(long)` | Pack or unpack four octets. Leading zeros in an octet are accepted (`"192.168.01.1"` equals `"192.168.1.1"`). |
+| `cidrToLong(cidr)` / `cidrToSubnetMask(cidr)` | Prefix length `0`–`32` to a mask number / dotted mask. CIDR `0` is `0` (`"0.0.0.0"`). |
+| `subnetMaskToCidr(mask)` | Counts set bits. Does **not** require a contiguous mask: `"255.0.255.0"` returns `16`. |
+| `isInRange(ip, network, cidr)` | `(ip & mask) === (network & mask)`. CIDR `0` matches every IPv4 address. |
+| `isPrivateIp(ip)` | RFC 1918 only: `10.0.0.0/8`, `172.16.0.0/12`, `192.168.0.0/16`. Loopback (`127.0.0.1`) and link-local (`169.254.0.0/16`) are **not** private. |
+| `getIpClass(ip)` | Classful first-octet lookup (`A`–`E`). `0.0.0.0` and malformed input return `""`. |
+| `getNetworkAddress(ip, mask)` | `ipToLong(ip) & cidrToLong(subnetMaskToCidr(mask))` as an unsigned 32-bit number. |
+| `ipToBinaryString(ip)` | 32-character `0`/`1` string, eight bits per octet. |
+
+```ts
+import {
+  cidrToSubnetMask,
+  getNetworkAddress,
+  ipToLong,
+  isInRange,
+  isPrivateIp,
+  longToIp,
+} from "umt/IP";
+
+ipToLong("192.168.1.1"); // 3232235777
+longToIp(3232235777); // "192.168.1.1"
+cidrToSubnetMask(24); // "255.255.255.0"
+isInRange("192.168.1.2", "192.168.1.0", 24); // true
+isPrivateIp("10.0.0.1"); // true
+isPrivateIp("127.0.0.1"); // false
+longToIp(getNetworkAddress("192.168.1.1", "255.255.255.0")); // "192.168.1.0"
+```
+
+Python and Rust ports live in `package/umt_python` and `package/umt_rust`. Those ports raise / return `Err` on malformed input and reject non-contiguous subnet masks. They are not exposed through `umt-plugin-wasm`: Rust IP functions are not named `umt_*`, so wasm codegen ignores them.
+
 ## Function List
 
 ### Advance

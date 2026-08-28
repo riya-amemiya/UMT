@@ -48,3 +48,38 @@ assert_eq!(epoch.timestamp(), 0);
 There is no `umt_is_same` yet (TypeScript `isSame`). Use `umt_is_same_day` or compare `umt_start_of` results.
 
 Wasm bindings for most of these Date helpers are **not** auto-generated (`DateTime<Utc>` / custom enums). See `package/umt_wasm/doc/index.md`.
+
+## IP helpers
+
+IPv4 utilities in `src/ip/`. Names are **not** `umt_`-prefixed (`umt_rust::ip::cidr_to_long`, not `umt_cidr_to_long`). Most return `Result<_, String>`; `long_to_ip` returns `String`, and `get_ip_class` returns `""` for invalid input (matching TypeScript).
+
+| Function | Notes |
+| --- | --- |
+| `ip_to_long` / `long_to_ip` | Pack or unpack four octets. Invalid dotted-decimal returns `Err`. Leading zeros (`"192.168.01.1"`) are rejected, same as Python. `long_to_ip` always returns `String`. |
+| `cidr_to_long` / `cidr_to_subnet_mask` | Prefix `0`–`32`. `cidr > 32` is `Err`. CIDR `0` is `0`. |
+| `subnet_mask_to_cidr` | Requires contiguous `1` bits then `0` bits (same as Python). TypeScript only counts set bits. |
+| `is_in_range` | `(ip & mask) == (network & mask)`. |
+| `is_private_ip` | RFC 1918 only: `10.0.0.0/8`, `172.16.0.0/12`, `192.168.0.0/16`. Loopback and link-local are not private. |
+| `get_ip_class` | Classful first-octet lookup. `0.0.0.0` and malformed input return `""`. |
+| `get_network_address` | Returns `u32`, not a dotted string. |
+| `ip_to_binary_string` | 32-character `0`/`1` string. |
+
+```rust
+use umt_rust::ip::{
+    cidr_to_subnet_mask, get_network_address, ip_to_long, is_in_range, is_private_ip,
+    long_to_ip,
+};
+
+assert_eq!(ip_to_long("192.168.1.1").unwrap(), 3232235777);
+assert_eq!(long_to_ip(3232235777), "192.168.1.1");
+assert_eq!(cidr_to_subnet_mask(24).unwrap(), "255.255.255.0");
+assert!(is_in_range("192.168.1.2", "192.168.1.0", 24).unwrap());
+assert!(is_private_ip("10.0.0.1").unwrap());
+assert!(!is_private_ip("127.0.0.1").unwrap());
+assert_eq!(
+    get_network_address("192.168.1.1", "255.255.255.0").unwrap(),
+    3232235776
+);
+```
+
+Wasm codegen only wraps `pub fn umt_*`, so none of these IP helpers appear in `umt-plugin-wasm` (they are absent from both the generated and skipped lists in `package/umt_wasm/doc/generated.md`).
