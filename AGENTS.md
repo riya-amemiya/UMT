@@ -90,6 +90,7 @@ Located in `package/umt_wasm`. Auto-generated wasm-bindgen wrappers over `umt_ru
 
 * **Generate bindings**: from `package/umt_wasm`, `bun run gen` (or `cargo run --manifest-path codegen/Cargo.toml` then `cargo fmt`).
 * **Do not edit** `src/generated.rs` or `doc/generated.md` by hand. After changing `umt_rust` public `umt_*` functions, regenerate and commit both files.
+* Codegen only considers `pub fn umt_*`. Modules that omit the prefix (currently `umt_rust::ip`) are invisible — they are neither generated nor listed as skipped.
 * Functions whose signatures are not wasm-bindgen-friendly (`DateTime<Utc>`, custom enums, generics, closures) are listed as skipped in `doc/generated.md`. Hand-written adapters go in `src/manual.rs`.
 * **CI**: `.github/workflows/wasm-plugin-ci.yml` includes a `codegen-sync` job that fails if generated files drift.
 
