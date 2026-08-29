@@ -90,3 +90,50 @@ fn test_ip_to_long_double_dot() {
     assert!(result.is_err());
     assert_eq!(result.unwrap_err(), "Invalid IP address format");
 }
+
+#[test]
+fn test_ip_to_long_leading_zero_third_octet() {
+    let result = ip_to_long("192.168.01.1");
+    assert!(result.is_err());
+    assert_eq!(result.unwrap_err(), "Invalid IP address format");
+}
+
+#[test]
+fn test_ip_to_long_leading_zero_fourth_octet() {
+    let result = ip_to_long("192.168.1.01");
+    assert!(result.is_err());
+    assert_eq!(result.unwrap_err(), "Invalid IP address format");
+}
+
+#[test]
+fn test_ip_to_long_all_leading_zeros() {
+    let result = ip_to_long("010.020.030.040");
+    assert!(result.is_err());
+    assert_eq!(result.unwrap_err(), "Invalid IP address format");
+}
+
+#[test]
+fn test_ip_to_long_trailing_dot() {
+    let result = ip_to_long("192.168.1.");
+    assert!(result.is_err());
+    assert_eq!(result.unwrap_err(), "Invalid IP address format");
+}
+
+#[test]
+fn test_ip_to_long_leading_dot() {
+    let result = ip_to_long(".192.168.1");
+    assert!(result.is_err());
+    assert_eq!(result.unwrap_err(), "Invalid IP address format");
+}
+
+#[test]
+fn test_ip_to_long_packs_octets_as_big_endian_u32() {
+    assert_eq!(
+        ip_to_long("192.168.1.1").unwrap(),
+        (192u32 << 24) | (168 << 16) | (1 << 8) | 1
+    );
+    assert_eq!(
+        ip_to_long("10.20.30.40").unwrap(),
+        (10u32 << 24) | (20 << 16) | (30 << 8) | 40
+    );
+}
