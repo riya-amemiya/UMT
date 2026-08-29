@@ -1,6 +1,3 @@
-from .ip_to_binary_string import ip_to_binary_string
-
-
 def ip_to_long(ip: str) -> int:
     """
     Converts an IPv4 address to a 32-bit number.
@@ -20,4 +17,26 @@ def ip_to_long(ip: str) -> int:
         >>> ip_to_long("0.0.0.0")
         0
     """
-    return int(ip_to_binary_string(ip), 2)
+    if not ip:
+        raise ValueError("IP address is required")
+
+    parts = ip.split(".")
+    if len(parts) != 4:
+        raise ValueError("Invalid IP address format")
+
+    result = 0
+    for octet in parts:
+        if (
+            not octet.isascii()
+            or not octet.isdigit()
+            or (len(octet) > 1 and octet[0] == "0")
+        ):
+            raise ValueError("Invalid IP address format")
+
+        num = int(octet)
+        if num > 255:
+            raise ValueError("Invalid IP address format")
+
+        result = (result << 8) | num
+
+    return result
