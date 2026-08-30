@@ -1,6 +1,3 @@
-import re
-
-
 def subnet_mask_to_cidr(subnet_mask: str) -> int:
     """
     Converts a subnet mask to CIDR notation.
@@ -27,21 +24,21 @@ def subnet_mask_to_cidr(subnet_mask: str) -> int:
     if len(octets) != 4:
         raise ValueError("Invalid subnet mask format")
 
-    binary_octets = []
-    for octet in octets:
-        try:
-            num = int(octet)
-        except ValueError:
-            raise ValueError("Invalid subnet mask format") from None
+    try:
+        nums = [int(octet) for octet in octets]
+    except ValueError:
+        raise ValueError("Invalid subnet mask format") from None
 
+    mask = 0
+    for num in nums:
         if num < 0 or num > 255:
             raise ValueError("Invalid subnet mask format")
+        mask = (mask << 8) | num
 
-        binary_octets.append(f"{num:08b}")
-
-    binary_string = "".join(binary_octets)
-
-    if not re.match(r"^1*0*$", binary_string):
+    # Host bits of a valid prefix mask are 0 or 2^n-1, so host & (host + 1)
+    # is 0. 0xFFFFFFFF ^ mask is a 32-bit invert (Python ints are unbounded).
+    host = 0xFFFFFFFF ^ mask
+    if host & (host + 1) != 0:
         raise ValueError("Invalid subnet mask: must be consecutive 1s followed by 0s")
 
-    return binary_string.count("1")
+    return mask.bit_count()

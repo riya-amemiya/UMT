@@ -1,6 +1,6 @@
 import unittest
 
-from src.ip import subnet_mask_to_cidr
+from src.ip import cidr_to_subnet_mask, subnet_mask_to_cidr
 
 
 class TestSubnetMaskToCidr(unittest.TestCase):
@@ -51,6 +51,24 @@ class TestSubnetMaskToCidr(unittest.TestCase):
             "Invalid subnet mask: must be consecutive 1s followed by 0s",
             str(context.exception),
         )
+
+        with self.assertRaises(ValueError) as context:
+            subnet_mask_to_cidr("255.255.255.1")
+        self.assertIn(
+            "Invalid subnet mask: must be consecutive 1s followed by 0s",
+            str(context.exception),
+        )
+
+        with self.assertRaises(ValueError) as context:
+            subnet_mask_to_cidr("254.255.255.0")
+        self.assertIn(
+            "Invalid subnet mask: must be consecutive 1s followed by 0s",
+            str(context.exception),
+        )
+
+    def test_every_prefix_length_round_trip(self):
+        for cidr in range(33):
+            self.assertEqual(subnet_mask_to_cidr(cidr_to_subnet_mask(cidr)), cidr)
 
     def test_docstring_examples(self):
         self.assertEqual(subnet_mask_to_cidr("255.255.255.0"), 24)
