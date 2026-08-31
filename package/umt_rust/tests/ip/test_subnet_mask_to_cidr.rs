@@ -1,4 +1,4 @@
-use umt_rust::ip::subnet_mask_to_cidr;
+use umt_rust::ip::{cidr_to_subnet_mask, subnet_mask_to_cidr};
 
 // Test valid subnet masks
 #[test]
@@ -57,6 +57,13 @@ fn test_subnet_mask_to_cidr_empty_string() {
 #[test]
 fn test_subnet_mask_to_cidr_incomplete_mask() {
     let result = subnet_mask_to_cidr("192.168");
+    assert!(result.is_err());
+    assert_eq!(result.unwrap_err(), "Invalid subnet mask format");
+}
+
+#[test]
+fn test_subnet_mask_to_cidr_too_many_octets() {
+    let result = subnet_mask_to_cidr("255.255.255.0.0");
     assert!(result.is_err());
     assert_eq!(result.unwrap_err(), "Invalid subnet mask format");
 }
@@ -124,4 +131,12 @@ fn test_subnet_mask_to_cidr_invalid_bit_pattern() {
         result.unwrap_err(),
         "Invalid subnet mask: must be consecutive 1s followed by 0s"
     );
+}
+
+#[test]
+fn test_subnet_mask_to_cidr_every_prefix_length_round_trip() {
+    for cidr in 0..=32 {
+        let mask = cidr_to_subnet_mask(cidr).unwrap();
+        assert_eq!(subnet_mask_to_cidr(&mask).unwrap(), cidr);
+    }
 }
