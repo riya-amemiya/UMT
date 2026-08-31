@@ -35,8 +35,6 @@ def subnet_mask_to_cidr(subnet_mask: str) -> int:
             raise ValueError("Invalid subnet mask format")
         mask = (mask << 8) | num
 
-    # Host bits of a valid prefix mask are 0 or 2^n-1, so host & (host + 1)
-    # is 0. 0xFFFFFFFF ^ mask is a 32-bit invert (Python ints are unbounded).
     host = 0xFFFFFFFF ^ mask
     if host & (host + 1) != 0:
         raise ValueError("Invalid subnet mask: must be consecutive 1s followed by 0s")
