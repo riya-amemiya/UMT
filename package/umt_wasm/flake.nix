@@ -36,14 +36,6 @@
         checks = {
           formatting = treefmtEval.config.build.check self;
         };
-
-        devShells = {
-          default = pkgs.mkShell {
-            packages = with pkgs; [
-              bun
-            ];
-          };
-        };
       }
     );
 }
