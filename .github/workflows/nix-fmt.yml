@@ -1,0 +1,50 @@
+name: Nix Format
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+      - feature/*
+    paths:
+      - '**/*.nix'
+      - '**/flake.lock'
+      - '.github/workflows/nix-fmt.yml'
+  push:
+    branches:
+      - main
+      - develop
+      - feature/*
+    paths:
+      - '**/*.nix'
+      - '**/flake.lock'
+      - '.github/workflows/nix-fmt.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  fmt:
+    name: nix fmt (${{ matrix.name }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: root
+            flake: .
+          - name: main
+            flake: package/main
+          - name: i18n
+            flake: package/umt_i18n
+          - name: wasm
+            flake: package/umt_wasm
+    defaults:
+      run:
+        working-directory: ${{ matrix.flake }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Setup Nix
+        uses: DeterminateSystems/determinate-nix-action@527f17dd63d2d60d3e5552934bc84b9a33a14d11 # v3.22.2
+      - name: Setup Magic Nix Cache
+        uses: DeterminateSystems/magic-nix-cache-action@908b263ff629f4cc17666315b7fd3ec127c6244d # v14
+      - name: Check formatting
+        run: nix fmt -- --fail-on-change flake.nix nix/treefmt.nix

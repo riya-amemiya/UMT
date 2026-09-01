@@ -1,3 +1,5 @@
+# Formatter only (`nix fmt` / `checks.formatting`).
+# Package build and test run with native toolchains, not this flake.
 {
   inputs = {
     nixpkgs = {

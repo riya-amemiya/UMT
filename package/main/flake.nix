@@ -1,3 +1,5 @@
+# Formatter only (`nix fmt` / `checks.formatting`).
+# Build, test, and lint use native toolchains (bun, make), not `nix develop`.
 {
   inputs = {
     nixpkgs = {
