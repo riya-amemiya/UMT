@@ -13,6 +13,7 @@ UMT is a collection of useful utility functions. The primary implementation and 
 3.  **No Git Conflict Markers**: Ensure all conflict markers (`<<<<<<<`, `=======`, `>>>>>>>`) are resolved and removed. Their presence will fail CI immediately.
 4.  **Verification**: Always verify changes by running the appropriate test and lint commands for the specific package.
 5.  **No benchmark comments**: Do not put timing numbers, "~Nx faster", ns/call, op counts, or runtime versions in source comments. Put measurements in the PR description only. Comments should explain non-obvious behavior, not recap a microbenchmark.
+6.  **Nix is formatter-only**: Use `nix fmt` for Nix (and root YAML) formatting. Do not wrap build, test, or lint in `nix develop`.
 
 ## Package: main (TypeScript)
 
@@ -23,6 +24,7 @@ Located in `package/main`.
 *   **Testing**: `bun run test` (runs Jest)
 *   **Linting**: `bun run lint` (runs ESLint, Biome, and TSC)
 *   **Formatting**: `bun run format` (runs Biome)
+*   **Nix**: `nix fmt` only. Scripts call `make` directly.
 
 **Note**: The `types` directory primarily contains type definitions. Porting logic from `types` is only necessary if it corresponds to runtime logic.
 
@@ -92,7 +94,7 @@ Located in `package/umt_wasm`. Auto-generated wasm-bindgen wrappers over `umt_ru
 * **Do not edit** `src/generated.rs` or `doc/generated.md` by hand. After changing `umt_rust` public `umt_*` functions, regenerate and commit both files.
 * Codegen only considers `pub fn umt_*`. Modules that omit the prefix (currently `umt_rust::ip`) are invisible — they are neither generated nor listed as skipped.
 * Functions whose signatures are not wasm-bindgen-friendly (`DateTime<Utc>`, custom enums, generics, closures) are listed as skipped in `doc/generated.md`. Hand-written adapters go in `src/manual.rs`.
-* **CI**: `.github/workflows/wasm-plugin-ci.yml` includes a `codegen-sync` job that fails if generated files drift.
+* **CI**: `.github/workflows/wasm-plugin-ci.yml` includes a `codegen-sync` job that fails if generated files drift. Build and test run with cargo / bun; Nix is not used.
 
 ## Algorithms & Specific Implementations
 *   **String Distance**: Implement Levenshtein and similar algorithms using O(min(N, M)) space complexity (two-row strategy).

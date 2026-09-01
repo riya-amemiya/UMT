@@ -1,3 +1,5 @@
+# Formatter only (`nix fmt` / `checks.formatting`).
+# Build, test, and lint use native toolchains (bun), not `nix develop`.
 {
   inputs = {
     nixpkgs = {
@@ -33,15 +35,6 @@
 
         checks = {
           formatting = treefmtEval.config.build.check self;
-        };
-
-        devShells = {
-          default = pkgs.mkShell {
-            packages = with pkgs; [
-              bun
-              nodejs
-            ];
-          };
         };
       }
     );

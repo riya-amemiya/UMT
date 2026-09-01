@@ -2,9 +2,11 @@
 # Idempotent Cloud Agent bootstrap for the UMT monorepo.
 #
 # Prepares the three primary packages documented in AGENTS.md:
-#   - package/main       TypeScript (Bun via Nix flake dev shell)
+#   - package/main       TypeScript (Bun)
 #   - package/umt_python Python (uv)
 #   - package/umt_rust   Rust (cargo, nightly toolchain for edition 2024)
+#
+# Nix is installed only for `nix fmt`. Build and test use native toolchains.
 #
 # Safe to run repeatedly: every toolchain check is guarded and the per-package
 # steps only refresh dependencies against the committed lockfiles.
@@ -15,9 +17,17 @@ cd "$REPO_ROOT"
 
 log() { printf '\n\033[1;34m==> %s\033[0m\n' "$1"; }
 
-# --- Nix (single-user) -------------------------------------------------------
-# The main package's package.json scripts and CI drive everything through
-# `nix develop`, which provides pinned bun/node/gnumake from the flake.
+# --- Bun ---------------------------------------------------------------------
+log "Ensuring Bun is available"
+export BUN_INSTALL="${BUN_INSTALL:-$HOME/.bun}"
+export PATH="$BUN_INSTALL/bin:$PATH"
+if ! command -v bun >/dev/null 2>&1; then
+  curl -fsSL https://bun.sh/install | bash
+  export PATH="$BUN_INSTALL/bin:$PATH"
+fi
+
+# --- Nix (formatter only) ----------------------------------------------------
+# Flakes provide `nix fmt`. package.json scripts and CI do not use `nix develop`.
 log "Ensuring Nix is available"
 if [ ! -e "$HOME/.nix-profile/etc/profile.d/nix.sh" ]; then
   sh <(curl -L https://nixos.org/nix/install) --no-daemon --yes
@@ -47,7 +57,7 @@ fi
 
 # --- package/main (TypeScript / Bun) ----------------------------------------
 log "Installing package/main dependencies (bun)"
-( cd package/main && nix develop -c bun install )
+( cd package/main && bun install )
 
 # --- package/umt_python (Python / uv) ---------------------------------------
 log "Installing package/umt_python dependencies (uv)"

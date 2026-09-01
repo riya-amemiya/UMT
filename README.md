@@ -31,12 +31,15 @@ TypeScript (`package/main`) is the source of truth. Other language ports should 
 
 Per-package commands live in [AGENTS.md](AGENTS.md). Cloud Agent bootstrap is [`.cursor/install.sh`](.cursor/install.sh).
 
+Build, test, and lint use each package's native toolchain. Nix is only used for `nix fmt`.
+
 ```bash
-# TypeScript (Bun inside the package flake)
+# TypeScript (Bun)
 cd package/main
-bun install          # run inside `nix develop` if bun/node are not on PATH
+bun install
 bun run test
 bun run lint
+bun run build
 
 # Python (uv)
 cd package/umt_python
@@ -48,9 +51,11 @@ cd package/umt_rust
 cargo test
 cargo fmt
 cargo clippy
+
+# Format Nix files
+nix fmt
 ```
 
-`package/main` npm scripts (`bun run test`, `bun run lint`, `bun run build`) invoke `nix develop --command make …`, so Nix flakes must be available for those entry points.
 
 ## Compatibility
 

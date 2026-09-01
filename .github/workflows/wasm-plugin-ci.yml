@@ -60,10 +60,6 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: dtolnay/rust-toolchain@nightly
-      - name: Setup Nix
-        uses: DeterminateSystems/determinate-nix-action@527f17dd63d2d60d3e5552934bc84b9a33a14d11 # v3.22.2
-      - name: Setup Magic Nix Cache
-        uses: DeterminateSystems/magic-nix-cache-action@908b263ff629f4cc17666315b7fd3ec127c6244d # v14
       - name: Run Tests(Cargo)
         run: cargo test --all -- --nocapture
   codegen-sync:

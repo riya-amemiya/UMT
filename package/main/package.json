@@ -212,17 +212,17 @@
     "url": "git+https://github.com/riya-amemiya/UMT.git"
   },
   "scripts": {
-    "build": "nix develop --command make build",
-    "build:clean": "nix develop --command make build-clean",
-    "deploy": "nix develop --command make deploy",
-    "eslint": "nix develop --command make eslint",
-    "format": "nix develop --command make format",
-    "lint": "nix develop --command make lint",
-    "lint:ci": "nix develop --command make lint-ci",
-    "readme": "nix develop --command make readme",
-    "test": "nix develop --command make test",
-    "test-debug": "nix develop --command make test-debug",
-    "ts-node": "nix develop --command make ts-node"
+    "build": "make build",
+    "build:clean": "make build-clean",
+    "deploy": "make deploy",
+    "eslint": "make eslint",
+    "format": "make format",
+    "lint": "make lint",
+    "lint:ci": "make lint-ci",
+    "readme": "make readme",
+    "test": "make test",
+    "test-debug": "make test-debug",
+    "ts-node": "make ts-node"
   },
   "type": "module",
   "types": "module/index.d.ts",

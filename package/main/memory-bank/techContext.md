@@ -5,7 +5,7 @@
 ### コア技術
 
 - TypeScript: メイン開発言語
-- Bun: パッケージマネージャー & ランタイム（Nix flake の `devShell` 経由）
+- Bun: パッケージマネージャー & ランタイム
 - Node.js 20 / 22 / 24: 実行環境（ESM）
 - ESLint: コード品質管理
 - Biome: コードフォーマットとリント
@@ -20,15 +20,15 @@
 ### 開発環境
 
 - Git: バージョン管理
-- Nix flakes: `package/main` の npm scripts は `nix develop --command make …` を呼ぶ
+- Nix flakes: `nix fmt` 専用（build / test / lint は Bun と Make）
 - npm: パッケージ公開
 
 ## 開発環境セットアップ
 
 ### 必要要件
 
-- Nix（flakes）: `package/main` の `bun run *` スクリプト用
-- Bun: flake の `devShell` が提供
+- Bun: `package/main` の `bun run *` スクリプト用
+- Nix（flakes）: `nix fmt` 専用。build / test / lint には不要
 - Node.js: LTS（公開パッケージの実行環境）
 - Git
 
@@ -38,12 +38,11 @@
 git clone https://github.com/riya-amemiya/UMT.git
 cd UMT/package/main
 
-# flake の bun を使う
-nix develop -c bun install
-nix develop -c bun run test
+bun install
+bun run test
 ```
 
-リポジトリ全体の Cloud Agent bootstrap は `.cursor/install.sh`。
+リポジトリ全体の Cloud Agent bootstrap は `.cursor/install.sh`。 Nix が必要なのは `nix fmt` のみ。
 
 ### 開発コマンド
 
