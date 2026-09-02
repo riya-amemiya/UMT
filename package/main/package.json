@@ -38,7 +38,7 @@
     "typedoc": "0.28.20",
     "typedoc-github-wiki-theme": "2.1.0",
     "typedoc-plugin-markdown": "4.13.0",
-    "typescript": "7.0.2",
+    "typescript": "6.0.3",
     "typescript-eslint": "8.68.0",
     "valibot": "1.4.2",
     "zod": "4.5.4"
