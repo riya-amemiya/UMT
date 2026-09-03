@@ -1,4 +1,4 @@
-import re
+from .ip_to_long import ip_to_long
 
 
 def ip_to_binary_string(ip: str) -> str:
@@ -20,23 +20,4 @@ def ip_to_binary_string(ip: str) -> str:
         >>> ip_to_binary_string("0.0.0.0")
         '00000000000000000000000000000000'
     """
-    if not ip:
-        raise ValueError("IP address is required")
-
-    if re.search(r"[^0-9.]", ip):
-        raise ValueError("Invalid IP address format")
-
-    parts = ip.split(".")
-    if len(parts) != 4:
-        raise ValueError("Invalid IP address format")
-
-    for octet in parts:
-        if not octet or (len(octet) > 1 and octet.startswith("0")):
-            raise ValueError("Invalid IP address format")
-
-        num = int(octet)
-
-        if num < 0 or num > 255:
-            raise ValueError("Invalid IP address format")
-
-    return "".join(f"{int(octet):08b}" for octet in parts)
+    return f"{ip_to_long(ip):032b}"
