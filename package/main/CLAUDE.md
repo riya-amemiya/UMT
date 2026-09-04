@@ -82,14 +82,17 @@ src/
 ├── Crypto/                  # Cryptographic functions
 ├── DataStructure/           # Data structures (PriorityQueue, LRUCache, TTLCache)
 ├── Date/                    # Date manipulation functions
+├── Decorator/               # Class-field validation decorators
 ├── Error/                   # Error handling and Result type functions
 ├── Function/                # Function utilities (curry, debounce, throttle, memoize, once)
 ├── IP/                      # IP manipulation functions
 ├── Iterator/                # Lazy iterator helpers (lazyMap, lazyFilter, lazyTake)
+├── Map/                     # groupByToMap, zipToMap
 ├── Math/                    # Mathematical functions
 ├── Number/                  # Number formatting (toOrdinal, formatNumber, toPercentage)
 ├── Object/                  # Object manipulation functions
 ├── Predicate/               # Predicate combinators (not, every, some, matches, isNullish)
+├── Random/                  # randomChoice, seededRandom, weightedChoice
 ├── Simple/                  # Simple version functions
 ├── String/                  # String manipulation functions
 ├── Time/                    # Time conversion functions

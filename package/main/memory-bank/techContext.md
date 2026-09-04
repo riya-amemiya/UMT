@@ -6,7 +6,7 @@
 
 - TypeScript: メイン開発言語
 - Bun: パッケージマネージャー & ランタイム
-- Node.js 20 / 22 / 24: 実行環境（ESM）
+- Node.js 20 / 22 / 24 / 26: 実行環境（ESM）
 - ESLint: コード品質管理
 - Biome: コードフォーマットとリント
 - Jest + SWC: テスト
@@ -29,7 +29,7 @@
 
 - Bun: `package/main` の `bun run *` スクリプト用
 - Nix（flakes）: `nix fmt` 専用。build / test / lint には不要
-- Node.js: LTS（公開パッケージの実行環境）
+- Node.js: 20 / 22 / 24 / 26（CI `main-package-node.yml`）
 - Git
 
 ### インストール手順
@@ -48,7 +48,7 @@ bun run test
 
 - `bun run build`: TypeScript を `./module/` にコンパイル
 - `bun run lint`: ESLint + Biome + `tsc`
-- `bun run test`: Jest
+- `bun run test`: Jest（CI は statements / branches / functions / lines いずれも 100%）
 - `bun run format`: Biome format
 - `bun run test src/tests/unit/path/to/test.test.ts`: 個別テスト
 - `bun run readme`: typedoc 出力から README の Function List を再生成（`## Function List` 以降を置き換える）
@@ -74,7 +74,7 @@ bun run test
 ### テスト要件
 
 - 新機能の単体テスト必須
-- テストカバレッジの維持
+- テストカバレッジ 100%（`main-package-bun.yml` が未達なら PR にコメントして fail）
 - テストケースの明確な命名
 - モック使用の最小化
 
