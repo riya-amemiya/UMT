@@ -96,6 +96,25 @@ Located in `package/umt_wasm`. Auto-generated wasm-bindgen wrappers over `umt_ru
 * Functions whose signatures are not wasm-bindgen-friendly (`DateTime<Utc>`, custom enums, generics, closures) are listed as skipped in `doc/generated.md`. Hand-written adapters go in `src/manual.rs`.
 * **CI**: `.github/workflows/wasm-plugin-ci.yml` includes a `codegen-sync` job that fails if generated files drift. Build and test run with cargo / bun; Nix is not used.
 
+## Package: umt_go (Go)
+
+Located in `package/umt_go`. Partial port. Module path `github.com/riya-amemiya/umt-go`; import `github.com/riya-amemiya/umt-go/src/<pkg>` (for example `src/math`, `src/ip`). Go 1.24.1. No GitHub Actions workflow — run Makefile targets locally.
+
+* `make test`: `go test -v -race ./...`
+* `make fmt` / `make check` / `make build`
+* Tests live under `src/tests/<pkg>/` and import the `src/` packages.
+* IP signatures differ from TypeScript: `CidrToLong` takes `"network/prefix"` and returns `[start, end]`; `IsInRange(ip, "network/prefix")`; `GetNetworkAddress` returns a dotted string; `LongToIp` / `CidrToSubnetMask` panic on invalid input.
+* Date helpers include `StartOf` / `EndOf` / `AddDuration` / `IsBusinessDay`. There is no `IsBetween`, `AddBusinessDays`, or unix conversion.
+
+## Package: umt_i18n (TypeScript)
+
+Located in `package/umt_i18n`. Nested-key translator (`UMT_i18n`), not a port of `package/main`. npm name `umt-i18n`. Depends on `umt` for types only.
+
+* **Setup**: `bun install`
+* **Testing**: `bun run test` (Jest, `src/tests`)
+* **Linting**: `bun run lint`
+* Placeholders are `{{name}}`. Plural suffixes `_zero` / `_one` / `_other` except locales `ja` / `zh` / `ko`. Lookup: current → fallback locales → default locale → `defaultValue` or the key.
+
 ## Algorithms & Specific Implementations
 *   **String Distance**: Implement Levenshtein and similar algorithms using O(min(N, M)) space complexity (two-row strategy).
 *   **Sorting**: When sorting lists with `NaN`, use a single-pass partition (valid vs. NaN) followed by sorting the valid partition.

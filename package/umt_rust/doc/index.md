@@ -4,7 +4,7 @@ A collection of useful functions that I personally created.
 
 It is for personal use, so there may be destructive changes.
 
-TypeScript `package/main` is the source of truth. Public functions are prefixed with `umt_`. Tests live in `tests/` (integration style), not in `src/`. CI uses the nightly toolchain (edition 2024).
+TypeScript `package/main` is the source of truth. Public functions are prefixed with `umt_`, except `umt_rust::ip` (unprefixed; wasm codegen ignores them). Tests live in `tests/` (integration style), not in `src/`. Nightly toolchain, edition 2024. Crate version is in `Cargo.toml` (currently 0.7.0).
 
 ```bash
 cargo test
@@ -12,6 +12,24 @@ cargo fmt
 cargo clippy
 cargo doc --open
 ```
+
+`.github/workflows/rust-package-ci.yml` runs `cargo fmt --check`, `cargo clippy -- -D warnings`, and `cargo build`. It does **not** run `cargo test`; run `cargo test` in this directory locally. Wasm CI (`package/umt_wasm`) runs `cargo test --all` for the wasm crate, not this crate's `tests/`.
+
+## Modules
+
+`src/lib.rs` exports:
+
+| Module | Notes |
+| --- | --- |
+| `advance`, `array`, `async_util`, `color`, `consts`, `crypto` | Same grouping as TypeScript |
+| `data_structure` | `LRUCache`, `TTLCache`, `PriorityQueue` |
+| `date` | Calendar helpers; wasm skips most (`DateTime<Utc>`) |
+| `error`, `function` | Result helpers; debounce / memoize / throttle |
+| `ip` | **Not** `umt_`-prefixed. See below |
+| `iterator`, `map`, `math`, `number`, `object` | |
+| `predicate`, `random`, `simple`, `string`, `time`, `tool`, `ua`, `unit`, `url`, `validate` | |
+
+Runtime dependencies include `chrono`, `regex`, `serde`, `rand`, and others listed in `Cargo.toml` (the crate is not dependency-free).
 
 ## Date helpers
 

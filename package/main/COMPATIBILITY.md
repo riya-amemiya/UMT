@@ -4,7 +4,7 @@
 
 This package supports the following runtime environments:
 
-- Node.js 20.x, 22.x, 24.x
+- Node.js 20.x, 22.x, 24.x, 26.x
 - Bun 1.2.x
 
 ## Module format (v5)
