@@ -177,6 +177,12 @@ func TestIpToLongInvalid(t *testing.T) {
 		{"-1.0.0.0", "Invalid IP address format"},
 		{"192.168.1.1.1", "Invalid IP address format"},
 		{"192.168..1", "Invalid IP address format"},
+		{"192.168.01.1", "Invalid IP address format"},
+		{"192.168.1.01", "Invalid IP address format"},
+		{"010.020.030.040", "Invalid IP address format"},
+		{"192.168.1.", "Invalid IP address format"},
+		{".192.168.1", "Invalid IP address format"},
+		{"192.168.1.+1", "Invalid IP address format"},
 	}
 	for _, tt := range tests {
 		t.Run(tt.ipAddr, func(t *testing.T) {
@@ -186,6 +192,46 @@ func TestIpToLongInvalid(t *testing.T) {
 			}
 			if !strings.Contains(err.Error(), tt.errContains) {
 				t.Errorf("expected error containing %q, got %q", tt.errContains, err.Error())
+			}
+		})
+	}
+}
+
+func TestIpToLongPacksOctets(t *testing.T) {
+	tests := []struct {
+		ipAddr     string
+		a, b, c, d int64
+	}{
+		{"192.168.1.1", 192, 168, 1, 1},
+		{"10.20.30.40", 10, 20, 30, 40},
+	}
+	for _, tt := range tests {
+		t.Run(tt.ipAddr, func(t *testing.T) {
+			result, err := ip.IpToLong(tt.ipAddr)
+			if err != nil {
+				t.Fatalf("unexpected error: %v", err)
+			}
+			want := (tt.a << 24) | (tt.b << 16) | (tt.c << 8) | tt.d
+			if result != want {
+				t.Errorf("IpToLong(%q) = %d, want %d", tt.ipAddr, result, want)
+			}
+		})
+	}
+}
+
+func TestIpToLongRoundTrip(t *testing.T) {
+	ips := []string{
+		"192.168.1.1", "10.20.30.40", "0.0.0.0", "255.255.255.255",
+		"127.0.0.1", "8.8.8.8",
+	}
+	for _, ipAddr := range ips {
+		t.Run(ipAddr, func(t *testing.T) {
+			longVal, err := ip.IpToLong(ipAddr)
+			if err != nil {
+				t.Fatalf("unexpected error: %v", err)
+			}
+			if got := ip.LongToIp(longVal); got != ipAddr {
+				t.Errorf("LongToIp(IpToLong(%q)) = %q, want %q", ipAddr, got, ipAddr)
 			}
 		})
 	}
