@@ -75,13 +75,10 @@ func LongToIp(long int64) string {
 		panic("Input must be a valid 32-bit unsigned integer")
 	}
 
-	binary := fmt.Sprintf("%032b", long)
-	octets := make([]string, 4)
-	for i := 0; i < 4; i++ {
-		val, _ := strconv.ParseInt(binary[i*8:(i+1)*8], 2, 64)
-		octets[i] = strconv.FormatInt(val, 10)
-	}
-	return strings.Join(octets, ".")
+	return strconv.Itoa(int((long>>24)&0xFF)) + "." +
+		strconv.Itoa(int((long>>16)&0xFF)) + "." +
+		strconv.Itoa(int((long>>8)&0xFF)) + "." +
+		strconv.Itoa(int(long&0xFF))
 }
 
 // CidrToLong converts a CIDR prefix length (0-32) to its subnet mask as a 32-bit number.
