@@ -2,6 +2,7 @@ package ip
 
 import (
 	"fmt"
+	"math/bits"
 	"regexp"
 	"strconv"
 	"strings"
@@ -181,26 +182,21 @@ func SubnetMaskToCidr(mask string) (int, error) {
 		return 0, fmt.Errorf("Invalid subnet mask format")
 	}
 
-	var sb strings.Builder
+	var packed uint32
 	for _, octet := range octets {
 		num, err := strconv.Atoi(octet)
 		if err != nil || num < 0 || num > 255 {
 			return 0, fmt.Errorf("Invalid subnet mask format")
 		}
-		sb.WriteString(fmt.Sprintf("%08b", num))
+		packed = (packed << 8) | uint32(num)
 	}
 
-	binaryString := sb.String()
-
-	// Check that binary string is consecutive 1s followed by 0s
-	matched, _ := regexp.MatchString(`^1*0*$`, binaryString)
-	if !matched {
+	host := ^packed
+	if host&(host+1) != 0 {
 		return 0, fmt.Errorf("Invalid subnet mask: must be consecutive 1s followed by 0s")
 	}
 
-	// Count 1s
-	cidr := strings.Count(binaryString, "1")
-	return cidr, nil
+	return bits.OnesCount32(packed), nil
 }
 
 // GetNetworkAddress calculates the network address from an IP and subnet mask.
