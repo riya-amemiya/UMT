@@ -58,15 +58,43 @@ func IpToBinaryString(ipStr string) (string, error) {
 
 // IpToLong converts an IPv4 address to a 32-bit unsigned integer (as int64).
 func IpToLong(ipStr string) (int64, error) {
-	binStr, err := IpToBinaryString(ipStr)
-	if err != nil {
-		return 0, err
+	if ipStr == "" {
+		return 0, fmt.Errorf("IP address is required")
 	}
-	val, err := strconv.ParseInt(binStr, 2, 64)
-	if err != nil {
+
+	var result int64
+	octetCount := 0
+	for _, octet := range strings.Split(ipStr, ".") {
+		if octetCount == 4 ||
+			octet == "" ||
+			!isASCIIDigits(octet) ||
+			(len(octet) > 1 && octet[0] == '0') {
+			return 0, fmt.Errorf("Invalid IP address format")
+		}
+
+		num, err := strconv.Atoi(octet)
+		if err != nil || num > 255 {
+			return 0, fmt.Errorf("Invalid IP address format")
+		}
+
+		result = (result << 8) | int64(num)
+		octetCount++
+	}
+
+	if octetCount != 4 {
 		return 0, fmt.Errorf("Invalid IP address format")
 	}
-	return val, nil
+
+	return result, nil
+}
+
+func isASCIIDigits(s string) bool {
+	for i := 0; i < len(s); i++ {
+		if s[i] < '0' || s[i] > '9' {
+			return false
+		}
+	}
+	return true
 }
 
 // LongToIp converts a 32-bit unsigned integer to an IPv4 address string.
