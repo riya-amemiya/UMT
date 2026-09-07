@@ -274,6 +274,69 @@ func TestLongToIpInvalid(t *testing.T) {
 	}
 }
 
+func TestLongToIpTsAddresses(t *testing.T) {
+	tests := []struct {
+		long     int64
+		expected string
+	}{
+		{3232235777, "192.168.1.1"},
+		{0xFFFFFFFE, "255.255.255.254"},
+	}
+	for _, tt := range tests {
+		t.Run(tt.expected, func(t *testing.T) {
+			result := ip.LongToIp(tt.long)
+			if result != tt.expected {
+				t.Errorf("LongToIp(%d) = %q, want %q", tt.long, result, tt.expected)
+			}
+		})
+	}
+}
+
+func TestLongToIpPackedOctets(t *testing.T) {
+	tests := [][4]int64{
+		{192, 168, 1, 1},
+		{10, 0, 0, 1},
+		{0, 0, 0, 0},
+		{255, 255, 255, 255},
+		{1, 2, 3, 4},
+		{127, 0, 0, 1},
+		{172, 16, 0, 1},
+		{8, 8, 8, 8},
+	}
+	for _, oct := range tests {
+		packed := (oct[0] << 24) | (oct[1] << 16) | (oct[2] << 8) | oct[3]
+		want := fmt.Sprintf("%d.%d.%d.%d", oct[0], oct[1], oct[2], oct[3])
+		t.Run(want, func(t *testing.T) {
+			got := ip.LongToIp(packed)
+			if got != want {
+				t.Errorf("LongToIp(%d) = %q, want %q", packed, got, want)
+			}
+		})
+	}
+}
+
+func TestLongToIpRoundTripIpToLong(t *testing.T) {
+	ips := []string{
+		"0.0.0.0",
+		"1.2.3.4",
+		"10.0.0.1",
+		"127.0.0.1",
+		"192.168.1.1",
+		"255.255.255.255",
+	}
+	for _, ipAddr := range ips {
+		t.Run(ipAddr, func(t *testing.T) {
+			longVal, err := ip.IpToLong(ipAddr)
+			if err != nil {
+				t.Fatalf("IpToLong(%q) error: %v", ipAddr, err)
+			}
+			if got := ip.LongToIp(longVal); got != ipAddr {
+				t.Errorf("round-trip %q -> %d -> %q", ipAddr, longVal, got)
+			}
+		})
+	}
+}
+
 // =============================================================================
 // CidrToLong (string CIDR notation -> [start, end])
 // =============================================================================
