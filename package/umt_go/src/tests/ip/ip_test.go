@@ -2,6 +2,7 @@ package ip_test
 
 import (
 	"fmt"
+	"math/bits"
 	"strconv"
 	"strings"
 	"testing"
@@ -472,6 +473,7 @@ func TestSubnetMaskToCidrInvalid(t *testing.T) {
 		{"255.-1.255.0", "Invalid subnet mask format"},
 		{"255.255.255.abc", "Invalid subnet mask format"},
 		{"a.b.c.d", "Invalid subnet mask format"},
+		{"255.255.255.0.0", "Invalid subnet mask format"},
 		{"255.255.255.1", "Invalid subnet mask: must be consecutive 1s followed by 0s"},
 		{"255.0.255.0", "Invalid subnet mask: must be consecutive 1s followed by 0s"},
 		{"254.255.255.0", "Invalid subnet mask: must be consecutive 1s followed by 0s"},
@@ -486,6 +488,45 @@ func TestSubnetMaskToCidrInvalid(t *testing.T) {
 				t.Errorf("expected error containing %q, got %q", tt.errContains, err.Error())
 			}
 		})
+	}
+}
+
+func TestSubnetMaskToCidrPackedPopcount(t *testing.T) {
+	tests := []struct {
+		mask       string
+		a, b, c, d uint32
+	}{
+		{"255.255.255.0", 255, 255, 255, 0},
+		{"255.255.0.0", 255, 255, 0, 0},
+		{"255.255.255.254", 255, 255, 255, 254},
+		{"128.0.0.0", 128, 0, 0, 0},
+		{"0.0.0.0", 0, 0, 0, 0},
+		{"255.255.255.255", 255, 255, 255, 255},
+	}
+	for _, tt := range tests {
+		t.Run(tt.mask, func(t *testing.T) {
+			result, err := ip.SubnetMaskToCidr(tt.mask)
+			if err != nil {
+				t.Fatalf("unexpected error: %v", err)
+			}
+			want := bits.OnesCount32((tt.a << 24) | (tt.b << 16) | (tt.c << 8) | tt.d)
+			if result != want {
+				t.Errorf("SubnetMaskToCidr(%q) = %d, want %d", tt.mask, result, want)
+			}
+		})
+	}
+}
+
+func TestSubnetMaskToCidrEveryPrefixRoundTrip(t *testing.T) {
+	for cidr := 0; cidr <= 32; cidr++ {
+		mask := ip.CidrToSubnetMask(cidr)
+		result, err := ip.SubnetMaskToCidr(mask)
+		if err != nil {
+			t.Fatalf("SubnetMaskToCidr(%q) error: %v", mask, err)
+		}
+		if result != cidr {
+			t.Errorf("round-trip failed: /%d -> %q -> /%d", cidr, mask, result)
+		}
 	}
 }
 
