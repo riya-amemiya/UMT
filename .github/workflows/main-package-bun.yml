@@ -155,6 +155,14 @@ jobs:
           echo "branch=$(jq '.total.branches.pct' coverage/coverage-summary.json)" >> $GITHUB_OUTPUT
           echo "funcs=$(jq '.total.functions.pct' coverage/coverage-summary.json)" >> $GITHUB_OUTPUT
           echo "lines=$(jq '.total.lines.pct' coverage/coverage-summary.json)" >> $GITHUB_OUTPUT
+      - name: Build Coverage Comment
+        if: always() && github.event_name == 'pull_request' && steps.check_coverage.outputs.passed == 'false'
+        run: |
+          bun scripts/writeCoverageComment.ts \
+            --summary coverage/coverage-summary.json \
+            --lcov coverage/lcov.info \
+            --text /tmp/coverage-clean.txt \
+            --out /tmp/coverage-comment.md
       - name: Post Coverage Comment on PR
         if: always() && github.event_name == 'pull_request' && steps.check_coverage.outputs.passed == 'false'
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v7
@@ -162,66 +170,21 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const fs = require('fs');
-            const path = require('path');
-            const summaryPath = path.join(process.env.GITHUB_WORKSPACE, 'package/main/coverage/coverage-summary.json');
-            const outputPath = '/tmp/coverage-clean.txt';
-            let summaryData;
-            try {
-              summaryData = JSON.parse(fs.readFileSync(summaryPath, 'utf8'));
-            } catch (e) {
-              console.log('Could not read coverage summary:', e.message);
+            const bodyPath = '/tmp/coverage-comment.md';
+            if (!fs.existsSync(bodyPath)) {
+              console.log('Coverage comment file missing');
               return;
             }
-            const coverageText = fs.existsSync(outputPath) ? fs.readFileSync(outputPath, 'utf8') : '';
-            // Extract coverage table (lines between dash separators)
-            const tableMatch = coverageText.match(/([-]+[|][-| ]+\n(?:.*\n)*?[-]+[|][-| ]+)/);
-            const coverageTable = tableMatch ? tableMatch[0] : '';
-            const { statements: stmts, branches, functions: funcs, lines: lns } = summaryData.total;
-            const parts = [
-              '## ❌ カバレッジが100%ではありません',
-              '',
-              '| Metric | Coverage | Required |',
-              '|--------|----------|----------|',
-              `| % Stmts | ${stmts.pct}% | 100% |`,
-              `| % Branch | ${branches.pct}% | 100% |`,
-              `| % Funcs | ${funcs.pct}% | 100% |`,
-              `| % Lines | ${lns.pct}% | 100% |`,
-            ];
-            // List files with < 100% coverage
-            const uncoveredFiles = Object.entries(summaryData)
-              .filter(([file, data]) => file !== 'total' && (
-                data.statements.pct < 100 || data.branches.pct < 100 ||
-                data.functions.pct < 100 || data.lines.pct < 100
-              ))
-              .map(([file, data]) => {
-                const shortFile = file.replace(/.*\/src\//, 'src/');
-                const issues = [];
-                if (data.statements.pct < 100) issues.push(`Stmts: ${data.statements.pct}%`);
-                if (data.branches.pct < 100) issues.push(`Branch: ${data.branches.pct}%`);
-                if (data.functions.pct < 100) issues.push(`Funcs: ${data.functions.pct}%`);
-                if (data.lines.pct < 100) issues.push(`Lines: ${data.lines.pct}%`);
-                return `- \`${shortFile}\`: ${issues.join(', ')}`;
-              });
-            if (uncoveredFiles.length > 0) {
-              parts.push('', '### カバレッジが100%未満のファイル', '', ...uncoveredFiles);
-            }
-            if (coverageTable) {
-              parts.push(
-                '',
-                '<details>',
-                '<summary>カバレッジ詳細（未カバーの行を含む）</summary>',
-                '',
-                '```',
-                coverageTable,
-                '```',
-                '</details>'
-              );
+            const body = fs.readFileSync(bodyPath, 'utf8');
+            if (!body.trim()) {
+              console.log('Coverage comment was empty');
+              return;
             }
             await github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: parts.join('\n')
+              body
             });
       - name: Upload Coverage to Codecov
         if: always()
