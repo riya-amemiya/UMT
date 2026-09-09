@@ -174,7 +174,7 @@ jobs:
             }
             const coverageText = fs.existsSync(outputPath) ? fs.readFileSync(outputPath, 'utf8') : '';
             // Extract coverage table (lines between dash separators)
-            const tableMatch = coverageText.match(/([-]+[|][-| ]+\n(?:.*\n)*?[-]+[|][-| ]+)/);
+            const tableMatch = coverageText.match(/([-]+[|][-| ]+\n(?:.*\n)*[-]+[|][-| ]+)/);
             const coverageTable = tableMatch ? tableMatch[0] : '';
             const { statements: stmts, branches, functions: funcs, lines: lns } = summaryData.total;
             const parts = [
