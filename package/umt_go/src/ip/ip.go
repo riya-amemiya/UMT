@@ -3,58 +3,17 @@ package ip
 import (
 	"fmt"
 	"math/bits"
-	"regexp"
 	"strconv"
 	"strings"
 )
 
-// validateIP validates an IPv4 address string and returns the parts.
-// It checks for empty string, invalid characters, correct number of octets,
-// leading zeros, and valid octet ranges.
-func validateIP(ipStr string) ([]string, error) {
-	if ipStr == "" {
-		return nil, fmt.Errorf("IP address is required")
-	}
-
-	// Check for invalid characters
-	matched, _ := regexp.MatchString(`[^0-9.]`, ipStr)
-	if matched {
-		return nil, fmt.Errorf("Invalid IP address format")
-	}
-
-	parts := strings.Split(ipStr, ".")
-	if len(parts) != 4 {
-		return nil, fmt.Errorf("Invalid IP address format")
-	}
-
-	for _, octet := range parts {
-		// Check for empty octet or leading zeros
-		if octet == "" || (len(octet) > 1 && octet[0] == '0') {
-			return nil, fmt.Errorf("Invalid IP address format")
-		}
-
-		num, err := strconv.Atoi(octet)
-		if err != nil || num < 0 || num > 255 {
-			return nil, fmt.Errorf("Invalid IP address format")
-		}
-	}
-
-	return parts, nil
-}
-
 // IpToBinaryString converts an IPv4 address to its 32-bit binary string representation.
 func IpToBinaryString(ipStr string) (string, error) {
-	parts, err := validateIP(ipStr)
+	long, err := IpToLong(ipStr)
 	if err != nil {
 		return "", err
 	}
-
-	var sb strings.Builder
-	for _, octet := range parts {
-		num, _ := strconv.Atoi(octet)
-		sb.WriteString(fmt.Sprintf("%08b", num))
-	}
-	return sb.String(), nil
+	return fmt.Sprintf("%032b", long), nil
 }
 
 // IpToLong converts an IPv4 address to a 32-bit unsigned integer (as int64).

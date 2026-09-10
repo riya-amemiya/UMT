@@ -36,6 +36,7 @@ func TestIpToBinaryString(t *testing.T) {
 		ipAddr   string
 		expected string
 	}{
+		{"192.168.1.1", "11000000101010000000000100000001"},
 		{"192.168.0.1", "11000000101010000000000000000001"},
 		{"0.0.0.0", "00000000000000000000000000000000"},
 		{"255.255.255.255", "11111111111111111111111111111111"},
@@ -130,6 +131,69 @@ func TestIpToBinaryStringLeadingZeros(t *testing.T) {
 			}
 			if !strings.Contains(err.Error(), "Invalid IP address format") {
 				t.Errorf("expected 'Invalid IP address format', got %q", err.Error())
+			}
+		})
+	}
+}
+
+func TestIpToBinaryStringMatchesIpToLongBits(t *testing.T) {
+	ips := []string{
+		"192.168.0.1",
+		"0.0.0.0",
+		"255.255.255.255",
+		"1.2.3.4",
+		"10.0.0.1",
+		"172.16.0.1",
+		"127.0.0.1",
+		"169.254.0.1",
+		"8.8.8.8",
+		"128.0.0.0",
+		"0.255.0.255",
+		"192.168.1.1",
+	}
+	for _, ipAddr := range ips {
+		t.Run(ipAddr, func(t *testing.T) {
+			binary, err := ip.IpToBinaryString(ipAddr)
+			if err != nil {
+				t.Fatalf("unexpected error: %v", err)
+			}
+			longVal, err := ip.IpToLong(ipAddr)
+			if err != nil {
+				t.Fatalf("IpToLong error: %v", err)
+			}
+			want := fmt.Sprintf("%032b", longVal)
+			if binary != want {
+				t.Errorf("IpToBinaryString(%q) = %q, want %q", ipAddr, binary, want)
+			}
+			if len(binary) != 32 {
+				t.Errorf("binary length = %d, want 32", len(binary))
+			}
+		})
+	}
+}
+
+func TestIpToBinaryStringRoundTripLongToIp(t *testing.T) {
+	longs := []int64{
+		0, 1, 0x7F000001, 0xC0A80001, 0xFFFFFFFF, 0x01020304,
+		0x0A000001, 0xAC100001, 0x80000000, 0x00FF00FF,
+	}
+	for _, longVal := range longs {
+		t.Run(fmt.Sprintf("%d", longVal), func(t *testing.T) {
+			ipAddr := ip.LongToIp(longVal)
+			binary, err := ip.IpToBinaryString(ipAddr)
+			if err != nil {
+				t.Fatalf("unexpected error: %v", err)
+			}
+			want := fmt.Sprintf("%032b", longVal)
+			if binary != want {
+				t.Errorf("IpToBinaryString(%q) = %q, want %q", ipAddr, binary, want)
+			}
+			got, err := ip.IpToLong(ipAddr)
+			if err != nil {
+				t.Fatalf("IpToLong error: %v", err)
+			}
+			if got != longVal {
+				t.Errorf("IpToLong(%q) = %d, want %d", ipAddr, got, longVal)
 			}
 		})
 	}
