@@ -33,8 +33,7 @@ const standardAnyValidator = attachStandard<
   any,
   // biome-ignore lint/suspicious/noExplicitAny: any() carries any through Standard Schema
   any,
-  typeof anyValidator
->(anyValidator);
+  typeof anyValidator>(anyValidator);
 
 /**
  * Creates a validator that accepts any value
