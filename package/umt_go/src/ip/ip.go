@@ -115,10 +115,7 @@ func cidrPrefixToLong(cidr int) (int64, error) {
 	if cidr == 0 {
 		return 0, nil
 	}
-	// Build binary string of cidr 1s followed by (32-cidr) 0s
-	binStr := strings.Repeat("1", cidr) + strings.Repeat("0", 32-cidr)
-	val, _ := strconv.ParseInt(binStr, 2, 64)
-	return val, nil
+	return int64(^uint32(0) << (32 - cidr)), nil
 }
 
 // CidrToSubnetMask converts a CIDR prefix length (0-32) to a subnet mask string.
