@@ -25,6 +25,7 @@ Located in `package/main`.
 *   **Linting**: `bun run lint` (runs ESLint, Biome, and TSC)
 *   **Formatting**: `bun run format` (runs Biome)
 *   **Nix**: `nix fmt` only. Scripts call `make` directly.
+*   **TypeScript pin**: Keep `typescript` at 6.0.3 in `package/main`, `package/umt_i18n`, and `package/umt_wasm`. TypeScript 7.x currently breaks `typescript-eslint` (`lint:ci`) and `ts-node` loading `jest.config.ts` (Node 20 `npx jest`). See `package/main/COMPATIBILITY.md`.
 
 **Note**: The `types` directory primarily contains type definitions. Porting logic from `types` is only necessary if it corresponds to runtime logic.
 
