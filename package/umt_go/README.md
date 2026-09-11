@@ -103,6 +103,7 @@ Other constraints (verified against `src/ip/ip.go` and `src/tests/ip/ip_test.go`
 - `SubnetMaskToCidr` requires contiguous `1` bits then `0` bits (`"255.0.255.0"` errors). TypeScript `subnetMaskToCidr` only counts set bits.
 - `IsPrivateIp` is RFC 1918 only (`10/8`, `172.16/12`, `192.168/16`). Loopback and link-local are not private. Invalid input returns `false` (no error).
 - `GetIpClass("0.0.0.0")` is `""`.
+- `IpToBinaryString` packs via `IpToLong` then formats one 32-bit field (`%032b`). Invalid input (including leading-zero octets) returns an error, same as `IpToLong`.
 
 ```go
 import "github.com/riya-amemiya/umt-go/src/ip"
@@ -112,6 +113,8 @@ _ = ip.LongToIp(3232235777)                     // "192.168.1.1"
 _ = ip.CidrToSubnetMask(24)                     // "255.255.255.0"
 in, _ := ip.IsInRange("192.168.1.2", "192.168.1.0/24")
 net, _ := ip.GetNetworkAddress("192.168.1.1", "255.255.255.0") // "192.168.1.0"
+bin, _ := ip.IpToBinaryString("192.168.0.1")
+// "11000000101010000000000000000001"
 ```
 
 ## Development
