@@ -1,4 +1,5 @@
 use regex::Regex;
+use std::sync::LazyLock;
 
 /// Represents the detected operating system from a User-Agent string.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -31,6 +32,12 @@ impl std::fmt::Display for Os {
     }
 }
 
+static IOS_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"iphone|ipad|ipod").unwrap());
+static ANDROID_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"android").unwrap());
+static MACOS_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"mac os x").unwrap());
+static WINDOWS_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"windows|win32").unwrap());
+static LINUX_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"linux").unwrap());
+
 /// Extracts operating system information from a User-Agent string.
 ///
 /// # Arguments
@@ -54,32 +61,27 @@ pub fn umt_extract_os_from_user_agent(ua: &str) -> Os {
     let ua_lower = ua.to_lowercase();
 
     // iOS detection (iPhone, iPad, iPod)
-    let ios_re = Regex::new(r"iphone|ipad|ipod").unwrap();
-    if ios_re.is_match(&ua_lower) {
+    if IOS_RE.is_match(&ua_lower) {
         return Os::Ios;
     }
 
     // Android detection
-    let android_re = Regex::new(r"android").unwrap();
-    if android_re.is_match(&ua_lower) {
+    if ANDROID_RE.is_match(&ua_lower) {
         return Os::Android;
     }
 
     // macOS detection
-    let macos_re = Regex::new(r"mac os x").unwrap();
-    if macos_re.is_match(&ua_lower) {
+    if MACOS_RE.is_match(&ua_lower) {
         return Os::MacOs;
     }
 
     // Windows detection
-    let windows_re = Regex::new(r"windows|win32").unwrap();
-    if windows_re.is_match(&ua_lower) {
+    if WINDOWS_RE.is_match(&ua_lower) {
         return Os::Windows;
     }
 
     // Linux detection
-    let linux_re = Regex::new(r"linux").unwrap();
-    if linux_re.is_match(&ua_lower) {
+    if LINUX_RE.is_match(&ua_lower) {
         return Os::Linux;
     }
 
