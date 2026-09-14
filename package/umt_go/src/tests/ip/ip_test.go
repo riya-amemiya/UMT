@@ -493,6 +493,17 @@ func TestCidrToSubnetMaskInvalid(t *testing.T) {
 	}
 }
 
+func TestCidrToSubnetMaskEveryPrefix(t *testing.T) {
+	for cidr := 0; cidr <= 32; cidr++ {
+		got := ip.CidrToSubnetMask(cidr)
+		expectedLong := int64(1<<32) - (int64(1) << (32 - cidr))
+		want := ip.LongToIp(expectedLong)
+		if got != want {
+			t.Errorf("CidrToSubnetMask(%d) = %q, want %q", cidr, got, want)
+		}
+	}
+}
+
 // =============================================================================
 // SubnetMaskToCidr
 // =============================================================================
