@@ -64,7 +64,8 @@ Input validation is the caller's responsibility. This library must not validate 
 - **Build target**: ESNext with ESM modules, compiled to `./module/`
 - **No dependencies**: Main package is dependency-free (dev dependencies only)
 - **Testing framework**: Jest with SWC transformer for fast TypeScript compilation
-- **Coverage**: Enabled by default, excludes environment detection utilities
+- **Coverage**: Enabled by default, excludes environment detection utilities (`isBrowser`, `isNode`, `isBun`, `isNodeWebkit`) and `src/tests/benchmark/**`
+- **TypeScript pin**: Keep `typescript` at 6.0.3. TypeScript 7.x breaks `typescript-eslint` and `ts-node` loading `jest.config.ts` (see `COMPATIBILITY.md`)
 
 ## Codebase Structure
 

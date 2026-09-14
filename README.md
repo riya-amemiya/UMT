@@ -71,14 +71,17 @@ Workflows are path-filtered. Typical failures:
 
 | Check | Workflow | What to do |
 | --- | --- | --- |
-| Main lint / build / 100% coverage | `main-package-bun.yml` | `cd package/main && bun run lint:ci && bun run test`. Coverage must be 100% statements, branches, functions, and lines or the job fails and comments on the PR. |
+| Main lint / build / 100% coverage | `main-package-bun.yml` | `cd package/main && bun run lint:ci && bun run test`. Coverage must be 100% statements, branches, functions, and lines or the job fails. On pull requests it also comments with the metric table, files under 100%, and the full Jest coverage table. `isBrowser` / `isNode` / `isBun` / `isNodeWebkit` and `src/tests/benchmark/**` are excluded from coverage. |
 | Node runtime matrix | `main-package-node.yml` | Node 20 / 22 / 24 / 26 via `npx jest --coverage`. |
 | Python format / lint / typecheck / test | `python-package-ci.yml` | `cd package/umt_python && make all`. Matrix 3.10–3.15. |
 | Rust format / clippy / build | `rust-package-ci.yml` | `cargo fmt --check`, `cargo clippy -- -D warnings`, `cargo build`. **Does not run `cargo test`**. Run `cd package/umt_rust && cargo test` locally. |
 | Wasm codegen drift | `wasm-plugin-ci.yml` `codegen-sync` | `cd package/umt_wasm && bun run gen` and commit `src/generated.rs` + `doc/generated.md`. |
 | Nix formatting | `nix-fmt.yml` | `nix fmt` at repo root and in `package/main`, `package/umt_i18n`, `package/umt_wasm`. |
+| PR benchmarks | `benchmark-pr.yml` | Add the `benchmark` label. Compares base vs head on Bun latest and Node 22 / 24 / 26, then updates a single PR comment. Manual `chunk` / `sort` runs use `main-package-benchmark.yml` (`workflow_dispatch`). |
 
 There is no Go CI. `package/umt_go` is validated only by `make test` locally.
+
+Dependabot may propose `typescript` 7.x in `package/main`, `package/umt_i18n`, and `package/umt_wasm`. Keep `typescript` at **6.0.3** until `typescript-eslint` and `ts-node` support it: 7.x currently breaks `bun run lint:ci` and the Node 20 Jest run that loads `jest.config.ts`. See [package/main/COMPATIBILITY.md](package/main/COMPATIBILITY.md).
 
 ## Compatibility
 

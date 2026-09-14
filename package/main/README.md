@@ -110,6 +110,76 @@ longToIp(getNetworkAddress("192.168.1.1", "255.255.255.0")); // "192.168.1.0"
 
 Python and Rust ports live in `package/umt_python` and `package/umt_rust`. Those ports raise / return `Err` on malformed input and reject non-contiguous subnet masks. They are not exposed through `umt-plugin-wasm`: Rust IP functions are not named `umt_*`, so wasm codegen ignores them.
 
+## Validate and Standard Schema
+
+Validator factories in `umt/Validate` (`string()`, `number()`, `object()`, `arrayOf()`, `union()`, …) implement [Standard Schema V1](https://standardschema.dev). Each factory return value has a `~standard` property:
+
+| Field | Value |
+| --- | --- |
+| `version` | `1` |
+| `vendor` | `"umt"` (`STANDARD_SCHEMA_VENDOR`) |
+| `validate(value)` | Synchronous. On success `{ value }` is the **original input** (validators do not transform). On failure `{ issues: [{ message }] }` with a single issue. |
+
+`attachStandard()` is how factories advertise the spec. It does not set `~standard.types`. Consume validators through `~standard.validate`, `@hono/standard-validator`'s `sValidator`, or any other Standard Schema V1 host (Zod / Valibot schemas are interchangeable with UMT on that interface).
+
+```ts
+import { number, object, string } from "umt/Validate";
+
+const user = object({ name: string(), age: number() });
+user["~standard"].vendor; // "umt"
+
+const ok = user["~standard"].validate({ name: "Ada", age: 1 });
+// { value: { name: "Ada", age: 1 } }
+
+const ng = user["~standard"].validate({ name: "Ada" });
+// { issues: [{ message: ... }] }
+```
+
+UMT validators never return a `Promise` from `~standard.validate`.
+
+## Decorator
+
+Class-field validation in `umt/Decorator`. Rules live on the prototype chain (`validateInstance` includes inherited fields). `@Validatable` wraps the constructor and throws after `super(...)`, so it sees initialized class fields.
+
+| Decorator | Behavior |
+| --- | --- |
+| `@IsString` / `@IsArray` / `@IsBoolean` | Type checks. `@IsNumber` rejects numeric strings (`"1"`). |
+| `@Min(n)` / `@Max(n)` | Inclusive numeric bounds. Non-numbers fail. |
+| `@LengthBetween(min, max)` | Inclusive length on strings and arrays. |
+| `@Optional` | Skip other rules when the value is `undefined`. |
+| `@Nullable` | Skip other rules when the value is `null`. |
+| `@Schema(schema)` | Any Standard Schema V1 validator (UMT, Zod, Valibot). **Async** `validate` results are treated as failure. |
+| `@Validatable` | Throws `Error` joining all messages with `"; "` if any field fails. |
+
+`validateInstance(instance)` returns a `Result`: success carries the instance; error carries `{ path, message }[]`.
+
+```ts
+import {
+  IsNumber,
+  IsString,
+  Optional,
+  Schema,
+  Validatable,
+  validateInstance,
+} from "umt/Decorator";
+import { number } from "umt/Validate";
+
+class Profile {
+  @IsString name = "alice";
+  @Optional
+  @IsNumber
+  age?: number;
+}
+
+validateInstance(new Profile()).type; // "success"
+
+@Validatable
+class Product {
+  @Schema(number()) price = 100;
+}
+new Product(); // succeeds; throws `Error` if `price` is not a number
+```
+
 ## Function List
 
 ### Advance
