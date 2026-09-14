@@ -1,5 +1,6 @@
 use super::cmyk_to_rgba::Rgba;
 use regex::Regex;
+use std::sync::LazyLock;
 
 /// Error type for hex color parsing
 #[derive(Debug, Clone, PartialEq)]
@@ -14,6 +15,9 @@ impl std::fmt::Display for HexColorError {
 }
 
 impl std::error::Error for HexColorError {}
+
+static HEX_RE: LazyLock<Regex> =
+    LazyLock::new(|| Regex::new(r"^#([\da-fA-F]{3}|[\da-fA-F]{6}|[\da-fA-F]{8})$").unwrap());
 
 /// Convert hexadecimal color code to RGBA color values
 ///
@@ -39,9 +43,7 @@ impl std::error::Error for HexColorError {}
 #[inline]
 pub fn umt_hexa_to_rgba(hex: &str) -> Result<Rgba, HexColorError> {
     // Validate hex code format using regex
-    let re = Regex::new(r"^#([\da-fA-F]{3}|[\da-fA-F]{6}|[\da-fA-F]{8})$").unwrap();
-
-    if !re.is_match(hex) {
+    if !HEX_RE.is_match(hex) {
         return Err(HexColorError {
             message: "Invalid hex code".to_string(),
         });
