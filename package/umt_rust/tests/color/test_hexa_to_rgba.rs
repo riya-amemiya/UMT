@@ -159,6 +159,39 @@ fn test_hexa_to_rgba_invalid_hex_code() {
     assert!(umt_hexa_to_rgba("#1234567").is_err());
     assert!(umt_hexa_to_rgba("123456").is_err());
     assert!(umt_hexa_to_rgba("").is_err());
+    assert!(umt_hexa_to_rgba("#gg0000").is_err());
+    assert!(umt_hexa_to_rgba("#12").is_err());
+}
+
+#[test]
+fn test_hexa_to_rgba_lowercase() {
+    assert_eq!(
+        umt_hexa_to_rgba("#abc").unwrap(),
+        Rgba {
+            r: 170.0,
+            g: 187.0,
+            b: 204.0,
+            a: 1.0
+        }
+    );
+    assert_eq!(
+        umt_hexa_to_rgba("#aabbcc").unwrap(),
+        Rgba {
+            r: 170.0,
+            g: 187.0,
+            b: 204.0,
+            a: 1.0
+        }
+    );
+    assert_eq!(
+        umt_hexa_to_rgba("#AABBCCDD").unwrap(),
+        Rgba {
+            r: 170.0,
+            g: 187.0,
+            b: 204.0,
+            a: 0.87
+        }
+    );
 }
 
 #[test]
