@@ -45,3 +45,26 @@ fn test_returns_empty_array_when_custom_pattern_matches_nothing() {
     let empty: Vec<String> = Vec::new();
     assert_eq!(umt_words("hello", Some(&pattern)), empty);
 }
+
+#[test]
+fn test_splits_camel_case_with_separators() {
+    assert_eq!(
+        umt_words("helloWorld foo-bar", None),
+        vec!["hello", "World", "foo", "bar"]
+    );
+}
+
+#[test]
+fn test_splits_digit_then_uppercase() {
+    assert_eq!(umt_words("foo2Bar", None), vec!["foo2", "Bar"]);
+}
+
+#[test]
+fn test_preserves_cjk_letters() {
+    assert_eq!(umt_words("こんにちは世界", None), vec!["こんにちは世界"]);
+}
+
+#[test]
+fn test_strips_leading_and_trailing_separators() {
+    assert_eq!(umt_words("--hello--world--", None), vec!["hello", "world"]);
+}
