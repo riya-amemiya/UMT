@@ -1,4 +1,11 @@
 use regex::Regex;
+use std::sync::LazyLock;
+
+static LOWER_UPPER_RE: LazyLock<Regex> =
+    LazyLock::new(|| Regex::new(r"([\p{Ll}\p{N}])(\p{Lu})").unwrap());
+static UPPER_UPPER_LOWER_RE: LazyLock<Regex> =
+    LazyLock::new(|| Regex::new(r"(\p{Lu})(\p{Lu}\p{Ll})").unwrap());
+static SEPARATORS_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"[^\p{L}\p{N}]+").unwrap());
 
 /// Splits a string into words on case boundaries and non-alphanumeric separators.
 ///
@@ -25,14 +32,10 @@ pub fn umt_words(s: &str, pattern: Option<&Regex>) -> Vec<String> {
 
     // Insert a space between a lowercase/number and an uppercase letter,
     // then between an uppercase letter and an uppercase-followed-by-lowercase.
-    let lower_upper = Regex::new(r"([\p{Ll}\p{N}])(\p{Lu})").unwrap();
-    let upper_upper_lower = Regex::new(r"(\p{Lu})(\p{Lu}\p{Ll})").unwrap();
-    let separators = Regex::new(r"[^\p{L}\p{N}]+").unwrap();
+    let step1 = LOWER_UPPER_RE.replace_all(s, "$1 $2");
+    let with_boundaries = UPPER_UPPER_LOWER_RE.replace_all(&step1, "$1 $2");
 
-    let step1 = lower_upper.replace_all(s, "$1 $2");
-    let with_boundaries = upper_upper_lower.replace_all(&step1, "$1 $2");
-
-    separators
+    SEPARATORS_RE
         .split(&with_boundaries)
         .filter(|part| !part.is_empty())
         .map(|part| part.to_string())
