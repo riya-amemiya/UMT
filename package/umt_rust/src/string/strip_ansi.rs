@@ -1,4 +1,12 @@
 use regex::Regex;
+use std::sync::LazyLock;
+
+static ANSI_RE: LazyLock<Regex> = LazyLock::new(|| {
+    Regex::new(
+        "(?:\u{001B}\\[|\u{009B})[0-?]*[ -/]*[@-~]|\u{001B}\\][^\u{0007}\u{001B}]*(?:\u{0007}|\u{001B}\\\\)",
+    )
+    .unwrap()
+});
 
 /// Removes ANSI escape sequences (e.g. terminal color codes) from a string,
 /// keeping the visible text.
@@ -20,9 +28,5 @@ use regex::Regex;
 /// ```
 #[inline]
 pub fn umt_strip_ansi(s: &str) -> String {
-    let ansi = Regex::new(
-        "(?:\u{001B}\\[|\u{009B})[0-?]*[ -/]*[@-~]|\u{001B}\\][^\u{0007}\u{001B}]*(?:\u{0007}|\u{001B}\\\\)",
-    )
-    .unwrap();
-    ansi.replace_all(s, "").to_string()
+    ANSI_RE.replace_all(s, "").to_string()
 }
