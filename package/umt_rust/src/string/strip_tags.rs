@@ -1,4 +1,7 @@
 use regex::Regex;
+use std::sync::LazyLock;
+
+static TAG_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"<[^<>]*>").unwrap());
 
 /// Removes HTML/XML tags from a string, keeping the text content.
 ///
@@ -19,10 +22,9 @@ use regex::Regex;
 /// assert_eq!(umt_strip_tags("<sc<script>ript>"), "");
 /// ```
 pub fn umt_strip_tags(s: &str) -> String {
-    let tag = Regex::new(r"<[^<>]*>").unwrap();
     let mut result = s.to_string();
     loop {
-        let next = tag.replace_all(&result, "").to_string();
+        let next = TAG_RE.replace_all(&result, "").to_string();
         if next == result {
             break;
         }

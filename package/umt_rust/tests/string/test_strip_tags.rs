@@ -37,3 +37,23 @@ fn test_leaves_text_without_tags_unchanged() {
 fn test_handles_empty_string() {
     assert_eq!(umt_strip_tags(""), "");
 }
+
+#[test]
+fn test_keeps_text_around_tags() {
+    assert_eq!(umt_strip_tags("Hello <b>World</b>!"), "Hello World!");
+}
+
+#[test]
+fn test_removes_multi_level_nested_injections() {
+    assert_eq!(umt_strip_tags("<sc<sc<script>ript>ript>"), "");
+}
+
+#[test]
+fn test_leaves_unclosed_angle_brackets() {
+    assert_eq!(umt_strip_tags("a < b"), "a < b");
+}
+
+#[test]
+fn test_removes_adjacent_tags() {
+    assert_eq!(umt_strip_tags("<p></p>text<div>x</div>"), "textx");
+}
