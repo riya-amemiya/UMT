@@ -29,3 +29,29 @@ fn test_leaves_single_spaced_string_unchanged() {
 fn test_handles_empty_string() {
     assert_eq!(umt_normalize_whitespace(""), "");
 }
+
+#[test]
+fn test_collapses_docstring_example() {
+    assert_eq!(
+        umt_normalize_whitespace("  hello   world \t\n foo "),
+        "hello world foo"
+    );
+}
+
+#[test]
+fn test_collapses_carriage_return_whitespace() {
+    assert_eq!(umt_normalize_whitespace("hello \r\n world"), "hello world");
+}
+
+#[test]
+fn test_collapses_consecutive_newlines() {
+    assert_eq!(umt_normalize_whitespace("a\n\n\nb"), "a b");
+}
+
+#[test]
+fn test_keeps_text_around_whitespace_runs() {
+    assert_eq!(
+        umt_normalize_whitespace("keep \t  this \n text"),
+        "keep this text"
+    );
+}

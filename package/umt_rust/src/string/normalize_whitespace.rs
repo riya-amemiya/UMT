@@ -1,4 +1,7 @@
 use regex::Regex;
+use std::sync::LazyLock;
+
+static WHITESPACE_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"\s+").unwrap());
 
 /// Collapses consecutive whitespace characters into a single space and trims the
 /// result.
@@ -19,6 +22,5 @@ use regex::Regex;
 /// ```
 #[inline]
 pub fn umt_normalize_whitespace(s: &str) -> String {
-    let whitespace = Regex::new(r"\s+").unwrap();
-    whitespace.replace_all(s, " ").trim().to_string()
+    WHITESPACE_RE.replace_all(s, " ").trim().to_string()
 }
