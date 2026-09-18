@@ -31,6 +31,8 @@ cargo doc --open
 
 Runtime dependencies include `chrono`, `regex`, `serde`, `rand`, and others listed in `Cargo.toml` (the crate is not dependency-free).
 
+Fixed regexes are compiled once in `std::sync::LazyLock` statics (`umt_strip_ansi`, `umt_strip_tags`, `umt_words`, `umt_hexa_to_rgba`, UA extractors). Patterns built from caller input stay inline. Prefer `LazyLock` over compiling the same pattern on every call.
+
 ## Date helpers
 
 Local-time calendar helpers in `src/date/`. Week boundaries are Sunday-start. There are no UTC variants.
@@ -66,6 +68,24 @@ assert_eq!(epoch.timestamp(), 0);
 There is no `umt_is_same` yet (TypeScript `isSame`). Use `umt_is_same_day` or compare `umt_start_of` results.
 
 Wasm bindings for most of these Date helpers are **not** auto-generated (`DateTime<Utc>` / custom enums). See `package/umt_wasm/doc/index.md`.
+
+## String helpers
+
+Unicode-aware string utilities in `src/string/`. Behavior matches TypeScript `package/main/src/String` (verified against the Rust tests added with the `LazyLock` regex cache).
+
+| Function | Notes |
+| --- | --- |
+| `umt_strip_ansi` | Removes CSI (colors, cursor) and OSC sequences. Incomplete CSI with no final byte is left unchanged (`"\u{001B}[31"` stays). Unlike a full sanitizer, other non-printables are kept. |
+| `umt_strip_tags` | Deletes HTML/XML tags, repeating until stable so `"<sc<script>ript>"` becomes `""`. |
+| `umt_words(s, pattern)` | Default: split on camelCase / acronym boundaries and non-letter/number separators. Pass `Some(&regex)` to return that pattern's matches instead (empty if nothing matches). |
+
+```rust
+use umt_rust::string::{umt_strip_ansi, umt_strip_tags, umt_words};
+
+assert_eq!(umt_strip_ansi("\u{001B}[31mred\u{001B}[0m"), "red");
+assert_eq!(umt_strip_tags("<p>Hello <b>World</b></p>"), "Hello World");
+assert_eq!(umt_words("XMLHttpRequest", None), vec!["XML", "Http", "Request"]);
+```
 
 ## IP helpers
 

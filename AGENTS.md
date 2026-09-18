@@ -73,7 +73,7 @@ Located in `package/umt_rust`.
 *   **Core Logic**:
     *   **Stable Rust Only**: Do not use unstable features like `let_chains`.
     *   **Value Enum**: Use `umt_rust::object::Value` with `#[serde(untagged)]` for JSON interoperability. Use the `obj!` macro for construction.
-    *   **Regex**: Use `std::sync::OnceLock` for regex compilation in loops.
+    *   **Regex**: Cache compiled `regex::Regex` values in `std::sync::LazyLock` statics (`umt_strip_ansi`, `umt_strip_tags`, `umt_words`, `hexa_to_rgba`, UA extractors). Do not compile a fixed pattern on every call. Patterns built from caller input (calculator, `format_string`, `umt_regex_match`) stay inline.
     *   **Math**:
         *   Implement `apply_currency_exchange` for currency conversion.
         *   Operator precedence: Exp > Mul/Div > Add/Sub.

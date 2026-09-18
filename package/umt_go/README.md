@@ -65,7 +65,7 @@ Public code lives in `src/<package>`. Tests are `src/tests/<package>/*_test.go` 
 | `predicate` | `src/predicate` | `Every`, `Some`, `IsNullish` |
 | `random` | `src/random` | `RandomChoice`, `SeededRandom` |
 | `simple` | `src/simple` | `BirthdaySimple`, `NowSimple` |
-| `str` | `src/str` | `FormatString`, `Slugify` |
+| `str` | `src/str` | `FormatString`, `Slugify`, `StripAnsi`, `StripTags`, `Words` |
 | `timeutil` | `src/timeutil` | `ConvertTime` |
 | `tool` | `src/tool` | `Pipe`, `Unwrap`, `ParseJson` |
 | `ua` | `src/ua` | `ParseUserAgent` |
@@ -73,7 +73,7 @@ Public code lives in `src/<package>`. Tests are `src/tests/<package>/*_test.go` 
 | `urlutil` | `src/urlutil` | `BuildUrl`, `ParseQueryString` |
 | `validate` | `src/validate` | `IsNumber`, `ArrayOf` |
 
-Not every TypeScript helper is ported. There is no `IsBetween`, `AddBusinessDays`, `FromUnix` / `ToUnix`, `WeekOfYear`, `GetQuarter`, or `IsSame`.
+Not every TypeScript helper is ported. There is no `IsBetween`, `AddBusinessDays`, `FromUnix` / `ToUnix`, `WeekOfYear`, `GetQuarter`, or `IsSame`. There is also no `CountBy`, `Partition`, `Sliding`, `MapSeries`, or `SafeExecuteAsync`.
 
 ## Date helpers
 
@@ -84,6 +84,24 @@ Calendar helpers in `src/date`. Week boundaries are Sunday-start (`time.Weekday`
 | `StartOf` / `EndOf` | `DateBoundaryUnit`: second, minute, hour, day, week, month, quarter, year. Unknown unit returns the date unchanged. `EndOf` uses millisecond `.999`. |
 | `AddDuration` / `SubDuration` / `Diff` | Fixed units (`ms`, `s`, `m`, `h`, `d`, `w`) use millisecond arithmetic. `M` / `y` are calendar-aware and clamp end-of-month (Jan 31 + 1 month → Feb 28/29). |
 | `IsWeekend` / `IsSameDay` / `IsBusinessDay` | Compared in each value's own location. `IsBusinessDay` treats optional holidays as calendar days. |
+
+## String helpers
+
+Unicode-aware helpers in `src/str`, aligned with TypeScript `package/main/src/String`.
+
+| Function | Notes |
+| --- | --- |
+| `StripAnsi` | Removes CSI (colors, cursor, including C1 `U+009B`) and OSC sequences. Incomplete CSI is left unchanged. Unlike `SanitizeString`, other non-printables stay. |
+| `StripTags` | Deletes HTML/XML tags, repeating until stable so `"<sc<script>ript>"` becomes `""`. |
+| `Words` / `WordsWithPattern` | `Words` splits on camelCase / acronym boundaries and non-letter/number separators. Custom patterns are a separate function (`WordsWithPattern`), not an optional argument like TypeScript / Python / Rust. No matches → empty slice (not `nil`). |
+
+```go
+import "github.com/riya-amemiya/umt-go/src/str"
+
+_ = str.StripAnsi("\x1b[31mred\x1b[0m") // "red"
+_ = str.StripTags("<p>Hello <b>World</b></p>") // "Hello World"
+_ = str.Words("XMLHttpRequest") // []string{"XML", "Http", "Request"}
+```
 
 ## IP helpers
 

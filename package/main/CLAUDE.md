@@ -76,8 +76,8 @@ src/
 ├── index.ts                 # Main export file
 ├── types/                   # Shared type definitions ($/* alias)
 ├── Advance/                 # Advanced functions
-├── Array/                   # Array manipulation functions
-├── Async/                   # Async utilities (sleep, parallel, timeout, defer)
+├── Array/                   # Array manipulation functions (includes countBy, partition, sliding)
+├── Async/                   # Async utilities (sleep, parallel, timeout, defer, mapSeries)
 ├── Color/                   # Color conversion functions
 ├── Consts/                  # Constant definitions
 ├── Crypto/                  # Cryptographic functions

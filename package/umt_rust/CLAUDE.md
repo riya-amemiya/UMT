@@ -30,6 +30,7 @@ Each module typically has:
 
 - Public functions are prefixed with `umt_` **except** `umt_rust::ip` (`cidr_to_long`, `ip_to_long`, …). Wasm codegen only wraps `pub fn umt_*`.
 - Performance-critical functions may use `#[inline]`
+- Cache fixed `regex::Regex` values in `std::sync::LazyLock` statics. Do not use `OnceLock` for these; the crate already uses `LazyLock` (`umt_strip_ansi`, UA extractors, `hexa_to_rgba`). Caller-built patterns stay inline.
 - Tests must be in `tests/`, not in `src/`
 - Stable Rust only (no `let_chains`)
 - IP helpers return `Result` (except `long_to_ip` → `String` and `get_ip_class` → `""` on invalid input)
