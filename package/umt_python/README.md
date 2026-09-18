@@ -62,7 +62,7 @@ Public names are re-exported from `src/__init__.py`. Grouped the same way as Typ
 | `predicate` | `every`, `some`, `is_nullish` |
 | `random` | `random_choice`, `seeded_random` |
 | `simple` | `birthday_simple`, `now_simple` |
-| `string` | `format_string`, `slugify`, `levenshtein_distance` |
+| `string` | `format_string`, `slugify`, `strip_ansi`, `strip_tags`, `words` (see below) |
 | `time` | `convert_time` |
 | `tool` | `pipe`, `unwrap`, `parse_json` |
 | `ua` | `parse_user_agent` |
@@ -70,7 +70,7 @@ Public names are re-exported from `src/__init__.py`. Grouped the same way as Typ
 | `url` | `build_url`, `parse_query_string` |
 | `validate` | `is_number`, `array_of`, `parse_email` |
 
-Not every TypeScript helper is ported yet (for example there is no `is_same`; use `is_same_day` or compare truncated values with `start_of`).
+Not every TypeScript helper is ported yet. There is no `is_same` (use `is_same_day` or compare truncated values with `start_of`). There is also no `count_by`, `partition`, `sliding`, `map_series`, or `safe_execute_async`.
 
 ## Date helpers
 
@@ -89,6 +89,16 @@ Local-time calendar helpers aligned with TypeScript `package/main/src/Date`. Wee
 | `start_of` / `end_of` | `(date, unit) -> datetime` | Boundary truncation. `unit` is `second` \| `minute` \| `hour` \| `day` \| `week` \| `month` \| `quarter` \| `year` | `start_of(datetime(2025, 4, 15, 10, 30), "day")  # datetime(2025, 4, 15, 0, 0)` |
 
 `DateInclusivity` is `"()"` \| `"[]"` \| `"[)"` \| `"(]"`. `UnixTimeUnit` is `"s"` \| `"ms"`.
+
+## String helpers
+
+Unicode-aware helpers aligned with TypeScript `package/main/src/String`.
+
+| Function | Type | Description | Example |
+| --- | --- | --- | --- |
+| `strip_ansi` | `(string_: str) -> str` | Removes CSI (colors, cursor, including C1 `U+009B`) and OSC sequences. Incomplete CSI is left unchanged. Unlike `sanitize_string`, other non-printables stay. | `strip_ansi("\x1b[31mred\x1b[0m")  # "red"` |
+| `strip_tags` | `(string_: str) -> str` | Deletes HTML/XML tags, repeating until stable so `"<sc<script>ript>"` becomes `""`. Self-closing tags leave no separator. | `strip_tags("<p>Hello <b>World</b></p>")  # "Hello World"` |
+| `words` | `(string_: str, pattern: re.Pattern[str] \| None = None) -> list[str]` | Default: camelCase / acronym split, then non-letter/number separators. Pass a compiled pattern to return `findall` matches (`[]` if none). | `words("XMLHttpRequest")  # ["XML", "Http", "Request"]` |
 
 ## IP helpers
 

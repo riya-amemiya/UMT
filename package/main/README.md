@@ -180,6 +180,55 @@ class Product {
 new Product(); // succeeds; throws `Error` if `price` is not a number
 ```
 
+## String helpers
+
+Unicode-aware string utilities in `umt/String`. Python, Rust, and Go ports exist (`strip_ansi` / `umt_strip_ansi` / `StripAnsi`, and the same mapping for tags and words).
+
+| Function | Behavior |
+| --- | --- |
+| `stripAnsi(string)` | Removes CSI sequences (colors, cursor movement, including C1 `U+009B`) and OSC sequences (BEL or ST terminated). Incomplete CSI with no final byte is left unchanged. Unlike `sanitizeString`, other non-printables stay. |
+| `stripTags(string)` | Deletes HTML/XML tags (`<[^<>]*>`), repeating until stable so `"<sc<script>ript>"` becomes `""`. Self-closing tags are removed without inserting a separator (`"line1<br/>line2"` → `"line1line2"`). |
+| `words(string, pattern?)` | Default: insert spaces on camelCase / acronym boundaries, then split on non-letter/number separators. CJK and other letters are kept. If `pattern` is passed, returns `string.match(pattern)` or `[]`. |
+
+```ts
+import { stripAnsi, stripTags, words } from "umt/String";
+
+stripAnsi("\u001B[31mred\u001B[0m"); // "red"
+stripTags("<p>Hello <b>World</b></p>"); // "Hello World"
+stripTags("<sc<script>ript>"); // ""
+words("XMLHttpRequest"); // ["XML", "Http", "Request"]
+words("foo-bar_baz"); // ["foo", "bar", "baz"]
+words("a1 b2 c3", /[a-z]\d/g); // ["a1", "b2", "c3"]
+```
+
+Go splits the custom-pattern case into `Words` vs `WordsWithPattern`.
+
+## Array, Async, and Error helpers
+
+These TypeScript helpers are **not** ported to Python, Rust, or Go yet.
+
+| Function | Behavior |
+| --- | --- |
+| `countBy(array, iteratee)` | Counts elements by iteratee key (`string` \| `number`). Empty input → `{}`. Iteratee receives `(value, index, array)`. |
+| `partition(array, predicate)` | `[pass, fail]` in original order. Does not mutate the input. Predicate receives `(value, index, array)`. |
+| `sliding(array, size, step?)` | Fixed-size windows. Default `step` is `1`. Incomplete trailing windows are omitted. `size` larger than length → `[]`. Does not mutate the input. |
+| `mapSeries(items, fn)` | Awaits each mapper before starting the next (never overlapping). Returns results in input order. Rejects if any task rejects; it does not swallow errors. |
+| `safeExecuteAsync(callback)` | `try/await/catch` into `Result`: `{ type: "success", value }` or `{ type: "error", error }`. Accepts a sync return or a `Promise`. Sync throws and rejected promises both become `type: "error"`. Never throws. |
+
+```ts
+import { countBy, partition, sliding } from "umt/Array";
+import { mapSeries } from "umt/Async";
+import { safeExecuteAsync } from "umt/Error";
+
+countBy(["one", "two", "three"], (s) => s.length); // { 3: 2, 5: 1 }
+partition([1, 2, 3, 4], (n) => n % 2 === 0); // [[2, 4], [1, 3]]
+sliding([1, 2, 3, 4, 5], 3); // [[1, 2, 3], [2, 3, 4], [3, 4, 5]]
+sliding([1, 2, 3, 4, 5], 3, 2); // [[1, 2, 3], [3, 4, 5]]
+
+await mapSeries([1, 2, 3], async (n) => n * 2); // [2, 4, 6]
+await safeExecuteAsync(async () => 42); // { type: "success", value: 42 }
+```
+
 ## Function List
 
 ### Advance

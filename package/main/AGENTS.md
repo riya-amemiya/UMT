@@ -60,6 +60,7 @@ UMT (Utility Module Toolkit) is a TypeScript utility library organized into func
 - **Coverage**: Enabled by default, excludes environment detection utilities (`isBrowser`, `isNode`, `isBun`, `isNodeWebkit`) and `src/tests/benchmark/**`
 - **TypeScript pin**: Keep `typescript` at 6.0.3. TypeScript 7.x breaks `typescript-eslint` and `ts-node` loading `jest.config.ts` (see `COMPATIBILITY.md`)
 - **Standard Schema**: Validate factories attach `~standard` (`vendor: "umt"`). `@Schema` in Decorator accepts any Standard Schema V1 validator; async `validate` is a failure. `@Validatable` throws after the wrapped constructor.
+- **Array / Async (TypeScript only)**: `countBy`, `partition`, `sliding`, `mapSeries`, and `safeExecuteAsync` are not ported. `sliding` omits incomplete windows; `mapSeries` is strictly sequential and rejects on the first failure.
 
 ## Codebase Structure
 
@@ -70,8 +71,8 @@ src/
 ├── index.ts                 # Main export file
 ├── types/                   # Shared type definitions ($/* alias)
 ├── Advance/                 # Advanced functions
-├── Array/                   # Array manipulation functions
-├── Async/                   # Async utilities (sleep, parallel, timeout, defer)
+├── Array/                   # Array manipulation functions (includes countBy, partition, sliding)
+├── Async/                   # Async utilities (sleep, parallel, timeout, defer, mapSeries)
 ├── Color/                   # Color conversion functions
 ├── Consts/                  # Constant definitions
 ├── Crypto/                  # Cryptographic functions
