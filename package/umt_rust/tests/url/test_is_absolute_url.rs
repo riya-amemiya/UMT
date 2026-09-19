@@ -44,3 +44,27 @@ fn test_returns_false_for_invalid_scheme_starts() {
     assert!(!umt_is_absolute_url("123://invalid"));
     assert!(!umt_is_absolute_url("+bad://invalid"));
 }
+
+#[test]
+fn test_returns_true_for_uppercase_schemes() {
+    assert!(umt_is_absolute_url("HTTP://example.com"));
+    assert!(umt_is_absolute_url("HTTPS://example.com"));
+    assert!(umt_is_absolute_url("Mailto:user@host"));
+}
+
+#[test]
+fn test_returns_true_for_scheme_with_digits() {
+    assert!(umt_is_absolute_url("http2://example.com"));
+    assert!(umt_is_absolute_url("a1:"));
+}
+
+#[test]
+fn test_returns_false_without_colon() {
+    assert!(!umt_is_absolute_url("http"));
+    assert!(!umt_is_absolute_url(":"));
+}
+
+#[test]
+fn test_returns_false_for_leading_whitespace() {
+    assert!(!umt_is_absolute_url(" http://example.com"));
+}
