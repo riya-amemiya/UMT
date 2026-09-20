@@ -85,3 +85,42 @@ fn test_format_morning_hours() {
     assert_eq!(umt_format(&date, "hh:mm A", 0), "09:05 AM");
     assert_eq!(umt_format(&date, "h:mm a", 0), "9:05 am");
 }
+
+#[test]
+fn test_format_empty_string() {
+    let date = Utc.with_ymd_and_hms(2023, 6, 10, 15, 30, 45).unwrap();
+    assert_eq!(umt_format(&date, "", 0), "");
+}
+
+#[test]
+fn test_format_escaped_tokens_stay_literal() {
+    let date = Utc.with_ymd_and_hms(2023, 6, 10, 15, 30, 45).unwrap();
+    assert_eq!(umt_format(&date, "[YYYY]", 0), "YYYY");
+    assert_eq!(umt_format(&date, "[YYYY-MM-DD]", 0), "YYYY-MM-DD");
+}
+
+#[test]
+fn test_format_adjacent_escaped_texts() {
+    let date = Utc.with_ymd_and_hms(2023, 6, 10, 15, 30, 45).unwrap();
+    assert_eq!(umt_format(&date, "[Year][Month]", 0), "YearMonth");
+}
+
+#[test]
+fn test_format_empty_brackets_are_not_escaped() {
+    let date = Utc.with_ymd_and_hms(2023, 6, 10, 15, 30, 45).unwrap();
+    assert_eq!(umt_format(&date, "[]YYYY", 0), "[]2023");
+}
+
+#[test]
+fn test_format_unclosed_bracket_is_not_escaped() {
+    let date = Utc.with_ymd_and_hms(2023, 6, 10, 15, 30, 45).unwrap();
+    assert_eq!(umt_format(&date, "[Ok YYYY", 0), "[Ok 2023");
+}
+
+#[test]
+fn test_format_docstring_examples() {
+    let date = Utc.with_ymd_and_hms(2025, 4, 4, 15, 30, 0).unwrap();
+    assert_eq!(umt_format(&date, "YYYY-MM-DD", 0), "2025-04-04");
+    assert_eq!(umt_format(&date, "HH:mm", 0), "15:30");
+    assert_eq!(umt_format(&date, "MM/DD/YYYY", 0), "04/04/2025");
+}
