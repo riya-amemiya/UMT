@@ -1,4 +1,8 @@
 use regex::Regex;
+use std::sync::LazyLock;
+
+static ABSOLUTE_URL_RE: LazyLock<Regex> =
+    LazyLock::new(|| Regex::new(r"(?i)^[a-z][\da-z+.\-]*:").unwrap());
 
 /// Checks whether a URL string is absolute (RFC 3986).
 ///
@@ -26,6 +30,5 @@ use regex::Regex;
 /// assert!(umt_is_absolute_url("mailto:user@host"));
 /// ```
 pub fn umt_is_absolute_url(url: &str) -> bool {
-    let re = Regex::new(r"(?i)^[a-z][\da-z+.\-]*:").unwrap();
-    re.is_match(url)
+    ABSOLUTE_URL_RE.is_match(url)
 }
