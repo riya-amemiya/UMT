@@ -25,7 +25,7 @@ type HSLA struct {
 // CMYK represents a color in CMYK color space.
 type CMYK struct {
 	C, M, Y, K float64 // 0-100
-	A           float64 // 0-1
+	A          float64 // 0-1
 }
 
 func roundTo(v float64, precision int) float64 {
@@ -39,11 +39,12 @@ func validateRgba(rgba RGBA) {
 	}
 }
 
+var hexaColorRe = regexp.MustCompile(`^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$`)
+
 // HexaToRgba converts a hex color string to RGBA.
 // Supports 3, 6, or 8 digit hex codes with #.
 func HexaToRgba(hex string) (RGBA, error) {
-	re := regexp.MustCompile(`^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$`)
-	if !re.MatchString(hex) {
+	if !hexaColorRe.MatchString(hex) {
 		return RGBA{}, fmt.Errorf("Invalid hex code")
 	}
 

@@ -107,8 +107,30 @@ func TestHexaToRgba3Digit(t *testing.T) {
 	}
 }
 
+func TestHexaToRgbaLowercase(t *testing.T) {
+	tests := []struct {
+		hex  string
+		want color.RGBA
+	}{
+		{"#abc", color.RGBA{R: 170, G: 187, B: 204, A: 1}},
+		{"#aabbcc", color.RGBA{R: 170, G: 187, B: 204, A: 1}},
+		{"#AABBCCDD", color.RGBA{R: 170, G: 187, B: 204, A: 0.87}},
+	}
+	for _, tt := range tests {
+		t.Run(tt.hex, func(t *testing.T) {
+			got, err := color.HexaToRgba(tt.hex)
+			if err != nil {
+				t.Fatalf("unexpected error: %v", err)
+			}
+			if got.R != tt.want.R || got.G != tt.want.G || got.B != tt.want.B || !approxEqual(got.A, tt.want.A, 0.01) {
+				t.Errorf("HexaToRgba(%q) = %+v, want %+v", tt.hex, got, tt.want)
+			}
+		})
+	}
+}
+
 func TestHexaToRgbaInvalid(t *testing.T) {
-	invalids := []string{"#12345", "#1234567", "123456", ""}
+	invalids := []string{"#12345", "#1234567", "123456", "", "#gg0000", "#12"}
 	for _, hex := range invalids {
 		t.Run(hex, func(t *testing.T) {
 			_, err := color.HexaToRgba(hex)
@@ -435,7 +457,7 @@ func TestRgbaToCmykConversions(t *testing.T) {
 func TestCmykToRgbaConversions(t *testing.T) {
 	tests := []struct {
 		name                string
-		c, m, y, k, a      float64
+		c, m, y, k, a       float64
 		wantR, wantG, wantB float64
 		wantA               float64
 	}{
@@ -638,8 +660,8 @@ func TestAlphaPreservation(t *testing.T) {
 func TestEdgeCaseConversions(t *testing.T) {
 	edgeCases := []color.RGBA{
 		{R: 0, G: 0, B: 0, A: 1},       // Black
-		{R: 255, G: 255, B: 255, A: 1},  // White
-		{R: 255, G: 0, B: 255, A: 0},    // Magenta with 0 alpha
+		{R: 255, G: 255, B: 255, A: 1}, // White
+		{R: 255, G: 0, B: 255, A: 0},   // Magenta with 0 alpha
 	}
 
 	for _, c := range edgeCases {
