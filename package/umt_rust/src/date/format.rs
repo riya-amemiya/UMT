@@ -4,10 +4,13 @@
 
 use chrono::{DateTime, Datelike, Timelike, Utc};
 use regex::Regex;
+use std::sync::LazyLock;
 
 use super::get_timezone_offset_string::{
     umt_get_timezone_offset_string, umt_get_timezone_offset_string_compact,
 };
+
+static ESCAPED_TEXT_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"\[([^\]]+)]").unwrap());
 
 /// Converts a date to a string according to the specified format pattern.
 ///
@@ -112,12 +115,11 @@ pub fn umt_format(
     ];
 
     // Handle escaped text in brackets
-    let re = Regex::new(r"\[([^\]]+)]").unwrap();
     let mut result = format_string.to_string();
     let mut escaped_texts: Vec<(String, String)> = Vec::new();
 
     // Replace escaped text with placeholders
-    for (i, cap) in re.captures_iter(format_string).enumerate() {
+    for (i, cap) in ESCAPED_TEXT_RE.captures_iter(format_string).enumerate() {
         let placeholder = format!("\x00ESC{}\x00", i);
         let full_match = cap.get(0).unwrap().as_str();
         let inner_text = cap.get(1).unwrap().as_str();
