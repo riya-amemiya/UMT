@@ -44,15 +44,14 @@ func EscapeHtml(s string) string {
 	return b.String()
 }
 
+var htmlEntityRe = regexp.MustCompile(`&(?:amp|lt|gt|quot|#39|#x27|#x2F|#x60|#x3D);|&#(\d+);|&#x([0-9a-fA-F]+);`)
+
 // UnescapeHtml unescapes HTML entities in a string.
 // It handles named entities (&amp;, &lt;, &gt;, &quot;, &#39;, &#x27;, &#x2F;, &#x60;, &#x3D;),
 // decimal numeric references (&#65;), and hexadecimal numeric references (&#x41;).
 func UnescapeHtml(s string) string {
-	// Match named entities, decimal numeric refs, and hex numeric refs
-	re := regexp.MustCompile(`&(?:amp|lt|gt|quot|#39|#x27|#x2F|#x60|#x3D);|&#(\d+);|&#x([0-9a-fA-F]+);`)
-
-	return re.ReplaceAllStringFunc(s, func(match string) string {
-		submatches := re.FindStringSubmatch(match)
+	return htmlEntityRe.ReplaceAllStringFunc(s, func(match string) string {
+		submatches := htmlEntityRe.FindStringSubmatch(match)
 
 		// Check decimal numeric reference (group 1)
 		if submatches[1] != "" {

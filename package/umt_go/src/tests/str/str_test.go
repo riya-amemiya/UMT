@@ -706,6 +706,10 @@ func TestUnescapeHtml(t *testing.T) {
 		{"complex HTML doc",
 			"&lt;!DOCTYPE html&gt;\n&lt;html&gt;\n&lt;head&gt;\n    &lt;title&gt;Test &amp; Demo&lt;/title&gt;\n&lt;/head&gt;\n&lt;body&gt;\n    &lt;p&gt;Hello &#39;World&#39; &amp; welcome!&lt;/p&gt;\n&lt;/body&gt;\n&lt;/html&gt;",
 			"<!DOCTYPE html>\n<html>\n<head>\n    <title>Test & Demo</title>\n</head>\n<body>\n    <p>Hello 'World' & welcome!</p>\n</body>\n</html>"},
+		{"mixed named and decimal", "&amp;&#65;", "&A"},
+		{"mixed named and hex", "&lt;&#x41;&gt;", "<A>"},
+		{"comparison with double ampersand", "5 &lt; 10 &amp;&amp; 10 &gt; 5", "5 < 10 && 10 > 5"},
+		{"hex slash in path", "path&#x2F;to", "path/to"},
 	}
 
 	for _, tt := range tests {
