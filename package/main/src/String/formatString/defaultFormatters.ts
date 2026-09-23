@@ -38,10 +38,9 @@ export const defaultFormatters: Record<string, Formatter> = {
     if (format === "iso") {
       return date.toISOString();
     }
-    if (format === "time") {
-      return date.toLocaleTimeString(locale);
-    }
-    return date.toLocaleDateString(locale);
+    return format === "time"
+      ? date.toLocaleTimeString(locale)
+      : date.toLocaleDateString(locale);
   },
 
   time: (value, locale = "en-US") => {

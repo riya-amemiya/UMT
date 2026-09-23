@@ -47,8 +47,5 @@ export const diff = (left: Date, right: Date, unit: DurationUnit): number => {
     calendarMonths += 1;
   }
 
-  if (unit === "M") {
-    return calendarMonths;
-  }
-  return Math.trunc(calendarMonths / 12);
+  return unit === "M" ? calendarMonths : Math.trunc(calendarMonths / 12);
 };

@@ -144,11 +144,9 @@ export function formatString(
         value = defaultValue;
       }
 
-      if (formatterString) {
-        return applyFormatter(value, formatterString, formatters);
-      }
-
-      return String(value);
+      return formatterString
+        ? applyFormatter(value, formatterString, formatters)
+        : String(value);
     },
   );
 

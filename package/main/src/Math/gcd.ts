@@ -69,10 +69,8 @@ const gcdInteger = (x: number, y: number, ...z: number[]) => {
     r = copyY % copyX;
   }
 
-  if (copyZ.length > 0) {
-    for (const element of copyZ) {
-      copyX = gcdInteger(copyX, element);
-    }
+  for (const element of copyZ) {
+    copyX = gcdInteger(copyX, element);
   }
 
   return copyX;

@@ -14,9 +14,5 @@ export const truncate = (
   length: number,
   suffix = "...",
 ): string => {
-  if (string_.length <= length) {
-    return string_;
-  }
-
-  return string_.slice(0, length) + suffix;
+  return string_.length <= length ? string_ : string_.slice(0, length) + suffix;
 };

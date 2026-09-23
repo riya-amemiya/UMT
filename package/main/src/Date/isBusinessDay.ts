@@ -11,8 +11,7 @@ import { isWeekend } from "./isWeekend";
  * isBusinessDay(new Date("2025-04-21"), [new Date("2025-04-21")]); // false
  */
 export const isBusinessDay = (date: Date, holidays: Date[] = []): boolean => {
-  if (isWeekend(date)) {
-    return false;
-  }
-  return holidays.every((holiday) => !isSameDay(holiday, date));
+  return (
+    !isWeekend(date) && holidays.every((holiday) => !isSameDay(holiday, date))
+  );
 };

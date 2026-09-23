@@ -11,10 +11,7 @@ const isNumber = <T extends boolean>(
   number: unknown,
   loose: T = true as T,
 ): number is T extends true ? number | string : number => {
-  if (Array.isArray(number)) {
-    return false;
-  }
-  if (typeof number === "object") {
+  if (typeof number === "object" || Array.isArray(number)) {
     return false;
   }
   return number !== null && typeof number !== "boolean" && loose

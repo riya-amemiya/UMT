@@ -25,10 +25,7 @@ export const Schema = <Output>(
     addFieldRule(target, propertyKey, {
       validate: (value) => {
         const result = validator["~standard"].validate(value);
-        if (result instanceof Promise) {
-          return false;
-        }
-        return result.issues === undefined;
+        return !(result instanceof Promise) && result.issues === undefined;
       },
       message: `${String(propertyKey)} failed schema validation`,
     });

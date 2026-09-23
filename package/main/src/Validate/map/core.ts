@@ -69,20 +69,21 @@ export const map = <
           };
         }
       }
-      if (valueValidator) {
-        const valueResult = (
-          valueValidator as (v: unknown) => {
-            validate: boolean;
-            message: string;
-          }
-        )(entryValue);
-        if (!valueResult.validate) {
-          return {
-            validate: false,
-            message: valueResult.message,
-            type: value,
-          };
+      if (!valueValidator) {
+        continue;
+      }
+      const valueResult = (
+        valueValidator as (v: unknown) => {
+          validate: boolean;
+          message: string;
         }
+      )(entryValue);
+      if (!valueResult.validate) {
+        return {
+          validate: false,
+          message: valueResult.message,
+          type: value,
+        };
       }
     }
     return {

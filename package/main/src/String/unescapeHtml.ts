@@ -20,27 +20,17 @@ const htmlUnescapeMap: Record<string, string> = {
  * and values beyond the Unicode maximum (>0x10FFFF).
  */
 const isSafeCodePoint = (codePoint: number): boolean => {
-  if (codePoint > 0x10_ff_ff) {
-    return false;
-  }
-  if (codePoint === 0) {
-    return false;
-  }
-  if (codePoint >= 0xd8_00 && codePoint <= 0xdf_ff) {
-    return false;
-  }
-  if (
-    codePoint !== 0x09 &&
-    codePoint !== 0x0a &&
-    codePoint !== 0x0d &&
-    codePoint <= 0x1f
-  ) {
-    return false;
-  }
-  if (codePoint === 0x7f) {
-    return false;
-  }
-  return !(codePoint >= 0x80 && codePoint <= 0x9f);
+  return !(
+    codePoint === 0 ||
+    codePoint === 0x7f ||
+    codePoint > 0x10_ff_ff ||
+    (codePoint >= 0xd8_00 && codePoint <= 0xdf_ff) ||
+    (codePoint !== 0x09 &&
+      codePoint !== 0x0a &&
+      codePoint !== 0x0d &&
+      codePoint <= 0x1f) ||
+    (codePoint >= 0x80 && codePoint <= 0x9f)
+  );
 };
 
 /**
@@ -74,17 +64,15 @@ export const unescapeHtml = (string_: string): string => {
       // malformed strings. Out-of-range values (>0x10FFFF) are not valid
       // Unicode. Leave these entity references unmodified rather than decoding
       // them into potentially dangerous characters.
-      if (!isSafeCodePoint(codePoint)) {
-        return match;
-      }
-      return String.fromCodePoint(codePoint);
+      return isSafeCodePoint(codePoint)
+        ? String.fromCodePoint(codePoint)
+        : match;
     }
     if (hex !== undefined) {
       const codePoint = Number.parseInt(hex, 16);
-      if (!isSafeCodePoint(codePoint)) {
-        return match;
-      }
-      return String.fromCodePoint(codePoint);
+      return isSafeCodePoint(codePoint)
+        ? String.fromCodePoint(codePoint)
+        : match;
     }
     return htmlUnescapeMap[match];
   });

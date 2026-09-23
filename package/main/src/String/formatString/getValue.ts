@@ -51,13 +51,16 @@ export function getValue(object: unknown, path: string): unknown {
 
     current = (current as Record<string, unknown>)[segment.key];
 
-    if (segment.index !== undefined) {
-      if (!Array.isArray(current)) {
-        return;
-      }
-      const index = segment.index;
-      current = index < 0 ? current[current.length + index] : current[index];
+    if (segment.index === undefined) {
+      continue;
     }
+
+    if (!Array.isArray(current)) {
+      return;
+    }
+
+    const index = segment.index;
+    current = index < 0 ? current[current.length + index] : current[index];
   }
 
   return current;

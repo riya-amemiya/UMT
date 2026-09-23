@@ -51,12 +51,14 @@ export const getArraysCommon = <O, T extends unknown[] = unknown[]>(
       }
     }
 
-    if (isCommon) {
-      if (seen) {
-        seen.add(item);
-      }
-      uniqueResult.push(item);
+    if (!isCommon) {
+      continue;
     }
+
+    if (seen) {
+      seen.add(item);
+    }
+    uniqueResult.push(item);
   }
 
   return uniqueResult as unknown as O;

@@ -26,19 +26,13 @@ const medianOfThree = <T>(
     if (bc < 0) {
       return array[b];
     }
-    if (compareFunction(array[a], array[c]) < 0) {
-      return array[c];
-    }
-    return array[a];
+    return compareFunction(array[a], array[c]) < 0 ? array[c] : array[a];
   }
   const ac = compareFunction(array[a], array[c]);
   if (ac < 0) {
     return array[a];
   }
-  if (compareFunction(array[b], array[c]) < 0) {
-    return array[c];
-  }
-  return array[b];
+  return compareFunction(array[b], array[c]) < 0 ? array[c] : array[b];
 };
 
 /**

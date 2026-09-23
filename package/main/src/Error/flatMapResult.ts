@@ -25,8 +25,5 @@ export const flatMapResult = <V, E, U, F>(
   result: Result<V, E>,
   function_: (value: V) => Result<U, F>,
 ): Result<U, E | F> => {
-  if (result.type === "success") {
-    return function_(result.value);
-  }
-  return result;
+  return result.type === "success" ? function_(result.value) : result;
 };

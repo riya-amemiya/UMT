@@ -21,11 +21,7 @@ export const isPlainObject = (
   }
 
   const prototype = Object.getPrototypeOf(value);
-  if (prototype === null) {
-    return true;
-  }
-
-  if (prototype === Object.prototype) {
+  if (prototype === null || prototype === Object.prototype) {
     return true;
   }
 

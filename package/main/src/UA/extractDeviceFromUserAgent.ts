@@ -24,19 +24,12 @@ export const extractDeviceFromUserAgent = (
   }
 
   if (/android/i.test(ua)) {
-    if (/mobile/i.test(ua)) {
-      return "mobile";
-    }
-    return "tablet";
+    return /mobile/i.test(ua) ? "mobile" : "tablet";
   }
 
   if (/ipad|android(?!.*mobile)/i.test(ua)) {
     return "tablet";
   }
 
-  if (/windows|macintosh|linux/i.test(ua)) {
-    return "desktop";
-  }
-
-  return "other";
+  return /windows|macintosh|linux/i.test(ua) ? "desktop" : "other";
 };

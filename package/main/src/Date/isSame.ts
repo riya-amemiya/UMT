@@ -20,8 +20,7 @@ export const isSame = (
   right: Date,
   unit?: DateBoundaryUnit,
 ): boolean => {
-  if (unit === undefined) {
-    return left.getTime() === right.getTime();
-  }
-  return startOf(left, unit).getTime() === startOf(right, unit).getTime();
+  return unit === undefined
+    ? left.getTime() === right.getTime()
+    : startOf(left, unit).getTime() === startOf(right, unit).getTime();
 };

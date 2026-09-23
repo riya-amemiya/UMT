@@ -16,10 +16,7 @@ export const even = (message?: string): ValidateReturnType<number> => {
     type: "number",
     message,
     validate: (value) => {
-      if (isDouble(value, false)) {
-        return false;
-      }
-      return value % 2 === 0;
+      return !isDouble(value, false) && value % 2 === 0;
     },
   };
 };
