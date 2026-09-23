@@ -34,32 +34,35 @@ func CamelCase(s string) string {
 	return result
 }
 
+var (
+	kebabLowerUpper      = regexp.MustCompile(`([a-z])([A-Z])`)
+	kebabAcronym         = regexp.MustCompile(`([A-Z])([A-Z][a-z])`)
+	kebabSpaceUnderscore = regexp.MustCompile(`[\s_]+`)
+	kebabNonAlnum        = regexp.MustCompile(`[^a-zA-Z0-9-]`)
+	kebabMultiDash       = regexp.MustCompile(`-+`)
+	kebabEdgeDash        = regexp.MustCompile(`^-|-$`)
+)
+
 // KebabCase converts a string to kebab-case.
 // It handles camelCase, PascalCase, snake_case, space-separated words, and mixed separators.
 func KebabCase(s string) string {
 	// Insert dash between lowercase and uppercase
-	re1 := regexp.MustCompile(`([a-z])([A-Z])`)
-	result := re1.ReplaceAllString(s, "${1}-${2}")
+	result := kebabLowerUpper.ReplaceAllString(s, "${1}-${2}")
 
 	// Insert dash between sequences of uppercase letters and following lowercase
-	re2 := regexp.MustCompile(`([A-Z])([A-Z][a-z])`)
-	result = re2.ReplaceAllString(result, "${1}-${2}")
+	result = kebabAcronym.ReplaceAllString(result, "${1}-${2}")
 
 	// Replace spaces and underscores with dashes
-	re3 := regexp.MustCompile(`[\s_]+`)
-	result = re3.ReplaceAllString(result, "-")
+	result = kebabSpaceUnderscore.ReplaceAllString(result, "-")
 
 	// Remove special characters except alphanumeric and dashes
-	re4 := regexp.MustCompile(`[^a-zA-Z0-9-]`)
-	result = re4.ReplaceAllString(result, "-")
+	result = kebabNonAlnum.ReplaceAllString(result, "-")
 
 	// Remove multiple consecutive dashes
-	re5 := regexp.MustCompile(`-+`)
-	result = re5.ReplaceAllString(result, "-")
+	result = kebabMultiDash.ReplaceAllString(result, "-")
 
 	// Remove leading and trailing dashes
-	re6 := regexp.MustCompile(`^-|-$`)
-	result = re6.ReplaceAllString(result, "")
+	result = kebabEdgeDash.ReplaceAllString(result, "")
 
 	return strings.ToLower(result)
 }
