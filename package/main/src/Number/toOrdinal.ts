@@ -30,9 +30,5 @@ export const toOrdinal = (value: number): string => {
   if (module10 === 2) {
     return `${value}nd`;
   }
-  if (module10 === 3) {
-    return `${value}rd`;
-  }
-
-  return `${value}th`;
+  return module10 === 3 ? `${value}rd` : `${value}th`;
 };

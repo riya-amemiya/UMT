@@ -37,9 +37,5 @@ export const birthday = <T extends MonTypeInt>(
   }
 
   // Handle future birthdays (should return 0 or non-negative)
-  if (age < 0) {
-    return 0;
-  }
-
-  return age;
+  return Math.max(age, 0);
 };

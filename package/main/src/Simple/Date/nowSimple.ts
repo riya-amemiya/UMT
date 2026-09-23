@@ -12,8 +12,7 @@ export const nowSimple = (timeDifference: HoursTypeInt | HoursType = 9) => {
   if (typeof timeDifference === "number") {
     return now(timeDifference);
   }
-  if (isNumber(timeDifference)) {
-    return now(Number(timeDifference) as HoursTypeInt);
-  }
-  return now();
+  return isNumber(timeDifference)
+    ? now(Number(timeDifference) as HoursTypeInt)
+    : now();
 };

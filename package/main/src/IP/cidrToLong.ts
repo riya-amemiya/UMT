@@ -4,8 +4,5 @@
  * @returns {number} Subnet mask as a 32-bit number
  */
 export const cidrToLong = (cidr: number): number => {
-  if (cidr === 0) {
-    return 0;
-  }
-  return (~0 << (32 - cidr)) >>> 0;
+  return cidr === 0 ? 0 : (~0 << (32 - cidr)) >>> 0;
 };

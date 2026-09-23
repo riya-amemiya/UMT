@@ -72,8 +72,7 @@ const cloneValue = (value: unknown, depth: number): unknown => {
  * - `removePrototypeMapDeep` — recursive sanitization of an array of objects (for deeply nested data)
  */
 export const deepClone = <T>(value: T): T => {
-  if (value === null || typeof value !== "object") {
-    return value;
-  }
-  return cloneValue(value, 0) as T;
+  return value === null || typeof value !== "object"
+    ? value
+    : (cloneValue(value, 0) as T);
 };

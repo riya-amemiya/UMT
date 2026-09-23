@@ -29,10 +29,12 @@ export const randomSelect = <T>(
     (allowDuplicates || result.length < array.length)
   ) {
     const randomIndex = Math.floor(Math.random() * array.length);
-    if (allowDuplicates || !usedIndices.has(randomIndex)) {
-      usedIndices.add(randomIndex);
-      result.push(array[randomIndex]);
+    if (!allowDuplicates && usedIndices.has(randomIndex)) {
+      continue;
     }
+
+    usedIndices.add(randomIndex);
+    result.push(array[randomIndex]);
   }
 
   return result;

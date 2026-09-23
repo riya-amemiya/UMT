@@ -22,10 +22,12 @@ export const decodeBase32 = (input: string): Uint8Array => {
     buffer = (buffer << 5) | value;
     bufferLength += 5;
 
-    if (bufferLength >= 8) {
-      bufferLength -= 8;
-      result.push((buffer >> bufferLength) & 0xff);
+    if (!(bufferLength >= 8)) {
+      continue;
     }
+
+    bufferLength -= 8;
+    result.push((buffer >> bufferLength) & 0xff);
   }
 
   return new Uint8Array(result);

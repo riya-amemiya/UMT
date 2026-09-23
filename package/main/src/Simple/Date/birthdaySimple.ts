@@ -57,18 +57,17 @@ export const birthdaySimple = (<T extends MonType>(
     ];
     return birthday(year, mon, day, timeDifference);
   }
-  if (birthdays instanceof Date) {
-    return birthday(
-      birthdays.getFullYear(),
-      birthdays.getMonth() as MonTypeInt,
-      birthdays.getDate() as DayTypeInt<MonTypeInt>,
-      timeDifference,
-    );
-  }
-  return birthday(
-    birthdays.year,
-    birthdays.mon as MonTypeInt,
-    birthdays.day as DayTypeInt<MonTypeInt>,
-    timeDifference,
-  );
+  return birthdays instanceof Date
+    ? birthday(
+        birthdays.getFullYear(),
+        birthdays.getMonth() as MonTypeInt,
+        birthdays.getDate() as DayTypeInt<MonTypeInt>,
+        timeDifference,
+      )
+    : birthday(
+        birthdays.year,
+        birthdays.mon as MonTypeInt,
+        birthdays.day as DayTypeInt<MonTypeInt>,
+        timeDifference,
+      );
 }) as BIRTHDAYSIMPLE;

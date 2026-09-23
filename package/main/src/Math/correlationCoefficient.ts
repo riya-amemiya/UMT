@@ -37,9 +37,5 @@ export const correlationCoefficient = (x: number[], y: number[]): number => {
 
   const denominator = Math.sqrt(sumSquaredX * sumSquaredY);
 
-  if (denominator === 0) {
-    return Number.NaN;
-  }
-
-  return numerator / denominator;
+  return denominator === 0 ? Number.NaN : numerator / denominator;
 };

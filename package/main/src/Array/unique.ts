@@ -9,10 +9,12 @@ export const unique = <T>(array: T[]): T[] => {
   const length = array.length;
   for (let index = 0; index < length; index++) {
     const value = array[index];
-    if (!seen.has(value)) {
-      seen.add(value);
-      result.push(value);
+    if (seen.has(value)) {
+      continue;
     }
+
+    seen.add(value);
+    result.push(value);
   }
   return result;
 };

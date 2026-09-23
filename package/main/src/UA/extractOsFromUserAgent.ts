@@ -27,8 +27,5 @@ export const extractOsFromUserAgent = (
   if (/windows|win32/i.test(ua)) {
     return "windows";
   }
-  if (/linux/i.test(ua)) {
-    return "linux";
-  }
-  return "other";
+  return /linux/i.test(ua) ? "linux" : "other";
 };

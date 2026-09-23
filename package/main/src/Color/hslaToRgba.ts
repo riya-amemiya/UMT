@@ -45,16 +45,15 @@ export const hslaToRgba = (
       if (tAdjusted < division(1, 2)) {
         return q;
       }
-      if (tAdjusted < division(2, 3)) {
-        return addition(
-          p,
-          multiplication(
-            subtract(q, p),
-            multiplication(subtract(division(2, 3, true), tAdjusted), 6),
-          ),
-        );
-      }
-      return p;
+      return tAdjusted < division(2, 3)
+        ? addition(
+            p,
+            multiplication(
+              subtract(q, p),
+              multiplication(subtract(division(2, 3, true), tAdjusted), 6),
+            ),
+          )
+        : p;
     };
 
     const q =

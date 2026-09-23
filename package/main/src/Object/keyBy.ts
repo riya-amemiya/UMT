@@ -46,8 +46,7 @@ function normalizeIteratee<T>(iteratee?: Iteratee<T>): IterateeFunction<T> {
   if (!iteratee) {
     return (value) => value as unknown as PropertyName;
   }
-  if (typeof iteratee === "function") {
-    return iteratee;
-  }
-  return (object: T) => object[iteratee] as PropertyName;
+  return typeof iteratee === "function"
+    ? iteratee
+    : (object: T) => object[iteratee] as PropertyName;
 }

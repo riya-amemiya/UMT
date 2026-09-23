@@ -10,8 +10,5 @@
 export const getDecimalLength = (value: number) => {
   const string_ = value.toString();
   const x = string_.split(".", 2)[1];
-  if (x !== undefined && x.length > 0) {
-    return x.length;
-  }
-  return 0;
+  return x !== undefined && x.length > 0 ? x.length : 0;
 };

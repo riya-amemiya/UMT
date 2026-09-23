@@ -53,8 +53,7 @@ export const dedent = (
       minIndent = indent;
     }
   }
-  if (!Number.isFinite(minIndent)) {
-    return raw;
-  }
-  return lines.map((line) => line.slice(minIndent)).join("\n");
+  return Number.isFinite(minIndent)
+    ? lines.map((line) => line.slice(minIndent)).join("\n")
+    : raw;
 };

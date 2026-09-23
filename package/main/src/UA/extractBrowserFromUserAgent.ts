@@ -32,8 +32,5 @@ export const extractBrowserFromUserAgent = (
     return "chrome";
   }
   // Safari check should be last as Chrome/Firefox on iOS also include Safari in UA
-  if (/safari/i.test(ua)) {
-    return "safari";
-  }
-  return "other";
+  return /safari/i.test(ua) ? "safari" : "other";
 };

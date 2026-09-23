@@ -20,12 +20,11 @@ export const dayOfWeek = <T extends MonTypeInt>(
   timeDifference: HoursTypeInt = 9,
 ) => {
   const nowTime = now(timeDifference);
-  if (properties) {
-    return newDateInt(
-      properties.year ?? nowTime.getFullYear(),
-      properties.mon ?? ((nowTime.getMonth() + 1) as MonTypeInt),
-      properties.day ?? (nowTime.getDate() as DayTypeInt<T>),
-    ).getDay();
-  }
-  return nowTime.getDay();
+  return properties
+    ? newDateInt(
+        properties.year ?? nowTime.getFullYear(),
+        properties.mon ?? ((nowTime.getMonth() + 1) as MonTypeInt),
+        properties.day ?? (nowTime.getDate() as DayTypeInt<T>),
+      ).getDay()
+    : nowTime.getDay();
 };

@@ -27,8 +27,7 @@ export const matchResult = <V, E, S, F>(
     onError: (error: E) => F;
   },
 ): S | F => {
-  if (result.type === "success") {
-    return handlers.onSuccess(result.value);
-  }
-  return handlers.onError(result.error);
+  return result.type === "success"
+    ? handlers.onSuccess(result.value)
+    : handlers.onError(result.error);
 };

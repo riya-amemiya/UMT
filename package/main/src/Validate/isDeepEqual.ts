@@ -39,15 +39,13 @@ export function isDeepEqual(
       return true;
     }
 
-    if (x == null || y == null) {
-      return false;
-    }
-
-    if (typeof x !== typeof y) {
-      return false;
-    }
-
-    if (typeof x !== "object" || typeof y !== "object") {
+    if (
+      x == null ||
+      y == null ||
+      typeof x !== typeof y ||
+      typeof x !== "object" ||
+      typeof y !== "object"
+    ) {
       return false;
     }
 

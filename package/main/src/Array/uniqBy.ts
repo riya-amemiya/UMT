@@ -13,10 +13,12 @@ export const uniqBy = <T extends unknown[], K>(
 
   for (const item of array) {
     const key = selector(item);
-    if (!seen.has(key)) {
-      seen.add(key);
-      result.push(item);
+    if (seen.has(key)) {
+      continue;
     }
+
+    seen.add(key);
+    result.push(item);
   }
 
   return result;

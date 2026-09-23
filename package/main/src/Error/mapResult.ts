@@ -23,8 +23,7 @@ export const mapResult = <V, E, U>(
   result: Result<V, E>,
   function_: (value: V) => U,
 ): Result<U, E> => {
-  if (result.type === "success") {
-    return successFunction(function_(result.value));
-  }
-  return result;
+  return result.type === "success"
+    ? successFunction(function_(result.value))
+    : result;
 };

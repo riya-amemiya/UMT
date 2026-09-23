@@ -134,13 +134,12 @@ const resolveParentheses = (expression: string): string => {
   const match = /\((-?\d+(?:\.\d+)?)([*+/-])(-?\d+(?:\.\d+)?)\)/.exec(
     expression,
   );
-  if (match) {
-    return expression.replace(
-      match[0],
-      calculatorCore(match[0].replaceAll(/\(|\)/g, "")),
-    );
-  }
-  return Number.NaN.toString();
+  return match
+    ? expression.replace(
+        match[0],
+        calculatorCore(match[0].replaceAll(/\(|\)/g, "")),
+      )
+    : Number.NaN.toString();
 };
 
 const containsMulExp = (expression: string): boolean => {

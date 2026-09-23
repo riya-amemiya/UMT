@@ -107,13 +107,18 @@ export const fuzzySearch = (
       }
     }
 
-    if (minDistanceInRow <= maxAllowedDistance) {
-      const trueDistance = rowBuffer[length1];
-      if (trueDistance <= maxAllowedDistance) {
-        const score = 1 - trueDistance / maxLength;
-        results.push({ item, score });
-      }
+    if (minDistanceInRow > maxAllowedDistance) {
+      continue;
     }
+
+    const trueDistance = rowBuffer[length1];
+
+    if (trueDistance > maxAllowedDistance) {
+      continue;
+    }
+
+    const score = 1 - trueDistance / maxLength;
+    results.push({ item, score });
   }
 
   return quickSort(results, (a, b) => b.score - a.score);
