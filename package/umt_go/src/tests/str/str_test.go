@@ -54,6 +54,12 @@ func TestCamelCase(t *testing.T) {
 		// Handle multiple consecutive separators
 		{"consecutive hello---world", "hello---world", "helloWorld"},
 		{"consecutive foo___bar", "foo___bar", "fooBar"},
+		// Handle trailing punctuation and surrounding whitespace
+		{"trailing hello-world!!!", "hello-world!!!", "helloWorld"},
+		{"surrounding spaces", "  foo  bar  ", "fooBar"},
+		// Handle mixed case identifiers (first letter lowercased only)
+		{"complex XMLHttpRequest", "XMLHttpRequest", "xMLHttpRequest"},
+		{"complex getElementById", "getElementById", "getElementById"},
 	}
 
 	for _, tt := range tests {
