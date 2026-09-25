@@ -106,7 +106,7 @@ Located in `package/umt_go`. Partial port. Module path `github.com/riya-amemiya/
 * Tests live under `src/tests/<pkg>/` and import the `src/` packages.
 * IP signatures differ from TypeScript: `CidrToLong` takes `"network/prefix"` and returns `[start, end]`; `IsInRange(ip, "network/prefix")`; `GetNetworkAddress` returns a dotted string; `LongToIp` / `CidrToSubnetMask` panic on invalid input.
 * Date helpers include `StartOf` / `EndOf` / `AddDuration` / `IsBusinessDay` / `FormatDate`. There is no `IsBetween`, `AddBusinessDays`, or unix conversion. `FormatDate` has no `Z` / `ZZ` tokens.
-* Fixed regexes: cache with package-level `regexp.MustCompile` (`CamelCase`, `KebabCase`, `UnescapeHtml`, `HexaToRgba`, `StripAnsi` / `StripTags` / `Words`, `NormalizeWhitespace`, `IsAbsoluteUrl`, UA extractors, calculator). Caller-built patterns (`FormatString`, `RegexMatch`, currency symbol) stay inline.
+* Fixed regexes: cache with package-level `regexp.MustCompile` (`CamelCase`, `KebabCase`, `Slugify`, `UnescapeHtml`, `HexaToRgba`, `StripAnsi` / `StripTags` / `Words`, `NormalizeWhitespace`, `IsAbsoluteUrl`, UA extractors, calculator). Caller-built patterns (`FormatString`, `RegexMatch`, currency symbol) stay inline.
 
 ## Package: umt_i18n (TypeScript)
 

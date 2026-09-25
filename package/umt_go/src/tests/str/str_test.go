@@ -161,6 +161,12 @@ func TestSlugify(t *testing.T) {
 		{"consecutive hyphens", "Hello---World", "hello-world"},
 		// Handle mixed case
 		{"mixed case", "CamelCase", "camelcase"},
+		// Handle leading/trailing dashes, punctuation-only, and mixed accents
+		{"leading/trailing dashes", "--hello-world--", "hello-world"},
+		{"punctuation only", "!!!", ""},
+		{"mixed accents and punctuation", "Caf\u00e9 & Na\u00efve!", "cafe-naive"},
+		{"already a slug", "hello-world", "hello-world"},
+		{"surrounding underscores", "__foo_bar__", "foo-bar"},
 	}
 
 	for _, tt := range tests {
