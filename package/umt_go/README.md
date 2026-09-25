@@ -49,7 +49,7 @@ Public code lives in `src/<package>`. Tests are `src/tests/<package>/*_test.go` 
 | `advance` | `src/advance` | `RangeAdvance` |
 | `array` | `src/array` | `Chunk`, `Unique`, `UltraNumberSort` |
 | `async` | `src/async` | `Sleep`, `Parallel`, `Timeout` |
-| `color` | `src/color` | `HexaToRgba`, `RgbaToHsla` |
+| `color` | `src/color` | `HexaToRgba`, `RgbaToHsla` (see below) |
 | `consts` | `src/consts` | `OneDayMs`, HTTP status maps |
 | `cryptoutil` | `src/cryptoutil` | `EncodeBase32`, `DecodeBase58` |
 | `datastructure` | `src/datastructure` | `LRUCache`, `TTLCache`, `PriorityQueue` |
@@ -70,7 +70,7 @@ Public code lives in `src/<package>`. Tests are `src/tests/<package>/*_test.go` 
 | `tool` | `src/tool` | `Pipe`, `Unwrap`, `ParseJson` |
 | `ua` | `src/ua` | `ParseUserAgent` |
 | `unit` | `src/unit` | `ToCelsius`, `ToKelvin` |
-| `urlutil` | `src/urlutil` | `BuildUrl`, `ParseQueryString` |
+| `urlutil` | `src/urlutil` | `BuildUrl`, `ParseQueryString`, `IsAbsoluteUrl` (see below) |
 | `validate` | `src/validate` | `IsNumber`, `ArrayOf` |
 
 Not every TypeScript helper is ported. There is no `IsBetween`, `AddBusinessDays`, `FromUnix` / `ToUnix`, `WeekOfYear`, `GetQuarter`, or `IsSame`. There is also no `CountBy`, `Partition`, `Sliding`, `MapSeries`, or `SafeExecuteAsync`.
@@ -84,6 +84,7 @@ Calendar helpers in `src/date`. Week boundaries are Sunday-start (`time.Weekday`
 | `StartOf` / `EndOf` | `DateBoundaryUnit`: second, minute, hour, day, week, month, quarter, year. Unknown unit returns the date unchanged. `EndOf` uses millisecond `.999`. |
 | `AddDuration` / `SubDuration` / `Diff` | Fixed units (`ms`, `s`, `m`, `h`, `d`, `w`) use millisecond arithmetic. `M` / `y` are calendar-aware and clamp end-of-month (Jan 31 + 1 month → Feb 28/29). |
 | `IsWeekend` / `IsSameDay` / `IsBusinessDay` | Compared in each value's own location. `IsBusinessDay` treats optional holidays as calendar days. |
+| `FormatDate` | Token formatter (`YYYY`, `MM`, `DD`, `HH`, `mm`, `ss`, `SSS`, `A` / `a`, `[text]` escapes, …). **No `Z` / `ZZ`** (TypeScript `format` and Rust `umt_format` have those). |
 
 ## String helpers
 
@@ -94,6 +95,10 @@ Unicode-aware helpers in `src/str`, aligned with TypeScript `package/main/src/St
 | `StripAnsi` | Removes CSI (colors, cursor, including C1 `U+009B`) and OSC sequences. Incomplete CSI is left unchanged. Unlike `SanitizeString`, other non-printables stay. |
 | `StripTags` | Deletes HTML/XML tags, repeating until stable so `"<sc<script>ript>"` becomes `""`. |
 | `Words` / `WordsWithPattern` | `Words` splits on camelCase / acronym boundaries and non-letter/number separators. Custom patterns are a separate function (`WordsWithPattern`), not an optional argument like TypeScript / Python / Rust. No matches → empty slice (not `nil`). |
+| `NormalizeWhitespace` | Collapses Unicode `\s+` to a single space and trims. Unlike `DeleteSpaces`, words stay separated. |
+| `UnescapeHtml` | Named entities plus decimal / hex numeric references. `&#X41;` (uppercase `X`) is left unchanged. Decodes via `rune` — it does **not** apply TypeScript's extra rejection of NULL / C0 / DEL / C1 / surrogates. |
+| `CamelCase` | Replaces non-alphanumeric runs, then lowercases only the first rune. Does not split acronyms (`"HELLO"` → `"hELLO"`, `"XMLHttpRequest"` → `"xMLHttpRequest"`). |
+| `KebabCase` | Inserts dashes on case boundaries and replaces separators. Splits acronyms (`"XMLHttpRequest"` → `"xml-http-request"`). |
 
 ```go
 import "github.com/riya-amemiya/umt-go/src/str"
@@ -101,7 +106,31 @@ import "github.com/riya-amemiya/umt-go/src/str"
 _ = str.StripAnsi("\x1b[31mred\x1b[0m") // "red"
 _ = str.StripTags("<p>Hello <b>World</b></p>") // "Hello World"
 _ = str.Words("XMLHttpRequest") // []string{"XML", "Http", "Request"}
+_ = str.NormalizeWhitespace("  hello   world \t\n foo ") // "hello world foo"
+_ = str.UnescapeHtml("Tom &amp; Jerry") // "Tom & Jerry"
+_ = str.CamelCase("hello-world") // "helloWorld"
+_ = str.KebabCase("XMLHttpRequest") // "xml-http-request"
 ```
+
+## Color and URL helpers
+
+| Function | Notes |
+| --- | --- |
+| `color.HexaToRgba` | `#` plus 3, 6, or 8 hex digits → `RGBA`. Invalid input returns an error. TypeScript `hexaToRgba` does not validate. |
+| `urlutil.IsAbsoluteUrl` | RFC 3986 scheme check. Protocol-relative URLs (`"//example.com"`) are not absolute. |
+
+```go
+import (
+	"github.com/riya-amemiya/umt-go/src/color"
+	"github.com/riya-amemiya/umt-go/src/urlutil"
+)
+
+rgba, _ := color.HexaToRgba("#FF0000") // {R: 255, G: 0, B: 0, A: 1}
+_ = urlutil.IsAbsoluteUrl("https://example.com") // true
+_ = urlutil.IsAbsoluteUrl("//example.com")       // false
+```
+
+Fixed regexes in this package are compiled once with package-level `regexp.MustCompile`. Caller-built patterns (`FormatString`, `RegexMatch`) stay inline.
 
 ## IP helpers
 

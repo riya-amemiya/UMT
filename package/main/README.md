@@ -40,12 +40,14 @@ Local-time calendar helpers. Week boundaries are Sunday-start (JavaScript `Date#
 | `getQuarter(date)` | Local month → `1`–`4` (Jan–Mar = 1), matching `startOf(..., "quarter")`. |
 | `weekOfYear(date)` | Sunday-start week index. Week 1 contains January 1 of that local year. Uses day-count rounding so DST does not shift the week number. Not ISO-8601 (Monday-start) week numbering. |
 | `fromUnix(value, unit?)` / `toUnix(date, unit?)` | Default unit is `"s"`. `toUnix(..., "s")` is `Math.floor(date.getTime() / 1000)`. |
+| `format(date, formatString?)` | Token formatter on **local** `Date` fields. Default pattern is `"YYYY-MM-DDTHH:mm:ssZ"`. `[text]` is copied as-is. `Z` / `ZZ` use `date`'s timezone offset. Throws `TypeError("Invalid Date in format")` if `date` is not a `Date`. |
 
 `DateInclusivity` is `"()"` \| `"[]"` \| `"[)"` \| `"(]"`. `UnixTimeUnit` is `"s"` \| `"ms"`. `DateBoundaryUnit` is `second` \| `minute` \| `hour` \| `day` \| `week` \| `month` \| `quarter` \| `year`.
 
 ```ts
 import {
   addBusinessDays,
+  format,
   fromUnix,
   getQuarter,
   isBetween,
@@ -68,9 +70,12 @@ weekOfYear(new Date(2025, 0, 5)); // 2 (Sunday)
 
 fromUnix(0).getTime(); // 0
 toUnix(new Date(1_700_000_000_999)); // 1700000000
+
+format(new Date(2023, 5, 10, 15, 30, 45), "YYYY-MM-DD"); // "2023-06-10"
+format(new Date(2023, 5, 10, 15, 30, 45), "[Year:] YYYY"); // "Year: 2023"
 ```
 
-Python and Rust ports of these helpers live in `package/umt_python` and `package/umt_rust`. Rust treats `DateTime<Utc>` calendar fields as wall-clock values except `fromUnix` / `toUnix`, which use real epoch timestamps. `isSame` exists in TypeScript only.
+Python and Rust ports of these helpers live in `package/umt_python` and `package/umt_rust`. Rust treats `DateTime<Utc>` calendar fields as wall-clock values except `fromUnix` / `toUnix`, which use real epoch timestamps. `isSame` exists in TypeScript only. Date `format` is not ported to Python. Rust `umt_format` takes an explicit `timezone_offset_minutes` (no default pattern; use `umt_format_iso` for the ISO-like default). Go `FormatDate` has the same tokens except it has no `Z` / `ZZ`. Wasm skips `umt_format` (`DateTime<Utc>`).
 
 ## IP helpers
 
@@ -189,6 +194,10 @@ Unicode-aware string utilities in `umt/String`. Python, Rust, and Go ports exist
 | `stripAnsi(string)` | Removes CSI sequences (colors, cursor movement, including C1 `U+009B`) and OSC sequences (BEL or ST terminated). Incomplete CSI with no final byte is left unchanged. Unlike `sanitizeString`, other non-printables stay. |
 | `stripTags(string)` | Deletes HTML/XML tags (`<[^<>]*>`), repeating until stable so `"<sc<script>ript>"` becomes `""`. Self-closing tags are removed without inserting a separator (`"line1<br/>line2"` → `"line1line2"`). |
 | `words(string, pattern?)` | Default: insert spaces on camelCase / acronym boundaries, then split on non-letter/number separators. CJK and other letters are kept. If `pattern` is passed, returns `string.match(pattern)` or `[]`. |
+| `normalizeWhitespace(string)` | Collapses Unicode `\s+` to a single space and trims. Unlike `deleteSpaces`, words stay separated. All-whitespace input → `""`. |
+| `unescapeHtml(string)` | Named entities (`&amp;` `&lt;` `&gt;` `&quot;` `&#39;` `&#x27;` `&#x2F;` `&#x60;` `&#x3D;`) plus decimal / hex numeric references (`&#65;`, `&#x41;`). `&#X41;` (uppercase `X`) is left unchanged. Dangerous code points are **not** decoded (NULL, C0 except TAB/LF/CR, DEL, C1, surrogates, `>0x10FFFF`). Python / Rust / Go do not apply those extra filters. |
+| `camelCase(string)` | Replaces non-alphanumeric runs, then lowercases **only the first character**. Does not split acronyms: `"HELLO"` → `"hELLO"`, `"XMLHttpRequest"` → `"xMLHttpRequest"`. |
+| `kebabCase(string)` | Inserts dashes on `aB` / `ABc` boundaries, replaces spaces / underscores / other non-alphanumerics, lowercases. Splits acronyms: `"XMLHttpRequest"` → `"xml-http-request"`. |
 
 ```ts
 import { stripAnsi, stripTags, words } from "umt/String";
@@ -199,9 +208,40 @@ stripTags("<sc<script>ript>"); // ""
 words("XMLHttpRequest"); // ["XML", "Http", "Request"]
 words("foo-bar_baz"); // ["foo", "bar", "baz"]
 words("a1 b2 c3", /[a-z]\d/g); // ["a1", "b2", "c3"]
+normalizeWhitespace("  hello   world \t\n foo "); // "hello world foo"
+unescapeHtml("Tom &amp; Jerry"); // "Tom & Jerry"
+unescapeHtml("&#0;"); // "&#0;" (NULL left unchanged)
+camelCase("hello-world"); // "helloWorld"
+camelCase("HELLO"); // "hELLO"
+kebabCase("XMLHttpRequest"); // "xml-http-request"
 ```
 
 Go splits the custom-pattern case into `Words` vs `WordsWithPattern`.
+
+## Color and URL helpers
+
+`hexaToRgba` (`umt/Color`) and `isAbsoluteUrl` (`umt/URL`). Python, Rust, and Go ports exist.
+
+| Function | Behavior |
+| --- | --- |
+| `hexaToRgba(hex)` | `#` plus 3, 6, or 8 hex digits → `{ r, g, b, a }`. `r`/`g`/`b` are `0`–`255`; `a` is `0`–`1` rounded to 2 decimals (`#FF000080` → `0.5`). TypeScript does **not** validate; malformed input can yield `NaN`. Python / Rust / Go require the `#` + hex pattern and error otherwise. |
+| `isAbsoluteUrl(url)` | RFC 3986 scheme check: letter, then letters / digits / `+` / `.` / `-`, then `:`. `mailto:` and `tel:` are absolute. Protocol-relative (`"//example.com"`), relative paths, and schemes starting with a digit are not. |
+
+```ts
+import { hexaToRgba } from "umt/Color";
+import { isAbsoluteUrl } from "umt/URL";
+
+hexaToRgba("#FF0000"); // { r: 255, g: 0, b: 0, a: 1 }
+hexaToRgba("#F00"); // { r: 255, g: 0, b: 0, a: 1 }
+hexaToRgba("#FF000080"); // { r: 255, g: 0, b: 0, a: 0.5 }
+
+isAbsoluteUrl("https://example.com"); // true
+isAbsoluteUrl("mailto:user@host"); // true
+isAbsoluteUrl("/path/to/page"); // false
+isAbsoluteUrl("//example.com"); // false
+```
+
+Wasm codegen skips `umt_hexa_to_rgba` (custom `Result`) and generates `isAbsoluteUrl` / `normalizeWhitespace` / `unescapeHtml` / `camelCase`.
 
 ## Array, Async, and Error helpers
 

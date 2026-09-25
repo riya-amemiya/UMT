@@ -61,6 +61,7 @@ UMT (Utility Module Toolkit) is a TypeScript utility library organized into func
 - **TypeScript pin**: Keep `typescript` at 6.0.3. TypeScript 7.x breaks `typescript-eslint` and `ts-node` loading `jest.config.ts` (see `COMPATIBILITY.md`)
 - **Standard Schema**: Validate factories attach `~standard` (`vendor: "umt"`). `@Schema` in Decorator accepts any Standard Schema V1 validator; async `validate` is a failure. `@Validatable` throws after the wrapped constructor.
 - **Array / Async (TypeScript only)**: `countBy`, `partition`, `sliding`, `mapSeries`, and `safeExecuteAsync` are not ported. `sliding` omits incomplete windows; `mapSeries` is strictly sequential and rejects on the first failure.
+- **String / Color / URL**: `camelCase` lowercases only the first character (no acronym split). TypeScript `unescapeHtml` rejects dangerous numeric references; ports do not. TypeScript `hexaToRgba` does not validate; ports require `#` plus 3/6/8 hex digits. Date `format` is not ported to Python; Rust `umt_format` takes an explicit offset; Go `FormatDate` has no `Z` / `ZZ`.
 
 ## Codebase Structure
 
