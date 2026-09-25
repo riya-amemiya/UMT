@@ -31,7 +31,7 @@ cargo doc --open
 
 Runtime dependencies include `chrono`, `regex`, `serde`, `rand`, and others listed in `Cargo.toml` (the crate is not dependency-free).
 
-Fixed regexes are compiled once in `std::sync::LazyLock` statics (`umt_strip_ansi`, `umt_strip_tags`, `umt_words`, `umt_hexa_to_rgba`, UA extractors). Patterns built from caller input stay inline. Prefer `LazyLock` over compiling the same pattern on every call.
+Fixed regexes are compiled once in `std::sync::LazyLock` statics (`umt_strip_ansi`, `umt_strip_tags`, `umt_words`, `umt_normalize_whitespace`, `umt_unescape_html`, `umt_is_absolute_url`, `umt_hexa_to_rgba`, `umt_format` escaped-text `[...]`, `parse_email`, UA extractors). Patterns built from caller input stay inline (`format_string`, calculator, `umt_regex_match`). Date `umt_format` is not string `format_string`. Prefer `LazyLock` over compiling the same pattern on every call.
 
 ## Date helpers
 
@@ -46,11 +46,13 @@ Local-time calendar helpers in `src/date/`. Week boundaries are Sunday-start. Th
 | `umt_get_quarter` | Jan–Mar → 1, matching `umt_start_of(..., Quarter)`. |
 | `umt_week_of_year` | Sunday-start week index. Week 1 contains January 1. Not ISO-8601. |
 | `umt_from_unix` / `umt_to_unix` | `UnixTimeUnit::Second` or `Millisecond`. Seconds are floored. No default unit — pass `UnixTimeUnit::Second` to match TS/Python `"s"`. |
+| `umt_format` / `umt_format_iso` | Token formatter. No default pattern — pass `"YYYY-MM-DDTHH:mm:ssZ"` or use `umt_format_iso`. Third argument is `timezone_offset_minutes` (TypeScript `format` reads the `Date`'s own offset). `[text]` is copied as-is. Wasm skips both (`DateTime<Utc>`). |
 
 ```rust
 use chrono::{Datelike, TimeZone, Utc};
 use umt_rust::date::{
-    umt_add_business_days, umt_from_unix, umt_is_between, DateInclusivity, UnixTimeUnit,
+    umt_add_business_days, umt_format, umt_from_unix, umt_is_between, DateInclusivity,
+    UnixTimeUnit,
 };
 
 let start = Utc.with_ymd_and_hms(2025, 4, 10, 10, 0, 0).unwrap();
@@ -63,6 +65,9 @@ assert_eq!(umt_add_business_days(&friday, 1, &[]).day(), 21);
 
 let epoch = umt_from_unix(0.0, UnixTimeUnit::Second);
 assert_eq!(epoch.timestamp(), 0);
+
+assert_eq!(umt_format(&friday, "YYYY-MM-DD", 0), "2025-04-18");
+assert_eq!(umt_format(&friday, "[Year:] YYYY", 0), "Year: 2025");
 ```
 
 There is no `umt_is_same` yet (TypeScript `isSame`). Use `umt_is_same_day` or compare `umt_start_of` results.
@@ -78,13 +83,42 @@ Unicode-aware string utilities in `src/string/`. Behavior matches TypeScript `pa
 | `umt_strip_ansi` | Removes CSI (colors, cursor) and OSC sequences. Incomplete CSI with no final byte is left unchanged (`"\u{001B}[31"` stays). Unlike a full sanitizer, other non-printables are kept. |
 | `umt_strip_tags` | Deletes HTML/XML tags, repeating until stable so `"<sc<script>ript>"` becomes `""`. |
 | `umt_words(s, pattern)` | Default: split on camelCase / acronym boundaries and non-letter/number separators. Pass `Some(&regex)` to return that pattern's matches instead (empty if nothing matches). |
+| `umt_normalize_whitespace` | Collapses Unicode `\s+` to a single space and trims. |
+| `umt_unescape_html` | Named entities plus decimal / hex numeric references. Decodes via `char::from_u32` (rejects surrogates and out-of-range). Does **not** apply TypeScript's extra NULL / C0 / DEL / C1 filters. |
+| `umt_camel_case` | Lowercases only the first alphanumeric character. Does not split acronyms (`"HELLO"` → `"hELLO"`). |
+| `umt_kebab_case` | Inserts dashes on case boundaries. Splits acronyms (`"XMLHttpRequest"` → `"xml-http-request"`). |
 
 ```rust
-use umt_rust::string::{umt_strip_ansi, umt_strip_tags, umt_words};
+use umt_rust::string::{
+    umt_camel_case, umt_kebab_case, umt_normalize_whitespace, umt_strip_ansi, umt_strip_tags,
+    umt_unescape_html, umt_words,
+};
 
 assert_eq!(umt_strip_ansi("\u{001B}[31mred\u{001B}[0m"), "red");
 assert_eq!(umt_strip_tags("<p>Hello <b>World</b></p>"), "Hello World");
 assert_eq!(umt_words("XMLHttpRequest", None), vec!["XML", "Http", "Request"]);
+assert_eq!(umt_normalize_whitespace("  hello   world \t\n foo "), "hello world foo");
+assert_eq!(umt_unescape_html("Tom &amp; Jerry"), "Tom & Jerry");
+assert_eq!(umt_camel_case("hello-world"), "helloWorld");
+assert_eq!(umt_kebab_case("XMLHttpRequest"), "xml-http-request");
+```
+
+## Color and URL helpers
+
+| Function | Notes |
+| --- | --- |
+| `umt_hexa_to_rgba` | `#` plus 3, 6, or 8 hex digits → `Rgba`. Invalid input is `Err`. Wasm skips this (`Result<Rgba, HexColorError>`). TypeScript `hexaToRgba` does not validate. |
+| `umt_is_absolute_url` | RFC 3986 scheme check. Protocol-relative URLs are not absolute. Generated for wasm. |
+
+```rust
+use umt_rust::color::umt_hexa_to_rgba;
+use umt_rust::url::umt_is_absolute_url;
+
+let red = umt_hexa_to_rgba("#FF0000").unwrap();
+assert_eq!((red.r, red.g, red.b, red.a), (255.0, 0.0, 0.0, 1.0));
+assert!(umt_hexa_to_rgba("FF0000").is_err());
+assert!(umt_is_absolute_url("https://example.com"));
+assert!(!umt_is_absolute_url("//example.com"));
 ```
 
 ## IP helpers

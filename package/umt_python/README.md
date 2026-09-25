@@ -46,7 +46,7 @@ Public names are re-exported from `src/__init__.py`. Grouped the same way as Typ
 | `advance` | `range_advance` |
 | `array` | `chunk`, `unique`, `ultra_number_sort`, `zip_arrays` |
 | `async_util` | `sleep`, `parallel`, `timeout`, `debounce_async` |
-| `color` | `hexa_to_rgba`, `rgba_to_hsla` |
+| `color` | `hexa_to_rgba`, `rgba_to_hsla` (see below) |
 | `consts` | `ONE_DAY_MS`, `HttpStatus` |
 | `crypto` | `encode_base32`, `decode_base58` |
 | `data_structure` | `LRUCache`, `TTLCache`, `PriorityQueue` |
@@ -62,15 +62,15 @@ Public names are re-exported from `src/__init__.py`. Grouped the same way as Typ
 | `predicate` | `every`, `some`, `is_nullish` |
 | `random` | `random_choice`, `seeded_random` |
 | `simple` | `birthday_simple`, `now_simple` |
-| `string` | `format_string`, `slugify`, `strip_ansi`, `strip_tags`, `words` (see below) |
+| `string` | `format_string`, `slugify`, `strip_ansi`, `strip_tags`, `words`, `normalize_whitespace`, `unescape_html`, `camel_case`, `kebab_case` (see below) |
 | `time` | `convert_time` |
 | `tool` | `pipe`, `unwrap`, `parse_json` |
 | `ua` | `parse_user_agent` |
 | `unit` | `to_celsius`, `to_kelvin` |
-| `url` | `build_url`, `parse_query_string` |
+| `url` | `build_url`, `parse_query_string`, `is_absolute_url` (see below) |
 | `validate` | `is_number`, `array_of`, `parse_email` |
 
-Not every TypeScript helper is ported yet. There is no `is_same` (use `is_same_day` or compare truncated values with `start_of`). There is also no `count_by`, `partition`, `sliding`, `map_series`, or `safe_execute_async`.
+Not every TypeScript helper is ported yet. There is no `is_same` (use `is_same_day` or compare truncated values with `start_of`). There is no date `format` (TypeScript `format` / Rust `umt_format` / Go `FormatDate`). There is also no `count_by`, `partition`, `sliding`, `map_series`, or `safe_execute_async`.
 
 ## Date helpers
 
@@ -99,6 +99,10 @@ Unicode-aware helpers aligned with TypeScript `package/main/src/String`.
 | `strip_ansi` | `(string_: str) -> str` | Removes CSI (colors, cursor, including C1 `U+009B`) and OSC sequences. Incomplete CSI is left unchanged. Unlike `sanitize_string`, other non-printables stay. | `strip_ansi("\x1b[31mred\x1b[0m")  # "red"` |
 | `strip_tags` | `(string_: str) -> str` | Deletes HTML/XML tags, repeating until stable so `"<sc<script>ript>"` becomes `""`. Self-closing tags leave no separator. | `strip_tags("<p>Hello <b>World</b></p>")  # "Hello World"` |
 | `words` | `(string_: str, pattern: re.Pattern[str] \| None = None) -> list[str]` | Default: camelCase / acronym split, then non-letter/number separators. Pass a compiled pattern to return `findall` matches (`[]` if none). | `words("XMLHttpRequest")  # ["XML", "Http", "Request"]` |
+| `normalize_whitespace` | `(string_: str) -> str` | Collapses Unicode `\s+` to a single space and trims. Unlike `delete_spaces`, words stay separated. | `normalize_whitespace("hello   world")  # "hello world"` |
+| `unescape_html` | `(string_: str) -> str` | Named entities plus decimal / hex numeric references. `&#X41;` (uppercase `X`) is left unchanged. Decodes via `chr()` — it does **not** apply TypeScript's extra rejection of NULL / C0 / DEL / C1 / surrogates. | `unescape_html("Tom &amp; Jerry")  # "Tom & Jerry"` / `unescape_html("&#65;")  # "A"` |
+| `camel_case` | `(string_: str) -> str` | Replaces non-alphanumeric runs, then lowercases only the first character. Does not split acronyms. | `camel_case("hello-world")  # "helloWorld"` / `camel_case("HELLO")  # "hELLO"` |
+| `kebab_case` | `(string_: str) -> str` | Inserts dashes on case boundaries and replaces separators. Splits acronyms. | `kebab_case("XMLHttpRequest")  # "xml-http-request"` |
 
 ## IP helpers
 
@@ -114,6 +118,13 @@ IPv4 dotted-decimal only, aligned with TypeScript `package/main/src/IP`. Unlike 
 | `get_ip_class` | `(ip: str) -> str` | Classful first-octet lookup (`A`–`E`). `0.0.0.0` and malformed input return `""`. | `get_ip_class("10.0.0.1")  # "A"` |
 | `get_network_address` | `(ip: str, subnet_mask: str) -> int` | Returns an unsigned 32-bit **int**, not a dotted string. | `get_network_address("192.168.1.1", "255.255.255.0")  # 3232235776` |
 | `ip_to_binary_string` | `(ip: str) -> str` | 32-character `0`/`1` string, eight bits per octet. | `ip_to_binary_string("192.168.0.1")  # "11000000101010000000000000000001"` |
+
+## Color and URL helpers
+
+| Function | Type | Description | Example |
+| --- | --- | --- | --- |
+| `hexa_to_rgba` | `(hex_code: str) -> dict[str, float]` | `#` plus 3, 6, or 8 hex digits → `{r, g, b, a}`. `a` is `0`–`1` rounded to 2 decimals. Invalid input raises `ValueError`. TypeScript `hexaToRgba` does not validate. | `hexa_to_rgba("#FF0000")  # {'r': 255, 'g': 0, 'b': 0, 'a': 1.0}` / `hexa_to_rgba("#fff")  # {'r': 255, 'g': 255, 'b': 255, 'a': 1.0}` |
+| `is_absolute_url` | `(url: str) -> bool` | RFC 3986 scheme check (letter, then letters / digits / `+` / `.` / `-`, then `:`). Protocol-relative URLs are not absolute. | `is_absolute_url("https://example.com")  # True` / `is_absolute_url("//example.com")  # False` |
 
 ## Function List
 
@@ -180,6 +191,8 @@ IPv4 dotted-decimal only, aligned with TypeScript `package/main/src/IP`. Unlike 
 - Exact arithmetic in math helpers uses `decimal.Decimal` constructed from strings, to match JavaScript number-string behavior.
 - Date week math uses Sunday-start weeks. Do not assume ISO weeks (`datetime.isocalendar()`).
 - IP helpers are IPv4 only. They validate input (TypeScript does not). `subnet_mask_to_cidr` requires a contiguous mask; TypeScript `subnetMaskToCidr` only counts set bits. `is_private_ip` is RFC 1918 only (not loopback or link-local).
+- `hexa_to_rgba` requires `#` plus 3, 6, or 8 hex digits. TypeScript `hexaToRgba` does not validate.
+- `unescape_html` decodes numeric entities with `chr()`. TypeScript `unescapeHtml` additionally rejects NULL, most C0 controls, DEL, C1, surrogates, and out-of-range values.
 
 ## Development
 
