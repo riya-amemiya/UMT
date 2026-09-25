@@ -6,14 +6,18 @@ import (
 	"unicode"
 )
 
+var (
+	camelNonAlphaFollowed = regexp.MustCompile(`[^a-zA-Z0-9]+(.?)`)
+	camelTrailing         = regexp.MustCompile(`[^a-zA-Z0-9]+$`)
+)
+
 // CamelCase converts a string to camelCase.
 // It handles kebab-case, snake_case, space-separated words, PascalCase, and mixed separators.
 func CamelCase(s string) string {
 	// Replace non-alphanumeric characters followed by a character with the uppercase version
-	reNonAlphaFollowed := regexp.MustCompile(`[^a-zA-Z0-9]+(.?)`)
-	result := reNonAlphaFollowed.ReplaceAllStringFunc(s, func(match string) string {
+	result := camelNonAlphaFollowed.ReplaceAllStringFunc(s, func(match string) string {
 		// Find the last character of the match (the captured group)
-		sub := reNonAlphaFollowed.FindStringSubmatch(match)
+		sub := camelNonAlphaFollowed.FindStringSubmatch(match)
 		if len(sub) > 1 && sub[1] != "" {
 			return strings.ToUpper(sub[1])
 		}
@@ -21,8 +25,7 @@ func CamelCase(s string) string {
 	})
 
 	// Remove trailing non-alphanumeric characters
-	reTrailing := regexp.MustCompile(`[^a-zA-Z0-9]+$`)
-	result = reTrailing.ReplaceAllString(result, "")
+	result = camelTrailing.ReplaceAllString(result, "")
 
 	// Lowercase the first character
 	if len(result) > 0 {
