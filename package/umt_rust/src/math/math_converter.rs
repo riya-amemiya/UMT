@@ -1,5 +1,9 @@
 use super::umt_math_separator;
 use regex::Regex;
+use std::sync::LazyLock;
+
+static MUL_OR_EXP_RE: LazyLock<Regex> =
+    LazyLock::new(|| Regex::new(r"\d+\.?(\d+)?(\*|\^)\d+\.?(\d+)?").unwrap());
 
 /// Expands square of n into a sum of simpler multiplications.
 ///
@@ -25,10 +29,9 @@ use regex::Regex;
 /// ```
 pub fn umt_math_converter(equation: &str) -> String {
     let mut converted_equation = equation.to_string();
-    let re = Regex::new(r"\d+\.?(\d+)?(\*|\^)\d+\.?(\d+)?").unwrap();
 
     loop {
-        let capture = match re.find(&converted_equation) {
+        let capture = match MUL_OR_EXP_RE.find(&converted_equation) {
             Some(m) => m.as_str().to_string(),
             None => return converted_equation,
         };

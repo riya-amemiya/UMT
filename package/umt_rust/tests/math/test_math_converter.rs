@@ -47,3 +47,19 @@ fn test_math_converter_invalid() {
 fn test_math_converter_zero() {
     assert_eq!(umt_math_converter("0*0"), "0*0");
 }
+
+#[test]
+fn test_math_converter_empty() {
+    assert_eq!(umt_math_converter(""), "");
+}
+
+#[test]
+fn test_math_converter_different_operands() {
+    assert_eq!(umt_math_converter("100*200"), "100*200");
+    assert_eq!(umt_math_converter("1250*1350"), "1250*1350");
+}
+
+#[test]
+fn test_math_converter_small_square() {
+    assert_eq!(umt_math_converter("2*2"), "2*2");
+}
