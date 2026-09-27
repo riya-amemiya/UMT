@@ -64,10 +64,11 @@ func normalizeJSExponent(s string) string {
 }
 
 var (
-	calcParenRe  = regexp.MustCompile(`\((-?\d+(?:\.\d+)?)([*+/-])(-?\d+(?:\.\d+)?)\)`)
-	calcMulExpRe = regexp.MustCompile(`(.*?)(-?\d+(?:\.\d+)?)([*^])(-?\d+(?:\.\d+)?)$`)
-	calcDivRe    = regexp.MustCompile(`(-?\d+(?:\.\d+)?)/(-?\d+(?:\.\d+)?)`)
-	calcAddSubRe = regexp.MustCompile(`(-?\d+(?:\.\d+)?)(\+|-)(-?\d+(?:\.\d+)?)`)
+	calcWhitespaceRe = regexp.MustCompile(`\s+`)
+	calcParenRe      = regexp.MustCompile(`\((-?\d+(?:\.\d+)?)([*+/-])(-?\d+(?:\.\d+)?)\)`)
+	calcMulExpRe     = regexp.MustCompile(`(.*?)(-?\d+(?:\.\d+)?)([*^])(-?\d+(?:\.\d+)?)$`)
+	calcDivRe        = regexp.MustCompile(`(-?\d+(?:\.\d+)?)/(-?\d+(?:\.\d+)?)`)
+	calcAddSubRe     = regexp.MustCompile(`(-?\d+(?:\.\d+)?)(\+|-)(-?\d+(?:\.\d+)?)`)
 )
 
 // Calculator evaluates a mathematical expression or a simple single-variable
@@ -86,7 +87,7 @@ var (
 //	Calculator("x=5", nil)            // "x=5"
 //	Calculator("$10*2", map[string]any{"$": 100}) // "2000"
 func Calculator(expression string, exchange map[string]any) string {
-	cleanExpression := regexp.MustCompile(`\s+`).ReplaceAllString(expression, "")
+	cleanExpression := calcWhitespaceRe.ReplaceAllString(expression, "")
 	if strings.Contains(cleanExpression, "=") {
 		return literalExpression(cleanExpression)
 	}
