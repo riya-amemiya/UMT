@@ -752,4 +752,26 @@ func TestParseEmailWithLevel(t *testing.T) {
 			t.Error("punycode address should be valid at rfc5321 level")
 		}
 	})
+
+	t.Run("level names are case-insensitive", func(t *testing.T) {
+		result := validate.ParseEmailWithLevel("user@example.com", "RFC5322")
+		if !result.Valid {
+			t.Error("user@example.com should be valid at RFC5322 level")
+		}
+		result = validate.ParseEmailWithLevel("user@localhost", "Rfc822")
+		if !result.Valid {
+			t.Error("user@localhost should be valid at Rfc822 level")
+		}
+	})
+
+	t.Run("unknown level is invalid", func(t *testing.T) {
+		result := validate.ParseEmailWithLevel("user@example.com", "rfc9999")
+		if result.Valid || result.Parts != nil {
+			t.Error("unknown level should be invalid")
+		}
+		result = validate.ParseEmailWithLevel("user@example.com", "")
+		if result.Valid || result.Parts != nil {
+			t.Error("empty level should be invalid")
+		}
+	})
 }
