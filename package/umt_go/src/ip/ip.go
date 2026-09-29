@@ -165,30 +165,6 @@ func GetNetworkAddress(ipStr string, mask string) (string, error) {
 		return "", fmt.Errorf("Subnet mask is required")
 	}
 
-	// Validate IP format
-	ipParts := strings.Split(ipStr, ".")
-	if len(ipParts) != 4 {
-		return "", fmt.Errorf("Invalid IP address or subnet mask")
-	}
-	for _, part := range ipParts {
-		num, err := strconv.Atoi(part)
-		if err != nil || num < 0 || num > 255 {
-			return "", fmt.Errorf("Invalid IP address or subnet mask")
-		}
-	}
-
-	// Validate mask format
-	maskParts := strings.Split(mask, ".")
-	if len(maskParts) != 4 {
-		return "", fmt.Errorf("Invalid IP address or subnet mask")
-	}
-	for _, part := range maskParts {
-		num, err := strconv.Atoi(part)
-		if err != nil || num < 0 || num > 255 {
-			return "", fmt.Errorf("Invalid IP address or subnet mask")
-		}
-	}
-
 	ipLong, err := IpToLong(ipStr)
 	if err != nil {
 		return "", fmt.Errorf("Invalid IP address or subnet mask")
@@ -204,8 +180,7 @@ func GetNetworkAddress(ipStr string, mask string) (string, error) {
 		return "", fmt.Errorf("Invalid IP address or subnet mask")
 	}
 
-	networkAddress := ipLong & maskLong
-	return LongToIp(networkAddress), nil
+	return LongToIp(ipLong & maskLong), nil
 }
 
 // GetIpClass returns the IP class (A, B, C, D, E) for an IPv4 address.
