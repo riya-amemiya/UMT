@@ -26,28 +26,6 @@ pub fn get_network_address(ip: &str, subnet_mask: &str) -> Result<u32, String> {
         return Err("Subnet mask is required".to_string());
     }
 
-    // Validate IP format
-    let ip_parts: Vec<&str> = ip.split('.').collect();
-    if ip_parts.len() != 4 {
-        return Err("Invalid IP address or subnet mask".to_string());
-    }
-    for part in &ip_parts {
-        let _: u8 = part
-            .parse()
-            .map_err(|_| "Invalid IP address or subnet mask".to_string())?;
-    }
-
-    // Validate subnet mask format
-    let mask_parts: Vec<&str> = subnet_mask.split('.').collect();
-    if mask_parts.len() != 4 {
-        return Err("Invalid IP address or subnet mask".to_string());
-    }
-    for part in &mask_parts {
-        let _: u8 = part
-            .parse()
-            .map_err(|_| "Invalid IP address or subnet mask".to_string())?;
-    }
-
     let ip_long = ip_to_long(ip).map_err(|_| "Invalid IP address or subnet mask".to_string())?;
     let cidr = subnet_mask_to_cidr(subnet_mask)
         .map_err(|_| "Invalid IP address or subnet mask".to_string())?;
