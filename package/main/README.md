@@ -142,6 +142,31 @@ const ng = user["~standard"].validate({ name: "Ada" });
 
 UMT validators never return a `Promise` from `~standard.validate`.
 
+### parseEmail
+
+`parseEmail({ email, options: { level } })` returns `{ valid, parts? }` with `parts: { local, domain }` when the regex matches. `level` is required: `"basic"` \| `"rfc822"` \| `"rfc2822"` \| `"rfc5321"` \| `"rfc5322"`. Inputs longer than **320** characters are rejected before the regex (ReDoS). Python and Rust do not apply that global cap; Go applies 998 / 256 only on some RFC levels.
+
+| Level | Behavior |
+| --- | --- |
+| `basic` | Common local/domain characters. Single-label domains are accepted (`user@localhost`). |
+| `rfc822` | Comments, quoted locals, optional whitespace around `@`. Single-label domains allowed. Local part max 64. |
+| `rfc2822` | Requires a TLD (`[A-Za-z]{2,}`). Rejects `..`. Max 998. |
+| `rfc5321` | SMTP path: max 256, local max 64, rejects `..`. Allows `user@[192.168.1.1]` / `user@[IPv6:…]`. Single-label domains fail. |
+| `rfc5322` | Comments and quoted strings. Max 998. Rejects `..`. |
+
+```ts
+import { parseEmail } from "umt/Validate";
+
+parseEmail({ email: "user@example.com", options: { level: "basic" } });
+// { valid: true, parts: { local: "user", domain: "example.com" } }
+
+parseEmail({ email: "user@localhost", options: { level: "basic" } }).valid; // true
+parseEmail({ email: "user@localhost", options: { level: "rfc5321" } }).valid; // false
+parseEmail({ email: "userexample.com", options: { level: "basic" } }).valid; // false
+```
+
+Python `parse_email(email, ParseEmailOptions(level=...))` keeps the five patterns. Rust `umt_parse_email` maps `Rfc822` → the Basic pattern and `Rfc5322` → the Rfc5321 pattern; `None` options default to Basic. Go `ParseEmail(email)` returns `(EmailParts, error)` at basic only; `ParseEmailWithLevel(email, level)` returns `{Valid, Parts}` (unknown / empty level is invalid). Wasm skips `umt_parse_email` (custom options type).
+
 ## Decorator
 
 Class-field validation in `umt/Decorator`. Rules live on the prototype chain (`validateInstance` includes inherited fields). `@Validatable` wraps the constructor and throws after `super(...)`, so it sees initialized class fields.
@@ -198,9 +223,10 @@ Unicode-aware string utilities in `umt/String`. Python, Rust, and Go ports exist
 | `unescapeHtml(string)` | Named entities (`&amp;` `&lt;` `&gt;` `&quot;` `&#39;` `&#x27;` `&#x2F;` `&#x60;` `&#x3D;`) plus decimal / hex numeric references (`&#65;`, `&#x41;`). `&#X41;` (uppercase `X`) is left unchanged. Dangerous code points are **not** decoded (NULL, C0 except TAB/LF/CR, DEL, C1, surrogates, `>0x10FFFF`). Python / Rust / Go do not apply those extra filters. |
 | `camelCase(string)` | Replaces non-alphanumeric runs, then lowercases **only the first character**. Does not split acronyms: `"HELLO"` → `"hELLO"`, `"XMLHttpRequest"` → `"xMLHttpRequest"`. |
 | `kebabCase(string)` | Inserts dashes on `aB` / `ABc` boundaries, replaces spaces / underscores / other non-alphanumerics, lowercases. Splits acronyms: `"XMLHttpRequest"` → `"xml-http-request"`. |
+| `slugify(string)` | NFD, strip combining marks `U+0300`–`U+036F`, lowercase, then collapse non-`[A-Za-z0-9-]` runs and underscores to `-`. JS `\w` is ASCII, so CJK is dropped: `"Japanese: こんにちは"` → `"japanese"`. Python / Rust keep those letters (`"japanese-こんにちは"`). Go matches TypeScript (ASCII `\w`) but decomposes only a fixed Latin-1 table, not full Unicode NFD. |
 
 ```ts
-import { stripAnsi, stripTags, words } from "umt/String";
+import { slugify, stripAnsi, stripTags, words } from "umt/String";
 
 stripAnsi("\u001B[31mred\u001B[0m"); // "red"
 stripTags("<p>Hello <b>World</b></p>"); // "Hello World"
@@ -214,6 +240,9 @@ unescapeHtml("&#0;"); // "&#0;" (NULL left unchanged)
 camelCase("hello-world"); // "helloWorld"
 camelCase("HELLO"); // "hELLO"
 kebabCase("XMLHttpRequest"); // "xml-http-request"
+slugify("Hello World!"); // "hello-world"
+slugify("café"); // "cafe"
+slugify("Japanese: こんにちは"); // "japanese"
 ```
 
 Go splits the custom-pattern case into `Words` vs `WordsWithPattern`.
@@ -241,7 +270,7 @@ isAbsoluteUrl("/path/to/page"); // false
 isAbsoluteUrl("//example.com"); // false
 ```
 
-Wasm codegen skips `umt_hexa_to_rgba` (custom `Result`) and generates `isAbsoluteUrl` / `normalizeWhitespace` / `unescapeHtml` / `camelCase`.
+Wasm codegen skips `umt_hexa_to_rgba` (custom `Result`) and generates `isAbsoluteUrl` / `normalizeWhitespace` / `unescapeHtml` / `camelCase` / `slugify`. Wasm `slugify` follows Rust and keeps CJK.
 
 ## Array, Async, and Error helpers
 
@@ -268,6 +297,30 @@ sliding([1, 2, 3, 4, 5], 3, 2); // [[1, 2, 3], [3, 4, 5]]
 await mapSeries([1, 2, 3], async (n) => n * 2); // [2, 4, 6]
 await safeExecuteAsync(async () => 42); // { type: "success", value: 42 }
 ```
+
+## Math helpers
+
+Expression utilities in `umt/Math`. Python, Rust, and Go ports exist (`calculator` / `umt_calculator` / `Calculator`, and the same mapping for `mathConverter`).
+
+| Function | Behavior |
+| --- | --- |
+| `calculator(expression, exchange?)` | Strips whitespace. If the string contains `=`, solves a single-variable equation (`"x=5"` → `"5"`, `"2x=6"` → `"3"`). Otherwise evaluates `+ - * / ^` and parentheses. Incomplete input is returned as-is (`"1+"` → `"1+"`). `^` reduces the last pair first (`"2^2^2"` → `"16"`). Optional `exchange` replaces `symbol` + digits (`"$10*2"` with `{ $: 100 }` → `"2000"`). Finite results are rounded to 10 decimal places before `toString()`. |
+| `calculatorInitialization(exchange)` | Returns `(expression) => calculator(expression, exchange)`. |
+| `mathConverter(equation)` | Rewrites `n*n` or `n^2` as a sum of simpler products (`"1250*1250"` → `"1500*1000+400*100+200*100+50*50"`). Unequal `*` operands and `+` are left unchanged. |
+
+```ts
+import { calculator, calculatorInitialization, mathConverter } from "umt/Math";
+
+calculator("1+2"); // "3"
+calculator("(2+3)*4"); // "20"
+calculator("2^2^2"); // "16"
+calculator("1+"); // "1+"
+calculator("$10*2", { $: 100 }); // "2000"
+calculatorInitialization({ $: 100 })("$1"); // "100"
+mathConverter("1250*1250"); // "1500*1000+400*100+200*100+50*50"
+```
+
+Wasm generates `mathConverter`. It skips `calculator` (`HashMap` exchange rates).
 
 ## Function List
 

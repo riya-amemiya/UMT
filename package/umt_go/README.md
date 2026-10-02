@@ -59,7 +59,7 @@ Public code lives in `src/<package>`. Tests are `src/tests/<package>/*_test.go` 
 | `ip` | `src/ip` | `IpToLong`, `IsInRange`, `IsPrivateIp` |
 | `iterator` | `src/iterator` | `LazyMap`, `LazyFilter`, `LazyTake` |
 | `maputil` | `src/maputil` | `GroupByToMap`, `ZipToMap` |
-| `math` | `src/math` | `Random`, `MustRandom`, `GCD` |
+| `math` | `src/math` | `Random`, `MustRandom`, `GCD`, `Calculator`, `MathConverter` (see below) |
 | `number` | `src/number` | `FormatNumber`, `ToOrdinal` |
 | `object` | `src/object` | `Get`, `DeepClone`, `FlattenObject` |
 | `predicate` | `src/predicate` | `Every`, `Some`, `IsNullish` |
@@ -71,7 +71,7 @@ Public code lives in `src/<package>`. Tests are `src/tests/<package>/*_test.go` 
 | `ua` | `src/ua` | `ParseUserAgent` |
 | `unit` | `src/unit` | `ToCelsius`, `ToKelvin` |
 | `urlutil` | `src/urlutil` | `BuildUrl`, `ParseQueryString`, `IsAbsoluteUrl` (see below) |
-| `validate` | `src/validate` | `IsNumber`, `ArrayOf` |
+| `validate` | `src/validate` | `IsNumber`, `ArrayOf`, `ParseEmail` (see below) |
 
 Not every TypeScript helper is ported. There is no `IsBetween`, `AddBusinessDays`, `FromUnix` / `ToUnix`, `WeekOfYear`, `GetQuarter`, or `IsSame`. There is also no `CountBy`, `Partition`, `Sliding`, `MapSeries`, or `SafeExecuteAsync`.
 
@@ -99,6 +99,7 @@ Unicode-aware helpers in `src/str`, aligned with TypeScript `package/main/src/St
 | `UnescapeHtml` | Named entities plus decimal / hex numeric references. `&#X41;` (uppercase `X`) is left unchanged. Decodes via `rune` — it does **not** apply TypeScript's extra rejection of NULL / C0 / DEL / C1 / surrogates. |
 | `CamelCase` | Replaces non-alphanumeric runs, then lowercases only the first rune. Does not split acronyms (`"HELLO"` → `"hELLO"`, `"XMLHttpRequest"` → `"xMLHttpRequest"`). |
 | `KebabCase` | Inserts dashes on case boundaries and replaces separators. Splits acronyms (`"XMLHttpRequest"` → `"xml-http-request"`). |
+| `Slugify` | Lowercase hyphenated slug. Go `\w` is ASCII, so CJK is dropped (`"Japanese: こんにちは"` → `"japanese"`), matching TypeScript. Diacritics are decomposed through a **fixed Latin-1 table**, not full Unicode NFD. Python / Rust keep Unicode letters. |
 
 ```go
 import "github.com/riya-amemiya/umt-go/src/str"
@@ -110,6 +111,8 @@ _ = str.NormalizeWhitespace("  hello   world \t\n foo ") // "hello world foo"
 _ = str.UnescapeHtml("Tom &amp; Jerry") // "Tom & Jerry"
 _ = str.CamelCase("hello-world") // "helloWorld"
 _ = str.KebabCase("XMLHttpRequest") // "xml-http-request"
+_ = str.Slugify("Hello World!")  // "hello-world"
+_ = str.Slugify("café")          // "cafe"
 ```
 
 ## Color and URL helpers
@@ -130,7 +133,31 @@ _ = urlutil.IsAbsoluteUrl("https://example.com") // true
 _ = urlutil.IsAbsoluteUrl("//example.com")       // false
 ```
 
-Fixed regexes in this package are compiled once with package-level `regexp.MustCompile`. Caller-built patterns (`FormatString`, `RegexMatch`) stay inline.
+Fixed regexes in this package are compiled once with package-level `regexp.MustCompile` (`CamelCase`, `KebabCase`, `Slugify`, `UnescapeHtml`, `HexaToRgba`, `StripAnsi` / `StripTags` / `Words`, `NormalizeWhitespace`, `IsAbsoluteUrl`, UA extractors, calculator, `ParseEmail`). Caller-built patterns (`FormatString`, `RegexMatch`, currency symbol) stay inline.
+
+## parseEmail
+
+`ParseEmail(email)` validates at **basic** and returns `(EmailParts, error)`. `ParseEmailWithLevel(email, level)` returns `ParseEmailResult` (`Valid`, `Parts`). Level names are case-insensitive (`"RFC5322"` works). Unknown or empty level is invalid. There is no TypeScript 320-character global cap; `rfc2822` / `rfc5322` reject length `> 998`, `rfc5321` rejects length `> 256` or local `> 64`.
+
+```go
+import "github.com/riya-amemiya/umt-go/src/validate"
+
+parts, _ := validate.ParseEmail("user@example.com") // {Local: "user", Domain: "example.com"}
+_ = validate.ParseEmailWithLevel("user@localhost", "basic").Valid   // true
+_ = validate.ParseEmailWithLevel("user@localhost", "rfc5321").Valid // false
+```
+
+## Calculator
+
+`math.Calculator(expression, exchange)` strips whitespace, then either solves a single-variable equation (`"x=5"` → `"5"`) or evaluates `+ - * / ^` and parentheses. Incomplete input is returned as-is (`"1+"`). `^` reduces the last pair first (`"2^2^2"` → `"16"`). `math.CalculatorInitialization(exchange)` binds the rate map. `math.MathConverter` rewrites `n*n` / `n^2`.
+
+```go
+import "github.com/riya-amemiya/umt-go/src/math"
+
+_ = math.Calculator("1+2", nil)                      // "3"
+_ = math.Calculator("$10*2", map[string]any{"$": 100}) // "2000"
+_ = math.MathConverter("1250*1250")                  // "1500*1000+400*100+200*100+50*50"
+```
 
 ## IP helpers
 

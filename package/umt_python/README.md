@@ -56,7 +56,7 @@ Public names are re-exported from `src/__init__.py`. Grouped the same way as Typ
 | `ip` | `ip_to_long`, `cidr_to_long`, `is_in_range`, `is_private_ip` (see below) |
 | `iterator` | `lazy_map`, `lazy_filter`, `lazy_take` |
 | `map` | `group_by_to_map`, `zip_to_map` |
-| `math` | `gcd`, `n_cr`, `sum_precise` |
+| `math` | `gcd`, `n_cr`, `sum_precise`, `calculator`, `math_converter` (see below) |
 | `number` | `format_number`, `to_ordinal`, `to_percentage` |
 | `object` | `object_get`, `deep_clone`, `flatten_object` |
 | `predicate` | `every`, `some`, `is_nullish` |
@@ -68,7 +68,7 @@ Public names are re-exported from `src/__init__.py`. Grouped the same way as Typ
 | `ua` | `parse_user_agent` |
 | `unit` | `to_celsius`, `to_kelvin` |
 | `url` | `build_url`, `parse_query_string`, `is_absolute_url` (see below) |
-| `validate` | `is_number`, `array_of`, `parse_email` |
+| `validate` | `is_number`, `array_of`, `parse_email` (see below) |
 
 Not every TypeScript helper is ported yet. There is no `is_same` (use `is_same_day` or compare truncated values with `start_of`). There is no date `format` (TypeScript `format` / Rust `umt_format` / Go `FormatDate`). There is also no `count_by`, `partition`, `sliding`, `map_series`, or `safe_execute_async`.
 
@@ -103,6 +103,7 @@ Unicode-aware helpers aligned with TypeScript `package/main/src/String`.
 | `unescape_html` | `(string_: str) -> str` | Named entities plus decimal / hex numeric references. `&#X41;` (uppercase `X`) is left unchanged. Decodes via `chr()` — it does **not** apply TypeScript's extra rejection of NULL / C0 / DEL / C1 / surrogates. | `unescape_html("Tom &amp; Jerry")  # "Tom & Jerry"` / `unescape_html("&#65;")  # "A"` |
 | `camel_case` | `(string_: str) -> str` | Replaces non-alphanumeric runs, then lowercases only the first character. Does not split acronyms. | `camel_case("hello-world")  # "helloWorld"` / `camel_case("HELLO")  # "hELLO"` |
 | `kebab_case` | `(string_: str) -> str` | Inserts dashes on case boundaries and replaces separators. Splits acronyms. | `kebab_case("XMLHttpRequest")  # "xml-http-request"` |
+| `slugify` | `(string_: str) -> str` | NFD, strip combining marks, lowercase, hyphenate. Python `\w` is Unicode, so CJK stays: `"Japanese: こんにちは"` → `"japanese-こんにちは"`. TypeScript / Go drop those letters (`"japanese"`). | `slugify("Hello World!")  # "hello-world"` / `slugify("Café")  # "cafe"` |
 
 ## IP helpers
 
@@ -125,6 +126,27 @@ IPv4 dotted-decimal only, aligned with TypeScript `package/main/src/IP`. Unlike 
 | --- | --- | --- | --- |
 | `hexa_to_rgba` | `(hex_code: str) -> dict[str, float]` | `#` plus 3, 6, or 8 hex digits → `{r, g, b, a}`. `a` is `0`–`1` rounded to 2 decimals. Invalid input raises `ValueError`. TypeScript `hexaToRgba` does not validate. | `hexa_to_rgba("#FF0000")  # {'r': 255, 'g': 0, 'b': 0, 'a': 1.0}` / `hexa_to_rgba("#fff")  # {'r': 255, 'g': 255, 'b': 255, 'a': 1.0}` |
 | `is_absolute_url` | `(url: str) -> bool` | RFC 3986 scheme check (letter, then letters / digits / `+` / `.` / `-`, then `:`). Protocol-relative URLs are not absolute. | `is_absolute_url("https://example.com")  # True` / `is_absolute_url("//example.com")  # False` |
+
+## parse_email
+
+`parse_email(email, ParseEmailOptions(level=...))` returns `ParseEmailResult(valid, parts)`. `level` is required: `"basic"` \| `"rfc822"` \| `"rfc2822"` \| `"rfc5321"` \| `"rfc5322"`. There is **no** TypeScript 320-character pre-check.
+
+```python
+from umt_python import ParseEmailOptions, parse_email
+
+parse_email("user@example.com", ParseEmailOptions(level="basic")).valid  # True
+parse_email("user@localhost", ParseEmailOptions(level="basic")).valid  # True
+parse_email("user@localhost", ParseEmailOptions(level="rfc5321")).valid  # False
+```
+
+`rfc822` allows single-label domains and comments. `rfc2822` requires a TLD and rejects `..`. `rfc5321` is the SMTP path (max 256 / local 64, domain literals allowed). `rfc5322` adds comments and quoted strings.
+
+## Math helpers
+
+| Function | Type | Description | Example |
+| --- | --- | --- | --- |
+| `calculator` | `(expression: str, exchange=None) -> str` | Strips whitespace. `=` solves a single-variable equation (`"x=5"` → `"5"`). Otherwise evaluates `+ - * / ^` and parentheses. Incomplete input is returned as-is. `^` reduces the last pair first (`"2^2^2"` → `"16"`). | `calculator("1+2")  # "3"` / `calculator("$10*2", {"$": 100})  # "2000"` |
+| `math_converter` | `(equation: str) -> str` | Rewrites `n*n` or `n^2` as a sum of simpler products. Uses `float` in the rewritten terms, so the string is `"1500.0*1000+…"` rather than TypeScript / Go `"1500*1000+…"`. | `math_converter("1250*1250")  # "1500.0*1000+400.0*100+200.0*100+50*50"` |
 
 ## Function List
 
@@ -193,6 +215,9 @@ IPv4 dotted-decimal only, aligned with TypeScript `package/main/src/IP`. Unlike 
 - IP helpers are IPv4 only. They validate input (TypeScript does not). `subnet_mask_to_cidr` requires a contiguous mask; TypeScript `subnetMaskToCidr` only counts set bits. `is_private_ip` is RFC 1918 only (not loopback or link-local).
 - `hexa_to_rgba` requires `#` plus 3, 6, or 8 hex digits. TypeScript `hexaToRgba` does not validate.
 - `unescape_html` decodes numeric entities with `chr()`. TypeScript `unescapeHtml` additionally rejects NULL, most C0 controls, DEL, C1, surrogates, and out-of-range values.
+- `slugify` keeps Unicode letters (Python `\w`). TypeScript / Go `slugify` use ASCII `\w` and drop CJK.
+- `parse_email` requires `ParseEmailOptions`. It does not apply TypeScript's 320-character ReDoS cap.
+- `math_converter` formats split terms with `float` (`"1500.0*1000+…"`). TypeScript / Rust / Go emit integers (`"1500*1000+…"`).
 
 ## Development
 
