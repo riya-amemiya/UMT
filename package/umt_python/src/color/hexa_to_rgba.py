@@ -1,5 +1,7 @@
 import re
 
+_HEX_COLOR_RE = re.compile(r"^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$")
+
 
 def hexa_to_rgba(hex_code: str) -> dict[str, float]:
     """
@@ -20,7 +22,7 @@ def hexa_to_rgba(hex_code: str) -> dict[str, float]:
         >>> hexa_to_rgba("#fff")
         {'r': 255, 'g': 255, 'b': 255, 'a': 1.0}
     """
-    if not re.match(r"^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$", hex_code):
+    if not _HEX_COLOR_RE.match(hex_code):
         raise ValueError("Invalid hex code")
 
     hex_value = hex_code.replace("#", "")
