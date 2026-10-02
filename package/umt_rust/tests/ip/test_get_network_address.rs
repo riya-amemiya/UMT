@@ -123,3 +123,33 @@ fn test_get_network_address_invalid_subnet_mask_pattern() {
     assert!(result.is_err());
     assert_eq!(result.unwrap_err(), "Invalid IP address or subnet mask");
 }
+
+#[test]
+fn test_get_network_address_wrong_octet_count() {
+    let result = get_network_address("192.168.1", "255.255.255.0");
+    assert!(result.is_err());
+    assert_eq!(result.unwrap_err(), "Invalid IP address or subnet mask");
+
+    let result = get_network_address("192.168.1.1", "255.255.255");
+    assert!(result.is_err());
+    assert_eq!(result.unwrap_err(), "Invalid IP address or subnet mask");
+}
+
+#[test]
+fn test_get_network_address_non_numeric_octet() {
+    let result = get_network_address("192.abc.1.1", "255.255.255.0");
+    assert!(result.is_err());
+    assert_eq!(result.unwrap_err(), "Invalid IP address or subnet mask");
+
+    let result = get_network_address("192.168.1.1", "255.abc.255.0");
+    assert!(result.is_err());
+    assert_eq!(result.unwrap_err(), "Invalid IP address or subnet mask");
+}
+
+#[test]
+fn test_get_network_address_docstring_example() {
+    assert_eq!(
+        get_network_address("192.168.1.100", "255.255.255.0").unwrap(),
+        0xc0_a8_01_00
+    );
+}
