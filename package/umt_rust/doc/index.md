@@ -31,7 +31,7 @@ cargo doc --open
 
 Runtime dependencies include `chrono`, `regex`, `serde`, `rand`, and others listed in `Cargo.toml` (the crate is not dependency-free).
 
-Fixed regexes are compiled once in `std::sync::LazyLock` statics (`umt_strip_ansi`, `umt_strip_tags`, `umt_words`, `umt_normalize_whitespace`, `umt_unescape_html`, `umt_is_absolute_url`, `umt_hexa_to_rgba`, `umt_format` escaped-text `[...]`, `parse_email`, UA extractors). Patterns built from caller input stay inline (`format_string`, calculator, `umt_regex_match`). Date `umt_format` is not string `format_string`. Prefer `LazyLock` over compiling the same pattern on every call.
+Fixed regexes are compiled once in `std::sync::LazyLock` statics (`umt_strip_ansi`, `umt_strip_tags`, `umt_words`, `umt_normalize_whitespace`, `umt_unescape_html`, `umt_is_absolute_url`, `umt_hexa_to_rgba`, `umt_format` escaped-text `[...]`, `umt_math_converter`, `parse_email`, UA extractors). Patterns built from caller input stay inline (`format_string`, calculator, `umt_regex_match`). Date `umt_format` is not string `format_string`. Prefer `LazyLock` over compiling the same pattern on every call.
 
 ## Date helpers
 
@@ -87,11 +87,12 @@ Unicode-aware string utilities in `src/string/`. Behavior matches TypeScript `pa
 | `umt_unescape_html` | Named entities plus decimal / hex numeric references. Decodes via `char::from_u32` (rejects surrogates and out-of-range). Does **not** apply TypeScript's extra NULL / C0 / DEL / C1 filters. |
 | `umt_camel_case` | Lowercases only the first alphanumeric character. Does not split acronyms (`"HELLO"` → `"hELLO"`). |
 | `umt_kebab_case` | Inserts dashes on case boundaries. Splits acronyms (`"XMLHttpRequest"` → `"xml-http-request"`). |
+| `umt_slugify` | NFD, drop combining marks, lowercase, hyphenate. `char::is_alphanumeric` keeps CJK (`"Japanese: こんにちは"` → `"japanese-こんにちは"`). TypeScript / Go drop those letters. Generated for wasm. |
 
 ```rust
 use umt_rust::string::{
-    umt_camel_case, umt_kebab_case, umt_normalize_whitespace, umt_strip_ansi, umt_strip_tags,
-    umt_unescape_html, umt_words,
+    umt_camel_case, umt_kebab_case, umt_normalize_whitespace, umt_slugify, umt_strip_ansi,
+    umt_strip_tags, umt_unescape_html, umt_words,
 };
 
 assert_eq!(umt_strip_ansi("\u{001B}[31mred\u{001B}[0m"), "red");
@@ -101,6 +102,8 @@ assert_eq!(umt_normalize_whitespace("  hello   world \t\n foo "), "hello world f
 assert_eq!(umt_unescape_html("Tom &amp; Jerry"), "Tom & Jerry");
 assert_eq!(umt_camel_case("hello-world"), "helloWorld");
 assert_eq!(umt_kebab_case("XMLHttpRequest"), "xml-http-request");
+assert_eq!(umt_slugify("Hello World!"), "hello-world");
+assert_eq!(umt_slugify("Japanese: こんにちは"), "japanese-こんにちは");
 ```
 
 ## Color and URL helpers
@@ -119,6 +122,37 @@ assert_eq!((red.r, red.g, red.b, red.a), (255.0, 0.0, 0.0, 1.0));
 assert!(umt_hexa_to_rgba("FF0000").is_err());
 assert!(umt_is_absolute_url("https://example.com"));
 assert!(!umt_is_absolute_url("//example.com"));
+```
+
+## parseEmail and calculator
+
+`umt_parse_email(email, options)` returns `{ valid, parts }`. `None` options default to `ParseEmailLevel::Basic`. **`Rfc822` uses the Basic regex; `Rfc5322` uses the Rfc5321 regex.** There is no TypeScript 320-character pre-check. Wasm skips this function (custom `ParseEmailOptions`).
+
+```rust
+use umt_rust::validate::{umt_parse_email, ParseEmailLevel, ParseEmailOptions};
+
+let ok = umt_parse_email("user@example.com", None);
+assert!(ok.valid);
+assert_eq!(ok.parts.unwrap().local, "user");
+
+let rfc5321 = ParseEmailOptions {
+    level: ParseEmailLevel::Rfc5321,
+};
+assert!(!umt_parse_email("user@localhost", Some(rfc5321)).valid);
+```
+
+`umt_calculator(expression, exchange)` strips whitespace, solves `=` equations (`"x=5"` → `"5"`), or evaluates `+ - * / ^`. Incomplete input is returned as-is. `^` reduces the last pair first. Wasm skips it (`HashMap` rates). `umt_math_converter` is generated for wasm.
+
+```rust
+use umt_rust::math::calculator::umt_calculator;
+use umt_rust::math::umt_math_converter;
+
+assert_eq!(umt_calculator("1+2", None), "3");
+assert_eq!(umt_calculator("2^2^2", None), "16");
+assert_eq!(
+    umt_math_converter("1250*1250"),
+    "1500*1000+400*100+200*100+50*50"
+);
 ```
 
 ## IP helpers

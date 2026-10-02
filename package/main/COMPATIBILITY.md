@@ -44,6 +44,12 @@ IP helpers (`umt/IP`) are IPv4 only. TypeScript does not validate dotted-decimal
 
 `unescapeHtml` (`umt/String`) in TypeScript leaves dangerous numeric character references unchanged: NULL (`0`), C0 controls except TAB / LF / CR, DEL (`127`), C1 (`128`–`159`), surrogates (`0xD800`–`0xDFFF`), and values above `0x10FFFF`. Python / Rust / Go decode numeric entities through the language code-point APIs and do not apply those extra filters.
 
+`slugify` (`umt/String`) uses JavaScript `\w` (`[A-Za-z0-9_]`), so CJK and other non-ASCII letters are dropped (`"Japanese: こんにちは"` → `"japanese"`). Go `Slugify` matches that ASCII `\w` but decomposes only a fixed Latin-1 table instead of full Unicode NFD. Python `slugify` and Rust `umt_slugify` keep Unicode letters (`"japanese-こんにちは"`). Wasm `slugify` follows Rust.
+
+`parseEmail` (`umt/Validate`) rejects strings longer than 320 characters before the RFC regex. Python has no global cap. Rust `umt_parse_email` maps `Rfc822` to the Basic pattern and `Rfc5322` to the Rfc5321 pattern. Go `ParseEmail` is basic-only and returns an error; `ParseEmailWithLevel` applies 998 / 256 limits on some RFC levels.
+
+`mathConverter("1250*1250")` is `"1500*1000+400*100+200*100+50*50"` in TypeScript, Rust, and Go. Python `math_converter` emits float terms (`"1500.0*1000+400.0*100+200.0*100+50*50"`).
+
 ## Versioning
 
 This package follows [Semantic Versioning (SemVer)](https://semver.org/):

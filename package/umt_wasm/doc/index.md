@@ -53,6 +53,8 @@ To expose a skipped or unprefixed function, add an adapter in `src/manual.rs` (u
 
 A few Date helpers that already use wasm-friendly types (`umt_is_leap_year`, `umt_day_of_week`, timezone offset strings) are generated automatically.
 
+`slugify` and `mathConverter` are generated. They follow the Rust crate, so wasm `slugify` keeps CJK letters (`"japanese-こんにちは"`), unlike TypeScript / Go. `calculator` (HashMap exchange rates) and `parseEmail` (`Option<ParseEmailOptions>`) are skipped.
+
 ## Build and test
 
 ```bash

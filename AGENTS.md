@@ -73,7 +73,7 @@ Located in `package/umt_rust`.
 *   **Core Logic**:
     *   **Stable Rust Only**: Do not use unstable features like `let_chains`.
     *   **Value Enum**: Use `umt_rust::object::Value` with `#[serde(untagged)]` for JSON interoperability. Use the `obj!` macro for construction.
-    *   **Regex**: Cache compiled `regex::Regex` values in `std::sync::LazyLock` statics. Current sites: `umt_strip_ansi`, `umt_strip_tags`, `umt_words`, `umt_normalize_whitespace`, `umt_unescape_html`, `umt_is_absolute_url`, `umt_hexa_to_rgba`, `umt_format` (date escaped-text `[...]`), `parse_email`, UA extractors. Do not compile a fixed pattern on every call. Patterns built from caller input (calculator, `format_string`, `umt_regex_match`) stay inline. Date `umt_format` is not string `format_string`.
+    *   **Regex**: Cache compiled `regex::Regex` values in `std::sync::LazyLock` statics. Current sites: `umt_strip_ansi`, `umt_strip_tags`, `umt_words`, `umt_normalize_whitespace`, `umt_unescape_html`, `umt_is_absolute_url`, `umt_hexa_to_rgba`, `umt_format` (date escaped-text `[...]`), `umt_math_converter`, `parse_email`, UA extractors. Do not compile a fixed pattern on every call. Patterns built from caller input (calculator, `format_string`, `umt_regex_match`) stay inline. Date `umt_format` is not string `format_string`.
     *   **Math**:
         *   Implement `apply_currency_exchange` for currency conversion.
         *   Operator precedence: Exp > Mul/Div > Add/Sub.
