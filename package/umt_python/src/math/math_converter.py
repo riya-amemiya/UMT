@@ -2,6 +2,9 @@ import re
 
 from .math_separator import math_separator
 
+_MUL_OR_EXP_RE = re.compile(r"\d+\.?(\d+)?(\*|\^)\d+\.?(\d+)?")
+_OP_SPLIT_RE = re.compile(r"(\*|\^)")
+
 
 def math_converter(equation: str) -> str:
     """
@@ -20,13 +23,13 @@ def math_converter(equation: str) -> str:
     converted_equation = equation
 
     while True:
-        match = re.search(r"\d+\.?(\d+)?(\*|\^)\d+\.?(\d+)?", converted_equation)
+        match = _MUL_OR_EXP_RE.search(converted_equation)
 
         if not match:
             return converted_equation
 
         matched_string = match.group()
-        parts = re.split(r"(\*|\^)", matched_string)
+        parts = _OP_SPLIT_RE.split(matched_string)
         operand1 = parts[0]
         operator = parts[1]
         operand2 = parts[2] if len(parts) > 2 else None
