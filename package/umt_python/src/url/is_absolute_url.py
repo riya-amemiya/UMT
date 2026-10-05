@@ -1,5 +1,7 @@
 import re
 
+_ABSOLUTE_URL_RE = re.compile(r"^[a-z][a-z\d+\-.]*:", re.IGNORECASE)
+
 
 def is_absolute_url(url: str) -> bool:
     """Checks whether a URL string is absolute (RFC 3986).
@@ -11,4 +13,4 @@ def is_absolute_url(url: str) -> bool:
     :param url: The URL string to check
     :return: True if the URL is absolute, False otherwise
     """
-    return bool(re.match(r"^[a-z][a-z\d+\-.]*:", url, re.IGNORECASE))
+    return bool(_ABSOLUTE_URL_RE.match(url))

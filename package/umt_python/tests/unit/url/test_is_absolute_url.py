@@ -35,6 +35,22 @@ class TestIsAbsoluteUrl(unittest.TestCase):
         self.assertFalse(is_absolute_url("123://invalid"))
         self.assertFalse(is_absolute_url("+bad://invalid"))
 
+    def test_uppercase_schemes(self):
+        self.assertTrue(is_absolute_url("HTTP://example.com"))
+        self.assertTrue(is_absolute_url("HTTPS://example.com"))
+        self.assertTrue(is_absolute_url("Mailto:user@host"))
+
+    def test_scheme_with_digits(self):
+        self.assertTrue(is_absolute_url("http2://example.com"))
+        self.assertTrue(is_absolute_url("a1:"))
+
+    def test_missing_colon(self):
+        self.assertFalse(is_absolute_url("http"))
+        self.assertFalse(is_absolute_url(":"))
+
+    def test_leading_whitespace(self):
+        self.assertFalse(is_absolute_url(" http://example.com"))
+
 
 if __name__ == "__main__":
     unittest.main()
