@@ -3,6 +3,13 @@ from typing import Literal
 
 BrowserType = Literal["edge", "chrome", "firefox", "safari", "ie", "other"]
 
+_EDGE_RE = re.compile(r"edg(e)?", re.IGNORECASE)
+_IE_RE = re.compile(r"msie|trident", re.IGNORECASE)
+_FIREFOX_RE = re.compile(r"firefox|fxios", re.IGNORECASE)
+_OPERA_RE = re.compile(r"opr/", re.IGNORECASE)
+_CHROME_RE = re.compile(r"chrome|crios", re.IGNORECASE)
+_SAFARI_RE = re.compile(r"safari", re.IGNORECASE)
+
 
 def extract_browser_from_user_agent(ua: str) -> BrowserType:
     """
@@ -18,16 +25,16 @@ def extract_browser_from_user_agent(ua: str) -> BrowserType:
         >>> extract_browser_from_user_agent("Mozilla/5.0 Chrome/91.0")
         'chrome'
     """
-    if re.search(r"edg(e)?", ua, re.IGNORECASE):
+    if _EDGE_RE.search(ua):
         return "edge"
-    if re.search(r"msie|trident", ua, re.IGNORECASE):
+    if _IE_RE.search(ua):
         return "ie"
-    if re.search(r"firefox|fxios", ua, re.IGNORECASE):
+    if _FIREFOX_RE.search(ua):
         return "firefox"
-    if re.search(r"opr/", ua, re.IGNORECASE):
+    if _OPERA_RE.search(ua):
         return "other"
-    if re.search(r"chrome|crios", ua, re.IGNORECASE):
+    if _CHROME_RE.search(ua):
         return "chrome"
-    if re.search(r"safari", ua, re.IGNORECASE):
+    if _SAFARI_RE.search(ua):
         return "safari"
     return "other"
