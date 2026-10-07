@@ -1,17 +1,17 @@
 /**
- * Creates a new object with the same properties as the given object, but with the prototype polluting properties removed.
- * ("__proto__", "constructor", "prototype" are excluded from the shallow copy)
- *
- * @param object - The object to remove the prototype polluting properties from.
- * @returns A new object with the prototype polluting properties removed.
- *
- * @example
- * ```typescript
- * const obj = JSON.parse('{"__proto__":{"polluted":true},"a":1,"b":2}');
- * const safeObj = removePrototype(obj);
- * // safeObj is { a: 1, b: 2 } and "__proto__" is removed
- * ```
- */
+Creates a new object with the same properties as the given object, but with the prototype polluting properties removed.
+("__proto__", "constructor", "prototype" are excluded from the shallow copy)
+
+@param object - The object to remove the prototype polluting properties from.
+@returns A new object with the prototype polluting properties removed.
+
+@example
+```typescript
+const obj = JSON.parse('{"__proto__":{"polluted":true},"a":1,"b":2}');
+const safeObj = removePrototype(obj);
+// safeObj is { a: 1, b: 2 } and "__proto__" is removed
+```
+*/
 export const removePrototype = <T extends Record<string, unknown>>(
   object: T,
 ): Omit<T, "__proto__" | "constructor" | "prototype"> => {

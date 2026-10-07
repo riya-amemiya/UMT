@@ -1,12 +1,12 @@
 /**
- * Lazily filters values from an iterable using a generator
- * @param {Iterable<T>} iterable - The source iterable
- * @param {(value: T, index: number) => boolean} predicate - The filter predicate
- * @returns {Generator<T, void, undefined>} A generator yielding filtered values
- * @example
- * const evens = lazyFilter([1, 2, 3, 4], (n) => n % 2 === 0);
- * [...evens]; // [2, 4]
- */
+Lazily filters values from an iterable using a generator
+@param {Iterable<T>} iterable - The source iterable
+@param {(value: T, index: number) => boolean} predicate - The filter predicate
+@returns {Generator<T, void, undefined>} A generator yielding filtered values
+@example
+const evens = lazyFilter([1, 2, 3, 4], (n) => n % 2 === 0);
+[...evens]; // [2, 4]
+*/
 export function* lazyFilter<T>(
   iterable: Iterable<T>,
   predicate: (value: T, index: number) => boolean,

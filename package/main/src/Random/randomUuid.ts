@@ -13,13 +13,13 @@ const bytesToUuid = (bytes: Uint8Array): string => {
 };
 
 /**
- * Generates a UUID v4 string. Uses `crypto.randomUUID` when available,
- * otherwise falls back to `crypto.getRandomValues`.
- *
- * @returns {string} A UUID v4 in canonical 8-4-4-4-12 hex form
- * @example
- * randomUUID(); // e.g. "1b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed"
- */
+Generates a UUID v4 string. Uses `crypto.randomUUID` when available,
+otherwise falls back to `crypto.getRandomValues`.
+
+@returns {string} A UUID v4 in canonical 8-4-4-4-12 hex form
+@example
+randomUUID(); // e.g. "1b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed"
+*/
 export const randomUUID = (): string => {
   if (typeof globalThis.crypto?.randomUUID === "function") {
     return globalThis.crypto.randomUUID();

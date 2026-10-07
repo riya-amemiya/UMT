@@ -1,6 +1,6 @@
 /**
- * HTML entities map for unescaping
- */
+HTML entities map for unescaping
+*/
 const htmlUnescapeMap: Record<string, string> = {
   "&amp;": "&",
   "&lt;": "<",
@@ -14,11 +14,11 @@ const htmlUnescapeMap: Record<string, string> = {
 };
 
 /**
- * Security: Checks whether a numeric code point is safe to decode.
- * Rejects NULL (0), C0 control chars (1-31 except TAB 9, LF 10, CR 13),
- * DEL (127), C1 control chars (128-159), lone surrogates (0xD800-0xDFFF),
- * and values beyond the Unicode maximum (>0x10FFFF).
- */
+Security: Checks whether a numeric code point is safe to decode.
+Rejects NULL (0), C0 control chars (1-31 except TAB 9, LF 10, CR 13),
+DEL (127), C1 control chars (128-159), lone surrogates (0xD800-0xDFFF),
+and values beyond the Unicode maximum (>0x10FFFF).
+*/
 const isSafeCodePoint = (codePoint: number): boolean => {
   return !(
     codePoint === 0 ||
@@ -34,21 +34,21 @@ const isSafeCodePoint = (codePoint: number): boolean => {
 };
 
 /**
- * Unescapes HTML entities in a string
- * @param string_ - The string to unescape
- * @returns The unescaped string with HTML entities converted back to their original characters
- * @example
- * ```typescript
- * unescapeHtml("&lt;script&gt;alert(&quot;Hello&quot;);&lt;/script&gt;");
- * // Returns: "<script>alert(\"Hello\");</script>"
- *
- * unescapeHtml("Tom &amp; Jerry");
- * // Returns: "Tom & Jerry"
- *
- * unescapeHtml("5 &lt; 10 &amp;&amp; 10 &gt; 5");
- * // Returns: "5 < 10 && 10 > 5"
- * ```
- */
+Unescapes HTML entities in a string
+@param string_ - The string to unescape
+@returns The unescaped string with HTML entities converted back to their original characters
+@example
+```typescript
+unescapeHtml("&lt;script&gt;alert(&quot;Hello&quot;);&lt;/script&gt;");
+// Returns: "<script>alert(\"Hello\");</script>"
+
+unescapeHtml("Tom &amp; Jerry");
+// Returns: "Tom & Jerry"
+
+unescapeHtml("5 &lt; 10 &amp;&amp; 10 &gt; 5");
+// Returns: "5 < 10 && 10 > 5"
+```
+*/
 export const unescapeHtml = (string_: string): string => {
   const entityRegex =
     /&(?:amp|lt|gt|quot|#39|#x27|#x2F|#x60|#x3D);|&#(\d{1,7});|&#x([\dA-Fa-f]{1,6});/g;

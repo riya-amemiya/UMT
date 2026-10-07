@@ -1,9 +1,9 @@
 import type { GetEnumValues } from "$/enum/getEnumValues";
 
 /**
- * HTTP 4xx Client Error Status Codes
- * Indicates that the client seems to have made an error in the request
- */
+HTTP 4xx Client Error Status Codes
+Indicates that the client seems to have made an error in the request
+*/
 export const HttpClientErrorStatus = {
   /**
   Server cannot or will not process the request due to a client error

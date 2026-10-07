@@ -1,31 +1,31 @@
 /**
- * Options for isDeepEqual comparison
- */
+Options for isDeepEqual comparison
+*/
 export interface IsDeepEqualOptions {
   /**
-   * Whether to ignore array order when comparing arrays
-   * @default true
-   */
+  Whether to ignore array order when comparing arrays
+  @default true
+  */
   strictOrder?: boolean;
 }
 
 /**
- * Performs a deep equality comparison between two values
- *
- * @param a - First value to compare
- * @param b - Second value to compare
- * @param options - Comparison options
- * @returns true if values are deeply equal, false otherwise
- *
- * @example
- * ```typescript
- * isDeepEqual({ a: 1, b: [2, 3] }, { b: [2, 3], a: 1 }); // true
- * isDeepEqual([1, 2, 3], [3, 2, 1]); // false
- * isDeepEqual([1, 2, 3], [3, 2, 1], { strictOrder: false }); // true
- * isDeepEqual(new Set([1, 2]), new Set([2, 1])); // true
- * isDeepEqual(new Map([['a', 1]]), new Map([['a', 1]])); // true
- * ```
- */
+Performs a deep equality comparison between two values
+
+@param a - First value to compare
+@param b - Second value to compare
+@param options - Comparison options
+@returns true if values are deeply equal, false otherwise
+
+@example
+```typescript
+isDeepEqual({ a: 1, b: [2, 3] }, { b: [2, 3], a: 1 }); // true
+isDeepEqual([1, 2, 3], [3, 2, 1]); // false
+isDeepEqual([1, 2, 3], [3, 2, 1], { strictOrder: false }); // true
+isDeepEqual(new Set([1, 2]), new Set([2, 1])); // true
+isDeepEqual(new Map([['a', 1]]), new Map([['a', 1]])); // true
+```
+*/
 export function isDeepEqual(
   a: unknown,
   b: unknown,

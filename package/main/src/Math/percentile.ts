@@ -1,15 +1,15 @@
 import { ultraNumberSort } from "@/Array/ultraNumberSort";
 
 /**
- * Calculate the nth percentile of values in an array
- * @param array - Array of numbers
- * @param percentile - Percentile value (0-100)
- * @returns The percentile value
- * @example
- * percentile([1, 2, 3, 4, 5], 50); // 3 (50th percentile - median)
- * percentile([1, 2, 3, 4, 5], 25); // 2 (25th percentile)
- * percentile([1, 2, 3, 4, 5], 75); // 4 (75th percentile)
- */
+Calculate the nth percentile of values in an array
+@param array - Array of numbers
+@param percentile - Percentile value (0-100)
+@returns The percentile value
+@example
+percentile([1, 2, 3, 4, 5], 50); // 3 (50th percentile - median)
+percentile([1, 2, 3, 4, 5], 25); // 2 (25th percentile)
+percentile([1, 2, 3, 4, 5], 75); // 4 (75th percentile)
+*/
 export const percentile = (array: number[], percentile: number): number => {
   if (array.length === 0) {
     return Number.NaN;

@@ -1,13 +1,13 @@
 /**
- * Object validation - pickKeys
- * Returns a new object validator that only checks the specified keys of the
- * source validator. Mirrors `Pick<T, K>` at the type level so consumers like
- * `union()`, `intersection()`, and `SchemaToInterface` see the narrowed shape.
- *
- * The function is named `pickKeys` to avoid conflicting with the top-level
- * `Object` module's `pick` runtime helper while making the keys-based
- * semantics explicit.
- */
+Object validation - pickKeys
+Returns a new object validator that only checks the specified keys of the
+source validator. Mirrors `Pick<T, K>` at the type level so consumers like
+`union()`, `intersection()`, and `SchemaToInterface` see the narrowed shape.
+
+The function is named `pickKeys` to avoid conflicting with the top-level
+`Object` module's `pick` runtime helper while making the keys-based
+semantics explicit.
+*/
 
 import {
   type InferObject,
@@ -18,15 +18,15 @@ import {
 } from "./core";
 
 /**
- * Picks the given keys from an existing object validator and returns a new
- * object validator covering only those keys.
- * @template T - Original object shape
- * @template K - Tuple of keys to pick from the original shape
- * @param {ObjectValidator<T>} validator - Source object validator
- * @param {K} keys - Keys to retain on the new validator
- * @param {string} [message] - Custom error message for the picked validator
- * @returns {ObjectValidator<Pick<T, K[number]>>} - New validator scoped to picked keys
- */
+Picks the given keys from an existing object validator and returns a new
+object validator covering only those keys.
+@template T - Original object shape
+@template K - Tuple of keys to pick from the original shape
+@param {ObjectValidator<T>} validator - Source object validator
+@param {K} keys - Keys to retain on the new validator
+@param {string} [message] - Custom error message for the picked validator
+@returns {ObjectValidator<Pick<T, K[number]>>} - New validator scoped to picked keys
+*/
 export const pickKeys = <T extends ObjectShape, K extends readonly (keyof T)[]>(
   validator: ObjectValidator<T>,
   keys: K,

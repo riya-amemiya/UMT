@@ -1,9 +1,9 @@
 /**
- * Any validation core module
- * Provides a validator that accepts any value, useful when a position in a
- * schema needs to remain wide open while still participating in `object()`,
- * `union()`, `intersection()`, and other compositional helpers.
- */
+Any validation core module
+Provides a validator that accepts any value, useful when a position in a
+schema needs to remain wide open while still participating in `object()`,
+`union()`, `intersection()`, and other compositional helpers.
+*/
 
 import {
   attachStandard,
@@ -11,10 +11,10 @@ import {
 } from "@/Validate/standardSchema";
 
 /**
- * Return type produced by an `any` validator. Exposes the literal `"any"`
- * tag through the `type` field so `ValidateType<"any">` can map it back to
- * the `any` runtime type when consumed by downstream helpers.
- */
+Return type produced by an `any` validator. Exposes the literal `"any"`
+tag through the `type` field so `ValidateType<"any">` can map it back to
+the `any` runtime type when consumed by downstream helpers.
+*/
 export interface AnyReturnType {
   validate: boolean;
   message: string;
@@ -37,9 +37,9 @@ const standardAnyValidator = attachStandard<
 >(anyValidator);
 
 /**
- * Creates a validator that accepts any value
- * @returns {Function} - Validator that always succeeds
- */
+Creates a validator that accepts any value
+@returns {Function} - Validator that always succeeds
+*/
 export const any = (): ((
   // biome-ignore lint/suspicious/noExplicitAny: any() must accept and infer any value
   value: any,

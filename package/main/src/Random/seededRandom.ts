@@ -12,15 +12,15 @@ const hashStringToSeed = (input: string): number => {
 };
 
 /**
- * Returns a deterministic PRNG seeded from a number or string. Each call
- * produces a float in `[0, 1)` from the same xoshiro256** stream.
- *
- * @param {number | string} seed - Seed value
- * @returns {() => number} A function that returns sequential pseudo-random floats
- * @example
- * const rand = seededRandom("hello");
- * rand(); // deterministic for the same seed
- */
+Returns a deterministic PRNG seeded from a number or string. Each call
+produces a float in `[0, 1)` from the same xoshiro256** stream.
+
+@param {number | string} seed - Seed value
+@returns {() => number} A function that returns sequential pseudo-random floats
+@example
+const rand = seededRandom("hello");
+rand(); // deterministic for the same seed
+*/
 export const seededRandom = (seed: number | string): (() => number) => {
   const initial =
     typeof seed === "number" ? seed >>> 0 : hashStringToSeed(seed);

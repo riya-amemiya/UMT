@@ -1,9 +1,9 @@
 import type { ValidateReturnType } from "@/Validate/type";
 
 /**
- * String validation module for UUID strings
- * Provides validation functionality for checking if a string is a valid UUID
- */
+String validation module for UUID strings
+Provides validation functionality for checking if a string is a valid UUID
+*/
 
 // Security: Valid UUID versions are single-digit integers (1-7).
 // The version value is interpolated into a RegExp constructor, so untrusted
@@ -12,11 +12,11 @@ import type { ValidateReturnType } from "@/Validate/type";
 const VALID_UUID_VERSIONS = new Set([1, 2, 3, 4, 5, 6, 7]);
 
 /**
- * Creates a validator for checking if a string is a valid UUID
- * @param {number[]} [versions=[4]] - Array of supported UUID versions (1-7)
- * @param {string} [message] - Custom error message for validation failure
- * @returns {ValidateReturnType<string>} - Validator for UUID strings
- */
+Creates a validator for checking if a string is a valid UUID
+@param {number[]} [versions=[4]] - Array of supported UUID versions (1-7)
+@param {string} [message] - Custom error message for validation failure
+@returns {ValidateReturnType<string>} - Validator for UUID strings
+*/
 export const uuid = (
   versions: number[] = [4],
   message?: string,

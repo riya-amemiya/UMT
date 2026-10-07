@@ -29,17 +29,17 @@ const computeDelay = (
 };
 
 /**
- * Retries an async function until it succeeds or the retry budget is exhausted.
- * Supports fixed, linear, or exponential backoff, optional jitter, and
- * AbortSignal cancellation.
- *
- * @template T - Return type of the function
- * @param {() => Promise<T>} function_ - The async function to invoke
- * @param {RetryOptions} [options] - Retry configuration
- * @returns {Promise<T>} Result of the first successful invocation
- * @example
- * await retry(() => fetch("/api"), { retries: 5, backoff: "exponential", jitter: true });
- */
+Retries an async function until it succeeds or the retry budget is exhausted.
+Supports fixed, linear, or exponential backoff, optional jitter, and
+AbortSignal cancellation.
+
+@template T - Return type of the function
+@param {() => Promise<T>} function_ - The async function to invoke
+@param {RetryOptions} [options] - Retry configuration
+@returns {Promise<T>} Result of the first successful invocation
+@example
+await retry(() => fetch("/api"), { retries: 5, backoff: "exponential", jitter: true });
+*/
 export const retry = async <T>(
   function_: () => Promise<T>,
   options: RetryOptions = {},

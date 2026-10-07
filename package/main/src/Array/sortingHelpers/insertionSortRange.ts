@@ -1,8 +1,8 @@
 import type { CompareFunction } from "$/array/compareFunction";
 
 /**
- * @internal
- */
+@internal
+*/
 export const insertionSortRange = <T>(
   array: T[],
   compareFunction: CompareFunction<T>,

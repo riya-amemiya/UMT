@@ -1,17 +1,17 @@
 import type { SimplifiedUserAgentInfoBrowser } from "$/ua/simplifiedUserAgentInfoBrowser";
 
 /**
- * Extracts browser information from a User-Agent string
- *
- * @param ua - The User-Agent string to analyze
- * @returns The detected browser type ("edge", "chrome", "firefox", "safari", "ie", or "other")
- *
- * @example
- * ```ts
- * const browser = extractBrowserFromUserAgent(navigator.userAgent);
- * // browser: "chrome"
- * ```
- */
+Extracts browser information from a User-Agent string
+
+@param ua - The User-Agent string to analyze
+@returns The detected browser type ("edge", "chrome", "firefox", "safari", "ie", or "other")
+
+@example
+```ts
+const browser = extractBrowserFromUserAgent(navigator.userAgent);
+// browser: "chrome"
+```
+*/
 export const extractBrowserFromUserAgent = (
   ua: string,
 ): SimplifiedUserAgentInfoBrowser => {

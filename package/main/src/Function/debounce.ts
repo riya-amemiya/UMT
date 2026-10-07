@@ -1,6 +1,6 @@
 /**
- * Options for the debounce function.
- */
+Options for the debounce function.
+*/
 export interface DebounceOptions {
   /**
   Whether to invoke on the leading edge of the timeout.
@@ -13,8 +13,8 @@ export interface DebounceOptions {
 }
 
 /**
- * A debounced function with a cancel method.
- */
+A debounced function with a cancel method.
+*/
 export interface DebouncedFunction<
   T extends (...arguments_: unknown[]) => unknown,
 > {
@@ -26,25 +26,25 @@ export interface DebouncedFunction<
 }
 
 /**
- * Creates a debounced version of the provided function that delays
- * invoking it until after the specified wait time has elapsed since
- * the last time the debounced function was called.
- *
- * @param function_ - The function to debounce.
- * @param wait - The number of milliseconds to delay.
- * @param options - Configuration for leading/trailing invocation.
- * @param options.leading - If true, invoke on the leading edge.
- * @param options.trailing - If true, invoke on the trailing edge (default).
- * @returns The debounced function with a cancel method.
- *
- * @example
- * ```typescript
- * const debounced = debounce(() => console.log("called"), 300);
- * debounced();
- * debounced();
- * debounced.cancel();
- * ```
- */
+Creates a debounced version of the provided function that delays
+invoking it until after the specified wait time has elapsed since
+the last time the debounced function was called.
+
+@param function_ - The function to debounce.
+@param wait - The number of milliseconds to delay.
+@param options - Configuration for leading/trailing invocation.
+@param options.leading - If true, invoke on the leading edge.
+@param options.trailing - If true, invoke on the trailing edge (default).
+@returns The debounced function with a cancel method.
+
+@example
+```typescript
+const debounced = debounce(() => console.log("called"), 300);
+debounced();
+debounced();
+debounced.cancel();
+```
+*/
 export const debounce = <T extends (...arguments_: unknown[]) => unknown>(
   function_: T,
   wait: number,

@@ -3,12 +3,12 @@ import { gcd } from "./gcd";
 import { multiplication } from "./multiplication";
 import { valueSwap } from "./valueSwap";
 /**
- * Least Common Multiple (LCM)
- * @param  {number} x First number
- * @param  {number} y Second number
- * @returns number The LCM of x and y
- * @example lcm(2, 3); // 6
- */
+Least Common Multiple (LCM)
+@param  {number} x First number
+@param  {number} y Second number
+@returns number The LCM of x and y
+@example lcm(2, 3); // 6
+*/
 export const lcm = (x: number, y: number) => {
   if (x === 0 || y === 0) {
     return 0;

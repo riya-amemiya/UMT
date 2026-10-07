@@ -1,15 +1,15 @@
 import { isPlainObject } from "@/Object/isPlainObject";
 
 /**
- * Creates a new object with the same properties as the given object, but with
- * the prototype polluting properties removed recursively.
- * ("__proto__", "constructor", "prototype" are excluded from nested objects
- * and objects inside arrays)
- *
- * @param object - The object to remove the prototype polluting properties from.
- * @returns A new object with the prototype polluting properties removed
- * recursively.
- */
+Creates a new object with the same properties as the given object, but with
+the prototype polluting properties removed recursively.
+("__proto__", "constructor", "prototype" are excluded from nested objects
+and objects inside arrays)
+
+@param object - The object to remove the prototype polluting properties from.
+@returns A new object with the prototype polluting properties removed
+recursively.
+*/
 export const removePrototypeDeep = <T extends Record<string, unknown>>(
   object: T,
 ): T => {

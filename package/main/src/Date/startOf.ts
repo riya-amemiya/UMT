@@ -9,16 +9,16 @@ export type DateBoundaryUnit =
   | "year";
 
 /**
- * Returns a new Date set to the start of the given unit.
- * Week start is Sunday (day 0).
- *
- * @param {Date} date - Base date
- * @param {DateBoundaryUnit} unit - Boundary unit
- * @returns {Date} A new Date at the start of the specified unit
- * @example
- * startOf(new Date("2025-04-15T10:30:00"), "day"); // 2025-04-15T00:00:00
- * startOf(new Date("2025-04-15"), "month"); // 2025-04-01T00:00:00
- */
+Returns a new Date set to the start of the given unit.
+Week start is Sunday (day 0).
+
+@param {Date} date - Base date
+@param {DateBoundaryUnit} unit - Boundary unit
+@returns {Date} A new Date at the start of the specified unit
+@example
+startOf(new Date("2025-04-15T10:30:00"), "day"); // 2025-04-15T00:00:00
+startOf(new Date("2025-04-15"), "month"); // 2025-04-01T00:00:00
+*/
 export const startOf = (date: Date, unit: DateBoundaryUnit): Date => {
   const result = new Date(date);
   switch (unit) {

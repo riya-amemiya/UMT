@@ -1,16 +1,16 @@
 import type { DateBoundaryUnit } from "./startOf";
 
 /**
- * Returns a new Date set to the end of the given unit.
- * Week ends on Saturday at 23:59:59.999.
- *
- * @param {Date} date - Base date
- * @param {DateBoundaryUnit} unit - Boundary unit
- * @returns {Date} A new Date at the end of the specified unit
- * @example
- * endOf(new Date("2025-04-15T10:30:00"), "day"); // 2025-04-15T23:59:59.999
- * endOf(new Date("2025-04-15"), "month"); // 2025-04-30T23:59:59.999
- */
+Returns a new Date set to the end of the given unit.
+Week ends on Saturday at 23:59:59.999.
+
+@param {Date} date - Base date
+@param {DateBoundaryUnit} unit - Boundary unit
+@returns {Date} A new Date at the end of the specified unit
+@example
+endOf(new Date("2025-04-15T10:30:00"), "day"); // 2025-04-15T23:59:59.999
+endOf(new Date("2025-04-15"), "month"); // 2025-04-30T23:59:59.999
+*/
 export const endOf = (date: Date, unit: DateBoundaryUnit): Date => {
   const result = new Date(date);
   switch (unit) {

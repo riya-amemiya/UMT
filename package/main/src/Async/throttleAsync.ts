@@ -4,18 +4,18 @@ export interface ThrottledAsyncFunction<A extends unknown[], R> {
 }
 
 /**
- * Creates a throttled async function. Coalesces concurrent calls within the
- * `wait` window so only one underlying invocation runs; all callers in the
- * window receive the same result.
- *
- * @template A - Argument tuple type
- * @template R - Resolved value type
- * @param {(...args: A) => Promise<R>} function_ - Async function to throttle
- * @param {number} wait - Window length in milliseconds
- * @returns {ThrottledAsyncFunction<A, R>} Throttled wrapper with cancel support
- * @example
- * const fetchUser = throttleAsync(loadUser, 1000);
- */
+Creates a throttled async function. Coalesces concurrent calls within the
+`wait` window so only one underlying invocation runs; all callers in the
+window receive the same result.
+
+@template A - Argument tuple type
+@template R - Resolved value type
+@param {(...args: A) => Promise<R>} function_ - Async function to throttle
+@param {number} wait - Window length in milliseconds
+@returns {ThrottledAsyncFunction<A, R>} Throttled wrapper with cancel support
+@example
+const fetchUser = throttleAsync(loadUser, 1000);
+*/
 export const throttleAsync = <A extends unknown[], R>(
   function_: (...arguments_: A) => Promise<R>,
   wait: number,

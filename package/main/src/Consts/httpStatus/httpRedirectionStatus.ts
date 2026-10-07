@@ -1,9 +1,9 @@
 import type { GetEnumValues } from "$/enum/getEnumValues";
 
 /**
- * HTTP 3xx Redirection Status Codes
- * Indicates that further action needs to be taken by the user agent in order to fulfill the request
- */
+HTTP 3xx Redirection Status Codes
+Indicates that further action needs to be taken by the user agent in order to fulfill the request
+*/
 export const HttpRedirectionStatus = {
   /**
   Multiple options for the resource from which the client may choose

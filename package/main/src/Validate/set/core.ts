@@ -1,13 +1,13 @@
 /**
- * Set validation core module
- * Provides validation for `Set` instances. The validator can optionally
- * delegate to a per-element validator, mirroring how `arrayOf()` validates
- * each element of an array.
- *
- * The function is named `setOf` to avoid conflicting with the top-level
- * `Object` module's `set` runtime helper, and mirrors `arrayOf()` for
- * consistency.
- */
+Set validation core module
+Provides validation for `Set` instances. The validator can optionally
+delegate to a per-element validator, mirroring how `arrayOf()` validates
+each element of an array.
+
+The function is named `setOf` to avoid conflicting with the top-level
+`Object` module's `set` runtime helper, and mirrors `arrayOf()` for
+consistency.
+*/
 
 import {
   attachStandard,
@@ -22,14 +22,14 @@ export type SetExtractValidatedType<V> = V extends (value: never) => {
   : never;
 
 /**
- * Creates a Set validator. When a per-element validator is supplied, every
- * element of the set must satisfy it; iteration short-circuits at the first
- * failure and surfaces the failing message.
- * @template IV - Validator for set elements
- * @param {IV} [itemValidator] - Validator applied to every element
- * @param {string} [message] - Custom error message for type validation
- * @returns {Function} - Validator function for Set instances
- */
+Creates a Set validator. When a per-element validator is supplied, every
+element of the set must satisfy it; iteration short-circuits at the first
+failure and surfaces the failing message.
+@template IV - Validator for set elements
+@param {IV} [itemValidator] - Validator applied to every element
+@param {string} [message] - Custom error message for type validation
+@returns {Function} - Validator function for Set instances
+*/
 export const setOf = <
   // biome-ignore lint/suspicious/noExplicitAny: validator inputs vary
   IV extends (value: any) => ValidateCoreReturnType<unknown> = (
@@ -38,14 +38,14 @@ export const setOf = <
   T = SetExtractValidatedType<IV>,
 >(
   itemValidator?: IV,
-  message?: string,
+  message = "",
 ): ((value: Set<T>) => ValidateCoreReturnType<Set<T>>) &
   StandardSchemaV1<Set<T>, Set<T>> => {
   const setValidator = (value: Set<T>): ValidateCoreReturnType<Set<T>> => {
     if (!(value instanceof Set)) {
       return {
         validate: false,
-        message: message ?? "",
+        message,
         type: value,
       };
     }

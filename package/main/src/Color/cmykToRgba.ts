@@ -5,15 +5,15 @@ import { roundOf } from "@/Math/roundOf";
 import { subtract } from "@/Math/subtract";
 
 /**
- * Convert CMYK color values to RGBA color space
- * @param {number} c Cyan percentage (0-100)
- * @param {number} m Magenta percentage (0-100)
- * @param {number} y Yellow percentage (0-100)
- * @param {number} k Key/Black percentage (0-100)
- * @param {number} a Alpha value (0-1)
- * @returns {Object} RGBA values (r, g, b as 0-255, a as 0-1)
- * @example cmykToRgba(100, 100, 0, 60.78) // { r: 0, g: 0, b: 100, a: 1 }
- */
+Convert CMYK color values to RGBA color space
+@param {number} c Cyan percentage (0-100)
+@param {number} m Magenta percentage (0-100)
+@param {number} y Yellow percentage (0-100)
+@param {number} k Key/Black percentage (0-100)
+@param {number} a Alpha value (0-1)
+@returns {Object} RGBA values (r, g, b as 0-255, a as 0-1)
+@example cmykToRgba(100, 100, 0, 60.78) // { r: 0, g: 0, b: 100, a: 1 }
+*/
 export const cmykToRgba = (
   c: number,
   m: number,

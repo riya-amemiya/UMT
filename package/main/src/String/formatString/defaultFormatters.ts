@@ -1,27 +1,27 @@
 import type { Formatter } from "$/string/formatString/formatter";
 
 /**
- * Built-in formatter functions for formatString.
- *
- * Each formatter takes a value and optional arguments, returning a formatted string.
- * Formatters are used with syntax like {value:formatterName} or {value:formatterName(arg1,arg2)}.
- *
- * Available formatters:
- * - upper: Convert to uppercase
- * - lower: Convert to lowercase
- * - currency: Format as currency with locale support
- * - date: Format dates with locale and format options
- * - time: Format time with locale support
- * - number: Format numbers with precision control
- * - plural: Choose singular/plural form based on count
- * - pad: Pad string with characters to specified length
- *
- * @example
- * // Usage in formatString
- * formatString("{name:upper}", { name: "alice" }) // → "ALICE"
- * formatString("{price:currency(ja-JP,JPY)}", { price: 1000 }) // → "￥1,000"
- * formatString("{count:plural(item,items)}", { count: 1 }) // → "item"
- */
+Built-in formatter functions for formatString.
+
+Each formatter takes a value and optional arguments, returning a formatted string.
+Formatters are used with syntax like {value:formatterName} or {value:formatterName(arg1,arg2)}.
+
+Available formatters:
+- upper: Convert to uppercase
+- lower: Convert to lowercase
+- currency: Format as currency with locale support
+- date: Format dates with locale and format options
+- time: Format time with locale support
+- number: Format numbers with precision control
+- plural: Choose singular/plural form based on count
+- pad: Pad string with characters to specified length
+
+@example
+// Usage in formatString
+formatString("{name:upper}", { name: "alice" }) // → "ALICE"
+formatString("{price:currency(ja-JP,JPY)}", { price: 1000 }) // → "￥1,000"
+formatString("{count:plural(item,items)}", { count: 1 }) // → "item"
+*/
 export const defaultFormatters: Record<string, Formatter> = {
   upper: (value) => String(value).toUpperCase(),
   lower: (value) => String(value).toLowerCase(),

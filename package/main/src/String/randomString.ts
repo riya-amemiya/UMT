@@ -1,9 +1,9 @@
 /**
- * Generates a random string.
- * @param char String of characters to use for generating random string
- * @param size Length of the random string
- * @returns Random string
- */
+Generates a random string.
+@param char String of characters to use for generating random string
+@param size Length of the random string
+@returns Random string
+*/
 export const randomString = (
   size = 8,
   char = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",

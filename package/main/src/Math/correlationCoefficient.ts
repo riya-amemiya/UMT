@@ -1,15 +1,15 @@
 import { average } from "./average";
 
 /**
- * Calculate the Pearson correlation coefficient between two arrays
- * @param x - First array of numbers
- * @param y - Second array of numbers
- * @returns Correlation coefficient (-1 to 1)
- * @example
- * correlationCoefficient([1, 2, 3, 4, 5], [2, 4, 6, 8, 10]); // 1 (perfect positive correlation)
- * correlationCoefficient([1, 2, 3, 4, 5], [5, 4, 3, 2, 1]); // -1 (perfect negative correlation)
- * correlationCoefficient([1, 2, 3, 4, 5], [1, 1, 1, 1, 1]); // 0 (no correlation)
- */
+Calculate the Pearson correlation coefficient between two arrays
+@param x - First array of numbers
+@param y - Second array of numbers
+@returns Correlation coefficient (-1 to 1)
+@example
+correlationCoefficient([1, 2, 3, 4, 5], [2, 4, 6, 8, 10]); // 1 (perfect positive correlation)
+correlationCoefficient([1, 2, 3, 4, 5], [5, 4, 3, 2, 1]); // -1 (perfect negative correlation)
+correlationCoefficient([1, 2, 3, 4, 5], [1, 1, 1, 1, 1]); // 0 (no correlation)
+*/
 export const correlationCoefficient = (x: number[], y: number[]): number => {
   if (x.length === 0) {
     return Number.NaN;

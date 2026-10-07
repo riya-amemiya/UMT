@@ -1,11 +1,11 @@
 /**
- * Template literal validation core module
- * Provides a validator that checks whether a string matches a template
- * literal pattern composed of string fragments and primitive validators
- * (string / number / boolean / bigint). The runtime check is performed by
- * an auto-generated regular expression assembled from the parts, while the
- * inferred type is the corresponding TypeScript template literal type.
- */
+Template literal validation core module
+Provides a validator that checks whether a string matches a template
+literal pattern composed of string fragments and primitive validators
+(string / number / boolean / bigint). The runtime check is performed by
+an auto-generated regular expression assembled from the parts, while the
+inferred type is the corresponding TypeScript template literal type.
+*/
 
 import {
   attachStandard,
@@ -17,10 +17,10 @@ import type { ValidateType } from "@/Validate/type";
 export type TemplateLiteralAnyValidator = (value?: any) => { type: unknown };
 
 /**
- * Allowed parts of a template literal definition. Each element is either a
- * string literal that must appear verbatim, or a primitive validator whose
- * accepted shape is converted to a regex fragment at construction time.
- */
+Allowed parts of a template literal definition. Each element is either a
+string literal that must appear verbatim, or a primitive validator whose
+accepted shape is converted to a regex fragment at construction time.
+*/
 export type TemplateLiteralPart = string | TemplateLiteralAnyValidator;
 
 export type ExtractValidatorTag<V> = V extends (value: never) => {
@@ -44,10 +44,10 @@ export type PartToTemplate<P> = P extends string
   : TagToTemplate<ExtractValidatorTag<P>>;
 
 /**
- * Builds the template literal type produced by joining `Parts`. Each part is
- * mapped to either its literal string value or to the runtime type that the
- * corresponding validator accepts.
- */
+Builds the template literal type produced by joining `Parts`. Each part is
+mapped to either its literal string value or to the runtime type that the
+corresponding validator accepts.
+*/
 export type BuildTemplateLiteral<Parts extends readonly TemplateLiteralPart[]> =
   Parts extends readonly [
     infer Head,
@@ -57,11 +57,11 @@ export type BuildTemplateLiteral<Parts extends readonly TemplateLiteralPart[]> =
     : "";
 
 /**
- * Return type produced by a `templateLiteral` validator. Preserves the
- * literal template string type through the `type` field so consumers like
- * `union()`, `intersection()`, and `SchemaToInterface` can recover it.
- * @template T - The inferred template literal type
- */
+Return type produced by a `templateLiteral` validator. Preserves the
+literal template string type through the `type` field so consumers like
+`union()`, `intersection()`, and `SchemaToInterface` can recover it.
+@template T - The inferred template literal type
+*/
 export interface TemplateLiteralReturnType<T extends string> {
   validate: boolean;
   message: string;
@@ -99,20 +99,20 @@ const detectValidatorTag = (
 };
 
 /**
- * Creates a validator that checks whether a value matches a template literal
- * pattern. Each part is either a string literal that must appear verbatim or
- * a primitive validator (string / number / boolean / bigint) that contributes
- * a regex fragment.
- * @template Parts - Tuple describing the template parts
- * @param {Parts} parts - Tuple of literal strings and primitive validators
- * @param {string} [message] - Custom error message for validation failure
- * @returns {Function} - Validator function for template literal strings
- */
+Creates a validator that checks whether a value matches a template literal
+pattern. Each part is either a string literal that must appear verbatim or
+a primitive validator (string / number / boolean / bigint) that contributes
+a regex fragment.
+@template Parts - Tuple describing the template parts
+@param {Parts} parts - Tuple of literal strings and primitive validators
+@param {string} [message] - Custom error message for validation failure
+@returns {Function} - Validator function for template literal strings
+*/
 export const templateLiteral = <
   const Parts extends readonly TemplateLiteralPart[],
 >(
   parts: Parts,
-  message?: string,
+  message = "",
 ): ((
   value: BuildTemplateLiteral<Parts>,
 ) => TemplateLiteralReturnType<BuildTemplateLiteral<Parts>>) &
@@ -136,7 +136,7 @@ export const templateLiteral = <
     if (typeof value !== "string" || !regex.test(value)) {
       return {
         validate: false,
-        message: message ?? "",
+        message,
         type: value,
       };
     }

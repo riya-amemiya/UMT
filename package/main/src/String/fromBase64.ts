@@ -1,10 +1,10 @@
 import { unwrap } from "@/Tool/unwrap";
 
 /**
- * Converts Base64 to string
- * @param {string} base64String - Base64 encoded string
- * @returns Decoded string from Base64
- */
+Converts Base64 to string
+@param {string} base64String - Base64 encoded string
+@returns Decoded string from Base64
+*/
 export const fromBase64 = (base64String: string): string => {
   return base64String === ""
     ? ""

@@ -3,16 +3,16 @@ export type SettledResult<T> =
   | { status: "rejected"; reason: unknown };
 
 /**
- * Awaits all promises and returns their settled results, with an optional
- * concurrency limit applied during execution.
- *
- * @template T - Resolved value type
- * @param {Iterable<Promise<T> | (() => Promise<T>)>} tasks - Promises or thunks
- * @param {number} [limit] - Maximum concurrent in-flight tasks; unlimited when omitted
- * @returns {Promise<SettledResult<T>[]>} Settled results in input order
- * @example
- * await pSettled([Promise.resolve(1), Promise.reject(new Error("x"))]);
- */
+Awaits all promises and returns their settled results, with an optional
+concurrency limit applied during execution.
+
+@template T - Resolved value type
+@param {Iterable<Promise<T> | (() => Promise<T>)>} tasks - Promises or thunks
+@param {number} [limit] - Maximum concurrent in-flight tasks; unlimited when omitted
+@returns {Promise<SettledResult<T>[]>} Settled results in input order
+@example
+await pSettled([Promise.resolve(1), Promise.reject(new Error("x"))]);
+*/
 export const pSettled = <T>(
   tasks: Iterable<Promise<T> | (() => Promise<T>)>,
   limit?: number,

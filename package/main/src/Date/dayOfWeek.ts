@@ -5,12 +5,12 @@ import { newDateInt } from "@/Date/new";
 import { now } from "@/Date/now";
 
 /**
- * Get the day of the week
- * @param properties Object containing year, month, and day
- * @param timeDifference Time difference from UTC in hours (default: 9)
- * @returns A number representing the day of the week (0 = Sunday, 6 = Saturday)
- * @example dayOfWeek({ year: 2000, mon: 1, day: 1 });
- */
+Get the day of the week
+@param properties Object containing year, month, and day
+@param timeDifference Time difference from UTC in hours (default: 9)
+@returns A number representing the day of the week (0 = Sunday, 6 = Saturday)
+@example dayOfWeek({ year: 2000, mon: 1, day: 1 });
+*/
 export const dayOfWeek = <T extends MonTypeInt>(
   properties?: {
     year?: number;

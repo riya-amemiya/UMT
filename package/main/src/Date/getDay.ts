@@ -9,15 +9,15 @@ export interface DayList {
 }
 
 /**
- * Convert a number to a day of the week in the specified language
- * @param day Number representing the day (0-6, where 0 is Sunday)
- * @param lang Language code ('de', 'ko', 'en', 'ja', 'fr')
- * @returns Day of the week string in the specified language
- * @example
- * getDay(0); // Returns "日" (default is Japanese)
- * getDay(0, "en"); // Returns "Sun"
- * getDay(1, "fr"); // Returns "Lun"
- */
+Convert a number to a day of the week in the specified language
+@param day Number representing the day (0-6, where 0 is Sunday)
+@param lang Language code ('de', 'ko', 'en', 'ja', 'fr')
+@returns Day of the week string in the specified language
+@example
+getDay(0); // Returns "日" (default is Japanese)
+getDay(0, "en"); // Returns "Sun"
+getDay(1, "fr"); // Returns "Lun"
+*/
 export const getDay = <T extends keyof DayList>(
   day: number,
   lang: T = "ja" as T,

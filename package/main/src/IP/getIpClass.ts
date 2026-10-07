@@ -1,8 +1,8 @@
 /**
- * Gets the IP address class (A, B, C, D, or E)
- * @param {string} ip - IPv4 address
- * @returns {string} IP class ('A', 'B', 'C', 'D', 'E', or empty string for invalid IP)
- */
+Gets the IP address class (A, B, C, D, or E)
+@param {string} ip - IPv4 address
+@returns {string} IP class ('A', 'B', 'C', 'D', 'E', or empty string for invalid IP)
+*/
 export const getIpClass = (ip: string): string => {
   if (!ip) {
     return "";

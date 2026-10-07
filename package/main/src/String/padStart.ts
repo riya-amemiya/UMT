@@ -1,16 +1,16 @@
 /**
- * Pads the start of a string with another string until the target length is reached
- *
- * @param {string} string_ - The original string to pad
- * @param {number} targetLength - The target length after padding
- * @param {string} padString - The string to use for padding
- * @returns {string} The padded string
- * @example
- * ```typescript
- * padStart("123", 5, "0");     // Returns: "00123"
- * padStart("abc", 8, "def");   // Returns: "defdeabc"
- * ```
- */
+Pads the start of a string with another string until the target length is reached
+
+@param {string} string_ - The original string to pad
+@param {number} targetLength - The target length after padding
+@param {string} padString - The string to use for padding
+@returns {string} The padded string
+@example
+```typescript
+padStart("123", 5, "0");     // Returns: "00123"
+padStart("abc", 8, "def");   // Returns: "defdeabc"
+```
+*/
 export const padStart = (
   string_: string,
   targetLength: number,

@@ -8,16 +8,16 @@ import type { MonthsWithout31Days } from "$/date/monthsWithout31Days";
 import type { MonthsWithout31DaysInt } from "$/date/monthsWithout31DaysInt";
 import { dayOfWeek } from "@/Date/dayOfWeek";
 /**
- * Get day of the week
- * @param properties - Date in various formats (year, month, day)
- * @param timeDifference - Time zone difference in hours (default: 9)
- * @returns Day of the week (0-6, where 0 is Sunday)
- * @example dayOfWeekSimple("2000-01-01");
- * dayOfWeekSimple("2000:01:01");
- * dayOfWeekSimple("2000/01/01");
- * dayOfWeekSimple({ year: 2000, mon: 1, day: 1 });
- * dayOfWeekSimple(new Date(2000, 0, 1));
- */
+Get day of the week
+@param properties - Date in various formats (year, month, day)
+@param timeDifference - Time zone difference in hours (default: 9)
+@returns Day of the week (0-6, where 0 is Sunday)
+@example dayOfWeekSimple("2000-01-01");
+dayOfWeekSimple("2000:01:01");
+dayOfWeekSimple("2000/01/01");
+dayOfWeekSimple({ year: 2000, mon: 1, day: 1 });
+dayOfWeekSimple(new Date(2000, 0, 1));
+*/
 function dayOfWeekSimple<
   T extends MonthsWith31DaysInt | MonthsWithout31DaysInt,
 >(

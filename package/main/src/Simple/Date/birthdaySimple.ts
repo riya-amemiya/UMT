@@ -14,16 +14,16 @@ export type BIRTHDAYSIMPLE = <T extends MonType>(
   timeDifference?: HoursTypeInt,
 ) => number;
 /**
- * Calculate age from birthdate
- * @param birthdays - Birthday date in various formats
- * @param timeDifference - Time zone difference in hours (default: 9)
- * @returns Age in years
- * @example birthdaySimple("2000-01-01");
- * birthdaySimple("2000:01:01");
- * birthdaySimple("2000/01/01");
- * birthdaySimple({ year: 2000, mon: 1, day: 1 });
- * birthdaySimple(new Date(2000, 0, 1));
- */
+Calculate age from birthdate
+@param birthdays - Birthday date in various formats
+@param timeDifference - Time zone difference in hours (default: 9)
+@returns Age in years
+@example birthdaySimple("2000-01-01");
+birthdaySimple("2000:01:01");
+birthdaySimple("2000/01/01");
+birthdaySimple({ year: 2000, mon: 1, day: 1 });
+birthdaySimple(new Date(2000, 0, 1));
+*/
 export const birthdaySimple = (<T extends MonType>(
   birthdays:
     | `${number}-${T}-${DayType<T>}`

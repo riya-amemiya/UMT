@@ -1,11 +1,11 @@
 import { getDecimalLength } from "@/Math/getDecimalLength";
 
 /**
- * Returns the sum of an array of numbers
- * @param {number[]} x Array of numbers
- * @returns Sum of the array elements
- * @example sum([1, 2, 3]); // 6
- */
+Returns the sum of an array of numbers
+@param {number[]} x Array of numbers
+@returns Sum of the array elements
+@example sum([1, 2, 3]); // 6
+*/
 export const sum = (x: number[]): number => {
   const length = x.length;
 

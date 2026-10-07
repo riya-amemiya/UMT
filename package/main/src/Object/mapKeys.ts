@@ -1,27 +1,27 @@
 /**
- * Creates an object with the same values as the given object, but
- * with keys transformed by the provided function.
- *
- * @param object - The source object.
- * @param function_ - The function invoked per key. Receives (value, key).
- * @returns A new object with transformed keys.
- *
- * @remarks
- * **Prototype pollution warning:** This function does not filter out
- * prototype-polluting keys (`__proto__`, `constructor`, `prototype`).
- * If processing user-controlled input, sanitize with the appropriate
- * `removePrototype*` helper before calling this function:
- * - `removePrototype` — shallow sanitization of a single object
- * - `removePrototypeDeep` — recursive sanitization of a single object (for deeply nested data)
- * - `removePrototypeMap` — shallow sanitization of an array of objects
- * - `removePrototypeMapDeep` — recursive sanitization of an array of objects (for deeply nested data)
- *
- * @example
- * ```typescript
- * mapKeys({ a: 1, b: 2 }, (_value, key) => key.toUpperCase());
- * // { A: 1, B: 2 }
- * ```
- */
+Creates an object with the same values as the given object, but
+with keys transformed by the provided function.
+
+@param object - The source object.
+@param function_ - The function invoked per key. Receives (value, key).
+@returns A new object with transformed keys.
+
+@remarks
+**Prototype pollution warning:** This function does not filter out
+prototype-polluting keys (`__proto__`, `constructor`, `prototype`).
+If processing user-controlled input, sanitize with the appropriate
+`removePrototype*` helper before calling this function:
+- `removePrototype` — shallow sanitization of a single object
+- `removePrototypeDeep` — recursive sanitization of a single object (for deeply nested data)
+- `removePrototypeMap` — shallow sanitization of an array of objects
+- `removePrototypeMapDeep` — recursive sanitization of an array of objects (for deeply nested data)
+
+@example
+```typescript
+mapKeys({ a: 1, b: 2 }, (_value, key) => key.toUpperCase());
+// { A: 1, B: 2 }
+```
+*/
 export const mapKeys = <T extends Record<string, unknown>>(
   object: T,
   function_: (value: T[keyof T], key: string) => string,

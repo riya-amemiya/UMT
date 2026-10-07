@@ -1,11 +1,11 @@
 import { BASE58_ALPHABET } from "./constants";
 
 /**
- * Encodes a string or Uint8Array to Base58 format
- * @param {string | Uint8Array} input - The input to encode
- * @returns {string} Base58 encoded string
- * @example encodeBase58("Hello"); // "9Ajdvzr"
- */
+Encodes a string or Uint8Array to Base58 format
+@param {string | Uint8Array} input - The input to encode
+@returns {string} Base58 encoded string
+@example encodeBase58("Hello"); // "9Ajdvzr"
+*/
 export const encodeBase58 = (input: string | Uint8Array): string => {
   const alphabet = BASE58_ALPHABET;
   const bytes =

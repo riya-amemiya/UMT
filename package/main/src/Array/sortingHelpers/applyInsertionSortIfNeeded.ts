@@ -3,16 +3,16 @@ import { insertionSortRange } from "./insertionSortRange";
 import type { CompareFunction } from "$/array/compareFunction";
 
 /**
- * Checks if a partition is small enough to apply insertion sort and applies it if so.
- *
- * @template T The type of elements in the array.
- * @param {T[]} array The array containing the partition.
- * @param {number} low The starting index of the partition.
- * @param {number} high The ending index of the partition.
- * @param {CompareFunction<T>} compareFunction The function to compare elements.
- * @param {number} insertionSortThreshold The size threshold for switching to insertion sort.
- * @returns {boolean} True if insertion sort was applied, false otherwise.
- */
+Checks if a partition is small enough to apply insertion sort and applies it if so.
+
+@template T The type of elements in the array.
+@param {T[]} array The array containing the partition.
+@param {number} low The starting index of the partition.
+@param {number} high The ending index of the partition.
+@param {CompareFunction<T>} compareFunction The function to compare elements.
+@param {number} insertionSortThreshold The size threshold for switching to insertion sort.
+@returns {boolean} True if insertion sort was applied, false otherwise.
+*/
 export const applyInsertionSortIfNeeded = <T>(
   array: T[],
   low: number,

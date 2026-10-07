@@ -1,9 +1,9 @@
 /**
- * Map validation core module
- * Provides validation for `Map` instances. The validator can optionally
- * delegate to per-entry validators for keys and values, mirroring how
- * `arrayOf()` validates each element of an array.
- */
+Map validation core module
+Provides validation for `Map` instances. The validator can optionally
+delegate to per-entry validators for keys and values, mirroring how
+`arrayOf()` validates each element of an array.
+*/
 
 import {
   attachStandard,
@@ -18,17 +18,17 @@ export type MapExtractValidatedType<V> = V extends (value: never) => {
   : never;
 
 /**
- * Creates a Map validator. The validator can optionally accept per-entry key
- * and value validators that are applied to every entry of the map. When the
- * value-side validator is provided, the entry validators short-circuit on the
- * first failure and surface the failing message, mirroring `arrayOf()`.
- * @template KV - Validator for the map key
- * @template VV - Validator for the map value
- * @param {KV} [keyValidator] - Validator applied to every key
- * @param {VV} [valueValidator] - Validator applied to every value
- * @param {string} [message] - Custom error message for type validation
- * @returns {Function} - Validator function for Map instances
- */
+Creates a Map validator. The validator can optionally accept per-entry key
+and value validators that are applied to every entry of the map. When the
+value-side validator is provided, the entry validators short-circuit on the
+first failure and surface the failing message, mirroring `arrayOf()`.
+@template KV - Validator for the map key
+@template VV - Validator for the map value
+@param {KV} [keyValidator] - Validator applied to every key
+@param {VV} [valueValidator] - Validator applied to every value
+@param {string} [message] - Custom error message for type validation
+@returns {Function} - Validator function for Map instances
+*/
 export const map = <
   // biome-ignore lint/suspicious/noExplicitAny: validator inputs vary
   KV extends (value: any) => ValidateCoreReturnType<unknown> = (
@@ -43,7 +43,7 @@ export const map = <
 >(
   keyValidator?: KV,
   valueValidator?: VV,
-  message?: string,
+  message = "",
 ): ((value: Map<K, V>) => ValidateCoreReturnType<Map<K, V>>) &
   StandardSchemaV1<Map<K, V>, Map<K, V>> => {
   const mapValidator = (
@@ -52,7 +52,7 @@ export const map = <
     if (!(value instanceof Map)) {
       return {
         validate: false,
-        message: message ?? "",
+        message,
         type: value,
       };
     }

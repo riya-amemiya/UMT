@@ -1,14 +1,14 @@
 import { ultraNumberSort } from "@/Array/ultraNumberSort";
 
 /**
- * Finds the most frequently occurring value(s) in an array
- * @param array - Array of numbers to find mode for
- * @returns Array of mode values (can be multiple values if there are ties)
- * @example
- * mode([1, 2, 2, 3, 3, 3]); // [3]
- * mode([1, 2, 2, 3, 3]); // [2, 3]
- * mode([1, 2, 3]); // [1, 2, 3]
- */
+Finds the most frequently occurring value(s) in an array
+@param array - Array of numbers to find mode for
+@returns Array of mode values (can be multiple values if there are ties)
+@example
+mode([1, 2, 2, 3, 3, 3]); // [3]
+mode([1, 2, 2, 3, 3]); // [2, 3]
+mode([1, 2, 3]); // [1, 2, 3]
+*/
 export const mode = (array: number[]): number[] => {
   if (array.length === 0) {
     return [];

@@ -1,8 +1,8 @@
 /**
- * Returns the maximum value from the input numbers
- * @param {number[]} number_ Array of numbers
- * @returns number Maximum value
- * @example max(1, 2, 3); // 3
- */
+Returns the maximum value from the input numbers
+@param {number[]} number_ Array of numbers
+@returns number Maximum value
+@example max(1, 2, 3); // 3
+*/
 export const max = (...number_: number[]) =>
   Reflect.apply(Math.max, null, number_);

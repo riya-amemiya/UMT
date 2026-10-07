@@ -1,9 +1,9 @@
 /**
- * instanceof validation core module
- * Provides a validator that checks whether a value is an instance of a
- * specific constructor, including subclasses. The validator is exported as
- * `instanceOf` because `instanceof` is a reserved keyword in JavaScript.
- */
+instanceof validation core module
+Provides a validator that checks whether a value is an instance of a
+specific constructor, including subclasses. The validator is exported as
+`instanceOf` because `instanceof` is a reserved keyword in JavaScript.
+*/
 
 import {
   attachStandard,
@@ -15,23 +15,23 @@ import type { Types, ValidateCoreReturnType } from "@/Validate/type";
 export type Constructor<T> = new (...arguments_: any[]) => T;
 
 /**
- * Creates a validator that checks whether a value is an instance of the given
- * constructor. Subclasses of the constructor satisfy the validator, matching
- * native `instanceof` semantics.
- * @template T - The instance type produced by the constructor
- * @param {Constructor<T>} classConstructor - Constructor whose instances are accepted
- * @param {string} [message] - Custom error message for validation failure
- * @returns {Function} - Validator function for instances of the constructor
- */
+Creates a validator that checks whether a value is an instance of the given
+constructor. Subclasses of the constructor satisfy the validator, matching
+native `instanceof` semantics.
+@template T - The instance type produced by the constructor
+@param {Constructor<T>} classConstructor - Constructor whose instances are accepted
+@param {string} [message] - Custom error message for validation failure
+@returns {Function} - Validator function for instances of the constructor
+*/
 export const instanceOf = <T>(
   classConstructor: Constructor<T>,
-  message?: string,
+  message = "",
 ): ((value: T) => ValidateCoreReturnType<T>) & StandardSchemaV1<T, T> => {
   const validator = (value: T): ValidateCoreReturnType<T> => {
     if (!(value instanceof classConstructor)) {
       return {
         validate: false,
-        message: message ?? "",
+        message,
         type: value as unknown as Types<T>,
       };
     }
