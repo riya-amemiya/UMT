@@ -1,9 +1,9 @@
 import type { GetEnumValues } from "$/enum/getEnumValues";
 
 /**
- * HTTP 2xx Success Status Codes
- * Indicates that the client's request was successfully received, understood, and accepted
- */
+HTTP 2xx Success Status Codes
+Indicates that the client's request was successfully received, understood, and accepted
+*/
 export const HttpSuccessStatus = {
   /**
   Request has succeeded

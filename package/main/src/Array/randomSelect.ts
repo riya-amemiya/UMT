@@ -1,13 +1,13 @@
 import { shuffle } from "./shuffle";
 
 /**
- * Randomly selects a specified number of elements from an array
- * @param array Source array
- * @param count Number of elements to select
- * @param allowDuplicates Whether to allow duplicate selections (default: false)
- * @returns Array of randomly selected elements
- * @example randomSelect([1, 2, 3, 4, 5], 2); // [3, 1]
- */
+Randomly selects a specified number of elements from an array
+@param array Source array
+@param count Number of elements to select
+@param allowDuplicates Whether to allow duplicate selections (default: false)
+@returns Array of randomly selected elements
+@example randomSelect([1, 2, 3, 4, 5], 2); // [3, 1]
+*/
 export const randomSelect = <T>(
   array: T[],
   count: number,

@@ -5,11 +5,11 @@ import { roundOf } from "@/Math/roundOf";
 import { subtract } from "@/Math/subtract";
 
 /**
- * Convert RGBA color values to HSLA color space
- * @param rgba Object containing r, g, b values (0-255) and optional a (0-1)
- * @returns {Object} HSLA values (h as 0-360, s and l as 0-100, a as 0-1)
- * @example rgbaToHsla({ r: 100, g: 100, b: 100, a: 1 }); // { h: 0, s: 0, l: 39.22, a: 1 }
- */
+Convert RGBA color values to HSLA color space
+@param rgba Object containing r, g, b values (0-255) and optional a (0-1)
+@returns {Object} HSLA values (h as 0-360, s and l as 0-100, a as 0-1)
+@example rgbaToHsla({ r: 100, g: 100, b: 100, a: 1 }); // { h: 0, s: 0, l: 39.22, a: 1 }
+*/
 export const rgbaToHsla = ({
   r,
   g,

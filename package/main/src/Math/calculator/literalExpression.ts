@@ -3,13 +3,13 @@ import { calculatorCore } from "./core";
 import { division } from "@/Math/division";
 import { gcd } from "@/Math/gcd";
 /**
- * Solves literal equations with variables
- * @param {string} x - Equation string
- * @returns {string} Solution result
- * @example literalExpression("x+1=2"); // "1"
- * @example literalExpression("2x=6"); // "3"
- * @example literalExpression("3x+2=8"); // "2"
- */
+Solves literal equations with variables
+@param {string} x - Equation string
+@returns {string} Solution result
+@example literalExpression("x+1=2"); // "1"
+@example literalExpression("2x=6"); // "3"
+@example literalExpression("3x+2=8"); // "2"
+*/
 export const literalExpression = (x: string): string => {
   // Handle invalid equations like x=x
   const sides = x.split("=");

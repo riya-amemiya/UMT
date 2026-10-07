@@ -12,17 +12,17 @@ import type { MonTypeInt } from "$/date/monTypeInt";
 import type { MonTypeZero } from "$/date/monTypeZero";
 
 /**
- * Create a new Date object from numeric values
- * @param year - The year
- * @param mon - The month (1-12)
- * @param day - The day of the month
- * @param hours - Hours offset from UTC (defaults to local timezone offset)
- * @param minutes - Minutes (0-59)
- * @param seconds - Seconds (0-59)
- * @param milliseconds - Milliseconds (0-999)
- * @returns Date object
- * @example newDateInt(2021, 1, 1); // Creates date for January 1, 2021
- */
+Create a new Date object from numeric values
+@param year - The year
+@param mon - The month (1-12)
+@param day - The day of the month
+@param hours - Hours offset from UTC (defaults to local timezone offset)
+@param minutes - Minutes (0-59)
+@param seconds - Seconds (0-59)
+@param milliseconds - Milliseconds (0-999)
+@returns Date object
+@example newDateInt(2021, 1, 1); // Creates date for January 1, 2021
+*/
 export const newDateInt = <T extends MonTypeInt>(
   year: number,
   mon: T,
@@ -45,16 +45,16 @@ export const newDateInt = <T extends MonTypeInt>(
 };
 
 /**
- * Create a new Date object from a string date and time components
- * @param date - Date string in format "YYYY-MM-DD"
- * @param hours - Hours in "HH" format (00-23)
- * @param minutes - Minutes in "mm" format (00-59)
- * @param seconds - Seconds in "ss" format (00-59)
- * @param milliseconds - Milliseconds in "mmm" format (000-999)
- * @param timeDifference - Timezone offset in "HH" format (e.g., "09" for UTC+9)
- * @returns Date object
- * @example newDateString("2021-01-01"); // Creates date for January 1, 2021 00:00:00
- */
+Create a new Date object from a string date and time components
+@param date - Date string in format "YYYY-MM-DD"
+@param hours - Hours in "HH" format (00-23)
+@param minutes - Minutes in "mm" format (00-59)
+@param seconds - Seconds in "ss" format (00-59)
+@param milliseconds - Milliseconds in "mmm" format (000-999)
+@param timeDifference - Timezone offset in "HH" format (e.g., "09" for UTC+9)
+@returns Date object
+@example newDateString("2021-01-01"); // Creates date for January 1, 2021 00:00:00
+*/
 export const newDateString = <T extends MonTypeZero>(
   date: `${number}-${T}-${DayType<T>}`,
   hours: HoursType = "00",

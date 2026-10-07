@@ -10,11 +10,11 @@ export interface UndefinedReturn {
 }
 
 /**
- * Optional validator augmented with a reference to the wrapped validator,
- * used by `required()` to unwrap optional layers when rebuilding a shape
- * @template T - The type of value the wrapped validator expects
- * @template R - The return type of the wrapped validator (preserved so the inner type tag flows through)
- */
+Optional validator augmented with a reference to the wrapped validator,
+used by `required()` to unwrap optional layers when rebuilding a shape
+@template T - The type of value the wrapped validator expects
+@template R - The return type of the wrapped validator (preserved so the inner type tag flows through)
+*/
 export type OptionalValidator<
   T,
   R extends { type: unknown; message: string; validate: boolean } = {
@@ -28,12 +28,12 @@ export type OptionalValidator<
 };
 
 /**
- * Wraps a validator to accept undefined values
- * @template T - The type of value the wrapped validator expects
- * @template R - The return type of the wrapped validator (preserved so the inner type tag flows through)
- * @param {Function} validator - Validator function to make optional
- * @returns {OptionalValidator<T, R>} - Validator that passes for undefined or delegates to the wrapped validator
- */
+Wraps a validator to accept undefined values
+@template T - The type of value the wrapped validator expects
+@template R - The return type of the wrapped validator (preserved so the inner type tag flows through)
+@param {Function} validator - Validator function to make optional
+@returns {OptionalValidator<T, R>} - Validator that passes for undefined or delegates to the wrapped validator
+*/
 export const optional = <
   T,
   R extends { type: unknown; message: string; validate: boolean },

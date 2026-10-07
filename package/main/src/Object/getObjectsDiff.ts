@@ -1,39 +1,39 @@
 import { isPlainObject } from "@/Object/isPlainObject";
 
 /**
- * Extract key-value pairs that appear in exactly one input object.
- *
- * A key-value pair is considered "shared" if the same key with the same value (===)
- * exists in two or more objects. Only pairs unique to a single object are returned.
- * When all values for a key are plain objects, the function recurses to find
- * the diff subset. If the recursive result is empty, the key is excluded.
- * When multiple unique pairs share the same key (different values),
- * the last value wins.
- *
- * @template T - Type of the input objects.
- * @param {T} object - The first object.
- * @param {...Record<string, unknown>[]} objects - Additional objects to compare.
- * @returns {Partial<T>} Object containing only key-value pairs unique to one input.
- *
- * @remarks
- * **Prototype pollution warning:** This function does not filter out
- * prototype-polluting keys (`__proto__`, `constructor`, `prototype`).
- * If processing user-controlled input, sanitize with the appropriate
- * `removePrototype*` helper before calling this function:
- * - `removePrototype` — shallow sanitization of a single object
- * - `removePrototypeDeep` — recursive sanitization of a single object (for deeply nested data)
- * - `removePrototypeMap` — shallow sanitization of an array of objects
- * - `removePrototypeMapDeep` — recursive sanitization of an array of objects (for deeply nested data)
- *
- * @example
- * ```typescript
- * getObjectsDiff({ a: 1, b: 2 }, { b: 2, c: 3 });
- * // { a: 1, c: 3 }
- *
- * getObjectsDiff({ a: { b: 1, c: 2 }, d: 3 }, { a: { b: 1, d: 4 }, d: 3 });
- * // { a: { c: 2, d: 4 } }
- * ```
- */
+Extract key-value pairs that appear in exactly one input object.
+
+A key-value pair is considered "shared" if the same key with the same value (===)
+exists in two or more objects. Only pairs unique to a single object are returned.
+When all values for a key are plain objects, the function recurses to find
+the diff subset. If the recursive result is empty, the key is excluded.
+When multiple unique pairs share the same key (different values),
+the last value wins.
+
+@template T - Type of the input objects.
+@param {T} object - The first object.
+@param {...Record<string, unknown>[]} objects - Additional objects to compare.
+@returns {Partial<T>} Object containing only key-value pairs unique to one input.
+
+@remarks
+**Prototype pollution warning:** This function does not filter out
+prototype-polluting keys (`__proto__`, `constructor`, `prototype`).
+If processing user-controlled input, sanitize with the appropriate
+`removePrototype*` helper before calling this function:
+- `removePrototype` — shallow sanitization of a single object
+- `removePrototypeDeep` — recursive sanitization of a single object (for deeply nested data)
+- `removePrototypeMap` — shallow sanitization of an array of objects
+- `removePrototypeMapDeep` — recursive sanitization of an array of objects (for deeply nested data)
+
+@example
+```typescript
+getObjectsDiff({ a: 1, b: 2 }, { b: 2, c: 3 });
+// { a: 1, c: 3 }
+
+getObjectsDiff({ a: { b: 1, c: 2 }, d: 3 }, { a: { b: 1, d: 4 }, d: 3 });
+// { a: { c: 2, d: 4 } }
+```
+*/
 export const getObjectsDiff = <T extends Record<string, unknown>>(
   object: T,
   ...objects: Record<string, unknown>[]

@@ -1,14 +1,14 @@
 import { getDecimalLength } from "./getDecimalLength";
 
 /**
- * Performs division without floating point errors
- * @param  {number} x Dividend
- * @param  {number} y Divisor
- * @param  {boolean} [isFloor=true] If true, returns quotient; if false, returns [quotient, remainder]
- * @returns {number | number[]} Division result
- * @example division(0.1, 0.2); // 0.5
- * @example division(10, 3, false); // [3, 1]
- */
+Performs division without floating point errors
+@param  {number} x Dividend
+@param  {number} y Divisor
+@param  {boolean} [isFloor=true] If true, returns quotient; if false, returns [quotient, remainder]
+@returns {number | number[]} Division result
+@example division(0.1, 0.2); // 0.5
+@example division(10, 3, false); // [3, 1]
+*/
 export const division = <T extends boolean = true>(
   x: number,
   y: number,

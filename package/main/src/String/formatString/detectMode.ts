@@ -3,24 +3,24 @@ import type { FormatOptions } from "$/string/formatString/formatOptions";
 import type { FormatValue } from "$/string/formatString/formatValue";
 
 /**
- * Detects whether formatString should use indexed or named mode based on arguments.
- *
- * Named mode: First argument is a non-array object
- * Indexed mode: Arguments are treated as array values
- *
- * @param dataOrFirstValue - First argument (object for named mode, value for indexed mode)
- * @param optionsOrSecondValue - Second argument (options for named mode, value for indexed mode)
- * @param restValues - Remaining arguments for indexed mode
- * @returns Object containing data and options for formatting
- *
- * @example
- * // Named mode detection
- * detectMode({ name: "Alice" }) // → { data: { name: "Alice" }, options: {} }
- *
- * @example
- * // Indexed mode detection
- * detectMode("first", "second") // → { data: ["first", "second"], options: {} }
- */
+Detects whether formatString should use indexed or named mode based on arguments.
+
+Named mode: First argument is a non-array object
+Indexed mode: Arguments are treated as array values
+
+@param dataOrFirstValue - First argument (object for named mode, value for indexed mode)
+@param optionsOrSecondValue - Second argument (options for named mode, value for indexed mode)
+@param restValues - Remaining arguments for indexed mode
+@returns Object containing data and options for formatting
+
+@example
+// Named mode detection
+detectMode({ name: "Alice" }) // → { data: { name: "Alice" }, options: {} }
+
+@example
+// Indexed mode detection
+detectMode("first", "second") // → { data: ["first", "second"], options: {} }
+*/
 export function detectMode(
   dataOrFirstValue: FormatData | FormatValue | undefined,
   optionsOrSecondValue: FormatOptions | FormatValue | undefined,

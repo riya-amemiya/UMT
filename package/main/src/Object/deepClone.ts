@@ -1,6 +1,6 @@
 /**
- * Recursively clones a value.
- */
+Recursively clones a value.
+*/
 const cloneValue = (value: unknown, depth: number): unknown => {
   if (value === null || typeof value !== "object") {
     return value;
@@ -48,29 +48,29 @@ const cloneValue = (value: unknown, depth: number): unknown => {
 };
 
 /**
- * Creates a deep clone of the given value.
- *
- * @param value - The value to deep clone.
- * @returns A deep clone of the input value.
- *
- * @example
- * ```typescript
- * const original = { a: 1, b: { c: 2 } };
- * const cloned = deepClone(original);
- * cloned.b.c = 99;
- * original.b.c; // still 2
- * ```
- *
- * @remarks
- * **Prototype pollution warning:** This function does not filter out
- * prototype-polluting keys (`__proto__`, `constructor`, `prototype`).
- * If processing user-controlled input, sanitize with the appropriate
- * `removePrototype*` helper before calling this function:
- * - `removePrototype` — shallow sanitization of a single object
- * - `removePrototypeDeep` — recursive sanitization of a single object (for deeply nested data)
- * - `removePrototypeMap` — shallow sanitization of an array of objects
- * - `removePrototypeMapDeep` — recursive sanitization of an array of objects (for deeply nested data)
- */
+Creates a deep clone of the given value.
+
+@param value - The value to deep clone.
+@returns A deep clone of the input value.
+
+@example
+```typescript
+const original = { a: 1, b: { c: 2 } };
+const cloned = deepClone(original);
+cloned.b.c = 99;
+original.b.c; // still 2
+```
+
+@remarks
+**Prototype pollution warning:** This function does not filter out
+prototype-polluting keys (`__proto__`, `constructor`, `prototype`).
+If processing user-controlled input, sanitize with the appropriate
+`removePrototype*` helper before calling this function:
+- `removePrototype` — shallow sanitization of a single object
+- `removePrototypeDeep` — recursive sanitization of a single object (for deeply nested data)
+- `removePrototypeMap` — shallow sanitization of an array of objects
+- `removePrototypeMapDeep` — recursive sanitization of an array of objects (for deeply nested data)
+*/
 export const deepClone = <T>(value: T): T => {
   return value === null || typeof value !== "object"
     ? value

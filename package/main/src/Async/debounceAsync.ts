@@ -4,18 +4,18 @@ export interface DebouncedAsyncFunction<A extends unknown[], R> {
 }
 
 /**
- * Creates a debounced async function. Subsequent calls within `wait` ms reset
- * the timer and share a single resolution; the latest arguments win.
- *
- * @template A - Argument tuple type
- * @template R - Resolved value type
- * @param {(...args: A) => Promise<R>} function_ - Async function to debounce
- * @param {number} wait - Debounce window in milliseconds
- * @returns {DebouncedAsyncFunction<A, R>} Debounced wrapper with cancel support
- * @example
- * const search = debounceAsync(query, 300);
- * await search("foo");
- */
+Creates a debounced async function. Subsequent calls within `wait` ms reset
+the timer and share a single resolution; the latest arguments win.
+
+@template A - Argument tuple type
+@template R - Resolved value type
+@param {(...args: A) => Promise<R>} function_ - Async function to debounce
+@param {number} wait - Debounce window in milliseconds
+@returns {DebouncedAsyncFunction<A, R>} Debounced wrapper with cancel support
+@example
+const search = debounceAsync(query, 300);
+await search("foo");
+*/
 export const debounceAsync = <A extends unknown[], R>(
   function_: (...arguments_: A) => Promise<R>,
   wait: number,

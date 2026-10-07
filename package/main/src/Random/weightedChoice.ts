@@ -4,15 +4,15 @@ export interface WeightedItem<T> {
 }
 
 /**
- * Returns a random element using cumulative weights and binary search.
- * Items with non-positive weights are skipped from the pool.
- *
- * @template T - Element type
- * @param {readonly WeightedItem<T>[]} items - Items with non-negative weights
- * @returns {T} A randomly selected element
- * @example
- * weightedChoice([{ value: "a", weight: 1 }, { value: "b", weight: 4 }]);
- */
+Returns a random element using cumulative weights and binary search.
+Items with non-positive weights are skipped from the pool.
+
+@template T - Element type
+@param {readonly WeightedItem<T>[]} items - Items with non-negative weights
+@returns {T} A randomly selected element
+@example
+weightedChoice([{ value: "a", weight: 1 }, { value: "b", weight: 4 }]);
+*/
 export const weightedChoice = <T>(items: readonly WeightedItem<T>[]): T => {
   const cumulative: number[] = [];
   let total = 0;

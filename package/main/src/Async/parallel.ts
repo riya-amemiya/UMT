@@ -1,12 +1,12 @@
 /**
- * Executes async functions in parallel with a concurrency limit
- * @param {number} limit - Maximum number of concurrent executions
- * @param {T[]} items - The items to process
- * @param {(item: T, index: number) => Promise<U>} function_ - The async function to apply to each item
- * @returns {Promise<U[]>} Results in the same order as the input items
- * @example
- * const results = await parallel(2, [1, 2, 3], async (n) => n * 2);
- */
+Executes async functions in parallel with a concurrency limit
+@param {number} limit - Maximum number of concurrent executions
+@param {T[]} items - The items to process
+@param {(item: T, index: number) => Promise<U>} function_ - The async function to apply to each item
+@returns {Promise<U[]>} Results in the same order as the input items
+@example
+const results = await parallel(2, [1, 2, 3], async (n) => n * 2);
+*/
 export const parallel = <T, U>(
   limit: number,
   items: T[],

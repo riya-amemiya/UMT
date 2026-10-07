@@ -1,10 +1,10 @@
 /**
- * Calculates the Levenshtein distance between two strings
- * Returns the minimum number of single-character edits (insertions, deletions, or substitutions)
- * @param string1 - First string to compare
- * @param string2 - Second string to compare
- * @returns The Levenshtein distance
- */
+Calculates the Levenshtein distance between two strings
+Returns the minimum number of single-character edits (insertions, deletions, or substitutions)
+@param string1 - First string to compare
+@param string2 - Second string to compare
+@returns The Levenshtein distance
+*/
 export const levenshteinDistance = (
   string1: string,
   string2: string,

@@ -4,22 +4,22 @@ import { multiplication } from "./multiplication";
 import { roundOf } from "./roundOf";
 import { subtract } from "./subtract";
 /**
- * Solves a system of linear equations using Gaussian elimination
- * @param {number[][]} coefficients Matrix of coefficients
- * @param {number[]} constants Vector of constants
- * @returns {number[]} Solution vector
- * @example
- * // Solves the system:
- * // x + y = 4
- * // x + 2y = 10
- * solveEquation([
- *   [1, 1],
- *   [1, 2]
- * ], [4, 10]); // returns [-2, 6]
- * @description
- * Uses Gaussian elimination with partial pivoting to solve a system of linear equations.
- * The solution is rounded to 1 decimal place.
- */
+Solves a system of linear equations using Gaussian elimination
+@param {number[][]} coefficients Matrix of coefficients
+@param {number[]} constants Vector of constants
+@returns {number[]} Solution vector
+@example
+// Solves the system:
+// x + y = 4
+// x + 2y = 10
+solveEquation([
+  [1, 1],
+  [1, 2]
+], [4, 10]); // returns [-2, 6]
+@description
+Uses Gaussian elimination with partial pivoting to solve a system of linear equations.
+The solution is rounded to 1 decimal place.
+*/
 export const solveEquation = (
   coefficients: number[][],
   constants: number[],

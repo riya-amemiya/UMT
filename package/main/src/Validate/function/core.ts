@@ -1,15 +1,15 @@
 /**
- * Function validation core module
- * Provides a validator for function values along with an `implement()`
- * helper that wraps a concrete function with runtime validation of its
- * inputs and output.
- *
- * The runtime validator only enforces that the value is a function, since
- * argument and return-value contracts can only be checked when the function
- * is actually invoked. Use `.implement()` (or call the validator's
- * `implement` property directly) to create a wrapped function that asserts
- * the schema on every call.
- */
+Function validation core module
+Provides a validator for function values along with an `implement()`
+helper that wraps a concrete function with runtime validation of its
+inputs and output.
+
+The runtime validator only enforces that the value is a function, since
+argument and return-value contracts can only be checked when the function
+is actually invoked. Use `.implement()` (or call the validator's
+`implement` property directly) to create a wrapped function that asserts
+the schema on every call.
+*/
 
 import {
   attachStandard,
@@ -39,10 +39,10 @@ export type InferOutput<Output> = Output extends FunctionAnyValidator
     any;
 
 /**
- * Function schema definition. `input` describes positional parameters and
- * `output` describes the return type. Both are optional; when omitted the
- * validator only enforces that the value is callable.
- */
+Function schema definition. `input` describes positional parameters and
+`output` describes the return type. Both are optional; when omitted the
+validator only enforces that the value is callable.
+*/
 export interface FunctionSchema {
   input?: readonly FunctionAnyValidator[];
   output?: FunctionAnyValidator;
@@ -52,21 +52,21 @@ export type ExtractInput<S> = S extends { input: infer I } ? I : undefined;
 export type ExtractOutput<S> = S extends { output: infer O } ? O : undefined;
 
 /**
- * Inferred function signature from a `FunctionSchema`. Used by callers via
- * `SchemaToInterface` and as the return type of `implement()`.
- * @template Inputs - Tuple of validators describing positional parameters
- * @template Output - Validator describing the return value
- */
+Inferred function signature from a `FunctionSchema`. Used by callers via
+`SchemaToInterface` and as the return type of `implement()`.
+@template Inputs - Tuple of validators describing positional parameters
+@template Output - Validator describing the return value
+*/
 export type InferFunction<Inputs, Output> = (
   ...arguments_: InferInputs<Inputs>
 ) => InferOutput<Output>;
 
 /**
- * Validator return type. Carries the inferred function signature through
- * the `type` field so `SchemaToInterface` can recover it.
- * @template Inputs - Tuple of validators describing positional parameters
- * @template Output - Validator describing the return value
- */
+Validator return type. Carries the inferred function signature through
+the `type` field so `SchemaToInterface` can recover it.
+@template Inputs - Tuple of validators describing positional parameters
+@template Output - Validator describing the return value
+*/
 export interface FunctionReturnType<Inputs, Output> {
   validate: boolean;
   message: string;
@@ -74,11 +74,11 @@ export interface FunctionReturnType<Inputs, Output> {
 }
 
 /**
- * Validator value enriched with an `implement()` method that returns a
- * runtime-checked wrapper of a concrete function matching the schema.
- * @template Inputs - Tuple of validators describing positional parameters
- * @template Output - Validator describing the return value
- */
+Validator value enriched with an `implement()` method that returns a
+runtime-checked wrapper of a concrete function matching the schema.
+@template Inputs - Tuple of validators describing positional parameters
+@template Output - Validator describing the return value
+*/
 export interface FunctionValidator<Inputs, Output> {
   (value: InferFunction<Inputs, Output>): FunctionReturnType<Inputs, Output>;
   implement: (
@@ -87,14 +87,14 @@ export interface FunctionValidator<Inputs, Output> {
 }
 
 /**
- * Creates a function validator. When invoked the validator only checks that
- * the value is callable; use `.implement()` on the returned validator to
- * obtain a runtime-checked wrapper that asserts the schema for each call.
- * @template S - Function schema type, captured for input/output inference
- * @param {S} [schema] - Function schema definition
- * @param {string} [message] - Custom error message for type validation
- * @returns {FunctionValidator} - Validator augmented with `implement()`
- */
+Creates a function validator. When invoked the validator only checks that
+the value is callable; use `.implement()` on the returned validator to
+obtain a runtime-checked wrapper that asserts the schema for each call.
+@template S - Function schema type, captured for input/output inference
+@param {S} [schema] - Function schema definition
+@param {string} [message] - Custom error message for type validation
+@returns {FunctionValidator} - Validator augmented with `implement()`
+*/
 
 // eslint-disable-next-line unicorn/name-replacements -- public API name, renaming would be a breaking change
 export const func = <const S extends FunctionSchema = FunctionSchema>(

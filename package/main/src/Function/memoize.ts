@@ -1,6 +1,6 @@
 /**
- * Options for the memoize function.
- */
+Options for the memoize function.
+*/
 export interface MemoizeOptions<K> {
   /**
   Maximum number of entries to store in the cache.
@@ -13,8 +13,8 @@ export interface MemoizeOptions<K> {
 }
 
 /**
- * A memoized function with an exposed cache.
- */
+A memoized function with an exposed cache.
+*/
 export interface MemoizedFunction<A extends unknown[], R, K = unknown> {
   (...arguments_: A): R;
   /**
@@ -24,23 +24,23 @@ export interface MemoizedFunction<A extends unknown[], R, K = unknown> {
 }
 
 /**
- * Creates a memoized version of the provided function. Results are
- * cached in a Map keyed by the first argument (or a custom resolver).
- *
- * @param function_ - The function to memoize.
- * @param options - Configuration for cache behavior.
- * @param options.maxSize - Maximum cache entries before evicting the oldest.
- * @param options.resolver - Custom key resolver function.
- * @returns The memoized function with an exposed cache property.
- *
- * @example
- * ```typescript
- * const memoized = memoize((n: number) => n * 2);
- * memoized(5); // 10 (computed)
- * memoized(5); // 10 (cached)
- * memoized.cache.size; // 1
- * ```
- */
+Creates a memoized version of the provided function. Results are
+cached in a Map keyed by the first argument (or a custom resolver).
+
+@param function_ - The function to memoize.
+@param options - Configuration for cache behavior.
+@param options.maxSize - Maximum cache entries before evicting the oldest.
+@param options.resolver - Custom key resolver function.
+@returns The memoized function with an exposed cache property.
+
+@example
+```typescript
+const memoized = memoize((n: number) => n * 2);
+memoized(5); // 10 (computed)
+memoized(5); // 10 (cached)
+memoized.cache.size; // 1
+```
+*/
 export const memoize = <A extends unknown[], R, K = unknown>(
   function_: (...arguments_: A) => R,
   options: MemoizeOptions<K> = {},

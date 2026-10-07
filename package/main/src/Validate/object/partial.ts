@@ -1,9 +1,9 @@
 /**
- * Object validation - partial
- * Returns a new object validator where every key is wrapped in `optional()`,
- * mirroring `Partial<T>` at the type level so consumers see all properties as
- * optional.
- */
+Object validation - partial
+Returns a new object validator where every key is wrapped in `optional()`,
+mirroring `Partial<T>` at the type level so consumers see all properties as
+optional.
+*/
 
 import {
   type InferObject,
@@ -28,13 +28,13 @@ export type PartialShape<T extends ObjectShape> = {
 };
 
 /**
- * Wraps every property validator of `validator` with `optional()`. Validators
- * that are already optional are kept as-is so the wrapper stays idempotent.
- * @template T - Original object shape
- * @param {ObjectValidator<T>} validator - Source object validator
- * @param {string} [message] - Custom error message for the new validator
- * @returns {ObjectValidator<PartialShape<T>>} - New validator where every key accepts undefined
- */
+Wraps every property validator of `validator` with `optional()`. Validators
+that are already optional are kept as-is so the wrapper stays idempotent.
+@template T - Original object shape
+@param {ObjectValidator<T>} validator - Source object validator
+@param {string} [message] - Custom error message for the new validator
+@returns {ObjectValidator<PartialShape<T>>} - New validator where every key accepts undefined
+*/
 export const partial = <T extends ObjectShape>(
   validator: ObjectValidator<T>,
   message?: string,

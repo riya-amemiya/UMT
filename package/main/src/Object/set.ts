@@ -1,23 +1,23 @@
 import { pathSegments } from "./pathSegments";
 
 /**
- * Sets a value at a deeply nested path on an object, mutating it.
- * Creates intermediate objects as needed.
- *
- * @template T - Type of the source object
- * @param {T} object - Target object (mutated)
- * @param {string | string[]} path - Dot-separated string or path segments array
- * @param {unknown} value - Value to assign at the path
- * @returns {T} The same object reference, for chaining
- *
- * @remarks
- * **Prototype pollution warning:** This function does not filter out
- * prototype-polluting keys (`__proto__`, `constructor`, `prototype`).
- * Sanitize user-controlled paths before calling.
- *
- * @example
- * set({}, "a.b.c", 1); // { a: { b: { c: 1 } } }
- */
+Sets a value at a deeply nested path on an object, mutating it.
+Creates intermediate objects as needed.
+
+@template T - Type of the source object
+@param {T} object - Target object (mutated)
+@param {string | string[]} path - Dot-separated string or path segments array
+@param {unknown} value - Value to assign at the path
+@returns {T} The same object reference, for chaining
+
+@remarks
+**Prototype pollution warning:** This function does not filter out
+prototype-polluting keys (`__proto__`, `constructor`, `prototype`).
+Sanitize user-controlled paths before calling.
+
+@example
+set({}, "a.b.c", 1); // { a: { b: { c: 1 } } }
+*/
 export const set = <T extends object>(
   object: T,
   path: string | string[],

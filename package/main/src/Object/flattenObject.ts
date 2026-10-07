@@ -1,15 +1,15 @@
 import { isPlainObject } from "./isPlainObject";
 
 /**
- * Recursively flattens a nested plain object into a single-level object
- * keyed by joined paths. Arrays and non-plain objects are kept as-is.
- *
- * @param {Record<string, unknown>} object - Source nested object
- * @param {string} [separator="."] - Separator used to join path segments
- * @returns {Record<string, unknown>} A flat object
- * @example
- * flattenObject({ a: { b: { c: 1 } }, d: 2 }); // { "a.b.c": 1, d: 2 }
- */
+Recursively flattens a nested plain object into a single-level object
+keyed by joined paths. Arrays and non-plain objects are kept as-is.
+
+@param {Record<string, unknown>} object - Source nested object
+@param {string} [separator="."] - Separator used to join path segments
+@returns {Record<string, unknown>} A flat object
+@example
+flattenObject({ a: { b: { c: 1 } }, d: 2 }); // { "a.b.c": 1, d: 2 }
+*/
 export const flattenObject = <T extends Record<string, unknown>>(
   object: T,
   separator = ".",

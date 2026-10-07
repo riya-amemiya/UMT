@@ -1,9 +1,9 @@
 /**
- * Binary search implementation
- * @param array A sorted array of numbers
- * @param target The value to search for
- * @returns The index of the target value in the array, or -1 if not found
- */
+Binary search implementation
+@param array A sorted array of numbers
+@param target The value to search for
+@returns The index of the target value in the array, or -1 if not found
+*/
 export const binarySearch = (array: number[], target: number): number => {
   let left = 0;
   let right = array.length - 1;

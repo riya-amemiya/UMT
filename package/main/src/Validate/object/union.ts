@@ -20,10 +20,10 @@ export type UnionExtractValidatedType<V> = V extends (value: never) => {
   : never;
 
 /**
- * Creates a union validator that passes if any of the given validators pass
- * @param validators - Validator functions to compose as a union (logical OR)
- * @returns {Function} - Validator that checks if the value matches any of the validators
- */
+Creates a union validator that passes if any of the given validators pass
+@param validators - Validator functions to compose as a union (logical OR)
+@returns {Function} - Validator that checks if the value matches any of the validators
+*/
 export const union = <
   Vs extends ((value: never) => ValidateCoreReturnType<unknown>)[],
 >(

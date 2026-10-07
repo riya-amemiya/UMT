@@ -4,15 +4,15 @@ import { multiplication } from "@/Math/multiplication";
 import { subtract } from "@/Math/subtract";
 
 /**
- * Generates an array of numbers with the specified length
- * @param length The length of the array
- * @param min The minimum value (default: 0)
- * @param max The maximum value (default: length - 1)
- * @param random Whether to generate random values (default: false)
- * @returns Array of numbers
- * @example generateNumberArray(5); // [0, 1, 2, 3, 4]
- * @example generateNumberArray(5, 10, 14); // [10, 11, 12, 13, 14]
- */
+Generates an array of numbers with the specified length
+@param length The length of the array
+@param min The minimum value (default: 0)
+@param max The maximum value (default: length - 1)
+@param random Whether to generate random values (default: false)
+@returns Array of numbers
+@example generateNumberArray(5); // [0, 1, 2, 3, 4]
+@example generateNumberArray(5, 10, 14); // [10, 11, 12, 13, 14]
+*/
 export const generateNumberArray = (
   length: number,
   min = 0,

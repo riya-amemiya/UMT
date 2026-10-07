@@ -1,7 +1,7 @@
 /**
- * Core validation module
- * Provides the base validation functionality used by all other validation modules
- */
+Core validation module
+Provides the base validation functionality used by all other validation modules
+*/
 
 import type {
   Types,
@@ -12,11 +12,11 @@ import type {
 const EMPTY_OPTION: ValidateReturnType<unknown>[] = [];
 
 /**
- * Creates a validator function that checks type and additional validation rules
- * @template T - The type of value to validate
- * @param {Types<T>} type - The expected type of the value
- * @returns {Function} - A validator function that accepts a value, options, and message
- */
+Creates a validator function that checks type and additional validation rules
+@template T - The type of value to validate
+@param {Types<T>} type - The expected type of the value
+@returns {Function} - A validator function that accepts a value, options, and message
+*/
 export const core = <T>(type: Types<T>) => {
   const success: ValidateCoreReturnType<T> = {
     validate: true,
@@ -26,12 +26,12 @@ export const core = <T>(type: Types<T>) => {
   return <O extends ValidateReturnType<T>[]>(
     value: T,
     option: O = EMPTY_OPTION as unknown as O,
-    message?: string,
+    message = "",
   ): ValidateCoreReturnType<T> => {
     if (typeof value !== type) {
       return {
         validate: false,
-        message: message ?? "",
+        message,
         type,
       };
     }

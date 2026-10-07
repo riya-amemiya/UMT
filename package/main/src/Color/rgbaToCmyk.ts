@@ -3,11 +3,11 @@ import { roundOf } from "@/Math/roundOf";
 import { subtract } from "@/Math/subtract";
 
 /**
- * Convert RGBA color to CMYK color model
- * @param rgba Object containing r, g, b values (0-255) and optional a (0-1)
- * @returns {Object} CMYK values (c, m, y, k as percentages 0-100) and alpha channel
- * @example rgbaToCmyk({ r: 0, g: 0, b: 0, a: 1 }); // { c: 0, m: 0, y: 0, k: 100, a: 1 }
- */
+Convert RGBA color to CMYK color model
+@param rgba Object containing r, g, b values (0-255) and optional a (0-1)
+@returns {Object} CMYK values (c, m, y, k as percentages 0-100) and alpha channel
+@example rgbaToCmyk({ r: 0, g: 0, b: 0, a: 1 }); // { c: 0, m: 0, y: 0, k: 100, a: 1 }
+*/
 export const rgbaToCmyk = ({
   r,
   g,

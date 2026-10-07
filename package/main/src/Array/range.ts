@@ -1,12 +1,12 @@
 /**
- * Generates an array of sequential numbers
- * @param start Starting number
- * @param end Ending number (if omitted, generates array from 0 to start)
- * @param step Step value (defaults to 1)
- * @returns Array of sequential numbers
- * @example range(5); // [0, 1, 2, 3, 4]
- * @example range(2, 10, 2); // [2, 4, 6, 8]
- */
+Generates an array of sequential numbers
+@param start Starting number
+@param end Ending number (if omitted, generates array from 0 to start)
+@param step Step value (defaults to 1)
+@returns Array of sequential numbers
+@example range(5); // [0, 1, 2, 3, 4]
+@example range(2, 10, 2); // [2, 4, 6, 8]
+*/
 const range = (start: number, end?: number, step = 1) => {
   if (step === 0) {
     return [];

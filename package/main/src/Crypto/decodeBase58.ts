@@ -6,11 +6,11 @@ const base58CharToIndex = new Map(
 );
 
 /**
- * Decodes a Base58 string to Uint8Array
- * @param {string} input - Base58 encoded string
- * @returns {Uint8Array} Decoded bytes
- * @example decodeBase58("9Ajdvzr"); // Uint8Array for "Hello"
- */
+Decodes a Base58 string to Uint8Array
+@param {string} input - Base58 encoded string
+@returns {Uint8Array} Decoded bytes
+@example decodeBase58("9Ajdvzr"); // Uint8Array for "Hello"
+*/
 export const decodeBase58 = (input: string): Uint8Array => {
   let bigNumber = 0n;
 

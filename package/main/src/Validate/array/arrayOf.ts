@@ -17,12 +17,12 @@ export type ArrayOfExtractValidatedType<V> = V extends (value: never) => {
   : never;
 
 /**
- * Creates an array validator that validates every element with a single validator
- * @template V - The validator function applied to each element (its return `type` field carries the element type)
- * @param {V} validator - Validator applied to each element (e.g. an object validator)
- * @param {string} [message] - Custom error message for array type validation
- * @returns {Function} - Validator function for arrays whose elements satisfy the given validator
- */
+Creates an array validator that validates every element with a single validator
+@template V - The validator function applied to each element (its return `type` field carries the element type)
+@param {V} validator - Validator applied to each element (e.g. an object validator)
+@param {string} [message] - Custom error message for array type validation
+@returns {Function} - Validator function for arrays whose elements satisfy the given validator
+*/
 export const arrayOf = <
   V extends (value: never) => {
     type: unknown;
@@ -31,7 +31,7 @@ export const arrayOf = <
   },
 >(
   validator: V,
-  message?: string,
+  message = "",
 ): ((
   values: ArrayOfExtractValidatedType<V>[],
 ) => ValidateCoreReturnType<ArrayOfExtractValidatedType<V>[]>) &
@@ -46,7 +46,7 @@ export const arrayOf = <
     if (!isArray(values)) {
       return {
         validate: false,
-        message: message ?? "",
+        message,
         type: values,
       };
     }

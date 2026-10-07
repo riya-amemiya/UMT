@@ -1,16 +1,16 @@
 /**
- * Removes specified characters from the start of a string
- *
- * @param {string} string_ - The input string to trim
- * @param {string} chars - Characters to remove from the start
- * @returns {string} A new string with specified characters removed from the start
- * @example
- * ```typescript
- * trimStartCharacters("!!!hello", "!"); // Returns: "hello"
- * trimStartCharacters("---123", "-");   // Returns: "123"
- * trimStartCharacters("abc123", "xyz"); // Returns: "abc123"
- * ```
- */
+Removes specified characters from the start of a string
+
+@param {string} string_ - The input string to trim
+@param {string} chars - Characters to remove from the start
+@returns {string} A new string with specified characters removed from the start
+@example
+```typescript
+trimStartCharacters("!!!hello", "!"); // Returns: "hello"
+trimStartCharacters("---123", "-");   // Returns: "123"
+trimStartCharacters("abc123", "xyz"); // Returns: "abc123"
+```
+*/
 export const trimStartCharacters = (string_: string, chars: string): string => {
   // Use Set for O(1) character lookups instead of O(m) string.includes()
   const charSet = new Set(chars);

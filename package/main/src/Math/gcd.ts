@@ -1,13 +1,13 @@
 import { isDouble } from "@/Validate/isDouble";
 
 /**
- * Greatest Common Divisor (GCD)
- * @param  {number} x First number
- * @param  {number} y Second number
- * @param  {number[]} z Additional numbers (optional)
- * @returns number The GCD of all input numbers
- * @example gcd(12, 18); // 6
- */
+Greatest Common Divisor (GCD)
+@param  {number} x First number
+@param  {number} y Second number
+@param  {number[]} z Additional numbers (optional)
+@returns number The GCD of all input numbers
+@example gcd(12, 18); // 6
+*/
 export const gcd = (x: number, y: number, ...z: number[]) => {
   // Handle decimal numbers by scaling them to integers
   const allNumbers = [x, y, ...z];

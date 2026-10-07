@@ -1,18 +1,18 @@
 /**
- * Curries a function.
- *
- * @param func - The function to curry.
- * @returns The curried function.
- *
- * @example
- * // Example with a function that adds three numbers
- * const add = (a: number, b: number, c: number) => a + b + c;
- * const curriedAdd = curry(add);
- *
- * console.log(curriedAdd(1)(2)(3)); // Output: 6
- * console.log(curriedAdd(1, 2)(3)); // Output: 6
- * console.log(curriedAdd(1, 2, 3)); // Output: 6
- */
+Curries a function.
+
+@param func - The function to curry.
+@returns The curried function.
+
+@example
+// Example with a function that adds three numbers
+const add = (a: number, b: number, c: number) => a + b + c;
+const curriedAdd = curry(add);
+
+console.log(curriedAdd(1)(2)(3)); // Output: 6
+console.log(curriedAdd(1, 2)(3)); // Output: 6
+console.log(curriedAdd(1, 2, 3)); // Output: 6
+*/
 export function curry<Result>(function_: () => Result): () => Result;
 export function curry<Argument1, Result>(
   function_: (argument1: Argument1) => Result,

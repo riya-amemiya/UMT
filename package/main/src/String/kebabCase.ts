@@ -1,8 +1,8 @@
 /**
- * Converts a string to kebab-case
- * @param str - The string to convert
- * @returns The kebab-case string
- */
+Converts a string to kebab-case
+@param str - The string to convert
+@returns The kebab-case string
+*/
 export const kebabCase = (string_: string): string => {
   return (
     string_

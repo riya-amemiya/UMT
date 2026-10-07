@@ -7,16 +7,16 @@ export interface ValidatedSortRange {
 }
 
 /**
- * Validates and adjusts the start and end indices for an operation on an array.
- * Ensures indices are within the bounds of the array.
- *
- * @template T The type of elements in the array.
- * @param {T[]} array The array.
- * @param {number} startIndex The desired starting index.
- * @param {number} endIndex The desired ending index.
- * @returns {ValidatedSortRange} An object containing the validated start index, end index,
- *                               and a boolean indicating if the operation should proceed on the range.
- */
+Validates and adjusts the start and end indices for an operation on an array.
+Ensures indices are within the bounds of the array.
+
+@template T The type of elements in the array.
+@param {T[]} array The array.
+@param {number} startIndex The desired starting index.
+@param {number} endIndex The desired ending index.
+@returns {ValidatedSortRange} An object containing the validated start index, end index,
+                              and a boolean indicating if the operation should proceed on the range.
+*/
 export const validateRange = <T>(
   array: T[],
   startIndex: number,

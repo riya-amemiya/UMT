@@ -1,21 +1,21 @@
 /**
- * Removes the minimum common leading whitespace from each line of the input.
- * Works as a plain function or as a tagged template literal.
- *
- * @param {string | TemplateStringsArray} string_ - Input string or template strings array
- * @param {...unknown[]} values - Interpolated values when used as a tag
- * @returns {string} Dedented string
- * @example
- * dedent(`
- *   line1
- *     line2
- * `); // "\nline1\n  line2\n"
- *
- * @example
- * dedent`
- *   value: ${1}
- * `; // "\nvalue: 1\n"
- */
+Removes the minimum common leading whitespace from each line of the input.
+Works as a plain function or as a tagged template literal.
+
+@param {string | TemplateStringsArray} string_ - Input string or template strings array
+@param {...unknown[]} values - Interpolated values when used as a tag
+@returns {string} Dedented string
+@example
+dedent(`
+  line1
+    line2
+`); // "\nline1\n  line2\n"
+
+@example
+dedent`
+  value: ${1}
+`; // "\nvalue: 1\n"
+*/
 export const dedent = (
   string_: string | TemplateStringsArray,
   ...values: unknown[]

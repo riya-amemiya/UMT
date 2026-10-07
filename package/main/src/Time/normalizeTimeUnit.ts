@@ -16,11 +16,11 @@ const TIME_UNIT_MAP: Record<
 } as const;
 
 /**
- * Normalize time unit.
- * @param unit Time unit
- * @param to "long" or "short"
- * @returns Normalized time unit
- */
+Normalize time unit.
+@param unit Time unit
+@param to "long" or "short"
+@returns Normalized time unit
+*/
 export function normalizeTimeUnit(
   unit: TimeUnit | TimeUnitShort,
   to: "long",

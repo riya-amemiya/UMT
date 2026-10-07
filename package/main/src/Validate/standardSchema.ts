@@ -1,18 +1,18 @@
 /**
- * Standard Schema V1 integration
- *
- * Defines the public Standard Schema V1 surface (https://standardschema.dev)
- * and exposes the `attachStandard()` helper used by every UMT validator
- * factory to advertise itself as a Standard Schema V1 implementation. The
- * `~standard` property added by `attachStandard()` lets external tools
- * (Zod-, Valibot-, ArkType-style ecosystems) consume UMT validators without
- * adapters.
- *
- * Biome's `noNamespace` lint rule forbids TypeScript namespaces, so the spec
- * is mirrored with flat interface/type names that remain structurally
- * compatible with the official `StandardSchemaV1` interface published by
- * `@standard-schema/spec`.
- */
+Standard Schema V1 integration
+
+Defines the public Standard Schema V1 surface (https://standardschema.dev)
+and exposes the `attachStandard()` helper used by every UMT validator
+factory to advertise itself as a Standard Schema V1 implementation. The
+`~standard` property added by `attachStandard()` lets external tools
+(Zod-, Valibot-, ArkType-style ecosystems) consume UMT validators without
+adapters.
+
+Biome's `noNamespace` lint rule forbids TypeScript namespaces, so the spec
+is mirrored with flat interface/type names that remain structurally
+compatible with the official `StandardSchemaV1` interface published by
+`@standard-schema/spec`.
+*/
 
 /**
 The Standard Schema V1 interface.
@@ -115,10 +115,10 @@ export type StandardSchemaV1InferOutput<
 > = NonNullable<Schema["~standard"]["types"]>["output"];
 
 /**
- * Vendor identifier used by all UMT validators when advertising Standard
- * Schema V1 compatibility. External tools may key off this value to attach
- * UMT-specific behavior.
- */
+Vendor identifier used by all UMT validators when advertising Standard
+Schema V1 compatibility. External tools may key off this value to attach
+UMT-specific behavior.
+*/
 export const STANDARD_SCHEMA_VENDOR = "umt";
 
 /**
@@ -131,24 +131,24 @@ export interface UmtValidatorResult {
 }
 
 /**
- * Attaches a Standard Schema V1 `~standard` property to a UMT validator
- * function in place. The validator's existing call signature, attached
- * helpers (such as `shape` on `object()` or `implement` on `func()`),
- * and return type are preserved untouched; only the `~standard` property is
- * added.
- *
- * Validation is delegated to the wrapped validator. On success the input
- * value is returned through the Standard Schema `value` field; on failure a
- * single issue carrying the validator's message is emitted. UMT validators
- * never transform their input, so `Input` and `Output` default to the same
- * type.
- *
- * @template Input - The input type advertised through `~standard.types`
- * @template Output - The output type advertised through `~standard.types`
- * @template F - The validator function being augmented
- * @param {F} validator - The validator function to augment
- * @returns {F & StandardSchemaV1<Input, Output>} The same function with `~standard` attached
- */
+Attaches a Standard Schema V1 `~standard` property to a UMT validator
+function in place. The validator's existing call signature, attached
+helpers (such as `shape` on `object()` or `implement` on `func()`),
+and return type are preserved untouched; only the `~standard` property is
+added.
+
+Validation is delegated to the wrapped validator. On success the input
+value is returned through the Standard Schema `value` field; on failure a
+single issue carrying the validator's message is emitted. UMT validators
+never transform their input, so `Input` and `Output` default to the same
+type.
+
+@template Input - The input type advertised through `~standard.types`
+@template Output - The output type advertised through `~standard.types`
+@template F - The validator function being augmented
+@param {F} validator - The validator function to augment
+@returns {F & StandardSchemaV1<Input, Output>} The same function with `~standard` attached
+*/
 export const attachStandard = <
   Input,
   Output = Input,

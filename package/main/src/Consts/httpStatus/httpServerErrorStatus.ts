@@ -1,9 +1,9 @@
 import type { GetEnumValues } from "$/enum/getEnumValues";
 
 /**
- * HTTP 5xx Server Error Status Codes
- * Indicates that the server failed to fulfill a valid request
- */
+HTTP 5xx Server Error Status Codes
+Indicates that the server failed to fulfill a valid request
+*/
 export const HttpServerErrorStatus = {
   /**
   Server encountered an unexpected condition that prevented it from fulfilling the request

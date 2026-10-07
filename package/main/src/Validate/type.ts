@@ -17,10 +17,10 @@ export type _Types2<T> = T extends undefined
 export type _Types3<T> = T extends bigint ? "bigint" : T;
 
 /**
- * Maps TypeScript types to their string literal representations
- * @template T - The type to map
- * @returns "string" for string, "number" for number, "boolean" for boolean, "bigint" for bigint, or the original type T otherwise
- */
+Maps TypeScript types to their string literal representations
+@template T - The type to map
+@returns "string" for string, "number" for number, "boolean" for boolean, "bigint" for bigint, or the original type T otherwise
+*/
 export type Types<T> = T extends string | number | boolean
   ? _Types<T>
   : T extends undefined | null
@@ -30,9 +30,9 @@ export type Types<T> = T extends string | number | boolean
       : T;
 
 /**
- * Core validation result type including validation status, message, and type information
- * @template T - The type being validated
- */
+Core validation result type including validation status, message, and type information
+@template T - The type being validated
+*/
 export interface ValidateCoreReturnType<T> {
   validate: boolean;
   message: string;
@@ -40,9 +40,9 @@ export interface ValidateCoreReturnType<T> {
 }
 
 /**
- * Extended validation result type including type information and validation function
- * @template T - The type being validated
- */
+Extended validation result type including type information and validation function
+@template T - The type being validated
+*/
 export interface ValidateReturnType<T> {
   type: Types<T>;
   validate: ValidateFunctionType<T>;
@@ -50,20 +50,20 @@ export interface ValidateReturnType<T> {
 }
 
 /**
- * Type for validation functions that take a value and return a boolean
- * @template T - The type of value to validate
- */
+Type for validation functions that take a value and return a boolean
+@template T - The type of value to validate
+*/
 export type ValidateFunctionType<T> = (value: T) => boolean;
 
 declare const LITERAL_BRAND: unique symbol;
 
 /**
- * Branded literal type used by validators (such as `oneOf`) that need to keep
- * a string literal verbatim through `ValidateType`. The brand prevents the
- * literal from colliding with reserved type tags like `"string"`, `"number"`,
- * or `"boolean"` when the same string also happens to name a primitive type.
- * @template T - The literal value preserved by the brand
- */
+Branded literal type used by validators (such as `oneOf`) that need to keep
+a string literal verbatim through `ValidateType`. The brand prevents the
+literal from colliding with reserved type tags like `"string"`, `"number"`,
+or `"boolean"` when the same string also happens to name a primitive type.
+@template T - The literal value preserved by the brand
+*/
 export type LiteralBrand<T extends string> = T & {
   readonly [LITERAL_BRAND]: T;
 };
@@ -96,10 +96,10 @@ export type _ValidateType3<T> = T extends "bigint"
         : T;
 
 /**
- * Maps string literal type names back to their TypeScript types
- * @template T - The string literal type name ("string", "number", "boolean", "bigint", "undefined", "null", "any", "unknown", "never")
- * @returns The corresponding TypeScript type, the unwrapped literal when `T` is a `LiteralBrand`, or the original type `T` when no tag matches
- */
+Maps string literal type names back to their TypeScript types
+@template T - The string literal type name ("string", "number", "boolean", "bigint", "undefined", "null", "any", "unknown", "never")
+@returns The corresponding TypeScript type, the unwrapped literal when `T` is a `LiteralBrand`, or the original type `T` when no tag matches
+*/
 export type ValidateType<T> =
   T extends LiteralBrand<infer L>
     ? L

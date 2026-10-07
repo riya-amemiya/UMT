@@ -1,6 +1,6 @@
 /**
- * A throttled function with a cancel method.
- */
+A throttled function with a cancel method.
+*/
 export interface ThrottledFunction<
   T extends (...arguments_: unknown[]) => unknown,
 > {
@@ -12,21 +12,21 @@ export interface ThrottledFunction<
 }
 
 /**
- * Creates a throttled version of the provided function that only
- * invokes it at most once per the specified wait period.
- *
- * @param function_ - The function to throttle.
- * @param wait - The minimum time between invocations in milliseconds.
- * @returns The throttled function with a cancel method.
- *
- * @example
- * ```typescript
- * const throttled = throttle(() => console.log("called"), 300);
- * throttled();
- * throttled();
- * throttled.cancel();
- * ```
- */
+Creates a throttled version of the provided function that only
+invokes it at most once per the specified wait period.
+
+@param function_ - The function to throttle.
+@param wait - The minimum time between invocations in milliseconds.
+@returns The throttled function with a cancel method.
+
+@example
+```typescript
+const throttled = throttle(() => console.log("called"), 300);
+throttled();
+throttled();
+throttled.cancel();
+```
+*/
 export const throttle = <T extends (...arguments_: unknown[]) => unknown>(
   function_: T,
   wait: number,

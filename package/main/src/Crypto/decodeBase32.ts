@@ -6,11 +6,11 @@ const base32CharToIndex = new Map(
 );
 
 /**
- * Decodes a Base32 string to Uint8Array
- * @param {string} input - Base32 encoded string
- * @returns {Uint8Array} Decoded bytes
- * @example decodeBase32("JBSWY3DP"); // Uint8Array for "Hello"
- */
+Decodes a Base32 string to Uint8Array
+@param {string} input - Base32 encoded string
+@returns {Uint8Array} Decoded bytes
+@example decodeBase32("JBSWY3DP"); // Uint8Array for "Hello"
+*/
 export const decodeBase32 = (input: string): Uint8Array => {
   const cleanedInput = input.replaceAll("=", "");
   const result: number[] = [];

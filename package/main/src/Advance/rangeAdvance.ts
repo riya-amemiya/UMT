@@ -1,17 +1,17 @@
 import { range } from "@/Array/range";
 
 /**
- * Returns an array of numbers that satisfy the conditional expression
- * @param start - Starting number
- * @param end - Ending number (exclusive)
- * @param conditionalExpression - Function that determines which numbers to include
- * @returns Array of numbers that satisfy the conditional expression
- *
- * @example
- * ```ts
- * rangeAdvance(1, 10, (number) => number % 2 === 0); // [2, 4, 6, 8]
- * ```
- */
+Returns an array of numbers that satisfy the conditional expression
+@param start - Starting number
+@param end - Ending number (exclusive)
+@param conditionalExpression - Function that determines which numbers to include
+@returns Array of numbers that satisfy the conditional expression
+
+@example
+```ts
+rangeAdvance(1, 10, (number) => number % 2 === 0); // [2, 4, 6, 8]
+```
+*/
 const rangeAdvance = (
   start: number,
   end: number,

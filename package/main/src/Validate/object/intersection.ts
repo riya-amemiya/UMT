@@ -32,10 +32,10 @@ export type IntersectValidatedTypes<Vs> = Vs extends readonly [
   : unknown;
 
 /**
- * Creates an intersection validator that passes only if all given validators pass
- * @param validators - Validator functions to compose as an intersection (logical AND)
- * @returns {Function} - Validator that checks if the value matches all validators
- */
+Creates an intersection validator that passes only if all given validators pass
+@param validators - Validator functions to compose as an intersection (logical AND)
+@returns {Function} - Validator that checks if the value matches all validators
+*/
 export const intersection = <
   Vs extends ((value: never) => ValidateCoreReturnType<unknown>)[],
 >(

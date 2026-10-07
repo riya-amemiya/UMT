@@ -1,6 +1,6 @@
 /**
- * Determines if the current environment is Node.js
- */
+Determines if the current environment is Node.js
+*/
 export const isNode = () => {
   try {
     // biome-ignore lint/correctness/noProcessGlobal: ignore

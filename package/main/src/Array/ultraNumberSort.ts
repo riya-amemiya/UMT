@@ -1,9 +1,9 @@
 /**
- * Ultra-fast sorting specifically optimized for number arrays
- * @param array Array of numbers to sort
- * @param ascending Sort in ascending order if true, descending if false
- * @returns Sorted array
- */
+Ultra-fast sorting specifically optimized for number arrays
+@param array Array of numbers to sort
+@param ascending Sort in ascending order if true, descending if false
+@returns Sorted array
+*/
 export const ultraNumberSort = (
   array: number[],
   ascending = true,
@@ -42,7 +42,7 @@ export const ultraNumberSort = (
         return handleNaNSort(result, ascending);
       }
     }
-    numericQuickSort(result, 0, length - 1, ascending);
+    numericQuickSort(result, length - 1, ascending);
     return result;
   }
 
@@ -95,7 +95,7 @@ export const ultraNumberSort = (
     if (hasNaN) {
       return handleNaNSort(result, ascending);
     }
-    numericQuickSort(result, 0, length - 1, ascending);
+    numericQuickSort(result, length - 1, ascending);
     return result;
   }
 
@@ -104,16 +104,16 @@ export const ultraNumberSort = (
 };
 
 /**
- * IEEE 754 Float64 radix sort
- * Works on all number types (integers and floats) by treating
- * the 64-bit IEEE 754 bit pattern as a sortable unsigned integer.
- *
- * Bit transformation:
- * - Positive numbers (sign bit 0): flip only the sign bit
- * - Negative numbers (sign bit 1): flip ALL 64 bits
- * After this transformation, unsigned integer comparison matches
- * the original floating-point numerical order.
- */
+IEEE 754 Float64 radix sort
+Works on all number types (integers and floats) by treating
+the 64-bit IEEE 754 bit pattern as a sortable unsigned integer.
+
+Bit transformation:
+- Positive numbers (sign bit 0): flip only the sign bit
+- Negative numbers (sign bit 1): flip ALL 64 bits
+After this transformation, unsigned integer comparison matches
+the original floating-point numerical order.
+*/
 const float64RadixSort = (
   array: number[],
   ascending: boolean,
@@ -285,8 +285,8 @@ const float64RadixSort = (
 };
 
 /**
- * Inline sort for 3 elements
- */
+Inline sort for 3 elements
+*/
 const inlineSort3 = (array: number[], ascending: boolean): void => {
   let a = array[0];
   let b = array[1];
@@ -333,8 +333,8 @@ const inlineSort3 = (array: number[], ascending: boolean): void => {
 };
 
 /**
- * Handle arrays with NaN values
- */
+Handle arrays with NaN values
+*/
 const handleNaNSort = (array: number[], ascending: boolean): number[] => {
   const valid: number[] = [];
   let nanCount = 0;
@@ -351,7 +351,7 @@ const handleNaNSort = (array: number[], ascending: boolean): number[] => {
     index++;
   }
 
-  numericQuickSort(valid, 0, valid.length - 1, ascending);
+  numericQuickSort(valid, valid.length - 1, ascending);
 
   // NaN values go to the end
   for (let index = 0; index < nanCount; index++) {
@@ -367,8 +367,8 @@ const handleNaNSort = (array: number[], ascending: boolean): number[] => {
 };
 
 /**
- * Counting sort for small integer ranges
- */
+Counting sort for small integer ranges
+*/
 const countingSort = (
   array: number[],
   min: number,
@@ -409,15 +409,14 @@ const countingSort = (
 };
 
 /**
- * Optimized quicksort for numbers
- */
+Optimized quicksort for numbers
+*/
 const numericQuickSort = (
   array: number[],
-  low: number,
   high: number,
   ascending: boolean,
 ): number[] => {
-  const stack: number[] = [low, high];
+  const stack: number[] = [0, high];
 
   while (stack.length > 0) {
     const h = stack.pop();
@@ -448,8 +447,8 @@ const numericQuickSort = (
 };
 
 /**
- * Numeric insertion sort
- */
+Numeric insertion sort
+*/
 const numericInsertionSort = (
   array: number[],
   low: number,
@@ -480,8 +479,8 @@ const numericInsertionSort = (
 };
 
 /**
- * Numeric partition with median-of-three pivot
- */
+Numeric partition with median-of-three pivot
+*/
 const numericPartition = (
   array: number[],
   low: number,

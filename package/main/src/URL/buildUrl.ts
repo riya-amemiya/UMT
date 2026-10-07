@@ -1,29 +1,29 @@
 /**
- * Builds a URL with query parameters appended.
- *
- * @param base - The base URL string
- * @param params - An object of key-value pairs to append as query parameters
- * @returns The complete URL string with query parameters
- *
- * @remarks
- * **Prototype pollution warning:** This function does not filter out
- * prototype-polluting keys (`__proto__`, `constructor`, `prototype`).
- * If processing user-controlled input, sanitize with the appropriate
- * `removePrototype*` helper before calling this function:
- * - `removePrototype` — shallow sanitization of a single object
- * - `removePrototypeDeep` — recursive sanitization of a single object (for deeply nested data)
- * - `removePrototypeMap` — shallow sanitization of an array of objects
- * - `removePrototypeMapDeep` — recursive sanitization of an array of objects (for deeply nested data)
- *
- * @example
- * ```typescript
- * buildUrl("https://example.com", { page: "1", q: "search" });
- * // "https://example.com/?page=1&q=search"
- *
- * buildUrl("https://example.com/path", { foo: "bar" });
- * // "https://example.com/path?foo=bar"
- * ```
- */
+Builds a URL with query parameters appended.
+
+@param base - The base URL string
+@param params - An object of key-value pairs to append as query parameters
+@returns The complete URL string with query parameters
+
+@remarks
+**Prototype pollution warning:** This function does not filter out
+prototype-polluting keys (`__proto__`, `constructor`, `prototype`).
+If processing user-controlled input, sanitize with the appropriate
+`removePrototype*` helper before calling this function:
+- `removePrototype` — shallow sanitization of a single object
+- `removePrototypeDeep` — recursive sanitization of a single object (for deeply nested data)
+- `removePrototypeMap` — shallow sanitization of an array of objects
+- `removePrototypeMapDeep` — recursive sanitization of an array of objects (for deeply nested data)
+
+@example
+```typescript
+buildUrl("https://example.com", { page: "1", q: "search" });
+// "https://example.com/?page=1&q=search"
+
+buildUrl("https://example.com/path", { foo: "bar" });
+// "https://example.com/path?foo=bar"
+```
+*/
 export const buildUrl = (
   base: string,
   parameters: Record<string, string> = {},

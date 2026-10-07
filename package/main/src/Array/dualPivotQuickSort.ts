@@ -10,14 +10,14 @@ interface PartitionResult {
 }
 
 /**
- * Get the median of three elements in the array
- * @param array - The input array
- * @param a - Index of the first element
- * @param b - Index of the second element
- * @param c - Index of the third element
- * @param compareFunction - Comparison function
- * @returns Index of the median element
- */
+Get the median of three elements in the array
+@param array - The input array
+@param a - Index of the first element
+@param b - Index of the second element
+@param c - Index of the third element
+@param compareFunction - Comparison function
+@returns Index of the median element
+*/
 const medianOfThree = <T>(
   array: T[],
   a: number,
@@ -38,13 +38,13 @@ const medianOfThree = <T>(
 };
 
 /**
- * Select dual pivots and partition the array into three parts
- * @param array - Array to be partitioned
- * @param low - Starting index
- * @param high - Ending index
- * @param compareFunction - Comparison function
- * @returns Object containing left and right pivot indices
- */
+Select dual pivots and partition the array into three parts
+@param array - Array to be partitioned
+@param low - Starting index
+@param high - Ending index
+@param compareFunction - Comparison function
+@returns Object containing left and right pivot indices
+*/
 const partition = <T>(
   array: T[],
   low: number,
@@ -130,13 +130,13 @@ const partition = <T>(
 };
 
 /**
- * Internal implementation of dual-pivot quicksort
- * @param array - Array to be sorted
- * @param start - Starting index
- * @param end - Ending index
- * @param compareFunction - Comparison function
- * @param insertionSortThreshold - Threshold for switching to insertion sort
- */
+Internal implementation of dual-pivot quicksort
+@param array - Array to be sorted
+@param start - Starting index
+@param end - Ending index
+@param compareFunction - Comparison function
+@param insertionSortThreshold - Threshold for switching to insertion sort
+*/
 const sortRange = <T>(
   array: T[],
   start: number,
@@ -195,18 +195,18 @@ const sortRange = <T>(
 };
 
 /**
- * Sort array using dual-pivot quicksort algorithm
- * More efficient than traditional quicksort for arrays with many duplicate values
- * @param array - Array to be sorted
- * @param compareFunction - Optional comparison function
- * @param startIndex - Optional starting index (default: 0)
- * @param endIndex - Optional ending index (default: array.length - 1)
- * @param insertionSortThreshold - Optional threshold for insertion sort (default: 10)
- * @returns Sorted array
- * @example
- * dualPivotQuickSort([3, 1, 4, 1, 5, 9, 2, 6, 5, 3]); // [1, 1, 2, 3, 3, 4, 5, 5, 6, 9]
- * dualPivotQuickSort(['banana', 'apple', 'orange']); // ['apple', 'banana', 'orange']
- */
+Sort array using dual-pivot quicksort algorithm
+More efficient than traditional quicksort for arrays with many duplicate values
+@param array - Array to be sorted
+@param compareFunction - Optional comparison function
+@param startIndex - Optional starting index (default: 0)
+@param endIndex - Optional ending index (default: array.length - 1)
+@param insertionSortThreshold - Optional threshold for insertion sort (default: 10)
+@returns Sorted array
+@example
+dualPivotQuickSort([3, 1, 4, 1, 5, 9, 2, 6, 5, 3]); // [1, 1, 2, 3, 3, 4, 5, 5, 6, 9]
+dualPivotQuickSort(['banana', 'apple', 'orange']); // ['apple', 'banana', 'orange']
+*/
 export const dualPivotQuickSort = <T>(
   array: T[],
   compareFunction: CompareFunction<T> = compareFunctionDefault<T>,

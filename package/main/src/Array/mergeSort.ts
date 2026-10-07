@@ -3,12 +3,12 @@ import { compareFunctionDefault } from "./compareFunctionDefault";
 import type { CompareFunction } from "$/array/compareFunction";
 
 /**
- * Merge sort implementation
- * @param  {T[]} array Array to sort
- * @param  {(a: T, b: T) => number} compareFunction Comparison function
- * @returns {T[]} Sorted array
- * @example mergeSort([1, 3, 2, 4, 5], (a, b) => a - b); // [1, 2, 3, 4, 5]
- */
+Merge sort implementation
+@param  {T[]} array Array to sort
+@param  {(a: T, b: T) => number} compareFunction Comparison function
+@returns {T[]} Sorted array
+@example mergeSort([1, 3, 2, 4, 5], (a, b) => a - b); // [1, 2, 3, 4, 5]
+*/
 export const mergeSort = <T>(
   array: T[],
   compareFunction: CompareFunction<T> = compareFunctionDefault,
@@ -27,13 +27,13 @@ export const mergeSort = <T>(
 };
 
 /**
- * Recursive merge sort implementation
- * @param array Array to sort
- * @param aux Auxiliary array
- * @param start Start index
- * @param end End index
- * @param compareFunction Comparison function
- */
+Recursive merge sort implementation
+@param array Array to sort
+@param aux Auxiliary array
+@param start Start index
+@param end End index
+@param compareFunction Comparison function
+*/
 function mergeSortRecursive<T>(
   array: T[],
   aux: T[],
@@ -54,14 +54,14 @@ function mergeSortRecursive<T>(
 }
 
 /**
- * Merges two sorted subarrays
- * @param array Array containing the subarrays
- * @param aux Auxiliary array
- * @param start Start index
- * @param mid Middle index
- * @param end End index
- * @param compareFunction Comparison function
- */
+Merges two sorted subarrays
+@param array Array containing the subarrays
+@param aux Auxiliary array
+@param start Start index
+@param mid Middle index
+@param end End index
+@param compareFunction Comparison function
+*/
 function merge<T>(
   array: T[],
   aux: T[],

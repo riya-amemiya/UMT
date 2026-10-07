@@ -8,28 +8,28 @@ import {
 } from "@/Error/safeExecute";
 
 /**
- * Validates every decorated field of an instance and aggregates the failures.
- * Reads the rules registered by the field decorators along the prototype
- * chain, so inherited rules are included.
- *
- * @template T - The instance type.
- * @param instance - The object to validate.
- * @returns A success {@link Result} carrying the instance when every field is
- * valid, otherwise an error {@link Result} carrying one issue per failing
- * field.
- *
- * @example
- * ```typescript
- * class User {
- *   @IsString name = "alice";
- *   @IsNumber age = 20;
- * }
- * const result = validateInstance(new User());
- * if (result.type === "error") {
- *   console.log(result.error);
- * }
- * ```
- */
+Validates every decorated field of an instance and aggregates the failures.
+Reads the rules registered by the field decorators along the prototype
+chain, so inherited rules are included.
+
+@template T - The instance type.
+@param instance - The object to validate.
+@returns A success {@link Result} carrying the instance when every field is
+valid, otherwise an error {@link Result} carrying one issue per failing
+field.
+
+@example
+```typescript
+class User {
+  @IsString name = "alice";
+  @IsNumber age = 20;
+}
+const result = validateInstance(new User());
+if (result.type === "error") {
+  console.log(result.error);
+}
+```
+*/
 export const validateInstance = <T extends object>(
   instance: T,
 ): Result<T, ValidationIssue[]> => {

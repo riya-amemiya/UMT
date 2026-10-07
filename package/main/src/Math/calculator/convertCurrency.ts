@@ -2,15 +2,15 @@ import { multiplication } from "@/Math/multiplication";
 import { isNumber } from "@/Validate/isNumber";
 
 /**
- * Converts currency amounts in a string using currency symbols.
- *
- * @param {string} inputString - String containing a currency amount to convert
- * @param {object} conversionRates - Object mapping currency symbols to conversion rates
- * @returns {string} Converted currency amount as a string, or the original string if conversion is not possible
- * @example convertCurrency("¥100", { "¥": 0.01 }); // "1"
- * @example convertCurrency("$50", { "$": 1.2 }); // "60"
- * @example convertCurrency("€200", { "€": 1.1 }); // "220"
- */
+Converts currency amounts in a string using currency symbols.
+
+@param {string} inputString - String containing a currency amount to convert
+@param {object} conversionRates - Object mapping currency symbols to conversion rates
+@returns {string} Converted currency amount as a string, or the original string if conversion is not possible
+@example convertCurrency("¥100", { "¥": 0.01 }); // "1"
+@example convertCurrency("$50", { "$": 1.2 }); // "60"
+@example convertCurrency("€200", { "€": 1.1 }); // "220"
+*/
 export const convertCurrency = <
   T extends {
     [key: string]: number | string;
