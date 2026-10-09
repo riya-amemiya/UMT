@@ -35,6 +35,7 @@ Each module typically has:
 - Stable Rust only (no `let_chains`)
 - IP helpers return `Result` (except `long_to_ip` → `String` and `get_ip_class` → `""` on invalid input)
 - Date `DateTime<Utc>` calendar fields are wall-clock values except `umt_from_unix` / `umt_to_unix`
+- UA extractors return `Browser` / `Device` / `Os` enums. Opera (`opr/`) is `Browser::Other`. Android without `mobile` is `Device::Tablet`. Wasm skips all four UA functions.
 
 ### Testing Patterns
 

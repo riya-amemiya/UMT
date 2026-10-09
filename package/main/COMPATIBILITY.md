@@ -50,6 +50,8 @@ IP helpers (`umt/IP`) are IPv4 only. TypeScript does not validate dotted-decimal
 
 `mathConverter("1250*1250")` is `"1500*1000+400*100+200*100+50*50"` in TypeScript, Rust, and Go. Python `math_converter` emits float terms (`"1500.0*1000+400.0*100+200.0*100+50*50"`).
 
+UA helpers (`umt/UA`) return coarse labels, not a full parser. Opera (`OPR/`) is `"other"`. Android without a `mobile` token is `"tablet"`. iPhone / iPad / iPod are `"ios"` even when the string contains `like Mac OS X`. Wasm skips the four UA functions (custom enums). Go wraps each field in a struct (`Browser.Name`, `OS.Name`, `Device.Type`).
+
 ## Versioning
 
 This package follows [Semantic Versioning (SemVer)](https://semver.org/):
