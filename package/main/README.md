@@ -322,6 +322,42 @@ mathConverter("1250*1250"); // "1500*1000+400*100+200*100+50*50"
 
 Wasm generates `mathConverter`. It skips `calculator` (`HashMap` exchange rates).
 
+## UA helpers
+
+Coarse User-Agent labels in `umt/UA`. Python, Rust, and Go ports exist. This is not a full UA parser: there are no versions, engines, or vendor strings — only the enums below. Matching is case-insensitive. `parseUserAgent` lowercases the input, then calls the three extractors.
+
+| Function | Behavior |
+| --- | --- |
+| `extractBrowserFromUserAgent(ua)` | Order: Edge (`edg` / `edge`) → IE (`msie` / `trident`) → Firefox (`firefox` / `fxios`) → Opera (`opr/`, returned as **`"other"`**) → Chrome (`chrome` / `crios`) → Safari → `"other"`. Safari is last because Chrome / Firefox on iOS also contain `Safari`. |
+| `extractDeviceFromUserAgent(ua)` | Order: bot (`bot` / `googlebot` / `crawler` / `spider` / `robot` / `crawling`) → mobile (`iphone` / `ipod` / `webos` / `blackberry` / `iemobile` / `opera mini`) → Android with `mobile` → `"mobile"`, Android without `mobile` → `"tablet"` → iPad → desktop (`windows` / `macintosh` / `linux`) → `"other"`. |
+| `extractOsFromUserAgent(ua)` | Order: iOS (`iphone` / `ipad` / `ipod`) → Android → macOS (`mac os x`) → Windows (`windows` / `win32`) → Linux → `"other"`. iPhone UAs that contain `like Mac OS X` are still `"ios"`. Android UAs that contain `Linux` are still `"android"`. |
+| `parseUserAgent(userAgent)` | `{ os, browser, device }`. Googlebot is `{ os: "other", browser: "other", device: "bot" }`. |
+
+```ts
+import {
+  extractBrowserFromUserAgent,
+  extractDeviceFromUserAgent,
+  extractOsFromUserAgent,
+  parseUserAgent,
+} from "umt/UA";
+
+parseUserAgent(
+  "Mozilla/5.0 (iPhone; CPU iPhone OS 14_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.3 Mobile/15E148 Safari/604.1",
+); // { os: "ios", browser: "safari", device: "mobile" }
+
+extractBrowserFromUserAgent(
+  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36 OPR/75.0.3969.149",
+); // "other" (Opera)
+extractDeviceFromUserAgent(
+  "Mozilla/5.0 (Linux; Android 10) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.105 Safari/537.36",
+); // "tablet" (no Mobile token)
+extractOsFromUserAgent(
+  "Mozilla/5.0 (iPhone; CPU iPhone OS 14_4 like Mac OS X) AppleWebKit/605.1.15",
+); // "ios"
+```
+
+Python and Go return the same lowercase strings. Rust uses `Browser` / `Device` / `Os` enums (`as_str()` is the TypeScript label). Go wraps each field in a struct (`Browser.Name`, `OS.Name`, `Device.Type`). Wasm skips all four functions (custom enums / `UserAgentInfo`).
+
 ## Function List
 
 ### Advance

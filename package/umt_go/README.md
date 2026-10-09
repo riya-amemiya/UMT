@@ -68,7 +68,7 @@ Public code lives in `src/<package>`. Tests are `src/tests/<package>/*_test.go` 
 | `str` | `src/str` | `FormatString`, `Slugify`, `StripAnsi`, `StripTags`, `Words` |
 | `timeutil` | `src/timeutil` | `ConvertTime` |
 | `tool` | `src/tool` | `Pipe`, `Unwrap`, `ParseJson` |
-| `ua` | `src/ua` | `ParseUserAgent` |
+| `ua` | `src/ua` | `ParseUserAgent`, `ExtractBrowserFromUserAgent` (see below) |
 | `unit` | `src/unit` | `ToCelsius`, `ToKelvin` |
 | `urlutil` | `src/urlutil` | `BuildUrl`, `ParseQueryString`, `IsAbsoluteUrl` (see below) |
 | `validate` | `src/validate` | `IsNumber`, `ArrayOf`, `ParseEmail` (see below) |
@@ -157,6 +157,26 @@ import "github.com/riya-amemiya/umt-go/src/math"
 _ = math.Calculator("1+2", nil)                      // "3"
 _ = math.Calculator("$10*2", map[string]any{"$": 100}) // "2000"
 _ = math.MathConverter("1250*1250")                  // "1500*1000+400*100+200*100+50*50"
+```
+
+## UA helpers
+
+Coarse User-Agent labels in `src/ua`, aligned with TypeScript `package/main/src/UA`. Matching is case-insensitive (`(?i)`). `ParseUserAgent` lowercases the input, then calls the three extractors. Return values are structs, not bare strings: `BrowserInfo.Name`, `OsInfo.Name`, `DeviceInfo.Type`.
+
+| Function | Notes |
+| --- | --- |
+| `ExtractBrowserFromUserAgent` | Order: Edge (`edg` / `edge`) → IE → Firefox → Opera (`opr/`, **`"other"`**) → Chrome (`chrome` / `crios`) → Safari → `"other"`. |
+| `ExtractOsFromUserAgent` | iPhone / iPad / iPod → `"ios"` (checked before `mac os x`). Android is checked before `linux`. |
+| `ExtractDeviceFromUserAgent` | Bots first. Android with `mobile` → `"mobile"`; Android without `mobile` → `"tablet"`. iPad is `"tablet"`. |
+| `ParseUserAgent` | `UserAgentInfo{OS, Browser, Device}`. Googlebot has `Device.Type == "bot"` and OS / browser `"other"`. |
+
+```go
+import "github.com/riya-amemiya/umt-go/src/ua"
+
+info := ua.ParseUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
+// info.Browser.Name == "chrome", info.OS.Name == "windows", info.Device.Type == "desktop"
+_ = ua.ExtractBrowserFromUserAgent("… Edg/120.0.0.0").Name // "edge"
+_ = ua.ExtractDeviceFromUserAgent("Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)").Type // "bot"
 ```
 
 ## IP helpers

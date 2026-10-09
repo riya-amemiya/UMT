@@ -155,6 +155,39 @@ assert_eq!(
 );
 ```
 
+## UA helpers
+
+Coarse User-Agent labels in `src/ua/`. Matching is case-insensitive (the extractors lowercase first). `umt_parse_user_agent` also lowercases, then calls the three extractors. Return types are enums (`Browser`, `Device`, `Os`); `as_str()` is the TypeScript lowercase label. Wasm skips all four (`Browser` / `Device` / `Os` / `UserAgentInfo`).
+
+| Function | Notes |
+| --- | --- |
+| `umt_extract_browser_from_user_agent` | Order: Edge (`edg` / `edge`) → IE → Firefox → Opera (`opr/`, **`Browser::Other`**) → Chrome (`chrome` / `crios`) → Safari → `Other`. |
+| `umt_extract_os_from_user_agent` | iPhone / iPad / iPod → `Os::Ios` (before `mac os x`). Android before `linux`. |
+| `umt_extract_device_from_user_agent` | Bots first. Android with `mobile` → `Device::Mobile`; Android without `mobile` → `Device::Tablet`. iPad is `Tablet`. |
+| `umt_parse_user_agent` | `UserAgentInfo { os, browser, device }`. Googlebot is `{ Other, Other, Bot }`. |
+
+```rust
+use umt_rust::ua::{
+    umt_extract_browser_from_user_agent, umt_extract_device_from_user_agent,
+    umt_parse_user_agent, Browser, Device, Os,
+};
+
+let info = umt_parse_user_agent(
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/89.0 Safari/537.36",
+);
+assert_eq!(info.os, Os::Windows);
+assert_eq!(info.browser, Browser::Chrome);
+assert_eq!(info.device, Device::Desktop);
+assert_eq!(
+    umt_extract_browser_from_user_agent("Mozilla/5.0 Chrome/89.0"),
+    Browser::Chrome
+);
+assert_eq!(
+    umt_extract_device_from_user_agent("Mozilla/5.0 (Windows NT 10.0; Win64; x64)"),
+    Device::Desktop
+);
+```
+
 ## IP helpers
 
 IPv4 utilities in `src/ip/`. Names are **not** `umt_`-prefixed (`umt_rust::ip::cidr_to_long`, not `umt_cidr_to_long`). Most return `Result<_, String>`; `long_to_ip` returns `String`, and `get_ip_class` returns `""` for invalid input (matching TypeScript).
