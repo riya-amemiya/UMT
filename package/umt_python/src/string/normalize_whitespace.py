@@ -1,5 +1,7 @@
 import re
 
+_WHITESPACE_RE = re.compile(r"\s+")
+
 
 def normalize_whitespace(string_: str) -> str:
     """
@@ -21,4 +23,4 @@ def normalize_whitespace(string_: str) -> str:
         >>> normalize_whitespace("")
         ''
     """
-    return re.sub(r"\s+", " ", string_).strip()
+    return _WHITESPACE_RE.sub(" ", string_).strip()
