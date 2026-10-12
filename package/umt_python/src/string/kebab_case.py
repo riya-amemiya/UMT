@@ -1,5 +1,12 @@
 import re
 
+_LOWER_UPPER_RE = re.compile(r"([a-z])([A-Z])")
+_ACRONYM_RE = re.compile(r"([A-Z])([A-Z][a-z])")
+_SPACE_UNDERSCORE_RE = re.compile(r"[\s_]+")
+_NON_ALNUM_RE = re.compile(r"[^a-zA-Z0-9-]")
+_MULTI_DASH_RE = re.compile(r"-+")
+_EDGE_DASH_RE = re.compile(r"^-|-$")
+
 
 def kebab_case(string_: str) -> str:
     """
@@ -19,10 +26,10 @@ def kebab_case(string_: str) -> str:
         >>> kebab_case("foo_bar_baz")
         'foo-bar-baz'
     """
-    result = re.sub(r"([a-z])([A-Z])", r"\1-\2", string_)
-    result = re.sub(r"([A-Z])([A-Z][a-z])", r"\1-\2", result)
-    result = re.sub(r"[\s_]+", "-", result)
-    result = re.sub(r"[^a-zA-Z0-9-]", "-", result)
-    result = re.sub(r"-+", "-", result)
-    result = re.sub(r"^-|-$", "", result)
+    result = _LOWER_UPPER_RE.sub(r"\1-\2", string_)
+    result = _ACRONYM_RE.sub(r"\1-\2", result)
+    result = _SPACE_UNDERSCORE_RE.sub("-", result)
+    result = _NON_ALNUM_RE.sub("-", result)
+    result = _MULTI_DASH_RE.sub("-", result)
+    result = _EDGE_DASH_RE.sub("", result)
     return result.lower()
