@@ -65,7 +65,7 @@ Public names are re-exported from `src/__init__.py`. Grouped the same way as Typ
 | `string` | `format_string`, `slugify`, `strip_ansi`, `strip_tags`, `words`, `normalize_whitespace`, `unescape_html`, `camel_case`, `kebab_case` (see below) |
 | `time` | `convert_time` |
 | `tool` | `pipe`, `unwrap`, `parse_json` |
-| `ua` | `parse_user_agent` |
+| `ua` | `parse_user_agent`, `extract_browser_from_user_agent`, `extract_device_from_user_agent`, `extract_os_from_user_agent` (see below) |
 | `unit` | `to_celsius`, `to_kelvin` |
 | `url` | `build_url`, `parse_query_string`, `is_absolute_url` (see below) |
 | `validate` | `is_number`, `array_of`, `parse_email` (see below) |
@@ -148,6 +148,19 @@ parse_email("user@localhost", ParseEmailOptions(level="rfc5321")).valid  # False
 | `calculator` | `(expression: str, exchange=None) -> str` | Strips whitespace. `=` solves a single-variable equation (`"x=5"` → `"5"`). Otherwise evaluates `+ - * / ^` and parentheses. Incomplete input is returned as-is. `^` reduces the last pair first (`"2^2^2"` → `"16"`). | `calculator("1+2")  # "3"` / `calculator("$10*2", {"$": 100})  # "2000"` |
 | `math_converter` | `(equation: str) -> str` | Rewrites `n*n` or `n^2` as a sum of simpler products. Uses `float` in the rewritten terms, so the string is `"1500.0*1000+…"` rather than TypeScript / Go `"1500*1000+…"`. | `math_converter("1250*1250")  # "1500.0*1000+400.0*100+200.0*100+50*50"` |
 
+## UA helpers
+
+Coarse User-Agent labels aligned with TypeScript `package/main/src/UA`. Matching is case-insensitive. `parse_user_agent` lowercases the input, then calls the three extractors. Not a full UA parser (no versions).
+
+| Function | Type | Description | Example |
+| --- | --- | --- | --- |
+| `extract_browser_from_user_agent` | `(ua: str) -> BrowserType` | Order: Edge → IE → Firefox → Opera (`opr/`, returned as **`"other"`**) → Chrome (`chrome` / `crios`) → Safari → `"other"`. | `extract_browser_from_user_agent("… Chrome/91 … OPR/77")  # "other"` |
+| `extract_device_from_user_agent` | `(ua: str) -> DeviceType` | Bots first, then iPhone / iPod / webOS / BlackBerry / Opera Mini as `"mobile"`. Android with `mobile` → `"mobile"`; Android without `mobile` → `"tablet"`. iPad is `"tablet"`. | `extract_device_from_user_agent("Mozilla/5.0 (iPad; CPU OS 14_6 like Mac OS X)")  # "tablet"` |
+| `extract_os_from_user_agent` | `(ua: str) -> OsType` | iPhone / iPad / iPod → `"ios"` even when the string contains `like Mac OS X`. Android wins over the `Linux` token. | `extract_os_from_user_agent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)")  # "macos"` |
+| `parse_user_agent` | `(user_agent: str) -> UserAgentInfo` | TypedDict `{browser, device, os}`. | `parse_user_agent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) Chrome/91.0")  # {'browser': 'chrome', 'device': 'desktop', 'os': 'macos'}` |
+
+Fixed regexes in this package are compiled once at module level (`re.compile`): UA extractors, `hexa_to_rgba`, `is_absolute_url`, `math_converter`, `parse_email`, `strip_ansi` / `strip_tags`, `unescape_html`, calculator / `calculator_core` (except the currency-symbol pattern). Caller-built patterns (`format_string`, `regex_match`, optional `words` pattern, `template_literal`) stay inline. `camel_case` / `kebab_case` / `slugify` / `normalize_whitespace` still call `re.sub` with a literal each time.
+
 ## Function List
 
 ### String Manipulation Functions
@@ -218,6 +231,7 @@ parse_email("user@localhost", ParseEmailOptions(level="rfc5321")).valid  # False
 - `slugify` keeps Unicode letters (Python `\w`). TypeScript / Go `slugify` use ASCII `\w` and drop CJK.
 - `parse_email` requires `ParseEmailOptions`. It does not apply TypeScript's 320-character ReDoS cap.
 - `math_converter` formats split terms with `float` (`"1500.0*1000+…"`). TypeScript / Rust / Go emit integers (`"1500*1000+…"`).
+- UA helpers are coarse labels. Opera (`OPR/`) is `"other"`. Android without a `mobile` token is `"tablet"`. iPhone UAs that contain `like Mac OS X` are `"ios"`.
 
 ## Development
 

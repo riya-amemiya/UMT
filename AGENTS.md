@@ -57,6 +57,7 @@ Located in `package/umt_python`.
 *   **Testing & Benchmarks**:
     *   Unit tests must import from `src` (e.g., `from src.validate import ...`).
     *   Benchmarks reside in `tests/benchmark/` and use `timeit`. Note that `__file__` is not defined in `timeit` strings; resolve paths externally.
+*   **Regex**: Cache fixed patterns with module-level `re.compile`. Current sites: `strip_ansi` / `strip_tags`, `unescape_html`, `hexa_to_rgba`, `is_absolute_url`, `math_converter`, `parse_email`, calculator / `calculator_core` (except the currency-symbol pattern), UA extractors, `literal_expression`, `apply_formatter`, `get_value`. Do not compile a fixed pattern on every call. Caller-built patterns (`format_string`, `regex_match`, optional `words` pattern, `template_literal`, calculator currency symbol) stay inline. `camel_case` / `kebab_case` / `slugify` / `normalize_whitespace` still use `re.sub` literals.
 
 ## Package: umt_rust (Rust)
 

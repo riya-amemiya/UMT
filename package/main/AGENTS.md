@@ -62,6 +62,7 @@ UMT (Utility Module Toolkit) is a TypeScript utility library organized into func
 - **Standard Schema**: Validate factories attach `~standard` (`vendor: "umt"`). `@Schema` in Decorator accepts any Standard Schema V1 validator; async `validate` is a failure. `@Validatable` throws after the wrapped constructor.
 - **Array / Async (TypeScript only)**: `countBy`, `partition`, `sliding`, `mapSeries`, and `safeExecuteAsync` are not ported. `sliding` omits incomplete windows; `mapSeries` is strictly sequential and rejects on the first failure.
 - **String / Color / URL**: `camelCase` lowercases only the first character (no acronym split). TypeScript `unescapeHtml` rejects dangerous numeric references; ports do not. TypeScript `hexaToRgba` does not validate; ports require `#` plus 3/6/8 hex digits. Date `format` is not ported to Python; Rust `umt_format` takes an explicit offset; Go `FormatDate` has no `Z` / `ZZ`. TypeScript / Go `slugify` drop CJK (`"japanese"`); Python / Rust keep it. `parseEmail` requires `{ email, options: { level } }` and rejects length `> 320`. `calculator("x=5")` is `"5"`; incomplete expressions stay as-is; `^` reduces the last pair first.
+- **UA**: Coarse labels only. Opera (`opr/`) is `"other"`. Android without `mobile` is `"tablet"`. iPhone / iPad / iPod win over `mac os x`. Wasm skips the four UA functions (custom enums). Go returns structs (`Browser.Name`, `OS.Name`, `Device.Type`), not bare strings.
 
 ## Codebase Structure
 
