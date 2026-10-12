@@ -34,6 +34,24 @@ class TestJoinPath(unittest.TestCase):
     def test_handle_empty_segments(self):
         self.assertEqual(join_path("a", "", "b"), "a/b")
 
+    def test_ts_absolute_example(self):
+        self.assertEqual(join_path("/a/", "/b/", "/c"), "/a/b/c")
+
+    def test_preserve_leading_and_trailing_slashes(self):
+        self.assertEqual(join_path("/a/", "/b/", "/c/"), "/a/b/c/")
+
+    def test_slash_only_middle_segments_dropped(self):
+        self.assertEqual(join_path("a", "/", "///", "b"), "a/b")
+
+    def test_consecutive_empty_segments(self):
+        self.assertEqual(join_path("a", "", "", "b"), "a/b")
+
+    def test_single_slash_segment(self):
+        self.assertEqual(join_path("/"), "/")
+
+    def test_only_slashes_single_segment(self):
+        self.assertEqual(join_path("///"), "///")
+
 
 if __name__ == "__main__":
     unittest.main()
