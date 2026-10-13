@@ -1,5 +1,8 @@
 import re
 
+_LEADING_SLASHES_RE = re.compile(r"^/+")
+_TRAILING_SLASHES_RE = re.compile(r"/+$")
+
 
 def join_path(*segments: str) -> str:
     """Joins multiple path segments into a single path,
@@ -19,9 +22,9 @@ def join_path(*segments: str) -> str:
     for index, segment in enumerate(segments):
         s = segment
         if index > 0:
-            s = re.sub(r"^/+", "", s)
+            s = _LEADING_SLASHES_RE.sub("", s)
         if index < len(segments) - 1:
-            s = re.sub(r"/+$", "", s)
+            s = _TRAILING_SLASHES_RE.sub("", s)
 
         if s:
             normalized.append(s)
