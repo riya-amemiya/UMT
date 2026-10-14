@@ -1,5 +1,7 @@
 import re
 
+_WHITESPACE_RE = re.compile(r"\s")
+
 
 def delete_spaces(string_: str) -> str:
     """
@@ -17,4 +19,4 @@ def delete_spaces(string_: str) -> str:
         >>> delete_spaces("  tab\\t space ")
         'tabspace'
     """
-    return re.sub(r"\s", "", string_)
+    return _WHITESPACE_RE.sub("", string_)
