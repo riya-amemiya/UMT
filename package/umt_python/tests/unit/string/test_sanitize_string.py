@@ -40,6 +40,27 @@ class TestSanitizeString(unittest.TestCase):
     def test_empty_string(self):
         self.assertEqual(sanitize_string(""), "")
 
+    def test_docstring_examples(self):
+        self.assertEqual(sanitize_string("Hello, World!"), "Hello, World!")
+        self.assertEqual(sanitize_string("a\x00b"), "ab")
+        self.assertEqual(sanitize_string("héllo"), "hllo")
+        self.assertEqual(sanitize_string("日本語"), "")
+
+    def test_keeps_space_and_tilde_bounds(self):
+        self.assertEqual(sanitize_string(" \x1f~\x7f"), " ~")
+
+    def test_removes_form_feed_and_vertical_tab(self):
+        self.assertEqual(sanitize_string("a\x0bb\x0cc"), "abc")
+
+    def test_removes_c1_controls(self):
+        self.assertEqual(sanitize_string("a\x9bb\x80c"), "abc")
+
+    def test_mixed_printable_null_and_cjk(self):
+        self.assertEqual(sanitize_string("ok\x00日\n本語\t!"), "ok\n\t!")
+
+    def test_consecutive_controls_only(self):
+        self.assertEqual(sanitize_string("\x00\x01\x7f\x9b"), "")
+
 
 if __name__ == "__main__":
     unittest.main()

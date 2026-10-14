@@ -1,5 +1,7 @@
 import re
 
+_NON_PRINTABLE_RE = re.compile(r"[^\t\n\r -~]")
+
 
 def sanitize_string(string_: str) -> str:
     """
@@ -25,4 +27,4 @@ def sanitize_string(string_: str) -> str:
         >>> sanitize_string("日本語")
         ''
     """
-    return re.sub(r"[^\t\n\r -~]", "", string_)
+    return _NON_PRINTABLE_RE.sub("", string_)
