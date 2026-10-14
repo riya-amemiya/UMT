@@ -460,9 +460,12 @@ const numericInsertionSort = (
       const key = array[index];
       let index_ = index - 1;
       while (index_ >= low && array[index_] > key) {
-        array[index_ + 1] = array[index_];
         index_--;
       }
+      if (index_ === index - 1) {
+        continue;
+      }
+      array.copyWithin(index_ + 2, index_ + 1, index);
       array[index_ + 1] = key;
     }
   } else {
@@ -470,9 +473,12 @@ const numericInsertionSort = (
       const key = array[index];
       let index_ = index - 1;
       while (index_ >= low && array[index_] < key) {
-        array[index_ + 1] = array[index_];
         index_--;
       }
+      if (index_ === index - 1) {
+        continue;
+      }
+      array.copyWithin(index_ + 2, index_ + 1, index);
       array[index_ + 1] = key;
     }
   }

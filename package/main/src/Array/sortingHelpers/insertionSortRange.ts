@@ -13,9 +13,12 @@ export const insertionSortRange = <T>(
     let index_ = index;
     const target = array[index];
     while (index_ > start && compareFunction(array[index_ - 1], target) > 0) {
-      array[index_] = array[index_ - 1];
       index_--;
     }
+    if (index_ === index) {
+      continue;
+    }
+    array.copyWithin(index_ + 1, index_, index);
     array[index_] = target;
   }
 };
