@@ -1,5 +1,7 @@
 import re
 
+_REGEXP_SPECIAL_RE = re.compile(r"[$()*+.?\[\\\]^{|}]")
+
 
 def escape_regexp(string: str) -> str:
     """
@@ -15,4 +17,4 @@ def escape_regexp(string: str) -> str:
         >>> escape_regexp("a.b")
         "a\\.b"
     """
-    return re.sub(r"[$()*+.?\[\\\]^{|}]", r"\\\g<0>", string)
+    return _REGEXP_SPECIAL_RE.sub(r"\\\g<0>", string)
