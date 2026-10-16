@@ -62,12 +62,12 @@ Public names are re-exported from `src/__init__.py`. Grouped the same way as Typ
 | `predicate` | `every`, `some`, `is_nullish` |
 | `random` | `random_choice`, `seeded_random` |
 | `simple` | `birthday_simple`, `now_simple` |
-| `string` | `format_string`, `slugify`, `strip_ansi`, `strip_tags`, `words`, `normalize_whitespace`, `unescape_html`, `camel_case`, `kebab_case` (see below) |
+| `string` | `format_string`, `slugify`, `strip_ansi`, `strip_tags`, `words`, `normalize_whitespace`, `unescape_html`, `camel_case`, `kebab_case`, `sanitize_string`, `delete_spaces` (see below) |
 | `time` | `convert_time` |
-| `tool` | `pipe`, `unwrap`, `parse_json` |
+| `tool` | `pipe`, `unwrap`, `parse_json`, `escape_regexp` (see below) |
 | `ua` | `parse_user_agent`, `extract_browser_from_user_agent`, `extract_device_from_user_agent`, `extract_os_from_user_agent` (see below) |
 | `unit` | `to_celsius`, `to_kelvin` |
-| `url` | `build_url`, `parse_query_string`, `is_absolute_url` (see below) |
+| `url` | `build_url`, `parse_query_string`, `is_absolute_url`, `join_path` (see below) |
 | `validate` | `is_number`, `array_of`, `parse_email` (see below) |
 
 Not every TypeScript helper is ported yet. There is no `is_same` (use `is_same_day` or compare truncated values with `start_of`). There is no date `format` (TypeScript `format` / Rust `umt_format` / Go `FormatDate`). There is also no `count_by`, `partition`, `sliding`, `map_series`, or `safe_execute_async`.
@@ -100,6 +100,8 @@ Unicode-aware helpers aligned with TypeScript `package/main/src/String`.
 | `strip_tags` | `(string_: str) -> str` | Deletes HTML/XML tags, repeating until stable so `"<sc<script>ript>"` becomes `""`. Self-closing tags leave no separator. | `strip_tags("<p>Hello <b>World</b></p>")  # "Hello World"` |
 | `words` | `(string_: str, pattern: re.Pattern[str] \| None = None) -> list[str]` | Default: camelCase / acronym split, then non-letter/number separators. Pass a compiled pattern to return `findall` matches (`[]` if none). | `words("XMLHttpRequest")  # ["XML", "Http", "Request"]` |
 | `normalize_whitespace` | `(string_: str) -> str` | Collapses Unicode `\s+` to a single space and trims. Unlike `delete_spaces`, words stay separated. | `normalize_whitespace("hello   world")  # "hello world"` |
+| `delete_spaces` | `(string_: str) -> str` | Removes every Unicode `\s` character (spaces, tabs, newlines, em space, ideographic space). | `delete_spaces("Hello World")  # "HelloWorld"` / `delete_spaces("  tab\t space ")  # "tabspace"` |
+| `sanitize_string` | `(string_: str) -> str` | Keeps printable ASCII (space to tilde) plus TAB / LF / CR. Drops NULL, other C0, DEL, ANSI ESC, and **all non-ASCII** (CJK, emoji, `"é"`). Unlike `strip_ansi`, CSI leftovers remain. | `sanitize_string("\x1b[31mred\x1b[0m")  # "[31mred[0m"` / `sanitize_string("héllo")  # "hllo"` / `sanitize_string("日本語")  # ""` |
 | `unescape_html` | `(string_: str) -> str` | Named entities plus decimal / hex numeric references. `&#X41;` (uppercase `X`) is left unchanged. Decodes via `chr()` — it does **not** apply TypeScript's extra rejection of NULL / C0 / DEL / C1 / surrogates. | `unescape_html("Tom &amp; Jerry")  # "Tom & Jerry"` / `unescape_html("&#65;")  # "A"` |
 | `camel_case` | `(string_: str) -> str` | Replaces non-alphanumeric runs, then lowercases only the first character. Does not split acronyms. | `camel_case("hello-world")  # "helloWorld"` / `camel_case("HELLO")  # "hELLO"` |
 | `kebab_case` | `(string_: str) -> str` | Inserts dashes on case boundaries and replaces separators. Splits acronyms. | `kebab_case("XMLHttpRequest")  # "xml-http-request"` |
@@ -126,6 +128,18 @@ IPv4 dotted-decimal only, aligned with TypeScript `package/main/src/IP`. Unlike 
 | --- | --- | --- | --- |
 | `hexa_to_rgba` | `(hex_code: str) -> dict[str, float]` | `#` plus 3, 6, or 8 hex digits → `{r, g, b, a}`. `a` is `0`–`1` rounded to 2 decimals. Invalid input raises `ValueError`. TypeScript `hexaToRgba` does not validate. | `hexa_to_rgba("#FF0000")  # {'r': 255, 'g': 0, 'b': 0, 'a': 1.0}` / `hexa_to_rgba("#fff")  # {'r': 255, 'g': 255, 'b': 255, 'a': 1.0}` |
 | `is_absolute_url` | `(url: str) -> bool` | RFC 3986 scheme check (letter, then letters / digits / `+` / `.` / `-`, then `:`). Protocol-relative URLs are not absolute. | `is_absolute_url("https://example.com")  # True` / `is_absolute_url("//example.com")  # False` |
+| `join_path` | `(*segments: str) -> str` | Slash-normalizing string join, not `os.path.join`. Keeps the first segment's leading `/` and the last segment's trailing `/`. Empty pieces are dropped. No `.` / `..` resolution. No segments → `""`. A single `"///"` stays `"///"`. | `join_path("https://example.com/", "/api/", "/users")  # "https://example.com/api/users"` / `join_path("a", "", "b")  # "a/b"` |
+
+`escape_regexp(string)` (in `tool`) prefixes `$ ( ) * + . ? [ \ ] ^ { | }` with a backslash. Hyphen and `/` are not escaped. `calculator` builds its currency-symbol regex with this helper at call time.
+
+```python
+from umt_python import escape_regexp, join_path
+
+escape_regexp("a.b")  # "a\\.b"
+escape_regexp("foo-bar")  # "foo-bar"
+escape_regexp("path/to/file.txt")  # "path/to/file\\.txt"
+join_path("https://example.com/", "/api/", "/users")  # "https://example.com/api/users"
+```
 
 ## parse_email
 
@@ -159,7 +173,7 @@ Coarse User-Agent labels aligned with TypeScript `package/main/src/UA`. Matching
 | `extract_os_from_user_agent` | `(ua: str) -> OsType` | iPhone / iPad / iPod → `"ios"` even when the string contains `like Mac OS X`. Android wins over the `Linux` token. | `extract_os_from_user_agent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)")  # "macos"` |
 | `parse_user_agent` | `(user_agent: str) -> UserAgentInfo` | TypedDict `{browser, device, os}`. | `parse_user_agent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) Chrome/91.0")  # {'browser': 'chrome', 'device': 'desktop', 'os': 'macos'}` |
 
-Fixed regexes in this package are compiled once at module level (`re.compile`): UA extractors, `hexa_to_rgba`, `is_absolute_url`, `math_converter`, `parse_email`, `strip_ansi` / `strip_tags`, `unescape_html`, calculator / `calculator_core` (except the currency-symbol pattern). Caller-built patterns (`format_string`, `regex_match`, optional `words` pattern, `template_literal`) stay inline. `camel_case` / `kebab_case` / `slugify` / `normalize_whitespace` still call `re.sub` with a literal each time.
+Fixed regexes in this package are compiled once at module level (`re.compile`): UA extractors, `hexa_to_rgba`, `is_absolute_url`, `join_path`, `math_converter`, `parse_email`, `strip_ansi` / `strip_tags`, `unescape_html`, `camel_case`, `kebab_case`, `slugify`, `normalize_whitespace`, `sanitize_string`, `delete_spaces`, `escape_regexp`, calculator / `calculator_core` (except the currency-symbol pattern), `literal_expression`, `apply_formatter`, `get_value`. Caller-built patterns (`format_string`, `regex_match`, optional `words` pattern, `template_literal`, calculator currency symbol) stay inline.
 
 ## Function List
 
@@ -232,6 +246,9 @@ Fixed regexes in this package are compiled once at module level (`re.compile`): 
 - `parse_email` requires `ParseEmailOptions`. It does not apply TypeScript's 320-character ReDoS cap.
 - `math_converter` formats split terms with `float` (`"1500.0*1000+…"`). TypeScript / Rust / Go emit integers (`"1500*1000+…"`).
 - UA helpers are coarse labels. Opera (`OPR/`) is `"other"`. Android without a `mobile` token is `"tablet"`. iPhone UAs that contain `like Mac OS X` are `"ios"`.
+- `sanitize_string` is ASCII-only. CJK, emoji, and accented letters are dropped. It is not `strip_ansi`: `"\x1b[31mred\x1b[0m"` becomes `"[31mred[0m"`.
+- `join_path` does not resolve `.` / `..` and does not use OS separators.
+- `escape_regexp` does not escape `-` or `/`.
 
 ## Development
 

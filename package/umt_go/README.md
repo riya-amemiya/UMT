@@ -65,12 +65,12 @@ Public code lives in `src/<package>`. Tests are `src/tests/<package>/*_test.go` 
 | `predicate` | `src/predicate` | `Every`, `Some`, `IsNullish` |
 | `random` | `src/random` | `RandomChoice`, `SeededRandom` |
 | `simple` | `src/simple` | `BirthdaySimple`, `NowSimple` |
-| `str` | `src/str` | `FormatString`, `Slugify`, `StripAnsi`, `StripTags`, `Words` |
+| `str` | `src/str` | `FormatString`, `Slugify`, `StripAnsi`, `SanitizeString`, `Words` |
 | `timeutil` | `src/timeutil` | `ConvertTime` |
-| `tool` | `src/tool` | `Pipe`, `Unwrap`, `ParseJson` |
+| `tool` | `src/tool` | `Pipe`, `Unwrap`, `ParseJson`, `EscapeRegExp` |
 | `ua` | `src/ua` | `ParseUserAgent`, `ExtractBrowserFromUserAgent` (see below) |
 | `unit` | `src/unit` | `ToCelsius`, `ToKelvin` |
-| `urlutil` | `src/urlutil` | `BuildUrl`, `ParseQueryString`, `IsAbsoluteUrl` (see below) |
+| `urlutil` | `src/urlutil` | `BuildUrl`, `ParseQueryString`, `IsAbsoluteUrl`, `JoinPath` (see below) |
 | `validate` | `src/validate` | `IsNumber`, `ArrayOf`, `ParseEmail` (see below) |
 
 Not every TypeScript helper is ported. There is no `IsBetween`, `AddBusinessDays`, `FromUnix` / `ToUnix`, `WeekOfYear`, `GetQuarter`, or `IsSame`. There is also no `CountBy`, `Partition`, `Sliding`, `MapSeries`, or `SafeExecuteAsync`.
@@ -96,6 +96,8 @@ Unicode-aware helpers in `src/str`, aligned with TypeScript `package/main/src/St
 | `StripTags` | Deletes HTML/XML tags, repeating until stable so `"<sc<script>ript>"` becomes `""`. |
 | `Words` / `WordsWithPattern` | `Words` splits on camelCase / acronym boundaries and non-letter/number separators. Custom patterns are a separate function (`WordsWithPattern`), not an optional argument like TypeScript / Python / Rust. No matches → empty slice (not `nil`). |
 | `NormalizeWhitespace` | Collapses Unicode `\s+` to a single space and trims. Unlike `DeleteSpaces`, words stay separated. |
+| `DeleteSpaces` | Removes every Unicode space (`unicode.IsSpace`), including em space and ideographic space. `"Hello World"` → `"HelloWorld"`. |
+| `SanitizeString` | Keeps printable ASCII (space to tilde) plus TAB / LF / CR. Drops NULL, other C0, DEL, ANSI ESC, and **all non-ASCII** (CJK, emoji, `"é"`). Unlike `StripAnsi`, CSI leftovers remain (`"\x1b[31mred\x1b[0m"` → `"[31mred[0m"`). |
 | `UnescapeHtml` | Named entities plus decimal / hex numeric references. `&#X41;` (uppercase `X`) is left unchanged. Decodes via `rune` — it does **not** apply TypeScript's extra rejection of NULL / C0 / DEL / C1 / surrogates. |
 | `CamelCase` | Replaces non-alphanumeric runs, then lowercases only the first rune. Does not split acronyms (`"HELLO"` → `"hELLO"`, `"XMLHttpRequest"` → `"xMLHttpRequest"`). |
 | `KebabCase` | Inserts dashes on case boundaries and replaces separators. Splits acronyms (`"XMLHttpRequest"` → `"xml-http-request"`). |
@@ -108,6 +110,9 @@ _ = str.StripAnsi("\x1b[31mred\x1b[0m") // "red"
 _ = str.StripTags("<p>Hello <b>World</b></p>") // "Hello World"
 _ = str.Words("XMLHttpRequest") // []string{"XML", "Http", "Request"}
 _ = str.NormalizeWhitespace("  hello   world \t\n foo ") // "hello world foo"
+_ = str.DeleteSpaces("  tab\t space ")                   // "tabspace"
+_ = str.SanitizeString("\x1b[31mred\x1b[0m")             // "[31mred[0m"
+_ = str.SanitizeString("日本語")                           // ""
 _ = str.UnescapeHtml("Tom &amp; Jerry") // "Tom & Jerry"
 _ = str.CamelCase("hello-world") // "helloWorld"
 _ = str.KebabCase("XMLHttpRequest") // "xml-http-request"
@@ -121,19 +126,26 @@ _ = str.Slugify("café")          // "cafe"
 | --- | --- |
 | `color.HexaToRgba` | `#` plus 3, 6, or 8 hex digits → `RGBA`. Invalid input returns an error. TypeScript `hexaToRgba` does not validate. |
 | `urlutil.IsAbsoluteUrl` | RFC 3986 scheme check. Protocol-relative URLs (`"//example.com"`) are not absolute. |
+| `urlutil.JoinPath` | Slash-normalizing string join, not `path.Join`. Keeps the first segment's leading `/` and the last segment's trailing `/`. Empty pieces are dropped. No `.` / `..` resolution. No segments → `""`. |
+| `tool.EscapeRegExp` | Escapes `$ ( ) * + . ? [ \ ] ^ { | }`. Hyphen and `/` are not escaped. Character scan, not a regex. |
 
 ```go
 import (
 	"github.com/riya-amemiya/umt-go/src/color"
+	"github.com/riya-amemiya/umt-go/src/tool"
 	"github.com/riya-amemiya/umt-go/src/urlutil"
 )
 
 rgba, _ := color.HexaToRgba("#FF0000") // {R: 255, G: 0, B: 0, A: 1}
 _ = urlutil.IsAbsoluteUrl("https://example.com") // true
 _ = urlutil.IsAbsoluteUrl("//example.com")       // false
+_ = urlutil.JoinPath("https://example.com/", "/api/", "/users") // "https://example.com/api/users"
+_ = urlutil.JoinPath("a", "", "b")                             // "a/b"
+_ = tool.EscapeRegExp("a.b")                                   // "a\\.b"
+_ = tool.EscapeRegExp("foo-bar")                               // "foo-bar"
 ```
 
-Fixed regexes in this package are compiled once with package-level `regexp.MustCompile` (`CamelCase`, `KebabCase`, `Slugify`, `UnescapeHtml`, `HexaToRgba`, `StripAnsi` / `StripTags` / `Words`, `NormalizeWhitespace`, `IsAbsoluteUrl`, UA extractors, calculator, `ParseEmail`). Caller-built patterns (`FormatString`, `RegexMatch`, currency symbol) stay inline.
+Fixed regexes in this package are compiled once with package-level `regexp.MustCompile` (`CamelCase`, `KebabCase`, `Slugify`, `UnescapeHtml`, `SanitizeString`, `HexaToRgba`, `StripAnsi` / `StripTags` / `Words`, `NormalizeWhitespace`, `IsAbsoluteUrl`, `JoinPath` slash regexes, UA extractors, calculator, `ParseEmail`). Caller-built patterns (`FormatString`, `RegexMatch`, currency symbol) stay inline. `EscapeRegExp` and `DeleteSpaces` scan characters (`unicode.IsSpace`); they do not compile a regex.
 
 ## parseEmail
 

@@ -36,6 +36,7 @@ Each module typically has:
 - IP helpers return `Result` (except `long_to_ip` → `String` and `get_ip_class` → `""` on invalid input)
 - Date `DateTime<Utc>` calendar fields are wall-clock values except `umt_from_unix` / `umt_to_unix`
 - UA extractors return `Browser` / `Device` / `Os` enums. Opera (`opr/`) is `Browser::Other`. Android without `mobile` is `Device::Tablet`. Wasm skips all four UA functions.
+- `umt_sanitize_string` is ASCII-only (CJK / emoji dropped) and is not `umt_strip_ansi`. `umt_join_path` is a slash join (`trim_start_matches` / `trim_end_matches`), not a regex. `umt_escape_regexp` does not escape `-` or `/`; wasm JS name is `escapeRegexp`.
 
 ### Testing Patterns
 

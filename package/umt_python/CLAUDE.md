@@ -49,7 +49,7 @@ from src.validate import is_number
 - Use `decimal.Decimal` from strings for exact math parity with JavaScript
 - Import `Callable` / `Iterable` from `collections.abc`
 - Do not put `try`/`except` inside loops (`PERF203`)
-- Cache fixed regexes with module-level `re.compile` (`strip_ansi` / `strip_tags`, `unescape_html`, `hexa_to_rgba`, `is_absolute_url`, `math_converter`, `parse_email`, calculator / `calculator_core` except currency symbol, UA extractors). Caller-built patterns stay inline.
+- Cache fixed regexes with module-level `re.compile` (`strip_ansi` / `strip_tags`, `unescape_html`, `camel_case`, `kebab_case`, `slugify`, `normalize_whitespace`, `sanitize_string`, `delete_spaces`, `hexa_to_rgba`, `is_absolute_url`, `join_path`, `math_converter`, `parse_email`, calculator / `calculator_core` except currency symbol, UA extractors, `literal_expression`, `apply_formatter`, `get_value`, `escape_regexp`). Caller-built patterns (`format_string`, `regex_match`, optional `words` pattern, `template_literal`, calculator currency symbol) stay inline.
 
 ### Adding New Functions
 

@@ -52,6 +52,12 @@ IP helpers (`umt/IP`) are IPv4 only. TypeScript does not validate dotted-decimal
 
 UA helpers (`umt/UA`) return coarse labels, not a full parser. Opera (`OPR/`) is `"other"`. Android without a `mobile` token is `"tablet"`. iPhone / iPad / iPod are `"ios"` even when the string contains `like Mac OS X`. Wasm skips the four UA functions (custom enums). Go wraps each field in a struct (`Browser.Name`, `OS.Name`, `Device.Type`).
 
+`sanitizeString` (`umt/String`) keeps printable ASCII plus TAB / LF / CR. It drops CJK, emoji, and accented letters (`"héllo"` → `"hllo"`, `"日本語"` → `""`). It is not `stripAnsi`: ESC bytes are removed but CSI leftovers remain (`"\u001B[31mred\u001B[0m"` → `"[31mred[0m"`). Ports match this ASCII filter.
+
+`joinPath` (`umt/URL`) is a slash-normalizing string join. It does not resolve `.` / `..` and does not use OS separators. Leading `/` is kept only on the first segment; trailing `/` only on the last. Empty segments are dropped. Wasm `joinPath` takes an array of strings, not rest arguments.
+
+`escapeRegExp` (`umt/Tool`) does not escape `-` or `/`. Wasm's generated name is `escapeRegexp` (lowercase `p`); TypeScript and Go use `escapeRegExp` / `EscapeRegExp`.
+
 ## Versioning
 
 This package follows [Semantic Versioning (SemVer)](https://semver.org/):

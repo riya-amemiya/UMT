@@ -84,6 +84,8 @@ Unicode-aware string utilities in `src/string/`. Behavior matches TypeScript `pa
 | `umt_strip_tags` | Deletes HTML/XML tags, repeating until stable so `"<sc<script>ript>"` becomes `""`. |
 | `umt_words(s, pattern)` | Default: split on camelCase / acronym boundaries and non-letter/number separators. Pass `Some(&regex)` to return that pattern's matches instead (empty if nothing matches). |
 | `umt_normalize_whitespace` | Collapses Unicode `\s+` to a single space and trims. |
+| `umt_delete_spaces` | Removes every Unicode whitespace character (`char::is_whitespace`). `"Hello World"` → `"HelloWorld"`. |
+| `umt_sanitize_string` | Keeps printable ASCII (space through tilde) plus TAB / LF / CR. Drops NULL, other C0, DEL, ANSI ESC, and **all non-ASCII** (CJK, emoji, `"é"`). Unlike `umt_strip_ansi`, CSI leftovers remain (`"\u{001B}[31mred\u{001B}[0m"` → `"[31mred[0m"`). Char filter, not a regex. |
 | `umt_unescape_html` | Named entities plus decimal / hex numeric references. Decodes via `char::from_u32` (rejects surrogates and out-of-range). Does **not** apply TypeScript's extra NULL / C0 / DEL / C1 filters. |
 | `umt_camel_case` | Lowercases only the first alphanumeric character. Does not split acronyms (`"HELLO"` → `"hELLO"`). |
 | `umt_kebab_case` | Inserts dashes on case boundaries. Splits acronyms (`"XMLHttpRequest"` → `"xml-http-request"`). |
@@ -91,11 +93,15 @@ Unicode-aware string utilities in `src/string/`. Behavior matches TypeScript `pa
 
 ```rust
 use umt_rust::string::{
-    umt_camel_case, umt_kebab_case, umt_normalize_whitespace, umt_slugify, umt_strip_ansi,
-    umt_strip_tags, umt_unescape_html, umt_words,
+    umt_camel_case, umt_delete_spaces, umt_kebab_case, umt_normalize_whitespace,
+    umt_sanitize_string, umt_slugify, umt_strip_ansi, umt_strip_tags, umt_unescape_html,
+    umt_words,
 };
 
 assert_eq!(umt_strip_ansi("\u{001B}[31mred\u{001B}[0m"), "red");
+assert_eq!(umt_sanitize_string("\u{001B}[31mred\u{001B}[0m"), "[31mred[0m");
+assert_eq!(umt_sanitize_string("日本語"), "");
+assert_eq!(umt_delete_spaces("  tab\t space "), "tabspace");
 assert_eq!(umt_strip_tags("<p>Hello <b>World</b></p>"), "Hello World");
 assert_eq!(umt_words("XMLHttpRequest", None), vec!["XML", "Http", "Request"]);
 assert_eq!(umt_normalize_whitespace("  hello   world \t\n foo "), "hello world foo");
@@ -112,16 +118,26 @@ assert_eq!(umt_slugify("Japanese: こんにちは"), "japanese-こんにちは")
 | --- | --- |
 | `umt_hexa_to_rgba` | `#` plus 3, 6, or 8 hex digits → `Rgba`. Invalid input is `Err`. Wasm skips this (`Result<Rgba, HexColorError>`). TypeScript `hexaToRgba` does not validate. |
 | `umt_is_absolute_url` | RFC 3986 scheme check. Protocol-relative URLs are not absolute. Generated for wasm. |
+| `umt_join_path` | Slash-normalizing string join (`&[&str]`), not `std::path::Path`. Keeps the first segment's leading `/` and the last segment's trailing `/`. Empty pieces are dropped. No `.` / `..` resolution. Uses `trim_start_matches` / `trim_end_matches`, not a regex. Generated for wasm. |
+| `umt_escape_regexp` | Escapes `$ ( ) * + . ? [ \ ] ^ { | }`. Hyphen and `/` are not escaped. Char scan, not a regex. Wasm JS name is `escapeRegexp` (lowercase `p`). |
 
 ```rust
 use umt_rust::color::umt_hexa_to_rgba;
-use umt_rust::url::umt_is_absolute_url;
+use umt_rust::tool::umt_escape_regexp;
+use umt_rust::url::{umt_is_absolute_url, umt_join_path};
 
 let red = umt_hexa_to_rgba("#FF0000").unwrap();
 assert_eq!((red.r, red.g, red.b, red.a), (255.0, 0.0, 0.0, 1.0));
 assert!(umt_hexa_to_rgba("FF0000").is_err());
 assert!(umt_is_absolute_url("https://example.com"));
 assert!(!umt_is_absolute_url("//example.com"));
+assert_eq!(
+    umt_join_path(&["https://example.com/", "/api/", "/users"]),
+    "https://example.com/api/users"
+);
+assert_eq!(umt_join_path(&["a", "", "b"]), "a/b");
+assert_eq!(umt_escape_regexp("a.b"), "a\\.b");
+assert_eq!(umt_escape_regexp("foo-bar"), "foo-bar");
 ```
 
 ## parseEmail and calculator
