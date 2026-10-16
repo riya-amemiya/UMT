@@ -55,6 +55,8 @@ A few Date helpers that already use wasm-friendly types (`umt_is_leap_year`, `um
 
 `slugify` and `mathConverter` are generated. They follow the Rust crate, so wasm `slugify` keeps CJK letters (`"japanese-こんにちは"`), unlike TypeScript / Go. `calculator` (HashMap exchange rates), `parseEmail` (`Option<ParseEmailOptions>`), and the UA extractors (`Browser` / `Device` / `Os` / `UserAgentInfo`) are skipped.
 
+`sanitizeString`, `deleteSpaces`, `joinPath`, and `escapeRegexp` are generated. `sanitizeString` is ASCII-only (CJK / emoji dropped) and is not `stripAnsi` (ESC gone, CSI leftovers remain). `joinPath` takes an array of strings, not rest arguments, and does not resolve `.` / `..`. Wasm's JS name is `escapeRegexp` (lowercase `p`); TypeScript is `escapeRegExp`.
+
 ## Build and test
 
 ```bash

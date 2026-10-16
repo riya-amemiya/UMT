@@ -220,15 +220,28 @@ Unicode-aware string utilities in `umt/String`. Python, Rust, and Go ports exist
 | `stripTags(string)` | Deletes HTML/XML tags (`<[^<>]*>`), repeating until stable so `"<sc<script>ript>"` becomes `""`. Self-closing tags are removed without inserting a separator (`"line1<br/>line2"` → `"line1line2"`). |
 | `words(string, pattern?)` | Default: insert spaces on camelCase / acronym boundaries, then split on non-letter/number separators. CJK and other letters are kept. If `pattern` is passed, returns `string.match(pattern)` or `[]`. |
 | `normalizeWhitespace(string)` | Collapses Unicode `\s+` to a single space and trims. Unlike `deleteSpaces`, words stay separated. All-whitespace input → `""`. |
+| `deleteSpaces(string)` | Removes every Unicode `\s` character (spaces, tabs, newlines, em space `U+2003`, ideographic space `U+3000`, …). `"Hello World"` → `"HelloWorld"`. All-whitespace input → `""`. |
+| `sanitizeString(string)` | Keeps printable ASCII (`U+0020`–`U+007E`) plus TAB / LF / CR. Drops NULL, other C0, DEL, C1, ANSI ESC, and **all non-ASCII** (CJK, emoji, `"é"`). Unlike `stripAnsi`, it does not parse CSI: `"\u001B[31mred\u001B[0m"` → `"[31mred[0m"`. |
 | `unescapeHtml(string)` | Named entities (`&amp;` `&lt;` `&gt;` `&quot;` `&#39;` `&#x27;` `&#x2F;` `&#x60;` `&#x3D;`) plus decimal / hex numeric references (`&#65;`, `&#x41;`). `&#X41;` (uppercase `X`) is left unchanged. Dangerous code points are **not** decoded (NULL, C0 except TAB/LF/CR, DEL, C1, surrogates, `>0x10FFFF`). Python / Rust / Go do not apply those extra filters. |
 | `camelCase(string)` | Replaces non-alphanumeric runs, then lowercases **only the first character**. Does not split acronyms: `"HELLO"` → `"hELLO"`, `"XMLHttpRequest"` → `"xMLHttpRequest"`. |
 | `kebabCase(string)` | Inserts dashes on `aB` / `ABc` boundaries, replaces spaces / underscores / other non-alphanumerics, lowercases. Splits acronyms: `"XMLHttpRequest"` → `"xml-http-request"`. |
 | `slugify(string)` | NFD, strip combining marks `U+0300`–`U+036F`, lowercase, then collapse non-`[A-Za-z0-9-]` runs and underscores to `-`. JS `\w` is ASCII, so CJK is dropped: `"Japanese: こんにちは"` → `"japanese"`. Python / Rust keep those letters (`"japanese-こんにちは"`). Go matches TypeScript (ASCII `\w`) but decomposes only a fixed Latin-1 table, not full Unicode NFD. |
 
 ```ts
-import { slugify, stripAnsi, stripTags, words } from "umt/String";
+import {
+  deleteSpaces,
+  sanitizeString,
+  slugify,
+  stripAnsi,
+  stripTags,
+  words,
+} from "umt/String";
 
 stripAnsi("\u001B[31mred\u001B[0m"); // "red"
+sanitizeString("\u001B[31mred\u001B[0m"); // "[31mred[0m"
+sanitizeString("héllo"); // "hllo"
+sanitizeString("日本語"); // ""
+deleteSpaces("  tab\t space "); // "tabspace"
 stripTags("<p>Hello <b>World</b></p>"); // "Hello World"
 stripTags("<sc<script>ript>"); // ""
 words("XMLHttpRequest"); // ["XML", "Http", "Request"]
@@ -249,16 +262,17 @@ Go splits the custom-pattern case into `Words` vs `WordsWithPattern`.
 
 ## Color and URL helpers
 
-`hexaToRgba` (`umt/Color`) and `isAbsoluteUrl` (`umt/URL`). Python, Rust, and Go ports exist.
+`hexaToRgba` (`umt/Color`) and `isAbsoluteUrl` / `joinPath` (`umt/URL`). Python, Rust, and Go ports exist.
 
 | Function | Behavior |
 | --- | --- |
 | `hexaToRgba(hex)` | `#` plus 3, 6, or 8 hex digits → `{ r, g, b, a }`. `r`/`g`/`b` are `0`–`255`; `a` is `0`–`1` rounded to 2 decimals (`#FF000080` → `0.5`). TypeScript does **not** validate; malformed input can yield `NaN`. Python / Rust / Go require the `#` + hex pattern and error otherwise. |
 | `isAbsoluteUrl(url)` | RFC 3986 scheme check: letter, then letters / digits / `+` / `.` / `-`, then `:`. `mailto:` and `tel:` are absolute. Protocol-relative (`"//example.com"`), relative paths, and schemes starting with a digit are not. |
+| `joinPath(...segments)` | String join, not `path.join` and not a URL parser. Keeps the first segment's leading `/` and the last segment's trailing `/`. Strips leading `/` from later segments and trailing `/` from earlier ones, then drops empty pieces. No `.` / `..` resolution. No segments → `""`. A single `"///"` stays `"///"`. |
 
 ```ts
 import { hexaToRgba } from "umt/Color";
-import { isAbsoluteUrl } from "umt/URL";
+import { isAbsoluteUrl, joinPath } from "umt/URL";
 
 hexaToRgba("#FF0000"); // { r: 255, g: 0, b: 0, a: 1 }
 hexaToRgba("#F00"); // { r: 255, g: 0, b: 0, a: 1 }
@@ -268,9 +282,29 @@ isAbsoluteUrl("https://example.com"); // true
 isAbsoluteUrl("mailto:user@host"); // true
 isAbsoluteUrl("/path/to/page"); // false
 isAbsoluteUrl("//example.com"); // false
+
+joinPath("https://example.com/", "/api/", "/users"); // "https://example.com/api/users"
+joinPath("/a/", "/b/", "/c"); // "/a/b/c"
+joinPath("a", "", "b"); // "a/b"
+joinPath(); // ""
 ```
 
-Wasm codegen skips `umt_hexa_to_rgba` (custom `Result`) and generates `isAbsoluteUrl` / `normalizeWhitespace` / `unescapeHtml` / `camelCase` / `slugify`. Wasm `slugify` follows Rust and keeps CJK.
+Wasm codegen skips `umt_hexa_to_rgba` (custom `Result`) and generates `isAbsoluteUrl` / `joinPath` / `normalizeWhitespace` / `unescapeHtml` / `camelCase` / `slugify` / `sanitizeString` / `deleteSpaces` / `escapeRegexp`. Wasm `slugify` follows Rust and keeps CJK. Wasm's JS name is `escapeRegexp` (lowercase `p`); TypeScript is `escapeRegExp`.
+
+## Tool helpers
+
+`escapeRegExp` (`umt/Tool`) prefixes regex metacharacters with `\`. Python `escape_regexp`, Rust `umt_escape_regexp`, Go `EscapeRegExp`, and wasm `escapeRegexp` (lowercase `p`) match the same set: `$ ( ) * + . ? [ \ ] ^ { | }`. Hyphen and `/` are **not** escaped (`"foo-bar"` and `"a/b"` stay unchanged). Empty input → `""`.
+
+```ts
+import { escapeRegExp } from "umt/Tool";
+
+escapeRegExp("a.b"); // "a\\.b"
+escapeRegExp(".*+?^${}()|[]\\"); // "\\.\\*\\+\\?\\^\\$\\{\\}\\(\\)\\|\\[\\]\\\\"
+escapeRegExp("foo-bar"); // "foo-bar"
+escapeRegExp("path/to/file.txt"); // "path/to/file\\.txt"
+```
+
+`calculator` builds its currency-symbol regex with this helper at call time (the symbol is caller input).
 
 ## Array, Async, and Error helpers
 
