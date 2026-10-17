@@ -8,6 +8,12 @@ HTML_ESCAPE_MAP: dict[str, str] = {
     "'": "&#39;",
 }
 
+_HTML_ESCAPE_RE = re.compile(r"[&<>\"']")
+
+
+def _replace_html_special(match: re.Match[str]) -> str:
+    return HTML_ESCAPE_MAP[match.group(0)]
+
 
 def escape_html(string_: str) -> str:
     """
@@ -27,4 +33,4 @@ def escape_html(string_: str) -> str:
         >>> escape_html('"Hello"')
         '&quot;Hello&quot;'
     """
-    return re.sub(r"[&<>\"']", lambda m: HTML_ESCAPE_MAP[m.group(0)], string_)
+    return _HTML_ESCAPE_RE.sub(_replace_html_special, string_)
