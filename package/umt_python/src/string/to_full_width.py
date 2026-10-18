@@ -1,4 +1,7 @@
-import re
+_ASCII_ALNUM = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+_FULL_WIDTH_TABLE = str.maketrans(
+    _ASCII_ALNUM, "".join(chr(ord(character) + 0xFEE0) for character in _ASCII_ALNUM)
+)
 
 
 def to_full_width(string_: str) -> str:
@@ -21,8 +24,4 @@ def to_full_width(string_: str) -> str:
         >>> to_full_width("")
         ''
     """
-    return re.sub(
-        r"[0-9A-Za-z]",
-        lambda match: chr(ord(match.group(0)) + 0xFEE0),
-        string_,
-    )
+    return string_.translate(_FULL_WIDTH_TABLE)
