@@ -1,7 +1,16 @@
-use crate::math::{umt_division, umt_gcd};
+use std::sync::LazyLock;
+
 use regex::Regex;
 
 use super::core::umt_calculator_core;
+use crate::math::{umt_division, umt_gcd};
+
+static LETTER_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"[A-Za-z]+").unwrap());
+static VARIABLE_SPLIT_RE: LazyLock<Regex> =
+    LazyLock::new(|| Regex::new(r"([-+]?\d*[A-Za-z]+)|([-+]?\d+)").unwrap());
+static COEFFICIENT_SPLIT_RE: LazyLock<Regex> =
+    LazyLock::new(|| Regex::new(r"(\d+)|([A-Za-z]+)").unwrap());
+static FRACTION_OVER_ONE_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"(-?)\d+/1").unwrap());
 
 /// Solves literal equations with variables.
 ///
@@ -34,11 +43,9 @@ pub fn umt_literal_expression(x: &str) -> String {
     let mut variable_part: Vec<String> = Vec::new();
 
     // Split by equals sign and identify numerical and variable parts
-    let letter_regex = Regex::new(r"[A-Za-z]+").unwrap();
-    let split_regex = Regex::new(r"([-+]?\d*[A-Za-z]+)|([-+]?\d+)").unwrap();
     for part in &sides {
-        if letter_regex.is_match(part) {
-            variable_part = split_regex
+        if LETTER_RE.is_match(part) {
+            variable_part = VARIABLE_SPLIT_RE
                 .find_iter(part)
                 .map(|m| m.as_str().to_string())
                 .filter(|s| !s.is_empty())
@@ -77,8 +84,7 @@ pub fn umt_literal_expression(x: &str) -> String {
 
     // Split the variable part again to separate coefficient and variable
     if !variable_part.is_empty() {
-        let split_regex = Regex::new(r"(\d+)|([A-Za-z]+)").unwrap();
-        let new_parts: Vec<String> = split_regex
+        let new_parts: Vec<String> = COEFFICIENT_SPLIT_RE
             .find_iter(&variable_part[0])
             .map(|m| m.as_str().to_string())
             .filter(|s| !s.is_empty())
@@ -102,8 +108,7 @@ pub fn umt_literal_expression(x: &str) -> String {
 
         numerical_part = format!("{}/{}", simplified_num, simplified_denom);
 
-        let fraction_regex = Regex::new(r"(-?)\d+/1").unwrap();
-        if fraction_regex.is_match(&numerical_part) {
+        if FRACTION_OVER_ONE_RE.is_match(&numerical_part) {
             return numerical_part.replace("/1", "");
         }
     } else if coefficient != 1 {
