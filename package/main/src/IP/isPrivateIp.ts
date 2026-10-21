@@ -1,4 +1,11 @@
-import { isInRange } from "./isInRange";
+import { cidrToLong } from "./cidrToLong";
+import { ipToLong } from "./ipToLong";
+
+const PRIVATE_RANGES: [number, number][] = [
+  [ipToLong("10.0.0.0"), cidrToLong(8)],
+  [ipToLong("172.16.0.0"), cidrToLong(12)],
+  [ipToLong("192.168.0.0"), cidrToLong(16)],
+];
 
 /**
 Checks if an IP address is within private IP ranges
@@ -6,14 +13,8 @@ Checks if an IP address is within private IP ranges
 @returns {boolean} True if the IP is private, false otherwise
 */
 export const isPrivateIp = (ip: string): boolean => {
-  // Define private IP ranges with their CIDR notations
-  const privateRanges = [
-    { network: "10.0.0.0", cidr: 8 }, // Class A private network
-    { network: "172.16.0.0", cidr: 12 }, // Class B private network
-    { network: "192.168.0.0", cidr: 16 }, // Class C private network
-  ];
-
-  return privateRanges.some((range) =>
-    isInRange(ip, range.network, range.cidr),
+  const remoteLong = ipToLong(ip);
+  return PRIVATE_RANGES.some(
+    ([network, mask]) => (remoteLong & mask) === (network & mask),
   );
 };
