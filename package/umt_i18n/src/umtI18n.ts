@@ -153,10 +153,7 @@ export class UMT_i18n<
     if (count === 0) {
       return "_zero";
     }
-    if (count === 1) {
-      return "_one";
-    }
-    return "_other";
+    return count === 1 ? "_one" : "_other";
   }
 
   private replacePlaceholders(
@@ -170,11 +167,7 @@ export class UMT_i18n<
       }
 
       const formatter = this.formatters.get(key);
-      if (formatter) {
-        return formatter(value, String(this.locale));
-      }
-
-      return String(value);
+      return formatter ? formatter(value, String(this.locale)) : String(value);
     });
   }
 
