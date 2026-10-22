@@ -1,4 +1,18 @@
-use crate::ip::is_in_range::is_in_range;
+use std::sync::LazyLock;
+
+use crate::ip::cidr_to_long::cidr_to_long;
+use crate::ip::ip_to_long::ip_to_long;
+
+static PRIVATE_RANGES: LazyLock<[(u32, u32); 3]> = LazyLock::new(|| {
+    [
+        (ip_to_long("10.0.0.0").unwrap(), cidr_to_long(8).unwrap()),
+        (ip_to_long("172.16.0.0").unwrap(), cidr_to_long(12).unwrap()),
+        (
+            ip_to_long("192.168.0.0").unwrap(),
+            cidr_to_long(16).unwrap(),
+        ),
+    ]
+});
 
 /// Checks if an IP address is within private IP ranges
 ///
@@ -21,20 +35,9 @@ pub fn is_private_ip(ip: &str) -> Result<bool, String> {
         return Err("IP address is required".to_string());
     }
 
-    // Define private IP ranges with their CIDR notations
-    let private_ranges = [
-        ("10.0.0.0", 8),     // Class A private network
-        ("172.16.0.0", 12),  // Class B private network
-        ("192.168.0.0", 16), // Class C private network
-    ];
+    let remote_long = ip_to_long(ip).map_err(|e| format!("Invalid IP address: {}", e))?;
 
-    for (network, cidr) in private_ranges {
-        match is_in_range(ip, network, cidr) {
-            Ok(true) => return Ok(true),
-            Ok(false) => continue,
-            Err(e) => return Err(format!("Invalid IP address: {}", e)),
-        }
-    }
-
-    Ok(false)
+    Ok(PRIVATE_RANGES
+        .iter()
+        .any(|&(network, mask)| (remote_long & mask) == (network & mask)))
 }

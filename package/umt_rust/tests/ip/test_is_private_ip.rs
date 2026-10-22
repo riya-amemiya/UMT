@@ -1,6 +1,11 @@
-use umt_rust::ip::is_private_ip;
+use umt_rust::ip::{is_in_range, is_private_ip};
 
 // Test private IP addresses
+#[test]
+fn test_is_private_ip_class_a_private_network_address() {
+    assert!(is_private_ip("10.0.0.0").unwrap());
+}
+
 #[test]
 fn test_is_private_ip_class_a_private_start_range() {
     assert!(is_private_ip("10.0.0.1").unwrap());
@@ -12,6 +17,11 @@ fn test_is_private_ip_class_a_private_end_range() {
 }
 
 #[test]
+fn test_is_private_ip_class_b_private_network_address() {
+    assert!(is_private_ip("172.16.0.0").unwrap());
+}
+
+#[test]
 fn test_is_private_ip_class_b_private_start_range() {
     assert!(is_private_ip("172.16.0.1").unwrap());
 }
@@ -19,6 +29,11 @@ fn test_is_private_ip_class_b_private_start_range() {
 #[test]
 fn test_is_private_ip_class_b_private_end_range() {
     assert!(is_private_ip("172.31.255.255").unwrap());
+}
+
+#[test]
+fn test_is_private_ip_class_c_private_network_address() {
+    assert!(is_private_ip("192.168.0.0").unwrap());
 }
 
 #[test]
@@ -80,6 +95,49 @@ fn test_is_private_ip_link_local_address() {
 #[test]
 fn test_is_private_ip_localhost() {
     assert!(!is_private_ip("127.0.0.1").unwrap());
+}
+
+#[test]
+fn test_is_private_ip_unspecified_address() {
+    assert!(!is_private_ip("0.0.0.0").unwrap());
+}
+
+#[test]
+fn test_is_private_ip_broadcast_address() {
+    assert!(!is_private_ip("255.255.255.255").unwrap());
+}
+
+#[test]
+fn test_is_private_ip_matches_is_in_range_rfc1918() {
+    let samples = [
+        "10.0.0.0",
+        "10.0.0.1",
+        "10.255.255.255",
+        "172.16.0.0",
+        "172.16.0.1",
+        "172.31.255.255",
+        "192.168.0.0",
+        "192.168.1.1",
+        "192.168.255.255",
+        "9.255.255.255",
+        "11.0.0.0",
+        "172.15.255.255",
+        "172.32.0.0",
+        "192.167.255.255",
+        "192.169.0.0",
+        "8.8.8.8",
+        "1.1.1.1",
+        "169.254.0.1",
+        "127.0.0.1",
+        "0.0.0.0",
+        "255.255.255.255",
+    ];
+    for ip in samples {
+        let expected = is_in_range(ip, "10.0.0.0", 8).unwrap()
+            || is_in_range(ip, "172.16.0.0", 12).unwrap()
+            || is_in_range(ip, "192.168.0.0", 16).unwrap();
+        assert_eq!(is_private_ip(ip).unwrap(), expected, "{ip}");
+    }
 }
 
 // Test invalid inputs
