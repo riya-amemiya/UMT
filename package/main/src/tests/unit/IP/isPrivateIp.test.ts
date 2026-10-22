@@ -1,12 +1,17 @@
+import { isInRange } from "@/IP/isInRange";
 import { isPrivateIp } from "@/IP/isPrivateIp";
+
 describe("isPrivateIp", () => {
   describe("private IP addresses", () => {
     test.each([
       // [IP address, description]
+      ["10.0.0.0", "Class A private - network address"],
       ["10.0.0.1", "Class A private - start range"],
       ["10.255.255.255", "Class A private - end range"],
+      ["172.16.0.0", "Class B private - network address"],
       ["172.16.0.1", "Class B private - start range"],
       ["172.31.255.255", "Class B private - end range"],
+      ["192.168.0.0", "Class C private - network address"],
       ["192.168.0.1", "Class C private - start range"],
       ["192.168.255.255", "Class C private - end range"],
     ])("should identify %s as private IP (%s)", (ip) => {
@@ -27,8 +32,42 @@ describe("isPrivateIp", () => {
       ["1.1.1.1", "Cloudflare DNS"],
       ["169.254.0.1", "Link-local address"],
       ["127.0.0.1", "Localhost"],
+      ["0.0.0.0", "Unspecified address"],
+      ["255.255.255.255", "Broadcast address"],
     ])("should identify %s as non-private IP (%s)", (ip) => {
       expect(isPrivateIp(ip)).toBe(false);
+    });
+  });
+
+  describe("RFC 1918 composition", () => {
+    test.each([
+      "10.0.0.0",
+      "10.0.0.1",
+      "10.255.255.255",
+      "172.16.0.0",
+      "172.16.0.1",
+      "172.31.255.255",
+      "192.168.0.0",
+      "192.168.1.1",
+      "192.168.255.255",
+      "9.255.255.255",
+      "11.0.0.0",
+      "172.15.255.255",
+      "172.32.0.0",
+      "192.167.255.255",
+      "192.169.0.0",
+      "8.8.8.8",
+      "1.1.1.1",
+      "169.254.0.1",
+      "127.0.0.1",
+      "0.0.0.0",
+      "255.255.255.255",
+    ])("should match isInRange RFC 1918 composition for %s", (ip) => {
+      expect(isPrivateIp(ip)).toBe(
+        isInRange(ip, "10.0.0.0", 8) ||
+          isInRange(ip, "172.16.0.0", 12) ||
+          isInRange(ip, "192.168.0.0", 16),
+      );
     });
   });
 });
