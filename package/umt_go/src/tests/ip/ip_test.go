@@ -890,10 +890,13 @@ func TestIsInRangeErrorMessageFormatting(t *testing.T) {
 
 func TestIsPrivateIpTrue(t *testing.T) {
 	privateIps := []string{
+		"10.0.0.0",
 		"10.0.0.1",
 		"10.255.255.255",
+		"172.16.0.0",
 		"172.16.0.1",
 		"172.31.255.255",
+		"192.168.0.0",
 		"192.168.0.1",
 		"192.168.255.255",
 	}
@@ -918,11 +921,59 @@ func TestIsPrivateIpFalse(t *testing.T) {
 		"1.1.1.1",
 		"169.254.0.1",
 		"127.0.0.1",
+		"0.0.0.0",
+		"255.255.255.255",
 	}
 	for _, ipAddr := range nonPrivateIps {
 		t.Run(ipAddr, func(t *testing.T) {
 			if ip.IsPrivateIp(ipAddr) {
 				t.Errorf("IsPrivateIp(%q) = true, want false", ipAddr)
+			}
+		})
+	}
+}
+
+func TestIsPrivateIpMatchesIsInRangeRFC1918(t *testing.T) {
+	samples := []string{
+		"10.0.0.0",
+		"10.0.0.1",
+		"10.255.255.255",
+		"172.16.0.0",
+		"172.16.0.1",
+		"172.31.255.255",
+		"192.168.0.0",
+		"192.168.1.1",
+		"192.168.255.255",
+		"9.255.255.255",
+		"11.0.0.0",
+		"172.15.255.255",
+		"172.32.0.0",
+		"192.167.255.255",
+		"192.169.0.0",
+		"8.8.8.8",
+		"1.1.1.1",
+		"169.254.0.1",
+		"127.0.0.1",
+		"0.0.0.0",
+		"255.255.255.255",
+	}
+	for _, ipAddr := range samples {
+		t.Run(ipAddr, func(t *testing.T) {
+			inA, err := ip.IsInRange(ipAddr, "10.0.0.0/8")
+			if err != nil {
+				t.Fatalf("IsInRange(%q, 10.0.0.0/8) error: %v", ipAddr, err)
+			}
+			inB, err := ip.IsInRange(ipAddr, "172.16.0.0/12")
+			if err != nil {
+				t.Fatalf("IsInRange(%q, 172.16.0.0/12) error: %v", ipAddr, err)
+			}
+			inC, err := ip.IsInRange(ipAddr, "192.168.0.0/16")
+			if err != nil {
+				t.Fatalf("IsInRange(%q, 192.168.0.0/16) error: %v", ipAddr, err)
+			}
+			if ip.IsPrivateIp(ipAddr) != (inA || inB || inC) {
+				t.Errorf("IsPrivateIp(%q) = %v, want RFC 1918 composition %v",
+					ipAddr, ip.IsPrivateIp(ipAddr), inA || inB || inC)
 			}
 		})
 	}
