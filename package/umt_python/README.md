@@ -62,7 +62,7 @@ Public names are re-exported from `src/__init__.py`. Grouped the same way as Typ
 | `predicate` | `every`, `some`, `is_nullish` |
 | `random` | `random_choice`, `seeded_random` |
 | `simple` | `birthday_simple`, `now_simple` |
-| `string` | `format_string`, `slugify`, `strip_ansi`, `strip_tags`, `words`, `normalize_whitespace`, `unescape_html`, `camel_case`, `kebab_case`, `sanitize_string`, `delete_spaces` (see below) |
+| `string` | `format_string`, `slugify`, `strip_ansi`, `strip_tags`, `words`, `normalize_whitespace`, `unescape_html`, `escape_html`, `camel_case`, `kebab_case`, `sanitize_string`, `delete_spaces`, `to_full_width`, `to_half_width` (see below) |
 | `time` | `convert_time` |
 | `tool` | `pipe`, `unwrap`, `parse_json`, `escape_regexp` (see below) |
 | `ua` | `parse_user_agent`, `extract_browser_from_user_agent`, `extract_device_from_user_agent`, `extract_os_from_user_agent` (see below) |
@@ -103,6 +103,9 @@ Unicode-aware helpers aligned with TypeScript `package/main/src/String`.
 | `delete_spaces` | `(string_: str) -> str` | Removes every Unicode `\s` character (spaces, tabs, newlines, em space, ideographic space). | `delete_spaces("Hello World")  # "HelloWorld"` / `delete_spaces("  tab\t space ")  # "tabspace"` |
 | `sanitize_string` | `(string_: str) -> str` | Keeps printable ASCII (space to tilde) plus TAB / LF / CR. Drops NULL, other C0, DEL, ANSI ESC, and **all non-ASCII** (CJK, emoji, `"é"`). Unlike `strip_ansi`, CSI leftovers remain. | `sanitize_string("\x1b[31mred\x1b[0m")  # "[31mred[0m"` / `sanitize_string("héllo")  # "hllo"` / `sanitize_string("日本語")  # ""` |
 | `unescape_html` | `(string_: str) -> str` | Named entities plus decimal / hex numeric references. `&#X41;` (uppercase `X`) is left unchanged. Decodes via `chr()` — it does **not** apply TypeScript's extra rejection of NULL / C0 / DEL / C1 / surrogates. | `unescape_html("Tom &amp; Jerry")  # "Tom & Jerry"` / `unescape_html("&#65;")  # "A"` |
+| `escape_html` | `(string_: str) -> str` | Encodes `& < > " '`. Does **not** encode backtick or `/`. TypeScript `escapeHtml` also maps backtick → `&#x60;` and `/` → `&#x2F;`. Cached `re.compile(r"[&<>\"']")`. | `escape_html("<script></script>")  # "&lt;script&gt;&lt;/script&gt;"` / `escape_html("Tom & Jerry")  # "Tom &amp; Jerry"` |
+| `to_full_width` | `(string_: str) -> str` | ASCII digits and letters only (`0-9A-Za-z`), each code point `+ 0xFEE0`. Punctuation and space stay. `str.maketrans` / `translate`, not regex. | `to_full_width("Abc123")  # "Ａｂｃ１２３"` / `to_full_width("a-b!")  # "ａ-ｂ!"` |
+| `to_half_width` | `(string_: str) -> str` | **Broader than TypeScript / Rust / Go**: `U+FF01`–`U+FF5E` (full-width `!` through `~`, including digits and letters) plus ideographic space `U+3000` → `" "`. Those ports convert only `０-９Ａ-Ｚａ-ｚ`. `str.maketrans` / `translate`, not regex. | `to_half_width("ＡＢＣ１２３")  # "ABC123"` / `to_half_width("！　")  # "! "` |
 | `camel_case` | `(string_: str) -> str` | Replaces non-alphanumeric runs, then lowercases only the first character. Does not split acronyms. | `camel_case("hello-world")  # "helloWorld"` / `camel_case("HELLO")  # "hELLO"` |
 | `kebab_case` | `(string_: str) -> str` | Inserts dashes on case boundaries and replaces separators. Splits acronyms. | `kebab_case("XMLHttpRequest")  # "xml-http-request"` |
 | `slugify` | `(string_: str) -> str` | NFD, strip combining marks, lowercase, hyphenate. Python `\w` is Unicode, so CJK stays: `"Japanese: こんにちは"` → `"japanese-こんにちは"`. TypeScript / Go drop those letters (`"japanese"`). | `slugify("Hello World!")  # "hello-world"` / `slugify("Café")  # "cafe"` |
@@ -117,7 +120,7 @@ IPv4 dotted-decimal only, aligned with TypeScript `package/main/src/IP`. Unlike 
 | `cidr_to_long` / `cidr_to_subnet_mask` | `(cidr: int) -> int` / `(cidr: int) -> str` | Prefix `0`–`32`. Outside that range raises `ValueError`. | `cidr_to_long(24)  # 4294967040` / `cidr_to_subnet_mask(24)  # "255.255.255.0"` |
 | `subnet_mask_to_cidr` | `(subnet_mask: str) -> int` | Requires contiguous `1` bits then `0` bits. `"255.0.255.0"` raises. TypeScript `subnetMaskToCidr` only counts bits. | `subnet_mask_to_cidr("255.255.255.0")  # 24` |
 | `is_in_range` | `(remote_ip, network_ip, cidr) -> bool` | `(ip & mask) == (network & mask)`. CIDR `0` matches every IPv4 address. | `is_in_range("192.168.1.2", "192.168.1.0", 24)  # True` |
-| `is_private_ip` | `(ip: str) -> bool` | RFC 1918 only: `10.0.0.0/8`, `172.16.0.0/12`, `192.168.0.0/16`. Loopback and link-local are not private. | `is_private_ip("10.0.0.1")  # True` / `is_private_ip("127.0.0.1")  # False` |
+| `is_private_ip` | `(ip: str) -> bool` | RFC 1918 only: `10.0.0.0/8`, `172.16.0.0/12`, `192.168.0.0/16`. Loopback and link-local are not private. The three `(network, mask)` pairs are computed once at module load. Invalid input raises `ValueError`. | `is_private_ip("10.0.0.1")  # True` / `is_private_ip("127.0.0.1")  # False` |
 | `get_ip_class` | `(ip: str) -> str` | Classful first-octet lookup (`A`–`E`). `0.0.0.0` and malformed input return `""`. | `get_ip_class("10.0.0.1")  # "A"` |
 | `get_network_address` | `(ip: str, subnet_mask: str) -> int` | Returns an unsigned 32-bit **int**, not a dotted string. | `get_network_address("192.168.1.1", "255.255.255.0")  # 3232235776` |
 | `ip_to_binary_string` | `(ip: str) -> str` | 32-character `0`/`1` string, eight bits per octet. | `ip_to_binary_string("192.168.0.1")  # "11000000101010000000000000000001"` |
@@ -173,7 +176,7 @@ Coarse User-Agent labels aligned with TypeScript `package/main/src/UA`. Matching
 | `extract_os_from_user_agent` | `(ua: str) -> OsType` | iPhone / iPad / iPod → `"ios"` even when the string contains `like Mac OS X`. Android wins over the `Linux` token. | `extract_os_from_user_agent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)")  # "macos"` |
 | `parse_user_agent` | `(user_agent: str) -> UserAgentInfo` | TypedDict `{browser, device, os}`. | `parse_user_agent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) Chrome/91.0")  # {'browser': 'chrome', 'device': 'desktop', 'os': 'macos'}` |
 
-Fixed regexes in this package are compiled once at module level (`re.compile`): UA extractors, `hexa_to_rgba`, `is_absolute_url`, `join_path`, `math_converter`, `parse_email`, `strip_ansi` / `strip_tags`, `unescape_html`, `camel_case`, `kebab_case`, `slugify`, `normalize_whitespace`, `sanitize_string`, `delete_spaces`, `escape_regexp`, calculator / `calculator_core` (except the currency-symbol pattern), `literal_expression`, `apply_formatter`, `get_value`. Caller-built patterns (`format_string`, `regex_match`, optional `words` pattern, `template_literal`, calculator currency symbol) stay inline.
+Fixed regexes in this package are compiled once at module level (`re.compile`): UA extractors, `hexa_to_rgba`, `is_absolute_url`, `join_path`, `math_converter`, `parse_email`, `strip_ansi` / `strip_tags`, `unescape_html`, `escape_html`, `camel_case`, `kebab_case`, `slugify`, `normalize_whitespace`, `sanitize_string`, `delete_spaces`, `escape_regexp`, calculator / `calculator_core` (except the currency-symbol pattern), `literal_expression`, `apply_formatter`, `get_value`. Caller-built patterns (`format_string`, `regex_match`, optional `words` pattern, `template_literal`, calculator currency symbol) stay inline. `to_full_width` / `to_half_width` use module-level `str.maketrans` tables, not regex.
 
 ## Function List
 
@@ -184,7 +187,9 @@ Fixed regexes in this package are compiled once at module level (`re.compile`): 
 | `delete_spaces` | `(string_: str) -> str` | Remove all whitespace characters from a string | `delete_spaces("Hello World")  # "HelloWorld"` |
 | `format_string` | `(template: str, *values: object) -> str` | Replace placeholders {0}, {1}, etc. in a template string | `format_string("Sum of {0} and {1} is {2}", 1, 2, 3)  # "Sum of 1 and 2 is 3"` |
 | `reverse_string` | `(char: str) -> str` | Reverse a string | `reverse_string("Hello")  # "olleH"` |
-| `to_half_width` | `(string_: str) -> str` | Convert full-width characters to half-width | `to_half_width("Ｈｅｌｌｏ １２３")  # "Hello 123"` |
+| `escape_html` | `(string_: str) -> str` | Encode `& < > " '` (not backtick or `/`) | `escape_html("<b>")  # "&lt;b&gt;"` |
+| `to_full_width` | `(string_: str) -> str` | Convert ASCII digits and letters to full-width | `to_full_width("Abc123")  # "Ａｂｃ１２３"` |
+| `to_half_width` | `(string_: str) -> str` | Convert `U+FF01`–`U+FF5E` and ideographic space to half-width | `to_half_width("Ｈｅｌｌｏ １２３")  # "Hello 123"` |
 
 ### Base64 Encoding Functions
 
@@ -242,6 +247,8 @@ Fixed regexes in this package are compiled once at module level (`re.compile`): 
 - IP helpers are IPv4 only. They validate input (TypeScript does not). `subnet_mask_to_cidr` requires a contiguous mask; TypeScript `subnetMaskToCidr` only counts set bits. `is_private_ip` is RFC 1918 only (not loopback or link-local).
 - `hexa_to_rgba` requires `#` plus 3, 6, or 8 hex digits. TypeScript `hexaToRgba` does not validate.
 - `unescape_html` decodes numeric entities with `chr()`. TypeScript `unescapeHtml` additionally rejects NULL, most C0 controls, DEL, C1, surrogates, and out-of-range values.
+- `escape_html` encodes `& < > " '` only. TypeScript `escapeHtml` also encodes backtick (`&#x60;`) and `/` (`&#x2F;`).
+- `to_full_width` converts ASCII alnum only. `to_half_width` also converts full-width punctuation (`U+FF01`–`U+FF5E`) and ideographic space; TypeScript / Rust / Go `toHalfWidth` convert digits and letters only.
 - `slugify` keeps Unicode letters (Python `\w`). TypeScript / Go `slugify` use ASCII `\w` and drop CJK.
 - `parse_email` requires `ParseEmailOptions`. It does not apply TypeScript's 320-character ReDoS cap.
 - `math_converter` formats split terms with `float` (`"1500.0*1000+…"`). TypeScript / Rust / Go emit integers (`"1500*1000+…"`).

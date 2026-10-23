@@ -76,7 +76,7 @@ Wasm bindings for most of these Date helpers are **not** auto-generated (`DateTi
 
 ## String helpers
 
-Unicode-aware string utilities in `src/string/`. Behavior matches TypeScript `package/main/src/String` (verified against the Rust tests added with the `LazyLock` regex cache).
+Unicode-aware string utilities in `src/string/`. Most helpers match TypeScript `package/main/src/String`; `umt_escape_html` and `umt_unescape_html` differ as noted below.
 
 | Function | Notes |
 | --- | --- |
@@ -87,15 +87,18 @@ Unicode-aware string utilities in `src/string/`. Behavior matches TypeScript `pa
 | `umt_delete_spaces` | Removes every Unicode whitespace character (`char::is_whitespace`). `"Hello World"` → `"HelloWorld"`. |
 | `umt_sanitize_string` | Keeps printable ASCII (space through tilde) plus TAB / LF / CR. Drops NULL, other C0, DEL, ANSI ESC, and **all non-ASCII** (CJK, emoji, `"é"`). Unlike `umt_strip_ansi`, CSI leftovers remain (`"\u{001B}[31mred\u{001B}[0m"` → `"[31mred[0m"`). Char filter, not a regex. |
 | `umt_unescape_html` | Named entities plus decimal / hex numeric references. Decodes via `char::from_u32` (rejects surrogates and out-of-range). Does **not** apply TypeScript's extra NULL / C0 / DEL / C1 filters. |
+| `umt_escape_html` | Encodes `& < > " '`. Does **not** encode backtick or `/`. TypeScript `escapeHtml` also maps backtick → `&#x60;` and `/` → `&#x2F;`. Char scan, not a regex. Generated for wasm. |
+| `umt_to_full_width` | ASCII digits and letters only (`0-9A-Za-z`), each code point `+ 0xFEE0`. Punctuation and space stay (`"a-b!"` → `"ａ-ｂ!"`). Generated for wasm. |
+| `umt_to_half_width` | Full-width digits and letters only (`０-９Ａ-Ｚａ-ｚ`). CJK, punctuation, and ideographic space stay. Python also converts `U+FF01`–`U+FF5E` and `U+3000`. Generated for wasm. |
 | `umt_camel_case` | Lowercases only the first alphanumeric character. Does not split acronyms (`"HELLO"` → `"hELLO"`). |
 | `umt_kebab_case` | Inserts dashes on case boundaries. Splits acronyms (`"XMLHttpRequest"` → `"xml-http-request"`). |
 | `umt_slugify` | NFD, drop combining marks, lowercase, hyphenate. `char::is_alphanumeric` keeps CJK (`"Japanese: こんにちは"` → `"japanese-こんにちは"`). TypeScript / Go drop those letters. Generated for wasm. |
 
 ```rust
 use umt_rust::string::{
-    umt_camel_case, umt_delete_spaces, umt_kebab_case, umt_normalize_whitespace,
-    umt_sanitize_string, umt_slugify, umt_strip_ansi, umt_strip_tags, umt_unescape_html,
-    umt_words,
+    umt_camel_case, umt_delete_spaces, umt_escape_html, umt_kebab_case,
+    umt_normalize_whitespace, umt_sanitize_string, umt_slugify, umt_strip_ansi,
+    umt_strip_tags, umt_to_full_width, umt_to_half_width, umt_unescape_html, umt_words,
 };
 
 assert_eq!(umt_strip_ansi("\u{001B}[31mred\u{001B}[0m"), "red");
@@ -106,6 +109,9 @@ assert_eq!(umt_strip_tags("<p>Hello <b>World</b></p>"), "Hello World");
 assert_eq!(umt_words("XMLHttpRequest", None), vec!["XML", "Http", "Request"]);
 assert_eq!(umt_normalize_whitespace("  hello   world \t\n foo "), "hello world foo");
 assert_eq!(umt_unescape_html("Tom &amp; Jerry"), "Tom & Jerry");
+assert_eq!(umt_escape_html("<script></script>"), "&lt;script&gt;&lt;/script&gt;");
+assert_eq!(umt_to_full_width("Abc123"), "Ａｂｃ１２３");
+assert_eq!(umt_to_half_width("ＡＢＣ１２３"), "ABC123");
 assert_eq!(umt_camel_case("hello-world"), "helloWorld");
 assert_eq!(umt_kebab_case("XMLHttpRequest"), "xml-http-request");
 assert_eq!(umt_slugify("Hello World!"), "hello-world");
@@ -214,7 +220,7 @@ IPv4 utilities in `src/ip/`. Names are **not** `umt_`-prefixed (`umt_rust::ip::c
 | `cidr_to_long` / `cidr_to_subnet_mask` | Prefix `0`–`32`. `cidr > 32` is `Err`. CIDR `0` is `0`. |
 | `subnet_mask_to_cidr` | Requires contiguous `1` bits then `0` bits (same as Python). TypeScript only counts set bits. |
 | `is_in_range` | `(ip & mask) == (network & mask)`. |
-| `is_private_ip` | RFC 1918 only: `10.0.0.0/8`, `172.16.0.0/12`, `192.168.0.0/16`. Loopback and link-local are not private. |
+| `is_private_ip` | RFC 1918 only: `10.0.0.0/8`, `172.16.0.0/12`, `192.168.0.0/16`. Loopback and link-local are not private. The three `(network, mask)` pairs are a `LazyLock` static. Invalid input is `Err`. |
 | `get_ip_class` | Classful first-octet lookup. `0.0.0.0` and malformed input return `""`. |
 | `get_network_address` | Returns `u32`, not a dotted string. |
 | `ip_to_binary_string` | 32-character `0`/`1` string. |

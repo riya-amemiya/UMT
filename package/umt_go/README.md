@@ -99,6 +99,9 @@ Unicode-aware helpers in `src/str`, aligned with TypeScript `package/main/src/St
 | `DeleteSpaces` | Removes every Unicode space (`unicode.IsSpace`), including em space and ideographic space. `"Hello World"` → `"HelloWorld"`. |
 | `SanitizeString` | Keeps printable ASCII (space to tilde) plus TAB / LF / CR. Drops NULL, other C0, DEL, ANSI ESC, and **all non-ASCII** (CJK, emoji, `"é"`). Unlike `StripAnsi`, CSI leftovers remain (`"\x1b[31mred\x1b[0m"` → `"[31mred[0m"`). |
 | `UnescapeHtml` | Named entities plus decimal / hex numeric references. `&#X41;` (uppercase `X`) is left unchanged. Decodes via `rune` — it does **not** apply TypeScript's extra rejection of NULL / C0 / DEL / C1 / surrogates. |
+| `EscapeHtml` | Encodes `& < > " '`. Does **not** encode backtick or `/`. TypeScript `escapeHtml` also maps backtick → `&#x60;` and `/` → `&#x2F;`. Rune scan, not a regex. |
+| `ToFullWidth` | ASCII digits and letters only (`0-9A-Za-z`), each rune `+ 0xFEE0`. Punctuation and space stay (`"a-b!"` → `"ａ-ｂ!"`). |
+| `ToHalfWidth` | Full-width digits and letters only (`０-９Ａ-Ｚａ-ｚ`). CJK, punctuation, and ideographic space stay. Python also converts `U+FF01`–`U+FF5E` and `U+3000`. |
 | `CamelCase` | Replaces non-alphanumeric runs, then lowercases only the first rune. Does not split acronyms (`"HELLO"` → `"hELLO"`, `"XMLHttpRequest"` → `"xMLHttpRequest"`). |
 | `KebabCase` | Inserts dashes on case boundaries and replaces separators. Splits acronyms (`"XMLHttpRequest"` → `"xml-http-request"`). |
 | `Slugify` | Lowercase hyphenated slug. Go `\w` is ASCII, so CJK is dropped (`"Japanese: こんにちは"` → `"japanese"`), matching TypeScript. Diacritics are decomposed through a **fixed Latin-1 table**, not full Unicode NFD. Python / Rust keep Unicode letters. |
@@ -114,6 +117,9 @@ _ = str.DeleteSpaces("  tab\t space ")                   // "tabspace"
 _ = str.SanitizeString("\x1b[31mred\x1b[0m")             // "[31mred[0m"
 _ = str.SanitizeString("日本語")                           // ""
 _ = str.UnescapeHtml("Tom &amp; Jerry") // "Tom & Jerry"
+_ = str.EscapeHtml("<script></script>") // "&lt;script&gt;&lt;/script&gt;"
+_ = str.ToFullWidth("Abc123") // "Ａｂｃ１２３"
+_ = str.ToHalfWidth("ＡＢＣ１２３") // "ABC123"
 _ = str.CamelCase("hello-world") // "helloWorld"
 _ = str.KebabCase("XMLHttpRequest") // "xml-http-request"
 _ = str.Slugify("Hello World!")  // "hello-world"
@@ -145,7 +151,7 @@ _ = tool.EscapeRegExp("a.b")                                   // "a\\.b"
 _ = tool.EscapeRegExp("foo-bar")                               // "foo-bar"
 ```
 
-Fixed regexes in this package are compiled once with package-level `regexp.MustCompile` (`CamelCase`, `KebabCase`, `Slugify`, `UnescapeHtml`, `SanitizeString`, `HexaToRgba`, `StripAnsi` / `StripTags` / `Words`, `NormalizeWhitespace`, `IsAbsoluteUrl`, `JoinPath` slash regexes, UA extractors, calculator, `ParseEmail`). Caller-built patterns (`FormatString`, `RegexMatch`, currency symbol) stay inline. `EscapeRegExp` and `DeleteSpaces` scan characters (`unicode.IsSpace`); they do not compile a regex.
+Fixed regexes in this package are compiled once with package-level `regexp.MustCompile` (`CamelCase`, `KebabCase`, `Slugify`, `UnescapeHtml`, `SanitizeString`, `HexaToRgba`, `StripAnsi` / `StripTags` / `Words`, `NormalizeWhitespace`, `IsAbsoluteUrl`, `JoinPath` slash regexes, UA extractors, calculator, `ParseEmail`). Caller-built patterns (`FormatString`, `RegexMatch`, currency symbol) stay inline. `EscapeHtml`, `EscapeRegExp`, `DeleteSpaces`, `ToFullWidth`, and `ToHalfWidth` scan runes; they do not compile a regex.
 
 ## parseEmail
 
@@ -207,7 +213,7 @@ Other constraints (verified against `src/ip/ip.go` and `src/tests/ip/ip_test.go`
 
 - Leading-zero octets (`"192.168.01.1"`) are rejected.
 - `SubnetMaskToCidr` requires contiguous `1` bits then `0` bits (`"255.0.255.0"` errors). TypeScript `subnetMaskToCidr` only counts set bits.
-- `IsPrivateIp` is RFC 1918 only (`10/8`, `172.16/12`, `192.168/16`). Loopback and link-local are not private. Invalid input returns `false` (no error).
+- `IsPrivateIp` is RFC 1918 only (`10/8`, `172.16/12`, `192.168/16`). Loopback and link-local are not private. Invalid input returns `false` (no error). Unlike TypeScript / Python / Rust, the three ranges are rebuilt on each call.
 - `GetIpClass("0.0.0.0")` is `""`.
 - `IpToBinaryString` packs via `IpToLong` then formats one 32-bit field (`%032b`). Invalid input (including leading-zero octets) returns an error, same as `IpToLong`.
 
