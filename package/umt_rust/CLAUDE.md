@@ -37,6 +37,7 @@ Each module typically has:
 - Date `DateTime<Utc>` calendar fields are wall-clock values except `umt_from_unix` / `umt_to_unix`
 - UA extractors return `Browser` / `Device` / `Os` enums. Opera (`opr/`) is `Browser::Other`. Android without `mobile` is `Device::Tablet`. Wasm skips all four UA functions.
 - `umt_sanitize_string` is ASCII-only (CJK / emoji dropped) and is not `umt_strip_ansi`. `umt_join_path` is a slash join (`trim_start_matches` / `trim_end_matches`), not a regex. `umt_escape_regexp` does not escape `-` or `/`; wasm JS name is `escapeRegexp`.
+- `umt_escape_html` encodes `& < > " '` only (TypeScript also encodes backtick and `/`). `umt_to_full_width` is ASCII alnum only. `umt_to_half_width` is full-width alnum only (Python also converts `U+FF01`–`U+FF5E` and `U+3000`). `is_private_ip` hoists RFC 1918 masks in a `LazyLock` static.
 
 ### Testing Patterns
 

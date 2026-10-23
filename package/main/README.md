@@ -89,7 +89,7 @@ Input validation is the caller's responsibility. These functions do not throw on
 | `cidrToLong(cidr)` / `cidrToSubnetMask(cidr)` | Prefix length `0`–`32` to a mask number / dotted mask. CIDR `0` is `0` (`"0.0.0.0"`). |
 | `subnetMaskToCidr(mask)` | Counts set bits. Does **not** require a contiguous mask: `"255.0.255.0"` returns `16`. |
 | `isInRange(ip, network, cidr)` | `(ip & mask) === (network & mask)`. CIDR `0` matches every IPv4 address. |
-| `isPrivateIp(ip)` | RFC 1918 only: `10.0.0.0/8`, `172.16.0.0/12`, `192.168.0.0/16`. Loopback (`127.0.0.1`) and link-local (`169.254.0.0/16`) are **not** private. |
+| `isPrivateIp(ip)` | RFC 1918 only: `10.0.0.0/8`, `172.16.0.0/12`, `192.168.0.0/16`. Loopback (`127.0.0.1`) and link-local (`169.254.0.0/16`) are **not** private. TypeScript, Python, and Rust compute the three `(network, mask)` pairs once at module load; Go still builds them on each call. |
 | `getIpClass(ip)` | Classful first-octet lookup (`A`–`E`). `0.0.0.0` and malformed input return `""`. |
 | `getNetworkAddress(ip, mask)` | `ipToLong(ip) & cidrToLong(subnetMaskToCidr(mask))` as an unsigned 32-bit number. |
 | `ipToBinaryString(ip)` | 32-character `0`/`1` string, eight bits per octet. |
@@ -226,14 +226,20 @@ Unicode-aware string utilities in `umt/String`. Python, Rust, and Go ports exist
 | `camelCase(string)` | Replaces non-alphanumeric runs, then lowercases **only the first character**. Does not split acronyms: `"HELLO"` → `"hELLO"`, `"XMLHttpRequest"` → `"xMLHttpRequest"`. |
 | `kebabCase(string)` | Inserts dashes on `aB` / `ABc` boundaries, replaces spaces / underscores / other non-alphanumerics, lowercases. Splits acronyms: `"XMLHttpRequest"` → `"xml-http-request"`. |
 | `slugify(string)` | NFD, strip combining marks `U+0300`–`U+036F`, lowercase, then collapse non-`[A-Za-z0-9-]` runs and underscores to `-`. JS `\w` is ASCII, so CJK is dropped: `"Japanese: こんにちは"` → `"japanese"`. Python / Rust keep those letters (`"japanese-こんにちは"`). Go matches TypeScript (ASCII `\w`) but decomposes only a fixed Latin-1 table, not full Unicode NFD. |
+| `escapeHtml(string)` | Escapes `& < > " '` plus **backtick** (`&#x60;`) and **forward slash** (`&#x2F;`) so older-browser attribute delimiters and `</script>` injection are harder. Python / Rust / Go escape only `& < > " '`; `` ` `` and `/` stay. |
+| `toFullWidth(string)` | ASCII digits and letters only (`[0-9A-Za-z]`), each code point `+ 0xFEE0`. Punctuation and space stay: `"a-b!"` → `"ａ-ｂ!"`. Ports match. Inverse of `toHalfWidth` for those characters. |
+| `toHalfWidth(string)` | Full-width digits and letters only (`０-９Ａ-Ｚａ-ｚ`), each code point `- 0xFEE0`. CJK, punctuation, and ideographic space stay. Python **also** converts `U+FF01`–`U+FF5E` (full-width `!` through `~`) and `U+3000` → `" "`. Rust / Go match TypeScript. |
 
 ```ts
 import {
   deleteSpaces,
+  escapeHtml,
   sanitizeString,
   slugify,
   stripAnsi,
   stripTags,
+  toFullWidth,
+  toHalfWidth,
   words,
 } from "umt/String";
 
@@ -256,6 +262,12 @@ kebabCase("XMLHttpRequest"); // "xml-http-request"
 slugify("Hello World!"); // "hello-world"
 slugify("café"); // "cafe"
 slugify("Japanese: こんにちは"); // "japanese"
+escapeHtml("<script></script>"); // "&lt;script&gt;&lt;&#x2F;script&gt;"
+escapeHtml("Use `template`"); // "Use &#x60;template&#x60;"
+toFullWidth("Abc123"); // "Ａｂｃ１２３"
+toFullWidth("a-b!"); // "ａ-ｂ!"
+toHalfWidth("ＡＢＣ１２３"); // "ABC123"
+toHalfWidth("！　"); // "！　" (full-width bang and ideographic space stay)
 ```
 
 Go splits the custom-pattern case into `Words` vs `WordsWithPattern`.
@@ -289,7 +301,7 @@ joinPath("a", "", "b"); // "a/b"
 joinPath(); // ""
 ```
 
-Wasm codegen skips `umt_hexa_to_rgba` (custom `Result`) and generates `isAbsoluteUrl` / `joinPath` / `normalizeWhitespace` / `unescapeHtml` / `camelCase` / `slugify` / `sanitizeString` / `deleteSpaces` / `escapeRegexp`. Wasm `slugify` follows Rust and keeps CJK. Wasm's JS name is `escapeRegexp` (lowercase `p`); TypeScript is `escapeRegExp`.
+Wasm codegen skips `umt_hexa_to_rgba` (custom `Result`) and generates `isAbsoluteUrl` / `joinPath` / `normalizeWhitespace` / `unescapeHtml` / `escapeHtml` / `camelCase` / `slugify` / `sanitizeString` / `deleteSpaces` / `toFullWidth` / `toHalfWidth` / `escapeRegexp`. Wasm `slugify` follows Rust and keeps CJK. Wasm `escapeHtml` / `toHalfWidth` follow Rust (no backtick or `/` escaping; half-width conversion is alnum-only). Wasm's JS name is `escapeRegexp` (lowercase `p`); TypeScript is `escapeRegExp`.
 
 ## Tool helpers
 

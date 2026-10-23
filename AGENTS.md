@@ -57,7 +57,7 @@ Located in `package/umt_python`.
 *   **Testing & Benchmarks**:
     *   Unit tests must import from `src` (e.g., `from src.validate import ...`).
     *   Benchmarks reside in `tests/benchmark/` and use `timeit`. Note that `__file__` is not defined in `timeit` strings; resolve paths externally.
-*   **Regex**: Cache fixed patterns with module-level `re.compile`. Current sites: `strip_ansi` / `strip_tags`, `unescape_html`, `camel_case`, `kebab_case`, `slugify`, `normalize_whitespace`, `sanitize_string`, `delete_spaces`, `hexa_to_rgba`, `is_absolute_url`, `join_path`, `math_converter`, `parse_email`, calculator / `calculator_core` (except the currency-symbol pattern), UA extractors, `literal_expression`, `apply_formatter`, `get_value`, `escape_regexp`. Do not compile a fixed pattern on every call. Caller-built patterns (`format_string`, `regex_match`, optional `words` pattern, `template_literal`, calculator currency symbol) stay inline.
+*   **Regex**: Cache fixed patterns with module-level `re.compile`. Current sites: `strip_ansi` / `strip_tags`, `unescape_html`, `escape_html`, `camel_case`, `kebab_case`, `slugify`, `normalize_whitespace`, `sanitize_string`, `delete_spaces`, `hexa_to_rgba`, `is_absolute_url`, `join_path`, `math_converter`, `parse_email`, calculator / `calculator_core` (except the currency-symbol pattern), UA extractors, `literal_expression`, `apply_formatter`, `get_value`, `escape_regexp`. Do not compile a fixed pattern on every call. Caller-built patterns (`format_string`, `regex_match`, optional `words` pattern, `template_literal`, calculator currency symbol) stay inline. `to_full_width` / `to_half_width` use `str.maketrans` / `translate`, not regex. `is_private_ip` hoists the three RFC 1918 `(network, mask)` pairs at module load.
 
 ## Package: umt_rust (Rust)
 
@@ -107,7 +107,7 @@ Located in `package/umt_go`. Partial port. Module path `github.com/riya-amemiya/
 * Tests live under `src/tests/<pkg>/` and import the `src/` packages.
 * IP signatures differ from TypeScript: `CidrToLong` takes `"network/prefix"` and returns `[start, end]`; `IsInRange(ip, "network/prefix")`; `GetNetworkAddress` returns a dotted string; `LongToIp` / `CidrToSubnetMask` panic on invalid input.
 * Date helpers include `StartOf` / `EndOf` / `AddDuration` / `IsBusinessDay` / `FormatDate`. There is no `IsBetween`, `AddBusinessDays`, or unix conversion. `FormatDate` has no `Z` / `ZZ` tokens.
-* Fixed regexes: cache with package-level `regexp.MustCompile` (`CamelCase`, `KebabCase`, `Slugify`, `UnescapeHtml`, `HexaToRgba`, `StripAnsi` / `StripTags` / `Words`, `NormalizeWhitespace`, `IsAbsoluteUrl`, UA extractors, calculator, `ParseEmail`). Caller-built patterns (`FormatString`, `RegexMatch`, currency symbol) stay inline.
+* Fixed regexes: cache with package-level `regexp.MustCompile` (`CamelCase`, `KebabCase`, `Slugify`, `UnescapeHtml`, `SanitizeString`, `HexaToRgba`, `StripAnsi` / `StripTags` / `Words`, `NormalizeWhitespace`, `IsAbsoluteUrl`, `JoinPath` slash regexes, UA extractors, calculator, `ParseEmail`). Caller-built patterns (`FormatString`, `RegexMatch`, currency symbol) stay inline. `EscapeHtml` / `EscapeRegExp` / `DeleteSpaces` / `ToFullWidth` / `ToHalfWidth` scan runes; they do not compile a regex. `IsPrivateIp` rebuilds RFC 1918 ranges on each call (TypeScript / Python / Rust hoist them).
 
 ## Package: umt_i18n (TypeScript)
 
