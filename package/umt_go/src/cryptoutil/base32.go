@@ -7,6 +7,16 @@ import (
 
 const base32Alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567"
 
+var base32DecodeTable = func() (table [256]byte) {
+	for i := range table {
+		table[i] = 0xFF
+	}
+	for i := 0; i < len(base32Alphabet); i++ {
+		table[base32Alphabet[i]] = byte(i)
+	}
+	return
+}()
+
 // EncodeBase32 encodes a byte slice to a Base32 string (RFC 4648).
 func EncodeBase32(data []byte) string {
 	var result strings.Builder
@@ -38,18 +48,24 @@ func EncodeBase32(data []byte) string {
 
 // DecodeBase32 decodes a Base32 string to a byte slice.
 func DecodeBase32(input string) ([]byte, error) {
-	cleanedInput := strings.ReplaceAll(input, "=", "")
-	var result []byte
+	result := make([]byte, 0, ((len(input)+7)/8)*5)
 	buffer := 0
 	bufferLength := 0
 
-	for _, ch := range cleanedInput {
-		value := strings.IndexRune(base32Alphabet, ch)
-		if value == -1 {
+	for _, ch := range input {
+		if ch == '=' {
+			continue
+		}
+
+		value := byte(0xFF)
+		if uint32(ch) < 256 {
+			value = base32DecodeTable[ch]
+		}
+		if value == 0xFF {
 			return nil, fmt.Errorf("Invalid base32 character: %c", ch)
 		}
 
-		buffer = (buffer << 5) | value
+		buffer = (buffer << 5) | int(value)
 		bufferLength += 5
 
 		if bufferLength >= 8 {

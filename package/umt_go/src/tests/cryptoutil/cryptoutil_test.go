@@ -177,6 +177,50 @@ func TestDecodeBase32WithoutPadding(t *testing.T) {
 	}
 }
 
+func TestDecodeBase32PaddingOnly(t *testing.T) {
+	for _, input := range []string{"====", "="} {
+		result, err := cryptoutil.DecodeBase32(input)
+		if err != nil {
+			t.Fatalf("unexpected error for %q: %v", input, err)
+		}
+		if len(result) != 0 {
+			t.Errorf("DecodeBase32(%q) length = %d, want 0", input, len(result))
+		}
+	}
+}
+
+func TestDecodeBase32SkipsEqualsAnywhere(t *testing.T) {
+	result, err := cryptoutil.DecodeBase32("JB=SWY3DP")
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if string(result) != "Hello" {
+		t.Errorf("DecodeBase32(%q) = %q, want %q", "JB=SWY3DP", string(result), "Hello")
+	}
+}
+
+func TestDecodeBase32Lowercase(t *testing.T) {
+	_, err := cryptoutil.DecodeBase32("jbswy3dp")
+	if err == nil {
+		t.Fatal("expected error for lowercase input")
+	}
+	expected := "Invalid base32 character: j"
+	if !strings.Contains(err.Error(), expected) {
+		t.Errorf("expected error containing %q, got %q", expected, err.Error())
+	}
+}
+
+func TestDecodeBase32NonASCII(t *testing.T) {
+	_, err := cryptoutil.DecodeBase32("JBSWY3Dあ")
+	if err == nil {
+		t.Fatal("expected error for non-ASCII input")
+	}
+	expected := "Invalid base32 character: あ"
+	if !strings.Contains(err.Error(), expected) {
+		t.Errorf("expected error containing %q, got %q", expected, err.Error())
+	}
+}
+
 // =============================================================================
 // DecodeBase32ToString
 // =============================================================================
