@@ -63,10 +63,7 @@ export const flexibleNumberConversion = (value: unknown): number => {
 
   // Parse as floating point number
   const floatValue = Number.parseFloat(stringValue);
-  if (!isValueNaN(floatValue)) {
-    return floatValue;
-  }
 
   // When conversion is not possible
-  return Number.NaN;
+  return isValueNaN(floatValue) ? Number.NaN : floatValue;
 };

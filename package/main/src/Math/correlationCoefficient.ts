@@ -11,11 +11,7 @@ correlationCoefficient([1, 2, 3, 4, 5], [5, 4, 3, 2, 1]); // -1 (perfect negativ
 correlationCoefficient([1, 2, 3, 4, 5], [1, 1, 1, 1, 1]); // 0 (no correlation)
 */
 export const correlationCoefficient = (x: number[], y: number[]): number => {
-  if (x.length === 0) {
-    return Number.NaN;
-  }
-
-  if (x.length === 1) {
+  if (x.length === 0 || x.length === 1) {
     return Number.NaN;
   }
 
