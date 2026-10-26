@@ -31,11 +31,10 @@ export const checkFlagAlignment = <T extends { flag: boolean }>(
     }
   }
 
-  // Check diagonal alignment (top-left to bottom-right)
-  if (matrix.every((row, index) => row[index].flag)) {
-    return true;
-  }
-
-  // Check diagonal alignment (bottom-left to top-right)
-  return matrix.every((row, index) => row[cols - index - 1].flag);
+  return (
+    // Check diagonal alignment (top-left to bottom-right)
+    matrix.every((row, index) => row[index].flag) ||
+    // Check diagonal alignment (bottom-left to top-right)
+    matrix.every((row, index) => row[cols - index - 1].flag)
+  );
 };

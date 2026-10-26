@@ -12,16 +12,13 @@ const isDouble = <T extends boolean = true>(
   x: unknown,
   loose: T = true as T,
 ): x is T extends true ? number | string : number => {
-  if (loose) {
-    return (
-      // biome-ignore lint/suspicious/noGlobalIsFinite: ignore
+  return loose
+    ? // biome-ignore lint/suspicious/noGlobalIsFinite: ignore
       isFinite(x as number) &&
-      !Number.isNaN(x) &&
-      Number.isFinite(Number(x)) &&
-      !Number.isInteger(Number(x))
-    );
-  }
-  return Number.isFinite(x) && !Number.isInteger(x);
+        !Number.isNaN(x) &&
+        Number.isFinite(Number(x)) &&
+        !Number.isInteger(Number(x))
+    : Number.isFinite(x) && !Number.isInteger(x);
 };
 
 export { isDouble };
