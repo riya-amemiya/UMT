@@ -38,11 +38,15 @@ Subpath exports match source modules (`umt/Array`, `umt/Date`, `umt/Validate`, �
 
 Input validation is the caller's responsibility. Functions do not throw on invalid arguments unless throwing is the function's purpose (for example `unwrap`).
 
-IP helpers (`umt/IP`) are IPv4 only. TypeScript does not validate dotted-decimal strings; the Python and Rust ports raise / return `Err` on malformed addresses and reject non-contiguous subnet masks. `isPrivateIp` is RFC 1918 only (not loopback or link-local).
+IP helpers (`umt/IP`) are IPv4 only. TypeScript does not validate dotted-decimal strings; the Python and Rust ports raise / return `Err` on malformed addresses and reject non-contiguous subnet masks. `isPrivateIp` is RFC 1918 only (not loopback or link-local). TypeScript, Python, and Rust hoist the three RFC 1918 `(network, mask)` pairs at module load; Go rebuilds them per call.
 
 `hexaToRgba` (`umt/Color`) does not validate in TypeScript (malformed input can yield `NaN` components). Python, Rust, and Go require `#` plus 3, 6, or 8 hex digits.
 
 `unescapeHtml` (`umt/String`) in TypeScript leaves dangerous numeric character references unchanged: NULL (`0`), C0 controls except TAB / LF / CR, DEL (`127`), C1 (`128`–`159`), surrogates (`0xD800`–`0xDFFF`), and values above `0x10FFFF`. Python / Rust / Go decode numeric entities through the language code-point APIs and do not apply those extra filters.
+
+`escapeHtml` (`umt/String`) in TypeScript also encodes backtick (`&#x60;`) and `/` (`&#x2F;`). Python `escape_html`, Rust `umt_escape_html`, and Go `EscapeHtml` encode only `& < > " '`.
+
+`toFullWidth` (`umt/String`) converts ASCII digits and letters only (`[0-9A-Za-z]`, `+ 0xFEE0`). Ports match. `toHalfWidth` in TypeScript / Rust / Go converts full-width digits and letters only (`０-９Ａ-Ｚａ-ｚ`). Python `to_half_width` also maps `U+FF01`–`U+FF5E` (full-width punctuation) and ideographic space `U+3000` → `" "`.
 
 `slugify` (`umt/String`) uses JavaScript `\w` (`[A-Za-z0-9_]`), so CJK and other non-ASCII letters are dropped (`"Japanese: こんにちは"` → `"japanese"`). Go `Slugify` matches that ASCII `\w` but decomposes only a fixed Latin-1 table instead of full Unicode NFD. Python `slugify` and Rust `umt_slugify` keep Unicode letters (`"japanese-こんにちは"`). Wasm `slugify` follows Rust.
 
