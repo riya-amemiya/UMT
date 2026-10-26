@@ -104,3 +104,47 @@ fn test_to_binary_helper() {
 fn test_to_hex_helper() {
     assert_eq!(umt_to_hex(255), "ff");
 }
+
+#[test]
+fn test_zero() {
+    assert_eq!(umt_to_base_n(0, 2), "0");
+    assert_eq!(umt_to_base_n(0, 10), "0");
+    assert_eq!(umt_to_base_n(0, 36), "0");
+}
+
+#[test]
+fn test_negatives() {
+    assert_eq!(umt_to_base_n(-10, 2), "-1010");
+    assert_eq!(umt_to_base_n(-10, 3), "-101");
+    assert_eq!(umt_to_base_n(-5, 5), "-10");
+    assert_eq!(umt_to_base_n(-255, 16), "-ff");
+}
+
+#[test]
+fn test_invalid_radix() {
+    assert_eq!(umt_to_base_n(10, 1), "Invalid radix");
+    assert_eq!(umt_to_base_n(10, 0), "Invalid radix");
+    assert_eq!(umt_to_base_n(10, 37), "Invalid radix");
+}
+
+#[test]
+fn test_custom_bases() {
+    assert_eq!(umt_to_base_n(10, 3), "101");
+    assert_eq!(umt_to_base_n(100, 5), "400");
+    assert_eq!(umt_to_base_n(35, 36), "z");
+}
+
+#[test]
+fn test_i64_max() {
+    assert_eq!(umt_to_base_n(i64::MAX, 2), format!("{:b}", i64::MAX));
+    assert_eq!(umt_to_base_n(i64::MAX, 16), format!("{:x}", i64::MAX));
+    assert_eq!(umt_to_base_n(i64::MAX, 36), "1y2p0ij32e8e7");
+}
+
+#[test]
+fn test_helpers_negatives_and_zero() {
+    assert_eq!(umt_to_binary(0), "0");
+    assert_eq!(umt_to_binary(-10), "-1010");
+    assert_eq!(umt_to_hex(0), "0");
+    assert_eq!(umt_to_hex(-255), "-ff");
+}

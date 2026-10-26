@@ -29,21 +29,20 @@ pub fn umt_to_base_n(value: i64, radix: u32) -> String {
 
     let negative = value < 0;
     let mut n = value.abs();
-    let mut result = String::new();
-
-    let digits = "0123456789abcdefghijklmnopqrstuvwxyz";
+    let digits = b"0123456789abcdefghijklmnopqrstuvwxyz";
+    let mut bytes = Vec::with_capacity(65);
+    let radix = i64::from(radix);
 
     while n > 0 {
-        let digit = (n % radix as i64) as usize;
-        result.insert(0, digits.chars().nth(digit).unwrap());
-        n /= radix as i64;
+        bytes.push(digits[(n % radix) as usize]);
+        n /= radix;
     }
 
     if negative {
-        result.insert(0, '-');
+        bytes.push(b'-');
     }
-
-    result
+    bytes.reverse();
+    String::from_utf8(bytes).unwrap()
 }
 
 /// Converts a number to binary string representation.
