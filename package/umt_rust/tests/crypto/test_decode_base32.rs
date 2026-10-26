@@ -81,6 +81,34 @@ fn test_handles_base32_without_padding() {
 }
 
 #[test]
+fn test_padding_only_and_empty_clean_to_empty() {
+    assert_eq!(umt_decode_base32("====").unwrap(), Vec::<u8>::new());
+    assert_eq!(umt_decode_base32("=").unwrap(), Vec::<u8>::new());
+}
+
+#[test]
+fn test_skips_equals_anywhere() {
+    assert_eq!(
+        String::from_utf8(umt_decode_base32("JB=SWY3DP").unwrap()).unwrap(),
+        "Hello"
+    );
+}
+
+#[test]
+fn test_throws_error_on_lowercase() {
+    let result = umt_decode_base32("jbswy3dp");
+    assert!(result.is_err());
+    assert_eq!(result.unwrap_err().message, "Invalid base32 character: j");
+}
+
+#[test]
+fn test_throws_error_on_non_ascii() {
+    let result = umt_decode_base32("JBSWY3Dあ");
+    assert!(result.is_err());
+    assert_eq!(result.unwrap_err().message, "Invalid base32 character: あ");
+}
+
+#[test]
 fn test_base32_error_display() {
     use umt_rust::crypto::Base32Error;
     let error = Base32Error {

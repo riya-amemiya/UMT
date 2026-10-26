@@ -12,6 +12,19 @@ impl std::fmt::Display for Base32Error {
 
 impl std::error::Error for Base32Error {}
 
+const fn base32_decode_table() -> [u8; 256] {
+    let mut table = [0xFFu8; 256];
+    let alphabet = b"ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
+    let mut index = 0;
+    while index < alphabet.len() {
+        table[alphabet[index] as usize] = index as u8;
+        index += 1;
+    }
+    table
+}
+
+const BASE32_DECODE_TABLE: [u8; 256] = base32_decode_table();
+
 /// Decodes a Base32 string to bytes.
 ///
 /// Uses the standard RFC 4648 Base32 alphabet (A-Z, 2-7).
@@ -35,30 +48,26 @@ impl std::error::Error for Base32Error {}
 /// assert_eq!(String::from_utf8(result).unwrap(), "Hello");
 /// ```
 pub fn umt_decode_base32(input: &str) -> Result<Vec<u8>, Base32Error> {
-    const ALPHABET: &str = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
-
-    // Remove padding
-    let cleaned_input: String = input.chars().filter(|&c| c != '=').collect();
-
-    if cleaned_input.is_empty() {
-        return Ok(Vec::new());
-    }
-
-    let mut result: Vec<u8> = Vec::new();
+    let mut result: Vec<u8> = Vec::with_capacity(input.len().div_ceil(8).saturating_mul(5));
     let mut buffer: u32 = 0;
     let mut buffer_length: u32 = 0;
 
-    for char in cleaned_input.chars() {
-        let value = match ALPHABET.find(char) {
-            Some(v) => v as u32,
-            None => {
-                return Err(Base32Error {
-                    message: format!("Invalid base32 character: {}", char),
-                });
-            }
-        };
+    for character in input.chars() {
+        if character == '=' {
+            continue;
+        }
 
-        buffer = (buffer << 5) | value;
+        let value = BASE32_DECODE_TABLE
+            .get(character as usize)
+            .copied()
+            .unwrap_or(0xFF);
+        if value > 31 {
+            return Err(Base32Error {
+                message: format!("Invalid base32 character: {}", character),
+            });
+        }
+
+        buffer = (buffer << 5) | u32::from(value);
         buffer_length += 5;
 
         if buffer_length >= 8 {
