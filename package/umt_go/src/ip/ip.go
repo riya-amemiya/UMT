@@ -264,20 +264,31 @@ func IsInRange(ipStr string, cidr string) (bool, error) {
 	return (remoteLong & mask) == (networkLong & mask), nil
 }
 
+var privateRanges = func() []struct {
+	network int64
+	mask    int64
+} {
+	n10, _ := IpToLong("10.0.0.0")
+	m8, _ := cidrPrefixToLong(8)
+	n172, _ := IpToLong("172.16.0.0")
+	m12, _ := cidrPrefixToLong(12)
+	n192, _ := IpToLong("192.168.0.0")
+	m16, _ := cidrPrefixToLong(16)
+	return []struct {
+		network int64
+		mask    int64
+	}{
+		{n10, m8},
+		{n172, m12},
+		{n192, m16},
+	}
+}()
+
 // IsPrivateIp checks if an IP address is within private IP ranges
 // (10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16).
 func IsPrivateIp(ipStr string) bool {
 	if ipStr == "" {
 		return false
-	}
-
-	privateRanges := []struct {
-		network string
-		cidr    int
-	}{
-		{"10.0.0.0", 8},
-		{"172.16.0.0", 12},
-		{"192.168.0.0", 16},
 	}
 
 	remoteLong, err := IpToLong(ipStr)
@@ -286,10 +297,7 @@ func IsPrivateIp(ipStr string) bool {
 	}
 
 	for _, r := range privateRanges {
-		networkLong, _ := IpToLong(r.network)
-		shift := 32 - r.cidr
-		mask := int64(0xFFFFFFFF) << shift & 0xFFFFFFFF
-		if (remoteLong & mask) == (networkLong & mask) {
+		if (remoteLong & r.mask) == (r.network & r.mask) {
 			return true
 		}
 	}
