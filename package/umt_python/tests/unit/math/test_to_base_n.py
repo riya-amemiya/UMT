@@ -16,6 +16,17 @@ class TestToBaseN(unittest.TestCase):
         self.assertEqual(to_base_n(255, 16), "ff")
         self.assertEqual(to_base_n(15, 16), "f")
 
+    def test_decimal_conversion(self):
+        self.assertEqual(to_base_n(10, 10), "10")
+        self.assertEqual(to_base_n(255, 10), "255")
+        self.assertEqual(to_base_n(123456789, 10), "123456789")
+        self.assertEqual(to_base_n(-10, 10), "-10")
+        self.assertEqual(to_base_n(-999999, 10), "-999999")
+        self.assertEqual(to_base_n(2**63 - 1, 10), "9223372036854775807")
+        self.assertEqual(to_base_n(-(2**63), 10), "-9223372036854775808")
+        self.assertEqual(to_base_n(True, 10), "1")
+        self.assertEqual(to_base_n(False, 10), "0")
+
     def test_custom_base(self):
         self.assertEqual(to_base_n(10, 3), "101")
         self.assertEqual(to_base_n(100, 5), "400")
@@ -29,6 +40,7 @@ class TestToBaseN(unittest.TestCase):
     def test_negative_values(self):
         self.assertEqual(to_base_n(-10, 3), "-101")
         self.assertEqual(to_base_n(-5, 5), "-10")
+        self.assertEqual(to_base_n(-10, 10), "-10")
 
     def test_docstring_example(self):
         self.assertEqual(to_base_n(10), "1010")
