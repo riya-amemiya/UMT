@@ -1,9 +1,11 @@
 import { BASE32_ALPHABET } from "./constants";
 
-// O(1) lookup table for Base32 character-to-index mapping
-const base32CharToIndex = new Map(
-  [...BASE32_ALPHABET].map((c, index) => [c, index]),
-);
+const BASE32_DECODE_TABLE = new Uint8Array(256);
+const BASE32_PADDING_CHAR_CODE = "=".codePointAt(0) ?? 0;
+
+for (let index = 0; index < BASE32_ALPHABET.length; index++) {
+  BASE32_DECODE_TABLE[BASE32_ALPHABET.codePointAt(index) ?? 0] = index;
+}
 
 /**
 Decodes a Base32 string to Uint8Array
@@ -12,13 +14,20 @@ Decodes a Base32 string to Uint8Array
 @example decodeBase32("JBSWY3DP"); // Uint8Array for "Hello"
 */
 export const decodeBase32 = (input: string): Uint8Array => {
-  const cleanedInput = input.replaceAll("=", "");
   const result: number[] = [];
   let buffer = 0;
   let bufferLength = 0;
 
-  for (const char of cleanedInput) {
-    const value = base32CharToIndex.get(char) ?? 0;
+  for (let index = 0; index < input.length; index++) {
+    const code = input.codePointAt(index) ?? 0;
+    if (code === BASE32_PADDING_CHAR_CODE) {
+      continue;
+    }
+    if (code > 0xff_ff) {
+      index++;
+    }
+
+    const value = BASE32_DECODE_TABLE[code] ?? 0;
     buffer = (buffer << 5) | value;
     bufferLength += 5;
 
