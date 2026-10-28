@@ -21,6 +21,8 @@ def to_base_n(value: int, radix: int = 2) -> str:
         return f"{value:b}"
     if radix == 8:
         return f"{value:o}"
+    if radix == 10:
+        return f"{value:d}"
     if radix == 16:
         return f"{value:x}"
     if value == 0:
