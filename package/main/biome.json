@@ -162,5 +162,10 @@
         "useNumberToFixedDigitsArgument": "error"
       }
     }
+  },
+  "markdown": {
+    "formatter": {
+      "enabled": false
+    }
   }
 }
