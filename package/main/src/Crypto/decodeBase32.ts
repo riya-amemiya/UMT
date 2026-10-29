@@ -1,10 +1,17 @@
 import { BASE32_ALPHABET } from "./constants";
 
+import { unwrap } from "@/Tool/unwrap";
+
 const BASE32_DECODE_TABLE = new Uint8Array(256);
-const BASE32_PADDING_CHAR_CODE = "=".codePointAt(0) ?? 0;
+const BASE32_PADDING_CHAR_CODE = unwrap(
+  "=".codePointAt(0),
+  "panic: invalid base32 padding",
+);
 
 for (let index = 0; index < BASE32_ALPHABET.length; index++) {
-  BASE32_DECODE_TABLE[BASE32_ALPHABET.codePointAt(index) ?? 0] = index;
+  BASE32_DECODE_TABLE[
+    unwrap(BASE32_ALPHABET.codePointAt(index), "panic: invalid base32 alphabet")
+  ] = index;
 }
 
 /**
@@ -19,7 +26,10 @@ export const decodeBase32 = (input: string): Uint8Array => {
   let bufferLength = 0;
 
   for (let index = 0; index < input.length; index++) {
-    const code = input.codePointAt(index) ?? 0;
+    const code = unwrap(
+      input.codePointAt(index),
+      "panic: invalid base32 string",
+    );
     if (code === BASE32_PADDING_CHAR_CODE) {
       continue;
     }

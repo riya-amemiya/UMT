@@ -57,4 +57,8 @@ describe("decodeBase32", () => {
     expect(Array.from(decodeBase32("aA"))).toEqual([0]);
     expect(Array.from(decodeBase32("あA"))).toEqual([0]);
   });
+
+  test("treats a surrogate pair as one non-alphabet symbol", () => {
+    expect(Array.from(decodeBase32("\u{1F600}7"))).toEqual([7]);
+  });
 });
