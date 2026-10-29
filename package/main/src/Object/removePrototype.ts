@@ -19,7 +19,7 @@ export const removePrototype = <T extends Record<string, unknown>>(
   const keys = Object.keys(object);
 
   for (const key of keys) {
-    if (key !== "__proto__" && key !== "constructor" && key !== "prototype") {
+    if (!["__proto__", "constructor", "prototype"].includes(key)) {
       result[key] = object[key];
     }
   }

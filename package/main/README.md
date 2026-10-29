@@ -32,15 +32,15 @@ import { weekOfYear } from "umt/Date";
 
 Local-time calendar helpers. Week boundaries are Sunday-start (JavaScript `Date#getDay()` 0). There are no UTC variants.
 
-| Function | Behavior |
-| --- | --- |
-| `isBetween(date, start, end, unit?, inclusivity?)` | Default `inclusivity` is `"()"` (exclusive both ends, matching dayjs). Ranges are **not** swapped: if `start` is after `end`, the result is `false`. Omit `unit` for millisecond timestamps; with a unit, all three dates are truncated via `startOf` first. |
-| `isSame(left, right, unit?)` | Same truncation rules as `isBetween`. Omit `unit` for exact `getTime()` equality. |
+| Function                                                       | Behavior                                                                                                                                                                                                                                                                            |
+| -------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `isBetween(date, start, end, unit?, inclusivity?)`             | Default `inclusivity` is `"()"` (exclusive both ends, matching dayjs). Ranges are **not** swapped: if `start` is after `end`, the result is `false`. Omit `unit` for millisecond timestamps; with a unit, all three dates are truncated via `startOf` first.                        |
+| `isSame(left, right, unit?)`                                   | Same truncation rules as `isBetween`. Omit `unit` for exact `getTime()` equality.                                                                                                                                                                                                   |
 | `addBusinessDays(date, amount, holidays?)` / `subBusinessDays` | Walks calendar days until `amount` weekdays (minus optional holidays compared with `isSameDay`) have been counted. The start date is not counted: Friday + 1 is Monday, Saturday + 1 is Monday. `0` returns a clone and does not snap to a business day. Does not mutate the input. |
-| `getQuarter(date)` | Local month → `1`–`4` (Jan–Mar = 1), matching `startOf(..., "quarter")`. |
-| `weekOfYear(date)` | Sunday-start week index. Week 1 contains January 1 of that local year. Uses day-count rounding so DST does not shift the week number. Not ISO-8601 (Monday-start) week numbering. |
-| `fromUnix(value, unit?)` / `toUnix(date, unit?)` | Default unit is `"s"`. `toUnix(..., "s")` is `Math.floor(date.getTime() / 1000)`. |
-| `format(date, formatString?)` | Token formatter on **local** `Date` fields. Default pattern is `"YYYY-MM-DDTHH:mm:ssZ"`. `[text]` is copied as-is. `Z` / `ZZ` use `date`'s timezone offset. Throws `TypeError("Invalid Date in format")` if `date` is not a `Date`. |
+| `getQuarter(date)`                                             | Local month → `1`–`4` (Jan–Mar = 1), matching `startOf(..., "quarter")`.                                                                                                                                                                                                            |
+| `weekOfYear(date)`                                             | Sunday-start week index. Week 1 contains January 1 of that local year. Uses day-count rounding so DST does not shift the week number. Not ISO-8601 (Monday-start) week numbering.                                                                                                   |
+| `fromUnix(value, unit?)` / `toUnix(date, unit?)`               | Default unit is `"s"`.`toUnix(..., "s")` is `Math.floor(date.getTime() / 1000)`.                                                                                                                                                                                                    |
+| `format(date, formatString?)`                                  | Token formatter on **local** `Date` fields. Default pattern is `"YYYY-MM-DDTHH:mm:ssZ"`.`[text]` is copied as-is. `Z` / `ZZ` use `date`'s timezone offset. Throws `TypeError("Invalid Date in format")` if `date` is not a `Date`.                                                  |
 
 `DateInclusivity` is `"()"` \| `"[]"` \| `"[)"` \| `"(]"`. `UnixTimeUnit` is `"s"` \| `"ms"`. `DateBoundaryUnit` is `second` \| `minute` \| `hour` \| `day` \| `week` \| `month` \| `quarter` \| `year`.
 
@@ -83,16 +83,16 @@ IPv4 dotted-decimal only (no IPv6). Numeric results are unsigned 32-bit values. 
 
 Input validation is the caller's responsibility. These functions do not throw on malformed strings (see [COMPATIBILITY.md](./COMPATIBILITY.md)). Python and Rust ports **do** validate.
 
-| Function | Behavior |
-| --- | --- |
-| `ipToLong(ip)` / `longToIp(long)` | Pack or unpack four octets. Leading zeros in an octet are accepted (`"192.168.01.1"` equals `"192.168.1.1"`). |
-| `cidrToLong(cidr)` / `cidrToSubnetMask(cidr)` | Prefix length `0`–`32` to a mask number / dotted mask. CIDR `0` is `0` (`"0.0.0.0"`). |
-| `subnetMaskToCidr(mask)` | Counts set bits. Does **not** require a contiguous mask: `"255.0.255.0"` returns `16`. |
-| `isInRange(ip, network, cidr)` | `(ip & mask) === (network & mask)`. CIDR `0` matches every IPv4 address. |
-| `isPrivateIp(ip)` | RFC 1918 only: `10.0.0.0/8`, `172.16.0.0/12`, `192.168.0.0/16`. Loopback (`127.0.0.1`) and link-local (`169.254.0.0/16`) are **not** private. TypeScript, Python, and Rust compute the three `(network, mask)` pairs once at module load; Go still builds them on each call. |
-| `getIpClass(ip)` | Classful first-octet lookup (`A`–`E`). `0.0.0.0` and malformed input return `""`. |
-| `getNetworkAddress(ip, mask)` | `ipToLong(ip) & cidrToLong(subnetMaskToCidr(mask))` as an unsigned 32-bit number. |
-| `ipToBinaryString(ip)` | 32-character `0`/`1` string, eight bits per octet. |
+| Function                                      | Behavior                                                                                                                                                                                                                                                                     |
+| --------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ipToLong(ip)` / `longToIp(long)`             | Pack or unpack four octets. Leading zeros in an octet are accepted (`"192.168.01.1"` equals `"192.168.1.1"`).                                                                                                                                                                |
+| `cidrToLong(cidr)` / `cidrToSubnetMask(cidr)` | Prefix length `0`–`32` to a mask number / dotted mask. CIDR `0` is `0` (`"0.0.0.0"`).                                                                                                                                                                                        |
+| `subnetMaskToCidr(mask)`                      | Counts set bits. Does **not** require a contiguous mask: `"255.0.255.0"` returns `16`.                                                                                                                                                                                       |
+| `isInRange(ip, network, cidr)`                | `(ip & mask) === (network & mask)`. CIDR `0` matches every IPv4 address.                                                                                                                                                                                                     |
+| `isPrivateIp(ip)`                             | RFC 1918 only: `10.0.0.0/8`, `172.16.0.0/12`, `192.168.0.0/16`. Loopback (`127.0.0.1`) and link-local (`169.254.0.0/16`) are **not** private. TypeScript, Python, and Rust compute the three `(network, mask)` pairs once at module load; Go still builds them on each call. |
+| `getIpClass(ip)`                              | Classful first-octet lookup (`A`–`E`).`0.0.0.0` and malformed input return `""`.                                                                                                                                                                                             |
+| `getNetworkAddress(ip, mask)`                 | `ipToLong(ip) & cidrToLong(subnetMaskToCidr(mask))` as an unsigned 32-bit number.                                                                                                                                                                                            |
+| `ipToBinaryString(ip)`                        | 32-character `0`/`1` string, eight bits per octet.                                                                                                                                                                                                                           |
 
 ```ts
 import {
@@ -119,10 +119,10 @@ Python and Rust ports live in `package/umt_python` and `package/umt_rust`. Those
 
 Validator factories in `umt/Validate` (`string()`, `number()`, `object()`, `arrayOf()`, `union()`, …) implement [Standard Schema V1](https://standardschema.dev). Each factory return value has a `~standard` property:
 
-| Field | Value |
-| --- | --- |
-| `version` | `1` |
-| `vendor` | `"umt"` (`STANDARD_SCHEMA_VENDOR`) |
+| Field             | Value                                                                                                                                                    |
+| ----------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `version`         | `1`                                                                                                                                                      |
+| `vendor`          | `"umt"` (`STANDARD_SCHEMA_VENDOR`)                                                                                                                       |
 | `validate(value)` | Synchronous. On success `{ value }` is the **original input** (validators do not transform). On failure `{ issues: [{ message }] }` with a single issue. |
 
 `attachStandard()` is how factories advertise the spec. It does not set `~standard.types`. Consume validators through `~standard.validate`, `@hono/standard-validator`'s `sValidator`, or any other Standard Schema V1 host (Zod / Valibot schemas are interchangeable with UMT on that interface).
@@ -146,13 +146,13 @@ UMT validators never return a `Promise` from `~standard.validate`.
 
 `parseEmail({ email, options: { level } })` returns `{ valid, parts? }` with `parts: { local, domain }` when the regex matches. `level` is required: `"basic"` \| `"rfc822"` \| `"rfc2822"` \| `"rfc5321"` \| `"rfc5322"`. Inputs longer than **320** characters are rejected before the regex (ReDoS). Python and Rust do not apply that global cap; Go applies 998 / 256 only on some RFC levels.
 
-| Level | Behavior |
-| --- | --- |
-| `basic` | Common local/domain characters. Single-label domains are accepted (`user@localhost`). |
-| `rfc822` | Comments, quoted locals, optional whitespace around `@`. Single-label domains allowed. Local part max 64. |
-| `rfc2822` | Requires a TLD (`[A-Za-z]{2,}`). Rejects `..`. Max 998. |
+| Level     | Behavior                                                                                                                  |
+| --------- | ------------------------------------------------------------------------------------------------------------------------- |
+| `basic`   | Common local/domain characters. Single-label domains are accepted (`user@localhost`).                                     |
+| `rfc822`  | Comments, quoted locals, optional whitespace around `@`. Single-label domains allowed. Local part max 64.                 |
+| `rfc2822` | Requires a TLD (`[A-Za-z]{2,}`). Rejects `..`. Max 998.                                                                   |
 | `rfc5321` | SMTP path: max 256, local max 64, rejects `..`. Allows `user@[192.168.1.1]` / `user@[IPv6:…]`. Single-label domains fail. |
-| `rfc5322` | Comments and quoted strings. Max 998. Rejects `..`. |
+| `rfc5322` | Comments and quoted strings. Max 998. Rejects `..`.                                                                       |
 
 ```ts
 import { parseEmail } from "umt/Validate";
@@ -171,15 +171,15 @@ Python `parse_email(email, ParseEmailOptions(level=...))` keeps the five pattern
 
 Class-field validation in `umt/Decorator`. Rules live on the prototype chain (`validateInstance` includes inherited fields). `@Validatable` wraps the constructor and throws after `super(...)`, so it sees initialized class fields.
 
-| Decorator | Behavior |
-| --- | --- |
-| `@IsString` / `@IsArray` / `@IsBoolean` | Type checks. `@IsNumber` rejects numeric strings (`"1"`). |
-| `@Min(n)` / `@Max(n)` | Inclusive numeric bounds. Non-numbers fail. |
-| `@LengthBetween(min, max)` | Inclusive length on strings and arrays. |
-| `@Optional` | Skip other rules when the value is `undefined`. |
-| `@Nullable` | Skip other rules when the value is `null`. |
-| `@Schema(schema)` | Any Standard Schema V1 validator (UMT, Zod, Valibot). **Async** `validate` results are treated as failure. |
-| `@Validatable` | Throws `Error` joining all messages with `"; "` if any field fails. |
+| Decorator                               | Behavior                                                                                                   |
+| --------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| `@IsString` / `@IsArray` / `@IsBoolean` | Type checks. `@IsNumber` rejects numeric strings (`"1"`).                                                  |
+| `@Min(n)` / `@Max(n)`                   | Inclusive numeric bounds. Non-numbers fail.                                                                |
+| `@LengthBetween(min, max)`              | Inclusive length on strings and arrays.                                                                    |
+| `@Optional`                             | Skip other rules when the value is `undefined`.                                                            |
+| `@Nullable`                             | Skip other rules when the value is `null`.                                                                 |
+| `@Schema(schema)`                       | Any Standard Schema V1 validator (UMT, Zod, Valibot). **Async** `validate` results are treated as failure. |
+| `@Validatable`                          | Throws `Error` joining all messages with `"; "` if any field fails.                                        |
 
 `validateInstance(instance)` returns a `Result`: success carries the instance; error carries `{ path, message }[]`.
 
@@ -214,21 +214,21 @@ new Product(); // succeeds; throws `Error` if `price` is not a number
 
 Unicode-aware string utilities in `umt/String`. Python, Rust, and Go ports exist (`strip_ansi` / `umt_strip_ansi` / `StripAnsi`, and the same mapping for tags and words).
 
-| Function | Behavior |
-| --- | --- |
-| `stripAnsi(string)` | Removes CSI sequences (colors, cursor movement, including C1 `U+009B`) and OSC sequences (BEL or ST terminated). Incomplete CSI with no final byte is left unchanged. Unlike `sanitizeString`, other non-printables stay. |
-| `stripTags(string)` | Deletes HTML/XML tags (`<[^<>]*>`), repeating until stable so `"<sc<script>ript>"` becomes `""`. Self-closing tags are removed without inserting a separator (`"line1<br/>line2"` → `"line1line2"`). |
-| `words(string, pattern?)` | Default: insert spaces on camelCase / acronym boundaries, then split on non-letter/number separators. CJK and other letters are kept. If `pattern` is passed, returns `string.match(pattern)` or `[]`. |
-| `normalizeWhitespace(string)` | Collapses Unicode `\s+` to a single space and trims. Unlike `deleteSpaces`, words stay separated. All-whitespace input → `""`. |
-| `deleteSpaces(string)` | Removes every Unicode `\s` character (spaces, tabs, newlines, em space `U+2003`, ideographic space `U+3000`, …). `"Hello World"` → `"HelloWorld"`. All-whitespace input → `""`. |
-| `sanitizeString(string)` | Keeps printable ASCII (`U+0020`–`U+007E`) plus TAB / LF / CR. Drops NULL, other C0, DEL, C1, ANSI ESC, and **all non-ASCII** (CJK, emoji, `"é"`). Unlike `stripAnsi`, it does not parse CSI: `"\u001B[31mred\u001B[0m"` → `"[31mred[0m"`. |
-| `unescapeHtml(string)` | Named entities (`&amp;` `&lt;` `&gt;` `&quot;` `&#39;` `&#x27;` `&#x2F;` `&#x60;` `&#x3D;`) plus decimal / hex numeric references (`&#65;`, `&#x41;`). `&#X41;` (uppercase `X`) is left unchanged. Dangerous code points are **not** decoded (NULL, C0 except TAB/LF/CR, DEL, C1, surrogates, `>0x10FFFF`). Python / Rust / Go do not apply those extra filters. |
-| `camelCase(string)` | Replaces non-alphanumeric runs, then lowercases **only the first character**. Does not split acronyms: `"HELLO"` → `"hELLO"`, `"XMLHttpRequest"` → `"xMLHttpRequest"`. |
-| `kebabCase(string)` | Inserts dashes on `aB` / `ABc` boundaries, replaces spaces / underscores / other non-alphanumerics, lowercases. Splits acronyms: `"XMLHttpRequest"` → `"xml-http-request"`. |
-| `slugify(string)` | NFD, strip combining marks `U+0300`–`U+036F`, lowercase, then collapse non-`[A-Za-z0-9-]` runs and underscores to `-`. JS `\w` is ASCII, so CJK is dropped: `"Japanese: こんにちは"` → `"japanese"`. Python / Rust keep those letters (`"japanese-こんにちは"`). Go matches TypeScript (ASCII `\w`) but decomposes only a fixed Latin-1 table, not full Unicode NFD. |
-| `escapeHtml(string)` | Escapes `& < > " '` plus **backtick** (`&#x60;`) and **forward slash** (`&#x2F;`) so older-browser attribute delimiters and `</script>` injection are harder. Python / Rust / Go escape only `& < > " '`; `` ` `` and `/` stay. |
-| `toFullWidth(string)` | ASCII digits and letters only (`[0-9A-Za-z]`), each code point `+ 0xFEE0`. Punctuation and space stay: `"a-b!"` → `"ａ-ｂ!"`. Ports match. Inverse of `toHalfWidth` for those characters. |
-| `toHalfWidth(string)` | Full-width digits and letters only (`０-９Ａ-Ｚａ-ｚ`), each code point `- 0xFEE0`. CJK, punctuation, and ideographic space stay. Python **also** converts `U+FF01`–`U+FF5E` (full-width `!` through `~`) and `U+3000` → `" "`. Rust / Go match TypeScript. |
+| Function                      | Behavior                                                                                                                                                                                                                                                                                                                                                             |
+| ----------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `stripAnsi(string)`           | Removes CSI sequences (colors, cursor movement, including C1 `U+009B`) and OSC sequences (BEL or ST terminated). Incomplete CSI with no final byte is left unchanged. Unlike `sanitizeString`, other non-printables stay.                                                                                                                                            |
+| `stripTags(string)`           | Deletes HTML/XML tags (`<[^<>]*>`), repeating until stable so `"<sc<script>ript>"` becomes `""`. Self-closing tags are removed without inserting a separator (`"line1<br/>line2"` → `"line1line2"`).                                                                                                                                                                 |
+| `words(string, pattern?)`     | Default: insert spaces on camelCase / acronym boundaries, then split on non-letter/number separators. CJK and other letters are kept. If `pattern` is passed, returns `string.match(pattern)` or `[]`.                                                                                                                                                               |
+| `normalizeWhitespace(string)` | Collapses Unicode `\s+` to a single space and trims. Unlike `deleteSpaces`, words stay separated. All-whitespace input → `""`.                                                                                                                                                                                                                                       |
+| `deleteSpaces(string)`        | Removes every Unicode `\s` character (spaces, tabs, newlines, em space `U+2003`, ideographic space `U+3000`, …). `"Hello World"` → `"HelloWorld"`. All-whitespace input → `""`.                                                                                                                                                                                      |
+| `sanitizeString(string)`      | Keeps printable ASCII (`U+0020`–`U+007E`) plus TAB / LF / CR. Drops NULL, other C0, DEL, C1, ANSI ESC, and **all non-ASCII** (CJK, emoji, `"é"`). Unlike `stripAnsi`, it does not parse CSI: `"\u001B[31mred\u001B[0m"` → `"[31mred[0m"`.                                                                                                                            |
+| `unescapeHtml(string)`        | Named entities (`&amp;` `&lt;` `&gt;` `&quot;` `&#39;` `&#x27;` `&#x2F;` `&#x60;` `&#x3D;`) plus decimal / hex numeric references (`&#65;`, `&#x41;`).`&#X41;` (uppercase `X`) is left unchanged. Dangerous code points are **not** decoded (NULL, C0 except TAB/LF/CR, DEL, C1, surrogates, `>0x10FFFF`). Python / Rust / Go do not apply those extra filters.      |
+| `camelCase(string)`           | Replaces non-alphanumeric runs, then lowercases **only the first character**. Does not split acronyms: `"HELLO"` → `"hELLO"`, `"XMLHttpRequest"` → `"xMLHttpRequest"`.                                                                                                                                                                                               |
+| `kebabCase(string)`           | Inserts dashes on `aB` / `ABc` boundaries, replaces spaces / underscores / other non-alphanumerics, lowercases. Splits acronyms: `"XMLHttpRequest"` → `"xml-http-request"`.                                                                                                                                                                                          |
+| `slugify(string)`             | NFD, strip combining marks `U+0300`–`U+036F`, lowercase, then collapse non-`[A-Za-z0-9-]` runs and underscores to `-`. JS `\w` is ASCII, so CJK is dropped: `"Japanese: こんにちは"` → `"japanese"`. Python / Rust keep those letters (`"japanese-こんにちは"`). Go matches TypeScript (ASCII `\w`) but decomposes only a fixed Latin-1 table, not full Unicode NFD. |
+| `escapeHtml(string)`          | Escapes `& < > " '` plus **backtick** (`&#x60;`) and **forward slash** (`&#x2F;`) so older-browser attribute delimiters and `</script>` injection are harder. Python / Rust / Go escape only `& < > " '`; `` ` `` and `/` stay.                                                                                                                                      |
+| `toFullWidth(string)`         | ASCII digits and letters only (`[0-9A-Za-z]`), each code point `+ 0xFEE0`. Punctuation and space stay: `"a-b!"` → `"ａ-ｂ!"`. Ports match. Inverse of `toHalfWidth` for those characters.                                                                                                                                                                            |
+| `toHalfWidth(string)`         | Full-width digits and letters only (`０-９Ａ-Ｚａ-ｚ`), each code point `- 0xFEE0`. CJK, punctuation, and ideographic space stay. Python **also** converts `U+FF01`–`U+FF5E` (full-width `!` through `~`) and `U+3000` → `" "`. Rust / Go match TypeScript.                                                                                                          |
 
 ```ts
 import {
@@ -276,11 +276,11 @@ Go splits the custom-pattern case into `Words` vs `WordsWithPattern`.
 
 `hexaToRgba` (`umt/Color`) and `isAbsoluteUrl` / `joinPath` (`umt/URL`). Python, Rust, and Go ports exist.
 
-| Function | Behavior |
-| --- | --- |
-| `hexaToRgba(hex)` | `#` plus 3, 6, or 8 hex digits → `{ r, g, b, a }`. `r`/`g`/`b` are `0`–`255`; `a` is `0`–`1` rounded to 2 decimals (`#FF000080` → `0.5`). TypeScript does **not** validate; malformed input can yield `NaN`. Python / Rust / Go require the `#` + hex pattern and error otherwise. |
-| `isAbsoluteUrl(url)` | RFC 3986 scheme check: letter, then letters / digits / `+` / `.` / `-`, then `:`. `mailto:` and `tel:` are absolute. Protocol-relative (`"//example.com"`), relative paths, and schemes starting with a digit are not. |
-| `joinPath(...segments)` | String join, not `path.join` and not a URL parser. Keeps the first segment's leading `/` and the last segment's trailing `/`. Strips leading `/` from later segments and trailing `/` from earlier ones, then drops empty pieces. No `.` / `..` resolution. No segments → `""`. A single `"///"` stays `"///"`. |
+| Function                | Behavior                                                                                                                                                                                                                                                                                                         |
+| ----------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `hexaToRgba(hex)`       | `#` plus 3, 6, or 8 hex digits → `{ r, g, b, a }`.`r`/`g`/`b` are `0`–`255`; `a` is `0`–`1` rounded to 2 decimals (`#FF000080` → `0.5`). TypeScript does **not** validate; malformed input can yield `NaN`. Python / Rust / Go require the `#` + hex pattern and error otherwise.                                |
+| `isAbsoluteUrl(url)`    | RFC 3986 scheme check: letter, then letters / digits / `+` / `.` / `-`, then `:`.`mailto:` and `tel:` are absolute. Protocol-relative (`"//example.com"`), relative paths, and schemes starting with a digit are not.                                                                                            |
+| `joinPath(...segments)` | String join, not `path.join` and not a URL parser. Keeps the first segment's leading `/` and the last segment's trailing `/`. Strips leading `/` from later segments and trailing `/` from earlier ones, then drops empty pieces. No `.` / `..` resolution. No segments → `""`. A single `"///"` stays `"///"`.  |
 
 ```ts
 import { hexaToRgba } from "umt/Color";
@@ -322,13 +322,13 @@ escapeRegExp("path/to/file.txt"); // "path/to/file\\.txt"
 
 These TypeScript helpers are **not** ported to Python, Rust, or Go yet.
 
-| Function | Behavior |
-| --- | --- |
-| `countBy(array, iteratee)` | Counts elements by iteratee key (`string` \| `number`). Empty input → `{}`. Iteratee receives `(value, index, array)`. |
-| `partition(array, predicate)` | `[pass, fail]` in original order. Does not mutate the input. Predicate receives `(value, index, array)`. |
-| `sliding(array, size, step?)` | Fixed-size windows. Default `step` is `1`. Incomplete trailing windows are omitted. `size` larger than length → `[]`. Does not mutate the input. |
-| `mapSeries(items, fn)` | Awaits each mapper before starting the next (never overlapping). Returns results in input order. Rejects if any task rejects; it does not swallow errors. |
-| `safeExecuteAsync(callback)` | `try/await/catch` into `Result`: `{ type: "success", value }` or `{ type: "error", error }`. Accepts a sync return or a `Promise`. Sync throws and rejected promises both become `type: "error"`. Never throws. |
+| Function                      | Behavior                                                                                                                                                                                                        |
+| ----------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `countBy(array, iteratee)`    | Counts elements by iteratee key (`string` \| `number`). Empty input → `{}`. Iteratee receives `(value, index, array)`.                                                                                          |
+| `partition(array, predicate)` | `[pass, fail]` in original order. Does not mutate the input. Predicate receives `(value, index, array)`.                                                                                                        |
+| `sliding(array, size, step?)` | Fixed-size windows. Default `step` is `1`. Incomplete trailing windows are omitted. `size` larger than length → `[]`. Does not mutate the input.                                                                |
+| `mapSeries(items, fn)`        | Awaits each mapper before starting the next (never overlapping). Returns results in input order. Rejects if any task rejects; it does not swallow errors.                                                       |
+| `safeExecuteAsync(callback)`  | `try/await/catch` into `Result`: `{ type: "success", value }` or `{ type: "error", error }`. Accepts a sync return or a `Promise`. Sync throws and rejected promises both become `type: "error"`. Never throws. |
 
 ```ts
 import { countBy, partition, sliding } from "umt/Array";
@@ -348,11 +348,11 @@ await safeExecuteAsync(async () => 42); // { type: "success", value: 42 }
 
 Expression utilities in `umt/Math`. Python, Rust, and Go ports exist (`calculator` / `umt_calculator` / `Calculator`, and the same mapping for `mathConverter`).
 
-| Function | Behavior |
-| --- | --- |
-| `calculator(expression, exchange?)` | Strips whitespace. If the string contains `=`, solves a single-variable equation (`"x=5"` → `"5"`, `"2x=6"` → `"3"`). Otherwise evaluates `+ - * / ^` and parentheses. Incomplete input is returned as-is (`"1+"` → `"1+"`). `^` reduces the last pair first (`"2^2^2"` → `"16"`). Optional `exchange` replaces `symbol` + digits (`"$10*2"` with `{ $: 100 }` → `"2000"`). Finite results are rounded to 10 decimal places before `toString()`. |
-| `calculatorInitialization(exchange)` | Returns `(expression) => calculator(expression, exchange)`. |
-| `mathConverter(equation)` | Rewrites `n*n` or `n^2` as a sum of simpler products (`"1250*1250"` → `"1500*1000+400*100+200*100+50*50"`). Unequal `*` operands and `+` are left unchanged. |
+| Function                             | Behavior                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| ------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `calculator(expression, exchange?)`  | Strips whitespace. If the string contains `=`, solves a single-variable equation (`"x=5"` → `"5"`, `"2x=6"` → `"3"`). Otherwise evaluates `+ - * / ^` and parentheses. Incomplete input is returned as-is (`"1+"` → `"1+"`).`^` reduces the last pair first (`"2^2^2"` → `"16"`). Optional `exchange` replaces `symbol` + digits (`"$10*2"` with `{ $: 100 }` → `"2000"`). Finite results are rounded to 10 decimal places before `toString()`.  |
+| `calculatorInitialization(exchange)` | Returns `(expression) => calculator(expression, exchange)`.                                                                                                                                                                                                                                                                                                                                                                                      |
+| `mathConverter(equation)`            | Rewrites `n*n` or `n^2` as a sum of simpler products (`"1250*1250"` → `"1500*1000+400*100+200*100+50*50"`). Unequal `*` operands and `+` are left unchanged.                                                                                                                                                                                                                                                                                     |
 
 ```ts
 import { calculator, calculatorInitialization, mathConverter } from "umt/Math";
@@ -372,12 +372,12 @@ Wasm generates `mathConverter`. It skips `calculator` (`HashMap` exchange rates)
 
 Coarse User-Agent labels in `umt/UA`. Python, Rust, and Go ports exist. This is not a full UA parser: there are no versions, engines, or vendor strings — only the enums below. Matching is case-insensitive. `parseUserAgent` lowercases the input, then calls the three extractors.
 
-| Function | Behavior |
-| --- | --- |
-| `extractBrowserFromUserAgent(ua)` | Order: Edge (`edg` / `edge`) → IE (`msie` / `trident`) → Firefox (`firefox` / `fxios`) → Opera (`opr/`, returned as **`"other"`**) → Chrome (`chrome` / `crios`) → Safari → `"other"`. Safari is last because Chrome / Firefox on iOS also contain `Safari`. |
-| `extractDeviceFromUserAgent(ua)` | Order: bot (`bot` / `googlebot` / `crawler` / `spider` / `robot` / `crawling`) → mobile (`iphone` / `ipod` / `webos` / `blackberry` / `iemobile` / `opera mini`) → Android with `mobile` → `"mobile"`, Android without `mobile` → `"tablet"` → iPad → desktop (`windows` / `macintosh` / `linux`) → `"other"`. |
-| `extractOsFromUserAgent(ua)` | Order: iOS (`iphone` / `ipad` / `ipod`) → Android → macOS (`mac os x`) → Windows (`windows` / `win32`) → Linux → `"other"`. iPhone UAs that contain `like Mac OS X` are still `"ios"`. Android UAs that contain `Linux` are still `"android"`. |
-| `parseUserAgent(userAgent)` | `{ os, browser, device }`. Googlebot is `{ os: "other", browser: "other", device: "bot" }`. |
+| Function                          | Behavior                                                                                                                                                                                                                                                                                                        |
+| --------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `extractBrowserFromUserAgent(ua)` | Order: Edge (`edg` / `edge`) → IE (`msie` / `trident`) → Firefox (`firefox` / `fxios`) → Opera (`opr/`, returned as **`"other"`**) → Chrome (`chrome` / `crios`) → Safari → `"other"`. Safari is last because Chrome / Firefox on iOS also contain `Safari`.                                                    |
+| `extractDeviceFromUserAgent(ua)`  | Order: bot (`bot` / `googlebot` / `crawler` / `spider` / `robot` / `crawling`) → mobile (`iphone` / `ipod` / `webos` / `blackberry` / `iemobile` / `opera mini`) → Android with `mobile` → `"mobile"`, Android without `mobile` → `"tablet"` → iPad → desktop (`windows` / `macintosh` / `linux`) → `"other"`.  |
+| `extractOsFromUserAgent(ua)`      | Order: iOS (`iphone` / `ipad` / `ipod`) → Android → macOS (`mac os x`) → Windows (`windows` / `win32`) → Linux → `"other"`. iPhone UAs that contain `like Mac OS X` are still `"ios"`. Android UAs that contain `Linux` are still `"android"`.                                                                  |
+| `parseUserAgent(userAgent)`       | `{ os, browser, device }`. Googlebot is `{ os: "other", browser: "other", device: "bot" }`.                                                                                                                                                                                                                     |
 
 ```ts
 import {
