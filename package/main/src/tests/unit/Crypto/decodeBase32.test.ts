@@ -38,4 +38,27 @@ describe("decodeBase32", () => {
     // '1' is not in the Base32 alphabet, falls back to 0
     expect(Array.from(decodeBase32("1A"))).toEqual([0]);
   });
+
+  test("skips padding-only input", () => {
+    expect(Array.from(decodeBase32("========"))).toEqual([]);
+    expect(Array.from(decodeBase32("="))).toEqual([]);
+  });
+
+  test("skips equals anywhere, matching replaceAll", () => {
+    expect(Array.from(decodeBase32("JB=SWY3DP"))).toEqual(
+      Array.from(decodeBase32("JBSWY3DP")),
+    );
+    expect(new TextDecoder().decode(decodeBase32("MZX=W6YTB=OI"))).toBe(
+      "foobar",
+    );
+  });
+
+  test("treats lowercase and non-alphabet as 0", () => {
+    expect(Array.from(decodeBase32("aA"))).toEqual([0]);
+    expect(Array.from(decodeBase32("あA"))).toEqual([0]);
+  });
+
+  test("treats a surrogate pair as one non-alphabet symbol", () => {
+    expect(Array.from(decodeBase32("\u{1F600}7"))).toEqual([7]);
+  });
 });
