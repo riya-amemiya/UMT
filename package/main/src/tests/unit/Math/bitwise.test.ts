@@ -31,7 +31,7 @@ describe("bitwise", () => {
     expect(result.toString(16)).toBe("78123456");
   });
 
-  it("should handle bit count over 32 (rotate by remainder when divided by 32)", () => {
+  it("should handle bit count over 32 to the left (rotate by remainder when divided by 32)", () => {
     const result = bitwise(0x12_34_56_78, 40); // 40 % 32 = 8
     expect(result.toString(16)).toBe("34567812");
   });
@@ -61,7 +61,7 @@ describe("bitwise", () => {
     expect(result.toString(16)).toBe("12345678");
   });
 
-  it("should handle bit count over 32 (rotate by remainder when divided by 32)", () => {
+  it("should handle bit count over 32 to the right (rotate by remainder when divided by 32)", () => {
     const result = bitwise(0x12_34_56_78, 40, "right"); // 40 % 32 = 8
     expect(result.toString(16)).toBe("78123456");
   });

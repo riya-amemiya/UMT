@@ -43,7 +43,7 @@ describe("dayOfWeekSimple", () => {
     expect(dayOfWeekSimple(date)).toBe(2);
   });
 
-  it("should return 3 for Wednesday", () => {
+  it("should return 3 for Wednesday (Date)", () => {
     const date = new Date("2022-01-05");
     expect(dayOfWeekSimple(date)).toBe(3);
   });
