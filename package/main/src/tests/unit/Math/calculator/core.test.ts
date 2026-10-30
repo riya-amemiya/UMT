@@ -163,7 +163,7 @@ describe("calculatorCore function", () => {
     });
   });
 
-  describe("currency conversion", () => {
+  describe("currency conversion edge cases", () => {
     test("should return original expression when currency has no numbers", () => {
       expect(calculatorCore("Q*2", { Q: 3 })).toBe("Q*2");
     });
