@@ -51,7 +51,7 @@ Public code lives in `src/<package>`. Tests are `src/tests/<package>/*_test.go` 
 | `async` | `src/async` | `Sleep`, `Parallel`, `Timeout` |
 | `color` | `src/color` | `HexaToRgba`, `RgbaToHsla` (see below) |
 | `consts` | `src/consts` | `OneDayMs`, HTTP status maps |
-| `cryptoutil` | `src/cryptoutil` | `EncodeBase32`, `DecodeBase58` |
+| `cryptoutil` | `src/cryptoutil` | `EncodeBase32`, `DecodeBase32`, `DecodeBase58` (see below) |
 | `datastructure` | `src/datastructure` | `LRUCache`, `TTLCache`, `PriorityQueue` |
 | `date` | `src/date` | `StartOf`, `IsBusinessDay`, `AddDuration` |
 | `errutil` | `src/errutil` | Result helpers |
@@ -59,7 +59,7 @@ Public code lives in `src/<package>`. Tests are `src/tests/<package>/*_test.go` 
 | `ip` | `src/ip` | `IpToLong`, `IsInRange`, `IsPrivateIp` |
 | `iterator` | `src/iterator` | `LazyMap`, `LazyFilter`, `LazyTake` |
 | `maputil` | `src/maputil` | `GroupByToMap`, `ZipToMap` |
-| `math` | `src/math` | `Random`, `MustRandom`, `GCD`, `Calculator`, `MathConverter` (see below) |
+| `math` | `src/math` | `Random`, `MustRandom`, `GCD`, `Calculator`, `MathConverter`, `ToBaseN` (see below) |
 | `number` | `src/number` | `FormatNumber`, `ToOrdinal` |
 | `object` | `src/object` | `Get`, `DeepClone`, `FlattenObject` |
 | `predicate` | `src/predicate` | `Every`, `Some`, `IsNullish` |
@@ -165,9 +165,30 @@ _ = validate.ParseEmailWithLevel("user@localhost", "basic").Valid   // true
 _ = validate.ParseEmailWithLevel("user@localhost", "rfc5321").Valid // false
 ```
 
+## Crypto helpers
+
+RFC 4648 Base32 in `src/cryptoutil` (alphabet `A-Z` + `2-7`, `=` padding). Encoding, not encryption.
+
+| Function | Notes |
+| --- | --- |
+| `EncodeBase32` | Takes `[]byte` only (TypeScript / Python also accept a string). Empty input → `""`. `"Hello"` → `"JBSWY3DP"`. `"f"` → `"MY======"`. |
+| `DecodeBase32` | Returns `([]byte, error)`. Skips `=` anywhere. **Errors** on invalid / lowercase characters (`"1A"`, `"jbswy3dp"`). TypeScript `decodeBase32` maps those to value `0` and does not throw. Uses a 256-entry lookup table filled at package init. |
+| `DecodeBase32ToString` | UTF-8 string of `DecodeBase32`. |
+
+```go
+import "github.com/riya-amemiya/umt-go/src/cryptoutil"
+
+_ = cryptoutil.EncodeBase32([]byte("Hello")) // "JBSWY3DP"
+decoded, _ := cryptoutil.DecodeBase32("JBSWY3DP") // []byte("Hello")
+text, _ := cryptoutil.DecodeBase32ToString("MY======") // "f"
+_, err := cryptoutil.DecodeBase32("1A") // error: Invalid base32 character: 1
+```
+
 ## Calculator
 
 `math.Calculator(expression, exchange)` strips whitespace, then either solves a single-variable equation (`"x=5"` → `"5"`) or evaluates `+ - * / ^` and parentheses. Incomplete input is returned as-is (`"1+"`). `^` reduces the last pair first (`"2^2^2"` → `"16"`). `math.CalculatorInitialization(exchange)` binds the rate map. `math.MathConverter` rewrites `n*n` / `n^2`.
+
+`math.ToBaseN(n, base)` is `strconv.FormatInt`. There is no default base (unlike TypeScript / Python radix 2). Hex digits are lowercase (`ToBaseN(255, 16)` → `"ff"`). A base outside `2`–`36` **panics** (`strconv: illegal AppendInt/FormatInt base`). Rust returns the string `"Invalid radix"` instead.
 
 ```go
 import "github.com/riya-amemiya/umt-go/src/math"
@@ -175,6 +196,8 @@ import "github.com/riya-amemiya/umt-go/src/math"
 _ = math.Calculator("1+2", nil)                      // "3"
 _ = math.Calculator("$10*2", map[string]any{"$": 100}) // "2000"
 _ = math.MathConverter("1250*1250")                  // "1500*1000+400*100+200*100+50*50"
+_ = math.ToBaseN(10, 2)                              // "1010"
+_ = math.ToBaseN(255, 16)                            // "ff"
 ```
 
 ## UA helpers
@@ -213,7 +236,7 @@ Other constraints (verified against `src/ip/ip.go` and `src/tests/ip/ip_test.go`
 
 - Leading-zero octets (`"192.168.01.1"`) are rejected.
 - `SubnetMaskToCidr` requires contiguous `1` bits then `0` bits (`"255.0.255.0"` errors). TypeScript `subnetMaskToCidr` only counts set bits.
-- `IsPrivateIp` is RFC 1918 only (`10/8`, `172.16/12`, `192.168/16`). Loopback and link-local are not private. Invalid input returns `false` (no error). Unlike TypeScript / Python / Rust, the three ranges are rebuilt on each call.
+- `IsPrivateIp` is RFC 1918 only (`10/8`, `172.16/12`, `192.168/16`). Loopback and link-local are not private. Invalid input returns `false` (no error). The three `(network, mask)` pairs are a package-level `var` computed once at init, matching TypeScript / Python / Rust.
 - `GetIpClass("0.0.0.0")` is `""`.
 - `IpToBinaryString` packs via `IpToLong` then formats one 32-bit field (`%032b`). Invalid input (including leading-zero octets) returns an error, same as `IpToLong`.
 

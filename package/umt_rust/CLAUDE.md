@@ -38,6 +38,8 @@ Each module typically has:
 - UA extractors return `Browser` / `Device` / `Os` enums. Opera (`opr/`) is `Browser::Other`. Android without `mobile` is `Device::Tablet`. Wasm skips all four UA functions.
 - `umt_sanitize_string` is ASCII-only (CJK / emoji dropped) and is not `umt_strip_ansi`. `umt_join_path` is a slash join (`trim_start_matches` / `trim_end_matches`), not a regex. `umt_escape_regexp` does not escape `-` or `/`; wasm JS name is `escapeRegexp`.
 - `umt_escape_html` encodes `& < > " '` only (TypeScript also encodes backtick and `/`). `umt_to_full_width` is ASCII alnum only. `umt_to_half_width` is full-width alnum only (Python also converts `U+FF01`–`U+FF5E` and `U+3000`). `is_private_ip` hoists RFC 1918 masks in a `LazyLock` static.
+- `umt_decode_base32` uses a `const [u8; 256]` lookup (`0xFF` = invalid) and returns `Err` on invalid / lowercase characters. TypeScript maps those to `0`. Wasm skips encode (generic) and decode (`Result`).
+- `umt_to_base_n` has no default radix. Invalid radix returns the string `"Invalid radix"`. Wasm generates `toBaseN` / `toBinary` / `toHex`.
 
 ### Testing Patterns
 

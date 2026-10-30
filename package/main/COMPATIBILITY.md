@@ -38,7 +38,11 @@ Subpath exports match source modules (`umt/Array`, `umt/Date`, `umt/Validate`, �
 
 Input validation is the caller's responsibility. Functions do not throw on invalid arguments unless throwing is the function's purpose (for example `unwrap`).
 
-IP helpers (`umt/IP`) are IPv4 only. TypeScript does not validate dotted-decimal strings; the Python and Rust ports raise / return `Err` on malformed addresses and reject non-contiguous subnet masks. `isPrivateIp` is RFC 1918 only (not loopback or link-local). TypeScript, Python, and Rust hoist the three RFC 1918 `(network, mask)` pairs at module load; Go rebuilds them per call.
+IP helpers (`umt/IP`) are IPv4 only. TypeScript does not validate dotted-decimal strings; the Python and Rust ports raise / return `Err` on malformed addresses and reject non-contiguous subnet masks. `isPrivateIp` is RFC 1918 only (not loopback or link-local). TypeScript, Python, Rust, and Go hoist the three RFC 1918 `(network, mask)` pairs at module load.
+
+`decodeBase32` (`umt/Crypto`) is RFC 4648 (`A-Z` + `2-7`). It skips `=` anywhere and, in TypeScript, maps invalid / lowercase characters to value `0` instead of throwing (`"1A"` → `[0]`). Python / Rust / Go error on those inputs. Wasm skips encode (generic) and decode (`Result`).
+
+`toBaseN` (`umt/Math`) defaults to radix **2** (`toBaseN(10)` → `"1010"`). A radix outside `2`–`36` throws `RangeError` in TypeScript. Python `to_base_n` also defaults to 2. Rust `umt_to_base_n` returns the string `"Invalid radix"`. Go `ToBaseN` panics. Wasm `toBaseN` follows Rust.
 
 `hexaToRgba` (`umt/Color`) does not validate in TypeScript (malformed input can yield `NaN` components). Python, Rust, and Go require `#` plus 3, 6, or 8 hex digits.
 

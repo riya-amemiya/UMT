@@ -89,7 +89,7 @@ Input validation is the caller's responsibility. These functions do not throw on
 | `cidrToLong(cidr)` / `cidrToSubnetMask(cidr)` | Prefix length `0`–`32` to a mask number / dotted mask. CIDR `0` is `0` (`"0.0.0.0"`).                                                                                                                                                                                        |
 | `subnetMaskToCidr(mask)`                      | Counts set bits. Does **not** require a contiguous mask: `"255.0.255.0"` returns `16`.                                                                                                                                                                                       |
 | `isInRange(ip, network, cidr)`                | `(ip & mask) === (network & mask)`. CIDR `0` matches every IPv4 address.                                                                                                                                                                                                     |
-| `isPrivateIp(ip)`                             | RFC 1918 only: `10.0.0.0/8`, `172.16.0.0/12`, `192.168.0.0/16`. Loopback (`127.0.0.1`) and link-local (`169.254.0.0/16`) are **not** private. TypeScript, Python, and Rust compute the three `(network, mask)` pairs once at module load; Go still builds them on each call. |
+| `isPrivateIp(ip)`                             | RFC 1918 only: `10.0.0.0/8`, `172.16.0.0/12`, `192.168.0.0/16`. Loopback (`127.0.0.1`) and link-local (`169.254.0.0/16`) are **not** private. TypeScript, Python, Rust, and Go compute the three `(network, mask)` pairs once at module load. |
 | `getIpClass(ip)`                              | Classful first-octet lookup (`A`–`E`).`0.0.0.0` and malformed input return `""`.                                                                                                                                                                                             |
 | `getNetworkAddress(ip, mask)`                 | `ipToLong(ip) & cidrToLong(subnetMaskToCidr(mask))` as an unsigned 32-bit number.                                                                                                                                                                                            |
 | `ipToBinaryString(ip)`                        | 32-character `0`/`1` string, eight bits per octet.                                                                                                                                                                                                                           |
@@ -114,6 +114,32 @@ longToIp(getNetworkAddress("192.168.1.1", "255.255.255.0")); // "192.168.1.0"
 ```
 
 Python and Rust ports live in `package/umt_python` and `package/umt_rust`. Those ports raise / return `Err` on malformed input and reject non-contiguous subnet masks. They are not exposed through `umt-plugin-wasm`: Rust IP functions are not named `umt_*`, so wasm codegen ignores them.
+
+## Crypto helpers
+
+RFC 4648 Base32 in `umt/Crypto` (alphabet `A-Z` + `2-7`, `=` padding). Python, Rust, and Go ports exist. This is encoding, not encryption.
+
+| Function                          | Behavior                                                                                                                                                                                                                                                                                                                                 |
+| --------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `encodeBase32(input)`             | `string` or `Uint8Array` → padded Base32. Empty input → `""`. `"Hello"` → `"JBSWY3DP"`. `"f"` → `"MY======"`. Python accepts `str` \| `bytes`; Go takes `[]byte` only.                                                                                                                                                                   |
+| `decodeBase32(input)`             | Base32 → `Uint8Array`. Skips `=` **anywhere** (`"JB=SWY3DP"` equals `"JBSWY3DP"`). TypeScript does **not** throw: invalid / lowercase characters map to value `0` (same as `A`), so `"1A"` is `[0]`. Python / Rust / Go error on `1`, `0`, `@`, lowercase, and non-ASCII.                                                                  |
+| `decodeBase32ToString(input)`     | UTF-8 decode of `decodeBase32`. `"JBSWY3DP"` → `"Hello"`. `"4OAZHY4CSPRYDK7DQGQ6HANP"` → `"こんにちは"`.                                                                                                                                                                                                                                  |
+
+```ts
+import {
+  decodeBase32,
+  decodeBase32ToString,
+  encodeBase32,
+} from "umt/Crypto";
+
+encodeBase32("Hello"); // "JBSWY3DP"
+encodeBase32("f"); // "MY======"
+decodeBase32ToString("JBSWY3DP"); // "Hello"
+decodeBase32ToString("MY======"); // "f"
+Array.from(decodeBase32("1A")); // [0] (invalid `1` treated as 0)
+```
+
+Wasm skips all three: `umt_encode_base32` is generic (`AsRef<[u8]>`), and the decode helpers return `Result<_, Base32Error>`.
 
 ## Validate and Standard Schema
 
@@ -353,9 +379,15 @@ Expression utilities in `umt/Math`. Python, Rust, and Go ports exist (`calculato
 | `calculator(expression, exchange?)`  | Strips whitespace. If the string contains `=`, solves a single-variable equation (`"x=5"` → `"5"`, `"2x=6"` → `"3"`). Otherwise evaluates `+ - * / ^` and parentheses. Incomplete input is returned as-is (`"1+"` → `"1+"`).`^` reduces the last pair first (`"2^2^2"` → `"16"`). Optional `exchange` replaces `symbol` + digits (`"$10*2"` with `{ $: 100 }` → `"2000"`). Finite results are rounded to 10 decimal places before `toString()`.  |
 | `calculatorInitialization(exchange)` | Returns `(expression) => calculator(expression, exchange)`.                                                                                                                                                                                                                                                                                                                                                                                      |
 | `mathConverter(equation)`            | Rewrites `n*n` or `n^2` as a sum of simpler products (`"1250*1250"` → `"1500*1000+400*100+200*100+50*50"`). Unequal `*` operands and `+` are left unchanged.                                                                                                                                                                                                                                                                                     |
+| `toBaseN(value, radix?)`             | `Number#toString(radix)`. Default radix is **2** (`toBaseN(10)` → `"1010"`), not JavaScript's default 10. Hex digits are lowercase (`toBaseN(255, 16)` → `"ff"`). Radix outside `2`–`36` throws `RangeError`. Python `to_base_n` also defaults to 2 and takes `int` (`True` → `"1"`). Rust `umt_to_base_n` has no default radix; invalid radix returns the string `"Invalid radix"` (not `Err`). Go `ToBaseN` panics via `strconv.FormatInt` if the base is outside `2`–`36`. |
 
 ```ts
-import { calculator, calculatorInitialization, mathConverter } from "umt/Math";
+import {
+  calculator,
+  calculatorInitialization,
+  mathConverter,
+  toBaseN,
+} from "umt/Math";
 
 calculator("1+2"); // "3"
 calculator("(2+3)*4"); // "20"
@@ -364,9 +396,12 @@ calculator("1+"); // "1+"
 calculator("$10*2", { $: 100 }); // "2000"
 calculatorInitialization({ $: 100 })("$1"); // "100"
 mathConverter("1250*1250"); // "1500*1000+400*100+200*100+50*50"
+toBaseN(10); // "1010"
+toBaseN(15, 16); // "f"
+toBaseN(255, 16); // "ff"
 ```
 
-Wasm generates `mathConverter`. It skips `calculator` (`HashMap` exchange rates).
+Wasm generates `mathConverter` and `toBaseN` / `toBinary` / `toHex` (Rust: `i64`, `"Invalid radix"` on a bad base). It skips `calculator` (`HashMap` exchange rates).
 
 ## UA helpers
 
