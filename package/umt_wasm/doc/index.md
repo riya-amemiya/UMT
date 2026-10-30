@@ -55,6 +55,8 @@ A few Date helpers that already use wasm-friendly types (`umt_is_leap_year`, `um
 
 `slugify` and `mathConverter` are generated. They follow the Rust crate, so wasm `slugify` keeps CJK letters (`"japanese-こんにちは"`), unlike TypeScript / Go. `calculator` (HashMap exchange rates), `parseEmail` (`Option<ParseEmailOptions>`), and the UA extractors (`Browser` / `Device` / `Os` / `UserAgentInfo`) are skipped.
 
+`toBaseN` / `toBinary` / `toHex` are generated from Rust (`i64`). Invalid radix returns the string `"Invalid radix"`. TypeScript `toBaseN` defaults to radix 2 and throws `RangeError`; Go panics. `encodeBase32` (generic `AsRef<[u8]>`) and `decodeBase32` / `decodeBase32ToString` (`Result<_, Base32Error>`) are skipped. TypeScript `decodeBase32` maps invalid characters to `0`; the Rust decode that wasm would wrap errors instead.
+
 `sanitizeString`, `deleteSpaces`, `joinPath`, `escapeRegexp`, `escapeHtml`, `toFullWidth`, and `toHalfWidth` are generated. `sanitizeString` is ASCII-only (CJK / emoji dropped) and is not `stripAnsi` (ESC gone, CSI leftovers remain). `joinPath` takes an array of strings, not rest arguments, and does not resolve `.` / `..`. Wasm's JS name is `escapeRegexp` (lowercase `p`); TypeScript is `escapeRegExp`. Wasm `escapeHtml` follows Rust (no backtick or `/`). Wasm `toHalfWidth` is full-width alnum only, not Python's broader punctuation / space table.
 
 ## Build and test

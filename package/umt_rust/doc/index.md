@@ -21,7 +21,8 @@ cargo doc --open
 
 | Module | Notes |
 | --- | --- |
-| `advance`, `array`, `async_util`, `color`, `consts`, `crypto` | Same grouping as TypeScript |
+| `advance`, `array`, `async_util`, `color`, `consts` | Same grouping as TypeScript |
+| `crypto` | RFC 4648 Base32 / Base58. See below |
 | `data_structure` | `LRUCache`, `TTLCache`, `PriorityQueue` |
 | `date` | Calendar helpers; wasm skips most (`DateTime<Utc>`) |
 | `error`, `function` | Result helpers; debounce / memoize / throttle |
@@ -73,6 +74,24 @@ assert_eq!(umt_format(&friday, "[Year:] YYYY", 0), "Year: 2025");
 There is no `umt_is_same` yet (TypeScript `isSame`). Use `umt_is_same_day` or compare `umt_start_of` results.
 
 Wasm bindings for most of these Date helpers are **not** auto-generated (`DateTime<Utc>` / custom enums). See `package/umt_wasm/doc/index.md`.
+
+## Crypto helpers
+
+RFC 4648 Base32 in `src/crypto/` (alphabet `A-Z` + `2-7`, `=` padding). Encoding, not encryption.
+
+| Function | Notes |
+| --- | --- |
+| `umt_encode_base32` | Generic `AsRef<[u8]>` (string or bytes). Empty input → `""`. `"Hello"` → `"JBSWY3DP"`. `"f"` → `"MY======"`. Wasm skips it (generics). |
+| `umt_decode_base32` | `Result<Vec<u8>, Base32Error>`. Skips `=` anywhere. **Errors** on invalid / lowercase characters (`"1A"`, `"jbswy3dp"`). TypeScript `decodeBase32` maps those to value `0` and does not throw. Uses a `const [u8; 256]` lookup (`0xFF` = invalid). Wasm skips it (`Result`). |
+| `umt_decode_base32_to_string` | UTF-8 string of `umt_decode_base32`. Wasm skips it. |
+
+```rust
+use umt_rust::crypto::{umt_decode_base32, umt_decode_base32_to_string, umt_encode_base32};
+
+assert_eq!(umt_encode_base32("Hello"), "JBSWY3DP");
+assert_eq!(umt_decode_base32_to_string("JBSWY3DP").unwrap(), "Hello");
+assert!(umt_decode_base32("1A").is_err());
+```
 
 ## String helpers
 
@@ -165,9 +184,11 @@ assert!(!umt_parse_email("user@localhost", Some(rfc5321)).valid);
 
 `umt_calculator(expression, exchange)` strips whitespace, solves `=` equations (`"x=5"` → `"5"`), or evaluates `+ - * / ^`. Incomplete input is returned as-is. `^` reduces the last pair first. Wasm skips it (`HashMap` rates). `umt_math_converter` is generated for wasm.
 
+`umt_to_base_n(value, radix)` has **no default radix** (TypeScript / Python default to 2). Hex digits are lowercase. Invalid radix (`< 2` or `> 36`) returns the string `"Invalid radix"` (not `Err`). Helpers: `umt_to_binary` / `umt_to_hex`. Wasm generates all three.
+
 ```rust
 use umt_rust::math::calculator::umt_calculator;
-use umt_rust::math::umt_math_converter;
+use umt_rust::math::{umt_math_converter, umt_to_base_n};
 
 assert_eq!(umt_calculator("1+2", None), "3");
 assert_eq!(umt_calculator("2^2^2", None), "16");
@@ -175,6 +196,9 @@ assert_eq!(
     umt_math_converter("1250*1250"),
     "1500*1000+400*100+200*100+50*50"
 );
+assert_eq!(umt_to_base_n(10, 2), "1010");
+assert_eq!(umt_to_base_n(255, 16), "ff");
+assert_eq!(umt_to_base_n(10, 1), "Invalid radix");
 ```
 
 ## UA helpers
