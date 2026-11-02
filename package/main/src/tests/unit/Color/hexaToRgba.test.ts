@@ -24,4 +24,25 @@ describe("hexaToRgba", () => {
     expect(hexaToRgba("#FF000080")).toEqual({ r: 255, g: 0, b: 0, a: 0.5 });
     expect(hexaToRgba("#FF000000")).toEqual({ r: 255, g: 0, b: 0, a: 0 });
   });
+
+  it("should accept lowercase hex digits", () => {
+    expect(hexaToRgba("#ff0000")).toEqual({ r: 255, g: 0, b: 0, a: 1 });
+    expect(hexaToRgba("#f00")).toEqual({ r: 255, g: 0, b: 0, a: 1 });
+    expect(hexaToRgba("#ff000080")).toEqual({ r: 255, g: 0, b: 0, a: 0.5 });
+    expect(hexaToRgba("#aabbccdd")).toEqual({
+      r: 170,
+      g: 187,
+      b: 204,
+      a: 0.87,
+    });
+  });
+
+  it("should round 8-digit alpha to two decimals", () => {
+    expect(hexaToRgba("#00000001")).toEqual({ r: 0, g: 0, b: 0, a: 0 });
+    expect(hexaToRgba("#00000002")).toEqual({ r: 0, g: 0, b: 0, a: 0.01 });
+    expect(hexaToRgba("#00000033")).toEqual({ r: 0, g: 0, b: 0, a: 0.2 });
+    expect(hexaToRgba("#00000040")).toEqual({ r: 0, g: 0, b: 0, a: 0.25 });
+    expect(hexaToRgba("#0000007f")).toEqual({ r: 0, g: 0, b: 0, a: 0.5 });
+    expect(hexaToRgba("#000000fe")).toEqual({ r: 0, g: 0, b: 0, a: 1 });
+  });
 });
