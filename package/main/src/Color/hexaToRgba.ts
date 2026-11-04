@@ -1,5 +1,3 @@
-import { division } from "@/Math/division";
-import { roundOf } from "@/Math/roundOf";
 /**
 Convert hexadecimal color code to RGBA color values
 @param hex Hexadecimal color code (3, 6, or 8 digits with #)
@@ -27,7 +25,7 @@ export const hexaToRgba = (
   const b = Number.parseInt(hexCode.slice(4, 6), 16);
   const alphaValue =
     hexCode.length === 8 ? Number.parseInt(hexCode.slice(6, 8), 16) : 255;
-  const a = roundOf(division(alphaValue, 255), 2);
+  const a = Math.round((alphaValue / 255) * 100) / 100;
 
   // NaN check is not necessary since validation ensures valid hex values
   return { r, g, b, a };
