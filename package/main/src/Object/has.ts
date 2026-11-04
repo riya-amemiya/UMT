@@ -19,7 +19,7 @@ If processing user-controlled input, sanitize with the appropriate
 - `removePrototypeMap` — shallow sanitization of an array of objects
 - `removePrototypeMapDeep` — recursive sanitization of an array of objects (for deeply nested data)
 */
-export const has = <T extends { [key: string]: unknown }>(
+export const has = <T extends Record<string, unknown>>(
   object: T,
   path: string | string[],
 ): boolean => {

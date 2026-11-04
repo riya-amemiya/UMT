@@ -24,7 +24,6 @@ export default defineConfig(
   },
   {
     languageOptions: {
-      sourceType: "module",
       ecmaVersion: 2024,
       parserOptions: {
         project: "./tsconfig.json",
@@ -35,7 +34,6 @@ export default defineConfig(
       import: importPlugin,
     },
     rules: {
-      "@typescript-eslint/consistent-indexed-object-style": "off",
       "@typescript-eslint/no-explicit-any": "off",
       "@typescript-eslint/no-non-null-assertion": "off",
       "@typescript-eslint/no-unnecessary-type-assertion": [
@@ -43,7 +41,6 @@ export default defineConfig(
         { checkLiteralConstAssertions: true },
       ],
       "@typescript-eslint/no-unused-vars": "off",
-      "@typescript-eslint/unified-signatures": "off",
       "import/order": [
         "error",
         {
@@ -61,14 +58,11 @@ export default defineConfig(
           "newlines-between": "always",
         },
       ],
-      "no-constant-condition": "off",
       "unicorn/better-regex": "error",
       "unicorn/consistent-boolean-name": "off",
-      "unicorn/consistent-class-member-order": "off",
       "unicorn/consistent-destructuring": "error",
       "unicorn/filename-case": "off",
       "unicorn/max-nested-calls": "off",
-      "unicorn/no-array-reduce": "error",
       "unicorn/no-array-reverse": "off",
       // new Array(n) is the fast path for pre-sized buffers; Array.from({length})
       // is substantially slower and was autofixing performance-critical code.
@@ -80,15 +74,11 @@ export default defineConfig(
       "unicorn/no-computed-property-existence-check": "off",
       "unicorn/no-nested-ternary": "off",
       "unicorn/no-null": "off",
-      "unicorn/no-this-outside-of-class": "off",
-      "unicorn/no-unreadable-array-destructuring": "off",
-      "unicorn/no-unsafe-property-key": "off",
       "unicorn/no-unsafe-string-replacement": "off",
       "unicorn/no-unused-properties": "error",
       "unicorn/number-literal-case": "off",
       "unicorn/prefer-await": "off",
       "unicorn/prefer-global-number-constants": "off",
-      "unicorn/prefer-minimal-ternary": "off",
       "unicorn/prefer-number-coercion": "off",
       "unicorn/prefer-number-is-safe-integer": "off",
       "unicorn/prefer-number-properties": "off",

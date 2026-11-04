@@ -70,9 +70,7 @@ export class Pipe<T> {
     predicate: (input: T) => input is U,
     defaultValue: U,
   ): Pipe<U> {
-    return predicate(this.value)
-      ? new Pipe(this.value)
-      : new Pipe(defaultValue);
+    return new Pipe(predicate(this.value) ? this.value : defaultValue);
   }
 
   /**

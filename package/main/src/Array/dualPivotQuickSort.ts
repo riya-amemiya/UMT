@@ -74,18 +74,21 @@ const partition = <T>(
 
   // Move pivots to ends
   if (leftPivotIndex !== low) {
-    [array[low], array[leftPivotIndex]] = [array[leftPivotIndex], array[low]];
+    const lowValue = array[low];
+    array[low] = array[leftPivotIndex];
+    array[leftPivotIndex] = lowValue;
   }
   if (rightPivotIndex !== high) {
-    [array[high], array[rightPivotIndex]] = [
-      array[rightPivotIndex],
-      array[high],
-    ];
+    const highValue = array[high];
+    array[high] = array[rightPivotIndex];
+    array[rightPivotIndex] = highValue;
   }
 
   // Swap pivots if needed
   if (compareFunction(array[low], array[high]) > 0) {
-    [array[low], array[high]] = [array[high], array[low]];
+    const lowValue = array[low];
+    array[low] = array[high];
+    array[high] = lowValue;
   }
 
   // Initialize partition boundaries
@@ -97,7 +100,9 @@ const partition = <T>(
   while (current <= right) {
     // Handle elements smaller than left pivot
     if (compareFunction(array[current], array[low]) < 0) {
-      [array[current], array[left]] = [array[left], array[current]];
+      const currentValue = array[current];
+      array[current] = array[left];
+      array[left] = currentValue;
       left++;
     }
     // Handle elements larger than right pivot
@@ -109,11 +114,15 @@ const partition = <T>(
       ) {
         right--;
       }
-      [array[current], array[right]] = [array[right], array[current]];
+      const currentValue = array[current];
+      array[current] = array[right];
+      array[right] = currentValue;
       right--;
       // Check if swapped element is smaller than left pivot
       if (compareFunction(array[current], array[low]) < 0) {
-        [array[current], array[left]] = [array[left], array[current]];
+        const swappedValue = array[current];
+        array[current] = array[left];
+        array[left] = swappedValue;
         left++;
       }
     }
@@ -123,8 +132,12 @@ const partition = <T>(
   // Move pivots to their final positions
   left--;
   right++;
-  [array[low], array[left]] = [array[left], array[low]];
-  [array[high], array[right]] = [array[right], array[high]];
+  const leftPivotValue = array[low];
+  array[low] = array[left];
+  array[left] = leftPivotValue;
+  const rightPivotValue = array[high];
+  array[high] = array[right];
+  array[right] = rightPivotValue;
 
   return { leftPivotIndex: left, rightPivotIndex: right };
 };

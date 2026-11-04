@@ -26,13 +26,13 @@ const medianOfThree = <T>(
     if (bc < 0) {
       return array[b];
     }
-    return compareFunction(array[a], array[c]) < 0 ? array[c] : array[a];
+    return array[compareFunction(array[a], array[c]) < 0 ? c : a];
   }
   const ac = compareFunction(array[a], array[c]);
   if (ac < 0) {
     return array[a];
   }
-  return compareFunction(array[b], array[c]) < 0 ? array[c] : array[b];
+  return array[compareFunction(array[b], array[c]) < 0 ? c : b];
 };
 
 /**
@@ -71,7 +71,9 @@ const partition = <T>(
       return right;
     }
 
-    [array[left], array[right]] = [array[right], array[left]];
+    const leftValue = array[left];
+    array[left] = array[right];
+    array[right] = leftValue;
   }
 };
 

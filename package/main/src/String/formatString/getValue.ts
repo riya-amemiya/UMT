@@ -60,7 +60,7 @@ export function getValue(object: unknown, path: string): unknown {
     }
 
     const index = segment.index;
-    current = index < 0 ? current[current.length + index] : current[index];
+    current = current[index < 0 ? current.length + index : index];
   }
 
   return current;

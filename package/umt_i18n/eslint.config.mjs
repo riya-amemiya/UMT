@@ -1,6 +1,5 @@
 import js from "@eslint/js";
 import typescriptEslintPlugin from "@typescript-eslint/eslint-plugin";
-import typescriptEslintParser from "@typescript-eslint/parser";
 import unicornPlugin from "eslint-plugin-unicorn";
 import importPlugin from "eslint-plugin-import";
 
@@ -19,20 +18,15 @@ export default [
   },
   {
     languageOptions: {
-      sourceType: "module",
       ecmaVersion: 2024,
-      parser: typescriptEslintParser,
       parserOptions: {
         project: "./tsconfig.json",
       },
     },
     plugins: {
       import: importPlugin,
-      "@typescript-eslint": typescriptEslintPlugin,
     },
     rules: {
-      "@typescript-eslint/no-explicit-any": "off",
-      "@typescript-eslint/no-unused-vars": "off",
       "unicorn/filename-case": [
         "error",
         {
@@ -59,6 +53,7 @@ export default [
           "newlines-between": "always",
         },
       ],
+      "unicorn/prefer-includes-over-repeated-comparisons": "off",
     },
   },
 ];

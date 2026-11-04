@@ -20,10 +20,11 @@ export type { StandardSchemaV1 } from "@/Validate/standardSchema";
 /**
 Shape map describing per-property validators consumed by `object()`
 */
-export interface ObjectShape {
+export type ObjectShape = Record<
+  string,
   // biome-ignore lint/suspicious/noExplicitAny: Required for flexible object property validation
-  [key: string]: (value: any) => ValidateCoreReturnType<unknown>;
-}
+  (value: any) => ValidateCoreReturnType<unknown>
+>;
 
 /**
 Resolved property map produced by applying `ValidateType` to every shape

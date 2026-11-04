@@ -78,6 +78,108 @@ export class PriorityQueue<T> {
   }
 
   /**
+  Updates the minimum priority when adding elements.
+  @param priority - The priority being added
+  */
+  private updateMinPriorityOnAdd(priority: number): void {
+    if (this.heap.length === 1 || priority < this.minPriority) {
+      this.minPriority = priority;
+    }
+  }
+
+  /**
+  Updates the minimum priority from all elements (used in constructor).
+  */
+  private updateMinPriority(): void {
+    if (this.heap.length === 0) {
+      this.minPriority = 0;
+      return;
+    }
+    // Single-pass minimum without intermediate array allocation
+    let min = this.heap[0].priority;
+    for (let index = 1; index < this.heap.length; index++) {
+      if (this.heap[index].priority < min) {
+        min = this.heap[index].priority;
+      }
+    }
+    this.minPriority = min;
+  }
+
+  /**
+  Builds a max heap from the current heap array.
+  */
+  private buildHeap(): void {
+    for (
+      let index = Math.floor(this.heap.length / 2) - 1;
+      index >= 0;
+      index--
+    ) {
+      this.heapifyDown(index);
+    }
+  }
+
+  /**
+  Moves an element up the heap to maintain heap property.
+  @param index - The index of the element to move up
+  */
+  private heapifyUp(index: number): void {
+    let currentIndex = index;
+    while (currentIndex > 0) {
+      const parentIndex = Math.floor((currentIndex - 1) / 2);
+      if (this.heap[currentIndex].priority <= this.heap[parentIndex].priority) {
+        break;
+      }
+      this.swap(currentIndex, parentIndex);
+      currentIndex = parentIndex;
+    }
+  }
+
+  /**
+  Moves an element down the heap to maintain heap property.
+  @param index - The index of the element to move down
+  */
+  private heapifyDown(index: number): void {
+    let currentIndex = index;
+    while (true) {
+      const leftChild = 2 * currentIndex + 1;
+      const rightChild = 2 * currentIndex + 2;
+      let largest = currentIndex;
+
+      if (
+        leftChild < this.heap.length &&
+        this.heap[leftChild].priority > this.heap[largest].priority
+      ) {
+        largest = leftChild;
+      }
+
+      if (
+        rightChild < this.heap.length &&
+        this.heap[rightChild].priority > this.heap[largest].priority
+      ) {
+        largest = rightChild;
+      }
+
+      if (largest === currentIndex) {
+        break;
+      }
+
+      this.swap(currentIndex, largest);
+      currentIndex = largest;
+    }
+  }
+
+  /**
+  Swaps two elements in the heap.
+  @param i - First index
+  @param j - Second index
+  */
+  private swap(index: number, index_: number): void {
+    const element = this.heap[index];
+    this.heap[index] = this.heap[index_];
+    this.heap[index_] = element;
+  }
+
+  /**
   Returns the number of elements in the queue.
   @returns The number of elements in the queue
   @example
@@ -261,108 +363,5 @@ export class PriorityQueue<T> {
   */
   toArrayWithPriorities(): { value: T; priority: number }[] {
     return this.heap.slice();
-  }
-
-  /**
-  Updates the minimum priority when adding elements.
-  @param priority - The priority being added
-  */
-  private updateMinPriorityOnAdd(priority: number): void {
-    if (this.heap.length === 1 || priority < this.minPriority) {
-      this.minPriority = priority;
-    }
-  }
-
-  /**
-  Updates the minimum priority from all elements (used in constructor).
-  */
-  private updateMinPriority(): void {
-    if (this.heap.length === 0) {
-      this.minPriority = 0;
-      return;
-    }
-    // Single-pass minimum without intermediate array allocation
-    let min = this.heap[0].priority;
-    for (let index = 1; index < this.heap.length; index++) {
-      if (this.heap[index].priority < min) {
-        min = this.heap[index].priority;
-      }
-    }
-    this.minPriority = min;
-  }
-
-  /**
-  Builds a max heap from the current heap array.
-  */
-  private buildHeap(): void {
-    for (
-      let index = Math.floor(this.heap.length / 2) - 1;
-      index >= 0;
-      index--
-    ) {
-      this.heapifyDown(index);
-    }
-  }
-
-  /**
-  Moves an element up the heap to maintain heap property.
-  @param index - The index of the element to move up
-  */
-  private heapifyUp(index: number): void {
-    let currentIndex = index;
-    while (currentIndex > 0) {
-      const parentIndex = Math.floor((currentIndex - 1) / 2);
-      if (this.heap[currentIndex].priority <= this.heap[parentIndex].priority) {
-        break;
-      }
-      this.swap(currentIndex, parentIndex);
-      currentIndex = parentIndex;
-    }
-  }
-
-  /**
-  Moves an element down the heap to maintain heap property.
-  @param index - The index of the element to move down
-  */
-  private heapifyDown(index: number): void {
-    let currentIndex = index;
-    while (true) {
-      const leftChild = 2 * currentIndex + 1;
-      const rightChild = 2 * currentIndex + 2;
-      let largest = currentIndex;
-
-      if (
-        leftChild < this.heap.length &&
-        this.heap[leftChild].priority > this.heap[largest].priority
-      ) {
-        largest = leftChild;
-      }
-
-      if (
-        rightChild < this.heap.length &&
-        this.heap[rightChild].priority > this.heap[largest].priority
-      ) {
-        largest = rightChild;
-      }
-
-      if (largest === currentIndex) {
-        break;
-      }
-
-      this.swap(currentIndex, largest);
-      currentIndex = largest;
-    }
-  }
-
-  /**
-  Swaps two elements in the heap.
-  @param i - First index
-  @param j - Second index
-  */
-  private swap(index: number, index_: number): void {
-    [this.heap[index], this.heap[index_]] = [
-      this.heap[index_],
-      this.heap[index],
-    ];
   }
 }
