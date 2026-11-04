@@ -30,4 +30,15 @@ describe("fromBase64", () => {
     expect(fromBase64("YWE=")).toBe("aa"); // 1 padding char
     expect(fromBase64("YWFh")).toBe("aaa"); // no padding
   });
+
+  it("should convert a longer ASCII string", () => {
+    const input = "The quick brown fox jumps over the lazy dog";
+    expect(fromBase64(toBase64(input))).toBe(input);
+    expect(fromBase64("SGVsbG8gV29ybGQ=")).toBe("Hello World");
+  });
+
+  it("should round-trip mixed ASCII, CJK, and emoji", () => {
+    const input = "Hello 世界 🌊 A".repeat(16);
+    expect(fromBase64(toBase64(input))).toBe(input);
+  });
 });
