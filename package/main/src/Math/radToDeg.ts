@@ -1,5 +1,7 @@
 import { division } from "./division";
 
+const PI_OVER_180 = division(Math.PI, 180);
+
 /**
 Converts radians to degrees
 @param  {number} x Angle in radians
@@ -8,4 +10,4 @@ Converts radians to degrees
 @description
 Uses the formula: degrees = radians * (180/π)
 */
-export const radToDeg = (x: number) => division(x, division(Math.PI, 180));
+export const radToDeg = (x: number) => division(x, PI_OVER_180);
