@@ -1,0 +1,74 @@
+name: Publish Rust Package to crates.io
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: Run cargo publish --dry-run without uploading
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  publish:
+    if: github.repository == 'riya-amemiya/UMT' && (github.event_name == 'workflow_dispatch' || startsWith(github.event.release.tag_name, 'rust-'))
+    runs-on: ubuntu-latest
+    environment: release
+    permissions:
+      contents: read
+      id-token: write
+    defaults:
+      run:
+        working-directory: ./package/umt_rust
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Cache
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+          key: ${{ runner.os }}-cargo-${{ hashFiles('package/umt_rust/Cargo.lock') }}
+
+      - name: Install stable toolchain
+        run: rustup toolchain install stable --profile minimal --no-self-update
+
+      - name: Check tag matches crate version
+        if: github.event_name == 'release'
+        env:
+          TAG_NAME: ${{ github.event.release.tag_name }}
+        run: |
+          set -euo pipefail
+          tag="${TAG_NAME#rust-}"
+          crate_version="$(awk -F '"' '/^version = / { print $2; exit }' Cargo.toml)"
+          if [ "$tag" != "$crate_version" ]; then
+            echo "Tag '${TAG_NAME}' does not match Cargo.toml version '${crate_version}'"
+            exit 1
+          fi
+
+      - name: Authenticate with crates.io
+        if: ${{ github.event_name != 'workflow_dispatch' || !inputs.dry_run }}
+        id: auth
+        uses: rust-lang/crates-io-auth-action@3268eb413133e2960fa4ae0e963ca76380c54cd9 # v1.0.6
+
+      - name: Publish
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ steps.auth.outputs.token }}
+          DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run }}
+        run: |
+          set -euo pipefail
+          extra=()
+          if [ "${DRY_RUN}" = "true" ]; then
+            extra+=(--dry-run)
+          fi
+          cargo publish --locked "${extra[@]}"

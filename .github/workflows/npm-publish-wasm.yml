@@ -1,0 +1,81 @@
+name: Publish Wasm Package to npm
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: Run npm publish --dry-run without uploading
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  publish:
+    if: github.repository == 'riya-amemiya/UMT' && (github.event_name == 'workflow_dispatch' || startsWith(github.event.release.tag_name, 'wasm-'))
+    runs-on: ubuntu-latest
+    environment: release
+    permissions:
+      contents: read
+      id-token: write
+    defaults:
+      run:
+        working-directory: ./package/umt_wasm
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Cache
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+          key: ${{ runner.os }}-cargo-wasm-${{ hashFiles('package/umt_wasm/Cargo.lock') }}
+
+      - name: Install stable toolchain
+        run: rustup toolchain install stable --profile minimal --target wasm32-unknown-unknown --no-self-update
+
+      - name: Install wasm-pack
+        run: cargo install wasm-pack --version 0.15.0 --locked
+
+      - name: Setup Node.js for npm publish
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Check tag matches crate version
+        if: github.event_name == 'release'
+        env:
+          TAG_NAME: ${{ github.event.release.tag_name }}
+        run: |
+          set -euo pipefail
+          tag="${TAG_NAME#wasm-}"
+          crate_version="$(awk -F '"' '/^version = / { print $2; exit }' Cargo.toml)"
+          if [ "$tag" != "$crate_version" ]; then
+            echo "Tag '${TAG_NAME}' does not match Cargo.toml version '${crate_version}'"
+            exit 1
+          fi
+
+      - name: Build
+        run: wasm-pack build --release --target web --out-dir pkg
+
+      - name: Publish
+        working-directory: ./package/umt_wasm/pkg
+        env:
+          DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run }}
+        run: |
+          set -euo pipefail
+          extra=()
+          if [ "${DRY_RUN}" = "true" ]; then
+            extra+=(--dry-run)
+          fi
+          npm publish "${extra[@]}"
