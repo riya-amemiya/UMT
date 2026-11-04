@@ -27,7 +27,7 @@ Located in `package/main`.
 *   **Nix**: `nix fmt` only. Scripts call `make` directly.
 *   **TypeScript pin**: Keep `typescript` at 6.0.3 in `package/main`, `package/umt_i18n`, and `package/umt_wasm`. TypeScript 7.x currently breaks `typescript-eslint` (`lint:ci`) and `ts-node` loading `jest.config.ts` (Node 20 `npx jest`). See `package/main/COMPATIBILITY.md`.
 
-**Note**: The `types` directory primarily contains type definitions. Porting logic from `types` is only necessary if it corresponds to runtime logic.
+**Note**: The `types` directory primarily contains type definitions. Porting logic from `types` is only necessary if it corresponds to runtime logic. Type-level tests live in `src/tests/unit/types/` and must cover every `src/types` export.
 
 ## Package: umt_python (Python)
 
@@ -57,7 +57,7 @@ Located in `package/umt_python`.
 *   **Testing & Benchmarks**:
     *   Unit tests must import from `src` (e.g., `from src.validate import ...`).
     *   Benchmarks reside in `tests/benchmark/` and use `timeit`. Note that `__file__` is not defined in `timeit` strings; resolve paths externally.
-*   **Regex**: Cache fixed patterns with module-level `re.compile`. Current sites: `strip_ansi` / `strip_tags`, `unescape_html`, `escape_html`, `camel_case`, `kebab_case`, `slugify`, `normalize_whitespace`, `sanitize_string`, `delete_spaces`, `hexa_to_rgba`, `is_absolute_url`, `join_path`, `math_converter`, `parse_email`, calculator / `calculator_core` (except the currency-symbol pattern), UA extractors, `literal_expression`, `apply_formatter`, `get_value`, `escape_regexp`. Do not compile a fixed pattern on every call. Caller-built patterns (`format_string`, `regex_match`, optional `words` pattern, `template_literal`, calculator currency symbol) stay inline. `to_full_width` / `to_half_width` use `str.maketrans` / `translate`, not regex. `is_private_ip` hoists the three RFC 1918 `(network, mask)` pairs at module load.
+*   **Regex**: Cache fixed patterns with module-level `re.compile`. Current sites: `strip_ansi` / `strip_tags`, `unescape_html`, `escape_html`, `camel_case`, `kebab_case`, `slugify`, `normalize_whitespace`, `sanitize_string`, `delete_spaces`, `hexa_to_rgba`, `is_absolute_url`, `join_path`, `math_converter`, `parse_email`, calculator / `calculator_core` (except the currency-symbol pattern), UA extractors, `literal_expression`, `apply_formatter`, `get_value`, `escape_regexp`. Do not compile a fixed pattern on every call. Caller-built patterns (`format_string`, `regex_match`, optional `words` pattern, `template_literal`, calculator currency symbol) stay inline. `to_full_width` / `to_half_width` use `str.maketrans` / `translate`, not regex. `is_private_ip` hoists the three RFC 1918 `(network, mask)` pairs at module load. `decode_base32` still uses `str.find` and raises `ValueError` on invalid characters (TypeScript / Rust / Go use a 256-entry lookup table; TypeScript maps invalid to `0`). `to_base_n` uses format strings for radix 2 / 8 / 10 / 16.
 
 ## Package: umt_rust (Rust)
 
@@ -74,7 +74,7 @@ Located in `package/umt_rust`.
 *   **Core Logic**:
     *   **Stable Rust Only**: Do not use unstable features like `let_chains`.
     *   **Value Enum**: Use `umt_rust::object::Value` with `#[serde(untagged)]` for JSON interoperability. Use the `obj!` macro for construction.
-    *   **Regex**: Cache compiled `regex::Regex` values in `std::sync::LazyLock` statics. Current sites: `umt_strip_ansi`, `umt_strip_tags`, `umt_words`, `umt_normalize_whitespace`, `umt_unescape_html`, `umt_is_absolute_url`, `umt_hexa_to_rgba`, `umt_format` (date escaped-text `[...]`), `umt_math_converter`, `umt_literal_expression`, `parse_email`, UA extractors. Do not compile a fixed pattern on every call. Patterns built from caller input (calculator, `format_string`, `umt_regex_match`) stay inline. Date `umt_format` is not string `format_string`.
+    *   **Regex**: Cache compiled `regex::Regex` values in `std::sync::LazyLock` statics. Current sites: `umt_strip_ansi`, `umt_strip_tags`, `umt_words`, `umt_normalize_whitespace`, `umt_unescape_html`, `umt_is_absolute_url`, `umt_hexa_to_rgba`, `umt_format` (date escaped-text `[...]`), `umt_math_converter`, `umt_literal_expression`, `parse_email`, UA extractors. Do not compile a fixed pattern on every call. Patterns built from caller input (calculator, `format_string`, `umt_regex_match`) stay inline. Date `umt_format` is not string `format_string`. `umt_decode_base32` uses a `const [u8; 256]` lookup table (`0xFF` = invalid) and returns `Err` on invalid characters. `umt_to_base_n` returns the string `"Invalid radix"` when the base is outside `2`–`36`.
     *   **Math**:
         *   Implement `apply_currency_exchange` for currency conversion.
         *   Operator precedence: Exp > Mul/Div > Add/Sub.
@@ -107,7 +107,7 @@ Located in `package/umt_go`. Partial port. Module path `github.com/riya-amemiya/
 * Tests live under `src/tests/<pkg>/` and import the `src/` packages.
 * IP signatures differ from TypeScript: `CidrToLong` takes `"network/prefix"` and returns `[start, end]`; `IsInRange(ip, "network/prefix")`; `GetNetworkAddress` returns a dotted string; `LongToIp` / `CidrToSubnetMask` panic on invalid input.
 * Date helpers include `StartOf` / `EndOf` / `AddDuration` / `IsBusinessDay` / `FormatDate`. There is no `IsBetween`, `AddBusinessDays`, or unix conversion. `FormatDate` has no `Z` / `ZZ` tokens.
-* Fixed regexes: cache with package-level `regexp.MustCompile` (`CamelCase`, `KebabCase`, `Slugify`, `UnescapeHtml`, `SanitizeString`, `HexaToRgba`, `StripAnsi` / `StripTags` / `Words`, `NormalizeWhitespace`, `IsAbsoluteUrl`, `JoinPath` slash regexes, UA extractors, calculator, `ParseEmail`). Caller-built patterns (`FormatString`, `RegexMatch`, currency symbol) stay inline. `EscapeHtml` / `EscapeRegExp` / `DeleteSpaces` / `ToFullWidth` / `ToHalfWidth` scan runes; they do not compile a regex. `IsPrivateIp` rebuilds RFC 1918 ranges on each call (TypeScript / Python / Rust hoist them).
+* Fixed regexes: cache with package-level `regexp.MustCompile` (`CamelCase`, `KebabCase`, `Slugify`, `UnescapeHtml`, `SanitizeString`, `HexaToRgba`, `StripAnsi` / `StripTags` / `Words`, `NormalizeWhitespace`, `IsAbsoluteUrl`, `JoinPath` slash regexes, UA extractors, calculator, `ParseEmail`). Caller-built patterns (`FormatString`, `RegexMatch`, currency symbol) stay inline. `EscapeHtml` / `EscapeRegExp` / `DeleteSpaces` / `ToFullWidth` / `ToHalfWidth` scan runes; they do not compile a regex. `IsPrivateIp` hoists the three RFC 1918 `(network, mask)` pairs at package init, matching TypeScript / Python / Rust. `DecodeBase32` uses a 256-entry lookup table (Python still uses `str.find`). `ToBaseN` is `strconv.FormatInt` and panics if the base is outside `2`–`36`.
 
 ## Package: umt_i18n (TypeScript)
 

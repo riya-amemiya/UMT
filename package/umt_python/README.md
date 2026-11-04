@@ -48,7 +48,7 @@ Public names are re-exported from `src/__init__.py`. Grouped the same way as Typ
 | `async_util` | `sleep`, `parallel`, `timeout`, `debounce_async` |
 | `color` | `hexa_to_rgba`, `rgba_to_hsla` (see below) |
 | `consts` | `ONE_DAY_MS`, `HttpStatus` |
-| `crypto` | `encode_base32`, `decode_base58` |
+| `crypto` | `encode_base32`, `decode_base32`, `decode_base58` (see below) |
 | `data_structure` | `LRUCache`, `TTLCache`, `PriorityQueue` |
 | `date` | `is_between`, `add_business_days`, `from_unix` (see below) |
 | `error` | `safe_execute`, `match_result` |
@@ -56,7 +56,7 @@ Public names are re-exported from `src/__init__.py`. Grouped the same way as Typ
 | `ip` | `ip_to_long`, `cidr_to_long`, `is_in_range`, `is_private_ip` (see below) |
 | `iterator` | `lazy_map`, `lazy_filter`, `lazy_take` |
 | `map` | `group_by_to_map`, `zip_to_map` |
-| `math` | `gcd`, `n_cr`, `sum_precise`, `calculator`, `math_converter` (see below) |
+| `math` | `gcd`, `n_cr`, `sum_precise`, `calculator`, `math_converter`, `to_base_n` (see below) |
 | `number` | `format_number`, `to_ordinal`, `to_percentage` |
 | `object` | `object_get`, `deep_clone`, `flatten_object` |
 | `predicate` | `every`, `some`, `is_nullish` |
@@ -120,7 +120,7 @@ IPv4 dotted-decimal only, aligned with TypeScript `package/main/src/IP`. Unlike 
 | `cidr_to_long` / `cidr_to_subnet_mask` | `(cidr: int) -> int` / `(cidr: int) -> str` | Prefix `0`–`32`. Outside that range raises `ValueError`. | `cidr_to_long(24)  # 4294967040` / `cidr_to_subnet_mask(24)  # "255.255.255.0"` |
 | `subnet_mask_to_cidr` | `(subnet_mask: str) -> int` | Requires contiguous `1` bits then `0` bits. `"255.0.255.0"` raises. TypeScript `subnetMaskToCidr` only counts bits. | `subnet_mask_to_cidr("255.255.255.0")  # 24` |
 | `is_in_range` | `(remote_ip, network_ip, cidr) -> bool` | `(ip & mask) == (network & mask)`. CIDR `0` matches every IPv4 address. | `is_in_range("192.168.1.2", "192.168.1.0", 24)  # True` |
-| `is_private_ip` | `(ip: str) -> bool` | RFC 1918 only: `10.0.0.0/8`, `172.16.0.0/12`, `192.168.0.0/16`. Loopback and link-local are not private. The three `(network, mask)` pairs are computed once at module load. Invalid input raises `ValueError`. | `is_private_ip("10.0.0.1")  # True` / `is_private_ip("127.0.0.1")  # False` |
+| `is_private_ip` | `(ip: str) -> bool` | RFC 1918 only: `10.0.0.0/8`, `172.16.0.0/12`, `192.168.0.0/16`. Loopback and link-local are not private. The three `(network, mask)` pairs are computed once at module load (TypeScript / Rust / Go do the same). Invalid input raises `ValueError`. | `is_private_ip("10.0.0.1")  # True` / `is_private_ip("127.0.0.1")  # False` |
 | `get_ip_class` | `(ip: str) -> str` | Classful first-octet lookup (`A`–`E`). `0.0.0.0` and malformed input return `""`. | `get_ip_class("10.0.0.1")  # "A"` |
 | `get_network_address` | `(ip: str, subnet_mask: str) -> int` | Returns an unsigned 32-bit **int**, not a dotted string. | `get_network_address("192.168.1.1", "255.255.255.0")  # 3232235776` |
 | `ip_to_binary_string` | `(ip: str) -> str` | 32-character `0`/`1` string, eight bits per octet. | `ip_to_binary_string("192.168.0.1")  # "11000000101010000000000000000001"` |
@@ -144,6 +144,16 @@ escape_regexp("path/to/file.txt")  # "path/to/file\\.txt"
 join_path("https://example.com/", "/api/", "/users")  # "https://example.com/api/users"
 ```
 
+## Crypto helpers
+
+RFC 4648 Base32 (`A-Z` + `2-7`, `=` padding), aligned with TypeScript `package/main/src/Crypto`. Encoding, not encryption.
+
+| Function | Type | Description | Example |
+| --- | --- | --- | --- |
+| `encode_base32` | `(input_data: str \| bytes) -> str` | UTF-8 encode a string first. Empty input → `""`. Pads to a multiple of 8 with `=`. | `encode_base32("Hello")  # "JBSWY3DP"` / `encode_base32("f")  # "MY======"` |
+| `decode_base32` | `(input_data: str) -> bytes` | Skips `=` anywhere. **Raises `ValueError`** on invalid / lowercase characters (`"1A"`, `"jbswy3dp"`). TypeScript `decodeBase32` maps those to value `0` and does not throw. | `decode_base32("JBSWY3DP")  # b"Hello"` / `decode_base32("JB=SWY3DP")  # b"Hello"` |
+| `decode_base32_to_string` | `(input_data: str) -> str` | UTF-8 decode of `decode_base32`. | `decode_base32_to_string("JBSWY3DP")  # "Hello"` |
+
 ## parse_email
 
 `parse_email(email, ParseEmailOptions(level=...))` returns `ParseEmailResult(valid, parts)`. `level` is required: `"basic"` \| `"rfc822"` \| `"rfc2822"` \| `"rfc5321"` \| `"rfc5322"`. There is **no** TypeScript 320-character pre-check.
@@ -164,6 +174,7 @@ parse_email("user@localhost", ParseEmailOptions(level="rfc5321")).valid  # False
 | --- | --- | --- | --- |
 | `calculator` | `(expression: str, exchange=None) -> str` | Strips whitespace. `=` solves a single-variable equation (`"x=5"` → `"5"`). Otherwise evaluates `+ - * / ^` and parentheses. Incomplete input is returned as-is. `^` reduces the last pair first (`"2^2^2"` → `"16"`). | `calculator("1+2")  # "3"` / `calculator("$10*2", {"$": 100})  # "2000"` |
 | `math_converter` | `(equation: str) -> str` | Rewrites `n*n` or `n^2` as a sum of simpler products. Uses `float` in the rewritten terms, so the string is `"1500.0*1000+…"` rather than TypeScript / Go `"1500*1000+…"`. | `math_converter("1250*1250")  # "1500.0*1000+400.0*100+200.0*100+50*50"` |
+| `to_base_n` | `(value: int, radix: int = 2) -> str` | Default radix is **2** (`to_base_n(10)` → `"1010"`). Hex digits are lowercase. Radix 2 / 8 / 10 / 16 use format strings (`f"{value:d}"` for 10). `bool` is accepted as `int` (`True` → `"1"`). Rust returns `"Invalid radix"` and Go panics on a base outside `2`–`36`; this function does not check that range. | `to_base_n(15, 16)  # "f"` / `to_base_n(255, 16)  # "ff"` / `to_base_n(-10, 10)  # "-10"` |
 
 ## UA helpers
 
@@ -244,7 +255,9 @@ Fixed regexes in this package are compiled once at module level (`re.compile`): 
 - `bool` is a subclass of `int` in Python. Numeric validators must reject `True` / `False` explicitly so they do not treat them as `1` / `0`.
 - Exact arithmetic in math helpers uses `decimal.Decimal` constructed from strings, to match JavaScript number-string behavior.
 - Date week math uses Sunday-start weeks. Do not assume ISO weeks (`datetime.isocalendar()`).
-- IP helpers are IPv4 only. They validate input (TypeScript does not). `subnet_mask_to_cidr` requires a contiguous mask; TypeScript `subnetMaskToCidr` only counts set bits. `is_private_ip` is RFC 1918 only (not loopback or link-local).
+- IP helpers are IPv4 only. They validate input (TypeScript does not). `subnet_mask_to_cidr` requires a contiguous mask; TypeScript `subnetMaskToCidr` only counts set bits. `is_private_ip` is RFC 1918 only (not loopback or link-local). The three RFC 1918 `(network, mask)` pairs are hoisted at module load, matching TypeScript / Rust / Go.
+- `decode_base32` raises `ValueError` on invalid / lowercase characters. TypeScript `decodeBase32` maps those to `0`.
+- `to_base_n` defaults to radix 2. `True` / `False` are `1` / `0` because `bool` is an `int`.
 - `hexa_to_rgba` requires `#` plus 3, 6, or 8 hex digits. TypeScript `hexaToRgba` does not validate.
 - `unescape_html` decodes numeric entities with `chr()`. TypeScript `unescapeHtml` additionally rejects NULL, most C0 controls, DEL, C1, surrogates, and out-of-range values.
 - `escape_html` encodes `& < > " '` only. TypeScript `escapeHtml` also encodes backtick (`&#x60;`) and `/` (`&#x2F;`).
