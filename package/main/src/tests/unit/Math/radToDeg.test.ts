@@ -1,3 +1,4 @@
+import { division } from "@/Math/division";
 import { radToDeg } from "@/Math/radToDeg";
 
 describe("radToDeg", () => {
@@ -52,6 +53,25 @@ describe("radToDeg", () => {
       expect(radToDeg([1.57] as any)).toBeCloseTo(89.95);
       // biome-ignore lint/suspicious/noExplicitAny: ignore
       expect(radToDeg({} as any)).toBe(Number.NaN);
+    });
+  });
+
+  describe("unhoisted formula", () => {
+    it("should match division(x, division(Math.PI, 180))", () => {
+      const samples = [
+        0,
+        Math.PI / 4,
+        Math.PI / 2,
+        Math.PI,
+        (3 * Math.PI) / 2,
+        2 * Math.PI,
+        -Math.PI / 2,
+        (5 * Math.PI) / 2,
+        4 * Math.PI,
+      ];
+      for (const x of samples) {
+        expect(radToDeg(x)).toBe(division(x, division(Math.PI, 180)));
+      }
     });
   });
 });
