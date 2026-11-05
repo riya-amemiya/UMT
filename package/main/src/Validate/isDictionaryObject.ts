@@ -5,7 +5,7 @@ Determines if the value is a dictionary-type object
 @example isDictionaryObject({}); // true
 isDictionaryObject([]); // false
 */
-export const isDictionaryObject = <T extends { [key: string]: unknown }>(
+export const isDictionaryObject = <T extends Record<string, unknown>>(
   object: unknown,
 ): object is T => {
   return (

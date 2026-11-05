@@ -8,7 +8,7 @@ Initializes a calculator function with exchange rates
 @example calculatorInitialization({ EUR: 1.2 })("EUR5 + 10"); // "16"
 */
 export const calculatorInitialization = <
-  T extends { [key: string]: string | number },
+  T extends Record<string, string | number>,
 >(
   exchange: T,
 ): ((x: string) => string) => {

@@ -53,7 +53,7 @@ export const format = (
   const ampm = hours < 12 ? "AM" : "PM";
   const timezoneOffsetString = getTimezoneOffsetString(date);
 
-  const matches: { [key: string]: string } = {
+  const matches: Record<string, string> = {
     YY: yearString.slice(-2),
     YYYY: padStart(yearString, 4, "0"),
     M: monthString,

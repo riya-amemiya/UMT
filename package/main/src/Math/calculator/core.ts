@@ -7,7 +7,7 @@ import { subtract } from "@/Math/subtract";
 import { escapeRegExp } from "@/Tool/escapeRegExp";
 import { isNumber } from "@/Validate/isNumber";
 
-export const calculatorCore = <T extends { [key: string]: string | number }>(
+export const calculatorCore = <T extends Record<string, string | number>>(
   expression: string,
   currencyExchange?: T,
 ): string => {
@@ -103,7 +103,7 @@ const getCurrencyRegex = (currencySymbol: string): RegExp => {
   return regex;
 };
 
-const applyCurrencyExchange = <T extends { [key: string]: string | number }>(
+const applyCurrencyExchange = <T extends Record<string, string | number>>(
   expression: string,
   rates: T,
 ): string => {

@@ -17,12 +17,7 @@ const lengthConverter = unitConverterInitialization({
 lengthConverter(5, "kilometers", "meters"); // returns 5000
 */
 export const unitConverterInitialization =
-  <
-    T extends {
-      [k in K]: number;
-    },
-    K extends string | number | symbol,
-  >(
+  <T extends Record<K, number>, K extends string | number | symbol>(
     toBaseUnitRatios: T,
   ) =>
   (value: number, from: keyof T, to: keyof T) =>

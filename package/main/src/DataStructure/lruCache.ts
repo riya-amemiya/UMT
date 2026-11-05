@@ -54,6 +54,16 @@ export class LRUCache<K, V> {
   }
 
   /**
+  Evicts the least recently used entry (first inserted).
+  */
+  private evict(): void {
+    const iterator = this.map.keys().next();
+    if (!iterator.done) {
+      this.map.delete(iterator.value);
+    }
+  }
+
+  /**
   Returns the number of entries in the cache.
   @returns The current number of cached entries
   
@@ -164,15 +174,5 @@ export class LRUCache<K, V> {
   */
   clear(): void {
     this.map.clear();
-  }
-
-  /**
-  Evicts the least recently used entry (first inserted).
-  */
-  private evict(): void {
-    const iterator = this.map.keys().next();
-    if (!iterator.done) {
-      this.map.delete(iterator.value);
-    }
   }
 }

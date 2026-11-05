@@ -64,52 +64,6 @@ export class UMT_i18n<
     this.defaultLocale = locale;
     this.formatters = new Map(Object.entries(options?.formatters ?? {}));
   }
-  public getLocale() {
-    return this.locale;
-  }
-  public setLocale(locale: keyof T) {
-    this.locale = locale;
-    return this;
-  }
-
-  public getLocaleData() {
-    return this.data;
-  }
-
-  public getDefaultLocale() {
-    return this.defaultLocale;
-  }
-
-  public setDefaultLocale(locale: keyof T) {
-    this.defaultLocale = locale;
-    return this;
-  }
-
-  public translate(
-    key: PickDeepKey<DeepRequired<ShallowObjectValue<T>>>,
-    options?: TranslateOptions,
-  ): string {
-    const { params, count, defaultValue } = options || {};
-
-    let translation = this.getTranslation(key, count);
-
-    if (!translation) {
-      return defaultValue || (key as string);
-    }
-
-    if (params) {
-      translation = this.replacePlaceholders(translation, params);
-    }
-
-    return translation;
-  }
-
-  public t(
-    key: PickDeepKey<DeepRequired<ShallowObjectValue<T>>>,
-    options?: TranslateOptions,
-  ): string {
-    return this.translate(key, options);
-  }
 
   private getTranslation(
     key: PickDeepKey<DeepRequired<ShallowObjectValue<T>>>,
@@ -203,6 +157,53 @@ export class UMT_i18n<
     }
 
     return flattened;
+  }
+
+  public getLocale() {
+    return this.locale;
+  }
+  public setLocale(locale: keyof T) {
+    this.locale = locale;
+    return this;
+  }
+
+  public getLocaleData() {
+    return this.data;
+  }
+
+  public getDefaultLocale() {
+    return this.defaultLocale;
+  }
+
+  public setDefaultLocale(locale: keyof T) {
+    this.defaultLocale = locale;
+    return this;
+  }
+
+  public translate(
+    key: PickDeepKey<DeepRequired<ShallowObjectValue<T>>>,
+    options?: TranslateOptions,
+  ): string {
+    const { params, count, defaultValue } = options || {};
+
+    let translation = this.getTranslation(key, count);
+
+    if (!translation) {
+      return defaultValue || (key as string);
+    }
+
+    if (params) {
+      translation = this.replacePlaceholders(translation, params);
+    }
+
+    return translation;
+  }
+
+  public t(
+    key: PickDeepKey<DeepRequired<ShallowObjectValue<T>>>,
+    options?: TranslateOptions,
+  ): string {
+    return this.translate(key, options);
   }
 
   public setFallbackLocales(locales: (keyof T)[]): this {

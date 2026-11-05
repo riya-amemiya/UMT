@@ -1,20 +1,10 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.5.15/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.6.4/schema.json",
   "files": {
-    "includes": [
-      "**",
-      "!**/node_modules",
-      "!**/module",
-      "!**/*.json",
-      "!**/doc",
-      "!**/pkg"
-    ]
+    "includes": ["**", "!**/module", "!**/*.json", "!**/doc", "!**/pkg"]
   },
   "formatter": {
-    "enabled": true,
-    "formatWithErrors": false,
-    "indentStyle": "space",
-    "lineWidth": 80
+    "indentStyle": "space"
   },
   "javascript": {
     "globals": [
@@ -29,13 +19,7 @@
       "Bun"
     ]
   },
-  "json": {
-    "formatter": {
-      "enabled": false
-    }
-  },
   "linter": {
-    "enabled": true,
     "includes": [
       "**",
       "!**/tests",
@@ -48,7 +32,6 @@
         "noSvgWithoutTitle": "warn"
       },
       "complexity": {
-        "noExcessiveCognitiveComplexity": "off",
         "noUselessStringConcat": "error",
         "noUselessUndefinedInitialization": "error",
         "noVoid": "error",
@@ -57,20 +40,14 @@
         "noUselessEscapeInRegex": "error"
       },
       "correctness": {
-        "noConstantMathMinMaxClamp": "error",
         "noNodejsModules": "error",
         "noUndeclaredVariables": "warn",
         "noUnusedFunctionParameters": "error",
         "noUnusedImports": "error",
         "noUnusedPrivateClassMembers": "error",
-        "noUnusedVariables": "warn",
         "useExhaustiveDependencies": "warn",
-        "useHookAtTopLevel": "error",
-        "noInvalidBuiltinInstantiation": "error",
-        "noSwitchDeclarations": "error"
+        "useHookAtTopLevel": "error"
       },
-      "nursery": {},
-      "preset": "recommended",
       "style": {
         "noDefaultExport": "error",
         "noDoneCallback": "error",
@@ -78,7 +55,6 @@
         "noNamespace": "error",
         "noNegationElse": "error",
         "noParameterAssign": "warn",
-        "noParameterProperties": "off",
         "noShoutyConstants": "warn",
         "noYodaExpression": "error",
         "useBlockStatements": "error",
@@ -89,18 +65,6 @@
         "useExplicitLengthCheck": "error",
         "useForOf": "error",
         "useFragmentSyntax": "error",
-        "useNamingConvention": {
-          "level": "off",
-          "options": {
-            "conventions": [
-              {
-                "selector": { "kind": "enumMember" },
-                "formats": ["CONSTANT_CASE"]
-              }
-            ],
-            "strictCase": true
-          }
-        },
         "useNodeAssertStrict": "error",
         "useShorthandAssign": "error",
         "useThrowNewError": "error",
@@ -117,7 +81,6 @@
         "noSkippedTests": "error",
         "useErrorMessage": "error",
         "useNumberToFixedDigitsArgument": "error",
-        "noDuplicateElseIf": "error",
         "noIrregularWhitespace": "error",
         "useAdjacentOverloadSignatures": "error"
       },

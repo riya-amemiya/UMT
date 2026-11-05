@@ -11,11 +11,7 @@ Converts currency amounts in a string using currency symbols.
 @example convertCurrency("$50", { "$": 1.2 }); // "60"
 @example convertCurrency("€200", { "€": 1.1 }); // "220"
 */
-export const convertCurrency = <
-  T extends {
-    [key: string]: number | string;
-  },
->(
+export const convertCurrency = <T extends Record<string, number | string>>(
   inputString: string,
   conversionRates?: T,
 ) => {

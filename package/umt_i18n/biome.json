@@ -8,20 +8,10 @@
     }
   },
   "files": {
-    "includes": [
-      "**",
-      "!**/node_modules",
-      "!**/module",
-      "!**/*.json",
-      "!**/doc",
-      "!**/coverage"
-    ]
+    "includes": ["**", "!**/module", "!**/*.json", "!**/doc", "!**/coverage"]
   },
   "formatter": {
-    "enabled": true,
-    "formatWithErrors": false,
-    "indentStyle": "space",
-    "lineWidth": 80
+    "indentStyle": "space"
   },
   "javascript": {
     "globals": [
@@ -37,13 +27,7 @@
       "jest"
     ]
   },
-  "json": {
-    "formatter": {
-      "enabled": true
-    }
-  },
   "linter": {
-    "enabled": true,
     "includes": [
       "**",
       "!**/.dependency-cruiser.js",
@@ -55,7 +39,6 @@
         "noSvgWithoutTitle": "warn"
       },
       "complexity": {
-        "noExcessiveCognitiveComplexity": "off",
         "noExcessiveNestedTestSuites": "error",
         "noForEach": "error",
         "noUselessStringConcat": "error",
@@ -68,7 +51,6 @@
         "noNodejsModules": "error",
         "noProcessGlobal": "error",
         "noUndeclaredVariables": "warn",
-        "noUnusedVariables": "warn",
         "useExhaustiveDependencies": "warn",
         "useHookAtTopLevel": "error",
         "useParseIntRadix": "error",
@@ -82,7 +64,6 @@
         "noDelete": "error",
         "noNamespaceImport": "error"
       },
-      "preset": "recommended",
       "style": {
         "noCommonJs": "error",
         "noDefaultExport": "error",
@@ -95,7 +76,6 @@
         "noNegationElse": "error",
         "noNonNullAssertion": "error",
         "noParameterAssign": "warn",
-        "noParameterProperties": "off",
         "noProcessEnv": "error",
         "noShoutyConstants": "warn",
         "noSubstr": "error",
@@ -115,20 +95,6 @@
         "useForOf": "error",
         "useFragmentSyntax": "error",
         "useGroupedAccessorPairs": "error",
-        "useNamingConvention": {
-          "level": "off",
-          "options": {
-            "conventions": [
-              {
-                "formats": ["CONSTANT_CASE"],
-                "selector": {
-                  "kind": "enumMember"
-                }
-              }
-            ],
-            "strictCase": true
-          }
-        },
         "useNodeAssertStrict": "error",
         "useNumberNamespace": "error",
         "useNumericSeparators": "error",
@@ -158,7 +124,6 @@
         "useAwait": "error",
         "useErrorMessage": "error",
         "useGuardForIn": "error",
-        "useIterableCallbackReturn": "error",
         "useNumberToFixedDigitsArgument": "error"
       }
     }
