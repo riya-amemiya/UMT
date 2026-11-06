@@ -42,7 +42,11 @@ IP helpers (`umt/IP`) are IPv4 only. TypeScript does not validate dotted-decimal
 
 `decodeBase32` (`umt/Crypto`) is RFC 4648 (`A-Z` + `2-7`). It skips `=` anywhere and, in TypeScript, maps invalid / lowercase characters to value `0` instead of throwing (`"1A"` → `[0]`). Python / Rust / Go error on those inputs. Wasm skips encode (generic) and decode (`Result`).
 
+`toBase64` / `fromBase64` (`umt/String`) are standard Base64 (`A-Za-z0-9+/`, `=` padding), not URL-safe. Empty input is `""`. TypeScript `fromBase64` uses `atob` then `TextDecoder`: missing padding is accepted (`"SGVsbG8gV29ybGQ"` → `"Hello World"`); invalid characters throw `InvalidCharacterError`; invalid UTF-8 becomes U+FFFD (`"gA=="` → `"�"`). Python / Rust / Go require padding and error on invalid Base64. Rust also returns `Err` on invalid UTF-8; Go returns the decoded bytes even when they are not valid UTF-8. Wasm generates both from Rust (`fromBase64` is a `Result`).
+
 `toBaseN` (`umt/Math`) defaults to radix **2** (`toBaseN(10)` → `"1010"`). A radix outside `2`–`36` throws `RangeError` in TypeScript. Python `to_base_n` also defaults to 2. Rust `umt_to_base_n` returns the string `"Invalid radix"`. Go `ToBaseN` panics. Wasm `toBaseN` follows Rust.
+
+`degToRad` / `radToDeg` (`umt/Math`) in TypeScript and Python go through `multiplication` / `division`, not native `*` `/`. They do not wrap angles to 0–360. `radToDeg(Math.PI)` is `180`; `NaN` / `Infinity` propagate. Rust, Go, and wasm use native float multiply (`x * 180 / PI`).
 
 `hexaToRgba` (`umt/Color`) does not validate in TypeScript (malformed input can yield `NaN` components). Python, Rust, and Go require `#` plus 3, 6, or 8 hex digits.
 

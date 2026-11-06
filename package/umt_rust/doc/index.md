@@ -4,7 +4,7 @@ A collection of useful functions that I personally created.
 
 It is for personal use, so there may be destructive changes.
 
-TypeScript `package/main` is the source of truth. Public functions are prefixed with `umt_`, except `umt_rust::ip` (unprefixed; wasm codegen ignores them). Tests live in `tests/` (integration style), not in `src/`. Nightly toolchain, edition 2024. Crate version is in `Cargo.toml` (currently 0.7.0).
+TypeScript `package/main` is the source of truth. Public functions are prefixed with `umt_`, except `umt_rust::ip` (unprefixed; wasm codegen ignores them). Tests live in `tests/` (integration style), not in `src/`. Nightly toolchain, edition 2024. Crate version is in `Cargo.toml` (currently 0.7.1).
 
 ```bash
 cargo test
@@ -95,7 +95,7 @@ assert!(umt_decode_base32("1A").is_err());
 
 ## String helpers
 
-Unicode-aware string utilities in `src/string/`. Most helpers match TypeScript `package/main/src/String`; `umt_escape_html` and `umt_unescape_html` differ as noted below.
+Unicode-aware string utilities in `src/string/`. Most helpers match TypeScript `package/main/src/String`; `umt_escape_html`, `umt_unescape_html`, and `umt_from_base64` differ as noted below.
 
 | Function | Notes |
 | --- | --- |
@@ -112,12 +112,15 @@ Unicode-aware string utilities in `src/string/`. Most helpers match TypeScript `
 | `umt_camel_case` | Lowercases only the first alphanumeric character. Does not split acronyms (`"HELLO"` → `"hELLO"`). |
 | `umt_kebab_case` | Inserts dashes on case boundaries. Splits acronyms (`"XMLHttpRequest"` → `"xml-http-request"`). |
 | `umt_slugify` | NFD, drop combining marks, lowercase, hyphenate. `char::is_alphanumeric` keeps CJK (`"Japanese: こんにちは"` → `"japanese-こんにちは"`). TypeScript / Go drop those letters. Generated for wasm. |
+| `umt_to_base64` | UTF-8 → standard Base64 (`STANDARD` engine). Empty → `""`. `"Hello World"` → `"SGVsbG8gV29ybGQ="`. Generated for wasm. |
+| `umt_from_base64` | `Result<String, String>`. Empty → `Ok("")`. **Requires padding.** Invalid Base64 → `Err("Invalid Base64 string")`. Invalid UTF-8 (`"gA=="`) → `Err("Invalid UTF-8 sequence")`. TypeScript `fromBase64` accepts missing padding and maps invalid UTF-8 to U+FFFD. Generated for wasm. |
 
 ```rust
 use umt_rust::string::{
-    umt_camel_case, umt_delete_spaces, umt_escape_html, umt_kebab_case,
+    umt_camel_case, umt_delete_spaces, umt_escape_html, umt_from_base64, umt_kebab_case,
     umt_normalize_whitespace, umt_sanitize_string, umt_slugify, umt_strip_ansi,
-    umt_strip_tags, umt_to_full_width, umt_to_half_width, umt_unescape_html, umt_words,
+    umt_strip_tags, umt_to_base64, umt_to_full_width, umt_to_half_width, umt_unescape_html,
+    umt_words,
 };
 
 assert_eq!(umt_strip_ansi("\u{001B}[31mred\u{001B}[0m"), "red");
@@ -135,6 +138,10 @@ assert_eq!(umt_camel_case("hello-world"), "helloWorld");
 assert_eq!(umt_kebab_case("XMLHttpRequest"), "xml-http-request");
 assert_eq!(umt_slugify("Hello World!"), "hello-world");
 assert_eq!(umt_slugify("Japanese: こんにちは"), "japanese-こんにちは");
+assert_eq!(umt_to_base64("Hello World"), "SGVsbG8gV29ybGQ=");
+assert_eq!(umt_from_base64("SGVsbG8gV29ybGQ=").unwrap(), "Hello World");
+assert!(umt_from_base64("SGVsbG8gV29ybGQ").is_err());
+assert_eq!(umt_from_base64("gA==").unwrap_err(), "Invalid UTF-8 sequence");
 ```
 
 ## Color and URL helpers
@@ -186,9 +193,11 @@ assert!(!umt_parse_email("user@localhost", Some(rfc5321)).valid);
 
 `umt_to_base_n(value, radix)` has **no default radix** (TypeScript / Python default to 2). Hex digits are lowercase. Invalid radix (`< 2` or `> 36`) returns the string `"Invalid radix"` (not `Err`). Helpers: `umt_to_binary` / `umt_to_hex`. Wasm generates all three.
 
+`umt_rad_to_deg` / `umt_deg_to_rad` use native `f64` multiply (`x * (180.0 / PI)`), not the decimal-length `umt_division` / `umt_multiplication` helpers TypeScript / Python use. They do not wrap angles. Wasm generates both.
+
 ```rust
 use umt_rust::math::calculator::umt_calculator;
-use umt_rust::math::{umt_math_converter, umt_to_base_n};
+use umt_rust::math::{umt_deg_to_rad, umt_math_converter, umt_rad_to_deg, umt_to_base_n};
 
 assert_eq!(umt_calculator("1+2", None), "3");
 assert_eq!(umt_calculator("2^2^2", None), "16");
@@ -199,6 +208,8 @@ assert_eq!(
 assert_eq!(umt_to_base_n(10, 2), "1010");
 assert_eq!(umt_to_base_n(255, 16), "ff");
 assert_eq!(umt_to_base_n(10, 1), "Invalid radix");
+assert!((umt_rad_to_deg(std::f64::consts::PI) - 180.0).abs() < 1e-10);
+assert_eq!(umt_deg_to_rad(180.0), std::f64::consts::PI);
 ```
 
 ## UA helpers

@@ -39,7 +39,9 @@ Each module typically has:
 - `umt_sanitize_string` is ASCII-only (CJK / emoji dropped) and is not `umt_strip_ansi`. `umt_join_path` is a slash join (`trim_start_matches` / `trim_end_matches`), not a regex. `umt_escape_regexp` does not escape `-` or `/`; wasm JS name is `escapeRegexp`.
 - `umt_escape_html` encodes `& < > " '` only (TypeScript also encodes backtick and `/`). `umt_to_full_width` is ASCII alnum only. `umt_to_half_width` is full-width alnum only (Python also converts `U+FF01`–`U+FF5E` and `U+3000`). `is_private_ip` hoists RFC 1918 masks in a `LazyLock` static.
 - `umt_decode_base32` uses a `const [u8; 256]` lookup (`0xFF` = invalid) and returns `Err` on invalid / lowercase characters. TypeScript maps those to `0`. Wasm skips encode (generic) and decode (`Result`).
+- `umt_from_base64` uses the `STANDARD` engine (padding required). Invalid Base64 → `Err("Invalid Base64 string")`. Invalid UTF-8 → `Err("Invalid UTF-8 sequence")`. TypeScript `fromBase64` accepts missing padding and maps invalid UTF-8 to U+FFFD. Wasm generates both.
 - `umt_to_base_n` has no default radix. Invalid radix returns the string `"Invalid radix"`. Wasm generates `toBaseN` / `toBinary` / `toHex`.
+- `umt_rad_to_deg` / `umt_deg_to_rad` use native `f64` multiply, not `umt_division` / `umt_multiplication`. Wasm generates both.
 
 ### Testing Patterns
 

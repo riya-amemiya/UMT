@@ -56,13 +56,13 @@ Public names are re-exported from `src/__init__.py`. Grouped the same way as Typ
 | `ip` | `ip_to_long`, `cidr_to_long`, `is_in_range`, `is_private_ip` (see below) |
 | `iterator` | `lazy_map`, `lazy_filter`, `lazy_take` |
 | `map` | `group_by_to_map`, `zip_to_map` |
-| `math` | `gcd`, `n_cr`, `sum_precise`, `calculator`, `math_converter`, `to_base_n` (see below) |
+| `math` | `gcd`, `n_cr`, `sum_precise`, `calculator`, `math_converter`, `to_base_n`, `deg_to_rad`, `rad_to_deg` (see below) |
 | `number` | `format_number`, `to_ordinal`, `to_percentage` |
 | `object` | `object_get`, `deep_clone`, `flatten_object` |
 | `predicate` | `every`, `some`, `is_nullish` |
 | `random` | `random_choice`, `seeded_random` |
 | `simple` | `birthday_simple`, `now_simple` |
-| `string` | `format_string`, `slugify`, `strip_ansi`, `strip_tags`, `words`, `normalize_whitespace`, `unescape_html`, `escape_html`, `camel_case`, `kebab_case`, `sanitize_string`, `delete_spaces`, `to_full_width`, `to_half_width` (see below) |
+| `string` | `format_string`, `slugify`, `strip_ansi`, `strip_tags`, `words`, `normalize_whitespace`, `unescape_html`, `escape_html`, `camel_case`, `kebab_case`, `sanitize_string`, `delete_spaces`, `to_full_width`, `to_half_width`, `to_base64`, `from_base64` (see below) |
 | `time` | `convert_time` |
 | `tool` | `pipe`, `unwrap`, `parse_json`, `escape_regexp` (see below) |
 | `ua` | `parse_user_agent`, `extract_browser_from_user_agent`, `extract_device_from_user_agent`, `extract_os_from_user_agent` (see below) |
@@ -109,6 +109,8 @@ Unicode-aware helpers aligned with TypeScript `package/main/src/String`.
 | `camel_case` | `(string_: str) -> str` | Replaces non-alphanumeric runs, then lowercases only the first character. Does not split acronyms. | `camel_case("hello-world")  # "helloWorld"` / `camel_case("HELLO")  # "hELLO"` |
 | `kebab_case` | `(string_: str) -> str` | Inserts dashes on case boundaries and replaces separators. Splits acronyms. | `kebab_case("XMLHttpRequest")  # "xml-http-request"` |
 | `slugify` | `(string_: str) -> str` | NFD, strip combining marks, lowercase, hyphenate. Python `\w` is Unicode, so CJK stays: `"Japanese: こんにちは"` → `"japanese-こんにちは"`. TypeScript / Go drop those letters (`"japanese"`). | `slugify("Hello World!")  # "hello-world"` / `slugify("Café")  # "cafe"` |
+| `to_base64` | `(char: str) -> str` | UTF-8 → standard Base64 (`A-Za-z0-9+/`, `=` padding). Empty → `""`. Not URL-safe. | `to_base64("Hello World")  # "SGVsbG8gV29ybGQ="` / `to_base64("")  # ""` |
+| `from_base64` | `(base64_string: str) -> str` | Standard Base64 → UTF-8. Empty → `""`. **Requires padding.** Invalid Base64, missing padding, and invalid UTF-8 raise `ValueError("Invalid Base64 string")`. TypeScript `fromBase64` accepts missing padding (`"SGVsbG8gV29ybGQ"`) and maps invalid UTF-8 to U+FFFD. | `from_base64("SGVsbG8gV29ybGQ=")  # "Hello World"` |
 
 ## IP helpers
 
@@ -175,6 +177,7 @@ parse_email("user@localhost", ParseEmailOptions(level="rfc5321")).valid  # False
 | `calculator` | `(expression: str, exchange=None) -> str` | Strips whitespace. `=` solves a single-variable equation (`"x=5"` → `"5"`). Otherwise evaluates `+ - * / ^` and parentheses. Incomplete input is returned as-is. `^` reduces the last pair first (`"2^2^2"` → `"16"`). | `calculator("1+2")  # "3"` / `calculator("$10*2", {"$": 100})  # "2000"` |
 | `math_converter` | `(equation: str) -> str` | Rewrites `n*n` or `n^2` as a sum of simpler products. Uses `float` in the rewritten terms, so the string is `"1500.0*1000+…"` rather than TypeScript / Go `"1500*1000+…"`. | `math_converter("1250*1250")  # "1500.0*1000+400.0*100+200.0*100+50*50"` |
 | `to_base_n` | `(value: int, radix: int = 2) -> str` | Default radix is **2** (`to_base_n(10)` → `"1010"`). Hex digits are lowercase. Radix 2 / 8 / 10 / 16 use format strings (`f"{value:d}"` for 10). `bool` is accepted as `int` (`True` → `"1"`). Rust returns `"Invalid radix"` and Go panics on a base outside `2`–`36`; this function does not check that range. | `to_base_n(15, 16)  # "f"` / `to_base_n(255, 16)  # "ff"` / `to_base_n(-10, 10)  # "-10"` |
+| `deg_to_rad` / `rad_to_deg` | `(x: float) -> float` | Uses `multiplication` / `division`, not native `*` `/`. Does **not** wrap to 0–360. `rad_to_deg(math.pi)` is `180.0`. Rust / Go / wasm use native float multiply. | `rad_to_deg(math.pi)  # 180.0` / `round(deg_to_rad(180), 10)  # 3.1415926536` |
 
 ## UA helpers
 
@@ -207,7 +210,7 @@ Fixed regexes in this package are compiled once at module level (`re.compile`): 
 | Function | Type | Description | Example |
 |----------|------|-------------|---------|
 | `to_base64` | `(char: str) -> str` | Encode a string to Base64 | `to_base64("Hello")  # "SGVsbG8="` |
-| `from_base64` | `(base64_string: str) -> str` | Decode a Base64 string | `from_base64("SGVsbG8=")  # "Hello"` |
+| `from_base64` | `(base64_string: str) -> str` | Decode a Base64 string (padding required; invalid input raises `ValueError`) | `from_base64("SGVsbG8=")  # "Hello"` |
 
 ### String Padding Functions
 
@@ -257,6 +260,8 @@ Fixed regexes in this package are compiled once at module level (`re.compile`): 
 - Date week math uses Sunday-start weeks. Do not assume ISO weeks (`datetime.isocalendar()`).
 - IP helpers are IPv4 only. They validate input (TypeScript does not). `subnet_mask_to_cidr` requires a contiguous mask; TypeScript `subnetMaskToCidr` only counts set bits. `is_private_ip` is RFC 1918 only (not loopback or link-local). The three RFC 1918 `(network, mask)` pairs are hoisted at module load, matching TypeScript / Rust / Go.
 - `decode_base32` raises `ValueError` on invalid / lowercase characters. TypeScript `decodeBase32` maps those to `0`.
+- `from_base64` requires padding and raises `ValueError` on invalid Base64 or invalid UTF-8. TypeScript `fromBase64` accepts missing padding and maps invalid UTF-8 to U+FFFD. Not URL-safe.
+- `rad_to_deg` / `deg_to_rad` use `division` / `multiplication`. They do not wrap angles to 0–360. Rust / Go use native `*` `/`.
 - `to_base_n` defaults to radix 2. `True` / `False` are `1` / `0` because `bool` is an `int`.
 - `hexa_to_rgba` requires `#` plus 3, 6, or 8 hex digits. TypeScript `hexaToRgba` does not validate.
 - `unescape_html` decodes numeric entities with `chr()`. TypeScript `unescapeHtml` additionally rejects NULL, most C0 controls, DEL, C1, surrogates, and out-of-range values.
