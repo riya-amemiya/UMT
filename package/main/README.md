@@ -255,15 +255,19 @@ Unicode-aware string utilities in `umt/String`. Python, Rust, and Go ports exist
 | `escapeHtml(string)`          | Escapes `& < > " '` plus **backtick** (`&#x60;`) and **forward slash** (`&#x2F;`) so older-browser attribute delimiters and `</script>` injection are harder. Python / Rust / Go escape only `& < > " '`; `` ` `` and `/` stay.                                                                                                                                      |
 | `toFullWidth(string)`         | ASCII digits and letters only (`[0-9A-Za-z]`), each code point `+ 0xFEE0`. Punctuation and space stay: `"a-b!"` → `"ａ-ｂ!"`. Ports match. Inverse of `toHalfWidth` for those characters.                                                                                                                                                                            |
 | `toHalfWidth(string)`         | Full-width digits and letters only (`０-９Ａ-Ｚａ-ｚ`), each code point `- 0xFEE0`. CJK, punctuation, and ideographic space stay. Python **also** converts `U+FF01`–`U+FF5E` (full-width `!` through `~`) and `U+3000` → `" "`. Rust / Go match TypeScript.                                                                                                          |
+| `toBase64(string)`            | UTF-8 → standard Base64 (`A-Za-z0-9+/`, `=` padding). Empty → `""`. `"Hello World"` → `"SGVsbG8gV29ybGQ="`. Not URL-safe (`-` `_`). Python / Rust / Go / wasm match the alphabet. Encoding, not encryption — distinct from `umt/Crypto` Base32.                                                                                                                        |
+| `fromBase64(string)`          | Standard Base64 → UTF-8 string. Empty → `""`. Uses `atob` then `TextDecoder`. **Missing padding is accepted** (`"SGVsbG8gV29ybGQ"` → `"Hello World"`). Invalid characters throw `InvalidCharacterError`. Invalid UTF-8 becomes U+FFFD (`"gA=="` → `"�"`). Python / Rust / Go **require** padding and error on invalid Base64. Rust also errors on invalid UTF-8; Go returns the raw bytes; Python raises `ValueError`. Wasm follows Rust. |
 
 ```ts
 import {
   deleteSpaces,
   escapeHtml,
+  fromBase64,
   sanitizeString,
   slugify,
   stripAnsi,
   stripTags,
+  toBase64,
   toFullWidth,
   toHalfWidth,
   words,
@@ -294,6 +298,11 @@ toFullWidth("Abc123"); // "Ａｂｃ１２３"
 toFullWidth("a-b!"); // "ａ-ｂ!"
 toHalfWidth("ＡＢＣ１２３"); // "ABC123"
 toHalfWidth("！　"); // "！　" (full-width bang and ideographic space stay)
+toBase64("Hello World"); // "SGVsbG8gV29ybGQ="
+toBase64(""); // ""
+fromBase64("SGVsbG8gV29ybGQ="); // "Hello World"
+fromBase64("SGVsbG8gV29ybGQ"); // "Hello World" (padding optional in TypeScript)
+fromBase64("YQ=="); // "a"
 ```
 
 Go splits the custom-pattern case into `Words` vs `WordsWithPattern`.
@@ -380,12 +389,15 @@ Expression utilities in `umt/Math`. Python, Rust, and Go ports exist (`calculato
 | `calculatorInitialization(exchange)` | Returns `(expression) => calculator(expression, exchange)`.                                                                                                                                                                                                                                                                                                                                                                                      |
 | `mathConverter(equation)`            | Rewrites `n*n` or `n^2` as a sum of simpler products (`"1250*1250"` → `"1500*1000+400*100+200*100+50*50"`). Unequal `*` operands and `+` are left unchanged.                                                                                                                                                                                                                                                                                     |
 | `toBaseN(value, radix?)`             | `Number#toString(radix)`. Default radix is **2** (`toBaseN(10)` → `"1010"`), not JavaScript's default 10. Hex digits are lowercase (`toBaseN(255, 16)` → `"ff"`). Radix outside `2`–`36` throws `RangeError`. Python `to_base_n` also defaults to 2 and takes `int` (`True` → `"1"`). Rust `umt_to_base_n` has no default radix; invalid radix returns the string `"Invalid radix"` (not `Err`). Go `ToBaseN` panics via `strconv.FormatInt` if the base is outside `2`–`36`. |
+| `degToRad(degrees)` / `radToDeg(radians)` | Goes through `multiplication` / `division`, not native `*` `/`. Does **not** wrap to 0–360 (`radToDeg((5 * Math.PI) / 2)` is 450). `radToDeg(Math.PI)` is `180`; `degToRad(180)` is `Math.PI`. `NaN` / `Infinity` propagate. Python matches. Rust / Go / wasm use native float multiply (`x * 180 / PI`). |
 
 ```ts
 import {
   calculator,
   calculatorInitialization,
+  degToRad,
   mathConverter,
+  radToDeg,
   toBaseN,
 } from "umt/Math";
 
@@ -399,9 +411,11 @@ mathConverter("1250*1250"); // "1500*1000+400*100+200*100+50*50"
 toBaseN(10); // "1010"
 toBaseN(15, 16); // "f"
 toBaseN(255, 16); // "ff"
+radToDeg(Math.PI); // 180
+degToRad(180); // 3.141592653589793
 ```
 
-Wasm generates `mathConverter` and `toBaseN` / `toBinary` / `toHex` (Rust: `i64`, `"Invalid radix"` on a bad base). It skips `calculator` (`HashMap` exchange rates).
+Wasm generates `mathConverter`, `toBaseN` / `toBinary` / `toHex` (Rust: `i64`, `"Invalid radix"` on a bad base), and `degToRad` / `radToDeg` (native float multiply). It skips `calculator` (`HashMap` exchange rates).
 
 ## UA helpers
 

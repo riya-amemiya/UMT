@@ -59,13 +59,13 @@ Public code lives in `src/<package>`. Tests are `src/tests/<package>/*_test.go` 
 | `ip` | `src/ip` | `IpToLong`, `IsInRange`, `IsPrivateIp` |
 | `iterator` | `src/iterator` | `LazyMap`, `LazyFilter`, `LazyTake` |
 | `maputil` | `src/maputil` | `GroupByToMap`, `ZipToMap` |
-| `math` | `src/math` | `Random`, `MustRandom`, `GCD`, `Calculator`, `MathConverter`, `ToBaseN` (see below) |
+| `math` | `src/math` | `Random`, `MustRandom`, `GCD`, `Calculator`, `MathConverter`, `ToBaseN`, `DegToRad`, `RadToDeg` (see below) |
 | `number` | `src/number` | `FormatNumber`, `ToOrdinal` |
 | `object` | `src/object` | `Get`, `DeepClone`, `FlattenObject` |
 | `predicate` | `src/predicate` | `Every`, `Some`, `IsNullish` |
 | `random` | `src/random` | `RandomChoice`, `SeededRandom` |
 | `simple` | `src/simple` | `BirthdaySimple`, `NowSimple` |
-| `str` | `src/str` | `FormatString`, `Slugify`, `StripAnsi`, `SanitizeString`, `Words` |
+| `str` | `src/str` | `FormatString`, `Slugify`, `StripAnsi`, `SanitizeString`, `Words`, `ToBase64`, `FromBase64` |
 | `timeutil` | `src/timeutil` | `ConvertTime` |
 | `tool` | `src/tool` | `Pipe`, `Unwrap`, `ParseJson`, `EscapeRegExp` |
 | `ua` | `src/ua` | `ParseUserAgent`, `ExtractBrowserFromUserAgent` (see below) |
@@ -105,6 +105,8 @@ Unicode-aware helpers in `src/str`, aligned with TypeScript `package/main/src/St
 | `CamelCase` | Replaces non-alphanumeric runs, then lowercases only the first rune. Does not split acronyms (`"HELLO"` → `"hELLO"`, `"XMLHttpRequest"` → `"xMLHttpRequest"`). |
 | `KebabCase` | Inserts dashes on case boundaries and replaces separators. Splits acronyms (`"XMLHttpRequest"` → `"xml-http-request"`). |
 | `Slugify` | Lowercase hyphenated slug. Go `\w` is ASCII, so CJK is dropped (`"Japanese: こんにちは"` → `"japanese"`), matching TypeScript. Diacritics are decomposed through a **fixed Latin-1 table**, not full Unicode NFD. Python / Rust keep Unicode letters. |
+| `ToBase64` | UTF-8 → standard Base64 (`encoding/base64.StdEncoding`). Empty → `""`. `"Hello World"` → `"SGVsbG8gV29ybGQ="`. Not URL-safe. |
+| `FromBase64` | `(string, error)`. Empty → `("", nil)`. **Requires padding.** Invalid Base64 → `"Invalid Base64 string"`. Invalid UTF-8 is returned as raw bytes (not an error): `"gA=="` → `"\x80"`. TypeScript `fromBase64` accepts missing padding and maps invalid UTF-8 to U+FFFD; Rust errors on invalid UTF-8. |
 
 ```go
 import "github.com/riya-amemiya/umt-go/src/str"
@@ -124,6 +126,9 @@ _ = str.CamelCase("hello-world") // "helloWorld"
 _ = str.KebabCase("XMLHttpRequest") // "xml-http-request"
 _ = str.Slugify("Hello World!")  // "hello-world"
 _ = str.Slugify("café")          // "cafe"
+_ = str.ToBase64("Hello World")  // "SGVsbG8gV29ybGQ="
+decoded, _ := str.FromBase64("SGVsbG8gV29ybGQ=") // "Hello World"
+_, err := str.FromBase64("SGVsbG8gV29ybGQ")      // error: Invalid Base64 string
 ```
 
 ## Color and URL helpers
@@ -190,6 +195,8 @@ _, err := cryptoutil.DecodeBase32("1A") // error: Invalid base32 character: 1
 
 `math.ToBaseN(n, base)` is `strconv.FormatInt`. There is no default base (unlike TypeScript / Python radix 2). Hex digits are lowercase (`ToBaseN(255, 16)` → `"ff"`). A base outside `2`–`36` **panics** (`strconv: illegal AppendInt/FormatInt base`). Rust returns the string `"Invalid radix"` instead.
 
+`math.DegToRad` / `math.RadToDeg` use native `*` `/` (`deg * math.Pi / 180`), not TypeScript / Python's `multiplication` / `division` helpers. They do not wrap angles. `RadToDeg(math.Pi)` is 180.
+
 ```go
 import "github.com/riya-amemiya/umt-go/src/math"
 
@@ -198,6 +205,8 @@ _ = math.Calculator("$10*2", map[string]any{"$": 100}) // "2000"
 _ = math.MathConverter("1250*1250")                  // "1500*1000+400*100+200*100+50*50"
 _ = math.ToBaseN(10, 2)                              // "1010"
 _ = math.ToBaseN(255, 16)                            // "ff"
+_ = math.RadToDeg(3.141592653589793)                 // 180
+_ = math.DegToRad(180)                               // 3.141592653589793
 ```
 
 ## UA helpers
