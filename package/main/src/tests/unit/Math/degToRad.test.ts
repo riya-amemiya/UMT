@@ -1,4 +1,6 @@
 import { degToRad } from "@/Math/degToRad";
+import { division } from "@/Math/division";
+import { multiplication } from "@/Math/multiplication";
 
 describe("degToRad", () => {
   // Normal test cases
@@ -48,5 +50,12 @@ describe("degToRad", () => {
     expect(degToRad([90] as any)).toBeCloseTo(Math.PI / 2);
     // biome-ignore lint/suspicious/noExplicitAny: ignore
     expect(degToRad({} as any)).toBe(Number.NaN);
+  });
+
+  test("degToRad: matches unhoisted formula", () => {
+    const samples = [0, 45.5, 90, 180, 270, 360, -90, 450, 720];
+    for (const x of samples) {
+      expect(degToRad(x)).toBe(multiplication(x, division(Math.PI, 180)));
+    }
   });
 });
