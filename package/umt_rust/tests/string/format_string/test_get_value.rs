@@ -285,3 +285,17 @@ fn test_preserve_original_data_types() {
     assert_eq!(get_value(&obj, "mixed[2]"), Some(&json!(0)));
     assert_eq!(get_value(&obj, "mixed[3]"), Some(&json!(false)));
 }
+
+#[test]
+fn test_reuse_array_and_simple_paths() {
+    let obj = json!({
+        "name": "Alice",
+        "items": ["A", "B"]
+    });
+
+    assert_eq!(get_value(&obj, "name"), Some(&json!("Alice")));
+    assert_eq!(get_value(&obj, "items[0]"), Some(&json!("A")));
+    assert_eq!(get_value(&obj, "items[-1]"), Some(&json!("B")));
+    assert_eq!(get_value(&obj, "name"), Some(&json!("Alice")));
+    assert_eq!(get_value(&obj, "missing[0]"), None);
+}
