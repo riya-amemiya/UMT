@@ -1,5 +1,9 @@
 use regex::Regex;
 use serde_json::Value;
+use std::sync::LazyLock;
+
+static ARRAY_INDEX_RE: LazyLock<Regex> =
+    LazyLock::new(|| Regex::new(r"^(.+?)\[(-?\d+)\]$").unwrap());
 
 /// Retrieves a value from a JSON object using a dot-notation path with array index support.
 ///
@@ -28,7 +32,6 @@ pub fn get_value<'a>(object: &'a Value, path: &str) -> Option<&'a Value> {
         return None;
     }
 
-    let array_pattern = Regex::new(r"^(.+?)\[(-?\d+)\]$").unwrap();
     let parts: Vec<&str> = path.split('.').collect();
 
     let mut current = object;
@@ -39,7 +42,7 @@ pub fn get_value<'a>(object: &'a Value, path: &str) -> Option<&'a Value> {
             return None;
         }
 
-        if let Some(caps) = array_pattern.captures(part) {
+        if let Some(caps) = ARRAY_INDEX_RE.captures(part) {
             // Handle array notation like "items[0]" or "items[-1]"
             let key = caps.get(1)?.as_str();
             let index: i64 = caps.get(2)?.as_str().parse().ok()?;

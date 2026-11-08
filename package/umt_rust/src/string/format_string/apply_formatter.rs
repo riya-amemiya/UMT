@@ -1,8 +1,12 @@
 use regex::Regex;
 use std::collections::HashMap;
+use std::sync::LazyLock;
 
 /// A formatter function type
 pub type Formatter = Box<dyn Fn(&str, &[String]) -> String + Send + Sync>;
+
+static FORMATTER_RE: LazyLock<Regex> =
+    LazyLock::new(|| Regex::new(r"^(\w+)(?:\(([^)]*)\))?$").unwrap());
 
 /// Applies a formatter function to a value with optional arguments.
 ///
@@ -23,9 +27,7 @@ pub fn apply_formatter(
     formatter_string: &str,
     formatters: &HashMap<String, Formatter>,
 ) -> String {
-    let pattern = Regex::new(r"^(\w+)(?:\(([^)]*)\))?$").unwrap();
-
-    let Some(caps) = pattern.captures(formatter_string) else {
+    let Some(caps) = FORMATTER_RE.captures(formatter_string) else {
         return value.to_string();
     };
 

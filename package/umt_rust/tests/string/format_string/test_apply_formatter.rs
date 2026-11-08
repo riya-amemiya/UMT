@@ -176,3 +176,20 @@ fn test_only_accept_word_characters_in_formatter_names() {
         "test"
     );
 }
+
+#[test]
+fn test_accept_underscore_formatter_names() {
+    let mut formatters: HashMap<String, Formatter> = HashMap::new();
+    formatters.insert("snake_fmt".to_string(), Box::new(|v, _| v.to_uppercase()));
+    assert_eq!(apply_formatter("hello", "snake_fmt", &formatters), "HELLO");
+    assert_eq!(apply_formatter("hi", "snake_fmt()", &formatters), "HI");
+}
+
+#[test]
+fn test_handle_empty_and_repeated_values() {
+    let formatters = create_mock_formatters();
+    assert_eq!(apply_formatter("", "upper", &formatters), "");
+    assert_eq!(apply_formatter("hello", "upper", &formatters), "HELLO");
+    assert_eq!(apply_formatter("hello", "upper", &formatters), "HELLO");
+    assert_eq!(apply_formatter("42", "pad(4,0)", &formatters), "0042");
+}

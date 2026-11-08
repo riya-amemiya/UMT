@@ -32,7 +32,7 @@ cargo doc --open
 
 Runtime dependencies include `chrono`, `regex`, `serde`, `rand`, and others listed in `Cargo.toml` (the crate is not dependency-free).
 
-Fixed regexes are compiled once in `std::sync::LazyLock` statics (`umt_strip_ansi`, `umt_strip_tags`, `umt_words`, `umt_normalize_whitespace`, `umt_unescape_html`, `umt_is_absolute_url`, `umt_hexa_to_rgba`, `umt_format` escaped-text `[...]`, `umt_math_converter`, `parse_email`, UA extractors). Patterns built from caller input stay inline (`format_string`, calculator, `umt_regex_match`). Date `umt_format` is not string `format_string`. Prefer `LazyLock` over compiling the same pattern on every call.
+Fixed regexes are compiled once in `std::sync::LazyLock` statics (`umt_strip_ansi`, `umt_strip_tags`, `umt_words`, `umt_normalize_whitespace`, `umt_unescape_html`, `umt_is_absolute_url`, `umt_hexa_to_rgba`, `umt_format` escaped-text `[...]`, `umt_math_converter`, `umt_literal_expression`, `apply_formatter`, `get_value`, `parse_email`, UA extractors). Patterns built from caller input stay inline (`format_string` placeholder `{...}`, calculator, `umt_regex_match`). Date `umt_format` is not string `format_string`. Prefer `LazyLock` over compiling the same pattern on every call.
 
 ## Date helpers
 
