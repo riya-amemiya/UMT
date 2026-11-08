@@ -1117,6 +1117,86 @@ func TestFormatString(t *testing.T) {
 			t.Errorf("Expected %q, got %q", "Count: 42", result)
 		}
 	})
+
+	t.Run("formatter pad with arguments", func(t *testing.T) {
+		result := str.FormatString("{id:pad(4,0)}", map[string]any{"id": 42})
+		if result != "0042" {
+			t.Errorf("Expected %q, got %q", "0042", result)
+		}
+	})
+
+	t.Run("nested named path", func(t *testing.T) {
+		result := str.FormatString("{user.name}", map[string]any{
+			"user": map[string]any{"name": "Bob"},
+		})
+		if result != "Bob" {
+			t.Errorf("Expected %q, got %q", "Bob", result)
+		}
+	})
+
+	t.Run("array index positive and negative", func(t *testing.T) {
+		data := map[string]any{"items": []any{"A", "B", "C"}}
+		got := str.FormatString("{items[0]}-{items[-1]}", data)
+		if got != "A-C" {
+			t.Errorf("Expected %q, got %q", "A-C", got)
+		}
+	})
+
+	t.Run("array of objects then nested field", func(t *testing.T) {
+		data := map[string]any{
+			"users": []any{map[string]any{"name": "Alice"}},
+		}
+		got := str.FormatString("{users[0].name}", data)
+		if got != "Alice" {
+			t.Errorf("Expected %q, got %q", "Alice", got)
+		}
+	})
+
+	t.Run("invalid formatter returns original value", func(t *testing.T) {
+		result := str.FormatString("{name:invalid!@#}", map[string]any{"name": "test"})
+		if result != "test" {
+			t.Errorf("Expected %q, got %q", "test", result)
+		}
+	})
+
+	t.Run("underscore formatter names with and without parens", func(t *testing.T) {
+		opts := str.FormatOptions{
+			Formatters: map[string]str.Formatter{
+				"snake_fmt": func(value any, args ...string) string {
+					return "SNAKE:" + strings.ToUpper(value.(string))
+				},
+			},
+		}
+		data := map[string]any{"name": "hello"}
+		got := str.FormatString("{name:snake_fmt}", data, opts)
+		if got != "SNAKE:HELLO" {
+			t.Errorf("Expected %q, got %q", "SNAKE:HELLO", got)
+		}
+		got = str.FormatString("{name:snake_fmt()}", data, opts)
+		if got != "SNAKE:HELLO" {
+			t.Errorf("Expected %q, got %q", "SNAKE:HELLO", got)
+		}
+	})
+
+	t.Run("empty and repeated named values", func(t *testing.T) {
+		data := map[string]any{"name": "", "other": "x"}
+		got := str.FormatString("{name}-{name}-{other}", data)
+		if got != "--x" {
+			t.Errorf("Expected %q, got %q", "--x", got)
+		}
+	})
+
+	t.Run("mixed simple and array path reuse", func(t *testing.T) {
+		data := map[string]any{
+			"name":  "alice",
+			"items": []any{"A", "B", "C"},
+			"user":  map[string]any{"city": "tokyo"},
+		}
+		got := str.FormatString("{name} {items[0]} {items[-1]} {user.city:upper}", data)
+		if got != "alice A C TOKYO" {
+			t.Errorf("Expected %q, got %q", "alice A C TOKYO", got)
+		}
+	})
 }
 
 // =============================================================================

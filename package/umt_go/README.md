@@ -156,7 +156,7 @@ _ = tool.EscapeRegExp("a.b")                                   // "a\\.b"
 _ = tool.EscapeRegExp("foo-bar")                               // "foo-bar"
 ```
 
-Fixed regexes in this package are compiled once with package-level `regexp.MustCompile` (`CamelCase`, `KebabCase`, `Slugify`, `UnescapeHtml`, `SanitizeString`, `HexaToRgba`, `StripAnsi` / `StripTags` / `Words`, `NormalizeWhitespace`, `IsAbsoluteUrl`, `JoinPath` slash regexes, UA extractors, calculator, `ParseEmail`). Caller-built patterns (`FormatString`, `RegexMatch`, currency symbol) stay inline. `EscapeHtml`, `EscapeRegExp`, `DeleteSpaces`, `ToFullWidth`, and `ToHalfWidth` scan runes; they do not compile a regex.
+Fixed regexes in this package are compiled once with package-level `regexp.MustCompile` (`CamelCase`, `KebabCase`, `Slugify`, `UnescapeHtml`, `SanitizeString`, `HexaToRgba`, `StripAnsi` / `StripTags` / `Words`, `NormalizeWhitespace`, `IsAbsoluteUrl`, `JoinPath` slash regexes, UA extractors, calculator, `ParseEmail`, `applyFormatter` / `getValue`). Caller-built patterns (`FormatString` placeholder, `RegexMatch`, currency symbol) stay inline. `EscapeHtml`, `EscapeRegExp`, `DeleteSpaces`, `ToFullWidth`, and `ToHalfWidth` scan runes; they do not compile a regex.
 
 ## parseEmail
 

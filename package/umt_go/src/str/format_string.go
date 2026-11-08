@@ -213,6 +213,11 @@ func detectMode(args []any) (data any, options FormatOptions) {
 	return args, FormatOptions{}
 }
 
+var (
+	arrayIndexRe = regexp.MustCompile(`^(.+?)\[(-?\d+)\]$`)
+	formatterRe  = regexp.MustCompile(`^(\w+)(?:\(([^)]*)\))?$`)
+)
+
 // getValue retrieves a value from a map using a dot-notation path with optional
 // array index support (e.g., "items[0]", "users[-1].name").
 func getValue(obj any, path string) any {
@@ -224,9 +229,8 @@ func getValue(obj any, path string) any {
 
 	var segments []segment
 
-	arrayRe := regexp.MustCompile(`^(.+?)\[(-?\d+)\]$`)
 	for _, part := range parts {
-		matches := arrayRe.FindStringSubmatch(part)
+		matches := arrayIndexRe.FindStringSubmatch(part)
 		if matches != nil {
 			idx, _ := strconv.Atoi(matches[2])
 			segments = append(segments, segment{key: matches[1], index: &idx})
@@ -267,8 +271,7 @@ func getValue(obj any, path string) any {
 
 // applyFormatter applies a named formatter to a value.
 func applyFormatter(value any, formatterString string, formatters map[string]Formatter) string {
-	re := regexp.MustCompile(`^(\w+)(?:\(([^)]*)\))?$`)
-	match := re.FindStringSubmatch(formatterString)
+	match := formatterRe.FindStringSubmatch(formatterString)
 	if match == nil {
 		return fmt.Sprintf("%v", value)
 	}
