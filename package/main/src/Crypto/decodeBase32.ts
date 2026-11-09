@@ -21,7 +21,11 @@ Decodes a Base32 string to Uint8Array
 @example decodeBase32("JBSWY3DP"); // Uint8Array for "Hello"
 */
 export const decodeBase32 = (input: string): Uint8Array => {
-  const result: number[] = [];
+  // Write into a pre-sized Uint8Array instead of pushing boxed numbers and
+  // copying at the end. Capacity is ceil(len/8)*5, the RFC 4648 maximum for
+  // this input; unused padding capacity is trimmed with subarray.
+  const result = new Uint8Array(Math.ceil(input.length / 8) * 5);
+  let offset = 0;
   let buffer = 0;
   let bufferLength = 0;
 
@@ -46,8 +50,8 @@ export const decodeBase32 = (input: string): Uint8Array => {
     }
 
     bufferLength -= 8;
-    result.push((buffer >> bufferLength) & 0xff);
+    result[offset++] = (buffer >> bufferLength) & 0xff;
   }
 
-  return new Uint8Array(result);
+  return offset === result.length ? result : result.subarray(0, offset);
 };

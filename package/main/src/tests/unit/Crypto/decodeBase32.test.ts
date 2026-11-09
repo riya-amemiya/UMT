@@ -13,6 +13,7 @@ describe("decodeBase32", () => {
 
   test("decodes strings with padding", () => {
     expect(new TextDecoder().decode(decodeBase32("MY======"))).toBe("f");
+    expect(decodeBase32("MY======").length).toBe(1);
     expect(new TextDecoder().decode(decodeBase32("MZXQ===="))).toBe("fo");
     expect(new TextDecoder().decode(decodeBase32("MZXW6==="))).toBe("foo");
     expect(new TextDecoder().decode(decodeBase32("MZXW6YQ="))).toBe("foob");
@@ -20,6 +21,7 @@ describe("decodeBase32", () => {
     expect(new TextDecoder().decode(decodeBase32("MZXW6YTBOI======"))).toBe(
       "foobar",
     );
+    expect(decodeBase32("MZXW6YTBOI======").length).toBe(6);
   });
 
   test("decodes longer text", () => {

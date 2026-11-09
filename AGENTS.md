@@ -26,7 +26,7 @@ Located in `package/main`.
 *   **Formatting**: `bun run format` (runs Biome)
 *   **Nix**: `nix fmt` only. Scripts call `make` directly.
 *   **TypeScript pin**: Keep `typescript` at 6.0.3 in `package/main`, `package/umt_i18n`, and `package/umt_wasm`. TypeScript 7.x currently breaks `typescript-eslint` (`lint:ci`) and `ts-node` loading `jest.config.ts` (Node 20 `npx jest`). See `package/main/COMPATIBILITY.md`.
-*   **Lint**: In `package/main`, keep `unicorn/no-new-array` and `unicorn/prefer-spread` off. Pre-sized buffers (`new Array(n)` / `new Uint8Array(n)`) are intentional (`fromBase64`, width-conversion tables).
+*   **Lint**: In `package/main`, keep `unicorn/no-new-array` and `unicorn/prefer-spread` off. Pre-sized buffers (`new Array(n)` / `new Uint8Array(n)`) are intentional (`fromBase64`, `decodeBase32`, width-conversion tables).
 
 **Note**: The `types` directory primarily contains type definitions. Porting logic from `types` is only necessary if it corresponds to runtime logic. Type-level tests live in `src/tests/unit/types/` and must cover every `src/types` export.
 
