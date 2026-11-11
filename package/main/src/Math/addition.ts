@@ -1,5 +1,13 @@
 import { getDecimalLength } from "./getDecimalLength";
 
+const addIntegers = (numbers: number[]): number => {
+  let sum = 0;
+  for (const n of numbers) {
+    sum += n;
+  }
+  return sum;
+};
+
 /**
 Addition without floating point errors
 @param  {number[]} numbers Numbers to add
@@ -7,6 +15,10 @@ Addition without floating point errors
 @example addition(0.1, 0.2); // 0.3
 */
 export const addition = (...numbers: number[]) => {
+  if (numbers.every((n) => Number.isInteger(n))) {
+    return addIntegers(numbers);
+  }
+
   let maxDecimal = 0;
   for (const number of numbers) {
     const length = getDecimalLength(number);
