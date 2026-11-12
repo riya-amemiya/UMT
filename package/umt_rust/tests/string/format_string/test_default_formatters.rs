@@ -140,7 +140,7 @@ fn test_number_formatter_invalid_input() {
     let formatters = create_default_formatters();
     let number = formatters.get("number").unwrap();
 
-    // Invalid number should default to 0
+    // Invalid number is formatted as NaN
     assert_eq!(number("abc", &[]), "NaN");
 }
 
