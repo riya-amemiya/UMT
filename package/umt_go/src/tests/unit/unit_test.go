@@ -99,10 +99,10 @@ func TestUnitConverterInitialization(t *testing.T) {
 
 func TestUnitConverterWeight(t *testing.T) {
 	convertWeight := unit.UnitConverterInitialization(map[string]float64{
-		"grams":     1,
-		"kilograms": 0.001,
+		"grams":      1,
+		"kilograms":  0.001,
 		"milligrams": 1000,
-		"pounds":    0.00220462,
+		"pounds":     0.00220462,
 	})
 
 	result := convertWeight(1, "kilograms", "grams")
