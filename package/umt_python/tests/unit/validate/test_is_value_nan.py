@@ -26,10 +26,10 @@ class TestIsValueNan(unittest.TestCase):
         self.assertTrue(is_value_nan(float("nan"), loose=True))
 
     def test_loose_mode_with_invalid_value(self):
-        self.assertFalse(is_value_nan("not a number", loose=True))
+        self.assertTrue(is_value_nan("not a number", loose=True))
         self.assertFalse(is_value_nan(None, loose=True))
         self.assertFalse(is_value_nan([], loose=True))
-        self.assertFalse(is_value_nan({}, loose=True))
+        self.assertTrue(is_value_nan({}, loose=True))
 
     def test_docstring_examples(self):
         self.assertFalse(is_value_nan(1))

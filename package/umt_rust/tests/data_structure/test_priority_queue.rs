@@ -517,3 +517,84 @@ fn test_default_trait() {
     assert!(queue.is_empty());
     assert_eq!(queue.size(), 0);
 }
+
+#[test]
+fn test_comparator_min_heap() {
+    let mut queue: PriorityQueue<&str> =
+        PriorityQueue::with_comparator(|a, b| a.priority.total_cmp(&b.priority));
+    queue.enqueue("high", 10.0);
+    queue.enqueue("low", 1.0);
+    queue.enqueue("medium", 5.0);
+    assert_eq!(queue.peek(), Some(&"low"));
+    assert_eq!(queue.dequeue(), Some("low"));
+    assert_eq!(queue.dequeue(), Some("medium"));
+    assert_eq!(queue.dequeue(), Some("high"));
+    assert_eq!(queue.dequeue(), None);
+}
+
+#[test]
+fn test_comparator_heapifies_initial_elements() {
+    let mut queue = PriorityQueue::with_initial_and_comparator(
+        vec![
+            PriorityQueueItem::new("c", 3.0),
+            PriorityQueueItem::new("a", 1.0),
+            PriorityQueueItem::new("e", 5.0),
+            PriorityQueueItem::new("b", 2.0),
+            PriorityQueueItem::new("d", 4.0),
+        ],
+        |a, b| a.priority.total_cmp(&b.priority),
+    );
+    let mut order = Vec::new();
+    while let Some(value) = queue.dequeue() {
+        order.push(value);
+    }
+    assert_eq!(order, vec!["a", "b", "c", "d", "e"]);
+}
+
+#[test]
+fn test_comparator_breaks_ties() {
+    type Item = PriorityQueueItem<(&'static str, u32)>;
+    let mut queue: PriorityQueue<(&str, u32)> =
+        PriorityQueue::with_comparator(|a: &Item, b: &Item| {
+            b.priority
+                .total_cmp(&a.priority)
+                .then_with(|| a.value.1.cmp(&b.value.1))
+        });
+    queue.enqueue(("first", 0), 1.0);
+    queue.enqueue(("second", 1), 1.0);
+    queue.enqueue(("urgent", 2), 9.0);
+    queue.enqueue(("third", 3), 1.0);
+    queue.enqueue(("fourth", 4), 1.0);
+    let mut names = Vec::new();
+    while let Some((name, _)) = queue.dequeue() {
+        names.push(name);
+    }
+    assert_eq!(names, vec!["urgent", "first", "second", "third", "fourth"]);
+}
+
+#[test]
+fn test_comparator_orders_by_value() {
+    let mut queue: PriorityQueue<&str> = PriorityQueue::with_comparator(
+        |a: &PriorityQueueItem<&str>, b: &PriorityQueueItem<&str>| a.value.cmp(b.value),
+    );
+    queue.enqueue("pear", 0.0);
+    queue.enqueue("apple", 0.0);
+    queue.enqueue("fig", 0.0);
+    assert_eq!(queue.dequeue(), Some("apple"));
+    assert_eq!(queue.dequeue(), Some("fig"));
+    assert_eq!(queue.dequeue(), Some("pear"));
+}
+
+#[test]
+fn test_comparator_queue_is_cloneable_and_debuggable() {
+    let mut queue: PriorityQueue<i32> =
+        PriorityQueue::with_comparator(|a, b| a.priority.total_cmp(&b.priority));
+    queue.enqueue(2, 2.0);
+    queue.enqueue(1, 1.0);
+    let mut cloned = queue.clone();
+    assert_eq!(cloned.dequeue(), Some(1));
+    assert_eq!(queue.size(), 2);
+    assert!(format!("{:?}", queue).contains("has_comparator: true"));
+    let plain: PriorityQueue<i32> = PriorityQueue::new();
+    assert!(format!("{:?}", plain).contains("has_comparator: false"));
+}

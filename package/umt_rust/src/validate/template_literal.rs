@@ -51,11 +51,11 @@ fn escape_regex(input: &str) -> String {
 /// Returns the regex fragment that matches a given primitive validator tag.
 fn tag_to_pattern(part: &TemplateLiteralPart) -> &'static str {
     match part {
-        TemplateLiteralPart::StringTag => ".*?",
-        TemplateLiteralPart::NumberTag => r"-?(?:\d+\.\d+|\d+(?:\.\d*)?|\.\d+)",
+        TemplateLiteralPart::StringTag => r"[^\n\r\x{2028}\x{2029}]*?",
+        TemplateLiteralPart::NumberTag => r"-?(?:[0-9]+\.[0-9]+|[0-9]+(?:\.[0-9]*)?|\.[0-9]+)",
         TemplateLiteralPart::BooleanTag => "(?:true|false)",
-        TemplateLiteralPart::BigIntTag => r"-?\d+",
-        TemplateLiteralPart::UnknownTag => ".+?",
+        TemplateLiteralPart::BigIntTag => r"-?[0-9]+",
+        TemplateLiteralPart::UnknownTag => r"[^\n\r\x{2028}\x{2029}]+?",
         TemplateLiteralPart::Literal(_) => "",
     }
 }

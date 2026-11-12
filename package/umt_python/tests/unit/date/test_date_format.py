@@ -46,7 +46,7 @@ class TestDateFormat(unittest.TestCase):
 
     def test_day_of_week(self):
         dt = datetime(2025, 4, 4, tzinfo=timezone.utc)
-        self.assertEqual(date_format(dt, "d"), "4")
+        self.assertEqual(date_format(dt, "d"), "5")
 
     def test_24_hour_formats(self):
         dt = datetime(2025, 4, 4, 9, 30, 45, tzinfo=timezone.utc)
@@ -151,6 +151,31 @@ class TestDateFormat(unittest.TestCase):
             date_format(datetime(2025, 4, 4, tzinfo=timezone.utc), "YYYY-MM-DD"),
             "2025-04-04",
         )
+
+
+class TestDateFormatSundayStartDayOfWeek(unittest.TestCase):
+    def test_day_of_week_token_counts_from_sunday(self):
+        self.assertEqual(
+            date_format(datetime(2023, 6, 10, tzinfo=timezone.utc), "d"), "6"
+        )
+        self.assertEqual(
+            date_format(datetime(2023, 6, 11, tzinfo=timezone.utc), "d"), "0"
+        )
+        self.assertEqual(
+            date_format(datetime(2023, 6, 12, tzinfo=timezone.utc), "YYYY-MM-DD (d)"),
+            "2023-06-12 (1)",
+        )
+
+    def test_escaped_text_and_tokens_in_one_pass(self):
+        dt = datetime(2025, 4, 4, 15, 30, 45, 7000, tzinfo=timezone.utc)
+        self.assertEqual(
+            date_format(dt, "[Year:] YYYY [at] hh:mm:ss.SSS a ZZ"),
+            "Year: 2025 at 03:30:45.007 pm +0000",
+        )
+
+    def test_unknown_token_run_is_kept(self):
+        dt = datetime(2025, 4, 4, tzinfo=timezone.utc)
+        self.assertEqual(date_format(dt, "YYY"), "YYY")
 
 
 if __name__ == "__main__":

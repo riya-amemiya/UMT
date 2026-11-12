@@ -5,5 +5,6 @@ export * from "./omitKeys";
 export * from "./optional";
 export * from "./partial";
 export * from "./pickKeys";
+export * from "./record";
 export * from "./required";
 export * from "./union";

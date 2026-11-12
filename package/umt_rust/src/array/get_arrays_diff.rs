@@ -1,3 +1,4 @@
+use super::ordered_unique::ordered_unique_by;
 use std::collections::HashSet;
 use std::hash::Hash;
 
@@ -24,13 +25,13 @@ pub fn umt_get_arrays_diff<T: Clone + Hash + Eq>(arrays: &[&[T]]) -> Vec<T> {
         return vec![];
     }
 
-    let mut all_values = HashSet::new();
-    let mut duplicates = HashSet::new();
+    let mut all_values: HashSet<&T> = HashSet::new();
+    let mut duplicates: HashSet<&T> = HashSet::new();
 
     // First array - add all to all_values
     if let Some(first) = arrays.first() {
         for item in *first {
-            all_values.insert(item.clone());
+            all_values.insert(item);
         }
     }
 
@@ -38,26 +39,21 @@ pub fn umt_get_arrays_diff<T: Clone + Hash + Eq>(arrays: &[&[T]]) -> Vec<T> {
     for array in arrays.iter().skip(1) {
         for item in *array {
             if all_values.contains(item) {
-                duplicates.insert(item.clone());
+                duplicates.insert(item);
             } else {
-                all_values.insert(item.clone());
+                all_values.insert(item);
             }
         }
     }
 
     // Return elements that are not duplicates, preserving order
-    let mut result = Vec::new();
-    let mut seen = HashSet::new();
-
-    for array in arrays {
-        for item in *array {
-            if !duplicates.contains(item) && seen.insert(item.clone()) {
-                result.push(item.clone());
-            }
-        }
-    }
-
-    result
+    ordered_unique_by(
+        arrays
+            .iter()
+            .flat_map(|array| array.iter())
+            .filter(|item| !duplicates.contains(item)),
+        |item| item,
+    )
 }
 
 /// Extract elements that differ between exactly two arrays.

@@ -3,12 +3,12 @@ from typing import Literal
 
 BrowserType = Literal["edge", "chrome", "firefox", "safari", "ie", "other"]
 
-_EDGE_RE = re.compile(r"edg(e)?", re.IGNORECASE)
-_IE_RE = re.compile(r"msie|trident", re.IGNORECASE)
-_FIREFOX_RE = re.compile(r"firefox|fxios", re.IGNORECASE)
-_OPERA_RE = re.compile(r"opr/", re.IGNORECASE)
-_CHROME_RE = re.compile(r"chrome|crios", re.IGNORECASE)
-_SAFARI_RE = re.compile(r"safari", re.IGNORECASE)
+_EDGE_RE = re.compile(r"edg(e)?", re.IGNORECASE | re.ASCII)
+_IE_RE = re.compile(r"msie|trident", re.IGNORECASE | re.ASCII)
+_FIREFOX_RE = re.compile(r"firefox|fxios", re.IGNORECASE | re.ASCII)
+_OPERA_RE = re.compile(r"opr/", re.IGNORECASE | re.ASCII)
+_CHROME_RE = re.compile(r"chrome|crios", re.IGNORECASE | re.ASCII)
+_SAFARI_RE = re.compile(r"safari", re.IGNORECASE | re.ASCII)
 
 
 def extract_browser_from_user_agent(ua: str) -> BrowserType:

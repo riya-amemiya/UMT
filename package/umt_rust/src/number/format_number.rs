@@ -101,15 +101,7 @@ fn default_fraction_digits(style: FormatStyle, currency: Option<&str>) -> (u32, 
     }
 }
 
-// Intl.NumberFormat rounds half away from zero; f64::round matches that
-// semantic, unlike the usual banker's rounding that format! applies.
-fn round_half_away_from_zero(value: f64, digits: u32) -> f64 {
-    let factor = 10_f64.powi(digits as i32);
-    (value * factor).round() / factor
-}
-
-fn insert_thousands(integer: u128, sep: &str) -> String {
-    let digits = integer.to_string();
+fn insert_thousands(digits: &str, sep: &str) -> String {
     let bytes = digits.as_bytes();
     let n = bytes.len();
     let mut out = String::with_capacity(n + n / 3 * sep.len());
@@ -122,30 +114,79 @@ fn insert_thousands(integer: u128, sep: &str) -> String {
     out
 }
 
-fn format_absolute(value: f64, min_fraction: u32, max_fraction: u32, spec: &LocaleSpec) -> String {
-    let rounded = round_half_away_from_zero(value, max_fraction);
-    let integer_part = rounded.trunc() as u128;
-    let integer_str = insert_thousands(integer_part, spec.thousands);
-
-    if max_fraction == 0 {
-        return integer_str;
+// Intl.NumberFormat rounds the shortest decimal form of the number half away
+// from zero, so the digits are rounded as decimals instead of as binary
+// floats. Returns the integer digits and exactly `max_fraction` fraction
+// digits of `value * 10^scale`.
+fn round_decimal_digits(value: f64, scale: usize, max_fraction: usize) -> (String, String) {
+    let text = value.to_string();
+    let (integer_text, fraction_text) = text.split_once('.').unwrap_or((&text, ""));
+    let mut digits: Vec<u8> = integer_text
+        .bytes()
+        .chain(fraction_text.bytes())
+        .map(|byte| byte - b'0')
+        .collect();
+    let mut point = integer_text.len() + scale;
+    if digits.len() < point + max_fraction + 1 {
+        digits.resize(point + max_fraction + 1, 0);
     }
 
-    let remainder = (rounded - rounded.trunc()).abs();
-    // `format!("{:.N}", x)` already rounds to N digits; because `rounded` was
-    // snapped to max_fraction digits above, this formatting simply extracts
-    // those digits without re-rounding in a lossy direction.
-    let formatted_remainder = format!("{:.*}", max_fraction as usize, remainder);
-    let fraction_digits = formatted_remainder
-        .strip_prefix("0.")
-        .unwrap_or(&formatted_remainder);
+    let round_up = digits[point + max_fraction] >= 5;
+    digits.truncate(point + max_fraction);
+    if round_up {
+        let mut index = digits.len();
+        loop {
+            if index == 0 {
+                digits.insert(0, 1);
+                point += 1;
+                break;
+            }
+            index -= 1;
+            if digits[index] == 9 {
+                digits[index] = 0;
+            } else {
+                digits[index] += 1;
+                break;
+            }
+        }
+    }
+
+    let leading_zeros = digits[..point]
+        .iter()
+        .take(point.saturating_sub(1))
+        .take_while(|digit| **digit == 0)
+        .count();
+    let to_text = |part: &[u8]| part.iter().map(|digit| (digit + b'0') as char).collect();
+    (
+        to_text(&digits[leading_zeros..point]),
+        to_text(&digits[point..]),
+    )
+}
+
+fn format_absolute(
+    value: f64,
+    scale: usize,
+    min_fraction: u32,
+    max_fraction: u32,
+    spec: &LocaleSpec,
+) -> String {
+    if value.is_nan() {
+        return "NaN".to_string();
+    }
+    if value.is_infinite() {
+        return "\u{221e}".to_string();
+    }
+
+    let (integer_digits, fraction_digits) =
+        round_decimal_digits(value, scale, max_fraction as usize);
+    let integer_str = insert_thousands(&integer_digits, spec.thousands);
 
     let trimmed = fraction_digits.trim_end_matches('0');
     let min = min_fraction as usize;
-    let final_fraction: String = if trimmed.len() < min {
-        fraction_digits.chars().take(min).collect()
+    let final_fraction = if trimmed.len() < min {
+        &fraction_digits[..min]
     } else {
-        trimmed.to_string()
+        trimmed
     };
 
     if final_fraction.is_empty() {
@@ -157,8 +198,8 @@ fn format_absolute(value: f64, min_fraction: u32, max_fraction: u32, spec: &Loca
 
 /// Formats `value` according to `options`, mirroring `Intl.NumberFormat`.
 ///
-/// Returns the literal string `"NaN"` for NaN input, matching the TypeScript
-/// reference and the Python port.
+/// NaN formats as `"NaN"` and infinities as `"\u{221e}"`, with the sign,
+/// percent sign and currency symbol applied as for finite values.
 ///
 /// # Arguments
 ///
@@ -200,10 +241,6 @@ fn format_absolute(value: f64, min_fraction: u32, max_fraction: u32, spec: &Loca
 /// assert_eq!(umt_format_number(1234.5, &usd), "$1,234.50");
 /// ```
 pub fn umt_format_number(value: f64, options: &FormatNumberOptions) -> String {
-    if value.is_nan() {
-        return "NaN".to_string();
-    }
-
     let style = options.style.unwrap_or_default();
     let (default_min, default_max) = default_fraction_digits(style, options.currency);
     let min_fraction = options.minimum_fraction_digits.unwrap_or(default_min);
@@ -215,18 +252,13 @@ pub fn umt_format_number(value: f64, options: &FormatNumberOptions) -> String {
 
     let spec = resolve_locale_spec(options.locale);
 
-    let scaled_value = if style == FormatStyle::Percent {
-        value * 100.0
-    } else {
-        value
-    };
-
-    let sign = if scaled_value.is_sign_negative() && scaled_value != 0.0 {
+    let sign = if value.is_sign_negative() && !value.is_nan() {
         "-"
     } else {
         ""
     };
-    let magnitude = format_absolute(scaled_value.abs(), min_fraction, max_fraction, &spec);
+    let scale = if style == FormatStyle::Percent { 2 } else { 0 };
+    let magnitude = format_absolute(value.abs(), scale, min_fraction, max_fraction, &spec);
 
     match style {
         FormatStyle::Percent => format!("{}{}%", sign, magnitude),

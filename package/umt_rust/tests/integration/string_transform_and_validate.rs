@@ -195,14 +195,14 @@ mod tests {
     #[test]
     fn should_validate_and_transform_urls() {
         let url_paths = [
-            "user-profile-settings",
-            "api-v2-endpoints",
-            "auth-callback-handler",
+            ("user-profile-settings", "user-profile-settings"),
+            ("api-v2-endpoints", "api-v2endpoints"),
+            ("auth-callback-handler", "auth-callback-handler"),
         ];
 
         let camel_case_pattern = Regex::new(r"^[a-z][a-zA-Z0-9]*$").unwrap();
 
-        for path in url_paths {
+        for (path, expected_kebab) in url_paths {
             let camel = umt_camel_case(path);
             let validator = umt_regex_match(camel_case_pattern.clone(), None);
             assert!(
@@ -213,7 +213,11 @@ mod tests {
 
             // Round-trip transformation
             let back_to_kebab = umt_kebab_case(&camel);
-            assert_eq!(back_to_kebab, path, "Round-trip failed for: {}", path);
+            assert_eq!(
+                back_to_kebab, expected_kebab,
+                "Round-trip failed for: {}",
+                path
+            );
         }
     }
 

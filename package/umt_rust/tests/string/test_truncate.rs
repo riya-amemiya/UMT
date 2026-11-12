@@ -39,3 +39,21 @@ fn test_handle_empty_string() {
 fn test_truncate_default() {
     assert_eq!(umt_truncate_default("Hello World", 5), "Hello...");
 }
+
+#[test]
+fn test_cut_point_is_counted_in_characters() {
+    assert_eq!(
+        umt_truncate("\u{3042}\u{3044}\u{3042}", 2, "..."),
+        "\u{3042}\u{3044}..."
+    );
+    assert_eq!(
+        umt_truncate("\u{3042}\u{3044}", 2, "..."),
+        "\u{3042}\u{3044}"
+    );
+}
+
+#[test]
+fn test_zero_length_keeps_only_suffix() {
+    assert_eq!(umt_truncate("Hello", 0, "..."), "...");
+    assert_eq!(umt_truncate("", 0, "..."), "");
+}

@@ -1,3 +1,6 @@
+import math
+
+
 def is_prime_number(n: int | float) -> bool:
     """
     Determines if a number is prime.
@@ -34,4 +37,10 @@ def is_prime_number(n: int | float) -> bool:
     if n <= 1:
         return False
 
-    return all(n % i != 0 for i in range(2, int(n**0.5) + 1))
+    if n <= 3:
+        return True
+
+    if n % 2 == 0 or n % 3 == 0:
+        return False
+
+    return all(n % i != 0 and n % (i + 2) != 0 for i in range(5, math.isqrt(n) + 1, 6))

@@ -1,3 +1,6 @@
+import math
+
+
 def quotient(x: float, y: float) -> list[float]:
     """
     Computes quotient and remainder of division.
@@ -13,4 +16,7 @@ def quotient(x: float, y: float) -> list[float]:
         >>> quotient(5, 2)
         [2.0, 1.0]
     """
-    return [(x - (x % y)) / y, (x % y) + 0]
+    if y == 0 or math.isinf(x):
+        return [float("nan"), float("nan")]
+    remainder = math.fmod(x, y)
+    return [(x - remainder) / y, remainder + 0]

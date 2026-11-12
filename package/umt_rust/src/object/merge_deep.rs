@@ -49,37 +49,24 @@ pub fn umt_merge_deep(
     let mut result = target.clone();
 
     for source in sources {
-        result = merge_deep_impl(result, (*source).clone());
+        merge_deep_impl(&mut result, source);
     }
 
     result
 }
 
-/// Deeply merges two HashMaps.
-fn merge_deep_impl(
-    target: HashMap<String, Value>,
-    source: HashMap<String, Value>,
-) -> HashMap<String, Value> {
-    let mut result = target;
-
+/// Deeply merges `source` into `target` in place.
+fn merge_deep_impl(target: &mut HashMap<String, Value>, source: &HashMap<String, Value>) {
     for (key, source_value) in source {
-        let target_value = result.get(&key);
+        if let Value::Object(source_obj) = source_value
+            && let Some(Value::Object(target_obj)) = target.get_mut(key)
+        {
+            merge_deep_impl(target_obj, source_obj);
+            continue;
+        }
 
-        let new_value = match (target_value, &source_value) {
-            (Some(Value::Object(target_obj)), Value::Object(source_obj)) => {
-                // Both are objects, merge recursively
-                Value::Object(merge_deep_impl(target_obj.clone(), source_obj.clone()))
-            }
-            _ => {
-                // Otherwise, use the source value
-                source_value
-            }
-        };
-
-        result.insert(key, new_value);
+        target.insert(key.clone(), source_value.clone());
     }
-
-    result
 }
 
 /// Deeply merges two objects into a single object.

@@ -42,7 +42,7 @@ fn test_debounce_resets_timer_on_subsequent_calls() {
     debounced.call(());
     thread::sleep(WAIT / 2);
     // Wait window restarted by the second call: not yet elapsed.
-    assert!(!debounced.flush());
+    assert!(debounced.pending());
     assert_eq!(count.get(), 0);
 
     thread::sleep(WAIT / 2 + Duration::from_millis(20));
@@ -152,4 +152,104 @@ fn test_debounce_cancel_when_no_timer_pending() {
     thread::sleep(WAIT + Duration::from_millis(20));
     assert!(!debounced.flush());
     assert_eq!(count.get(), 0);
+}
+
+#[test]
+fn test_debounce_flush_invokes_pending_call_immediately() {
+    let last = Rc::new(Cell::new(0));
+    let sink = Rc::clone(&last);
+    let debounced = umt_debounce(move |n: i32| sink.set(n), WAIT, DebounceOptions::default());
+
+    debounced.call(1);
+    debounced.call(2);
+    assert!(debounced.flush());
+    assert_eq!(last.get(), 2);
+    assert!(!debounced.pending());
+    assert!(!debounced.flush());
+}
+
+#[test]
+fn test_debounce_flush_does_not_invoke_when_trailing_false() {
+    let count = Rc::new(Cell::new(0));
+    let sink = Rc::clone(&count);
+    let debounced = umt_debounce(
+        move |_: ()| sink.set(sink.get() + 1),
+        WAIT,
+        DebounceOptions {
+            leading: true,
+            trailing: false,
+        },
+    );
+
+    debounced.call(());
+    debounced.call(());
+    assert!(!debounced.flush());
+    assert_eq!(count.get(), 1);
+    assert!(!debounced.pending());
+}
+
+#[test]
+fn test_debounce_flush_does_not_invoke_again_after_leading_call() {
+    let count = Rc::new(Cell::new(0));
+    let sink = Rc::clone(&count);
+    let debounced = umt_debounce(
+        move |_: ()| sink.set(sink.get() + 1),
+        WAIT,
+        DebounceOptions {
+            leading: true,
+            trailing: true,
+        },
+    );
+
+    debounced.call(());
+    assert!(!debounced.flush());
+    assert_eq!(count.get(), 1);
+}
+
+#[test]
+fn test_debounce_call_after_wait_runs_previous_trailing_edge() {
+    let calls = Rc::new(RefCell::new(Vec::new()));
+    let sink = Rc::clone(&calls);
+    let debounced = umt_debounce(
+        move |n: i32| sink.borrow_mut().push(n),
+        WAIT,
+        DebounceOptions {
+            leading: true,
+            trailing: true,
+        },
+    );
+
+    debounced.call(1);
+    debounced.call(2);
+    thread::sleep(WAIT + Duration::from_millis(20));
+    debounced.call(3);
+    assert_eq!(*calls.borrow(), vec![1, 2, 3]);
+    assert!(debounced.pending());
+}
+
+#[test]
+fn test_debounce_call_within_wait_keeps_timer_pending() {
+    let count = Rc::new(Cell::new(0));
+    let sink = Rc::clone(&count);
+    let debounced = umt_debounce(
+        move |_: ()| sink.set(sink.get() + 1),
+        WAIT,
+        DebounceOptions::default(),
+    );
+
+    debounced.call(());
+    debounced.call(());
+    assert_eq!(count.get(), 0);
+    assert!(debounced.pending());
+}
+
+#[test]
+fn test_debounce_pending_reports_timer_state() {
+    let debounced = umt_debounce(|_: ()| (), WAIT, DebounceOptions::default());
+
+    assert!(!debounced.pending());
+    debounced.call(());
+    assert!(debounced.pending());
+    debounced.cancel();
+    assert!(!debounced.pending());
 }

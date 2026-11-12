@@ -1,5 +1,7 @@
 import math
 
+from ..math.js_string_to_number import js_string_to_number
+
 
 def is_number(value: object, loose: bool = True) -> bool:
     """
@@ -27,6 +29,8 @@ def is_number(value: object, loose: bool = True) -> bool:
     if value is None:
         return False
     if loose:
+        if isinstance(value, str):
+            return math.isfinite(js_string_to_number(value))
         try:
             num = float(value)  # type: ignore[arg-type]
             return math.isfinite(num)

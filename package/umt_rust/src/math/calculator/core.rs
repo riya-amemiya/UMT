@@ -1,9 +1,21 @@
 use std::collections::HashMap;
 
-use crate::math::{umt_addition, umt_division, umt_multiplication, umt_subtract};
+use crate::math::{js_round, umt_addition, umt_division, umt_multiplication, umt_subtract};
 
 use super::convert_currency::umt_convert_currency;
 use regex::Regex;
+use std::sync::LazyLock;
+
+static PARENTHESES_WITH_OPERATION_RE: LazyLock<Regex> =
+    LazyLock::new(|| Regex::new(r"\((-?\d+(?:\.\d+)?)([*+/\-^])(-?\d+(?:\.\d+)?)\)").unwrap());
+static PARENTHESES_SIMPLE_RE: LazyLock<Regex> =
+    LazyLock::new(|| Regex::new(r"\((-?\d+(?:\.\d+)?)\)").unwrap());
+static MUL_EXP_RE: LazyLock<Regex> =
+    LazyLock::new(|| Regex::new(r"(.*?)(-?\d+(?:\.\d+)?)([*^])(-?\d+(?:\.\d+)?)$").unwrap());
+static DIV_RE: LazyLock<Regex> =
+    LazyLock::new(|| Regex::new(r"(-?\d+(?:\.\d+)?)/(-?\d+(?:\.\d+)?)").unwrap());
+static ADD_SUB_RE: LazyLock<Regex> =
+    LazyLock::new(|| Regex::new(r"(-?\d+(?:\.\d+)?)(\+|-)(-?\d+(?:\.\d+)?)").unwrap());
 
 /// Core calculator function that handles mathematical expressions.
 /// Supports parentheses, signs, and currency conversion.
@@ -88,7 +100,7 @@ pub fn umt_calculator_core(
                 && !number.is_nan()
             {
                 // Handle floating point precision issues
-                let rounded = (number * 1e10).round() / 1e10;
+                let rounded = js_round(number * 1e10) / 1e10;
                 return rounded.to_string();
             }
             return sanitized_expression;
@@ -128,9 +140,7 @@ fn contains_parentheses(expr: &str) -> bool {
 
 fn resolve_parentheses(expr: &str) -> String {
     // First, try to match parentheses with an operation inside
-    let regex_with_op = Regex::new(r"\((-?\d+(?:\.\d+)?)([*+/\-^])(-?\d+(?:\.\d+)?)\)").unwrap();
-
-    if let Some(captures) = regex_with_op.captures(expr) {
+    if let Some(captures) = PARENTHESES_WITH_OPERATION_RE.captures(expr) {
         let full_match = captures.get(0).unwrap().as_str();
         let inner = full_match.replace(['(', ')'], "");
         let result = umt_calculator_core(&inner, None);
@@ -138,9 +148,7 @@ fn resolve_parentheses(expr: &str) -> String {
     }
 
     // Then, try to match simple parentheses containing just a number like (5) or ((5))
-    let regex_simple = Regex::new(r"\((-?\d+(?:\.\d+)?)\)").unwrap();
-
-    if let Some(captures) = regex_simple.captures(expr) {
+    if let Some(captures) = PARENTHESES_SIMPLE_RE.captures(expr) {
         let full_match = captures.get(0).unwrap().as_str();
         let inner = captures.get(1).unwrap().as_str();
         return expr.replacen(full_match, inner, 1);
@@ -158,9 +166,7 @@ fn contains_div(expr: &str) -> bool {
 }
 
 fn resolve_mul_exp(expr: &str) -> String {
-    let regex = Regex::new(r"(.*?)(-?\d+(?:\.\d+)?)([*^])(-?\d+(?:\.\d+)?)$").unwrap();
-
-    if let Some(captures) = regex.captures(expr) {
+    if let Some(captures) = MUL_EXP_RE.captures(expr) {
         let prefix = captures.get(1).map_or("", |m| m.as_str());
         let left: f64 = captures
             .get(2)
@@ -189,9 +195,7 @@ fn resolve_mul_exp(expr: &str) -> String {
 }
 
 fn resolve_div(expr: &str) -> String {
-    let regex = Regex::new(r"(-?\d+(?:\.\d+)?)/(-?\d+(?:\.\d+)?)").unwrap();
-
-    if let Some(captures) = regex.captures(expr) {
+    if let Some(captures) = DIV_RE.captures(expr) {
         let full_match = captures.get(0).unwrap().as_str();
         let left: f64 = captures
             .get(1)
@@ -218,9 +222,7 @@ fn contains_add_sub(expr: &str) -> bool {
 }
 
 fn resolve_add_sub(expr: &str) -> String {
-    let regex = Regex::new(r"(-?\d+(?:\.\d+)?)(\+|-)(-?\d+(?:\.\d+)?)").unwrap();
-
-    if let Some(captures) = regex.captures(expr) {
+    if let Some(captures) = ADD_SUB_RE.captures(expr) {
         let full_match = captures.get(0).unwrap().as_str();
         let left: f64 = captures
             .get(1)

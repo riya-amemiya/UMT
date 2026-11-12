@@ -69,3 +69,29 @@ fn test_unique_large_array() {
         assert_eq!(result[i], i as i32);
     }
 }
+
+#[test]
+fn test_unique_owned_strings() {
+    let arr = vec!["b".to_string(), "\u{3042}".to_string(), "b".to_string()];
+    assert_eq!(
+        umt_unique(&arr),
+        vec!["b".to_string(), "\u{3042}".to_string()]
+    );
+}
+
+#[test]
+fn test_unique_f64_signed_zero() {
+    let result = umt_unique_f64(&[0.0, -0.0, 1.0, -0.0]);
+    assert_eq!(result.len(), 2);
+    assert!(result[0] == 0.0 && result[0].is_sign_positive());
+    assert_eq!(result[1], 1.0);
+}
+
+#[test]
+fn test_unique_f64_nan_and_negative_values() {
+    let result = umt_unique_f64(&[f64::NAN, -1.5, f64::NAN, -1.5, f64::INFINITY]);
+    assert_eq!(result.len(), 3);
+    assert!(result[0].is_nan());
+    assert_eq!(result[1], -1.5);
+    assert_eq!(result[2], f64::INFINITY);
+}

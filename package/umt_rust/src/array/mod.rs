@@ -1,6 +1,8 @@
 // Sorting helpers module (internal utilities)
 pub mod sorting_helpers;
 
+pub mod ordered_unique;
+
 // Basic array functions
 pub mod first;
 pub use first::*;
@@ -24,6 +26,18 @@ pub use chunk::*;
 pub mod drop;
 pub use drop::*;
 
+pub mod drop_while;
+pub use drop_while::*;
+
+pub mod take_while;
+pub use take_while::*;
+
+pub mod sliding;
+pub use sliding::*;
+
+pub mod partition;
+pub use partition::*;
+
 pub mod arrays_join;
 pub use arrays_join::*;
 
@@ -37,6 +51,12 @@ pub use get_arrays_diff::*;
 pub mod uniq_by;
 pub use uniq_by::*;
 
+pub mod min_by;
+pub use min_by::*;
+
+pub mod max_by;
+pub use max_by::*;
+
 // Array utility functions
 pub mod binary_search;
 pub use binary_search::*;
@@ -49,6 +69,9 @@ pub use generate_number_array::*;
 
 pub mod group_by;
 pub use group_by::*;
+
+pub mod count_by;
+pub use count_by::*;
 
 pub mod range;
 pub use range::*;
@@ -70,6 +93,9 @@ pub use zip::*;
 pub mod zip_longest;
 pub use zip_longest::*;
 
+pub mod unzip;
+pub use unzip::*;
+
 // Sorting algorithms
 pub mod insertion_sort;
 pub use insertion_sort::*;
@@ -85,6 +111,9 @@ pub use dual_pivot_quick_sort::*;
 
 pub mod tim_sort;
 pub use tim_sort::*;
+
+pub mod sort_by;
+pub use sort_by::*;
 
 pub mod ultra_number_sort;
 pub use ultra_number_sort::*;

@@ -1,5 +1,7 @@
 import math
 
+from ..math.js_string_to_number import js_string_to_number
+
 
 def is_value_nan(value: object, loose: bool = False) -> bool:
     """
@@ -23,6 +25,10 @@ def is_value_nan(value: object, loose: bool = False) -> bool:
         True
     """
     if loose:
+        if isinstance(value, str):
+            return math.isnan(js_string_to_number(value))
+        if isinstance(value, dict):
+            return True
         try:
             return math.isnan(float(value))  # type: ignore[arg-type]
         except (ValueError, TypeError):

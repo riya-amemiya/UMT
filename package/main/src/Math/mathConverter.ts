@@ -8,7 +8,9 @@ Expands square of n into a sum of simpler multiplications
 @description
 This function converts expressions like n^2 or n*n into a sum of simpler multiplications
 using the distributive property. For example, 1250² is converted to
-(1000 + 200 + 50)² = 1500*1000 + 400*100 + 200*100 + 50*50
+(1000 + 200 + 50)² = 1500*1000 + 400*100 + 200*100 + 50*50.
+An expansion that reproduces its own input, such as "5*5+0*0" for "5*5",
+is returned after the first repetition instead of being expanded forever.
 */
 export const mathConverter = (equation: string): string => {
   let convertedEquation = equation;
@@ -31,12 +33,17 @@ export const mathConverter = (equation: string): string => {
         return convertedEquation;
       }
 
-      convertedEquation = `${Number(operand1) + remainder}*${primary}+`;
-
-      convertedEquation +=
+      const expanded = `${Number(operand1) + remainder}*${primary}+${
         remainder <= 100
           ? `${remainder}*${remainder}`
-          : mathConverter(`${remainder}*${remainder}`);
+          : mathConverter(`${remainder}*${remainder}`)
+      }`;
+
+      if (expanded === convertedEquation) {
+        return expanded;
+      }
+
+      convertedEquation = expanded;
     } else {
       return convertedEquation;
     }

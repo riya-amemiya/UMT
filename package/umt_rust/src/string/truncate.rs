@@ -17,13 +17,15 @@
 /// ```
 #[inline]
 pub fn umt_truncate(s: &str, length: usize, suffix: &str) -> String {
-    let chars: Vec<char> = s.chars().collect();
-    if chars.len() <= length {
-        return s.to_string();
+    match s.char_indices().nth(length) {
+        Some((cut, _)) => {
+            let mut result = String::with_capacity(cut + suffix.len());
+            result.push_str(&s[..cut]);
+            result.push_str(suffix);
+            result
+        }
+        None => s.to_string(),
     }
-
-    let truncated: String = chars.into_iter().take(length).collect();
-    format!("{}{}", truncated, suffix)
 }
 
 /// Truncate a string to a specified length with default suffix "..."

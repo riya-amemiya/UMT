@@ -41,4 +41,21 @@ describe("nCr function", () => {
       expect(nCr(0, 0)).toBe(1);
     });
   });
+
+  describe("large combinations", () => {
+    it("should stay finite when the result fits in a double", () => {
+      expect(nCr(1000, 500)).toBe(2.702_882_409_454_366_6e299);
+      expect(nCr(400, 170)).toBe(1.137_233_204_157_519_8e117);
+      expect(nCr(100, 97)).toBe(161_700);
+    });
+
+    it("should stay finite when an intermediate product would overflow", () => {
+      expect(nCr(1029, 514)).toBe(1.429_820_686_498_903e308);
+    });
+
+    it("should return Infinity when the result exceeds Number.MAX_VALUE", () => {
+      expect(nCr(1030, 515)).toBe(Number.POSITIVE_INFINITY);
+      expect(nCr(1e10, 5e9)).toBe(Number.POSITIVE_INFINITY);
+    });
+  });
 });

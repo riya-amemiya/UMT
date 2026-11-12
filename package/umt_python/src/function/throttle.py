@@ -18,6 +18,8 @@ class ThrottledFunction:
     Attributes:
         cancel: Cancel any pending trailing invocation and reset internal
             state.
+        flush: Immediately run the pending trailing invocation, if any.
+        pending: Return whether a trailing invocation is currently pending.
 
     Example:
         >>> import time
@@ -95,6 +97,43 @@ class ThrottledFunction:
             self._last_kwargs = None
             self._last_call_time = 0.0
 
+    def flush(self) -> None:
+        """Immediately run the pending trailing invocation, if any.
+
+        Clears the pending timer. Does nothing when no trailing invocation is
+        pending.
+
+        Example:
+            >>> calls: list[int] = []
+            >>> throttled = throttle(lambda n: calls.append(n), 10)
+            >>> throttled(1)
+            >>> throttled(2)
+            >>> throttled.flush()
+            >>> calls
+            [1, 2]
+        """
+        with self._lock:
+            if self._timer is None:
+                return
+            self._timer.cancel()
+        self._invoke()
+
+    def pending(self) -> bool:
+        """Return whether a trailing throttled invocation is currently pending.
+
+        Example:
+            >>> throttled = throttle(lambda: None, 10)
+            >>> throttled()
+            >>> throttled.pending()
+            False
+            >>> throttled()
+            >>> throttled.pending()
+            True
+            >>> throttled.cancel()
+        """
+        with self._lock:
+            return self._timer is not None
+
 
 def throttle(
     func: Callable[P, Any],
@@ -112,7 +151,8 @@ def throttle(
         wait: Minimum interval between invocations, in seconds.
 
     Returns:
-        A :class:`ThrottledFunction` wrapper with a ``cancel()`` method.
+        A :class:`ThrottledFunction` wrapper with ``cancel()``, ``flush()``
+        and ``pending()`` methods.
 
     Example:
         >>> import time

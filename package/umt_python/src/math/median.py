@@ -1,3 +1,6 @@
+from ..array.ultra_number_sort import ultra_number_sort
+
+
 def median(array: list[float]) -> float:
     """
     Calculate the median of an array of numbers.
@@ -14,7 +17,10 @@ def median(array: list[float]) -> float:
         >>> median([1, 2, 3, 4])
         2.5
     """
-    sorted_array = sorted(array)
+    if len(array) == 0:
+        return float("nan")
+
+    sorted_array = ultra_number_sort(array)
     mid = len(sorted_array) // 2
 
     if len(sorted_array) % 2 == 0:

@@ -41,16 +41,23 @@ pub fn umt_drop<T: Clone>(array: &[T], n: usize, direction: DropDirection) -> Ve
             }
         }
         DropDirection::Right => {
-            if n >= array.len() {
-                vec![]
+            let len = array.len();
+            let keep = if n <= len {
+                len - n
             } else {
-                array[..array.len() - n].to_vec()
-            }
+                (2 * len).saturating_sub(n)
+            };
+            array[..keep].to_vec()
         }
         DropDirection::Between => {
             let len = array.len();
             let mid = len / 2;
-            let start = mid.saturating_sub(n / 2);
+            let half = n / 2;
+            let start = if half <= mid {
+                mid - half
+            } else {
+                (len + mid).saturating_sub(half)
+            };
             let end = (mid + n.div_ceil(2)).min(len);
 
             let mut result = array[..start].to_vec();

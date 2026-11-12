@@ -1,3 +1,6 @@
+import math
+
+
 def min_value(*numbers: float) -> float:
     """
     Returns the minimum value from the input numbers.
@@ -14,4 +17,8 @@ def min_value(*numbers: float) -> float:
         >>> min_value(1, 1, 2, 3)
         1
     """
-    return min(set(numbers))
+    if not numbers:
+        return float("inf")
+    if any(math.isnan(number) for number in numbers):
+        return float("nan")
+    return min(numbers)

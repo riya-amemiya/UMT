@@ -112,3 +112,34 @@ fn test_dual_pivot_quick_sort_custom_threshold() {
         vec![1, 1, 2, 3, 3, 4, 5, 5, 6, 9]
     );
 }
+
+#[test]
+fn test_dual_pivot_quick_sort_descending_compare_on_large_array() {
+    let array: Vec<i32> = (0..500).map(|i| (i * 37) % 500).collect();
+    let compare: fn(&i32, &i32) -> i32 = |a, b| b - a;
+    assert_eq!(
+        umt_dual_pivot_quick_sort(&array, Some(compare), None, None, None),
+        (0..500).rev().collect::<Vec<i32>>()
+    );
+}
+
+#[test]
+fn test_dual_pivot_quick_sort_owned_strings() {
+    let array: Vec<String> = (0..60).map(|i| format!("{:02}", (i * 23) % 60)).collect();
+    let expected: Vec<String> = (0..60).map(|i| format!("{i:02}")).collect();
+    assert_eq!(
+        umt_dual_pivot_quick_sort(&array, None, None, None, None),
+        expected
+    );
+}
+
+#[test]
+fn test_dual_pivot_quick_sort_many_equal_values() {
+    let array: Vec<i32> = (0..300).map(|i| i % 3).collect();
+    let mut expected = array.clone();
+    expected.sort_unstable();
+    assert_eq!(
+        umt_dual_pivot_quick_sort(&array, None, None, None, None),
+        expected
+    );
+}

@@ -63,6 +63,18 @@ describe("lcm function", () => {
     expect(lcm(0.5, 1.5)).toBe(1.5);
   });
 
+  test("should handle more than two numbers", () => {
+    expect(lcm(2, 3, 4)).toBe(12);
+    expect(lcm(4, 6, 8, 12)).toBe(24);
+    expect(lcm(-2, 3, -5)).toBe(30);
+    expect(lcm(1.5, 2.5, 3)).toBe(15);
+  });
+
+  test("should return 0 when any of more than two numbers is zero", () => {
+    expect(lcm(2, 3, 0)).toBe(0);
+    expect(lcm(2, 0, 5)).toBe(0);
+  });
+
   test("should handle edge cases", () => {
     expect(lcm(2, 2)).toBe(2);
     expect(lcm(100, 200)).toBe(200);

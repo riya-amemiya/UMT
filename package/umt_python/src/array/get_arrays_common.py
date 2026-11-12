@@ -1,6 +1,8 @@
 import math
 from typing import Any
 
+from .ordered_unique import ordered_unique
+
 
 def _to_set_if_hashable(arr: list[Any]) -> set[Any] | list[Any]:
     try:
@@ -18,14 +20,30 @@ def _safe_is_in(item: object, container: set[Any] | list[Any]) -> bool:
     return item in container
 
 
-def _add_unique(item: object, seen: set[Any], unique_result: list[Any]) -> None:
+class _EqualityKey:
+    __slots__ = ("value",)
+
+    def __init__(self, value: object) -> None:
+        self.value = value
+
+    def __hash__(self) -> int:
+        return 0
+
+    def __eq__(self, other: object) -> bool:
+        return isinstance(other, _EqualityKey) and self.value == other.value
+
+
+_NAN_KEY = object()
+
+
+def _dedupe_key(item: object) -> object:
+    if isinstance(item, float) and math.isnan(item):
+        return _NAN_KEY
     try:
-        if item not in seen:
-            seen.add(item)
-            unique_result.append(item)
+        hash(item)
     except TypeError:
-        if item not in unique_result:
-            unique_result.append(item)
+        return _EqualityKey(item)
+    return item
 
 
 def get_arrays_common(array: list[Any], *arrays: list[Any]) -> list[Any]:
@@ -63,16 +81,4 @@ def get_arrays_common(array: list[Any], *arrays: list[Any]) -> list[Any]:
         elif all(_safe_is_in(item, container) for container in lookup_structures):
             result.append(item)
 
-    unique_result: list[Any] = []
-    seen: set[Any] = set()
-    has_seen_nan = False
-
-    for item in result:
-        if isinstance(item, float) and math.isnan(item):
-            if not has_seen_nan:
-                unique_result.append(item)
-                has_seen_nan = True
-        else:
-            _add_unique(item, seen, unique_result)
-
-    return unique_result
+    return ordered_unique(result, _dedupe_key)

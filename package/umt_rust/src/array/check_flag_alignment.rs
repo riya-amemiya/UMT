@@ -68,8 +68,8 @@ pub fn umt_check_flag_alignment<T: HasFlag>(matrix: &[Vec<T>]) -> bool {
     }
 
     // Check diagonal alignment (top-left to bottom-right)
-    // Only works for square matrices
-    if rows == cols {
+    // Only works when every row index has a matching column
+    if rows <= cols {
         if matrix
             .iter()
             .enumerate()
@@ -130,8 +130,8 @@ pub fn umt_check_flag_alignment_bool(matrix: &[Vec<bool>]) -> bool {
     }
 
     // Check diagonal alignment (top-left to bottom-right)
-    // Only works for square matrices
-    if rows == cols {
+    // Only works when every row index has a matching column
+    if rows <= cols {
         if matrix
             .iter()
             .enumerate()

@@ -32,7 +32,7 @@ pub fn umt_is_prime_number(n: i64) -> bool {
         return false;
     }
 
-    let sqrt_n = (n as f64).sqrt() as i64;
+    let sqrt_n = n.isqrt();
     let mut i = 5;
     while i <= sqrt_n {
         if n % i == 0 || n % (i + 2) == 0 {
@@ -65,7 +65,7 @@ pub fn umt_is_prime_number_usize(n: usize) -> bool {
         return false;
     }
 
-    let sqrt_n = (n as f64).sqrt() as usize;
+    let sqrt_n = n.isqrt();
     let mut i = 5;
     while i <= sqrt_n {
         if n.is_multiple_of(i) || n.is_multiple_of(i + 2) {

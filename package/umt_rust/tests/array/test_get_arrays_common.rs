@@ -163,3 +163,67 @@ fn test_get_arrays_common_f64_with_nan() {
     assert!(result[0].is_nan());
     assert_eq!(result[1], 2.0);
 }
+
+#[test]
+fn test_get_arrays_common_single_array_keeps_duplicates() {
+    assert_eq!(umt_get_arrays_common(&[&[1, 1, 2][..]]), vec![1, 1, 2]);
+    assert_eq!(
+        umt_get_arrays_common_f64(&[&[1.0, 1.0, 2.0][..]]),
+        vec![1.0, 1.0, 2.0]
+    );
+}
+
+#[test]
+fn test_get_arrays_common_owned_strings() {
+    let first = ["a".to_string(), "\u{3042}".to_string(), "a".to_string()];
+    let second = ["\u{3042}".to_string(), "a".to_string()];
+    assert_eq!(
+        umt_get_arrays_common(&[&first[..], &second[..]]),
+        vec!["a".to_string(), "\u{3042}".to_string()]
+    );
+}
+
+#[test]
+fn test_get_arrays_common_f64_empty_input() {
+    let empty: &[&[f64]] = &[];
+    assert_eq!(umt_get_arrays_common_f64(empty), Vec::<f64>::new());
+}
+
+#[test]
+fn test_get_arrays_common_f64_deduplicates() {
+    let first = [2.0, 1.0, 2.0, f64::NAN, f64::NAN];
+    let second = [f64::NAN, 2.0];
+    let result = umt_get_arrays_common_f64(&[&first[..], &second[..]]);
+    assert_eq!(result.len(), 2);
+    assert_eq!(result[0], 2.0);
+    assert!(result[1].is_nan());
+}
+
+#[test]
+fn test_get_arrays_common_f64_nan_missing_from_other() {
+    let first = [f64::NAN, 1.0];
+    let second = [1.0];
+    assert_eq!(
+        umt_get_arrays_common_f64(&[&first[..], &second[..]]),
+        vec![1.0]
+    );
+}
+
+#[test]
+fn test_get_arrays_common_f64_signed_zero() {
+    let first = [0.0, -0.0, 1.0];
+    let second = [-0.0];
+    let result = umt_get_arrays_common_f64(&[&first[..], &second[..]]);
+    assert_eq!(result.len(), 1);
+    assert!(result[0] == 0.0 && result[0].is_sign_positive());
+}
+
+#[test]
+fn test_get_arrays_common_f64_large_arrays() {
+    let first: Vec<f64> = (0..20_000).map(f64::from).collect();
+    let second: Vec<f64> = (10_000..30_000).map(f64::from).collect();
+    let result = umt_get_arrays_common_f64(&[&first[..], &second[..]]);
+    assert_eq!(result.len(), 10_000);
+    assert_eq!(result[0], 10_000.0);
+    assert_eq!(result[9_999], 19_999.0);
+}

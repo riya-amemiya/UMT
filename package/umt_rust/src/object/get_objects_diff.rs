@@ -9,7 +9,9 @@ use std::collections::HashSet;
 /// When all values for a key are objects, the function recurses to find
 /// the diff subset. If the recursive result is empty, the key is excluded.
 /// When multiple unique pairs share the same key (different values),
-/// the last value wins.
+/// the last value wins. NaN values are treated as equal to each other, and an
+/// integer equals the float with the same numeric value, matching the
+/// TypeScript implementation.
 ///
 /// # Arguments
 ///
@@ -53,16 +55,14 @@ pub fn umt_get_objects_diff(
         return object.clone();
     }
 
-    let mut all_keys = HashSet::new();
+    let mut all_keys: HashSet<&String> = HashSet::new();
     for obj in &all_objects {
-        for key in obj.keys() {
-            all_keys.insert(key.clone());
-        }
+        all_keys.extend(obj.keys());
     }
 
     let mut result = HashMap::new();
 
-    for key in &all_keys {
+    for key in all_keys {
         let mut values: Vec<&Value> = Vec::new();
 
         for obj in &all_objects {
@@ -97,7 +97,7 @@ pub fn umt_get_objects_diff(
         for i in 0..values.len() {
             let mut count = 0;
             for j in 0..values.len() {
-                if values[i] == values[j] {
+                if is_same_value_zero(values[i], values[j]) {
                     count += 1;
                 }
             }
@@ -112,4 +112,14 @@ pub fn umt_get_objects_diff(
     }
 
     result
+}
+
+/// Compares two values the way a JavaScript `Map` compares keys: NaN equals
+/// NaN, and an integer equals the float with the same numeric value.
+fn is_same_value_zero(a: &Value, b: &Value) -> bool {
+    match (a, b) {
+        (Value::Float(x), Value::Float(y)) => x == y || (x.is_nan() && y.is_nan()),
+        (Value::Int(x), Value::Float(y)) | (Value::Float(y), Value::Int(x)) => (*x as f64) == *y,
+        _ => a == b,
+    }
 }

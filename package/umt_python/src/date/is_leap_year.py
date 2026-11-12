@@ -18,7 +18,9 @@ def is_leap_year(year: int | float) -> bool:
         >>> is_leap_year(2023)
         False
     """
-    if not isinstance(year, int) or year != int(year):
+    if isinstance(year, bool):
+        return False
+    if isinstance(year, float) and not year.is_integer():
         return False
 
     return (year % 4 == 0 and year % 100 != 0) or year % 400 == 0

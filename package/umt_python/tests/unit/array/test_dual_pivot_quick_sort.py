@@ -213,6 +213,27 @@ class TestDualPivotQuickSort(unittest.TestCase):
         result = dual_pivot_quick_sort(arr)
         self.assertEqual(result, [1, 2, 3, 4, 5, 50, 95, 96, 97, 98, 99, 100])
 
+    def test_median_selection_uses_compare_function_for_unorderable_items(self):
+        """Test pivot selection with items that only the compare function can order."""
+        import random
+
+        random.seed(7)
+        values = list(range(40))
+        random.shuffle(values)
+        arr = [{"id": value} for value in values]
+        result = dual_pivot_quick_sort(arr, lambda a, b: a["id"] - b["id"])
+        self.assertEqual([item["id"] for item in result], list(range(40)))
+
+    def test_descending_compare_function_on_large_array(self):
+        """Test pivot selection with a compare function opposite to natural order."""
+        import random
+
+        random.seed(11)
+        arr = list(range(60))
+        random.shuffle(arr)
+        result = dual_pivot_quick_sort(arr, lambda a, b: b - a)
+        self.assertEqual(result, list(range(59, -1, -1)))
+
 
 if __name__ == "__main__":
     unittest.main()

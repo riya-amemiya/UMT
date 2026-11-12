@@ -61,5 +61,14 @@ fn test_math_converter_different_operands() {
 
 #[test]
 fn test_math_converter_small_square() {
-    assert_eq!(umt_math_converter("2*2"), "2*2");
+    assert_eq!(umt_math_converter("2*2"), "2*2+0*0");
+}
+
+#[test]
+fn test_math_converter_stops_once_expansion_repeats() {
+    assert_eq!(umt_math_converter("5*5"), "5*5+0*0");
+    assert_eq!(umt_math_converter("10*10"), "10*10+0*0");
+    assert_eq!(umt_math_converter("100*100"), "100*100+0*0");
+    assert_eq!(umt_math_converter("10^3"), "10*10+0*0");
+    assert_eq!(umt_math_converter("2000*2000"), "3000*1000+1000*1000+0*0");
 }

@@ -2,7 +2,7 @@
 
 This file is produced by `codegen/`. Do not edit by hand.
 
-Generated 150 wrappers. 274 functions are not auto-exposable and are listed below for future hand-written adapters.
+Generated 170 wrappers. 320 functions are not auto-exposable and are listed below for future hand-written adapters.
 
 ## Generated
 
@@ -40,7 +40,12 @@ Generated 150 wrappers. 274 functions are not auto-exposable and are listed belo
 | `gcdMultiple` | `umt_rust::math::umt_gcd_multiple` |
 | `getDecimalLength` | `umt_rust::math::umt_get_decimal_length` |
 | `inRange` | `umt_rust::math::umt_in_range` |
+| `inverseLerp` | `umt_rust::math::umt_inverse_lerp` |
+| `isPrime` | `umt_rust::math::umt_is_prime` |
 | `lcm` | `umt_rust::math::umt_lcm` |
+| `lcmMultiple` | `umt_rust::math::umt_lcm_multiple` |
+| `lerp` | `umt_rust::math::umt_lerp` |
+| `mapRange` | `umt_rust::math::umt_map_range` |
 | `mathConverter` | `umt_rust::math::umt_math_converter` |
 | `mathSeparator` | `umt_rust::math::umt_math_separator` |
 | `max` | `umt_rust::math::umt_max` |
@@ -53,12 +58,14 @@ Generated 150 wrappers. 274 functions are not auto-exposable and are listed belo
 | `nhr` | `umt_rust::math::umt_nhr` |
 | `npr` | `umt_rust::math::umt_npr` |
 | `percentile` | `umt_rust::math::umt_percentile` |
+| `quantile` | `umt_rust::math::umt_quantile` |
 | `radToDeg` | `umt_rust::math::umt_rad_to_deg` |
 | `random` | `umt_rust::math::umt_random` |
 | `randomMax` | `umt_rust::math::umt_random_max` |
 | `roundOf` | `umt_rust::math::umt_round_of` |
 | `softmax` | `umt_rust::math::umt_softmax` |
 | `standardDeviation` | `umt_rust::math::umt_standard_deviation` |
+| `standardDeviationWithSample` | `umt_rust::math::umt_standard_deviation_with_sample` |
 | `subtract` | `umt_rust::math::umt_subtract` |
 | `sumPrecise` | `umt_rust::math::umt_sum_precise` |
 | `toBaseN` | `umt_rust::math::umt_to_base_n` |
@@ -68,7 +75,10 @@ Generated 150 wrappers. 274 functions are not auto-exposable and are listed belo
 | `toKelvin` | `umt_rust::math::umt_to_kelvin` |
 | `uuidv7` | `umt_rust::math::umt_uuidv7` |
 | `valueSwap` | `umt_rust::math::umt_value_swap` |
+| `variance` | `umt_rust::math::umt_variance` |
 | `literalExpression` | `umt_rust::math::calculator::umt_literal_expression` |
+| `formatBytes` | `umt_rust::number::umt_format_bytes` |
+| `formatBytesDefault` | `umt_rust::number::umt_format_bytes_default` |
 | `formatNumberDefault` | `umt_rust::number::umt_format_number_default` |
 | `toOrdinal` | `umt_rust::number::umt_to_ordinal` |
 | `toPercentage` | `umt_rust::number::umt_to_percentage` |
@@ -92,15 +102,20 @@ Generated 150 wrappers. 274 functions are not auto-exposable and are listed belo
 | `capitalizeWord` | `umt_rust::string::umt_capitalize_word` |
 | `constantCase` | `umt_rust::string::umt_constant_case` |
 | `countOccurrences` | `umt_rust::string::umt_count_occurrences` |
+| `damerauLevenshteinDistance` | `umt_rust::string::umt_damerau_levenshtein_distance` |
 | `deburr` | `umt_rust::string::umt_deburr` |
+| `decodeBase64Url` | `umt_rust::string::umt_decode_base64_url` |
 | `dedent` | `umt_rust::string::umt_dedent` |
 | `deleteSpaces` | `umt_rust::string::umt_delete_spaces` |
+| `encodeBase64Url` | `umt_rust::string::umt_encode_base64_url` |
 | `ensurePrefix` | `umt_rust::string::umt_ensure_prefix` |
 | `ensureSuffix` | `umt_rust::string::umt_ensure_suffix` |
 | `escapeHtml` | `umt_rust::string::umt_escape_html` |
 | `formatStringIndexed` | `umt_rust::string::umt_format_string_indexed` |
 | `fromBase64` | `umt_rust::string::umt_from_base64` |
 | `hasNoLetters` | `umt_rust::string::umt_has_no_letters` |
+| `indent` | `umt_rust::string::umt_indent` |
+| `indentDefault` | `umt_rust::string::umt_indent_default` |
 | `kebabCase` | `umt_rust::string::umt_kebab_case` |
 | `levenshteinDistance` | `umt_rust::string::umt_levenshtein_distance` |
 | `normalizeWhitespace` | `umt_rust::string::umt_normalize_whitespace` |
@@ -113,6 +128,7 @@ Generated 150 wrappers. 274 functions are not auto-exposable and are listed belo
 | `removeSuffix` | `umt_rust::string::umt_remove_suffix` |
 | `reverseString` | `umt_rust::string::umt_reverse_string` |
 | `sanitizeString` | `umt_rust::string::umt_sanitize_string` |
+| `sentenceCase` | `umt_rust::string::umt_sentence_case` |
 | `slugify` | `umt_rust::string::umt_slugify` |
 | `snakeCase` | `umt_rust::string::umt_snake_case` |
 | `splitByLength` | `umt_rust::string::umt_split_by_length` |
@@ -129,11 +145,15 @@ Generated 150 wrappers. 274 functions are not auto-exposable and are listed belo
 | `trimStartCharacters` | `umt_rust::string::umt_trim_start_characters` |
 | `truncate` | `umt_rust::string::umt_truncate` |
 | `truncateDefault` | `umt_rust::string::umt_truncate_default` |
+| `truncateMiddle` | `umt_rust::string::umt_truncate_middle` |
+| `truncateMiddleDefault` | `umt_rust::string::umt_truncate_middle_default` |
 | `uncapitalize` | `umt_rust::string::umt_uncapitalize` |
 | `unescapeHtml` | `umt_rust::string::umt_unescape_html` |
 | `wordCount` | `umt_rust::string::umt_word_count` |
+| `wrapText` | `umt_rust::string::umt_wrap_text` |
 | `convertTime` | `umt_rust::time::umt_convert_time` |
 | `convertTimeFromStr` | `umt_rust::time::umt_convert_time_from_str` |
+| `formatDuration` | `umt_rust::time::umt_format_duration` |
 | `escapeRegexp` | `umt_rust::tool::umt_escape_regexp` |
 | `isAbsoluteUrl` | `umt_rust::url::umt_is_absolute_url` |
 | `joinPath` | `umt_rust::url::umt_join_path` |
@@ -176,9 +196,13 @@ Generated 150 wrappers. 274 functions are not auto-exposable and are listed belo
 | `umt_rust::array::compact::umt_compact` | generic type parameters |
 | `umt_rust::array::compact::umt_compact_options` | generic type parameters |
 | `umt_rust::array::compare_function_default::umt_compare_function_default` | generic type parameters |
+| `umt_rust::array::count_by::umt_count_by` | generic type parameters |
+| `umt_rust::array::count_by::umt_count_by_indexed` | generic type parameters |
 | `umt_rust::array::drop::umt_drop` | generic type parameters |
 | `umt_rust::array::drop::umt_drop_left` | generic type parameters |
 | `umt_rust::array::drop::umt_drop_right` | generic type parameters |
+| `umt_rust::array::drop_while::umt_drop_while` | generic type parameters |
+| `umt_rust::array::drop_while::umt_drop_while_indexed` | generic type parameters |
 | `umt_rust::array::dual_pivot_quick_sort::umt_dual_pivot_quick_sort` | generic type parameters |
 | `umt_rust::array::first::umt_first` | generic type parameters |
 | `umt_rust::array::get_arrays_common::umt_get_arrays_common` | generic type parameters |
@@ -190,7 +214,11 @@ Generated 150 wrappers. 274 functions are not auto-exposable and are listed belo
 | `umt_rust::array::group_by::umt_group_by_indexed` | generic type parameters |
 | `umt_rust::array::insertion_sort::umt_insertion_sort` | generic type parameters |
 | `umt_rust::array::insertion_sort::umt_insertion_sort_in_place` | generic type parameters |
+| `umt_rust::array::max_by::umt_max_by` | generic type parameters |
 | `umt_rust::array::merge_sort::umt_merge_sort` | generic type parameters |
+| `umt_rust::array::min_by::umt_min_by` | generic type parameters |
+| `umt_rust::array::partition::umt_partition` | generic type parameters |
+| `umt_rust::array::partition::umt_partition_indexed` | generic type parameters |
 | `umt_rust::array::pop::umt_pop` | generic type parameters |
 | `umt_rust::array::quick_sort::umt_quick_sort` | generic type parameters |
 | `umt_rust::array::quick_sort::umt_quick_sort_in_place` | generic type parameters |
@@ -199,11 +227,18 @@ Generated 150 wrappers. 274 functions are not auto-exposable and are listed belo
 | `umt_rust::array::shuffle::umt_shuffle` | generic type parameters |
 | `umt_rust::array::shuffle::umt_shuffle_in_place` | generic type parameters |
 | `umt_rust::array::shuffle_2d_array::umt_shuffle_2d_array` | generic type parameters |
+| `umt_rust::array::sliding::umt_sliding` | generic type parameters |
+| `umt_rust::array::sort_by::umt_sort_by` | generic type parameters |
+| `umt_rust::array::take_while::umt_take_while` | generic type parameters |
+| `umt_rust::array::take_while::umt_take_while_indexed` | generic type parameters |
 | `umt_rust::array::tim_sort::umt_tim_sort` | generic type parameters |
 | `umt_rust::array::tim_sort::umt_tim_sort_in_place` | generic type parameters |
 | `umt_rust::array::ultra_number_sort::umt_ultra_number_sort` | unsupported parameter type `& mut Vec < f64 >` |
 | `umt_rust::array::uniq_by::umt_uniq_by` | generic type parameters |
 | `umt_rust::array::unique::umt_unique` | generic type parameters |
+| `umt_rust::array::unzip::umt_unzip` | generic type parameters |
+| `umt_rust::array::unzip::umt_unzip3` | generic type parameters |
+| `umt_rust::array::unzip::umt_unzip_many` | generic type parameters |
 | `umt_rust::array::zip::umt_zip` | generic type parameters |
 | `umt_rust::array::zip::umt_zip3` | generic type parameters |
 | `umt_rust::array::zip::umt_zip_many` | generic type parameters |
@@ -212,13 +247,19 @@ Generated 150 wrappers. 274 functions are not auto-exposable and are listed belo
 | `umt_rust::array::zip_longest::umt_zip_longest_many` | generic type parameters |
 | `umt_rust::async_util::debounce_async::umt_debounce_async` | generic type parameters |
 | `umt_rust::async_util::defer::umt_defer` | generic type parameters |
+| `umt_rust::async_util::map_series::umt_map_series` | generic type parameters |
+| `umt_rust::async_util::memoize_async::umt_memoize_async` | generic type parameters |
+| `umt_rust::async_util::memoize_async::umt_memoize_async_with_resolver` | generic type parameters |
 | `umt_rust::async_util::p_settled::umt_p_settled` | generic type parameters |
 | `umt_rust::async_util::parallel::umt_parallel` | generic type parameters |
 | `umt_rust::async_util::retry::umt_retry` | generic type parameters |
+| `umt_rust::async_util::retry::umt_retry_with_max_delay` | generic type parameters |
 | `umt_rust::async_util::throttle_async::umt_throttle_async` | generic type parameters |
 | `umt_rust::async_util::timeout::umt_timeout` | generic type parameters |
 | `umt_rust::async_util::wait_for::umt_wait_for` | generic type parameters |
 | `umt_rust::color::cmyk_to_rgba::umt_cmyk_to_rgba` | unsupported return type `Rgba` |
+| `umt_rust::color::get_contrast_ratio::umt_get_contrast_ratio` | unsupported parameter type `RgbaInput` |
+| `umt_rust::color::get_luminance::umt_get_luminance` | unsupported parameter type `RgbaInput` |
 | `umt_rust::color::hexa_to_rgba::umt_hexa_to_rgba` | unsupported return type `Result < Rgba , HexColorError >` |
 | `umt_rust::color::hsla_to_rgba::umt_hsla_to_rgba` | unsupported return type `Result < Rgba , HslaError >` |
 | `umt_rust::color::rgba_to_cmyk::umt_rgba_to_cmyk` | unsupported parameter type `RgbaInput` |
@@ -228,12 +269,16 @@ Generated 150 wrappers. 274 functions are not auto-exposable and are listed belo
 | `umt_rust::crypto::decode_base32_to_string::umt_decode_base32_to_string` | unsupported return type `Result < String , Base32Error >` |
 | `umt_rust::crypto::decode_base58::umt_decode_base58` | unsupported return type `Result < Vec < u8 > , Base58Error >` |
 | `umt_rust::crypto::decode_base58_to_string::umt_decode_base58_to_string` | unsupported return type `Result < String , Base58Error >` |
+| `umt_rust::crypto::decode_hex::umt_decode_hex` | unsupported return type `Result < Vec < u8 > , HexError >` |
 | `umt_rust::crypto::encode_base32::umt_encode_base32` | generic type parameters |
 | `umt_rust::crypto::encode_base58::umt_encode_base58` | generic type parameters |
+| `umt_rust::crypto::encode_hex::umt_encode_hex` | generic type parameters |
 | `umt_rust::date::add_business_days::umt_add_business_days` | unsupported parameter type `& DateTime < Utc >` |
 | `umt_rust::date::add_duration::umt_add_duration` | unsupported parameter type `& DateTime < Utc >` |
+| `umt_rust::date::business_days_between::umt_business_days_between` | unsupported parameter type `& DateTime < Utc >` |
 | `umt_rust::date::date_range::umt_date_range` | unsupported parameter type `DateTime < Utc >` |
 | `umt_rust::date::date_range::umt_date_range_with_step` | unsupported parameter type `DateTime < Utc >` |
+| `umt_rust::date::days_in_month::umt_days_in_month` | unsupported parameter type `& DateTime < Utc >` |
 | `umt_rust::date::diff::umt_diff` | unsupported parameter type `& DateTime < Utc >` |
 | `umt_rust::date::end_of::umt_end_of` | unsupported parameter type `& DateTime < Utc >` |
 | `umt_rust::date::format::umt_format` | unsupported parameter type `& DateTime < Utc >` |
@@ -244,8 +289,11 @@ Generated 150 wrappers. 274 functions are not auto-exposable and are listed belo
 | `umt_rust::date::get_day::umt_get_day_en` | unsupported return type `& 'static str` |
 | `umt_rust::date::get_day::umt_get_day_ja` | unsupported return type `& 'static str` |
 | `umt_rust::date::get_quarter::umt_get_quarter` | unsupported parameter type `& DateTime < Utc >` |
+| `umt_rust::date::is_after::umt_is_after` | unsupported parameter type `& DateTime < Utc >` |
+| `umt_rust::date::is_before::umt_is_before` | unsupported parameter type `& DateTime < Utc >` |
 | `umt_rust::date::is_between::umt_is_between` | unsupported parameter type `& DateTime < Utc >` |
 | `umt_rust::date::is_business_day::umt_is_business_day` | unsupported parameter type `& DateTime < Utc >` |
+| `umt_rust::date::is_same::umt_is_same` | unsupported parameter type `& DateTime < Utc >` |
 | `umt_rust::date::is_same_day::umt_is_same_day` | unsupported parameter type `& DateTime < Utc >` |
 | `umt_rust::date::is_weekend::umt_is_weekend` | unsupported parameter type `& DateTime < Utc >` |
 | `umt_rust::date::ms_by_unit::umt_ms_by_unit` | unsupported parameter type `DurationUnit` |
@@ -253,6 +301,7 @@ Generated 150 wrappers. 274 functions are not auto-exposable and are listed belo
 | `umt_rust::date::new_date::umt_new_date_string` | unsupported return type `Option < DateTime < Utc > >` |
 | `umt_rust::date::now::umt_now` | unsupported return type `DateTime < Utc >` |
 | `umt_rust::date::now::umt_now_jst` | unsupported return type `DateTime < Utc >` |
+| `umt_rust::date::parse_date::umt_parse_date` | unsupported return type `Option < DateTime < Utc > >` |
 | `umt_rust::date::start_of::umt_start_of` | unsupported parameter type `& DateTime < Utc >` |
 | `umt_rust::date::sub_business_days::umt_sub_business_days` | unsupported parameter type `& DateTime < Utc >` |
 | `umt_rust::date::sub_duration::umt_sub_duration` | unsupported parameter type `& DateTime < Utc >` |
@@ -260,6 +309,7 @@ Generated 150 wrappers. 274 functions are not auto-exposable and are listed belo
 | `umt_rust::date::week_of_year::umt_week_of_year` | unsupported parameter type `& DateTime < Utc >` |
 | `umt_rust::error::error_function::umt_error_function` | generic type parameters |
 | `umt_rust::error::flat_map_result::umt_flat_map_result` | generic type parameters |
+| `umt_rust::error::map_error::umt_map_error` | generic type parameters |
 | `umt_rust::error::map_result::umt_map_result` | generic type parameters |
 | `umt_rust::error::match_result::umt_match_result` | generic type parameters |
 | `umt_rust::error::retry::umt_retry` | generic type parameters |
@@ -269,6 +319,7 @@ Generated 150 wrappers. 274 functions are not auto-exposable and are listed belo
 | `umt_rust::error::safe_execute::umt_safe_execute_mut` | generic type parameters |
 | `umt_rust::error::safe_execute::umt_safe_execute_result` | generic type parameters |
 | `umt_rust::error::success_function::umt_success_function` | generic type parameters |
+| `umt_rust::error::unwrap_or::umt_unwrap_or` | generic type parameters |
 | `umt_rust::function::curry::umt_curry0` | generic type parameters |
 | `umt_rust::function::curry::umt_curry1` | generic type parameters |
 | `umt_rust::function::curry::umt_curry2` | generic type parameters |
@@ -325,6 +376,8 @@ Generated 150 wrappers. 274 functions are not auto-exposable and are listed belo
 | `umt_rust::object::omit::umt_omit` | unsupported parameter type `& HashMap < String , Value >` |
 | `umt_rust::object::omit::umt_omit_string_keys` | unsupported parameter type `& HashMap < String , Value >` |
 | `umt_rust::object::omit_by::umt_omit_by` | generic type parameters |
+| `umt_rust::object::omit_deep::umt_omit_deep` | unsupported parameter type `& HashMap < String , Value >` |
+| `umt_rust::object::omit_deep::umt_omit_deep_string_keys` | unsupported parameter type `& HashMap < String , Value >` |
 | `umt_rust::object::pick::umt_pick` | unsupported parameter type `& HashMap < String , Value >` |
 | `umt_rust::object::pick::umt_pick_string_keys` | unsupported parameter type `& HashMap < String , Value >` |
 | `umt_rust::object::pick_by::umt_pick_by` | generic type parameters |
@@ -337,6 +390,10 @@ Generated 150 wrappers. 274 functions are not auto-exposable and are listed belo
 | `umt_rust::object::set::umt_set` | unsupported parameter type `& mut HashMap < String , Value >` |
 | `umt_rust::object::set::umt_set_path` | unsupported parameter type `& mut HashMap < String , Value >` |
 | `umt_rust::object::unflatten_object::umt_unflatten_object` | unsupported parameter type `& HashMap < String , Value >` |
+| `umt_rust::object::unset::umt_unset` | unsupported parameter type `& HashMap < String , Value >` |
+| `umt_rust::object::unset::umt_unset_path` | unsupported parameter type `& HashMap < String , Value >` |
+| `umt_rust::object::update::umt_update` | generic type parameters |
+| `umt_rust::object::update::umt_update_path` | generic type parameters |
 | `umt_rust::predicate::every::umt_every` | generic type parameters |
 | `umt_rust::predicate::is_not_nullish::umt_is_not_nullish` | generic type parameters |
 | `umt_rust::predicate::is_nullish::umt_is_nullish` | generic type parameters |
@@ -347,6 +404,7 @@ Generated 150 wrappers. 274 functions are not auto-exposable and are listed belo
 | `umt_rust::random::seeded_random::umt_seeded_random` | unsupported return type `impl FnMut () -> f64` |
 | `umt_rust::random::seeded_random::umt_seeded_random_from_str` | unsupported return type `impl FnMut () -> f64` |
 | `umt_rust::random::weighted_choice::umt_weighted_choice` | generic type parameters |
+| `umt_rust::random::weighted_choice::umt_weighted_choice_at` | generic type parameters |
 | `umt_rust::simple::array::quick_sort_simple::umt_quick_sort_simple` | generic type parameters |
 | `umt_rust::simple::date::birthday_simple::umt_birthday_simple_datetime` | unsupported parameter type `& DateTime` |
 | `umt_rust::simple::date::birthday_simple::umt_birthday_simple_props` | unsupported parameter type `& BirthdayProperties` |
@@ -377,10 +435,12 @@ Generated 150 wrappers. 274 functions are not auto-exposable and are listed belo
 | `umt_rust::unit::unit_converter::umt_unit_converter` | generic type parameters |
 | `umt_rust::url::build_url::umt_build_url` | unsupported parameter type `Option < & HashMap < String , String > >` |
 | `umt_rust::url::parse_query_string::umt_parse_query_string` | unsupported return type `HashMap < String , String >` |
+| `umt_rust::url::stringify_query::umt_stringify_query` | unsupported parameter type `& HashMap < String , String >` |
 | `umt_rust::validate::any::core::umt_any` | generic type parameters |
 | `umt_rust::validate::array::umt_array_validator` | generic type parameters |
 | `umt_rust::validate::array::umt_validate_array` | generic type parameters |
 | `umt_rust::validate::array::array_of::umt_array_of` | generic type parameters |
+| `umt_rust::validate::array::tuple::umt_tuple` | generic type parameters |
 | `umt_rust::validate::bigint::umt_bigint_validator` | unsupported return type `Box < dyn Fn (i128) -> ValidateCoreReturnType < i128 > >` |
 | `umt_rust::validate::bigint::umt_validate_bigint` | unsupported parameter type `i128` |
 | `umt_rust::validate::boolean::umt_boolean_validator` | unsupported return type `Box < dyn Fn (bool) -> ValidateCoreReturnType < bool > >` |
@@ -401,6 +461,7 @@ Generated 150 wrappers. 274 functions are not auto-exposable and are listed belo
 | `umt_rust::validate::is_equal::umt_is_equal` | generic type parameters |
 | `umt_rust::validate::is_not_empty::umt_is_not_empty` | generic type parameters |
 | `umt_rust::validate::is_not_empty::umt_is_not_empty_vec` | generic type parameters |
+| `umt_rust::validate::literal::umt_literal` | unsupported parameter type `Value` |
 | `umt_rust::validate::map::umt_validate_map` | generic type parameters |
 | `umt_rust::validate::never::umt_never` | generic type parameters |
 | `umt_rust::validate::number::umt_double` | unsupported return type `ValidateReturnType < f64 >` |
@@ -411,6 +472,8 @@ Generated 150 wrappers. 274 functions are not auto-exposable and are listed belo
 | `umt_rust::validate::number::umt_odd` | unsupported return type `ValidateReturnType < f64 >` |
 | `umt_rust::validate::number::umt_prime` | unsupported return type `ValidateReturnType < f64 >` |
 | `umt_rust::validate::number::umt_validate_number` | unsupported parameter type `& [ValidateReturnType < f64 >]` |
+| `umt_rust::validate::number::between::umt_between` | unsupported return type `ValidateReturnType < f64 >` |
+| `umt_rust::validate::number::integer::umt_integer` | unsupported return type `ValidateReturnType < f64 >` |
 | `umt_rust::validate::object::umt_optional` | generic type parameters |
 | `umt_rust::validate::object::umt_validate_object` | generic type parameters |
 | `umt_rust::validate::object::umt_validate_optional` | generic type parameters |
@@ -419,6 +482,7 @@ Generated 150 wrappers. 274 functions are not auto-exposable and are listed belo
 | `umt_rust::validate::object::omit_keys::umt_omit_keys` | generic type parameters |
 | `umt_rust::validate::object::partial::umt_partial` | generic type parameters |
 | `umt_rust::validate::object::pick_keys::umt_pick_keys` | generic type parameters |
+| `umt_rust::validate::object::record::umt_record` | generic type parameters |
 | `umt_rust::validate::object::required::umt_required` | generic type parameters |
 | `umt_rust::validate::object::union::umt_union` | generic type parameters |
 | `umt_rust::validate::parse_email::umt_parse_email` | unsupported parameter type `Option < ParseEmailOptions >` |
@@ -434,6 +498,8 @@ Generated 150 wrappers. 274 functions are not auto-exposable and are listed belo
 | `umt_rust::validate::string::umt_validate_email_validator` | unsupported parameter type `Option < ParseEmailLevel >` |
 | `umt_rust::validate::string::umt_validate_string` | unsupported parameter type `& [ValidateReturnType < String >]` |
 | `umt_rust::validate::string::exact_length::umt_exact_length` | unsupported return type `ValidateReturnType < String >` |
+| `umt_rust::validate::string::length_between::umt_length_between` | unsupported return type `ValidateReturnType < String >` |
 | `umt_rust::validate::string::one_of::umt_one_of` | unsupported return type `impl Fn (& str) -> ValidateCoreReturnType < String >` |
+| `umt_rust::validate::string::url::umt_url` | unsupported return type `ValidateReturnType < String >` |
 | `umt_rust::validate::template_literal::umt_template_literal` | unsupported parameter type `& [TemplateLiteralPart]` |
 | `umt_rust::validate::unknown::core::umt_unknown` | generic type parameters |

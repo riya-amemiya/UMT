@@ -2,9 +2,8 @@
 //! period, with a trailing call for activity that happened during the cooldown.
 //!
 //! Because Rust has no built-in single-threaded event loop like JavaScript's
-//! `setTimeout`, the trailing edge is driven explicitly by [`Throttled::flush`]
-//! (which reproduces exactly what the JavaScript timer callback would do once the
-//! remaining cooldown has elapsed). Timing decisions use real wall-clock time via
+//! `setTimeout`, the trailing edge runs when [`Throttled::flush`] is called, as
+//! the TypeScript `flush` does. Timing decisions use real wall-clock time via
 //! [`std::time::Instant`], mirroring `Date.now()` in the TypeScript reference.
 
 use std::cell::RefCell;
@@ -24,8 +23,9 @@ struct ThrottleState<A> {
 /// A throttled function with a trailing call and cancellation.
 ///
 /// Call [`Throttled::call`] to attempt an invocation, [`Throttled::flush`] to
-/// drive the trailing edge once the remaining cooldown has elapsed, and
-/// [`Throttled::cancel`] to discard any pending invocation.
+/// run the pending trailing invocation immediately, [`Throttled::pending`] to
+/// check for a pending trailing invocation, and [`Throttled::cancel`] to
+/// discard any pending invocation.
 pub struct Throttled<A, R> {
     func: Box<dyn Fn(A) -> R>,
     wait: Duration,
@@ -76,29 +76,19 @@ where
         }
     }
 
-    /// Drives the trailing edge, reproducing the JavaScript timer callback.
+    /// Immediately runs the pending trailing invocation, like the TypeScript
+    /// `flush`.
     ///
-    /// If a trailing timer is pending and the remaining cooldown has elapsed, the
-    /// timer is cleared and the underlying function is invoked with the latest
-    /// stored arguments. Returns `true` when the trailing invocation fired.
+    /// When a trailing timer is pending it is cleared and the underlying
+    /// function is invoked with the latest stored arguments without waiting for
+    /// the rest of the cooldown. Does nothing when no trailing invocation is
+    /// pending. Returns `true` when the trailing invocation fired.
     pub fn flush(&self) -> bool {
-        let ready = {
-            let state = self.state.borrow();
+        let argument = {
+            let mut state = self.state.borrow_mut();
             if !state.timer_active {
                 return false;
             }
-            match state.last_call_time {
-                Some(last_call_time) => last_call_time.elapsed() >= self.wait,
-                None => true,
-            }
-        };
-
-        if !ready {
-            return false;
-        }
-
-        let argument = {
-            let mut state = self.state.borrow_mut();
             state.timer_active = false;
             state.last_arguments.take()
         };
@@ -120,8 +110,9 @@ where
         state.last_call_time = None;
     }
 
-    /// Returns whether a trailing throttled invocation is currently pending.
-    pub fn is_pending(&self) -> bool {
+    /// Returns whether a trailing throttled invocation is currently pending,
+    /// like the TypeScript `pending`.
+    pub fn pending(&self) -> bool {
         self.state.borrow().timer_active
     }
 }
@@ -138,8 +129,8 @@ where
 /// # Returns
 ///
 /// A [`Throttled`] value. Use `.call(arg)` to attempt an invocation, `.flush()`
-/// to drive the trailing edge once the cooldown has elapsed, and `.cancel()` to
-/// discard pending work.
+/// to run the pending trailing invocation immediately, `.pending()` to check for
+/// a pending trailing invocation, and `.cancel()` to discard pending work.
 ///
 /// # Examples
 ///
@@ -160,10 +151,15 @@ where
 /// throttled.call(1);
 /// throttled.call(2);
 /// assert_eq!(count.get(), 1);
+/// assert!(throttled.pending());
 ///
-/// thread::sleep(Duration::from_millis(30));
 /// assert!(throttled.flush());
 /// assert_eq!(count.get(), 3);
+/// assert!(!throttled.pending());
+///
+/// thread::sleep(Duration::from_millis(30));
+/// throttled.call(4);
+/// assert_eq!(count.get(), 7);
 /// ```
 pub fn umt_throttle<F, A, R>(f: F, wait: Duration) -> Throttled<A, R>
 where

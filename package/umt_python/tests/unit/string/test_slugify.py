@@ -33,7 +33,7 @@ class TestSlugify(unittest.TestCase):
         self.assertEqual(slugify("café"), "cafe")
         self.assertEqual(slugify("naïve"), "naive")
         self.assertEqual(slugify("Café & Naïve!"), "cafe-naive")
-        self.assertEqual(slugify("Japanese: こんにちは"), "japanese-こんにちは")
+        self.assertEqual(slugify("Japanese: こんにちは"), "japanese")
 
     def test_numbers_and_case(self):
         self.assertEqual(slugify("Test 123"), "test-123")
@@ -44,6 +44,19 @@ class TestSlugify(unittest.TestCase):
         self.assertEqual(slugify("Hello World!"), "hello-world")
         self.assertEqual(slugify("This is a Test"), "this-is-a-test")
         self.assertEqual(slugify("Café"), "cafe")
+
+
+class TestSlugifyNonAscii(unittest.TestCase):
+    def test_non_ascii_letters_are_separators(self):
+        self.assertEqual(slugify("Japanese: こんにちは"), "japanese")
+        self.assertEqual(slugify("aßb"), "a-b")
+
+    def test_non_ascii_digits_are_separators(self):
+        self.assertEqual(slugify("１２３"), "")
+        self.assertEqual(slugify("a٣b"), "a-b")
+
+    def test_non_ascii_whitespace_is_a_separator(self):
+        self.assertEqual(slugify("a b"), "a-b")
 
 
 if __name__ == "__main__":

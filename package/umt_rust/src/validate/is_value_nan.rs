@@ -2,6 +2,8 @@
 //!
 //! This module provides a function to check if a value is NaN.
 
+use super::js_number::js_string_to_number;
+
 /// Determines if a f64 value is NaN (strict mode)
 ///
 /// Uses Number.isNaN semantics - only returns true for actual NaN values.
@@ -53,14 +55,7 @@ pub fn umt_is_value_nan(value: f64) -> bool {
 /// ```
 #[inline]
 pub fn umt_is_value_nan_str_loose(value: &str) -> bool {
-    // Empty string coerces to 0 in JavaScript (not NaN)
-    if value.is_empty() || value.chars().all(|c| c.is_whitespace()) {
-        return false;
-    }
-    match value.parse::<f64>() {
-        Ok(num) => num.is_nan(),
-        Err(_) => true,
-    }
+    js_string_to_number(value).is_nan()
 }
 
 /// Determines if a string represents NaN (strict mode)

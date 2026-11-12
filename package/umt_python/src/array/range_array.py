@@ -1,3 +1,6 @@
+from ..math.js_round import js_round
+
+
 def range_array(
     start: int | float,
     end: int | float | None = None,
@@ -36,13 +39,13 @@ def range_array(
     if step > 0:
         index = actual_start
         while index < actual_end:
-            rounded_value = round(index * 1e10) / 1e10
+            rounded_value = js_round(index * 1e10) / 1e10
             result.append(rounded_value)
             index += step
     else:
         index = actual_start
         while index > actual_end:
-            rounded_value = round(index * 1e10) / 1e10
+            rounded_value = js_round(index * 1e10) / 1e10
             result.append(rounded_value)
             index += step
 

@@ -2,7 +2,7 @@ import re
 import unicodedata
 
 _DIACRITICS_RE = re.compile(r"[\u0300-\u036f]")
-_NON_WORD_RE = re.compile(r"[^\w\s-]")
+_NON_WORD_RE = re.compile(r"[^\w\s-]", re.ASCII)
 _WHITESPACE_RE = re.compile(r"\s+")
 _UNDERSCORE_RE = re.compile(r"_+")
 _MULTI_DASH_RE = re.compile(r"-+")

@@ -1,4 +1,5 @@
 use regex::Regex;
+use std::borrow::Cow;
 use std::sync::LazyLock;
 
 static TAG_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"<[^<>]*>").unwrap());
@@ -23,11 +24,7 @@ static TAG_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"<[^<>]*>").unwrap
 /// ```
 pub fn umt_strip_tags(s: &str) -> String {
     let mut result = s.to_string();
-    loop {
-        let next = TAG_RE.replace_all(&result, "").to_string();
-        if next == result {
-            break;
-        }
+    while let Cow::Owned(next) = TAG_RE.replace_all(&result, "") {
         result = next;
     }
     result

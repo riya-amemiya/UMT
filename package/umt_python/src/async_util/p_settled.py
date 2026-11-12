@@ -74,16 +74,12 @@ async def p_settled(
 
     effective_limit = limit if limit and limit > 0 else len(items)
     next_index = 0
-    lock = asyncio.Lock()
 
     async def worker() -> None:
         nonlocal next_index
-        while True:
-            async with lock:
-                if next_index >= len(items):
-                    return
-                current_index = next_index
-                next_index += 1
+        while next_index < len(items):
+            current_index = next_index
+            next_index += 1
             results[current_index] = await _run_task(items[current_index])
 
     initial_batch = min(effective_limit, len(items))

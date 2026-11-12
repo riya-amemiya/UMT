@@ -1,4 +1,4 @@
-from urllib.parse import parse_qs, urlparse
+from urllib.parse import parse_qsl, urlparse
 
 
 def parse_query_string(query: str) -> dict[str, str]:
@@ -7,24 +7,20 @@ def parse_query_string(query: str) -> dict[str, str]:
     Accepts either a full URL or a raw query string
     (with or without leading "?").
 
-    Dangerous keys (__proto__, constructor, prototype) are
-    rejected to prevent prototype pollution attacks.
+    When a key appears more than once, the last value wins. No key is
+    filtered out.
 
     :param query: The query string or URL to parse
     :return: A dictionary of key-value pairs from the query string
+    :raises ValueError: If the input contains "://" but has no URL scheme
     """
     search_string = query
     if "://" in query:
-        search_string = urlparse(query).query
+        parsed = urlparse(query)
+        if not parsed.scheme:
+            raise ValueError("Invalid URL")
+        search_string = parsed.query
     elif search_string.startswith("?"):
         search_string = search_string[1:]
 
-    # parse_qs returns dict[str, list[str]], take the last value for each key
-    parsed = parse_qs(search_string, keep_blank_values=True)
-    result: dict[str, str] = {}
-    for key, values in parsed.items():
-        # Prevent prototype pollution by rejecting dangerous keys
-        if key in ("__proto__", "constructor", "prototype"):
-            continue
-        result[key] = values[-1]
-    return result
+    return dict(parse_qsl(search_string, keep_blank_values=True))

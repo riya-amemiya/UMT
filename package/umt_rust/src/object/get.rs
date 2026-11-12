@@ -7,7 +7,8 @@ use super::Value;
 /// reaching `null`/`undefined` mid-path, or resolving to `undefined`, falls
 /// back to the default value. A value that resolves to `Value::Null` is
 /// returned as-is (only `undefined`, i.e. a missing key, triggers the
-/// default).
+/// default). Arrays are traversed by canonical decimal index segments (for
+/// example `"0"`).
 ///
 /// # Arguments
 ///
@@ -45,6 +46,9 @@ pub fn umt_get(object: &Value, path: &[String], default_value: Option<Value>) ->
             None | Some(Value::Null) => return default_value,
             Some(Value::Object(map)) => {
                 current = map.get(key);
+            }
+            Some(Value::Array(items)) => {
+                current = super::has::array_index(key).and_then(|index| items.get(index));
             }
             // Indexing into a non-object primitive yields `undefined`.
             Some(_) => {

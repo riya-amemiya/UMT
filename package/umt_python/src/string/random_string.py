@@ -18,10 +18,10 @@ def random_string(size: int = 8, char_pool: str = DEFAULT_RANDOM_STRING_CHARS) -
                    Defaults to alphanumeric characters.
 
     Returns:
-        Random string.
+        Random string. An empty string is returned when char_pool is empty.
 
     Raises:
-        ValueError: If size is negative or char_pool is empty (when size > 0).
+        ValueError: If size is negative and char_pool is not empty.
 
     Example:
         >>> len(random_string()) == 8
@@ -30,11 +30,11 @@ def random_string(size: int = 8, char_pool: str = DEFAULT_RANDOM_STRING_CHARS) -
         True
         >>> all(c in 'abc' for c in random_string(5, 'abc'))
         True
+        >>> random_string(5, '')
+        ''
     """
+    if not char_pool:
+        return ""
     if size < 0:
         raise ValueError("size must be non-negative")
-    if size == 0:
-        return ""
-    if not char_pool:
-        raise ValueError("char_pool cannot be empty when size > 0")
     return "".join(secrets.choice(char_pool) for _ in range(size))

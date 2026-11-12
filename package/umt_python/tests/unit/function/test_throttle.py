@@ -102,6 +102,43 @@ class TestThrottle(unittest.TestCase):
         self.assertEqual(calls, [1, 2, 3])
         throttled.cancel()
 
+    def test_flush_invokes_pending_trailing_call_immediately(self):
+        calls: list[int] = []
+        throttled = throttle(lambda n: calls.append(n), 0.1)
+
+        throttled(1)
+        throttled(2)
+        throttled.flush()
+        self.assertEqual(calls, [1, 2])
+        self.assertFalse(throttled.pending())
+
+        time.sleep(0.15)
+        self.assertEqual(calls, [1, 2])
+
+    def test_flush_does_nothing_without_pending_call(self):
+        calls: list[int] = []
+        throttled = throttle(lambda n: calls.append(n), 0.1)
+
+        throttled.flush()
+        self.assertEqual(calls, [])
+        throttled(1)
+        throttled.flush()
+        self.assertEqual(calls, [1])
+
+    def test_pending_reports_trailing_state(self):
+        throttled = throttle(lambda: None, 0.05)
+
+        self.assertFalse(throttled.pending())
+        throttled()
+        self.assertFalse(throttled.pending())
+        throttled()
+        self.assertTrue(throttled.pending())
+        time.sleep(0.1)
+        self.assertFalse(throttled.pending())
+        throttled()
+        throttled.cancel()
+        self.assertFalse(throttled.pending())
+
 
 if __name__ == "__main__":
     unittest.main()

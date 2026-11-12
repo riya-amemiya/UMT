@@ -20,6 +20,4 @@ def pop(array: list[T]) -> T | None:
         >>> pop(['a', 'b'])
         'b'
     """
-    if len(array) == 0:
-        return None
-    return list(array).pop()
+    return array[-1] if array else None

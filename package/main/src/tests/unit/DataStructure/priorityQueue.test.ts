@@ -446,4 +446,79 @@ describe("PriorityQueue", () => {
       expect(queue.dequeue()).toBe("task3");
     });
   });
+
+  describe("comparator", () => {
+    it("should dequeue lower priorities first with a min-heap comparator", () => {
+      const queue = new PriorityQueue<string>(
+        undefined,
+        (a, b) => a.priority - b.priority,
+      );
+      queue.enqueue("high", 10);
+      queue.enqueue("low", 1);
+      queue.enqueue("medium", 5);
+      expect(queue.peek()).toBe("low");
+      expect(queue.dequeue()).toBe("low");
+      expect(queue.dequeue()).toBe("medium");
+      expect(queue.dequeue()).toBe("high");
+      expect(queue.dequeue()).toBeUndefined();
+    });
+
+    it("should heapify initial elements with the comparator", () => {
+      const queue = new PriorityQueue<string>(
+        [
+          { value: "c", priority: 3 },
+          { value: "a", priority: 1 },
+          { value: "e", priority: 5 },
+          { value: "b", priority: 2 },
+          { value: "d", priority: 4 },
+        ],
+        (a, b) => a.priority - b.priority,
+      );
+      const order: (string | undefined)[] = [];
+      while (!queue.isEmpty) {
+        order.push(queue.dequeue());
+      }
+      expect(order).toEqual(["a", "b", "c", "d", "e"]);
+    });
+
+    it("should break ties with the comparator", () => {
+      const queue = new PriorityQueue<{ name: string; order: number }>(
+        undefined,
+        (a, b) => b.priority - a.priority || a.value.order - b.value.order,
+      );
+      queue.enqueue({ name: "first", order: 0 }, 1);
+      queue.enqueue({ name: "second", order: 1 }, 1);
+      queue.enqueue({ name: "urgent", order: 2 }, 9);
+      queue.enqueue({ name: "third", order: 3 }, 1);
+      queue.enqueue({ name: "fourth", order: 4 }, 1);
+      const names: string[] = [];
+      while (!queue.isEmpty) {
+        names.push(queue.dequeue()?.name ?? "");
+      }
+      expect(names).toEqual(["urgent", "first", "second", "third", "fourth"]);
+    });
+
+    it("should order by value when the comparator ignores priority", () => {
+      const queue = new PriorityQueue<string>(undefined, (a, b) =>
+        a.value.localeCompare(b.value),
+      );
+      queue.enqueue("pear", 0);
+      queue.enqueue("apple", 0);
+      queue.enqueue("fig", 0);
+      expect(queue.dequeue()).toBe("apple");
+      expect(queue.dequeue()).toBe("fig");
+      expect(queue.dequeue()).toBe("pear");
+    });
+
+    it("should keep the default ordering when the comparator is omitted", () => {
+      const queue = new PriorityQueue<string>([
+        { value: "low", priority: 1 },
+        { value: "high", priority: 3 },
+      ]);
+      queue.enqueue("medium", 2);
+      expect(queue.dequeue()).toBe("high");
+      expect(queue.dequeue()).toBe("medium");
+      expect(queue.dequeue()).toBe("low");
+    });
+  });
 });

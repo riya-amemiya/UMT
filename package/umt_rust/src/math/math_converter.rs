@@ -9,7 +9,10 @@ static MUL_OR_EXP_RE: LazyLock<Regex> =
 ///
 /// This function converts expressions like n^2 or n*n into a sum of simpler
 /// multiplications using the distributive property. For example, 1250^2 is
-/// converted to (1000 + 200 + 50)^2 = 1500*1000 + 400*100 + 200*100 + 50*50
+/// converted to (1000 + 200 + 50)^2 = 1500*1000 + 400*100 + 200*100 + 50*50.
+/// An expansion that reproduces its own input, such as `"5*5+0*0"` for
+/// `"5*5"`, is returned after the first repetition instead of being expanded
+/// forever.
 ///
 /// # Arguments
 ///
@@ -54,20 +57,28 @@ pub fn umt_math_converter(equation: &str) -> String {
                 Err(_) => return converted_equation,
             };
             let sep_result = umt_math_separator(operand1_val);
-            let primary = sep_result[0];
-            let remainder = sep_result[1];
+            let (primary, remainder) = if sep_result[0] == 0 {
+                (operand1_val, 0)
+            } else {
+                (sep_result[0], sep_result[1])
+            };
 
             if primary == 0 {
                 return converted_equation;
             }
 
-            converted_equation = format!("{}*{}+", operand1_val + remainder, primary);
-
-            if remainder <= 100 {
-                converted_equation += &format!("{}*{}", remainder, remainder);
+            let square = if remainder <= 100 {
+                format!("{}*{}", remainder, remainder)
             } else {
-                converted_equation += &umt_math_converter(&format!("{}*{}", remainder, remainder));
+                umt_math_converter(&format!("{}*{}", remainder, remainder))
+            };
+            let expanded = format!("{}*{}+{}", operand1_val + remainder, primary, square);
+
+            if expanded == converted_equation {
+                return expanded;
             }
+
+            converted_equation = expanded;
         } else {
             return converted_equation;
         }

@@ -184,3 +184,61 @@ fn test_preserve_already_unescaped_content() {
     let input = "Already < unescaped & content with 'quotes'";
     assert_eq!(umt_unescape_html(input), input);
 }
+
+#[test]
+fn test_unsafe_decimal_code_points_are_left_unchanged() {
+    for entity in [
+        "&#0;",
+        "&#31;",
+        "&#127;",
+        "&#128;",
+        "&#159;",
+        "&#55296;",
+        "&#1114112;",
+    ] {
+        assert_eq!(umt_unescape_html(entity), entity);
+    }
+}
+
+#[test]
+fn test_unsafe_hex_code_points_are_left_unchanged() {
+    for entity in [
+        "&#x0;",
+        "&#x1F;",
+        "&#x7F;",
+        "&#x80;",
+        "&#xD800;",
+        "&#x110000;",
+    ] {
+        assert_eq!(umt_unescape_html(entity), entity);
+    }
+}
+
+#[test]
+fn test_safe_control_and_boundary_code_points_are_decoded() {
+    assert_eq!(umt_unescape_html("&#9;&#10;&#13;"), "\t\n\r");
+    assert_eq!(umt_unescape_html("&#x9;"), "\t");
+    assert_eq!(umt_unescape_html("&#160;&#xA0;"), "\u{a0}\u{a0}");
+    assert_eq!(umt_unescape_html("&#1114111;"), "\u{10ffff}");
+    assert_eq!(umt_unescape_html("&#x10FFFF;"), "\u{10ffff}");
+    assert_eq!(
+        umt_unescape_html("&#128512;&#x1F600;"),
+        "\u{1f600}\u{1f600}"
+    );
+    assert_eq!(umt_unescape_html("&#065;"), "A");
+}
+
+#[test]
+fn test_numeric_references_over_the_digit_limit_are_left_unchanged() {
+    assert_eq!(umt_unescape_html("&#12345678;"), "&#12345678;");
+    assert_eq!(umt_unescape_html("&#x1234567;"), "&#x1234567;");
+    assert_eq!(umt_unescape_html("&#1\u{662};"), "&#1\u{662};");
+}
+
+#[test]
+fn test_named_entities_take_precedence_and_decode_once() {
+    assert_eq!(umt_unescape_html("&#39;&#x27;&#x3D;&#x60;&#x2F;"), "''=`/");
+    assert_eq!(umt_unescape_html("&#x2f;"), "/");
+    assert_eq!(umt_unescape_html("&amp;lt;"), "&lt;");
+    assert_eq!(umt_unescape_html("&#X41;"), "&#X41;");
+}

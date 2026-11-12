@@ -21,23 +21,24 @@ def object_merge_deep(target: Any, *sources: Any) -> Any:  # noqa: ANN401
         >>> object_merge_deep({"a": {"b": 1}}, {"a": {"c": 2}})
         {'a': {'b': 1, 'c': 2}}
     """
-    if not sources:
-        return target
+    result = target
+    is_owned = False
 
-    sources_list = list(sources)
-    source = sources_list.pop(0)
+    for source in sources:
+        if _is_plain_object(result) and _is_plain_object(source):
+            if not is_owned:
+                result = result.copy()
+                is_owned = True
 
-    if _is_plain_object(target) and _is_plain_object(source):
-        result = target.copy()
+            for key, source_value in source.items():
+                target_value = result.get(key)
 
-        for key, source_value in source.items():
-            target_value = result.get(key)
+                if isinstance(target_value, dict) and isinstance(source_value, dict):
+                    result[key] = object_merge_deep(target_value, source_value)
+                else:
+                    result[key] = source_value
+        else:
+            result = source
+            is_owned = False
 
-            if isinstance(target_value, dict) and isinstance(source_value, dict):
-                result[key] = object_merge_deep(target_value, source_value)
-            else:
-                result[key] = source_value
-
-        return object_merge_deep(result, *sources_list)
-
-    return object_merge_deep(source, *sources_list)
+    return result

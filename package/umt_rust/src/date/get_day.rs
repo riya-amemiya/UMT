@@ -33,7 +33,8 @@ const DAYS_FR: [&str; 7] = ["Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam"];
 ///
 /// # Returns
 ///
-/// Day of the week string in the specified language
+/// Day of the week string in the specified language. Numbers above 6 return
+/// the Sunday name.
 ///
 /// # Examples
 ///
@@ -48,7 +49,7 @@ const DAYS_FR: [&str; 7] = ["Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam"];
 /// ```
 #[inline]
 pub fn umt_get_day(day: u32, lang: DayLanguage) -> &'static str {
-    let index = (day % 7) as usize;
+    let index = if day > 6 { 0 } else { day as usize };
 
     match lang {
         DayLanguage::De => DAYS_DE[index],

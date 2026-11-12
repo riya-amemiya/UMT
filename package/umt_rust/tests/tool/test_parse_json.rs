@@ -168,3 +168,56 @@ fn test_json_parse_error_from_serde_error() {
     let error = result.unwrap_err();
     assert!(!error.message.is_empty());
 }
+
+#[test]
+fn test_should_strip_proto_keys() {
+    let value = umt_parse_json_value(r#"{"__proto__": {"polluted": true}, "safe": 1}"#).unwrap();
+    assert_eq!(value, serde_json::json!({"safe": 1}));
+}
+
+#[test]
+fn test_should_strip_constructor_and_prototype_keys() {
+    let value = umt_parse_json_value(
+        r#"{"constructor": {"polluted": true}, "prototype": {"bad": true}, "ok": 2}"#,
+    )
+    .unwrap();
+    assert_eq!(value, serde_json::json!({"ok": 2}));
+}
+
+#[test]
+fn test_should_strip_dangerous_keys_in_nested_objects_and_arrays() {
+    let value =
+        umt_parse_json_value(r#"{"a": {"__proto__": {"x": 1}, "b": 2}, "c": [{"prototype": 1}]}"#)
+            .unwrap();
+    assert_eq!(value, serde_json::json!({"a": {"b": 2}, "c": [{}]}));
+}
+
+#[test]
+fn test_should_strip_escaped_dangerous_keys() {
+    let value = umt_parse_json_value(r#"{"__proto__": 1, "safe": "a\\b"}"#).unwrap();
+    assert_eq!(value, serde_json::json!({"safe": "a\\b"}));
+}
+
+#[test]
+fn test_should_strip_dangerous_keys_for_typed_maps() {
+    let result: HashMap<String, i32> = umt_parse_json(r#"{"constructor": 1, "ok": 2}"#).unwrap();
+    assert_eq!(result, HashMap::from([("ok".to_string(), 2)]));
+}
+
+#[test]
+fn test_should_keep_dangerous_words_inside_string_values() {
+    let value = umt_parse_json_value(r#"["prototype", 1]"#).unwrap();
+    assert_eq!(value, serde_json::json!(["prototype", 1]));
+}
+
+#[test]
+fn test_should_return_error_for_invalid_json_on_sanitizing_path() {
+    let result: Result<serde_json::Value, _> = umt_parse_json(r#"{"__proto__": "#);
+    assert!(result.is_err());
+}
+
+#[test]
+fn test_should_return_error_for_type_mismatch_on_sanitizing_path() {
+    let result: Result<HashMap<String, i32>, _> = umt_parse_json(r#"{"prototype": 1, "a": "x"}"#);
+    assert!(result.is_err());
+}

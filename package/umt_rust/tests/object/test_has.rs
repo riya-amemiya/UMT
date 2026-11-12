@@ -90,3 +90,66 @@ fn test_should_handle_path_with_single_key() {
     assert!(umt_has(&obj, "a"));
     assert!(!umt_has(&obj, "c"));
 }
+
+fn create_object_with_list() -> HashMap<String, Value> {
+    let mut element = HashMap::new();
+    element.insert("a".to_string(), Value::Int(1));
+
+    let mut obj = HashMap::new();
+    obj.insert(
+        "list".to_string(),
+        Value::Array(vec![Value::Int(10), Value::Object(element)]),
+    );
+    obj
+}
+
+#[test]
+fn test_should_match_array_indices_as_own_keys() {
+    let obj = create_object_with_list();
+    assert!(umt_has(&obj, "list.0"));
+    assert!(umt_has(&obj, "list.1"));
+    assert!(!umt_has(&obj, "list.2"));
+    assert!(!umt_has(&obj, "list.push"));
+}
+
+#[test]
+fn test_should_reject_non_canonical_array_indices() {
+    let obj = create_object_with_list();
+    assert!(!umt_has(&obj, "list.00"));
+    assert!(!umt_has(&obj, "list.01"));
+    assert!(!umt_has(&obj, "list.+1"));
+    assert!(!umt_has(&obj, "list.-1"));
+    assert!(!umt_has_path(&obj, &["list", ""]));
+    assert!(!umt_has(&obj, "list.99999999999999999999999999"));
+}
+
+#[test]
+fn test_should_traverse_objects_inside_arrays() {
+    let obj = create_object_with_list();
+    assert!(umt_has(&obj, "list.1.a"));
+    assert!(!umt_has(&obj, "list.1.b"));
+    assert!(!umt_has(&obj, "list.0.a"));
+}
+
+#[test]
+fn test_should_report_an_own_empty_string_key() {
+    let mut inner = HashMap::new();
+    inner.insert("".to_string(), Value::Int(1));
+
+    let mut obj = HashMap::new();
+    obj.insert("".to_string(), Value::Object(inner));
+
+    assert!(umt_has(&obj, ""));
+    assert!(umt_has(&obj, "."));
+    assert!(!umt_has(&obj, ".."));
+    assert!(umt_has_path(&obj, &[""]));
+}
+
+#[test]
+fn test_should_return_false_when_traversing_through_null() {
+    let mut obj = HashMap::new();
+    obj.insert("a".to_string(), Value::Null);
+
+    assert!(umt_has(&obj, "a"));
+    assert!(!umt_has(&obj, "a.b"));
+}

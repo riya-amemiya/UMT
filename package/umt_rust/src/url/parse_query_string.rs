@@ -3,11 +3,10 @@ use std::collections::HashMap;
 /// Parses a query string into a key-value map.
 ///
 /// Accepts either a full URL or a raw query string
-/// (with or without leading "?").
+/// (with or without leading "?"). The fragment of a full URL is ignored.
 ///
-/// Keys that could cause prototype pollution (`__proto__`, `constructor`,
-/// `prototype`) are silently dropped for parity with the TypeScript
-/// implementation.
+/// When a key appears more than once, the last value wins. No key is
+/// filtered out.
 ///
 /// # Arguments
 ///
@@ -29,8 +28,9 @@ use std::collections::HashMap;
 pub fn umt_parse_query_string(query: &str) -> HashMap<String, String> {
     let search_string = if query.contains("://") {
         // Extract the query portion after '?'
-        match query.find('?') {
-            Some(idx) => &query[idx..],
+        let without_fragment = query.find('#').map_or(query, |idx| &query[..idx]);
+        match without_fragment.find('?') {
+            Some(idx) => &without_fragment[idx..],
             None => return HashMap::new(),
         }
     } else {
@@ -38,10 +38,6 @@ pub fn umt_parse_query_string(query: &str) -> HashMap<String, String> {
     };
 
     let raw = search_string.strip_prefix('?').unwrap_or(search_string);
-
-    if raw.is_empty() {
-        return HashMap::new();
-    }
 
     let mut result = HashMap::new();
 
@@ -55,39 +51,41 @@ pub fn umt_parse_query_string(query: &str) -> HashMap<String, String> {
             None => (pair, ""),
         };
 
-        let key = decode_percent(key_raw);
-        let value = decode_percent(value_raw);
-
-        // Prevent prototype pollution by rejecting dangerous keys
-        if key == "__proto__" || key == "constructor" || key == "prototype" {
-            continue;
-        }
-
-        result.insert(key, value);
+        result.insert(decode_percent(key_raw), decode_percent(value_raw));
     }
 
     result
 }
 
+/// Reads the value of an ASCII hexadecimal digit.
+fn hex_value(byte: Option<&u8>) -> Option<u8> {
+    byte.and_then(|&digit| char::from(digit).to_digit(16))
+        .map(|value| value as u8)
+}
+
 /// Decodes percent-encoded strings, also converting '+' to spaces
 /// (application/x-www-form-urlencoded).
-fn decode_percent(input: &str) -> String {
-    let plus_decoded = input.replace('+', " ");
-    let bytes = plus_decoded.as_bytes();
+pub(super) fn decode_percent(input: &str) -> String {
+    let bytes = input.as_bytes();
     let mut result = Vec::with_capacity(bytes.len());
     let mut i = 0;
 
     while i < bytes.len() {
-        if bytes[i] == b'%'
-            && i + 2 < bytes.len()
-            && let Ok(byte) = u8::from_str_radix(&plus_decoded[i + 1..i + 3], 16)
-        {
-            result.push(byte);
-            i += 3;
-            continue;
+        let decoded = if bytes[i] == b'%' {
+            hex_value(bytes.get(i + 1)).zip(hex_value(bytes.get(i + 2)))
+        } else {
+            None
+        };
+        match decoded {
+            Some((high, low)) => {
+                result.push((high << 4) | low);
+                i += 3;
+            }
+            None => {
+                result.push(if bytes[i] == b'+' { b' ' } else { bytes[i] });
+                i += 1;
+            }
         }
-        result.push(bytes[i]);
-        i += 1;
     }
 
     String::from_utf8_lossy(&result).into_owned()

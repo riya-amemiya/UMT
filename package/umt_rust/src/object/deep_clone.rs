@@ -5,6 +5,7 @@
 //! of the TypeScript source implementation.
 
 use super::Value;
+use super::remove_prototype::DANGEROUS_KEYS;
 use std::collections::HashMap;
 
 const MAX_CLONE_DEPTH: usize = 100;
@@ -22,7 +23,7 @@ fn clone_value(value: &Value, depth: usize) -> Value {
         Value::Object(map) => {
             let mut result = HashMap::new();
             for (key, val) in map {
-                if key == "__proto__" || key == "constructor" || key == "prototype" {
+                if DANGEROUS_KEYS.contains(&key.as_str()) {
                     continue;
                 }
                 result.insert(key.clone(), clone_value(val, depth + 1));

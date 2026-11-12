@@ -1,4 +1,8 @@
-from ..validate import is_value_nan
+import re
+
+from .js_string_to_number import JS_WHITESPACE, js_string_to_number
+
+_LEADING_FLOAT_RE = re.compile(r"[+-]?(?:[0-9]+\.?[0-9]*|\.[0-9]+)(?:e[+-]?[0-9]+)?")
 
 
 def flexible_number_conversion(value: object) -> float:
@@ -29,65 +33,24 @@ def flexible_number_conversion(value: object) -> float:
         >>> math.isnan(flexible_number_conversion("not a number"))
         True
     """
-    # Return NaN for objects (dict, list, etc.)
-    if isinstance(value, (dict, list)):
-        return float("nan")
-
-    # Handle special cases
     if value is None or value == "":
         return 0
 
-    # Handle values already of type number
-    if isinstance(value, (int, float)) and not is_value_nan(value):
+    if isinstance(value, bool) or not isinstance(value, (str, int, float)):
+        return float("nan")
+
+    if not isinstance(value, str):
         return value
 
-    # Convert to string and process
-    string_value = str(value).strip().lower()
+    string_value = value.strip(JS_WHITESPACE).lower()
 
-    # Handle infinity
     if string_value in ("infinity", "+infinity"):
         return float("inf")
     if string_value == "-infinity":
         return float("-inf")
 
-    # Handle special base notations (hex, octal, binary)
-    if string_value.startswith("0x"):
-        try:
-            return float(int(string_value, 16))
-        except ValueError:
-            pass
-    if string_value.startswith("0o"):
-        try:
-            return float(int(string_value, 8))
-        except ValueError:
-            pass
-    if string_value.startswith("0b"):
-        try:
-            return float(int(string_value, 2))
-        except ValueError:
-            pass
+    if string_value.startswith(("0x", "0o", "0b")):
+        return js_string_to_number(string_value)
 
-    # Parse as floating point number
-    try:
-        float_value = float(string_value)
-        if not is_value_nan(float_value):
-            return float_value
-    except ValueError:
-        pass
-
-    # Try to extract leading number (like "42px" -> 42)
-    result = ""
-    for char in string_value:
-        if char.isdigit() or char == "." or (char == "-" and not result):
-            result += char
-        else:
-            break
-
-    if result and result not in {"-", "."}:
-        try:
-            return float(result)
-        except ValueError:
-            pass
-
-    # When conversion is not possible
-    return float("nan")
+    match = _LEADING_FLOAT_RE.match(string_value)
+    return float(match.group()) if match else float("nan")

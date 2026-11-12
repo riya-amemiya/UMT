@@ -35,16 +35,15 @@ def day_of_week_simple(
         time_difference: Hours offset from UTC (default: 9 for JST)
 
     Returns:
-        Day of the week as int (0 = Monday, 6 = Sunday per Python convention).
-        Note: Python uses 0=Monday unlike JS/Rust which use 0=Sunday.
+        Day of the week as int (0 = Sunday, 6 = Saturday).
 
     Example:
-        >>> day_of_week_simple("2022-01-03")  # Monday -> 0
+        >>> day_of_week_simple("2022-01-03")  # Monday
+        1
+        >>> day_of_week_simple("2022/01/02")  # Sunday
         0
-        >>> day_of_week_simple("2022/01/02")  # Sunday -> 6
-        6
-        >>> day_of_week_simple({"year": 2022, "mon": 1, "day": 5})  # Wednesday -> 2
-        2
+        >>> day_of_week_simple({"year": 2022, "mon": 1, "day": 5})  # Wednesday
+        3
     """
     if properties is None:
         return day_of_week(time_difference=time_difference)

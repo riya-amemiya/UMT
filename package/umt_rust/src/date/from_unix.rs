@@ -7,7 +7,7 @@ use super::unix_time_unit::UnixTimeUnit;
 /// Creates a `DateTime<Utc>` from a Unix timestamp.
 ///
 /// Unlike other Date helpers, this uses a real epoch timestamp rather than
-/// wall-clock fields.
+/// wall-clock fields. Fractional milliseconds are truncated toward zero.
 ///
 /// # Arguments
 ///
@@ -25,7 +25,7 @@ use super::unix_time_unit::UnixTimeUnit;
 pub fn umt_from_unix(value: f64, unit: UnixTimeUnit) -> DateTime<Utc> {
     match unit {
         UnixTimeUnit::Second => {
-            DateTime::from_timestamp(value as i64, 0).expect("valid unix timestamp")
+            DateTime::from_timestamp_millis((value * 1000.0) as i64).expect("valid unix timestamp")
         }
         UnixTimeUnit::Millisecond => {
             DateTime::from_timestamp_millis(value as i64).expect("valid unix timestamp")

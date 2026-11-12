@@ -14,6 +14,9 @@ def object_get(obj: Any, path: str | list[str], default_value: Any = None) -> An
     explicit `None` value at the final segment is returned as-is, while a
     missing segment returns `default_value`.
 
+    Lists are traversed by canonical decimal index segments (for example
+    "0"), mirroring index access on JavaScript arrays.
+
     Args:
         obj: Source object (dict-like) or any value
         path: Dot-separated string or list of path segments
@@ -29,11 +32,24 @@ def object_get(obj: Any, path: str | list[str], default_value: Any = None) -> An
         0
         >>> object_get({"a": None}, "a.b", 7)
         7
+        >>> object_get({"a": [10, 20]}, "a.1")
+        20
     """
     segments = path.split(".") if isinstance(path, str) else path
     current: Any = obj
     for key in segments:
-        if not isinstance(current, dict) or key not in current:
+        if isinstance(current, dict):
+            if key not in current:
+                return default_value
+            current = current[key]
+        elif (
+            isinstance(current, list)
+            and key.isascii()
+            and key.isdigit()
+            and str(int(key)) == key
+            and int(key) < len(current)
+        ):
+            current = current[int(key)]
+        else:
             return default_value
-        current = current[key]
     return current

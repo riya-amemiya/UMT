@@ -31,14 +31,15 @@ impl std::fmt::Display for Device {
 }
 
 static BOT_RE: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"bot|googlebot|crawler|spider|robot|crawling").unwrap());
-static MOBILE_RE: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"iphone|ipod|webos|blackberry|iemobile|opera mini").unwrap());
-static ANDROID_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"android").unwrap());
-static MOBILE_CHECK_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"mobile").unwrap());
-static IPAD_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"ipad").unwrap());
+    LazyLock::new(|| Regex::new(r"(?i-u)bot|googlebot|crawler|spider|robot|crawling").unwrap());
+static MOBILE_RE: LazyLock<Regex> = LazyLock::new(|| {
+    Regex::new(r"(?i-u)iphone|ipod|webos|blackberry|iemobile|opera mini").unwrap()
+});
+static ANDROID_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"(?i-u)android").unwrap());
+static MOBILE_CHECK_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"(?i-u)mobile").unwrap());
+static IPAD_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"(?i-u)ipad").unwrap());
 static DESKTOP_RE: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"windows|macintosh|linux").unwrap());
+    LazyLock::new(|| Regex::new(r"(?i-u)windows|macintosh|linux").unwrap());
 
 /// Extracts device type information from a User-Agent string.
 ///
@@ -60,33 +61,31 @@ static DESKTOP_RE: LazyLock<Regex> =
 /// ```
 #[inline]
 pub fn umt_extract_device_from_user_agent(ua: &str) -> Device {
-    let ua_lower = ua.to_lowercase();
-
     // Bot/crawler detection
-    if BOT_RE.is_match(&ua_lower) {
+    if BOT_RE.is_match(ua) {
         return Device::Bot;
     }
 
     // Mobile device detection (non-Android)
-    if MOBILE_RE.is_match(&ua_lower) {
+    if MOBILE_RE.is_match(ua) {
         return Device::Mobile;
     }
 
     // Android device detection with mobile/tablet distinction
-    if ANDROID_RE.is_match(&ua_lower) {
-        if MOBILE_CHECK_RE.is_match(&ua_lower) {
+    if ANDROID_RE.is_match(ua) {
+        if MOBILE_CHECK_RE.is_match(ua) {
             return Device::Mobile;
         }
         return Device::Tablet;
     }
 
     // iPad detection (tablet)
-    if IPAD_RE.is_match(&ua_lower) {
+    if IPAD_RE.is_match(ua) {
         return Device::Tablet;
     }
 
     // Desktop detection
-    if DESKTOP_RE.is_match(&ua_lower) {
+    if DESKTOP_RE.is_match(ua) {
         return Device::Desktop;
     }
 

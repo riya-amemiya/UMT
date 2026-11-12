@@ -4,6 +4,12 @@
 use super::core::{ValidateCoreReturnType, ValidateReturnType};
 use super::{umt_is_double, umt_is_prime_number};
 
+mod between;
+mod integer;
+
+pub use between::*;
+pub use integer::*;
+
 /// Validates a number value with optional validation rules
 ///
 /// # Arguments
@@ -102,10 +108,7 @@ pub fn umt_double(message: Option<String>) -> ValidateReturnType<f64> {
 #[inline]
 pub fn umt_even(message: Option<String>) -> ValidateReturnType<f64> {
     ValidateReturnType::new("number", message, |value: &f64| {
-        if umt_is_double(*value) {
-            return false;
-        }
-        (*value as i64) % 2 == 0
+        !umt_is_double(*value) && *value % 2.0 == 0.0
     })
 }
 
@@ -119,10 +122,7 @@ pub fn umt_even(message: Option<String>) -> ValidateReturnType<f64> {
 #[inline]
 pub fn umt_odd(message: Option<String>) -> ValidateReturnType<f64> {
     ValidateReturnType::new("number", message, |value: &f64| {
-        if umt_is_double(*value) {
-            return false;
-        }
-        (*value as i64) % 2 != 0
+        !umt_is_double(*value) && *value % 2.0 != 0.0
     })
 }
 
@@ -136,7 +136,7 @@ pub fn umt_odd(message: Option<String>) -> ValidateReturnType<f64> {
 #[inline]
 pub fn umt_prime(message: Option<String>) -> ValidateReturnType<f64> {
     ValidateReturnType::new("number", message, |value: &f64| {
-        umt_is_prime_number(*value as i64)
+        value.fract() == 0.0 && umt_is_prime_number(*value as i64)
     })
 }
 

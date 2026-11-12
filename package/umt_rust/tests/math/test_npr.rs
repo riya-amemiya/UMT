@@ -20,5 +20,5 @@ fn test_npr_valid_input() {
 
 #[test]
 fn test_npr_n_greater_than_12() {
-    assert_eq!(umt_npr(13, 5), 0);
+    assert_eq!(umt_npr(13, 5), 154440);
 }

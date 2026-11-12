@@ -18,6 +18,106 @@ pub struct FormatOptions {
     pub formatters: HashMap<String, Formatter>,
 }
 
+fn parse_radix(digits: &str, radix: u32) -> f64 {
+    if digits.starts_with('+') {
+        return f64::NAN;
+    }
+    u64::from_str_radix(digits, radix).map_or(f64::NAN, |parsed| parsed as f64)
+}
+
+fn js_number(text: &str) -> f64 {
+    let trimmed = text.trim();
+    if trimmed.is_empty() {
+        return 0.0;
+    }
+
+    for (lower, upper, radix) in [("0x", "0X", 16), ("0o", "0O", 8), ("0b", "0B", 2)] {
+        if let Some(digits) = trimmed
+            .strip_prefix(lower)
+            .or_else(|| trimmed.strip_prefix(upper))
+        {
+            return parse_radix(digits, radix);
+        }
+    }
+
+    let unsigned = trimmed.strip_prefix(['+', '-']).unwrap_or(trimmed);
+    if unsigned == "Infinity" {
+        return if trimmed.starts_with('-') {
+            f64::NEG_INFINITY
+        } else {
+            f64::INFINITY
+        };
+    }
+
+    let is_decimal_literal = unsigned
+        .bytes()
+        .all(|b| b.is_ascii_digit() || matches!(b, b'.' | b'e' | b'E' | b'+' | b'-'))
+        && unsigned.bytes().any(|b| b.is_ascii_digit());
+    if is_decimal_literal {
+        trimmed.parse().unwrap_or(f64::NAN)
+    } else {
+        f64::NAN
+    }
+}
+
+fn js_number_string(number: &serde_json::Number) -> String {
+    if number.is_i64() || number.is_u64() {
+        return number.to_string();
+    }
+
+    let value = number.as_f64().unwrap_or(f64::NAN);
+    let magnitude = value.abs();
+    if magnitude == 0.0 {
+        return "0".to_string();
+    }
+    if !(1e-6..1e21).contains(&magnitude) {
+        let exponential = format!("{value:e}");
+        return match exponential.split_once('e') {
+            Some((mantissa, exponent)) if !exponent.starts_with('-') => {
+                format!("{mantissa}e+{exponent}")
+            }
+            _ => exponential,
+        };
+    }
+    value.to_string()
+}
+
+fn js_string(value: &Value) -> String {
+    match value {
+        Value::String(text) => text.clone(),
+        Value::Number(number) => js_number_string(number),
+        Value::Bool(flag) => flag.to_string(),
+        Value::Array(items) => items
+            .iter()
+            .map(|item| {
+                if item.is_null() {
+                    String::new()
+                } else {
+                    js_string(item)
+                }
+            })
+            .collect::<Vec<_>>()
+            .join(","),
+        Value::Object(_) => "[object Object]".to_string(),
+        Value::Null => "null".to_string(),
+    }
+}
+
+fn indexed_value<'a>(items: &'a [Value], path: &str) -> Option<&'a Value> {
+    let index = js_number(path);
+    if index.fract() != 0.0 || index < 0.0 {
+        return None;
+    }
+    items.get(index as usize)
+}
+
+fn array_length(data: &Value, path: &str) -> Option<usize> {
+    match path.rsplit_once('.') {
+        Some((parent_path, "length")) => get_value(data, parent_path)?.as_array().map(Vec::len),
+        _ => None,
+    }
+}
+
 /// Replaces placeholders in a template string with specified values.
 ///
 /// Supports two modes:
@@ -32,6 +132,7 @@ pub struct FormatOptions {
 /// ### Array Access
 /// Access array elements with brackets: `{items[0]}`, `{users[1].name}`
 /// Supports negative indices: `{items[-1]}` (last element)
+/// Array length is available as `{items.length}`
 ///
 /// ### Default Values
 /// Provide fallback values using pipe syntax: `{name|Unknown}`, `{age|N/A}`
@@ -42,6 +143,8 @@ pub struct FormatOptions {
 /// Built-in formatters:
 /// - `upper` - Convert to uppercase
 /// - `lower` - Convert to lowercase
+/// - `currency(locale?, currency?)` - Currency formatting
+/// - `number(locale?, minFractionDigits?, maxFractionDigits?)` - Number formatting
 /// - `plural(singular, plural)` - Pluralization
 /// - `pad(length, char?)` - Pad string/number
 ///
@@ -95,66 +198,43 @@ pub fn umt_format_string(template: &str, data: &Value, options: Option<FormatOpt
     let placeholder_regex = Regex::new(r"\{([^}]+)\}").unwrap();
 
     let result = placeholder_regex.replace_all(&escaped_template, |caps: &regex::Captures| {
-        let content = caps.get(1).map(|m| m.as_str()).unwrap_or("");
-
-        // Parse content: path|default:formatter
-        let (path_and_formatter, default_value) = if let Some(pipe_pos) = content.find('|') {
-            let (left, right) = content.split_at(pipe_pos);
-            (left.trim(), Some(right[1..].trim()))
-        } else {
-            (content.trim(), None)
-        };
+        // Parse content: path:formatter|default
+        let mut parts = caps[1].split('|').map(str::trim);
+        let path_and_formatter = parts.next().unwrap_or("");
+        let default_value = parts.next();
 
         // Parse formatter
-        let (path, formatter_string) = if let Some(colon_pos) = path_and_formatter.find(':') {
-            let (left, right) = path_and_formatter.split_at(colon_pos);
-            (left.trim(), Some(right[1..].trim()))
-        } else {
-            (path_and_formatter, None)
-        };
+        let (path, formatter_string) = path_and_formatter
+            .split_once(':')
+            .unwrap_or((path_and_formatter, ""));
 
         // Get value from data
-        let value = if data.is_array() {
+        let value = match data {
             // Indexed mode
-            path.parse::<usize>().ok().and_then(|idx| data.get(idx))
-        } else {
+            Value::Array(items) => indexed_value(items, path),
             // Named mode
-            get_value(data, path)
+            _ => get_value(data, path),
         };
 
-        let value = match value {
-            Some(v) if !v.is_null() => v.clone(),
-            _ => {
-                if let Some(default) = default_value {
-                    Value::String(default.to_string())
-                } else {
-                    return caps[0].to_string();
-                }
-            }
+        let length = if value.is_none() && !data.is_array() {
+            array_length(data, path)
+        } else {
+            None
         };
 
         // Convert value to string
-        let value_str = match &value {
-            Value::String(s) => s.clone(),
-            Value::Number(n) => n.to_string(),
-            Value::Bool(b) => b.to_string(),
-            Value::Array(arr) => arr
-                .iter()
-                .map(|v| match v {
-                    Value::String(s) => s.clone(),
-                    _ => v.to_string(),
-                })
-                .collect::<Vec<_>>()
-                .join(","),
-            Value::Object(_) => "[object Object]".to_string(),
-            Value::Null => "null".to_string(),
+        let value_str = match (value, length, default_value) {
+            (Some(found), _, _) if !found.is_null() => js_string(found),
+            (_, Some(length), _) => length.to_string(),
+            (_, _, Some(default)) => default.to_string(),
+            (_, _, None) => return caps[0].to_string(),
         };
 
         // Apply formatter if present
-        if let Some(fmt_str) = formatter_string {
-            apply_formatter(&value_str, fmt_str, &formatters)
-        } else {
+        if formatter_string.is_empty() {
             value_str
+        } else {
+            apply_formatter(&value_str, formatter_string, &formatters)
         }
     });
 

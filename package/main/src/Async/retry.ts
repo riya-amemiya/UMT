@@ -5,6 +5,7 @@ export interface RetryOptions {
   delay?: number;
   backoff?: "fixed" | "exponential" | "linear";
   jitter?: boolean;
+  maxDelay?: number;
   shouldRetry?: (error: unknown, attempt: number) => boolean;
   onRetry?: (error: unknown, attempt: number) => void;
   signal?: AbortSignal;
@@ -30,7 +31,8 @@ const computeDelay = (
 
 /**
 Retries an async function until it succeeds or the retry budget is exhausted.
-Supports fixed, linear, or exponential backoff, optional jitter, and
+Supports fixed, linear, or exponential backoff, optional jitter, an optional
+`maxDelay` upper bound applied to each computed delay after jitter, and
 AbortSignal cancellation.
 
 @template T - Return type of the function
@@ -39,6 +41,8 @@ AbortSignal cancellation.
 @returns {Promise<T>} Result of the first successful invocation
 @example
 await retry(() => fetch("/api"), { retries: 5, backoff: "exponential", jitter: true });
+@example
+await retry(() => fetch("/api"), { delay: 500, backoff: "exponential", maxDelay: 5000 });
 */
 export const retry = async <T>(
   function_: () => Promise<T>,
@@ -49,6 +53,7 @@ export const retry = async <T>(
     delay = 1000,
     backoff = "fixed",
     jitter: isJitter = false,
+    maxDelay = Number.POSITIVE_INFINITY,
     shouldRetry = () => true,
     onRetry,
     signal,
@@ -68,7 +73,12 @@ export const retry = async <T>(
         throw error;
       }
       onRetry?.(error, attemptNumber);
-      await sleep(computeDelay(delay, attemptNumber + 1, backoff, isJitter));
+      await sleep(
+        Math.min(
+          computeDelay(delay, attemptNumber + 1, backoff, isJitter),
+          maxDelay,
+        ),
+      );
       attemptNumber += 1;
     }
   }

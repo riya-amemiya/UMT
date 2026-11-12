@@ -18,6 +18,18 @@ const THRESHOLDS: { unit: Intl.RelativeTimeFormatUnit; ms: number }[] = [
   { unit: "second", ms: OneSecondMs },
 ];
 
+const formatters = new Map<string | undefined, Intl.RelativeTimeFormat>();
+
+const getFormatter = (locale?: string): Intl.RelativeTimeFormat => {
+  const cached = formatters.get(locale);
+  if (cached !== undefined) {
+    return cached;
+  }
+  const formatter = new Intl.RelativeTimeFormat(locale, { numeric: "auto" });
+  formatters.set(locale, formatter);
+  return formatter;
+};
+
 /**
 Formats a date relative to a base date using Intl.RelativeTimeFormat.
 Picks the largest unit that fits the absolute delta.
@@ -37,7 +49,7 @@ export const formatRelative = (
 ): string => {
   const deltaMs = date.getTime() - baseDate.getTime();
   const absDelta = Math.abs(deltaMs);
-  const formatter = new Intl.RelativeTimeFormat(locale, { numeric: "auto" });
+  const formatter = getFormatter(locale);
 
   for (const { unit, ms } of THRESHOLDS) {
     if (absDelta < ms) {

@@ -293,3 +293,27 @@ fn test_time_converter() {
         result2
     );
 }
+
+#[test]
+fn test_converts_without_floating_point_error() {
+    let converter = umt_unit_converter(vec![("base", 1.0), ("tenth", 0.1), ("triple", 3.0)]);
+
+    assert_eq!(converter.convert(0.3, &"tenth", &"base"), Some(3.0));
+    assert_eq!(converter.convert(1.1, &"base", &"triple"), Some(3.3));
+    assert_eq!(converter.convert(100.0, &"base", &"tenth"), Some(10.0));
+}
+
+#[test]
+fn test_zero_source_ratio_returns_nan() {
+    let converter = umt_unit_converter(vec![("base", 1.0), ("zero", 0.0)]);
+
+    assert!(converter.convert(5.0, &"zero", &"base").unwrap().is_nan());
+}
+
+#[test]
+fn test_unknown_units_return_none() {
+    let converter = umt_unit_converter(vec![("base", 1.0)]);
+
+    assert_eq!(converter.convert(5.0, &"missing", &"base"), None);
+    assert_eq!(converter.convert(5.0, &"base", &"missing"), None);
+}

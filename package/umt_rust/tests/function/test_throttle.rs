@@ -120,3 +120,41 @@ fn test_throttle_cancel_when_no_timer_pending() {
     throttled.cancel();
     assert_eq!(count.get(), 0);
 }
+
+#[test]
+fn test_throttle_flush_invokes_pending_trailing_call_immediately() {
+    let calls = Rc::new(RefCell::new(Vec::new()));
+    let sink = Rc::clone(&calls);
+    let throttled = umt_throttle(move |n: i32| sink.borrow_mut().push(n), WAIT);
+
+    throttled.call(1);
+    throttled.call(2);
+    assert!(throttled.flush());
+    assert_eq!(*calls.borrow(), vec![1, 2]);
+    assert!(!throttled.pending());
+}
+
+#[test]
+fn test_throttle_flush_does_nothing_without_pending_call() {
+    let count = Rc::new(Cell::new(0));
+    let sink = Rc::clone(&count);
+    let throttled = umt_throttle(move |_: ()| sink.set(sink.get() + 1), WAIT);
+
+    assert!(!throttled.flush());
+    throttled.call(());
+    assert!(!throttled.flush());
+    assert_eq!(count.get(), 1);
+}
+
+#[test]
+fn test_throttle_pending_reports_trailing_state() {
+    let throttled = umt_throttle(|_: ()| (), WAIT);
+
+    assert!(!throttled.pending());
+    throttled.call(());
+    assert!(!throttled.pending());
+    throttled.call(());
+    assert!(throttled.pending());
+    throttled.cancel();
+    assert!(!throttled.pending());
+}

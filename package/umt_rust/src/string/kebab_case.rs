@@ -1,5 +1,10 @@
 /// Converts a string to kebab-case
 ///
+/// A dash is inserted between an ASCII lowercase letter and an uppercase
+/// letter, and before the last uppercase letter of an acronym that is followed
+/// by a lowercase letter. Every run of characters other than ASCII letters and
+/// digits becomes a single dash, and leading and trailing dashes are removed.
+///
 /// # Arguments
 /// * `s` - The string to convert
 ///
@@ -14,63 +19,32 @@
 /// ```
 #[inline]
 pub fn umt_kebab_case(s: &str) -> String {
-    let mut result = String::with_capacity(s.len() + 10);
-    let mut prev_was_lower = false;
-    let mut prev_was_upper = false;
-    let mut prev_was_dash = true; // Start as true to avoid leading dash
+    let bytes = s.as_bytes();
+    let mut result = String::with_capacity(s.len() + 8);
+    let mut pending_dash = false;
 
-    for c in s.chars() {
-        if c.is_alphanumeric() {
-            if c.is_uppercase() {
-                if prev_was_lower {
-                    result.push('-');
-                }
-                result.push(c.to_ascii_lowercase());
-                prev_was_upper = true;
-                prev_was_lower = false;
-            } else {
-                if prev_was_upper && result.len() > 1 {
-                    // Handle cases like "HTMLParser" -> "html-parser"
-                    let last_char = result.pop().unwrap();
-                    if !result.ends_with('-') {
-                        result.push('-');
-                    }
-                    result.push(last_char);
-                }
-                result.push(c.to_ascii_lowercase());
-                prev_was_lower = c.is_lowercase();
-                prev_was_upper = false;
-            }
-            prev_was_dash = false;
-        } else {
-            if !prev_was_dash && !result.is_empty() {
-                result.push('-');
-                prev_was_dash = true;
-            }
-            prev_was_lower = false;
-            prev_was_upper = false;
+    for (index, &byte) in bytes.iter().enumerate() {
+        if !byte.is_ascii_alphanumeric() {
+            pending_dash = true;
+            continue;
         }
-    }
 
-    // Remove trailing dash
-    if result.ends_with('-') {
-        result.pop();
-    }
-
-    // Remove multiple consecutive dashes
-    let mut final_result = String::with_capacity(result.len());
-    let mut prev_was_dash = false;
-    for c in result.chars() {
-        if c == '-' {
-            if !prev_was_dash {
-                final_result.push(c);
-                prev_was_dash = true;
+        if byte.is_ascii_uppercase() && index > 0 {
+            let previous = bytes[index - 1];
+            if previous.is_ascii_lowercase()
+                || (previous.is_ascii_uppercase()
+                    && bytes.get(index + 1).is_some_and(u8::is_ascii_lowercase))
+            {
+                pending_dash = true;
             }
-        } else {
-            final_result.push(c);
-            prev_was_dash = false;
         }
+
+        if pending_dash && !result.is_empty() {
+            result.push('-');
+        }
+        pending_dash = false;
+        result.push(byte.to_ascii_lowercase() as char);
     }
 
-    final_result
+    result
 }

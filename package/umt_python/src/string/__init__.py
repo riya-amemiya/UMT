@@ -4,11 +4,14 @@ from .capitalize import capitalize
 from .capitalize_word import capitalize_word
 from .constant_case import constant_case
 from .count_occurrences import count_occurrences
+from .damerau_levenshtein_distance import damerau_levenshtein_distance
 from .deburr import deburr
+from .decode_base64_url import decode_base64_url
 from .dedent import dedent
 from .default_formatters import default_formatters
 from .delete_spaces import delete_spaces
 from .detect_mode import detect_mode
+from .encode_base64_url import encode_base64_url
 from .ensure_prefix import ensure_prefix
 from .ensure_suffix import ensure_suffix
 from .escape_html import HTML_ESCAPE_MAP, escape_html
@@ -17,6 +20,7 @@ from .from_base64 import from_base64
 from .fuzzy_search import FuzzySearchResult, fuzzy_search
 from .get_value import get_value
 from .has_no_letters import has_no_letters
+from .indent import indent
 from .kebab_case import kebab_case
 from .levenshtein_distance import levenshtein_distance
 from .mask import mask
@@ -30,6 +34,7 @@ from .remove_prefix import remove_prefix
 from .remove_suffix import remove_suffix
 from .reverse_string import reverse_string
 from .sanitize_string import sanitize_string
+from .sentence_case import sentence_case
 from .slugify import slugify
 from .snake_case import snake_case
 from .split_by_length import split_by_length
@@ -45,10 +50,12 @@ from .trim_characters import trim_characters
 from .trim_end_characters import trim_end_characters
 from .trim_start_characters import trim_start_characters
 from .truncate import truncate
+from .truncate_middle import truncate_middle
 from .uncapitalize import uncapitalize
 from .unescape_html import HTML_UNESCAPE_MAP, unescape_html
 from .word_count import word_count
 from .words import words
+from .wrap_text import wrap_text
 
 __all__ = [
     "DEFAULT_RANDOM_STRING_CHARS",
@@ -62,11 +69,14 @@ __all__ = [
     "capitalize_word",
     "constant_case",
     "count_occurrences",
+    "damerau_levenshtein_distance",
     "deburr",
+    "decode_base64_url",
     "dedent",
     "default_formatters",
     "delete_spaces",
     "detect_mode",
+    "encode_base64_url",
     "ensure_prefix",
     "ensure_suffix",
     "escape_html",
@@ -75,6 +85,7 @@ __all__ = [
     "fuzzy_search",
     "get_value",
     "has_no_letters",
+    "indent",
     "js_string",
     "kebab_case",
     "levenshtein_distance",
@@ -89,6 +100,7 @@ __all__ = [
     "remove_suffix",
     "reverse_string",
     "sanitize_string",
+    "sentence_case",
     "slugify",
     "snake_case",
     "split_by_length",
@@ -104,8 +116,10 @@ __all__ = [
     "trim_end_characters",
     "trim_start_characters",
     "truncate",
+    "truncate_middle",
     "uncapitalize",
     "unescape_html",
     "word_count",
     "words",
+    "wrap_text",
 ]

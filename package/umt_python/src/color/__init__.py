@@ -1,4 +1,6 @@
 from .cmyk_to_rgba import cmyk_to_rgba
+from .get_contrast_ratio import get_contrast_ratio
+from .get_luminance import get_luminance
 from .hexa_to_rgba import hexa_to_rgba
 from .hsla_to_rgba import hsla_to_rgba
 from .rgba_to_cmyk import rgba_to_cmyk
@@ -7,6 +9,8 @@ from .rgba_to_hsla import rgba_to_hsla
 
 __all__ = [
     "cmyk_to_rgba",
+    "get_contrast_ratio",
+    "get_luminance",
     "hexa_to_rgba",
     "hsla_to_rgba",
     "rgba_to_cmyk",

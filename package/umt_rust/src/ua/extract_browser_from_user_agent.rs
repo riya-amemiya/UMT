@@ -32,12 +32,12 @@ impl std::fmt::Display for Browser {
     }
 }
 
-static EDGE_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"edg(e)?").unwrap());
-static IE_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"msie|trident").unwrap());
-static FIREFOX_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"firefox|fxios").unwrap());
-static OPERA_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"opr/").unwrap());
-static CHROME_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"chrome|crios").unwrap());
-static SAFARI_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"safari").unwrap());
+static EDGE_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"(?i-u)edg(e)?").unwrap());
+static IE_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"(?i-u)msie|trident").unwrap());
+static FIREFOX_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"(?i-u)firefox|fxios").unwrap());
+static OPERA_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"(?i-u)opr/").unwrap());
+static CHROME_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"(?i-u)chrome|crios").unwrap());
+static SAFARI_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"(?i-u)safari").unwrap());
 
 /// Extracts browser information from a User-Agent string.
 ///
@@ -59,35 +59,33 @@ static SAFARI_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"safari").unwra
 /// ```
 #[inline]
 pub fn umt_extract_browser_from_user_agent(ua: &str) -> Browser {
-    let ua_lower = ua.to_lowercase();
-
     // Edge detection (includes both "Edg" and "Edge")
-    if EDGE_RE.is_match(&ua_lower) {
+    if EDGE_RE.is_match(ua) {
         return Browser::Edge;
     }
 
     // Internet Explorer detection
-    if IE_RE.is_match(&ua_lower) {
+    if IE_RE.is_match(ua) {
         return Browser::Ie;
     }
 
     // Firefox detection (includes FxiOS for iOS)
-    if FIREFOX_RE.is_match(&ua_lower) {
+    if FIREFOX_RE.is_match(ua) {
         return Browser::Firefox;
     }
 
     // Opera detection (uses Chromium, check before Chrome)
-    if OPERA_RE.is_match(&ua_lower) {
+    if OPERA_RE.is_match(ua) {
         return Browser::Other;
     }
 
     // Chrome detection (includes CriOS for iOS)
-    if CHROME_RE.is_match(&ua_lower) {
+    if CHROME_RE.is_match(ua) {
         return Browser::Chrome;
     }
 
     // Safari detection (should be last as Chrome/Firefox on iOS also include Safari)
-    if SAFARI_RE.is_match(&ua_lower) {
+    if SAFARI_RE.is_match(ua) {
         return Browser::Safari;
     }
 

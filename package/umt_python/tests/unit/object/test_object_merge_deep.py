@@ -76,5 +76,34 @@ class TestObjectMergeDeep(unittest.TestCase):
         )
 
 
+class TestObjectMergeDeepSources(unittest.TestCase):
+    def test_no_sources_returns_the_target_itself(self):
+        target = {"a": 1}
+        self.assertIs(object_merge_deep(target), target)
+
+    def test_many_sources_do_not_mutate_inputs(self):
+        target = {"a": {"x": 1}}
+        first = {"a": {"y": 2}}
+        second = {"a": {"z": 3}, "b": 4}
+        result = object_merge_deep(target, first, second)
+        self.assertEqual(result, {"a": {"x": 1, "y": 2, "z": 3}, "b": 4})
+        self.assertEqual(target, {"a": {"x": 1}})
+        self.assertEqual(first, {"a": {"y": 2}})
+        self.assertEqual(second, {"a": {"z": 3}, "b": 4})
+
+    def test_non_plain_source_replaces_the_accumulated_result(self):
+        self.assertEqual(object_merge_deep({"a": 1}, 5), 5)
+        self.assertEqual(object_merge_deep({"a": 1}, 5, {"b": 2}), {"b": 2})
+
+    def test_source_after_non_plain_source_is_not_mutated(self):
+        replacement = {"b": 2}
+        result = object_merge_deep({"a": 1}, 5, replacement, {"c": 3})
+        self.assertEqual(result, {"b": 2, "c": 3})
+        self.assertEqual(replacement, {"b": 2})
+
+    def test_non_plain_target_is_replaced_by_source(self):
+        self.assertEqual(object_merge_deep(5, {"a": 1}), {"a": 1})
+
+
 if __name__ == "__main__":
     unittest.main()

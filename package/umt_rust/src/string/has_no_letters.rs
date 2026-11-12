@@ -1,4 +1,11 @@
+use regex::Regex;
+use std::sync::LazyLock;
+
+static LETTER_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"\p{L}").unwrap());
+
 /// Checks if the string contains no letters (contains only emojis, numbers, or special characters)
+///
+/// A letter is any character in the Unicode general category `L`.
 ///
 /// # Arguments
 /// * `text` - The string to check
@@ -15,5 +22,5 @@
 /// ```
 #[inline]
 pub fn umt_has_no_letters(text: &str) -> bool {
-    !text.chars().any(|c| c.is_alphabetic())
+    !LETTER_RE.is_match(text)
 }

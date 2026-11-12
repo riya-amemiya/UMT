@@ -37,5 +37,25 @@ class TestObjectGet(unittest.TestCase):
         self.assertEqual(object_get({"a": None}, "a.b", 7), 7)
 
 
+class TestObjectGetListTraversal(unittest.TestCase):
+    def test_reads_list_elements_by_index_segment(self):
+        self.assertEqual(object_get({"a": [10, 20]}, "a.1"), 20)
+        self.assertEqual(object_get({"a": [{"b": 5}]}, ["a", "0", "b"]), 5)
+
+    def test_returns_default_for_out_of_range_index(self):
+        self.assertEqual(object_get({"a": [10, 20]}, "a.2", "fallback"), "fallback")
+
+    def test_returns_default_for_non_canonical_index(self):
+        self.assertEqual(object_get({"a": [10, 20]}, "a.01", "fallback"), "fallback")
+        self.assertEqual(object_get({"a": [10, 20]}, "a.-1", "fallback"), "fallback")
+        self.assertEqual(object_get({"a": [10, 20]}, "a.x", "fallback"), "fallback")
+        self.assertEqual(
+            object_get({"a": [10, 20]}, "a.\u0661", "fallback"), "fallback"
+        )
+
+    def test_returns_default_when_stepping_off_a_primitive(self):
+        self.assertEqual(object_get({"a": 1}, "a.b", "fallback"), "fallback")
+
+
 if __name__ == "__main__":
     unittest.main()

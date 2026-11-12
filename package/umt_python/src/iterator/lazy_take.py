@@ -13,4 +13,6 @@ def lazy_take(iterable: Iterable[T], n: int) -> Generator[T, None, None]:
     :param n: The number of values to take.
     :return: A generator yielding at most n values.
     """
+    if n <= 0:
+        return
     yield from islice(iterable, n)

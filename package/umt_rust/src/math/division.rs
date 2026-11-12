@@ -83,10 +83,6 @@ pub fn umt_division_with_remainder(x: f64, y: f64) -> Option<DivisionResult> {
     let abs_x = x.abs();
     let abs_y = y.abs();
 
-    // Get decimal lengths
-    let decimal_length_x = umt_get_decimal_length(abs_x);
-    let decimal_length_y = umt_get_decimal_length(abs_y);
-
     // Remove decimal points
     let x_int: i64 = abs_x
         .to_string()
@@ -99,11 +95,7 @@ pub fn umt_division_with_remainder(x: f64, y: f64) -> Option<DivisionResult> {
         .parse()
         .unwrap_or(abs_y as i64);
 
-    // Calculate scaling factor based on the actual decimal difference
-    let scaling_factor = 10_f64.powi((decimal_length_y as i32) - (decimal_length_x as i32));
-
-    // Calculate the result
-    let division_result = ((x_int as f64 / y_int as f64) * scaling_factor).floor() as i64;
+    let division_result = umt_division(abs_x, abs_y).floor() as i64;
     let remainder = x_int % y_int;
 
     Some(DivisionResult {

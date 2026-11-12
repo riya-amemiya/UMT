@@ -1,16 +1,9 @@
 import secrets
 
-_DIGITS = "0123456789abcdef"
-
 
 def _bytes_to_uuid(byte_values: bytes) -> str:
-    result = ""
-    for index in range(16):
-        if index in (4, 6, 8, 10):
-            result += "-"
-        byte = byte_values[index]
-        result += _DIGITS[byte >> 4] + _DIGITS[byte & 0xF]
-    return result
+    digits = byte_values[:16].hex()
+    return f"{digits[:8]}-{digits[8:12]}-{digits[12:16]}-{digits[16:20]}-{digits[20:]}"
 
 
 def random_uuid() -> str:

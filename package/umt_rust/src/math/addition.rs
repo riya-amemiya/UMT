@@ -1,4 +1,4 @@
-use super::{umt_get_decimal_length, umt_max, umt_multiplication};
+use super::{umt_get_decimal_length, umt_multiplication};
 
 /// Performs addition without floating point errors.
 ///
@@ -26,11 +26,15 @@ pub fn umt_addition(numbers: &[f64]) -> f64 {
         return 0.0;
     }
 
-    let decimal_lengths: Vec<f64> = numbers
+    if numbers.iter().all(|n| n.fract() == 0.0) {
+        return numbers.iter().sum();
+    }
+
+    let max_decimal = numbers
         .iter()
-        .map(|&n| umt_get_decimal_length(n) as f64)
-        .collect();
-    let max_decimal = umt_max(&decimal_lengths) as i32;
+        .map(|&n| umt_get_decimal_length(n))
+        .max()
+        .unwrap_or(0) as i32;
     let z = 10_f64.powi(max_decimal);
 
     if z.is_infinite() {

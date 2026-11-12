@@ -1,8 +1,11 @@
+use super::ordered_unique::ordered_unique_by;
+use super::unique::same_value_zero_bits;
 use std::collections::HashSet;
 use std::hash::Hash;
 
 /// Extract common elements from multiple arrays.
 /// Returns unique elements that exist in all input arrays.
+/// A single input array is returned as is.
 ///
 /// # Arguments
 ///
@@ -28,35 +31,17 @@ pub fn umt_get_arrays_common<T: Clone + Hash + Eq>(arrays: &[&[T]]) -> Vec<T> {
     }
 
     if arrays.len() == 1 {
-        // Return unique elements from the single array
-        let mut seen = HashSet::new();
-        let mut result = Vec::new();
-        for item in arrays[0] {
-            if seen.insert(item.clone()) {
-                result.push(item.clone());
-            }
-        }
-        return result;
+        return arrays[0].to_vec();
     }
 
-    // Create sets for all arrays except the first
-    let other_sets: Vec<HashSet<T>> = arrays[1..]
-        .iter()
-        .map(|arr| arr.iter().cloned().collect())
-        .collect();
+    let other_sets: Vec<HashSet<&T>> = arrays[1..].iter().map(|arr| arr.iter().collect()).collect();
 
-    // Find elements in first array that exist in all other arrays
-    let mut seen = HashSet::new();
-    let mut result = Vec::new();
-
-    for item in arrays[0] {
-        if !seen.contains(item) && other_sets.iter().all(|set| set.contains(item)) {
-            seen.insert(item.clone());
-            result.push(item.clone());
-        }
-    }
-
-    result
+    ordered_unique_by(
+        arrays[0]
+            .iter()
+            .filter(|item| other_sets.iter().all(|set| set.contains(item))),
+        |item| item,
+    )
 }
 
 /// Extract common elements from exactly two arrays.
@@ -76,7 +61,8 @@ pub fn umt_get_arrays_common_two<T: Clone + Hash + Eq>(array1: &[T], array2: &[T
 }
 
 /// Extract common elements from multiple arrays of f64, handling NaN values.
-/// NaN is considered equal to NaN.
+/// NaN is considered equal to NaN, and 0.0 is considered equal to -0.0.
+/// A single input array is returned as is.
 ///
 /// # Arguments
 ///
@@ -91,40 +77,19 @@ pub fn umt_get_arrays_common_f64(arrays: &[&[f64]]) -> Vec<f64> {
     }
 
     if arrays.len() == 1 {
-        let mut result = Vec::new();
-        let mut has_nan = false;
-        for &item in arrays[0] {
-            if item.is_nan() {
-                if !has_nan {
-                    result.push(item);
-                    has_nan = true;
-                }
-            } else if !result.contains(&item) {
-                result.push(item);
-            }
-        }
-        return result;
+        return arrays[0].to_vec();
     }
 
-    // Check if all arrays contain NaN
-    let all_have_nan = arrays.iter().all(|arr| arr.iter().any(|x| x.is_nan()));
+    let other_sets: Vec<HashSet<u64>> = arrays[1..]
+        .iter()
+        .map(|arr| arr.iter().map(|&x| same_value_zero_bits(x)).collect())
+        .collect();
 
-    let mut result = Vec::new();
-    let mut has_nan_in_result = false;
-
-    for &item in arrays[0] {
-        if item.is_nan() {
-            if all_have_nan && !has_nan_in_result {
-                result.push(item);
-                has_nan_in_result = true;
-            }
-        } else {
-            let in_all = arrays[1..].iter().all(|arr| arr.contains(&item));
-            if in_all && !result.contains(&item) {
-                result.push(item);
-            }
-        }
-    }
-
-    result
+    ordered_unique_by(
+        arrays[0].iter().filter(|&&item| {
+            let key = same_value_zero_bits(item);
+            other_sets.iter().all(|set| set.contains(&key))
+        }),
+        |&item| same_value_zero_bits(item),
+    )
 }

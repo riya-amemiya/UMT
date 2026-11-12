@@ -1,9 +1,22 @@
 import math
 import random
 
+from ..math.addition import addition
+from ..math.division import division
+from ..math.multiplication import multiplication
+from ..math.subtraction import subtraction
+
+_MAX_SAFE_INTEGER = 2**53 - 1
+
+
+def _is_safe_integer(value: int | float) -> bool:
+    if isinstance(value, float) and not value.is_integer():
+        return False
+    return abs(value) <= _MAX_SAFE_INTEGER
+
 
 def generate_number_array(
-    length: int,
+    length: int | float,
     min_val: int | float = 0,
     max_val: int | float | None = None,
     random_values: bool = False,
@@ -20,9 +33,6 @@ def generate_number_array(
     Returns:
         Array of numbers.
 
-    Raises:
-        ValueError: If min_val is greater than max_val.
-
     Example:
         >>> generate_number_array(5)
         [0, 1, 2, 3, 4]
@@ -30,22 +40,41 @@ def generate_number_array(
         [10, 11, 12, 13, 14]
     """
     actual_length = math.floor(length)
-    actual_max = max_val if max_val is not None else actual_length - 1
-
     if actual_length <= 0:
         return []
-
-    if min_val > actual_max:
-        raise ValueError("min should be less than or equal to max")
-
     if actual_length == 1:
         return [min_val]
 
+    actual_max = max_val if max_val is not None else actual_length - 1
+    is_integer_inputs = _is_safe_integer(min_val) and _is_safe_integer(actual_max)
+
     if random_values:
+        if is_integer_inputs:
+            value_range = actual_max - min_val + 1
+            return [
+                math.floor(random.random() * value_range) + min_val
+                for _ in range(actual_length)
+            ]
         return [
-            min_val + math.floor(random.random() * (actual_max - min_val + 1))
+            addition(
+                math.floor(
+                    multiplication(
+                        random.random(), addition(subtraction(actual_max, min_val), 1)
+                    )
+                ),
+                min_val,
+            )
             for _ in range(actual_length)
         ]
 
-    step = (actual_max - min_val) / (actual_length - 1)
-    return [min_val + i * step for i in range(actual_length)]
+    if is_integer_inputs:
+        value_range = actual_max - min_val
+        steps = actual_length - 1
+        if value_range % steps == 0:
+            step = value_range // steps
+            return [min_val + index * step for index in range(actual_length)]
+
+    step = division(subtraction(actual_max, min_val), actual_length - 1)
+    return [
+        addition(min_val, multiplication(index, step)) for index in range(actual_length)
+    ]

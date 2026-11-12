@@ -262,6 +262,66 @@ class TestPriorityQueue(unittest.TestCase):
         queue._update_min_priority()
         self.assertEqual(queue._min_priority, 0.0)
 
+    def test_comparator_min_heap(self):
+        """Test that a min-heap comparator dequeues lower priorities first."""
+        queue = PriorityQueue(comparator=lambda a, b: a[1] - b[1])
+        queue.enqueue("high", 10)
+        queue.enqueue("low", 1)
+        queue.enqueue("medium", 5)
+        self.assertEqual(queue.peek(), "low")
+        self.assertEqual(queue.dequeue(), "low")
+        self.assertEqual(queue.dequeue(), "medium")
+        self.assertEqual(queue.dequeue(), "high")
+        self.assertIsNone(queue.dequeue())
+
+    def test_comparator_heapifies_initial_elements(self):
+        """Test that initial elements are heapified with the comparator."""
+        queue = PriorityQueue(
+            [("c", 3), ("a", 1), ("e", 5), ("b", 2), ("d", 4)],
+            lambda a, b: a[1] - b[1],
+        )
+        order = []
+        while not queue.is_empty:
+            order.append(queue.dequeue())
+        self.assertEqual(order, ["a", "b", "c", "d", "e"])
+
+    def test_comparator_breaks_ties(self):
+        """Test that the comparator can break ties between equal priorities."""
+        queue: PriorityQueue[tuple[str, int]] = PriorityQueue(
+            comparator=lambda a, b: (b[1] - a[1]) or (a[0][1] - b[0][1]),
+        )
+        queue.enqueue(("first", 0), 1)
+        queue.enqueue(("second", 1), 1)
+        queue.enqueue(("urgent", 2), 9)
+        queue.enqueue(("third", 3), 1)
+        queue.enqueue(("fourth", 4), 1)
+        names = []
+        while not queue.is_empty:
+            item = queue.dequeue()
+            assert item is not None
+            names.append(item[0])
+        self.assertEqual(names, ["urgent", "first", "second", "third", "fourth"])
+
+    def test_comparator_orders_by_value(self):
+        """Test a comparator that ignores priority and orders by value."""
+        queue: PriorityQueue[str] = PriorityQueue(
+            comparator=lambda a, b: (a[0] > b[0]) - (a[0] < b[0]),
+        )
+        queue.enqueue("pear", 0)
+        queue.enqueue("apple", 0)
+        queue.enqueue("fig", 0)
+        self.assertEqual(queue.dequeue(), "apple")
+        self.assertEqual(queue.dequeue(), "fig")
+        self.assertEqual(queue.dequeue(), "pear")
+
+    def test_default_ordering_without_comparator(self):
+        """Test that omitting the comparator keeps the max-heap ordering."""
+        queue: PriorityQueue[str] = PriorityQueue([("low", 1), ("high", 3)])
+        queue.enqueue("medium", 2)
+        self.assertEqual(queue.dequeue(), "high")
+        self.assertEqual(queue.dequeue(), "medium")
+        self.assertEqual(queue.dequeue(), "low")
+
 
 if __name__ == "__main__":
     unittest.main()

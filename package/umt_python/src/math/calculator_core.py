@@ -7,6 +7,8 @@ from ..validate.is_number import is_number
 from .addition import addition
 from .convert_currency import convert_currency
 from .division import division
+from .js_round import js_round
+from .js_string_to_number import js_string_to_number
 from .multiplication import multiplication
 from .number_to_js_string import number_to_js_string
 from .subtraction import subtraction
@@ -90,10 +92,10 @@ def calculator_core(
             sanitized_expression = temporary
 
         else:
-            number = _to_number(sanitized_expression)
+            number = js_string_to_number(sanitized_expression)
             if not math.isnan(number):
                 # Handle floating point precision issues.
-                rounded = _js_round(number * 1e10) / 1e10
+                rounded = js_round(number * 1e10) / 1e10
                 return number_to_js_string(rounded)
             return sanitized_expression
 
@@ -151,8 +153,8 @@ def _contains_div(expr: str) -> bool:
 def _resolve_mul_exp(expr: str) -> str:
     match = _MUL_EXP_RE.search(expr)
     if match:
-        left = _to_number(match.group(2))
-        right = _to_number(match.group(4))
+        left = js_string_to_number(match.group(2))
+        right = js_string_to_number(match.group(4))
         if match.group(3) == "^":
             result = _js_pow(left, right)
             return f"{match.group(1)}{number_to_js_string(result)}"
@@ -164,7 +166,9 @@ def _resolve_mul_exp(expr: str) -> str:
 def _resolve_div(expr: str) -> str:
     match = _DIV_RE.search(expr)
     if match:
-        result = division(_to_number(match.group(1)), _to_number(match.group(2)))
+        result = division(
+            js_string_to_number(match.group(1)), js_string_to_number(match.group(2))
+        )
         return expr.replace(match.group(0), number_to_js_string(result), 1)
     return _NAN_SENTINEL
 
@@ -176,32 +180,14 @@ def _contains_add_sub(expr: str) -> bool:
 def _resolve_add_sub(expr: str) -> str:
     match = _ADD_SUB_RE.search(expr)
     if match:
-        left = _to_number(match.group(1))
-        right = _to_number(match.group(3))
+        left = js_string_to_number(match.group(1))
+        right = js_string_to_number(match.group(3))
         if match.group(2) == "+":
             result = addition(left, right)
         else:
             result = subtraction(left, right)
         return expr.replace(match.group(0), number_to_js_string(result), 1)
     return _NAN_SENTINEL
-
-
-def _to_number(value: str) -> float:
-    """
-    Mimics JavaScript's ``Number(value)`` coercion for a string, returning NaN
-    for non-numeric strings (including ``"Infinity"`` handling).
-    """
-    stripped = value.strip()
-    if stripped == "":
-        return 0.0
-    if stripped in ("Infinity", "+Infinity"):
-        return float("inf")
-    if stripped == "-Infinity":
-        return float("-inf")
-    try:
-        return float(stripped)
-    except ValueError:
-        return float("nan")
 
 
 def _js_pow(base: float, exponent: float) -> float:
@@ -215,13 +201,3 @@ def _js_pow(base: float, exponent: float) -> float:
         if base < 0 and exponent != math.floor(exponent):
             return float("nan")
         return float("inf")
-
-
-def _js_round(value: float) -> float:
-    """
-    Mimics JavaScript's ``Math.round`` which rounds half away from negative
-    infinity (``Math.round(2.5) === 3``, ``Math.round(-2.5) === -2``).
-    """
-    if math.isnan(value) or math.isinf(value):
-        return value
-    return math.floor(value + 0.5)

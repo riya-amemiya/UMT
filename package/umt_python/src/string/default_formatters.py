@@ -2,6 +2,7 @@ import math
 from datetime import datetime, timezone
 from typing import Any
 
+from ..math.js_string_to_number import js_string_to_number
 from ..number.format_number import format_number
 from .apply_formatter import Formatter, js_string
 from .pad_start import pad_start
@@ -24,13 +25,7 @@ def _js_number(value: Any) -> float:  # noqa: ANN401
     if isinstance(value, (int, float)):
         return float(value)
     if isinstance(value, str):
-        stripped = value.strip()
-        if stripped == "":
-            return 0.0
-        try:
-            return float(stripped)
-        except ValueError:
-            return math.nan
+        return js_string_to_number(value)
     if isinstance(value, list):
         if len(value) == 0:
             return 0.0
@@ -107,12 +102,21 @@ def _number(
     )
 
 
-def _plural(value: Any, singular: str, plural: str) -> str:  # noqa: ANN401
+def _plural(
+    value: Any,  # noqa: ANN401
+    singular: str = "undefined",
+    plural: str = "undefined",
+) -> str:
     return singular if _js_number(value) == 1 else plural
 
 
 def _pad(value: Any, length: str = "2", char: str = "0") -> str:  # noqa: ANN401
-    return pad_start(js_string(value), int(length), char)
+    target_length = _js_number(length)
+    return pad_start(
+        js_string(value),
+        int(target_length) if math.isfinite(target_length) else 0,
+        char,
+    )
 
 
 # Built-in formatter functions for formatString.

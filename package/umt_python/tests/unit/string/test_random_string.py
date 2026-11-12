@@ -28,8 +28,7 @@ class TestRandomString(unittest.TestCase):
         self.assertTrue(all(c in custom_chars for c in s))
 
     def test_empty_char_pool(self):
-        with self.assertRaises(ValueError):
-            random_string(char_pool="")
+        self.assertEqual(random_string(char_pool=""), "")
 
     def test_negative_size(self):
         with self.assertRaises(ValueError):
@@ -43,6 +42,22 @@ class TestRandomString(unittest.TestCase):
         self.assertEqual(len(random_string()), 8)
         self.assertEqual(len(random_string(10)), 10)
         self.assertTrue(all(c in "abc" for c in random_string(5, "abc")))
+
+
+class TestRandomStringTypeScriptParity(unittest.TestCase):
+    def test_empty_char_pool_returns_empty_string(self):
+        self.assertEqual(random_string(5, ""), "")
+        self.assertEqual(random_string(0, ""), "")
+
+    def test_negative_size_with_empty_char_pool_returns_empty_string(self):
+        self.assertEqual(random_string(-1, ""), "")
+
+    def test_negative_size_raises_error(self):
+        with self.assertRaises(ValueError):
+            random_string(-1, "abc")
+
+    def test_positive_size_uses_pool(self):
+        self.assertEqual(random_string(4, "z"), "zzzz")
 
 
 if __name__ == "__main__":

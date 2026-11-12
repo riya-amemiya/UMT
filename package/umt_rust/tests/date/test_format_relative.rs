@@ -88,3 +88,113 @@ fn test_default_base_date_when_omitted() {
     let result = umt_format_relative(&target, &now, Some("en"));
     assert!(!result.is_empty());
 }
+
+#[test]
+fn test_formats_japanese_special_words() {
+    let base = base();
+    assert_eq!(
+        umt_format_relative(&(base + Duration::milliseconds(500)), &base, Some("ja")),
+        "\u{4eca}"
+    );
+    assert_eq!(
+        umt_format_relative(&(base + Duration::days(1)), &base, Some("ja")),
+        "\u{660e}\u{65e5}"
+    );
+    assert_eq!(
+        umt_format_relative(&(base + Duration::days(2)), &base, Some("ja")),
+        "\u{660e}\u{5f8c}\u{65e5}"
+    );
+    assert_eq!(
+        umt_format_relative(&(base - Duration::days(1)), &base, Some("ja")),
+        "\u{6628}\u{65e5}"
+    );
+    assert_eq!(
+        umt_format_relative(&(base - Duration::days(2)), &base, Some("ja")),
+        "\u{4e00}\u{6628}\u{65e5}"
+    );
+    assert_eq!(
+        umt_format_relative(&(base + Duration::days(7)), &base, Some("ja")),
+        "\u{6765}\u{9031}"
+    );
+    assert_eq!(
+        umt_format_relative(&(base - Duration::days(7)), &base, Some("ja")),
+        "\u{5148}\u{9031}"
+    );
+    assert_eq!(
+        umt_format_relative(&(base + Duration::days(30)), &base, Some("ja")),
+        "\u{6765}\u{6708}"
+    );
+    assert_eq!(
+        umt_format_relative(&(base - Duration::days(30)), &base, Some("ja")),
+        "\u{5148}\u{6708}"
+    );
+    assert_eq!(
+        umt_format_relative(&(base + Duration::days(365)), &base, Some("ja")),
+        "\u{6765}\u{5e74}"
+    );
+    assert_eq!(
+        umt_format_relative(&(base - Duration::days(365)), &base, Some("ja")),
+        "\u{6628}\u{5e74}"
+    );
+}
+
+#[test]
+fn test_formats_japanese_generic_forms() {
+    let base = base();
+    assert_eq!(
+        umt_format_relative(&(base - Duration::seconds(5)), &base, Some("ja")),
+        "5 \u{79d2}\u{524d}"
+    );
+    assert_eq!(
+        umt_format_relative(&(base + Duration::minutes(1)), &base, Some("ja")),
+        "1 \u{5206}\u{5f8c}"
+    );
+    assert_eq!(
+        umt_format_relative(&(base + Duration::hours(1)), &base, Some("ja")),
+        "1 \u{6642}\u{9593}\u{5f8c}"
+    );
+    assert_eq!(
+        umt_format_relative(&(base - Duration::days(3)), &base, Some("ja")),
+        "3 \u{65e5}\u{524d}"
+    );
+    assert_eq!(
+        umt_format_relative(&(base + Duration::days(14)), &base, Some("ja")),
+        "2 \u{9031}\u{9593}\u{5f8c}"
+    );
+    assert_eq!(
+        umt_format_relative(&(base + Duration::days(90)), &base, Some("ja")),
+        "3 \u{304b}\u{6708}\u{5f8c}"
+    );
+    assert_eq!(
+        umt_format_relative(&(base - Duration::days(730)), &base, Some("ja")),
+        "2 \u{5e74}\u{524d}"
+    );
+}
+
+#[test]
+fn test_unsupported_or_missing_locale_uses_english() {
+    let base = base();
+    let target = base + Duration::days(1);
+    assert_eq!(umt_format_relative(&target, &base, None), "tomorrow");
+    assert_eq!(umt_format_relative(&target, &base, Some("fr")), "tomorrow");
+}
+
+#[test]
+fn test_region_subtag_resolves_by_language() {
+    let base = base();
+    let target = base + Duration::days(1);
+    assert_eq!(
+        umt_format_relative(&target, &base, Some("ja-JP")),
+        "\u{660e}\u{65e5}"
+    );
+    assert_eq!(
+        umt_format_relative(&target, &base, Some("JA-jp")),
+        "\u{660e}\u{65e5}"
+    );
+    assert_eq!(
+        umt_format_relative(&target, &base, Some("en-US")),
+        "tomorrow"
+    );
+    assert_eq!(umt_format_relative(&target, &base, Some("jam")), "tomorrow");
+    assert_eq!(umt_format_relative(&target, &base, Some("")), "tomorrow");
+}

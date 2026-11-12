@@ -1,3 +1,6 @@
+from ..math.round_of import round_of
+
+
 def rgba_to_hexa(r: int, g: int, b: int, a: float = 1.0) -> str:
     """
     Convert RGBA color to hexadecimal color code.
@@ -24,4 +27,4 @@ def rgba_to_hexa(r: int, g: int, b: int, a: float = 1.0) -> str:
     def to_hex(x: int) -> str:
         return format(x, "02x")
 
-    return f"#{to_hex(r)}{to_hex(g)}{to_hex(b)}{to_hex(round(a * 255))}"
+    return f"#{to_hex(r)}{to_hex(g)}{to_hex(b)}{to_hex(int(round_of(a * 255)))}"

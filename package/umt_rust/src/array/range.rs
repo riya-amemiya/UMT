@@ -1,3 +1,5 @@
+use crate::math::js_round;
+
 /// Generates an array of sequential numbers.
 ///
 /// # Arguments
@@ -94,7 +96,7 @@ pub fn umt_range_f64(start: f64, end: Option<f64>, step: Option<f64>) -> Vec<f64
         let mut index = actual_start;
         while index < actual_end {
             // Handle floating point precision
-            let rounded = (index * 1e10).round() / 1e10;
+            let rounded = js_round(index * 1e10) / 1e10;
             result.push(rounded);
             index += step_val;
         }
@@ -102,7 +104,7 @@ pub fn umt_range_f64(start: f64, end: Option<f64>, step: Option<f64>) -> Vec<f64
         let mut index = actual_start;
         while index > actual_end {
             // Handle floating point precision
-            let rounded = (index * 1e10).round() / 1e10;
+            let rounded = js_round(index * 1e10) / 1e10;
             result.push(rounded);
             index += step_val;
         }

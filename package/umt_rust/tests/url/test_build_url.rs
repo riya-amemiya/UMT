@@ -51,17 +51,18 @@ fn test_handles_single_parameter() {
 }
 
 #[test]
-fn test_skips_prototype_pollution_keys() {
+fn test_keeps_prototype_pollution_keys() {
     let mut params = HashMap::new();
     params.insert("__proto__".to_string(), "evil".to_string());
     params.insert("constructor".to_string(), "evil".to_string());
     params.insert("prototype".to_string(), "evil".to_string());
     params.insert("safe".to_string(), "value".to_string());
     let result = umt_build_url("https://example.com", Some(&params));
-    assert_eq!(result, "https://example.com/?safe=value");
-    assert!(!result.contains("__proto__"));
-    assert!(!result.contains("constructor"));
-    assert!(!result.contains("prototype"));
+    assert!(result.starts_with("https://example.com/?"));
+    assert!(result.contains("safe=value"));
+    assert!(result.contains("__proto__=evil"));
+    assert!(result.contains("constructor=evil"));
+    assert!(result.contains("prototype=evil"));
 }
 
 #[test]

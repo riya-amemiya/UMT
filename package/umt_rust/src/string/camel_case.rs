@@ -1,4 +1,16 @@
+use regex::{Captures, Regex};
+use std::sync::LazyLock;
+
+static NON_ALNUM_FOLLOWED_RE: LazyLock<Regex> =
+    LazyLock::new(|| Regex::new(r"[^0-9A-Za-z]+([^\n\r\u{2028}\u{2029}])").unwrap());
+static TRAILING_NON_ALNUM_RE: LazyLock<Regex> =
+    LazyLock::new(|| Regex::new(r"[^0-9A-Za-z]+$").unwrap());
+
 /// Converts a string to camelCase
+///
+/// Every run of characters other than ASCII letters and digits is removed and
+/// the character that follows it is uppercased. Only an ASCII uppercase first
+/// character is lowercased.
 ///
 /// # Arguments
 /// * `s` - The string to convert
@@ -14,25 +26,17 @@
 /// ```
 #[inline]
 pub fn umt_camel_case(s: &str) -> String {
-    let mut result = String::with_capacity(s.len());
-    let mut capitalize_next = false;
-    let mut first_letter_found = false;
+    let replaced = NON_ALNUM_FOLLOWED_RE.replace_all(s, |caps: &Captures| caps[1].to_uppercase());
+    let trimmed = TRAILING_NON_ALNUM_RE.replace(&replaced, "");
 
-    for c in s.chars() {
-        if c.is_alphanumeric() {
-            if capitalize_next {
-                result.push(c.to_ascii_uppercase());
-                capitalize_next = false;
-            } else if !first_letter_found {
-                result.push(c.to_ascii_lowercase());
-                first_letter_found = true;
-            } else {
-                result.push(c);
-            }
-        } else if first_letter_found {
-            capitalize_next = true;
+    let mut chars = trimmed.chars();
+    match chars.next() {
+        Some(first) if first.is_ascii_uppercase() => {
+            let mut result = String::with_capacity(trimmed.len());
+            result.push(first.to_ascii_lowercase());
+            result.push_str(chars.as_str());
+            result
         }
+        _ => trimmed.into_owned(),
     }
-
-    result
 }

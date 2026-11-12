@@ -1,4 +1,7 @@
+use crate::math::{umt_addition, umt_division, umt_multiplication, umt_subtract};
 use rand::RngExt;
+
+const MAX_SAFE_INTEGER: f64 = 9_007_199_254_740_991.0;
 
 /// Generates an array of numbers with the specified length.
 ///
@@ -34,26 +37,49 @@ pub fn umt_generate_number_array(
     let actual_min = min.unwrap_or(0.0);
     let actual_max = max.unwrap_or((length - 1) as f64);
 
-    if actual_min > actual_max {
-        panic!("min should be less than or equal to max");
-    }
-
     if length == 1 {
         return vec![actual_min];
     }
 
+    let is_integer_inputs = is_safe_integer(actual_min) && is_safe_integer(actual_max);
+
     if random {
         let mut rng = rand::rng();
-        (0..length)
+        if is_integer_inputs {
+            let range = actual_max - actual_min + 1.0;
+            return (0..length)
+                .map(|_| (rng.random::<f64>() * range).floor() + actual_min)
+                .collect();
+        }
+        let range = umt_addition(&[umt_subtract(&[actual_max, actual_min]), 1.0]);
+        return (0..length)
             .map(|_| {
-                let value = actual_min + rng.random::<f64>() * (actual_max - actual_min + 1.0);
-                value.floor()
+                umt_addition(&[
+                    umt_multiplication(&[rng.random::<f64>(), range]).floor(),
+                    actual_min,
+                ])
             })
-            .collect()
-    } else {
-        let step = (actual_max - actual_min) / (length - 1) as f64;
-        (0..length).map(|i| actual_min + i as f64 * step).collect()
+            .collect();
     }
+
+    let steps = (length - 1) as f64;
+
+    if is_integer_inputs {
+        let range = actual_max - actual_min;
+        if range % steps == 0.0 {
+            let step = range / steps;
+            return (0..length).map(|i| actual_min + i as f64 * step).collect();
+        }
+    }
+
+    let step = umt_division(umt_subtract(&[actual_max, actual_min]), steps);
+    (0..length)
+        .map(|i| umt_addition(&[actual_min, umt_multiplication(&[i as f64, step])]))
+        .collect()
+}
+
+fn is_safe_integer(value: f64) -> bool {
+    value.fract() == 0.0 && value.abs() <= MAX_SAFE_INTEGER
 }
 
 /// Generates an array of integers with the specified length.
@@ -81,19 +107,20 @@ pub fn umt_generate_number_array_i32(
     let actual_min = min.unwrap_or(0);
     let actual_max = max.unwrap_or((length - 1) as i32);
 
-    if actual_min > actual_max {
-        panic!("min should be less than or equal to max");
-    }
-
     if length == 1 {
         return vec![actual_min];
     }
 
     if random {
         let mut rng = rand::rng();
-        (0..length)
-            .map(|_| rng.random_range(actual_min..=actual_max))
-            .collect()
+        let (low, high) = if actual_min <= actual_max {
+            (actual_min, actual_max)
+        } else if actual_min - actual_max == 1 {
+            (actual_min, actual_min)
+        } else {
+            (actual_max + 1, actual_min - 1)
+        };
+        (0..length).map(|_| rng.random_range(low..=high)).collect()
     } else {
         let step = (actual_max - actual_min) as f64 / (length - 1) as f64;
         (0..length)

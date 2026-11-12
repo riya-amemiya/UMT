@@ -5,6 +5,7 @@ mod test_is_array;
 mod test_is_browser;
 mod test_is_bun;
 mod test_is_deep_equal;
+mod test_is_deep_equal_unordered;
 mod test_is_dictionary_object;
 mod test_is_double;
 mod test_is_equal;
@@ -13,12 +14,18 @@ mod test_is_node_webkit;
 mod test_is_not_empty;
 mod test_is_number;
 mod test_is_perfect_square;
+mod test_is_perfect_square_exact;
 mod test_is_prime_number;
+mod test_is_prime_number_exact;
 mod test_is_string;
 mod test_is_value_nan;
+mod test_js_number_coercion;
+mod test_literal;
 mod test_never;
 mod test_parse_email;
+mod test_parse_email_levels;
 mod test_template_literal;
+mod test_template_literal_parity;
 mod test_types;
 
 mod any {
@@ -28,6 +35,7 @@ mod any {
 mod array {
     mod test_array_of;
     mod test_core;
+    mod test_tuple;
     mod test_validate_array_mod;
 }
 
@@ -61,13 +69,18 @@ mod map {
 }
 
 mod number {
+    mod test_between;
     mod test_core;
     mod test_double;
     mod test_even;
+    mod test_even_float;
+    mod test_integer;
     mod test_max_value;
     mod test_min_value;
     mod test_odd;
+    mod test_odd_float;
     mod test_prime;
+    mod test_prime_float;
     mod test_validate_number_mod;
 }
 
@@ -79,6 +92,7 @@ mod object {
     mod test_optional;
     mod test_partial;
     mod test_pick_keys;
+    mod test_record;
     mod test_required;
     mod test_union;
     mod test_validate_object_mod;
@@ -92,13 +106,20 @@ mod string {
     mod test_core;
     mod test_email;
     mod test_exact_length;
+    mod test_exact_length_utf16;
     mod test_length;
+    mod test_length_between;
+    mod test_length_utf16;
     mod test_max_length;
+    mod test_max_length_utf16;
     mod test_min_length;
+    mod test_min_length_utf16;
     mod test_number_string;
     mod test_one_of;
     mod test_regex_match;
+    mod test_url;
     mod test_uuid;
+    mod test_uuid_versions;
     mod test_validate_string_mod;
 }
 

@@ -65,9 +65,9 @@ class LRUCache(Generic[K, V]):
         """
         if key in self._cache:
             self._cache.move_to_end(key)
-        self._cache[key] = value
-        if len(self._cache) > self._capacity:
+        elif self._cache and len(self._cache) >= self._capacity:
             self._cache.popitem(last=False)
+        self._cache[key] = value
 
     def has(self, key: K) -> bool:
         """

@@ -7,10 +7,14 @@ use super::core::{ValidateCoreReturnType, ValidateReturnType};
 use super::{ParseEmailLevel, ParseEmailOptions, umt_is_number_str, umt_parse_email};
 
 mod exact_length;
+mod length_between;
 mod one_of;
+mod url;
 
 pub use exact_length::*;
+pub use length_between::*;
 pub use one_of::*;
+pub use url::*;
 
 /// Validates a string value with optional validation rules
 ///
@@ -92,7 +96,9 @@ pub fn umt_string_validator(
 /// A `ValidateReturnType` for string length validation
 #[inline]
 pub fn umt_length(len: usize, message: Option<String>) -> ValidateReturnType<String> {
-    ValidateReturnType::new("string", message, move |value: &String| value.len() == len)
+    ValidateReturnType::new("string", message, move |value: &String| {
+        value.encode_utf16().count() == len
+    })
 }
 
 /// Creates a validator for checking if a string's length >= minimum
@@ -105,7 +111,9 @@ pub fn umt_length(len: usize, message: Option<String>) -> ValidateReturnType<Str
 /// A `ValidateReturnType` for minimum string length validation
 #[inline]
 pub fn umt_min_length(min: usize, message: Option<String>) -> ValidateReturnType<String> {
-    ValidateReturnType::new("string", message, move |value: &String| value.len() >= min)
+    ValidateReturnType::new("string", message, move |value: &String| {
+        value.encode_utf16().count() >= min
+    })
 }
 
 /// Creates a validator for checking if a string's length <= maximum
@@ -118,7 +126,9 @@ pub fn umt_min_length(min: usize, message: Option<String>) -> ValidateReturnType
 /// A `ValidateReturnType` for maximum string length validation
 #[inline]
 pub fn umt_max_length(max: usize, message: Option<String>) -> ValidateReturnType<String> {
-    ValidateReturnType::new("string", message, move |value: &String| value.len() <= max)
+    ValidateReturnType::new("string", message, move |value: &String| {
+        value.encode_utf16().count() <= max
+    })
 }
 
 /// Creates a validator for checking if a string represents a valid number
@@ -150,6 +160,9 @@ pub fn umt_regex_match(pattern: Regex, message: Option<String>) -> ValidateRetur
 
 /// Creates a validator for checking if a string is a valid UUID
 ///
+/// Versions outside `1`-`7` are ignored. When no supported version remains
+/// the validator rejects every value.
+///
 /// # Arguments
 /// * `versions` - Array of supported UUID versions (default: [4])
 /// * `message` - Custom error message for validation failure
@@ -158,15 +171,22 @@ pub fn umt_regex_match(pattern: Regex, message: Option<String>) -> ValidateRetur
 /// A `ValidateReturnType` for UUID string validation
 #[inline]
 pub fn umt_uuid(versions: Option<Vec<u8>>, message: Option<String>) -> ValidateReturnType<String> {
-    let versions = versions.unwrap_or_else(|| vec![4]);
+    let version_class: String = versions
+        .unwrap_or_else(|| vec![4])
+        .into_iter()
+        .filter(|version| (1..=7).contains(version))
+        .map(|version| char::from(b'0' + version))
+        .collect();
+    let pattern = if version_class.is_empty() {
+        None
+    } else {
+        Regex::new(&format!(
+            r"(?i)^[0-9a-f]{{8}}-?[0-9a-f]{{4}}-?[{version_class}][0-9a-f]{{3}}-?[89ab][0-9a-f]{{3}}-?[0-9a-f]{{12}}$"
+        ))
+        .ok()
+    };
     ValidateReturnType::new("string", message, move |value: &String| {
-        versions.iter().any(|version| {
-            let pattern = format!(
-                r"(?i)^[\da-f]{{8}}-?[\da-f]{{4}}-?{}[\da-f]{{3}}-?[89ab][\da-f]{{3}}-?[\da-f]{{12}}$",
-                version
-            );
-            Regex::new(&pattern).map(|re| re.is_match(value)).unwrap_or(false)
-        })
+        pattern.as_ref().is_some_and(|regex| regex.is_match(value))
     })
 }
 

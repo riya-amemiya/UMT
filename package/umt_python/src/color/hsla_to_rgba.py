@@ -1,3 +1,38 @@
+from ..math.addition import addition
+from ..math.clamp import clamp
+from ..math.division import division
+from ..math.multiplication import multiplication
+from ..math.round_of import round_of
+from ..math.subtraction import subtraction
+
+_ONE_SIXTH = division(1, 6)
+_ONE_THIRD = division(1, 3)
+_ONE_HALF = division(1, 2)
+_TWO_THIRDS = division(2, 3)
+
+
+def _hue_to_rgb(p: float, q: float, t: float) -> float:
+    """Resolves one RGB channel (0-1) from the HSL intermediates p, q and the hue offset t."""
+    t_adjusted = addition(t, 1) if t < 0 else t
+    if t > 1:
+        t_adjusted = subtraction(t, 1)
+    if t_adjusted < _ONE_SIXTH:
+        return addition(
+            p, multiplication(subtraction(q, p), multiplication(6, t_adjusted))
+        )
+    if t_adjusted < _ONE_HALF:
+        return q
+    if t_adjusted < _TWO_THIRDS:
+        return addition(
+            p,
+            multiplication(
+                subtraction(q, p),
+                multiplication(subtraction(_TWO_THIRDS, t_adjusted), 6),
+            ),
+        )
+    return p
+
+
 def hsla_to_rgba(
     h: float, s: float, lightness: float, a: float = 1.0
 ) -> dict[str, float]:
@@ -18,7 +53,7 @@ def hsla_to_rgba(
 
     Example:
         >>> hsla_to_rgba(120, 50, 50, 1)
-        {'r': 64, 'g': 191, 'b': 64, 'a': 1.0}
+        {'r': 63.75, 'g': 191.25, 'b': 63.75, 'a': 1}
     """
     if h < 0 or h > 360:
         raise ValueError("Hue must be between 0 and 360 degrees")
@@ -29,46 +64,30 @@ def hsla_to_rgba(
     if a < 0 or a > 1:
         raise ValueError("Alpha must be between 0 and 1")
 
-    hue = (h % 360) / 360
-    saturation = max(0, min(s, 100)) / 100
-    lightness_normalized = max(0, min(lightness, 100)) / 100
-
-    r = 0.0
-    g = 0.0
-    b = 0.0
+    hue = division(division(h, 360, False)[1], 360)
+    saturation = division(clamp(s, 0, 100), 100)
+    lightness_normalized = division(clamp(lightness, 0, 100), 100)
 
     if saturation == 0:
         r = g = b = lightness_normalized
     else:
-
-        def hue_to_rgb(p: float, q: float, t: float) -> float:
-            t_adjusted = t
-            if t < 0:
-                t_adjusted = t + 1
-            if t > 1:
-                t_adjusted = t - 1
-            if t_adjusted < 1 / 6:
-                return p + (q - p) * 6 * t_adjusted
-            if t_adjusted < 1 / 2:
-                return q
-            if t_adjusted < 2 / 3:
-                return p + (q - p) * (2 / 3 - t_adjusted) * 6
-            return p
-
         q = (
-            lightness_normalized * (1 + saturation)
+            multiplication(lightness_normalized, addition(1, saturation))
             if lightness_normalized < 0.5
-            else lightness_normalized + saturation - lightness_normalized * saturation
+            else subtraction(
+                addition(lightness_normalized, saturation),
+                multiplication(lightness_normalized, saturation),
+            )
         )
-        p = 2 * lightness_normalized - q
+        p = subtraction(multiplication(2, lightness_normalized), q)
 
-        r = hue_to_rgb(p, q, hue + 1 / 3)
-        g = hue_to_rgb(p, q, hue)
-        b = hue_to_rgb(p, q, hue - 1 / 3)
+        r = _hue_to_rgb(p, q, addition(hue, _ONE_THIRD))
+        g = _hue_to_rgb(p, q, hue)
+        b = _hue_to_rgb(p, q, subtraction(hue, _ONE_THIRD))
 
-    rounded_r = round(r * 255, 2)
-    rounded_g = round(g * 255, 2)
-    rounded_b = round(b * 255, 2)
-    clamped_a = max(0, min(1, a))
-
-    return {"r": rounded_r, "g": rounded_g, "b": rounded_b, "a": clamped_a}
+    return {
+        "r": round_of(multiplication(r, 255), 2),
+        "g": round_of(multiplication(g, 255), 2),
+        "b": round_of(multiplication(b, 255), 2),
+        "a": clamp(a, 0, 1),
+    }

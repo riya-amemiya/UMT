@@ -32,6 +32,6 @@ use super::super::core::ValidateReturnType;
 #[inline]
 pub fn umt_exact_length(length: usize, message: Option<String>) -> ValidateReturnType<String> {
     ValidateReturnType::new("string", message, move |value: &String| {
-        value.len() == length
+        value.encode_utf16().count() == length
     })
 }

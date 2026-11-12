@@ -1,4 +1,4 @@
-use umt_rust::math::umt_standard_deviation;
+use umt_rust::math::{umt_standard_deviation, umt_standard_deviation_with_sample};
 
 #[test]
 fn test_standard_deviation_sequential() {
@@ -38,5 +38,27 @@ fn test_standard_deviation_single() {
 
 #[test]
 fn test_standard_deviation_empty() {
-    assert!(umt_standard_deviation(&[]).is_nan());
+    assert_eq!(umt_standard_deviation(&[]), 0.0);
+}
+
+#[test]
+fn test_standard_deviation_with_sample_population() {
+    assert_eq!(
+        umt_standard_deviation_with_sample(&[1.0, 2.0, 3.0], false),
+        umt_standard_deviation(&[1.0, 2.0, 3.0])
+    );
+}
+
+#[test]
+fn test_standard_deviation_with_sample_sample() {
+    assert_eq!(
+        umt_standard_deviation_with_sample(&[1.0, 2.0, 3.0], true),
+        1.0
+    );
+    assert_eq!(
+        umt_standard_deviation_with_sample(&[2.0, 4.0, 4.0, 4.0, 5.0, 5.0, 7.0, 9.0], true),
+        (32.0_f64 / 7.0).sqrt()
+    );
+    assert_eq!(umt_standard_deviation_with_sample(&[], true), 0.0);
+    assert!(umt_standard_deviation_with_sample(&[42.0], true).is_nan());
 }

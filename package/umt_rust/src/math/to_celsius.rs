@@ -1,3 +1,5 @@
+use super::umt_subtract;
+
 /// Converts temperature from Kelvin to Celsius.
 ///
 /// # Arguments
@@ -19,5 +21,5 @@
 /// ```
 #[inline]
 pub fn umt_to_celsius(kelvin: f64) -> f64 {
-    kelvin - 273.15
+    umt_subtract(&[kelvin, 273.15])
 }

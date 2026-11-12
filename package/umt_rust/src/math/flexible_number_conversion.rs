@@ -28,12 +28,12 @@
 /// assert!(umt_flexible_number_conversion("not a number").is_nan());
 /// ```
 pub fn umt_flexible_number_conversion(value: &str) -> f64 {
-    let trimmed = value.trim().to_lowercase();
-
     // Handle empty string
-    if trimmed.is_empty() {
+    if value.is_empty() {
         return 0.0;
     }
+
+    let trimmed = value.trim_matches(is_js_whitespace).to_lowercase();
 
     // Handle infinity
     if trimmed == "infinity" || trimmed == "+infinity" {
@@ -45,74 +45,84 @@ pub fn umt_flexible_number_conversion(value: &str) -> f64 {
 
     // Handle special base notations (hex, octal, binary)
     if let Some(hex) = trimmed.strip_prefix("0x") {
-        return match i64::from_str_radix(hex, 16) {
-            Ok(n) => n as f64,
-            Err(_) => f64::NAN,
-        };
+        return parse_radix_digits(hex, 16);
     }
     if let Some(oct) = trimmed.strip_prefix("0o") {
-        return match i64::from_str_radix(oct, 8) {
-            Ok(n) => n as f64,
-            Err(_) => f64::NAN,
-        };
+        return parse_radix_digits(oct, 8);
     }
     if let Some(bin) = trimmed.strip_prefix("0b") {
-        return match i64::from_str_radix(bin, 2) {
-            Ok(n) => n as f64,
-            Err(_) => f64::NAN,
-        };
+        return parse_radix_digits(bin, 2);
     }
 
-    // Try to parse as float
-    if let Ok(n) = trimmed.parse::<f64>() {
-        return n;
+    // Parse the longest leading decimal literal
+    leading_decimal_literal(&trimmed)
+        .parse::<f64>()
+        .unwrap_or(f64::NAN)
+}
+
+fn is_js_whitespace(character: char) -> bool {
+    matches!(
+        character,
+        '\u{9}'..='\u{d}'
+            | ' '
+            | '\u{a0}'
+            | '\u{1680}'
+            | '\u{2000}'..='\u{200a}'
+            | '\u{2028}'
+            | '\u{2029}'
+            | '\u{202f}'
+            | '\u{205f}'
+            | '\u{3000}'
+            | '\u{feff}'
+    )
+}
+
+fn parse_radix_digits(digits: &str, radix: u32) -> f64 {
+    if digits.is_empty() || !digits.chars().all(|digit| digit.is_digit(radix)) {
+        return f64::NAN;
+    }
+    match u128::from_str_radix(digits, radix) {
+        Ok(n) => n as f64,
+        Err(_) => digits.chars().fold(0.0, |total, digit| {
+            total * f64::from(radix) + f64::from(digit.to_digit(radix).unwrap_or(0))
+        }),
+    }
+}
+
+fn leading_decimal_literal(value: &str) -> &str {
+    let bytes = value.as_bytes();
+    let count_digits = |start: usize| {
+        bytes[start..]
+            .iter()
+            .take_while(|byte| byte.is_ascii_digit())
+            .count()
+    };
+
+    let sign_length = usize::from(matches!(bytes.first(), Some(b'+' | b'-')));
+    let integer_digits = count_digits(sign_length);
+    let mut end = sign_length + integer_digits;
+
+    let fraction_digits = if bytes.get(end) == Some(&b'.') {
+        count_digits(end + 1)
+    } else {
+        0
+    };
+    if integer_digits == 0 && fraction_digits == 0 {
+        return "";
+    }
+    if bytes.get(end) == Some(&b'.') {
+        end += 1 + fraction_digits;
     }
 
-    // Try to extract number from the beginning of the string
-    let mut num_str = String::new();
-    let mut has_dot = false;
-    let mut has_e = false;
-    let mut chars = trimmed.chars().peekable();
-
-    // Handle optional sign
-    if let Some(&c) = chars.peek()
-        && (c == '+' || c == '-')
-    {
-        num_str.push(c);
-        chars.next();
-    }
-
-    while let Some(&c) = chars.peek() {
-        if c.is_ascii_digit() {
-            num_str.push(c);
-            chars.next();
-        } else if c == '.' && !has_dot && !has_e {
-            has_dot = true;
-            num_str.push(c);
-            chars.next();
-        } else if (c == 'e' || c == 'E') && !has_e && !num_str.is_empty() {
-            has_e = true;
-            num_str.push(c);
-            chars.next();
-            // Handle optional sign after e
-            if let Some(&next) = chars.peek()
-                && (next == '+' || next == '-')
-            {
-                num_str.push(next);
-                chars.next();
-            }
-        } else {
-            break;
+    if bytes.get(end) == Some(&b'e') {
+        let exponent_sign_length = usize::from(matches!(bytes.get(end + 1), Some(b'+' | b'-')));
+        let exponent_digits = count_digits(end + 1 + exponent_sign_length);
+        if exponent_digits > 0 {
+            end += 1 + exponent_sign_length + exponent_digits;
         }
     }
 
-    if !num_str.is_empty()
-        && let Ok(n) = num_str.parse::<f64>()
-    {
-        return n;
-    }
-
-    f64::NAN
+    &value[..end]
 }
 
 /// Converts an Option value to a number.

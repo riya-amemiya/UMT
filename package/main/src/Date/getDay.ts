@@ -8,6 +8,14 @@ export interface DayList {
   fr: ["Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam"];
 }
 
+const dayList: DayList = {
+  de: ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"],
+  ko: ["일", "월", "화", "수", "목", "금", "토"],
+  en: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+  ja: ["日", "月", "火", "水", "木", "金", "土"],
+  fr: ["Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam"],
+};
+
 /**
 Convert a number to a day of the week in the specified language
 @param day Number representing the day (0-6, where 0 is Sunday)
@@ -22,13 +30,6 @@ export const getDay = <T extends keyof DayList>(
   day: number,
   lang: T = "ja" as T,
 ): ArrayToUnion<DayList[T]> => {
-  const dayList: DayList = {
-    de: ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"],
-    ko: ["일", "월", "화", "수", "목", "금", "토"],
-    en: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
-    ja: ["日", "月", "火", "水", "木", "金", "土"],
-    fr: ["Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam"],
-  };
   switch (day) {
     case 0: {
       return dayList[lang][0];

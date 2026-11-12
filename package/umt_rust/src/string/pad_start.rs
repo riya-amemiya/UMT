@@ -1,5 +1,7 @@
 /// Pads the start of a string with another string until the target length is reached
 ///
+/// Lengths are counted in characters.
+///
 /// # Arguments
 /// * `s` - The original string to pad
 /// * `target_length` - The target length after padding
@@ -16,18 +18,14 @@
 /// ```
 #[inline]
 pub fn umt_pad_start(s: &str, target_length: usize, pad_string: &str) -> String {
-    if pad_string.is_empty() || s.len() >= target_length {
+    let length = s.chars().count();
+    if pad_string.is_empty() || length >= target_length {
         return s.to_string();
     }
 
-    let padding_length = target_length - s.len();
-    let mut padding = String::with_capacity(padding_length);
-
-    while padding.len() < padding_length {
-        padding.push_str(pad_string);
-    }
-
-    // Trim padding to exact length needed
-    let trimmed_padding: String = padding.chars().take(padding_length).collect();
-    format!("{}{}", trimmed_padding, s)
+    let padding_length = target_length - length;
+    let mut result = String::with_capacity(s.len() + padding_length);
+    result.extend(pad_string.chars().cycle().take(padding_length));
+    result.push_str(s);
+    result
 }

@@ -2,6 +2,7 @@ import math
 from collections.abc import Mapping
 
 from ..validate.is_number import is_number
+from .js_string_to_number import js_string_to_number
 from .multiplication import multiplication
 from .number_to_js_string import number_to_js_string
 
@@ -38,25 +39,9 @@ def convert_currency(
             rate = conversion_rates[currency_symbol]
 
             if is_number(rate):
-                amount = _to_number(amount_string)
+                amount = js_string_to_number(amount_string)
                 converted_amount = multiplication(amount, float(rate))
                 if math.isnan(converted_amount):
                     return input_string
                 return number_to_js_string(converted_amount)
     return input_string
-
-
-def _to_number(value: str) -> float:
-    """
-    Mimics JavaScript's ``Number(value)`` coercion for a string.
-
-    Returns NaN (``float('nan')``) when the string is not a valid number,
-    matching JavaScript's behavior instead of raising an error.
-    """
-    stripped = value.strip()
-    if stripped == "":
-        return 0.0
-    try:
-        return float(stripped)
-    except ValueError:
-        return float("nan")

@@ -1,4 +1,4 @@
-from collections.abc import Sequence
+from collections.abc import Callable, Sequence
 from typing import Generic, TypeVar
 
 T = TypeVar("T")
@@ -8,7 +8,8 @@ Priority = int | float
 class PriorityQueue(Generic[T]):
     """
     A priority queue implementation using a binary heap.
-    Higher priority values are dequeued first.
+    Higher priority values are dequeued first by default. An optional
+    comparator replaces the ordering, which allows min-heaps and tie-breaking.
 
     Features:
         enqueue(value, priority): Add element with priority
@@ -40,19 +41,33 @@ class PriorityQueue(Generic[T]):
         'medium'
         >>> queue.dequeue()
         'low'
+
+        >>> min_queue = PriorityQueue(comparator=lambda a, b: a[1] - b[1])
+        >>> min_queue.enqueue("high", 10)
+        >>> min_queue.enqueue("low", 1)
+        >>> min_queue.dequeue()
+        'low'
     """
 
     def __init__(
-        self, initial_elements: Sequence[tuple[T, Priority]] | None = None
+        self,
+        initial_elements: Sequence[tuple[T, Priority]] | None = None,
+        comparator: Callable[[tuple[T, Priority], tuple[T, Priority]], int | float]
+        | None = None,
     ) -> None:
         """
         Creates a new PriorityQueue instance.
 
         Args:
             initial_elements: Optional list of tuples (value, priority)
+            comparator: Optional ordering function over (value, priority)
+                tuples. A negative return value means the first argument is
+                dequeued before the second. When omitted, higher priority
+                values are dequeued first.
         """
         self._heap: list[tuple[T, Priority]] = []
         self._min_priority: Priority = 0
+        self._comparator = comparator
 
         if initial_elements:
             self._heap = list(initial_elements)
@@ -85,6 +100,9 @@ class PriorityQueue(Generic[T]):
     def enqueue_back(self, value: T) -> None:
         """
         Adds an element to the end of the queue with lowest priority.
+        It is assigned a priority one below the current minimum, so with a
+        custom comparator its position follows how the comparator orders
+        that priority.
 
         Args:
             value: The value to add
@@ -177,7 +195,15 @@ class PriorityQueue(Generic[T]):
         current_index = index
         while current_index > 0:
             parent_index = (current_index - 1) // 2
-            if self._heap[current_index][1] <= self._heap[parent_index][1]:
+            is_ordered = (
+                self._heap[current_index][1] <= self._heap[parent_index][1]
+                if self._comparator is None
+                else self._comparator(
+                    self._heap[current_index], self._heap[parent_index]
+                )
+                >= 0
+            )
+            if is_ordered:
                 break
             self._swap(current_index, parent_index)
             current_index = parent_index
@@ -189,16 +215,10 @@ class PriorityQueue(Generic[T]):
             right_child = 2 * current_index + 2
             largest = current_index
 
-            if (
-                left_child < len(self._heap)
-                and self._heap[left_child][1] > self._heap[largest][1]
-            ):
+            if left_child < len(self._heap) and self._precedes(left_child, largest):
                 largest = left_child
 
-            if (
-                right_child < len(self._heap)
-                and self._heap[right_child][1] > self._heap[largest][1]
-            ):
+            if right_child < len(self._heap) and self._precedes(right_child, largest):
                 largest = right_child
 
             if largest == current_index:
@@ -206,6 +226,11 @@ class PriorityQueue(Generic[T]):
 
             self._swap(current_index, largest)
             current_index = largest
+
+    def _precedes(self, i: int, j: int) -> bool:
+        if self._comparator is None:
+            return self._heap[i][1] > self._heap[j][1]
+        return self._comparator(self._heap[i], self._heap[j]) < 0
 
     def _swap(self, i: int, j: int) -> None:
         self._heap[i], self._heap[j] = self._heap[j], self._heap[i]

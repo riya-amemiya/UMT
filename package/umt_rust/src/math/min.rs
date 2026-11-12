@@ -9,10 +9,16 @@
 ///
 /// # Returns
 ///
-/// The minimum value from the input slice, or f64::INFINITY if empty.
+/// The minimum value from the input slice, f64::INFINITY if empty, or f64::NAN if any value is NaN.
 #[inline]
 pub fn umt_min(numbers: &[f64]) -> f64 {
-    numbers
-        .iter()
-        .fold(f64::INFINITY, |acc, &x| if x < acc { x } else { acc })
+    numbers.iter().fold(f64::INFINITY, |acc, &x| {
+        if x.is_nan() || acc.is_nan() {
+            f64::NAN
+        } else if x < acc {
+            x
+        } else {
+            acc
+        }
+    })
 }

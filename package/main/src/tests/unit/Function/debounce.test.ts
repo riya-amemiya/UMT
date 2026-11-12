@@ -94,4 +94,60 @@ describe("debounce", () => {
     jest.advanceTimersByTime(100);
     expect(fn).not.toHaveBeenCalled();
   });
+
+  it("should invoke the pending call immediately on flush", () => {
+    const fn = jest.fn();
+    const debounced = debounce(fn, 100);
+
+    debounced(1);
+    debounced(2);
+    debounced.flush();
+    expect(fn).toHaveBeenCalledTimes(1);
+    expect(fn).toHaveBeenCalledWith(2);
+
+    jest.advanceTimersByTime(100);
+    expect(fn).toHaveBeenCalledTimes(1);
+  });
+
+  it("should do nothing on flush when no timer is pending", () => {
+    const fn = jest.fn();
+    const debounced = debounce(fn, 100);
+
+    debounced.flush();
+    expect(fn).not.toHaveBeenCalled();
+  });
+
+  it("should not invoke on flush when trailing is false", () => {
+    const fn = jest.fn();
+    const debounced = debounce(fn, 100, { leading: true, trailing: false });
+
+    debounced(1);
+    debounced(2);
+    debounced.flush();
+    expect(fn).toHaveBeenCalledTimes(1);
+    expect(debounced.pending()).toBe(false);
+  });
+
+  it("should not invoke again on flush after the leading call", () => {
+    const fn = jest.fn();
+    const debounced = debounce(fn, 100, { leading: true, trailing: true });
+
+    debounced(1);
+    debounced.flush();
+    expect(fn).toHaveBeenCalledTimes(1);
+  });
+
+  it("should report pending state", () => {
+    const fn = jest.fn();
+    const debounced = debounce(fn, 100);
+
+    expect(debounced.pending()).toBe(false);
+    debounced();
+    expect(debounced.pending()).toBe(true);
+    jest.advanceTimersByTime(100);
+    expect(debounced.pending()).toBe(false);
+    debounced();
+    debounced.cancel();
+    expect(debounced.pending()).toBe(false);
+  });
 });

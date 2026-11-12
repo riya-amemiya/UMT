@@ -21,15 +21,15 @@ def object_pick_deep(obj: dict[str, Any], *keys: str) -> dict[str, Any]:
 
     for key in keys:
         parts = key.split(".")
-        current = obj.copy()
-        target = result
+        current: Any = obj
+        target: Any = result
 
         for i, part in enumerate(parts):
             if current and isinstance(current, dict) and part in current:
                 if i == len(parts) - 1:
                     target[part] = current[part]
                 else:
-                    if part not in target:
+                    if target.get(part) is None:
                         target[part] = {}
                     current = current[part]
                     target = target[part]

@@ -1,3 +1,4 @@
+import math
 from typing import TypeVar
 
 T = TypeVar("T")
@@ -19,4 +20,8 @@ def compact(array: list[T]) -> list[T]:
         >>> compact([None, 0, False, ''])
         []
     """
-    return [item for item in array if item]
+    return [
+        item
+        for item in array
+        if item and not (isinstance(item, float) and math.isnan(item))
+    ]

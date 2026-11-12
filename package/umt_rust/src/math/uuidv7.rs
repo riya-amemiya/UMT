@@ -33,33 +33,18 @@ pub fn umt_uuidv7() -> String {
         .expect("Time went backwards")
         .as_millis() as u64;
 
-    let mut rng = rand::rng();
-    let rand_a: u16 = rng.random_range(0..0xFFF);
-    let rand_b_hi: u32 = rng.random_range(0..0x3FFFFFFF);
-    let rand_b_lo: u32 = rng.random();
-
-    let mut bytes = [0u8; 16];
+    let mut bytes: [u8; 16] = rand::rng().random();
 
     // Timestamp (48 bits)
     for (i, byte) in bytes.iter_mut().enumerate().take(6) {
         *byte = ((unix_ts_ms >> ((5 - i) * 8)) & 0xff) as u8;
     }
 
-    // Version (4 bits) + rand_a (12 bits)
-    bytes[6] = 0x70 | ((rand_a >> 8) as u8);
-    bytes[7] = (rand_a & 0xff) as u8;
+    // Version (4 bits) + 4 random bits
+    bytes[6] = 0x70 | (bytes[6] & 0x0f);
 
-    // Variant (2 bits) + rand_b_hi (30 bits)
-    bytes[8] = 0x80 | ((rand_b_hi >> 24) as u8 & 0x3f);
-    bytes[9] = ((rand_b_hi >> 16) & 0xff) as u8;
-    bytes[10] = ((rand_b_hi >> 8) & 0xff) as u8;
-    bytes[11] = (rand_b_hi & 0xff) as u8;
-
-    // rand_b_lo (32 bits)
-    bytes[12] = ((rand_b_lo >> 24) & 0xff) as u8;
-    bytes[13] = ((rand_b_lo >> 16) & 0xff) as u8;
-    bytes[14] = ((rand_b_lo >> 8) & 0xff) as u8;
-    bytes[15] = (rand_b_lo & 0xff) as u8;
+    // Variant (2 bits) + 6 random bits
+    bytes[8] = 0x80 | (bytes[8] & 0x3f);
 
     let mut uuid = String::with_capacity(36);
     for (i, byte) in bytes.iter().enumerate() {

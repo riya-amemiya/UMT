@@ -1,7 +1,13 @@
+use regex::{Captures, Regex};
+use std::sync::LazyLock;
+
+static LETTER_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"\p{L}").unwrap());
+
 /// Swaps the case of each letter in a string.
 ///
-/// Uppercase letters become lowercase and vice versa. Characters without case
-/// (digits, punctuation, CJK ideographs, etc.) are left unchanged.
+/// Uppercase letters become lowercase and vice versa. Characters outside the
+/// Unicode general category `L` (digits, punctuation, letter-like numerals,
+/// etc.) are left unchanged.
 ///
 /// # Arguments
 /// * `s` - The string to transform
@@ -16,18 +22,15 @@
 /// assert_eq!(umt_swap_case("abc123-日本"), "ABC123-日本");
 /// ```
 pub fn umt_swap_case(s: &str) -> String {
-    let mut result = String::with_capacity(s.len());
-    for c in s.chars() {
-        if c.is_alphabetic() {
-            let lower: String = c.to_lowercase().collect();
-            if lower == c.to_string() {
-                result.extend(c.to_uppercase());
+    LETTER_RE
+        .replace_all(s, |caps: &Captures| {
+            let letter = &caps[0];
+            let lower = letter.to_lowercase();
+            if lower == letter {
+                letter.to_uppercase()
             } else {
-                result.extend(c.to_lowercase());
+                lower
             }
-        } else {
-            result.push(c);
-        }
-    }
-    result
+        })
+        .into_owned()
 }

@@ -32,5 +32,16 @@ class TestTrimStartCharacters(unittest.TestCase):
         self.assertEqual(trim_start_characters("abc123", "xyz"), "abc123")
 
 
+class TestTrimStartCharactersSet(unittest.TestCase):
+    def test_empty_chars_keeps_whitespace(self):
+        self.assertEqual(trim_start_characters("  hello", ""), "  hello")
+
+    def test_chars_are_a_set_not_a_prefix(self):
+        self.assertEqual(trim_start_characters("abcabcX", "cba"), "X")
+
+    def test_non_ascii_chars(self):
+        self.assertEqual(trim_start_characters("\u3042\u3042a", "\u3042"), "a")
+
+
 if __name__ == "__main__":
     unittest.main()

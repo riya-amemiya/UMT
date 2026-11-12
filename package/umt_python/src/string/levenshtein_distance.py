@@ -20,6 +20,9 @@ def levenshtein_distance(string1: str, string2: str) -> int:
         >>> levenshtein_distance("", "abc")
         3
     """
+    if string1 == string2:
+        return 0
+
     if len(string1) < len(string2):
         string1, string2 = string2, string1
 

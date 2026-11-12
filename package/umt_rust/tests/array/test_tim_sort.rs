@@ -171,3 +171,41 @@ fn test_tim_sort_start_equals_end() {
     let result = umt_tim_sort(&arr, None, Some(2), Some(2));
     assert_eq!(result, arr); // No change expected
 }
+
+#[test]
+fn test_tim_sort_already_sorted_runs() {
+    let arr: Vec<i32> = (0..200).collect();
+    assert_eq!(umt_tim_sort(&arr, None, None, None), arr);
+
+    let mut in_place = arr.clone();
+    umt_tim_sort_in_place(&mut in_place, None);
+    assert_eq!(in_place, arr);
+}
+
+#[test]
+fn test_tim_sort_interleaved_runs() {
+    let arr: Vec<i32> = (0..64)
+        .map(|i| i * 2)
+        .chain((0..64).map(|i| i * 2 + 1))
+        .collect();
+    assert_eq!(
+        umt_tim_sort(&arr, None, None, None),
+        (0..128).collect::<Vec<i32>>()
+    );
+}
+
+#[test]
+fn test_tim_sort_left_run_exhausted_last() {
+    let arr: Vec<i32> = (100..164).chain(0..64).collect();
+    let expected: Vec<i32> = (0..64).chain(100..164).collect();
+    assert_eq!(umt_tim_sort(&arr, None, None, None), expected);
+}
+
+#[test]
+fn test_tim_sort_is_stable() {
+    let arr: Vec<(i32, i32)> = (0..200).map(|i| (i % 5, i)).collect();
+    let compare: fn(&(i32, i32), &(i32, i32)) -> i32 = |a, b| a.0 - b.0;
+    let mut expected = arr.clone();
+    expected.sort_by_key(|item| item.0);
+    assert_eq!(umt_tim_sort(&arr, Some(compare), None, None), expected);
+}

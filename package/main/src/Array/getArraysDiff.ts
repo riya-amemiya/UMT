@@ -1,3 +1,5 @@
+import { orderedUnique } from "./setHelpers/orderedUnique";
+
 /**
 Extract elements that are not common between arrays
 @param  {T[]} array The first array
@@ -9,27 +11,19 @@ export const getArraysDiff = <O, T extends unknown[] = unknown[]>(
   array: T,
   ...arrays: T[]
 ): O => {
-  const allValues = new Set(array);
-  const duplicates = new Set<T>();
-
-  for (const array_ of arrays) {
-    for (const value of array_) {
-      if (duplicates.has(value as T)) {
-        continue;
-      }
-      if (allValues.has(value)) {
-        allValues.delete(value);
-        duplicates.add(value as T);
-      } else {
-        allValues.add(value);
-      }
+  const duplicates = new Set<unknown>();
+  const merged = orderedUnique<unknown>(
+    [new Set(array), ...arrays],
+    undefined,
+    (value) => {
+      duplicates.add(value);
+    },
+  );
+  const result: unknown[] = [];
+  for (const value of merged) {
+    if (!duplicates.has(value)) {
+      result.push(value === 0 ? 0 : value);
     }
-  }
-
-  const result: unknown[] = new Array(allValues.size);
-  let index = 0;
-  for (const value of allValues) {
-    result[index++] = value;
   }
   return result as unknown as O;
 };

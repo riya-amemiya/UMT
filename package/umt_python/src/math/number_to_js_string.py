@@ -1,4 +1,5 @@
 import math
+from decimal import Decimal
 
 
 def number_to_js_string(value: float) -> str:
@@ -50,11 +51,7 @@ def _to_fixed_shortest(magnitude: float) -> str:
     """Renders a positive, non-exponential number using its shortest form."""
     text = repr(magnitude)
     if "e" in text or "E" in text:
-        # Python may still use exponential form; expand it back to plain digits.
-        text = f"{magnitude:.17f}".rstrip("0").rstrip(".")
-        # Re-shorten using repr round-trip safety.
-        if float(text) != magnitude:
-            text = repr(magnitude)
+        text = format(Decimal(text), "f")
     if text.endswith(".0"):
         return text[:-2]
     return text

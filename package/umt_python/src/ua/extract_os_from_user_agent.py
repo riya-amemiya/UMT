@@ -3,11 +3,11 @@ from typing import Literal
 
 OsType = Literal["ios", "android", "macos", "windows", "linux", "other"]
 
-_IOS_RE = re.compile(r"iphone|ipad|ipod", re.IGNORECASE)
-_ANDROID_RE = re.compile(r"android", re.IGNORECASE)
-_MACOS_RE = re.compile(r"mac os x", re.IGNORECASE)
-_WINDOWS_RE = re.compile(r"windows|win32", re.IGNORECASE)
-_LINUX_RE = re.compile(r"linux", re.IGNORECASE)
+_IOS_RE = re.compile(r"iphone|ipad|ipod", re.IGNORECASE | re.ASCII)
+_ANDROID_RE = re.compile(r"android", re.IGNORECASE | re.ASCII)
+_MACOS_RE = re.compile(r"mac os x", re.IGNORECASE | re.ASCII)
+_WINDOWS_RE = re.compile(r"windows|win32", re.IGNORECASE | re.ASCII)
+_LINUX_RE = re.compile(r"linux", re.IGNORECASE | re.ASCII)
 
 
 def extract_os_from_user_agent(ua: str) -> OsType:

@@ -1,8 +1,7 @@
 from typing import Any
 
+from .dangerous_keys import DANGEROUS_KEYS
 from .object_is_plain import object_is_plain
-
-_DANGEROUS_KEYS = ("__proto__", "constructor", "prototype")
 
 
 def remove_prototype_deep(object_: dict[str, Any]) -> dict[str, Any]:
@@ -55,7 +54,7 @@ def remove_prototype_deep(object_: dict[str, Any]) -> dict[str, Any]:
 
         target: dict[str, Any] = destination
         for key in source:
-            if key in _DANGEROUS_KEYS:
+            if key in DANGEROUS_KEYS:
                 continue
             value = source[key]
             if isinstance(value, list):

@@ -68,5 +68,24 @@ class TestCamelCase(unittest.TestCase):
         self.assertEqual(camel_case("FooBar"), "fooBar")
 
 
+class TestCamelCaseFirstCharacter(unittest.TestCase):
+    def test_ascii_uppercase_first_character_is_lowercased(self):
+        self.assertEqual(camel_case("ZEBRA crossing"), "zEBRACrossing")
+
+    def test_non_ascii_first_character_is_a_separator(self):
+        self.assertEqual(camel_case("\u00c9a b"), "aB")
+
+    def test_lowercase_first_character_is_kept(self):
+        self.assertEqual(camel_case("a--"), "a")
+
+    def test_empty_result(self):
+        self.assertEqual(camel_case("---"), "")
+
+    def test_line_terminator_is_not_capitalized_target(self):
+        self.assertEqual(camel_case("a-ß\r"), "aSS")
+        self.assertEqual(camel_case("a-ß "), "aSS")
+        self.assertEqual(camel_case("a-\nb"), "aB")
+
+
 if __name__ == "__main__":
     unittest.main()

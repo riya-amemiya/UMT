@@ -29,7 +29,7 @@ class TestBuildUrl(unittest.TestCase):
         result = build_url("https://example.com", {"key": "value"})
         self.assertEqual(result, "https://example.com/?key=value")
 
-    def test_skip_prototype_pollution_keys(self):
+    def test_keeps_prototype_pollution_keys(self):
         result = build_url(
             "https://example.com",
             {
@@ -39,10 +39,13 @@ class TestBuildUrl(unittest.TestCase):
                 "safe": "value",
             },
         )
-        self.assertEqual(result, "https://example.com/?safe=value")
-        self.assertNotIn("__proto__", result)
-        self.assertNotIn("constructor", result)
-        self.assertNotIn("prototype", result)
+        self.assertEqual(
+            result,
+            "https://example.com/?__proto__=evil&constructor=evil&prototype=evil&safe=value",
+        )
+        self.assertIn("__proto__", result)
+        self.assertIn("constructor", result)
+        self.assertIn("prototype", result)
 
 
 if __name__ == "__main__":

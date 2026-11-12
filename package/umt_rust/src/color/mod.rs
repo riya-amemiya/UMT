@@ -9,6 +9,12 @@
 pub mod cmyk_to_rgba;
 pub use cmyk_to_rgba::*;
 
+pub mod get_contrast_ratio;
+pub use get_contrast_ratio::*;
+
+pub mod get_luminance;
+pub use get_luminance::*;
+
 pub mod hexa_to_rgba;
 pub use hexa_to_rgba::*;
 

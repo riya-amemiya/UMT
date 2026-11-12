@@ -50,15 +50,15 @@ fn test_plus_sign() {
     assert_eq!(umt_flexible_number_conversion("+0"), 0.0);
 }
 
-// Note: Rust handles invalid exponential notation differently from JavaScript
-// The Rust implementation returns NaN for truncated exponential notations
+// Note: truncated exponential notation follows JavaScript parseFloat
+// The leading number is kept and the dangling exponent marker is ignored
 #[test]
 fn test_invalid_exponential() {
-    // "1e" is parsed as invalid because 'e' needs a following number
-    assert!(umt_flexible_number_conversion("1e").is_nan());
+    // "1e" keeps the leading 1 because the exponent has no digits
+    assert_eq!(umt_flexible_number_conversion("1e"), 1.0);
     assert!(umt_flexible_number_conversion("e10").is_nan());
-    // "2e+" is parsed as invalid because 'e+' needs a following number
-    assert!(umt_flexible_number_conversion("2e+").is_nan());
+    // "2e+" keeps the leading 2 because the exponent has no digits
+    assert_eq!(umt_flexible_number_conversion("2e+"), 2.0);
 }
 
 #[test]

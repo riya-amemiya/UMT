@@ -5,6 +5,7 @@
 //! - `is_absolute_url` - Check if a URL string is absolute (RFC 3986)
 //! - `join_path` - Join multiple path segments into a normalized path
 //! - `parse_query_string` - Parse a query string into a key-value map
+//! - `stringify_query` - Serialize a key-value map into a query string
 
 pub mod build_url;
 pub use build_url::*;
@@ -17,3 +18,6 @@ pub use join_path::*;
 
 pub mod parse_query_string;
 pub use parse_query_string::*;
+
+pub mod stringify_query;
+pub use stringify_query::*;

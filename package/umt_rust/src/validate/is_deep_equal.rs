@@ -52,15 +52,14 @@ pub fn umt_is_deep_equal<T: PartialEq + Clone>(
     if opts.strict_order {
         a == b
     } else {
-        let mut b_copy = b.clone();
-        for item in a {
-            if let Some(pos) = b_copy.iter().position(|x| x == item) {
-                b_copy.remove(pos);
-            } else {
-                return false;
-            }
-        }
-        b_copy.is_empty()
+        let mut matched = vec![false; b.len()];
+        a.iter().all(|item| {
+            b.iter()
+                .zip(matched.iter_mut())
+                .find(|(candidate, used)| !**used && *candidate == item)
+                .map(|(_, used)| *used = true)
+                .is_some()
+        })
     }
 }
 

@@ -95,4 +95,45 @@ describe("throttle", () => {
     throttled.cancel();
     expect(fn).not.toHaveBeenCalled();
   });
+
+  it("should invoke the pending trailing call immediately on flush", () => {
+    const fn = jest.fn();
+    const throttled = throttle(fn, 100);
+
+    throttled(1);
+    throttled(2);
+    throttled.flush();
+    expect(fn).toHaveBeenCalledTimes(2);
+    expect(fn).toHaveBeenLastCalledWith(2);
+
+    jest.advanceTimersByTime(100);
+    expect(fn).toHaveBeenCalledTimes(2);
+  });
+
+  it("should do nothing on flush when no trailing call is pending", () => {
+    const fn = jest.fn();
+    const throttled = throttle(fn, 100);
+
+    throttled.flush();
+    expect(fn).not.toHaveBeenCalled();
+    throttled(1);
+    throttled.flush();
+    expect(fn).toHaveBeenCalledTimes(1);
+  });
+
+  it("should report pending state", () => {
+    const fn = jest.fn();
+    const throttled = throttle(fn, 100);
+
+    expect(throttled.pending()).toBe(false);
+    throttled();
+    expect(throttled.pending()).toBe(false);
+    throttled();
+    expect(throttled.pending()).toBe(true);
+    jest.advanceTimersByTime(100);
+    expect(throttled.pending()).toBe(false);
+    throttled();
+    throttled.cancel();
+    expect(throttled.pending()).toBe(false);
+  });
 });

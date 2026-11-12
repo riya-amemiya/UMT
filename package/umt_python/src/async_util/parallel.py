@@ -36,16 +36,12 @@ async def parallel(
         return results
 
     next_index = 0
-    lock = asyncio.Lock()
 
     async def worker() -> None:
         nonlocal next_index
-        while True:
-            async with lock:
-                if next_index >= len(items):
-                    return
-                current_index = next_index
-                next_index += 1
+        while next_index < len(items):
+            current_index = next_index
+            next_index += 1
             results[current_index] = await function_(
                 items[current_index], current_index
             )

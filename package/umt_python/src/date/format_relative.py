@@ -1,4 +1,3 @@
-import math
 from datetime import datetime, timezone
 
 from ..consts.clock_consts import (
@@ -10,6 +9,7 @@ from ..consts.clock_consts import (
     ONE_WEEK_MS,
     ONE_YEAR_MS,
 )
+from ..math.js_round import js_round
 
 _THRESHOLDS: list[tuple[str, int]] = [
     ("year", ONE_YEAR_MS),
@@ -53,10 +53,6 @@ _JA_UNIT: dict[str, str] = {
     "month": "か月",
     "year": "年",
 }
-
-
-def _round_half_up(value: float) -> int:
-    return math.floor(value + 0.5)
 
 
 def _format_en(value: int, unit: str) -> str:
@@ -118,10 +114,11 @@ def format_relative(
     )
     abs_delta = abs(delta_ms)
 
-    formatter = _format_ja if locale == "ja" else _format_en
+    language = "" if locale is None else locale.split("-")[0].lower()
+    formatter = _format_ja if language == "ja" else _format_en
 
     for unit, ms in _THRESHOLDS:
         if abs_delta >= ms:
-            value = _round_half_up(delta_ms / ms)
+            value = int(js_round(delta_ms / ms))
             return formatter(value, unit)
     return formatter(0, "second")

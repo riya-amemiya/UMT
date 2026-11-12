@@ -299,3 +299,41 @@ fn test_reuse_array_and_simple_paths() {
     assert_eq!(get_value(&obj, "name"), Some(&json!("Alice")));
     assert_eq!(get_value(&obj, "missing[0]"), None);
 }
+
+#[test]
+fn test_canonical_index_key_on_array() {
+    let obj = json!({"items": ["A", "B"], "matrix": [["x", "y"]]});
+    assert_eq!(get_value(&obj, "items.0"), Some(&json!("A")));
+    assert_eq!(get_value(&obj, "items.1"), Some(&json!("B")));
+    assert_eq!(get_value(&obj, "matrix[0].1"), Some(&json!("y")));
+    assert_eq!(get_value(&json!([10, 20]), "1"), Some(&json!(20)));
+}
+
+#[test]
+fn test_non_canonical_index_key_on_array() {
+    let obj = json!({"items": ["A", "B"]});
+    assert_eq!(get_value(&obj, "items.01"), None);
+    assert_eq!(get_value(&obj, "items.-1"), None);
+    assert_eq!(get_value(&obj, "items.name"), None);
+    assert_eq!(get_value(&obj, "items."), None);
+    assert_eq!(get_value(&obj, "items.5"), None);
+    assert_eq!(get_value(&obj, "items.99999999999999999999999"), None);
+}
+
+#[test]
+fn test_empty_key_segments() {
+    assert_eq!(get_value(&json!({"": 1}), ""), Some(&json!(1)));
+    assert_eq!(get_value(&json!({"a": {"": 2}}), "a."), Some(&json!(2)));
+    assert_eq!(get_value(&json!({"a": 1}), ""), None);
+}
+
+#[test]
+fn test_bracket_index_edge_cases() {
+    let obj = json!({"a": [1, 2], "s": "abc"});
+    assert_eq!(get_value(&obj, "a[-3]"), None);
+    assert_eq!(get_value(&obj, "a[-2]"), Some(&json!(1)));
+    assert_eq!(get_value(&obj, "a[2]"), None);
+    assert_eq!(get_value(&obj, "a[99999999999999999999999]"), None);
+    assert_eq!(get_value(&obj, "s[0]"), None);
+    assert_eq!(get_value(&obj, "s.length"), None);
+}

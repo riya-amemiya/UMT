@@ -1,6 +1,8 @@
 from ..error.retry import retry
 from .debounce_async import DebouncedAsyncFunction, debounce_async
 from .defer import Deferred, defer
+from .map_series import map_series
+from .memoize_async import MemoizedAsyncFunction, memoize_async
 from .p_settled import SettledResult, p_settled
 from .parallel import parallel
 from .sleep import sleep
@@ -12,10 +14,13 @@ __all__ = [
     "AbortSignal",
     "DebouncedAsyncFunction",
     "Deferred",
+    "MemoizedAsyncFunction",
     "SettledResult",
     "ThrottledAsyncFunction",
     "debounce_async",
     "defer",
+    "map_series",
+    "memoize_async",
     "p_settled",
     "parallel",
     "retry",

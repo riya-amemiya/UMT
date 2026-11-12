@@ -1,36 +1,14 @@
 from collections.abc import Callable
 from typing import TypeVar
 
+from .compare_function_default import compare_function_default
+from .insertion_sort_range import insertion_sort_range
+
 T = TypeVar("T")
 
 CompareFunction = Callable[[T, T], int | float]
 
 MIN_RUN = 32
-
-
-def _compare_function_default(a: T, b: T) -> int | float:
-    """Default comparison function."""
-    if a < b:  # type: ignore
-        return -1
-    if a > b:  # type: ignore
-        return 1
-    return 0
-
-
-def _insertion_sort_range(
-    array: list[T],
-    start: int,
-    end: int,
-    compare_function: CompareFunction[T],
-) -> None:
-    """Sort a range using insertion sort."""
-    for i in range(start + 1, end + 1):
-        key = array[i]
-        j = i - 1
-        while j >= start and compare_function(array[j], key) > 0:
-            array[j + 1] = array[j]
-            j -= 1
-        array[j + 1] = key
 
 
 def _merge(
@@ -41,30 +19,25 @@ def _merge(
     compare_function: CompareFunction[T],
 ) -> None:
     """Merges two sorted portions of the array."""
+    if compare_function(array[mid], array[mid + 1]) <= 0:
+        return
+
     left = array[start : mid + 1]
-    right = array[mid + 1 : end + 1]
+    left_length = len(left)
     left_index = 0
-    right_index = 0
+    right_index = mid + 1
     array_index = start
 
-    while left_index < len(left) and right_index < len(right):
-        if compare_function(left[left_index], right[right_index]) <= 0:
+    while left_index < left_length and right_index <= end:
+        if compare_function(left[left_index], array[right_index]) <= 0:
             array[array_index] = left[left_index]
             left_index += 1
         else:
-            array[array_index] = right[right_index]
+            array[array_index] = array[right_index]
             right_index += 1
         array_index += 1
 
-    while left_index < len(left):
-        array[array_index] = left[left_index]
-        left_index += 1
-        array_index += 1
-
-    while right_index < len(right):
-        array[array_index] = right[right_index]
-        right_index += 1
-        array_index += 1
+    array[array_index : array_index + left_length - left_index] = left[left_index:]
 
 
 def _get_min_run_length(n: int) -> int:
@@ -107,7 +80,7 @@ def tim_sort(
         return result
 
     if compare_function is None:
-        compare_function = _compare_function_default
+        compare_function = compare_function_default
 
     if end is None:
         end = len(result) - 1
@@ -118,7 +91,7 @@ def tim_sort(
     run_start = start
     while run_start <= end:
         run_end = min(run_start + min_run - 1, end)
-        _insertion_sort_range(result, run_start, run_end, compare_function)
+        insertion_sort_range(result, compare_function, run_start, run_end)
         run_start += min_run
 
     size = min_run

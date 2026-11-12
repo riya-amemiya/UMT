@@ -10,9 +10,6 @@ def truncate(string_: str, length: int, suffix: str = "...") -> str:
     Returns:
         The truncated string.
 
-    Raises:
-        ValueError: If length is negative.
-
     Example:
         >>> truncate("Hello World", 5)
         'Hello...'
@@ -20,10 +17,9 @@ def truncate(string_: str, length: int, suffix: str = "...") -> str:
         'Hello~'
         >>> truncate("Hello", 10)
         'Hello'
+        >>> truncate("Hello", -1)
+        'Hell...'
     """
-    if length < 0:
-        raise ValueError("Length must be non-negative")
-
     if len(string_) <= length:
         return string_
 

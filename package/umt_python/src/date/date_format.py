@@ -4,6 +4,10 @@ from typing import Any
 
 from .get_timezone_offset_string import get_timezone_offset_string
 
+_TOKEN_PATTERN = re.compile(
+    r"\[([^\]]+)]|(Y{1,4}|M{1,2}|D{1,2}|d{1,2}|H{1,2}|h{1,2}|a|A|m{1,2}|s{1,2}|Z{1,2}|SSS)"
+)
+
 
 def date_format(date: Any, format_string: str = "YYYY-MM-DDTHH:mm:ssZ") -> str:  # noqa: ANN401
     """
@@ -54,7 +58,7 @@ def date_format(date: Any, format_string: str = "YYYY-MM-DDTHH:mm:ssZ") -> str: 
     minute_string = str(date.minute)
     second_string = str(date.second)
     millisecond_string = str(date.microsecond // 1000)
-    day_string = str(date.weekday())
+    day_string = str((date.weekday() + 1) % 7)
     ampm = "AM" if hours < 12 else "PM"
     timezone_offset_string = get_timezone_offset_string(date)
 
@@ -88,5 +92,4 @@ def date_format(date: Any, format_string: str = "YYYY-MM-DDTHH:mm:ssZ") -> str: 
             return escaped
         return matches.get(token) or match.group(0)
 
-    pattern = r"\[([^\]]+)]|(Y{1,4}|M{1,2}|D{1,2}|d{1,2}|H{1,2}|h{1,2}|a|A|m{1,2}|s{1,2}|Z{1,2}|SSS)"
-    return re.sub(pattern, replacer, format_string)
+    return _TOKEN_PATTERN.sub(replacer, format_string)

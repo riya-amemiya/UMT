@@ -44,3 +44,18 @@ fn test_return_false_for_strings_with_mixed_content() {
     "
     )); // Multiline mixed content
 }
+
+#[test]
+fn test_letter_like_characters_outside_category_l() {
+    assert!(umt_has_no_letters("\u{2167}"));
+    assert!(umt_has_no_letters("\u{345}"));
+    assert!(umt_has_no_letters("\u{2460}"));
+}
+
+#[test]
+fn test_letters_in_every_letter_subcategory() {
+    assert!(!umt_has_no_letters("\u{aa}"));
+    assert!(!umt_has_no_letters("\u{1c5}"));
+    assert!(!umt_has_no_letters("\u{65e5}"));
+    assert!(!umt_has_no_letters("1a"));
+}

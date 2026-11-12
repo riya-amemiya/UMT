@@ -2,10 +2,11 @@
 //! has elapsed since the last call.
 //!
 //! Because Rust has no built-in single-threaded event loop like JavaScript's
-//! `setTimeout`, the trailing edge is driven explicitly by [`Debounced::flush`]
-//! (which reproduces exactly what the JavaScript timer callback would do once the
-//! wait has elapsed). Timing decisions use real wall-clock time via
-//! [`std::time::Instant`], mirroring `Date.now()` in the TypeScript reference.
+//! `setTimeout`, the trailing edge runs when [`Debounced::flush`] is called, as
+//! the TypeScript `flush` does, or lazily at the next [`Debounced::call`] once
+//! the wait has elapsed, which is when the JavaScript timer would already have
+//! fired. Timing decisions use real wall-clock time via [`std::time::Instant`],
+//! mirroring `Date.now()` in the TypeScript reference.
 
 use std::cell::RefCell;
 use std::time::{Duration, Instant};
@@ -42,9 +43,9 @@ struct DebounceState<A> {
 
 /// A debounced function with leading/trailing edge control and cancellation.
 ///
-/// Call [`Debounced::call`] to schedule, [`Debounced::flush`] to drive the
-/// trailing edge once the wait has elapsed, and [`Debounced::cancel`] to discard
-/// any pending invocation.
+/// Call [`Debounced::call`] to schedule, [`Debounced::flush`] to run the pending
+/// trailing invocation immediately, [`Debounced::pending`] to check for a
+/// pending timer, and [`Debounced::cancel`] to discard any pending invocation.
 pub struct Debounced<A, R> {
     func: Box<dyn Fn(A) -> R>,
     wait: Duration,
@@ -59,11 +60,24 @@ where
 {
     /// Invokes the debounced function with the given argument.
     ///
-    /// On the leading edge (when `leading` is enabled and no timer is pending)
-    /// the underlying function is invoked immediately. A timer is started on the
-    /// first call of a burst; subsequent calls within the wait window only update
-    /// the stored arguments and the last-call time.
+    /// If the wait has elapsed since the previous call of a burst, the trailing
+    /// edge of that burst runs first, as the JavaScript timer would already have
+    /// fired. On the leading edge (when `leading` is enabled and no timer is
+    /// pending) the underlying function is invoked immediately. A timer is
+    /// started on the first call of a burst; subsequent calls within the wait
+    /// window only update the stored arguments and the last-call time.
     pub fn call(&self, argument: A) {
+        let is_expired = {
+            let state = self.state.borrow();
+            state.timer_active
+                && state
+                    .last_call_time
+                    .is_some_and(|last_call_time| last_call_time.elapsed() >= self.wait)
+        };
+        if is_expired {
+            self.flush();
+        }
+
         let is_first_call = {
             let mut state = self.state.borrow_mut();
             state.last_arguments = Some(argument);
@@ -86,32 +100,21 @@ where
         }
     }
 
-    /// Drives the trailing edge, reproducing the JavaScript timer callback.
+    /// Immediately runs the pending trailing invocation, like the TypeScript
+    /// `flush`.
     ///
-    /// If the wait period has elapsed since the last call, the timer is cleared
-    /// and, when `trailing` is enabled and arguments are pending, the underlying
-    /// function is invoked with the latest arguments. Otherwise the timer remains
-    /// active (the JavaScript code reschedules itself for the remaining time).
+    /// When a timer is pending it is cleared and, when `trailing` is enabled and
+    /// arguments are pending, the underlying function is invoked with the latest
+    /// arguments without waiting for the rest of the wait period. Does nothing
+    /// when no timer is pending.
     ///
     /// Returns `true` when the trailing invocation fired, `false` otherwise.
     pub fn flush(&self) -> bool {
-        let elapsed = {
-            let state = self.state.borrow();
+        let argument = {
+            let mut state = self.state.borrow_mut();
             if !state.timer_active {
                 return false;
             }
-            match state.last_call_time {
-                Some(last_call_time) => last_call_time.elapsed(),
-                None => return false,
-            }
-        };
-
-        if elapsed < self.wait {
-            return false;
-        }
-
-        let argument = {
-            let mut state = self.state.borrow_mut();
             state.timer_active = false;
             if self.trailing {
                 state.last_arguments.take()
@@ -137,8 +140,12 @@ where
         state.last_call_time = None;
     }
 
-    /// Returns whether a debounced invocation is currently pending.
-    pub fn is_pending(&self) -> bool {
+    /// Returns whether a debounce timer is currently pending, like the
+    /// TypeScript `pending`.
+    ///
+    /// The timer stays pending until [`Debounced::flush`], [`Debounced::cancel`]
+    /// or a [`Debounced::call`] after the wait has elapsed resolves it.
+    pub fn pending(&self) -> bool {
         self.state.borrow().timer_active
     }
 }
@@ -155,8 +162,9 @@ where
 ///
 /// # Returns
 ///
-/// A [`Debounced`] value. Use `.call(arg)` to schedule, `.flush()` to drive the
-/// trailing edge once `wait` has elapsed, and `.cancel()` to discard pending work.
+/// A [`Debounced`] value. Use `.call(arg)` to schedule, `.flush()` to run the
+/// pending trailing invocation immediately, `.pending()` to check for a pending
+/// timer, and `.cancel()` to discard pending work.
 ///
 /// # Examples
 ///
@@ -179,10 +187,16 @@ where
 /// debounced.call(2);
 /// debounced.call(3);
 /// assert_eq!(count.get(), 0);
+/// assert!(debounced.pending());
 ///
-/// thread::sleep(Duration::from_millis(30));
 /// assert!(debounced.flush());
 /// assert_eq!(count.get(), 3);
+/// assert!(!debounced.pending());
+///
+/// debounced.call(4);
+/// thread::sleep(Duration::from_millis(30));
+/// debounced.call(5);
+/// assert_eq!(count.get(), 7);
 /// ```
 pub fn umt_debounce<F, A, R>(f: F, wait: Duration, options: DebounceOptions) -> Debounced<A, R>
 where

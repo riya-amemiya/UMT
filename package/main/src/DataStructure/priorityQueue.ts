@@ -2,7 +2,8 @@ import { unwrap } from "@/Tool/unwrap";
 
 /**
 A priority queue implementation using a binary heap.
-Higher priority values are dequeued first.
+Higher priority values are dequeued first by default. An optional
+comparator replaces the ordering, which allows min-heaps and tie-breaking.
 
 ## Features
 - **enqueue(value, priority)**: Add element with priority
@@ -53,10 +54,17 @@ console.log(queue.peekPriority()); // 3
 export class PriorityQueue<T> {
   private heap: { value: T; priority: number }[] = [];
   private minPriority = 0;
+  private readonly comparator?: (
+    a: { value: T; priority: number },
+    b: { value: T; priority: number },
+  ) => number;
 
   /**
   Creates a new PriorityQueue instance.
   @param initialElements - Optional array of initial elements with priorities
+  @param comparator - Optional ordering function. A negative return value
+  means `a` is dequeued before `b`. When omitted, higher priority values are
+  dequeued first.
   @example
   ```typescript
   const queue = new PriorityQueue<string>();
@@ -66,8 +74,25 @@ export class PriorityQueue<T> {
     { value: "item2", priority: 5 }
   ]);
   ```
+  @example
+  ```typescript
+  // Min-heap: lower priority values are dequeued first
+  const queue = new PriorityQueue<string>(undefined, (a, b) =>
+    a.priority - b.priority
+  );
+  queue.enqueue("high", 10);
+  queue.enqueue("low", 1);
+  console.log(queue.dequeue()); // "low"
+  ```
   */
-  constructor(initialElements?: { value: T; priority: number }[]) {
+  constructor(
+    initialElements?: { value: T; priority: number }[],
+    comparator?: (
+      a: { value: T; priority: number },
+      b: { value: T; priority: number },
+    ) => number,
+  ) {
+    this.comparator = comparator;
     if (!initialElements) {
       return;
     }
@@ -106,7 +131,20 @@ export class PriorityQueue<T> {
   }
 
   /**
-  Builds a max heap from the current heap array.
+  Checks whether the element at the first index must move above the
+  element at the second index while sifting down.
+  @param index - First index
+  @param index_ - Second index
+  @returns True if the first element comes out first
+  */
+  private precedes(index: number, index_: number): boolean {
+    return this.comparator
+      ? this.comparator(this.heap[index], this.heap[index_]) < 0
+      : this.heap[index].priority > this.heap[index_].priority;
+  }
+
+  /**
+  Builds a heap from the current heap array.
   */
   private buildHeap(): void {
     for (
@@ -126,7 +164,10 @@ export class PriorityQueue<T> {
     let currentIndex = index;
     while (currentIndex > 0) {
       const parentIndex = Math.floor((currentIndex - 1) / 2);
-      if (this.heap[currentIndex].priority <= this.heap[parentIndex].priority) {
+      const isOrdered = this.comparator
+        ? this.comparator(this.heap[currentIndex], this.heap[parentIndex]) >= 0
+        : this.heap[currentIndex].priority <= this.heap[parentIndex].priority;
+      if (isOrdered) {
         break;
       }
       this.swap(currentIndex, parentIndex);
@@ -145,17 +186,11 @@ export class PriorityQueue<T> {
       const rightChild = 2 * currentIndex + 2;
       let largest = currentIndex;
 
-      if (
-        leftChild < this.heap.length &&
-        this.heap[leftChild].priority > this.heap[largest].priority
-      ) {
+      if (leftChild < this.heap.length && this.precedes(leftChild, largest)) {
         largest = leftChild;
       }
 
-      if (
-        rightChild < this.heap.length &&
-        this.heap[rightChild].priority > this.heap[largest].priority
-      ) {
+      if (rightChild < this.heap.length && this.precedes(rightChild, largest)) {
         largest = rightChild;
       }
 
@@ -231,6 +266,8 @@ export class PriorityQueue<T> {
   /**
   Adds an element to the end of the queue with lowest priority.
   This element will be dequeued last (FIFO for equal lowest priority).
+  It is assigned a priority one below the current minimum, so with a custom
+  comparator its position follows how the comparator orders that priority.
   
   @param value - The value to add
   @example

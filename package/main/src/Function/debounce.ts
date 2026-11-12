@@ -13,7 +13,7 @@ export interface DebounceOptions {
 }
 
 /**
-A debounced function with a cancel method.
+A debounced function with cancel, flush and pending methods.
 */
 export interface DebouncedFunction<
   T extends (...arguments_: unknown[]) => unknown,
@@ -23,6 +23,15 @@ export interface DebouncedFunction<
   Cancels any pending debounced invocation.
   */
   cancel: () => void;
+  /**
+  Immediately runs the pending trailing invocation, if any, and clears the
+  timer. Does nothing when no timer is pending.
+  */
+  flush: () => void;
+  /**
+  Returns whether a debounce timer is currently pending.
+  */
+  pending: () => boolean;
 }
 
 /**
@@ -35,12 +44,16 @@ the last time the debounced function was called.
 @param options - Configuration for leading/trailing invocation.
 @param options.leading - If true, invoke on the leading edge.
 @param options.trailing - If true, invoke on the trailing edge (default).
-@returns The debounced function with a cancel method.
+@returns The debounced function with cancel, flush and pending methods.
 
 @example
 ```typescript
 const debounced = debounce(() => console.log("called"), 300);
 debounced();
+debounced();
+debounced.pending(); // true
+debounced.flush(); // logs "called" immediately
+debounced.pending(); // false
 debounced();
 debounced.cancel();
 ```
@@ -56,17 +69,23 @@ export const debounce = <T extends (...arguments_: unknown[]) => unknown>(
   const thisReference = { value: undefined as unknown };
   let lastCallTime = 0;
 
+  const trailingEdge = () => {
+    timerId = undefined;
+    if (!isTrailing || lastArguments === undefined) {
+      return;
+    }
+
+    function_.apply(thisReference.value, lastArguments);
+    lastArguments = undefined;
+  };
+
   const scheduleCheck = () => {
     timerId = setTimeout(
       () => {
         const elapsed = Date.now() - lastCallTime;
         const remaining = wait - elapsed;
         if (remaining <= 0) {
-          timerId = undefined;
-          if (isTrailing && lastArguments !== undefined) {
-            function_.apply(thisReference.value, lastArguments);
-            lastArguments = undefined;
-          }
+          trailingEdge();
         } else {
           scheduleCheck();
         }
@@ -104,6 +123,16 @@ export const debounce = <T extends (...arguments_: unknown[]) => unknown>(
     thisReference.value = undefined;
     lastCallTime = 0;
   };
+
+  debounced.flush = () => {
+    if (timerId === undefined) {
+      return;
+    }
+    clearTimeout(timerId);
+    trailingEdge();
+  };
+
+  debounced.pending = () => timerId !== undefined;
 
   return debounced;
 };

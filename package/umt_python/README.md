@@ -44,30 +44,30 @@ Public names are re-exported from `src/__init__.py`. Grouped the same way as Typ
 | Module | Examples |
 | --- | --- |
 | `advance` | `range_advance` |
-| `array` | `chunk`, `unique`, `ultra_number_sort`, `zip_arrays` |
-| `async_util` | `sleep`, `parallel`, `timeout`, `debounce_async` |
-| `color` | `hexa_to_rgba`, `rgba_to_hsla` (see below) |
+| `array` | `chunk`, `unique`, `ultra_number_sort`, `zip_arrays`, `unzip`, `sort_by`, `min_by`, `max_by`, `take_while`, `drop_while` |
+| `async_util` | `sleep`, `parallel`, `timeout`, `debounce_async`, `memoize_async` |
+| `color` | `hexa_to_rgba`, `rgba_to_hsla`, `get_luminance`, `get_contrast_ratio` (see below) |
 | `consts` | `ONE_DAY_MS`, `HttpStatus` |
-| `crypto` | `encode_base32`, `decode_base32`, `decode_base58` (see below) |
-| `data_structure` | `LRUCache`, `TTLCache`, `PriorityQueue` |
+| `crypto` | `encode_base32`, `decode_base32`, `decode_base58`, `encode_hex`, `decode_hex` (see below) |
+| `data_structure` | `LRUCache`, `TTLCache`, `PriorityQueue`, `Deque` |
 | `date` | `is_between`, `add_business_days`, `from_unix` (see below) |
-| `error` | `safe_execute`, `match_result` |
+| `error` | `safe_execute`, `match_result`, `unwrap_or`, `map_error` |
 | `function` | `debounce`, `memoize`, `throttle` |
-| `ip` | `ip_to_long`, `cidr_to_long`, `is_in_range`, `is_private_ip` (see below) |
-| `iterator` | `lazy_map`, `lazy_filter`, `lazy_take` |
+| `ip` | `ip_to_long`, `cidr_to_long`, `is_in_range`, `is_private_ip`, `is_valid_ip`, `parse_cidr` (see below) |
+| `iterator` | `lazy_map`, `lazy_filter`, `lazy_take`, `lazy_chunk`, `lazy_zip` |
 | `map` | `group_by_to_map`, `zip_to_map` |
-| `math` | `gcd`, `n_cr`, `sum_precise`, `calculator`, `math_converter`, `to_base_n`, `deg_to_rad`, `rad_to_deg` (see below) |
-| `number` | `format_number`, `to_ordinal`, `to_percentage` |
-| `object` | `object_get`, `deep_clone`, `flatten_object` |
+| `math` | `gcd`, `lcm`, `n_cr`, `sum_precise`, `calculator`, `math_converter`, `to_base_n`, `deg_to_rad`, `rad_to_deg`, `variance`, `standard_deviation`, `quantile`, `lerp`, `inverse_lerp`, `map_range`, `is_prime` (see below) |
+| `number` | `format_bytes`, `format_number`, `to_ordinal`, `to_percentage` |
+| `object` | `object_get`, `object_update`, `object_unset`, `object_omit_deep`, `deep_clone`, `flatten_object` |
 | `predicate` | `every`, `some`, `is_nullish` |
 | `random` | `random_choice`, `seeded_random` |
 | `simple` | `birthday_simple`, `now_simple` |
-| `string` | `format_string`, `slugify`, `strip_ansi`, `strip_tags`, `words`, `normalize_whitespace`, `unescape_html`, `escape_html`, `camel_case`, `kebab_case`, `sanitize_string`, `delete_spaces`, `to_full_width`, `to_half_width`, `to_base64`, `from_base64` (see below) |
-| `time` | `convert_time` |
+| `string` | `format_string`, `slugify`, `strip_ansi`, `strip_tags`, `words`, `normalize_whitespace`, `unescape_html`, `escape_html`, `camel_case`, `kebab_case`, `sanitize_string`, `delete_spaces`, `to_full_width`, `to_half_width`, `to_base64`, `from_base64`, `encode_base64_url`, `decode_base64_url` (see below) |
+| `time` | `convert_time`, `format_duration` |
 | `tool` | `pipe`, `unwrap`, `parse_json`, `escape_regexp` (see below) |
 | `ua` | `parse_user_agent`, `extract_browser_from_user_agent`, `extract_device_from_user_agent`, `extract_os_from_user_agent` (see below) |
 | `unit` | `to_celsius`, `to_kelvin` |
-| `url` | `build_url`, `parse_query_string`, `is_absolute_url`, `join_path` (see below) |
+| `url` | `build_url`, `parse_query_string`, `stringify_query`, `is_absolute_url`, `join_path` (see below) |
 | `validate` | `is_number`, `array_of`, `parse_email` (see below) |
 
 Not every TypeScript helper is ported yet. There is no `is_same` (use `is_same_day` or compare truncated values with `start_of`). There is no date `format` (TypeScript `format` / Rust `umt_format` / Go `FormatDate`). There is also no `count_by`, `partition`, `sliding`, `map_series`, or `safe_execute_async`.
@@ -82,6 +82,10 @@ Local-time calendar helpers aligned with TypeScript `package/main/src/Date`. Wee
 | `add_business_days` | `(date, amount, holidays=None) -> datetime` | Walk calendar days until `amount` weekdays (minus optional holidays compared with `is_same_day`) have been counted. Start date is not counted: Friday + 1 is Monday. `0` returns a clone and does not snap to a business day. | `add_business_days(datetime(2025, 4, 18, 9, 30), 1)  # datetime(2025, 4, 21, 9, 30)` |
 | `sub_business_days` | `(date, amount, holidays=None) -> datetime` | `add_business_days(date, -amount, holidays)` | `sub_business_days(datetime(2025, 4, 21, 9, 30), 1)  # datetime(2025, 4, 18, 9, 30)` |
 | `is_business_day` | `(date, holidays=None) -> bool` | Weekday and not in `holidays` | `is_business_day(datetime(2025, 4, 21))  # True` |
+| `business_days_between` | `(start, end, holidays=None) -> int` | Business days from `start` (excluded) to `end` (included), compared by calendar day. Negative when `end` is before `start`. Inverse of `add_business_days` when `end` is a business day. | `business_days_between(datetime(2025, 4, 18), datetime(2025, 4, 21))  # 1` / `business_days_between(datetime(2025, 4, 21), datetime(2025, 4, 18))  # -1` |
+| `is_after` / `is_before` | `(date, compare, unit=None) -> bool` | Strict comparison. Omit `unit` for exact timestamps; with a unit, both dates are truncated with `start_of` first. | `is_after(datetime(2025, 4, 16), datetime(2025, 4, 15))  # True` / `is_before(datetime(2025, 4, 15, 1), datetime(2025, 4, 15, 23), "day")  # False` |
+| `days_in_month` | `(date) -> int` | Days in the month of `date` (28–31) | `days_in_month(datetime(2024, 2, 1))  # 29` |
+| `parse_date` | `(string, format_string) -> datetime \| None` | Inverse of `date_format` with the same tokens and `[text]` escapes. `YY` is 2000–2099. Missing fields default to 1970-01-01 00:00:00. `Z` / `ZZ` give an aware datetime in that offset; otherwise naive local. Returns `None` on mismatch, out-of-range fields, a disagreeing `d`, or year 0. | `parse_date("2025-04-04", "YYYY-MM-DD")  # datetime(2025, 4, 4, 0, 0)` / `parse_date("2025-13-01", "YYYY-MM-DD")  # None` |
 | `get_quarter` | `(date) -> int` | Local month → 1–4 (Jan–Mar = 1) | `get_quarter(datetime(2025, 4, 15))  # 2` |
 | `week_of_year` | `(date) -> int` | Sunday-start week index. Week 1 contains January 1 of that year. Not ISO-8601. | `week_of_year(datetime(2025, 1, 1))  # 1` / `week_of_year(datetime(2025, 1, 5))  # 2` |
 | `from_unix` | `(value, unit="s") -> datetime` | Epoch to naive local datetime whose timestamp matches JavaScript `Date.getTime()` | `from_unix(0).timestamp()  # 0.0` |
@@ -111,6 +115,8 @@ Unicode-aware helpers aligned with TypeScript `package/main/src/String`.
 | `slugify` | `(string_: str) -> str` | NFD, strip combining marks, lowercase, hyphenate. Python `\w` is Unicode, so CJK stays: `"Japanese: こんにちは"` → `"japanese-こんにちは"`. TypeScript / Go drop those letters (`"japanese"`). | `slugify("Hello World!")  # "hello-world"` / `slugify("Café")  # "cafe"` |
 | `to_base64` | `(char: str) -> str` | UTF-8 → standard Base64 (`A-Za-z0-9+/`, `=` padding). Empty → `""`. Not URL-safe. | `to_base64("Hello World")  # "SGVsbG8gV29ybGQ="` / `to_base64("")  # ""` |
 | `from_base64` | `(base64_string: str) -> str` | Standard Base64 → UTF-8. Empty → `""`. **Requires padding.** Invalid Base64, missing padding, and invalid UTF-8 raise `ValueError("Invalid Base64 string")`. TypeScript `fromBase64` accepts missing padding (`"SGVsbG8gV29ybGQ"`) and maps invalid UTF-8 to U+FFFD. | `from_base64("SGVsbG8gV29ybGQ=")  # "Hello World"` |
+| `encode_base64_url` | `(char: str) -> str` | UTF-8 → URL-safe Base64 (RFC 4648 section 5, `-` and `_`). No `=` padding. Empty → `""`. | `encode_base64_url("Hello World")  # "SGVsbG8gV29ybGQ"` / `encode_base64_url("???>")  # "Pz8_Pg"` |
+| `decode_base64_url` | `(base64_url_string: str) -> str` | URL-safe Base64 → UTF-8. Padding optional (missing `=` is added up to a multiple of 4 first). `+`, `/`, whitespace, a length of `4n + 1`, and invalid UTF-8 raise `ValueError("Invalid Base64 string")`. TypeScript `decodeBase64Url` does not validate and maps invalid UTF-8 to U+FFFD. | `decode_base64_url("SGVsbG8gV29ybGQ")  # "Hello World"` / `decode_base64_url("Zg==")  # "f"` |
 
 ## IP helpers
 
@@ -126,12 +132,17 @@ IPv4 dotted-decimal only, aligned with TypeScript `package/main/src/IP`. Unlike 
 | `get_ip_class` | `(ip: str) -> str` | Classful first-octet lookup (`A`–`E`). `0.0.0.0` and malformed input return `""`. | `get_ip_class("10.0.0.1")  # "A"` |
 | `get_network_address` | `(ip: str, subnet_mask: str) -> int` | Returns an unsigned 32-bit **int**, not a dotted string. | `get_network_address("192.168.1.1", "255.255.255.0")  # 3232235776` |
 | `ip_to_binary_string` | `(ip: str) -> str` | 32-character `0`/`1` string, eight bits per octet. | `ip_to_binary_string("192.168.0.1")  # "11000000101010000000000000000001"` |
+| `is_valid_ip` | `(ip: str) -> bool` | `True` exactly when `ip_to_long` accepts the input: four ASCII decimal octets `0`–`255`, no leading zeros, no whitespace. | `is_valid_ip("192.168.1.1")  # True` / `is_valid_ip("192.168.01.1")  # False` |
+| `parse_cidr` | `(cidr: str) -> ParsedCidr` | TypedDict `{network_address, prefix_length}`. Host bits are cleared. Prefix is `0`–`32` without leading zeros. Invalid address or prefix raises `ValueError`. TypeScript `parseCidr` does not validate. | `parse_cidr("192.168.1.130/25")  # {'network_address': '192.168.1.128', 'prefix_length': 25}` |
 
 ## Color and URL helpers
 
 | Function | Type | Description | Example |
 | --- | --- | --- | --- |
 | `hexa_to_rgba` | `(hex_code: str) -> dict[str, float]` | `#` plus 3, 6, or 8 hex digits → `{r, g, b, a}`. `a` is `0`–`1` rounded to 2 decimals. Invalid input raises `ValueError`. TypeScript `hexaToRgba` does not validate. | `hexa_to_rgba("#FF0000")  # {'r': 255, 'g': 0, 'b': 0, 'a': 1.0}` / `hexa_to_rgba("#fff")  # {'r': 255, 'g': 255, 'b': 255, 'a': 1.0}` |
+| `get_luminance` | `(r, g, b, a=1.0) -> float` | WCAG 2.1 relative luminance (`0.03928` threshold), `0`–`1`. Alpha is range-checked but ignored. Out-of-range values raise `ValueError("Invalid rgba value")`. | `get_luminance(255, 0, 0)  # 0.2126` |
+| `get_contrast_ratio` | `(color1: Mapping[str, int \| float], color2: Mapping[str, int \| float]) -> float` | WCAG 2.1 contrast ratio `1`–`21` between two `{r, g, b, a?}` mappings (for example `hexa_to_rgba` output). Argument order does not matter. | `get_contrast_ratio({"r": 0, "g": 0, "b": 0}, {"r": 255, "g": 255, "b": 255})  # 21.0` |
+| `stringify_query` | `(params: dict[str, str]) -> str` | Inverse of `parse_query_string`. Same `application/x-www-form-urlencoded` encoding as `build_url`. No leading `?`. Empty → `""`. | `stringify_query({"q": "hello world", "tag": "a&b"})  # "q=hello+world&tag=a%26b"` |
 | `is_absolute_url` | `(url: str) -> bool` | RFC 3986 scheme check (letter, then letters / digits / `+` / `.` / `-`, then `:`). Protocol-relative URLs are not absolute. | `is_absolute_url("https://example.com")  # True` / `is_absolute_url("//example.com")  # False` |
 | `join_path` | `(*segments: str) -> str` | Slash-normalizing string join, not `os.path.join`. Keeps the first segment's leading `/` and the last segment's trailing `/`. Empty pieces are dropped. No `.` / `..` resolution. No segments → `""`. A single `"///"` stays `"///"`. | `join_path("https://example.com/", "/api/", "/users")  # "https://example.com/api/users"` / `join_path("a", "", "b")  # "a/b"` |
 
@@ -155,6 +166,8 @@ RFC 4648 Base32 (`A-Z` + `2-7`, `=` padding), aligned with TypeScript `package/m
 | `encode_base32` | `(input_data: str \| bytes) -> str` | UTF-8 encode a string first. Empty input → `""`. Pads to a multiple of 8 with `=`. | `encode_base32("Hello")  # "JBSWY3DP"` / `encode_base32("f")  # "MY======"` |
 | `decode_base32` | `(input_data: str) -> bytes` | Skips `=` anywhere. **Raises `ValueError`** on invalid / lowercase characters (`"1A"`, `"jbswy3dp"`). TypeScript `decodeBase32` maps those to value `0` and does not throw. | `decode_base32("JBSWY3DP")  # b"Hello"` / `decode_base32("JB=SWY3DP")  # b"Hello"` |
 | `decode_base32_to_string` | `(input_data: str) -> str` | UTF-8 decode of `decode_base32`. | `decode_base32_to_string("JBSWY3DP")  # "Hello"` |
+| `encode_hex` | `(input_data: str \| bytes) -> str` | UTF-8 encode a string first. Lowercase, two digits per byte. Empty input → `""`. | `encode_hex("Hello")  # "48656c6c6f"` |
+| `decode_hex` | `(input_data: str) -> bytes` | Accepts upper and lower case. **Raises `ValueError`** on odd length or non-hex characters. TypeScript `decodeHex` does not validate. | `decode_hex("48656c6c6f")  # b"Hello"` |
 
 ## parse_email
 
@@ -175,7 +188,14 @@ parse_email("user@localhost", ParseEmailOptions(level="rfc5321")).valid  # False
 | Function | Type | Description | Example |
 | --- | --- | --- | --- |
 | `calculator` | `(expression: str, exchange=None) -> str` | Strips whitespace. `=` solves a single-variable equation (`"x=5"` → `"5"`). Otherwise evaluates `+ - * / ^` and parentheses. Incomplete input is returned as-is. `^` reduces the last pair first (`"2^2^2"` → `"16"`). | `calculator("1+2")  # "3"` / `calculator("$10*2", {"$": 100})  # "2000"` |
-| `math_converter` | `(equation: str) -> str` | Rewrites `n*n` or `n^2` as a sum of simpler products. Uses `float` in the rewritten terms, so the string is `"1500.0*1000+…"` rather than TypeScript / Go `"1500*1000+…"`. | `math_converter("1250*1250")  # "1500.0*1000+400.0*100+200.0*100+50*50"` |
+| `math_converter` | `(equation: str) -> str` | Rewrites `n*n` or `n^2` as a sum of simpler products. Uses `float` in the rewritten terms, so the string is `"1500.0*1000+…"` rather than TypeScript / Go `"1500*1000+…"`. An expansion that reproduces its own input is returned after the first repetition (`"5*5"` → `"5*5+0*0"`), matching TypeScript and Rust. | `math_converter("1250*1250")  # "1500.0*1000+400.0*100+200.0*100+50*50"` |
+| `lcm` | `(x: float, y: float, *z: float) -> float` | LCM of two or more numbers. `0` if any argument is `0`. Decimals are scaled like `gcd`. | `lcm(2, 3, 4)  # 12.0` |
+| `n_cr` | `(n: int, r: int) -> float` | Multiplicative formula with `k = min(r, n - r)`, so the result stays finite whenever it fits in a float (`n_cr(1000, 500)` ≈ `2.7e299`). `inf` above the float range, `nan` for invalid arguments. | `n_cr(5, 2)  # 10.0` |
+| `variance` | `(values, sample: bool = False) -> float` | Population variance by default; `sample=True` divides by `n - 1`. `0` for an empty list, `nan` for a sample of one value. | `variance([1, 2, 3], True)  # 1.0` |
+| `standard_deviation` | `(values, sample: bool = False) -> float` | Population (`statistics.pstdev`) by default; `sample=True` is `sqrt(variance(values, True))`. | `standard_deviation([1, 2, 3], True)  # 1.0` |
+| `quantile` | `(values, q: float) -> float` | `percentile(values, q * 100)` with `q` in `0`–`1`. Raises `ValueError` outside that range, like `percentile`. | `quantile([1, 2, 3, 4], 0.5)  # 2.5` |
+| `lerp` / `inverse_lerp` / `map_range` | `(start, end, t)` / `(start, end, value)` / `(value, in_min, in_max, out_min, out_max)` | Linear interpolation without clamping. `inverse_lerp` returns `0` when `start == end`, so `map_range` returns `out_min` for an empty input range. | `map_range(5, 0, 10, 0, 100)  # 50.0` |
+| `is_prime` | `(n: int \| float) -> bool` | 6k ± 1 trial division. `False` for `bool`, non-integers, `nan`, infinities and numbers below 2. `is_prime_number` is kept. | `is_prime(97)  # True` |
 | `to_base_n` | `(value: int, radix: int = 2) -> str` | Default radix is **2** (`to_base_n(10)` → `"1010"`). Hex digits are lowercase. Radix 2 / 8 / 10 / 16 use format strings (`f"{value:d}"` for 10). `bool` is accepted as `int` (`True` → `"1"`). Rust returns `"Invalid radix"` and Go panics on a base outside `2`–`36`; this function does not check that range. | `to_base_n(15, 16)  # "f"` / `to_base_n(255, 16)  # "ff"` / `to_base_n(-10, 10)  # "-10"` |
 | `deg_to_rad` / `rad_to_deg` | `(x: float) -> float` | Uses `multiplication` / `division`, not native `*` `/`. Does **not** wrap to 0–360. `rad_to_deg(math.pi)` is `180.0`. Rust / Go / wasm use native float multiply. | `rad_to_deg(math.pi)  # 180.0` / `round(deg_to_rad(180), 10)  # 3.1415926536` |
 
@@ -244,6 +264,7 @@ Fixed regexes in this package are compiled once at module level (`re.compile`): 
 
 | Function | Type | Description | Example |
 |----------|------|-------------|---------|
+| `format_bytes` | `(bytes_: int \| float, decimals: int = 2) -> str` | Base-1024 size with units B, KB, MB, GB, TB, PB (values of a PB or more stay in PB). Rounded with JavaScript `Math.round` semantics, no trailing zeros. | `format_bytes(1536)  # "1.5 KB"` / `format_bytes(1234567, 0)  # "1 MB"` / `format_bytes(-2048)  # "-2 KB"` |
 | `format_number` | `(value: float \| int, *, locale: str \| None = None, minimum_fraction_digits: int \| None = None, maximum_fraction_digits: int \| None = None, style: Literal["decimal", "currency", "percent"] = "decimal", currency: str \| None = None) -> str` | Format a number with locale-aware separators, fraction-digit controls, and decimal/percent/currency styles. Mirrors `Intl.NumberFormat` from the TypeScript source. | `format_number(1234567.89)  # "1,234,567.89"` / `format_number(1234567.89, locale="de-DE")  # "1.234.567,89"` / `format_number(0.75, style="percent")  # "75%"` / `format_number(1234.5, style="currency", currency="USD")  # "$1,234.50"` |
 | `to_ordinal` | `(value: int \| float) -> str` | Convert a number to its English ordinal string (handles 11th/12th/13th specially) | `to_ordinal(1)  # "1st"` / `to_ordinal(11)  # "11th"` / `to_ordinal(21)  # "21st"` |
 | `to_percentage` | `(value: float \| int, total: float \| int, decimals: int = 2) -> float` | Calculate the percentage of a value relative to a total (returns 0 when total is 0) | `to_percentage(1, 3)  # 33.33` / `to_percentage(25, 100)  # 25.0` |

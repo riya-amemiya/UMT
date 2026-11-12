@@ -25,7 +25,7 @@ def random_select(
         >>> len(result)
         2
     """
-    if count == 0:
+    if count <= 0:
         return []
 
     if allow_duplicates:

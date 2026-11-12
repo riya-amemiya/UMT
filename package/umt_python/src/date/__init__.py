@@ -1,12 +1,14 @@
 from .add_business_days import add_business_days
 from .add_duration import add_duration
 from .birthday import birthday
+from .business_days_between import business_days_between
 from .date_format import date_format
 from .date_inclusivity import DateInclusivity
 from .date_new import new_date_int, new_date_string
 from .date_now import date_now
 from .date_range import date_range
 from .day_of_week import day_of_week
+from .days_in_month import days_in_month
 from .diff import diff
 from .end_of import end_of
 from .format_relative import format_relative
@@ -14,12 +16,16 @@ from .from_unix import from_unix
 from .get_day import DAY_LIST, get_day
 from .get_quarter import get_quarter
 from .get_timezone_offset_string import get_timezone_offset_string
+from .is_after import is_after
+from .is_before import is_before
 from .is_between import is_between
 from .is_business_day import is_business_day
 from .is_leap_year import is_leap_year
+from .is_same import is_same
 from .is_same_day import is_same_day
 from .is_weekend import is_weekend
 from .ms_by_unit import ms_by_unit
+from .parse_date import parse_date
 from .start_of import start_of
 from .sub_business_days import sub_business_days
 from .sub_duration import sub_duration
@@ -34,10 +40,12 @@ __all__ = [
     "add_business_days",
     "add_duration",
     "birthday",
+    "business_days_between",
     "date_format",
     "date_now",
     "date_range",
     "day_of_week",
+    "days_in_month",
     "diff",
     "end_of",
     "format_relative",
@@ -45,14 +53,18 @@ __all__ = [
     "get_day",
     "get_quarter",
     "get_timezone_offset_string",
+    "is_after",
+    "is_before",
     "is_between",
     "is_business_day",
     "is_leap_year",
+    "is_same",
     "is_same_day",
     "is_weekend",
     "ms_by_unit",
     "new_date_int",
     "new_date_string",
+    "parse_date",
     "start_of",
     "sub_business_days",
     "sub_duration",

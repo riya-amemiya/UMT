@@ -176,3 +176,140 @@ fn test_unknown_formatter() {
     );
     assert_eq!(result, "Value: hello");
 }
+
+#[test]
+fn test_only_first_default_value_is_used() {
+    assert_eq!(umt_format_string("{a|b|c}", &json!({}), None), "b");
+    assert_eq!(
+        umt_format_string("{a|x:upper}", &json!({}), None),
+        "x:upper"
+    );
+    assert_eq!(umt_format_string("{a:upper|x}", &json!({}), None), "X");
+    assert_eq!(umt_format_string("{a}", &json!({"a": null}), None), "{a}");
+}
+
+#[test]
+fn test_path_is_not_trimmed_around_formatter_separator() {
+    assert_eq!(
+        umt_format_string("{name : upper}", &json!({"name": "x"}), None),
+        "{name : upper}"
+    );
+    assert_eq!(
+        umt_format_string("{ name:upper }", &json!({"name": "x"}), None),
+        "X"
+    );
+    assert_eq!(
+        umt_format_string("{a:unknown} {a:upper(}", &json!({"a": "x"}), None),
+        "x x"
+    );
+}
+
+#[test]
+fn test_index_follows_javascript_number_rules() {
+    assert_eq!(
+        umt_format_string("{ 0 } {} { }", &json!(["a"]), None),
+        "a {} a"
+    );
+    assert_eq!(
+        umt_format_string("{0x1} {1e0} {1.5} {-1} {+1}", &json!(["a", "b"]), None),
+        "b b {1.5} {-1} b"
+    );
+    assert_eq!(
+        umt_format_string("{name} {Infinity} {-Infinity} {5}", &json!(["a"]), None),
+        "{name} {Infinity} {-Infinity} {5}"
+    );
+}
+
+#[test]
+fn test_values_use_javascript_string_conversion() {
+    assert_eq!(
+        umt_format_string(
+            "{0}",
+            &json!([[1, [2, 3], null, {"a": 1}, "x", true]]),
+            None
+        ),
+        "1,2,3,,[object Object],x,true"
+    );
+    assert_eq!(
+        umt_format_string("{0} {1} {2} {3}", &json!([1.0, 1e21, 0.1, 1.5e-7]), None),
+        "1 1e+21 0.1 1.5e-7"
+    );
+    assert_eq!(
+        umt_format_string("{0} {1} {2} {3}", &json!([0.0, -0.5, 12, 1234.5]), None),
+        "0 -0.5 12 1234.5"
+    );
+    assert_eq!(
+        umt_format_string(
+            "{a} {b} {c}",
+            &json!({"a": {"b": 1}, "b": false, "c": ""}),
+            None
+        ),
+        "[object Object] false "
+    );
+}
+
+#[test]
+fn test_array_property_paths() {
+    assert_eq!(
+        umt_format_string("{items.0} {items.01}", &json!({"items": ["A", "B"]}), None),
+        "A {items.01}"
+    );
+}
+
+#[test]
+fn test_array_length_paths() {
+    let data = json!({
+        "items": ["A", "B", [1, 2, 3]],
+        "user": {"tags": ["x"], "length": 9, "name": "bob"},
+        "length": "top"
+    });
+    assert_eq!(
+        umt_format_string("{items.length} {items[2].length}", &data, None),
+        "3 3"
+    );
+    assert_eq!(
+        umt_format_string("{user.tags.length:pad(3)}", &data, None),
+        "001"
+    );
+    assert_eq!(
+        umt_format_string("{user.length} {length}", &data, None),
+        "9 top"
+    );
+    assert_eq!(
+        umt_format_string("{user.name.length} {missing.length|none}", &data, None),
+        "{user.name.length} none"
+    );
+    assert_eq!(
+        umt_format_string("{items.length.x} {items.lengths}", &data, None),
+        "{items.length.x} {items.lengths}"
+    );
+    assert_eq!(
+        umt_format_string("{0.length} {length}", &json!([[1, 2]]), None),
+        "{0.length} {length}"
+    );
+}
+
+#[test]
+fn test_built_in_number_currency_and_pad_formatters() {
+    assert_eq!(
+        umt_format_string("{0:number}", &json!([1234.5]), None),
+        "1,234.5"
+    );
+    assert_eq!(
+        umt_format_string("{0:number(en-US,2,2)}", &json!([1234.5]), None),
+        "1,234.50"
+    );
+    assert_eq!(
+        umt_format_string("{0:currency}", &json!([1234.5]), None),
+        "$1,234.50"
+    );
+    assert_eq!(umt_format_string("{0:pad(3, )}", &json!([5]), None), "  5");
+    assert_eq!(
+        umt_format_string("{0:pad(4,ab)}", &json!([5]), None),
+        "aba5"
+    );
+    assert_eq!(
+        umt_format_string("{0:plural(item,items)}", &json!([" 1 "]), None),
+        "item"
+    );
+}

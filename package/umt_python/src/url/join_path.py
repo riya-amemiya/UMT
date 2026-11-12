@@ -1,7 +1,7 @@
 import re
 
 _LEADING_SLASHES_RE = re.compile(r"^/+")
-_TRAILING_SLASHES_RE = re.compile(r"/+$")
+_TRAILING_SLASHES_RE = re.compile(r"/+\Z")
 
 
 def join_path(*segments: str) -> str:

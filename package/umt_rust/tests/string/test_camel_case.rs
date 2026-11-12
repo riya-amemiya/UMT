@@ -73,3 +73,29 @@ fn test_handle_multiple_consecutive_separators() {
     assert_eq!(umt_camel_case("hello---world"), "helloWorld");
     assert_eq!(umt_camel_case("foo___bar"), "fooBar");
 }
+
+#[test]
+fn test_non_ascii_characters_are_separators() {
+    assert_eq!(umt_camel_case("h\u{e9}llo w\u{f6}rld"), "hLloWRld");
+    assert_eq!(umt_camel_case("\u{c0}B"), "b");
+}
+
+#[test]
+fn test_trailing_separator_run_is_removed() {
+    assert_eq!(umt_camel_case("a--"), "a");
+    assert_eq!(umt_camel_case("a-\n"), "a");
+    assert_eq!(umt_camel_case("---"), "");
+}
+
+#[test]
+fn test_trailing_separator_uppercased_to_ascii_is_kept() {
+    assert_eq!(umt_camel_case("a-\u{df}"), "aSS");
+}
+
+#[test]
+fn test_only_ascii_uppercase_first_character_is_lowercased() {
+    assert_eq!(umt_camel_case("ZEBRA crossing"), "zEBRACrossing");
+    assert_eq!(umt_camel_case("--a"), "a");
+    assert_eq!(umt_camel_case("x\ny"), "xY");
+    assert_eq!(umt_camel_case("1abc"), "1abc");
+}

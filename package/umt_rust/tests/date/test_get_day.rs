@@ -34,11 +34,11 @@ fn test_get_day_japanese_default() {
 }
 
 #[test]
-fn test_get_day_invalid_day_numbers_wrap() {
-    // Days should wrap around (using modulo)
-    assert_eq!(umt_get_day(7, DayLanguage::Ja), "日"); // 7 % 7 = 0 (Sunday)
-    assert_eq!(umt_get_day(8, DayLanguage::Ja), "月"); // 8 % 7 = 1 (Monday)
-    assert_eq!(umt_get_day(100, DayLanguage::Ja), "火"); // 100 % 7 = 2 (Tuesday)
+fn test_get_day_invalid_day_numbers_return_sunday() {
+    // Day numbers outside 0-6 fall back to Sunday
+    assert_eq!(umt_get_day(7, DayLanguage::Ja), "日"); // falls back to Sunday
+    assert_eq!(umt_get_day(8, DayLanguage::Ja), "\u{65e5}"); // falls back to Sunday
+    assert_eq!(umt_get_day(100, DayLanguage::Ja), "\u{65e5}"); // falls back to Sunday
 }
 
 #[test]
@@ -53,4 +53,15 @@ fn test_get_day_all_days_in_english() {
 fn test_get_day_convenience_functions() {
     assert_eq!(umt_get_day_ja(0), "日");
     assert_eq!(umt_get_day_en(0), "Sun");
+}
+
+#[test]
+fn test_get_day_numbers_above_six_return_sunday() {
+    assert_eq!(umt_get_day(7, DayLanguage::Ja), "\u{65e5}");
+    assert_eq!(umt_get_day(8, DayLanguage::Ja), "\u{65e5}");
+    assert_eq!(umt_get_day(100, DayLanguage::Ja), "\u{65e5}");
+    assert_eq!(umt_get_day(8, DayLanguage::En), "Sun");
+    assert_eq!(umt_get_day(u32::MAX, DayLanguage::Fr), "Dim");
+    assert_eq!(umt_get_day(6, DayLanguage::De), "Sa");
+    assert_eq!(umt_get_day(6, DayLanguage::Ko), "\u{d1a0}");
 }

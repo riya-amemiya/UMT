@@ -239,3 +239,98 @@ fn test_pick_deep_with_string_keys() {
         assert_eq!(a.get("b"), Some(&Value::Int(1)));
     }
 }
+
+fn object_of(entries: Vec<(&str, Value)>) -> HashMap<String, Value> {
+    entries
+        .into_iter()
+        .map(|(key, value)| (key.to_string(), value))
+        .collect()
+}
+
+#[test]
+fn test_should_handle_non_existent_nested_paths() {
+    let obj = object_of(vec![(
+        "a",
+        Value::Object(object_of(vec![("b", Value::Int(1))])),
+    )]);
+
+    let result = umt_pick_deep(&obj, &["a.b.c"]);
+
+    let expected = object_of(vec![(
+        "a",
+        Value::Object(object_of(vec![("b", Value::Object(HashMap::new()))])),
+    )]);
+    assert_eq!(result, expected);
+}
+
+#[test]
+fn test_should_create_an_empty_placeholder_when_a_path_steps_into_a_primitive() {
+    let obj = object_of(vec![("a", Value::Int(1))]);
+
+    let result = umt_pick_deep(&obj, &["a.b"]);
+
+    assert_eq!(
+        result,
+        object_of(vec![("a", Value::Object(HashMap::new()))])
+    );
+}
+
+#[test]
+fn test_should_merge_sibling_paths_into_the_same_intermediate_object() {
+    let obj = object_of(vec![(
+        "a",
+        Value::Object(object_of(vec![
+            ("b", Value::Int(1)),
+            ("c", Value::Int(2)),
+            ("d", Value::Int(3)),
+        ])),
+    )]);
+
+    let result = umt_pick_deep(&obj, &["a.b", "a.c"]);
+
+    let expected = object_of(vec![(
+        "a",
+        Value::Object(object_of(vec![("b", Value::Int(1)), ("c", Value::Int(2))])),
+    )]);
+    assert_eq!(result, expected);
+}
+
+#[test]
+fn test_should_skip_a_missing_segment_and_keep_matching_later_segments() {
+    let obj = object_of(vec![("b", Value::Int(2))]);
+
+    let result = umt_pick_deep(&obj, &["x.b"]);
+
+    assert_eq!(result, object_of(vec![("b", Value::Int(2))]));
+}
+
+#[test]
+fn test_should_keep_a_picked_primitive_when_a_later_path_steps_into_it() {
+    let obj = object_of(vec![("a", Value::Int(1))]);
+
+    let result = umt_pick_deep(&obj, &["a", "a.b.c"]);
+
+    assert_eq!(result, object_of(vec![("a", Value::Int(1))]));
+}
+
+#[test]
+fn test_should_replace_a_picked_null_when_a_later_path_steps_into_it() {
+    let obj = object_of(vec![("a", Value::Null)]);
+
+    let result = umt_pick_deep(&obj, &["a", "a.b"]);
+
+    assert_eq!(
+        result,
+        object_of(vec![("a", Value::Object(HashMap::new()))])
+    );
+}
+
+#[test]
+fn test_should_extend_a_fully_picked_object_with_a_later_nested_pick() {
+    let inner = object_of(vec![("b", Value::Int(1))]);
+    let obj = object_of(vec![("a", Value::Object(inner.clone()))]);
+
+    let result = umt_pick_deep(&obj, &["a", "a.b"]);
+
+    assert_eq!(result, object_of(vec![("a", Value::Object(inner))]));
+}

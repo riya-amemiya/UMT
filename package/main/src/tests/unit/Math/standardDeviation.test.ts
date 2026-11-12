@@ -25,4 +25,18 @@ describe("standardDeviation function", () => {
     // Empty array should return 0 (as average function returns 0 for empty arrays)
     expect(standardDeviation([])).toBe(0);
   });
+
+  it("should calculate the population standard deviation when sample is false", () => {
+    expect(standardDeviation([1, 2, 3], false)).toBe(0.816_496_580_927_726);
+  });
+
+  it("should calculate the sample standard deviation when sample is true", () => {
+    expect(standardDeviation([1, 2, 3], true)).toBe(1);
+    expect(standardDeviation([2, 4, 4, 4, 5, 5, 7, 9], true)).toBe(
+      Math.sqrt(32 / 7),
+    );
+    expect(standardDeviation([5, 5, 5], true)).toBe(0);
+    expect(standardDeviation([], true)).toBe(0);
+    expect(standardDeviation([42], true)).toBeNaN();
+  });
 });

@@ -1,3 +1,4 @@
+use super::shuffle::umt_shuffle;
 use rand::RngExt;
 use std::collections::HashSet;
 
@@ -25,6 +26,12 @@ use std::collections::HashSet;
 pub fn umt_random_select<T: Clone>(array: &[T], count: usize, allow_duplicates: bool) -> Vec<T> {
     if array.is_empty() || count == 0 {
         return vec![];
+    }
+
+    if !allow_duplicates && count as f64 > array.len() as f64 * 0.8 {
+        let mut shuffled = umt_shuffle(array);
+        shuffled.truncate(count);
+        return shuffled;
     }
 
     let mut rng = rand::rng();

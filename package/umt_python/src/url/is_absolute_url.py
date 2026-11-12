@@ -1,6 +1,6 @@
 import re
 
-_ABSOLUTE_URL_RE = re.compile(r"^[a-z][a-z\d+\-.]*:", re.IGNORECASE)
+_ABSOLUTE_URL_RE = re.compile(r"^[a-z][a-z\d+\-.]*:", re.IGNORECASE | re.ASCII)
 
 
 def is_absolute_url(url: str) -> bool:

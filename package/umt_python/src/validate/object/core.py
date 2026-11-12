@@ -65,15 +65,17 @@ class ObjectValidator:
     def __init__(self, shape: ObjectShape, message: str = "") -> None:
         self.shape = shape
         self._message = message
+        self._entries = tuple(shape.items())
 
     def __call__(self, value: object) -> ObjectReturnType:
         if not is_dictionary_object(value) or not isinstance(value, dict):
             return ObjectReturnType(validate=False, message=self._message, type=value)
-        for key, validator in self.shape.items():
-            if not validator(value.get(key)).validate:
+        for key, validator in self._entries:
+            result = validator(value.get(key))
+            if not result.validate:
                 return ObjectReturnType(
                     validate=False,
-                    message=validator(value).message,
+                    message=result.message,
                     type=value,
                 )
         return ObjectReturnType(validate=True, message="", type=value)

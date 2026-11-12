@@ -1,4 +1,4 @@
-use std::collections::HashSet;
+use super::ordered_unique::ordered_unique_by;
 use std::hash::Hash;
 
 /// Removes duplicate values from an array.
@@ -19,20 +19,21 @@ use std::hash::Hash;
 /// assert_eq!(umt_unique(&[1, 2, 2, 3, 3, 3]), vec![1, 2, 3]);
 /// ```
 pub fn umt_unique<T: Clone + Hash + Eq>(array: &[T]) -> Vec<T> {
-    let mut seen = HashSet::new();
-    let mut result = Vec::new();
+    ordered_unique_by(array, |item| item)
+}
 
-    for item in array {
-        if seen.insert(item.clone()) {
-            result.push(item.clone());
-        }
+pub(super) fn same_value_zero_bits(value: f64) -> u64 {
+    if value.is_nan() {
+        f64::NAN.to_bits()
+    } else if value == 0.0 {
+        0
+    } else {
+        value.to_bits()
     }
-
-    result
 }
 
 /// Removes duplicate values from a vector of f64, handling NaN values.
-/// NaN values are considered equal to each other.
+/// NaN values are considered equal to each other, and 0.0 is considered equal to -0.0.
 ///
 /// Uses a HashSet of bit representations for O(N) deduplication instead of
 /// O(N²) linear search via `Vec::contains`.
@@ -45,22 +46,5 @@ pub fn umt_unique<T: Clone + Hash + Eq>(array: &[T]) -> Vec<T> {
 ///
 /// A new vector with unique values
 pub fn umt_unique_f64(array: &[f64]) -> Vec<f64> {
-    let mut seen = HashSet::new();
-    let mut result = Vec::new();
-    let mut has_nan = false;
-
-    for &item in array {
-        if item.is_nan() {
-            if !has_nan {
-                result.push(item);
-                has_nan = true;
-            }
-        } else if seen.insert(item.to_bits()) {
-            // Use to_bits() to convert f64 to u64 for hashing.
-            // This is safe because we already handle NaN separately.
-            result.push(item);
-        }
-    }
-
-    result
+    ordered_unique_by(array, |&item| same_value_zero_bits(item))
 }

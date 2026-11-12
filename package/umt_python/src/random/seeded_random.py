@@ -1,3 +1,4 @@
+import math
 from collections.abc import Callable
 
 from src.math.xoshiro256 import xoshiro256
@@ -12,7 +13,16 @@ def _hash_string_to_seed(value: str) -> int:
     return hash_value & 0xFFFFFFFF
 
 
-def seeded_random(seed: int | str) -> Callable[[], float]:
+def _to_uint32(value: int | float) -> int:
+    """Converts a number to an unsigned 32-bit integer like JavaScript's ``>>> 0``."""
+    if isinstance(value, int):
+        return value & 0xFFFFFFFF
+    if not math.isfinite(value):
+        return 0
+    return int(value) & 0xFFFFFFFF
+
+
+def seeded_random(seed: int | float | str) -> Callable[[], float]:
     """
     Returns a deterministic PRNG seeded from a number or string.
 
@@ -20,7 +30,8 @@ def seeded_random(seed: int | str) -> Callable[[], float]:
     same xoshiro256** stream.
 
     Args:
-        seed: Seed value (number or string).
+        seed: Seed value (number or string). Numbers are truncated to their
+            low 32 bits; NaN and infinities seed as 0.
 
     Returns:
         A function that returns sequential pseudo-random floats.
@@ -33,9 +44,7 @@ def seeded_random(seed: int | str) -> Callable[[], float]:
         >>> 0 <= seeded_random(42)() < 1
         True
     """
-    initial = (
-        (seed & 0xFFFFFFFF) if isinstance(seed, int) else _hash_string_to_seed(seed)
-    )
+    initial = _hash_string_to_seed(seed) if isinstance(seed, str) else _to_uint32(seed)
     state = [
         initial or 1,
         ((initial * 0x9E_37_79_B9) & 0xFFFFFFFF) or 2,

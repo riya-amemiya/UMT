@@ -17,7 +17,4 @@ def trim_start_characters(string_: str, chars: str) -> str:
         >>> trim_start_characters("abc123", "xyz")
         'abc123'
     """
-    start_index = 0
-    while start_index < len(string_) and string_[start_index] in chars:
-        start_index += 1
-    return string_[start_index:]
+    return string_.lstrip(chars) if chars else string_

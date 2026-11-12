@@ -124,3 +124,43 @@ fn test_format_docstring_examples() {
     assert_eq!(umt_format(&date, "HH:mm", 0), "15:30");
     assert_eq!(umt_format(&date, "MM/DD/YYYY", 0), "04/04/2025");
 }
+
+#[test]
+fn test_format_every_token_in_one_pass() {
+    let date =
+        Utc.with_ymd_and_hms(2023, 6, 10, 15, 5, 8).unwrap() + chrono::Duration::milliseconds(7);
+    assert_eq!(
+        umt_format(
+            &date,
+            "YYYY YY MM M DD D d HH H hh h mm m ss s SSS A a Z ZZ",
+            540
+        ),
+        "2023 23 06 6 10 10 6 15 15 03 3 05 5 08 8 007 PM pm +09:00 +0900"
+    );
+}
+
+#[test]
+fn test_format_token_runs_split_longest_first() {
+    let date = Utc.with_ymd_and_hms(2023, 6, 10, 15, 5, 8).unwrap();
+    assert_eq!(umt_format(&date, "YYY", 0), "23Y");
+    assert_eq!(umt_format(&date, "YYYYYY", 0), "202323");
+    assert_eq!(umt_format(&date, "MMM", 0), "066");
+    assert_eq!(umt_format(&date, "ZZZ", -300), "-0500-05:00");
+    assert_eq!(umt_format(&date, "SS S", 0), "SS S");
+}
+
+#[test]
+fn test_format_replaced_text_is_not_rescanned() {
+    let date = Utc.with_ymd_and_hms(2023, 6, 10, 9, 5, 8).unwrap();
+    assert_eq!(umt_format(&date, "A[M]a", 0), "AMMam");
+    assert_eq!(umt_format(&date, "[D] D [d] d", 0), "D 10 d 6");
+}
+
+#[test]
+fn test_format_keeps_non_ascii_literals() {
+    let date = Utc.with_ymd_and_hms(2023, 6, 10, 0, 0, 0).unwrap();
+    assert_eq!(
+        umt_format(&date, "YYYY\u{5e74}M\u{6708}D\u{65e5} hh A", 0),
+        "2023\u{5e74}6\u{6708}10\u{65e5} 12 AM"
+    );
+}

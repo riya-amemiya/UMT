@@ -39,4 +39,12 @@ describe("mathConverter function", () => {
   test("should handle missing primary value", () => {
     expect(mathConverter("0*0")).toBe("0*0");
   });
+
+  test("should stop once an expansion repeats", () => {
+    expect(mathConverter("5*5")).toBe("5*5+0*0");
+    expect(mathConverter("10*10")).toBe("10*10+0*0");
+    expect(mathConverter("100*100")).toBe("100*100+0*0");
+    expect(mathConverter("10^3")).toBe("10*10+0*0");
+    expect(mathConverter("2000*2000")).toBe("3000*1000+1000*1000+0*0");
+  });
 });

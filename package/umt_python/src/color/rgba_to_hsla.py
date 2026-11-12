@@ -1,3 +1,10 @@
+from ..math.addition import addition
+from ..math.division import division
+from ..math.multiplication import multiplication
+from ..math.round_of import round_of
+from ..math.subtraction import subtraction
+
+
 def rgba_to_hsla(r: int, g: int, b: int, a: float = 1.0) -> dict[str, float]:
     """
     Convert RGBA color values to HSLA color space.
@@ -21,30 +28,39 @@ def rgba_to_hsla(r: int, g: int, b: int, a: float = 1.0) -> dict[str, float]:
     if r < 0 or r > 255 or g < 0 or g > 255 or b < 0 or b > 255 or a < 0 or a > 1:
         raise ValueError("Invalid rgba value")
 
-    r_prime = r / 255
-    g_prime = g / 255
-    b_prime = b / 255
+    r_prime = division(r, 255)
+    g_prime = division(g, 255)
+    b_prime = division(b, 255)
 
     max_val = max(r_prime, g_prime, b_prime)
     min_val = min(r_prime, g_prime, b_prime)
-    diff = max_val - min_val
+    diff = subtraction(max_val, min_val)
 
     h = 0.0
-    lightness = (max_val + min_val) / 2
-    s = 0.0 if diff == 0 else diff / (1 - abs(max_val + min_val - 1))
+    lightness = division(addition(max_val, min_val), 2)
+    s = (
+        0.0
+        if diff == 0
+        else division(
+            diff, subtraction(1, abs(subtraction(addition(max_val, min_val), 1)))
+        )
+    )
 
     if diff != 0:
         if max_val == r_prime:
-            h = ((g_prime - b_prime) / diff) + (6 if g_prime < b_prime else 0)
+            h = addition(
+                division(subtraction(g_prime, b_prime), diff),
+                6 if g_prime < b_prime else 0,
+            )
         elif max_val == g_prime:
-            h = ((b_prime - r_prime) / diff) + 2
-        elif max_val == b_prime:
-            h = ((r_prime - g_prime) / diff) + 4
-        h = h * 60
+            h = addition(division(subtraction(b_prime, r_prime), diff), 2)
+        else:
+            h = addition(division(subtraction(r_prime, g_prime), diff), 4)
+        h = multiplication(h, 60)
 
     return {
-        "h": round(h, 2),
-        "s": round(s * 100, 2),
-        "l": round(lightness * 100, 2),
+        "h": round_of(h, 2),
+        "s": round_of(s * 100, 2),
+        "l": round_of(lightness * 100, 2),
         "a": a,
     }

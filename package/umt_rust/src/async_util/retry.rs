@@ -118,7 +118,76 @@ fn compute_delay(base_delay: u64, attempt_number: u32, backoff: Backoff, jitter:
 /// assert_eq!(result, Ok("ok"));
 /// assert_eq!(attempts, 3);
 /// ```
-pub fn umt_retry<T, E, O, S, R>(mut operation: O, options: RetryAsyncOptions<S, R>) -> Result<T, E>
+pub fn umt_retry<T, E, O, S, R>(operation: O, options: RetryAsyncOptions<S, R>) -> Result<T, E>
+where
+    O: FnMut() -> Result<T, E>,
+    S: Fn(&E, u32) -> bool,
+    R: Fn(&E, u32),
+{
+    retry_with_bound(operation, options, u64::MAX)
+}
+
+/// Retries an operation like [`umt_retry`], capping each computed delay at
+/// `max_delay` milliseconds. The cap is applied after backoff and jitter,
+/// matching the TypeScript `maxDelay` option.
+///
+/// # Arguments
+///
+/// * `operation` - The operation to invoke; returns `Result<T, E>`
+/// * `options` - Retry configuration
+/// * `max_delay` - Upper bound in milliseconds for each delay
+///
+/// # Returns
+///
+/// `Ok(value)` from the first successful invocation, or the last `Err` when the
+/// budget is exhausted or `should_retry` returns false.
+///
+/// # Examples
+///
+/// ```
+/// use umt_rust::async_util::{umt_retry_with_max_delay, Backoff, RetryAsyncOptions};
+///
+/// let mut attempts = 0;
+/// let result = umt_retry_with_max_delay(
+///     || {
+///         attempts += 1;
+///         if attempts < 3 {
+///             Err("nope")
+///         } else {
+///             Ok("ok")
+///         }
+///     },
+///     RetryAsyncOptions {
+///         retries: 3,
+///         delay: 1000,
+///         backoff: Backoff::Exponential,
+///         jitter: false,
+///         should_retry: |_: &&str, _| true,
+///         on_retry: None::<fn(&&str, u32)>,
+///     },
+///     1,
+/// );
+/// assert_eq!(result, Ok("ok"));
+/// assert_eq!(attempts, 3);
+/// ```
+pub fn umt_retry_with_max_delay<T, E, O, S, R>(
+    operation: O,
+    options: RetryAsyncOptions<S, R>,
+    max_delay: u64,
+) -> Result<T, E>
+where
+    O: FnMut() -> Result<T, E>,
+    S: Fn(&E, u32) -> bool,
+    R: Fn(&E, u32),
+{
+    retry_with_bound(operation, options, max_delay)
+}
+
+fn retry_with_bound<T, E, O, S, R>(
+    mut operation: O,
+    options: RetryAsyncOptions<S, R>,
+    max_delay: u64,
+) -> Result<T, E>
 where
     O: FnMut() -> Result<T, E>,
     S: Fn(&E, u32) -> bool,
@@ -145,12 +214,9 @@ where
                 if let Some(ref callback) = on_retry {
                     callback(&error, attempt_number);
                 }
-                thread::sleep(Duration::from_millis(compute_delay(
-                    delay,
-                    attempt_number + 1,
-                    backoff,
-                    jitter,
-                )));
+                thread::sleep(Duration::from_millis(
+                    compute_delay(delay, attempt_number + 1, backoff, jitter).min(max_delay),
+                ));
                 attempt_number += 1;
             }
         }
