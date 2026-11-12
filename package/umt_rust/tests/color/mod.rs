@@ -2,6 +2,8 @@
 
 mod test_cmyk_to_rgba;
 mod test_cmyk_to_rgba_parity;
+mod test_get_contrast_ratio;
+mod test_get_luminance;
 mod test_hexa_to_rgba;
 mod test_hexa_to_rgba_parity;
 mod test_hsla_to_rgba;

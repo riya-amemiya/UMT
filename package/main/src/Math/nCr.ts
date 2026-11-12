@@ -1,15 +1,15 @@
-import { factorial } from "./factorial";
-import { nPr } from "./nPr";
-
 /**
 Calculates combinations (nCr) - number of ways to choose r items from n items
 @param n - Total number of items
 @param r - Number of items to choose
-@returns {number} Number of combinations, or NaN for invalid arguments
+@returns {number} Number of combinations, Infinity when the result exceeds Number.MAX_VALUE, or NaN for invalid arguments
 @example nCr(5, 2); // 10
+@example nCr(1000, 500); // 2.7028824094543666e+299
 @description
 Calculates the number of ways to choose r items from a set of n items,
-where the order doesn't matter. Uses the formula nCr = nPr / r!
+where the order doesn't matter. Uses the multiplicative formula
+nCr = (n - k + 1) / 1 * (n - k + 2) / 2 * ... * n / k with k = min(r, n - r),
+so the result stays finite whenever it fits in a double.
 */
 export const nCr = (n: number, r: number): number => {
   if (n < r || n < 0 || r < 0) {
@@ -19,15 +19,20 @@ export const nCr = (n: number, r: number): number => {
     return 1;
   }
 
-  // Performance: use symmetry property nCr(n, r) = nCr(n, n-r) to
-  // minimize the number of multiplications when r > n/2.
-  // e.g. nCr(100, 97) becomes nCr(100, 3), reducing 193 multiplications to 5.
   const effectiveR = Math.min(r, n - r);
+  const base = n - effectiveR;
 
-  const numerator = nPr(n, effectiveR);
-  const denominator = factorial(effectiveR);
-
-  const result = numerator / denominator;
+  let result = 1;
+  for (let index = 1; index <= effectiveR; index++) {
+    const factor = base + index;
+    result =
+      result > Number.MAX_VALUE / factor
+        ? (result / index) * factor
+        : (result * factor) / index;
+    if (result === Number.POSITIVE_INFINITY) {
+      return result;
+    }
+  }
 
   return result;
 };

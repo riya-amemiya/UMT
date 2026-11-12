@@ -1,34 +1,12 @@
 from collections.abc import Callable
 from typing import TypeVar
 
+from .compare_function_default import compare_function_default
+from .insertion_sort_range import insertion_sort_range
+
 T = TypeVar("T")
 
 CompareFunction = Callable[[T, T], int | float]
-
-
-def _compare_function_default(a: T, b: T) -> int | float:
-    """Default comparison function."""
-    if a < b:  # type: ignore
-        return -1
-    if a > b:  # type: ignore
-        return 1
-    return 0
-
-
-def _insertion_sort_range(
-    array: list[T],
-    start: int,
-    end: int,
-    compare_function: CompareFunction[T],
-) -> None:
-    """Sort a range using insertion sort."""
-    for i in range(start + 1, end + 1):
-        key = array[i]
-        j = i - 1
-        while j >= start and compare_function(array[j], key) > 0:
-            array[j + 1] = array[j]
-            j -= 1
-        array[j + 1] = key
 
 
 def insertion_sort(
@@ -60,10 +38,10 @@ def insertion_sort(
         return result
 
     if compare_function is None:
-        compare_function = _compare_function_default
+        compare_function = compare_function_default
 
     if end is None:
         end = len(result) - 1
 
-    _insertion_sort_range(result, start, end, compare_function)
+    insertion_sort_range(result, compare_function, start, end)
     return result

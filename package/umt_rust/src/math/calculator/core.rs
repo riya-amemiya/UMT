@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use crate::math::{umt_addition, umt_division, umt_multiplication, umt_subtract};
+use crate::math::{js_round, umt_addition, umt_division, umt_multiplication, umt_subtract};
 
 use super::convert_currency::umt_convert_currency;
 use regex::Regex;
@@ -100,7 +100,7 @@ pub fn umt_calculator_core(
                 && !number.is_nan()
             {
                 // Handle floating point precision issues
-                let rounded = (number * 1e10).round() / 1e10;
+                let rounded = js_round(number * 1e10) / 1e10;
                 return rounded.to_string();
             }
             return sanitized_expression;

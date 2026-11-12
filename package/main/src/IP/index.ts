@@ -6,5 +6,7 @@ export * from "./ipToBinaryString";
 export * from "./ipToLong";
 export * from "./isInRange";
 export * from "./isPrivateIp";
+export * from "./isValidIp";
 export * from "./longToIp";
+export * from "./parseCidr";
 export * from "./subnetMaskToCidr";

@@ -16,6 +16,8 @@ class DebouncedFunction:
     Attributes:
         cancel: Cancel any pending debounced invocation and reset internal
             state.
+        flush: Immediately run the pending trailing invocation, if any.
+        pending: Return whether a debounce timer is currently pending.
 
     Example:
         >>> import time
@@ -114,6 +116,50 @@ class DebouncedFunction:
             self._last_kwargs = None
             self._last_call_time = 0.0
 
+    def flush(self) -> None:
+        """Immediately run the pending trailing invocation, if any.
+
+        Clears the pending timer. Does nothing when no timer is pending.
+
+        Example:
+            >>> calls: list[int] = []
+            >>> debounced = debounce(lambda n: calls.append(n), 10)
+            >>> debounced(1)
+            >>> debounced(2)
+            >>> debounced.flush()
+            >>> calls
+            [2]
+        """
+        with self._lock:
+            if self._timer is None:
+                return
+            self._timer.cancel()
+            self._timer = None
+            args = self._last_args
+            kwargs = self._last_kwargs
+            self._last_args = None
+            self._last_kwargs = None
+
+            if not self._trailing or args is None:
+                return
+
+        self._func(*args, **(kwargs or {}))
+
+    def pending(self) -> bool:
+        """Return whether a debounce timer is currently pending.
+
+        Example:
+            >>> debounced = debounce(lambda: None, 10)
+            >>> debounced.pending()
+            False
+            >>> debounced()
+            >>> debounced.pending()
+            True
+            >>> debounced.cancel()
+        """
+        with self._lock:
+            return self._timer is not None
+
 
 def debounce(
     func: Callable[P, Any],
@@ -132,7 +178,8 @@ def debounce(
         trailing: If ``True`` (default), invoke on the trailing edge.
 
     Returns:
-        A :class:`DebouncedFunction` wrapper with a ``cancel()`` method.
+        A :class:`DebouncedFunction` wrapper with ``cancel()``, ``flush()``
+        and ``pending()`` methods.
 
     Example:
         >>> import time

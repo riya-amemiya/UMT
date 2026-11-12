@@ -90,34 +90,46 @@ pub fn umt_tim_sort<T: Clone + PartialOrd>(
         return result;
     }
 
-    let n = end_idx - start_idx + 1;
+    tim_sort_range(&mut result, &compare_fn, start_idx, end_idx);
+
+    result
+}
+
+/// Sorts `array[start..=end]` in place with TimSort using any comparison closure.
+///
+/// Shared core of `umt_tim_sort`, `umt_tim_sort_in_place` and `umt_sort_by`.
+/// The caller guarantees `start <= end < array.len()`.
+pub(crate) fn tim_sort_range<T, F>(array: &mut [T], compare: &F, start: usize, end: usize)
+where
+    T: Clone,
+    F: Fn(&T, &T) -> i32,
+{
+    let n = end - start + 1;
     let min_run = get_min_run_length(n);
 
     // Sort individual runs using insertion sort
-    let mut run_start = start_idx;
-    while run_start <= end_idx {
-        let run_end = (run_start + min_run - 1).min(end_idx);
-        insertion_sort_range(&mut result, &compare_fn, run_start, run_end);
+    let mut run_start = start;
+    while run_start <= end {
+        let run_end = (run_start + min_run - 1).min(end);
+        insertion_sort_range(array, compare, run_start, run_end);
         run_start += min_run;
     }
 
     // Merge runs
     let mut size = min_run;
     while size < n {
-        let mut left = start_idx;
-        while left <= end_idx {
+        let mut left = start;
+        while left <= end {
             let mid = left + size - 1;
-            let right = (left + 2 * size - 1).min(end_idx);
+            let right = (left + 2 * size - 1).min(end);
 
             if mid < right {
-                merge(&mut result, left, mid, right, &compare_fn);
+                merge(array, left, mid, right, compare);
             }
             left += 2 * size;
         }
         size *= 2;
     }
-
-    result
 }
 
 /// Sort an array in place using TimSort.
@@ -135,30 +147,6 @@ pub fn umt_tim_sort_in_place<T: Clone + PartialOrd>(
     }
 
     let compare_fn = compare.unwrap_or(umt_compare_function_default);
-    let n = array.len();
-    let min_run = get_min_run_length(n);
-
-    // Sort individual runs using insertion sort
-    let mut run_start = 0;
-    while run_start < n {
-        let run_end = (run_start + min_run - 1).min(n - 1);
-        insertion_sort_range(array, &compare_fn, run_start, run_end);
-        run_start += min_run;
-    }
-
-    // Merge runs
-    let mut size = min_run;
-    while size < n {
-        let mut left = 0;
-        while left < n {
-            let mid = left + size - 1;
-            let right = (left + 2 * size - 1).min(n - 1);
-
-            if mid < right {
-                merge(array, left, mid, right, &compare_fn);
-            }
-            left += 2 * size;
-        }
-        size *= 2;
-    }
+    let end = array.len() - 1;
+    tim_sort_range(array, &compare_fn, 0, end);
 }

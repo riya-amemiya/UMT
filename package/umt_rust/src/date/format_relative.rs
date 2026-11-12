@@ -5,6 +5,7 @@ use chrono::{DateTime, Utc};
 use crate::consts::clock::{
     ONE_DAY_MS, ONE_HOUR_MS, ONE_MINUTE_MS, ONE_MONTH_MS, ONE_SECOND_MS, ONE_WEEK_MS, ONE_YEAR_MS,
 };
+use crate::math::js_round;
 
 /// A relative-time unit, mirroring the subset of `Intl.RelativeTimeFormat`
 /// units used by the threshold table.
@@ -28,12 +29,6 @@ const THRESHOLDS: [(RelativeUnit, u64); 7] = [
     (RelativeUnit::Minute, ONE_MINUTE_MS),
     (RelativeUnit::Second, ONE_SECOND_MS),
 ];
-
-/// Rounds a floating-point value the same way as JavaScript `Math.round`
-/// (half rounds toward positive infinity).
-fn js_round(value: f64) -> i64 {
-    (value + 0.5).floor() as i64
-}
 
 fn unit_singular(unit: RelativeUnit) -> &'static str {
     match unit {
@@ -183,7 +178,7 @@ pub fn umt_format_relative(
 
     for (unit, ms) in THRESHOLDS {
         if abs_delta >= ms {
-            let value = js_round(delta_ms as f64 / ms as f64);
+            let value = js_round(delta_ms as f64 / ms as f64) as i64;
             return formatter(value, unit);
         }
     }

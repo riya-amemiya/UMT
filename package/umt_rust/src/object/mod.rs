@@ -28,6 +28,9 @@ pub use pick_deep::*;
 pub mod omit;
 pub use omit::*;
 
+pub mod omit_deep;
+pub use omit_deep::*;
+
 pub mod get_objects_common;
 pub use get_objects_common::*;
 
@@ -51,6 +54,12 @@ pub use get::*;
 
 pub mod set;
 pub use set::*;
+
+pub mod unset;
+pub use unset::*;
+
+pub mod update;
+pub use update::*;
 
 pub mod flatten_object;
 pub use flatten_object::*;

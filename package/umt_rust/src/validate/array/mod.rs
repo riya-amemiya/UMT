@@ -2,8 +2,10 @@
 //! Provides validation functionality for arrays with type-specific validation rules
 
 mod array_of;
+mod tuple;
 
 pub use array_of::*;
+pub use tuple::*;
 
 use super::core::ValidateCoreReturnType;
 

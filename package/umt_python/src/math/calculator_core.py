@@ -7,6 +7,7 @@ from ..validate.is_number import is_number
 from .addition import addition
 from .convert_currency import convert_currency
 from .division import division
+from .js_round import js_round
 from .js_string_to_number import js_string_to_number
 from .multiplication import multiplication
 from .number_to_js_string import number_to_js_string
@@ -94,7 +95,7 @@ def calculator_core(
             number = js_string_to_number(sanitized_expression)
             if not math.isnan(number):
                 # Handle floating point precision issues.
-                rounded = _js_round(number * 1e10) / 1e10
+                rounded = js_round(number * 1e10) / 1e10
                 return number_to_js_string(rounded)
             return sanitized_expression
 
@@ -200,13 +201,3 @@ def _js_pow(base: float, exponent: float) -> float:
         if base < 0 and exponent != math.floor(exponent):
             return float("nan")
         return float("inf")
-
-
-def _js_round(value: float) -> float:
-    """
-    Mimics JavaScript's ``Math.round`` which rounds half away from negative
-    infinity (``Math.round(2.5) === 3``, ``Math.round(-2.5) === -2``).
-    """
-    if math.isnan(value) or math.isinf(value):
-        return value
-    return math.floor(value + 0.5)

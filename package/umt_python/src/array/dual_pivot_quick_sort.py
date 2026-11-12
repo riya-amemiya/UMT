@@ -1,34 +1,13 @@
 from collections.abc import Callable
 from typing import TypeVar
 
+from .apply_insertion_sort_if_needed import apply_insertion_sort_if_needed
+from .compare_function_default import compare_function_default
+from .validate_range import validate_range
+
 T = TypeVar("T")
 
 CompareFunction = Callable[[T, T], int | float]
-
-
-def _compare_function_default(a: T, b: T) -> int | float:
-    """Default comparison function."""
-    if a < b:  # type: ignore
-        return -1
-    if a > b:  # type: ignore
-        return 1
-    return 0
-
-
-def _insertion_sort_range(
-    array: list[T],
-    start: int,
-    end: int,
-    compare_function: CompareFunction[T],
-) -> None:
-    """Sort a range using insertion sort."""
-    for i in range(start + 1, end + 1):
-        key = array[i]
-        j = i - 1
-        while j >= start and compare_function(array[j], key) > 0:
-            array[j + 1] = array[j]
-            j -= 1
-        array[j + 1] = key
 
 
 def _median_of_three(
@@ -108,9 +87,9 @@ def _sort_range(
     insertion_sort_threshold: int,
 ) -> None:
     """Internal implementation of dual-pivot quicksort."""
-    if end - start < insertion_sort_threshold:
-        if end > start:
-            _insertion_sort_range(array, start, end, compare_function)
+    if apply_insertion_sort_if_needed(
+        array, start, end, compare_function, insertion_sort_threshold
+    ):
         return
 
     left_pivot_index, right_pivot_index = _partition(
@@ -167,17 +146,20 @@ def dual_pivot_quick_sort(
         return result
 
     if compare_function is None:
-        compare_function = _compare_function_default
+        compare_function = compare_function_default
 
     if end_index is None:
         end_index = len(result) - 1
 
-    valid_start = max(0, min(start_index, len(result) - 1))
-    valid_end = max(0, min(end_index, len(result) - 1))
+    sort_range = validate_range(result, start_index, end_index)
 
-    if valid_start < valid_end:
+    if sort_range.start_index < sort_range.end_index:
         _sort_range(
-            result, valid_start, valid_end, compare_function, insertion_sort_threshold
+            result,
+            sort_range.start_index,
+            sort_range.end_index,
+            compare_function,
+            insertion_sort_threshold,
         )
 
     return result

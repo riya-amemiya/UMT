@@ -10,6 +10,7 @@ mod nullable;
 mod omit_keys;
 mod partial;
 mod pick_keys;
+mod record;
 mod required;
 mod union;
 
@@ -18,6 +19,7 @@ pub use nullable::*;
 pub use omit_keys::*;
 pub use partial::*;
 pub use pick_keys::*;
+pub use record::*;
 pub use required::*;
 pub use union::*;
 

@@ -38,14 +38,16 @@ async def retry(
     *,
     backoff: Backoff = "fixed",
     jitter: bool = False,
+    max_delay: float | None = None,
     on_retry: Callable[[Exception, int], None] | None = None,
     signal: "AbortSignal | None" = None,
 ) -> T:
     """
     Retries a given async function with configurable retry logic.
 
-    Supports fixed, linear, or exponential backoff, optional jitter, and
-    abort signal cancellation.
+    Supports fixed, linear, or exponential backoff, optional jitter, an
+    optional ``max_delay`` upper bound applied to each computed delay after
+    jitter, and abort signal cancellation.
 
     Args:
         fn: The async function to retry
@@ -54,6 +56,7 @@ async def retry(
         should_retry: Function to determine if an error should trigger a retry (default: always retry)
         backoff: Delay growth strategy, one of "fixed", "linear", or "exponential" (default: "fixed")
         jitter: Whether to multiply each delay by a random factor in [0, 1) (default: False)
+        max_delay: Upper bound in seconds for each delay, applied after jitter (default: no bound)
         on_retry: Callback invoked before each retry with the error and the zero-based attempt number
         signal: Optional abort signal checked before every attempt
 
@@ -67,6 +70,7 @@ async def retry(
         >>> async def risky_operation():
         ...     return await fetch_data()
         >>> result = await retry(risky_operation, retries=5, delay=2.0, backoff="exponential")
+        >>> result = await retry(risky_operation, delay=0.5, backoff="exponential", max_delay=5.0)
     """
     attempt_number = 0
     while True:
@@ -88,5 +92,6 @@ async def retry(
             raise error
         if on_retry is not None:
             on_retry(error, attempt_number)
-        await asyncio.sleep(_compute_delay(delay, attempt_number + 1, backoff, jitter))
+        wait = _compute_delay(delay, attempt_number + 1, backoff, jitter)
+        await asyncio.sleep(wait if max_delay is None else min(wait, max_delay))
         attempt_number += 1

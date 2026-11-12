@@ -80,4 +80,69 @@ describe("memoize", () => {
     expect(memoized.cache.has("3-4")).toBe(true);
     expect(memoized.cache.has("5-6")).toBe(true);
   });
+
+  describe("ttl", () => {
+    beforeEach(() => {
+      jest.useFakeTimers();
+    });
+
+    afterEach(() => {
+      jest.useRealTimers();
+    });
+
+    it("should return the cached result before the ttl expires", () => {
+      const fn = jest.fn((n: number) => n * 2);
+      const memoized = memoize(fn, { ttl: 100 });
+
+      expect(memoized(5)).toBe(10);
+      jest.advanceTimersByTime(99);
+      expect(memoized(5)).toBe(10);
+      expect(fn).toHaveBeenCalledTimes(1);
+    });
+
+    it("should recompute an entry after the ttl expires", () => {
+      const fn = jest.fn((n: number) => n * 2);
+      const memoized = memoize(fn, { ttl: 100 });
+
+      memoized(5);
+      jest.advanceTimersByTime(100);
+      expect(memoized(5)).toBe(10);
+      expect(fn).toHaveBeenCalledTimes(2);
+      expect(memoized.cache.size).toBe(1);
+
+      jest.advanceTimersByTime(99);
+      memoized(5);
+      expect(fn).toHaveBeenCalledTimes(2);
+    });
+
+    it("should combine ttl with maxSize and a resolver", () => {
+      const fn = jest.fn((a: number, b: number) => a + b);
+      const memoized = memoize(fn, {
+        maxSize: 2,
+        resolver: (a: unknown, b: unknown) => `${a}-${b}`,
+        ttl: 100,
+      });
+
+      memoized(1, 2);
+      memoized(3, 4);
+      jest.advanceTimersByTime(100);
+      memoized(1, 2);
+      expect(fn).toHaveBeenCalledTimes(3);
+      expect([...memoized.cache.keys()]).toEqual(["3-4", "1-2"]);
+
+      memoized(5, 6);
+      expect(memoized.cache.has("3-4")).toBe(false);
+      expect(memoized.cache.has("1-2")).toBe(true);
+      expect(memoized.cache.has("5-6")).toBe(true);
+    });
+
+    it("should treat an entry without an expiration as expired", () => {
+      const fn = jest.fn((n: number) => n * 2);
+      const memoized = memoize(fn, { ttl: 100 });
+
+      memoized.cache.set(5, 0);
+      expect(memoized(5)).toBe(10);
+      expect(fn).toHaveBeenCalledTimes(1);
+    });
+  });
 });

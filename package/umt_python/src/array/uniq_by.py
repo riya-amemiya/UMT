@@ -1,6 +1,8 @@
 from collections.abc import Callable
 from typing import TypeVar
 
+from .ordered_unique import ordered_unique
+
 T = TypeVar("T")
 K = TypeVar("K")
 
@@ -20,13 +22,4 @@ def uniq_by(array: list[T], selector: Callable[[T], K]) -> list[T]:
         >>> uniq_by([{'x': 1}, {'x': 2}, {'x': 1}], lambda item: item['x'])
         [{'x': 1}, {'x': 2}]
     """
-    seen: set[K] = set()
-    result: list[T] = []
-
-    for item in array:
-        key = selector(item)
-        if key not in seen:
-            seen.add(key)
-            result.append(item)
-
-    return result
+    return ordered_unique(array, selector)

@@ -1,6 +1,6 @@
 from typing import Any
 
-_DANGEROUS_KEYS = ("__proto__", "constructor", "prototype")
+from .dangerous_keys import DANGEROUS_KEYS
 
 
 def remove_prototype(object_: dict[str, Any]) -> dict[str, Any]:
@@ -26,4 +26,4 @@ def remove_prototype(object_: dict[str, Any]) -> dict[str, Any]:
         >>> remove_prototype({"constructor": 3, "a": 2, "prototype": 5, "b": 4})
         {'a': 2, 'b': 4}
     """
-    return {key: value for key, value in object_.items() if key not in _DANGEROUS_KEYS}
+    return {key: value for key, value in object_.items() if key not in DANGEROUS_KEYS}

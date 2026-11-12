@@ -28,14 +28,7 @@ where
     K: Hash + Eq,
     F: Fn(&T) -> K,
 {
-    let mut result: HashMap<K, Vec<T>> = HashMap::new();
-
-    for item in array {
-        let key = iteratee(item);
-        result.entry(key).or_default().push(item.clone());
-    }
-
-    result
+    umt_group_by_indexed(array, |item, _| iteratee(item))
 }
 
 /// Groups elements of an array with index access in the iteratee.

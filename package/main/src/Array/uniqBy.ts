@@ -1,3 +1,5 @@
+import { orderedUnique } from "./setHelpers/orderedUnique";
+
 /**
 Removes duplicate values from an array based on a selector function
 @param array - The array to process
@@ -7,19 +9,4 @@ Removes duplicate values from an array based on a selector function
 export const uniqBy = <T extends unknown[], K>(
   array: T,
   selector: (item: T[number]) => K,
-): T => {
-  const seen = new Set<K>();
-  const result: T = [] as unknown as T;
-
-  for (const item of array) {
-    const key = selector(item);
-    if (seen.has(key)) {
-      continue;
-    }
-
-    seen.add(key);
-    result.push(item);
-  }
-
-  return result;
-};
+): T => orderedUnique<T[number], K>([array], selector) as T;

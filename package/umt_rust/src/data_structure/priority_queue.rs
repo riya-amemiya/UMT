@@ -1,3 +1,10 @@
+use std::cmp::Ordering;
+use std::fmt;
+use std::sync::Arc;
+
+type Comparator<T> =
+    Arc<dyn Fn(&PriorityQueueItem<T>, &PriorityQueueItem<T>) -> Ordering + Send + Sync>;
+
 /// A priority queue item that holds a value and its priority.
 ///
 /// # Type Parameters
@@ -28,7 +35,8 @@ impl<T> PriorityQueueItem<T> {
 }
 
 /// A priority queue implementation using a binary heap.
-/// Higher priority values are dequeued first.
+/// Higher priority values are dequeued first by default. An optional
+/// comparator replaces the ordering, which allows min-heaps and tie-breaking.
 ///
 /// # Features
 ///
@@ -69,10 +77,21 @@ impl<T> PriorityQueueItem<T> {
 /// # Type Parameters
 ///
 /// * `T` - The type of elements stored in the queue
-#[derive(Debug, Clone)]
+#[derive(Clone)]
 pub struct PriorityQueue<T> {
     heap: Vec<PriorityQueueItem<T>>,
     min_priority: f64,
+    comparator: Option<Comparator<T>>,
+}
+
+impl<T: fmt::Debug> fmt::Debug for PriorityQueue<T> {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_struct("PriorityQueue")
+            .field("heap", &self.heap)
+            .field("min_priority", &self.min_priority)
+            .field("has_comparator", &self.comparator.is_some())
+            .finish()
+    }
 }
 
 impl<T: Clone> Default for PriorityQueue<T> {
@@ -101,7 +120,89 @@ impl<T: Clone> PriorityQueue<T> {
         Self {
             heap: Vec::new(),
             min_priority: 0.0,
+            comparator: None,
         }
+    }
+
+    /// Creates a new empty PriorityQueue ordered by a custom comparator.
+    ///
+    /// The comparator returns `Ordering::Less` when `a` must be dequeued
+    /// before `b`.
+    ///
+    /// # Arguments
+    ///
+    /// * `comparator` - The ordering function over queue items
+    ///
+    /// # Returns
+    ///
+    /// A new empty PriorityQueue instance using the comparator
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use umt_rust::data_structure::PriorityQueue;
+    ///
+    /// let mut queue: PriorityQueue<&str> =
+    ///     PriorityQueue::with_comparator(|a, b| a.priority.total_cmp(&b.priority));
+    /// queue.enqueue("high", 10.0);
+    /// queue.enqueue("low", 1.0);
+    /// assert_eq!(queue.dequeue(), Some("low"));
+    /// ```
+    pub fn with_comparator<C>(comparator: C) -> Self
+    where
+        C: Fn(&PriorityQueueItem<T>, &PriorityQueueItem<T>) -> Ordering + Send + Sync + 'static,
+    {
+        Self {
+            heap: Vec::new(),
+            min_priority: 0.0,
+            comparator: Some(Arc::new(comparator)),
+        }
+    }
+
+    /// Creates a new PriorityQueue with initial elements ordered by a custom
+    /// comparator.
+    ///
+    /// The comparator returns `Ordering::Less` when `a` must be dequeued
+    /// before `b`.
+    ///
+    /// # Arguments
+    ///
+    /// * `initial_elements` - A vector of PriorityQueueItem elements
+    /// * `comparator` - The ordering function over queue items
+    ///
+    /// # Returns
+    ///
+    /// A new PriorityQueue instance containing the initial elements
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use umt_rust::data_structure::{PriorityQueue, PriorityQueueItem};
+    ///
+    /// let initial = vec![
+    ///     PriorityQueueItem::new("high", 3.0),
+    ///     PriorityQueueItem::new("low", 1.0),
+    /// ];
+    /// let queue = PriorityQueue::with_initial_and_comparator(initial, |a, b| {
+    ///     a.priority.total_cmp(&b.priority)
+    /// });
+    /// assert_eq!(queue.peek(), Some(&"low"));
+    /// ```
+    pub fn with_initial_and_comparator<C>(
+        initial_elements: Vec<PriorityQueueItem<T>>,
+        comparator: C,
+    ) -> Self
+    where
+        C: Fn(&PriorityQueueItem<T>, &PriorityQueueItem<T>) -> Ordering + Send + Sync + 'static,
+    {
+        let mut queue = Self {
+            heap: initial_elements,
+            min_priority: 0.0,
+            comparator: Some(Arc::new(comparator)),
+        };
+        queue.update_min_priority();
+        queue.build_heap();
+        queue
     }
 
     /// Creates a new PriorityQueue with initial elements.
@@ -132,6 +233,7 @@ impl<T: Clone> PriorityQueue<T> {
         let mut queue = Self {
             heap: initial_elements,
             min_priority: 0.0,
+            comparator: None,
         };
         queue.update_min_priority();
         queue.build_heap();
@@ -206,6 +308,9 @@ impl<T: Clone> PriorityQueue<T> {
 
     /// Adds an element to the end of the queue with lowest priority.
     /// This element will be dequeued last (FIFO for equal lowest priority).
+    /// It is assigned a priority one below the current minimum, so with a
+    /// custom comparator its position follows how the comparator orders that
+    /// priority.
     ///
     /// # Arguments
     ///
@@ -395,7 +500,7 @@ impl<T: Clone> PriorityQueue<T> {
         self.min_priority = min;
     }
 
-    /// Builds a max heap from the current heap array.
+    /// Builds a heap from the current heap array.
     fn build_heap(&mut self) {
         if self.heap.is_empty() {
             return;
@@ -410,11 +515,27 @@ impl<T: Clone> PriorityQueue<T> {
         let mut current_index = index;
         while current_index > 0 {
             let parent_index = (current_index - 1) / 2;
-            if self.heap[current_index].priority <= self.heap[parent_index].priority {
+            let is_ordered = match &self.comparator {
+                Some(comparator) => {
+                    comparator(&self.heap[current_index], &self.heap[parent_index])
+                        != Ordering::Less
+                }
+                None => self.heap[current_index].priority <= self.heap[parent_index].priority,
+            };
+            if is_ordered {
                 break;
             }
             self.heap.swap(current_index, parent_index);
             current_index = parent_index;
+        }
+    }
+
+    /// Checks whether the element at the first index must move above the
+    /// element at the second index while sifting down.
+    fn precedes(&self, index: usize, other: usize) -> bool {
+        match &self.comparator {
+            Some(comparator) => comparator(&self.heap[index], &self.heap[other]) == Ordering::Less,
+            None => self.heap[index].priority > self.heap[other].priority,
         }
     }
 
@@ -426,15 +547,11 @@ impl<T: Clone> PriorityQueue<T> {
             let right_child = 2 * current_index + 2;
             let mut largest = current_index;
 
-            if left_child < self.heap.len()
-                && self.heap[left_child].priority > self.heap[largest].priority
-            {
+            if left_child < self.heap.len() && self.precedes(left_child, largest) {
                 largest = left_child;
             }
 
-            if right_child < self.heap.len()
-                && self.heap[right_child].priority > self.heap[largest].priority
-            {
+            if right_child < self.heap.len() && self.precedes(right_child, largest) {
                 largest = right_child;
             }
 

@@ -81,7 +81,7 @@ pub fn umt_build_url(base: &str, params: Option<&HashMap<String, String>>) -> St
 }
 
 /// Appends one `key=value` pair to `query`, separated from the previous pair by `&`.
-fn push_pair(query: &mut String, key: &str, value: &str) {
+pub(super) fn push_pair(query: &mut String, key: &str, value: &str) {
     if !query.is_empty() {
         query.push('&');
     }

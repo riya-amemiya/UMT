@@ -1,3 +1,5 @@
+use crate::math::js_round;
+
 /// Generates an array of sequential numbers.
 ///
 /// # Arguments
@@ -109,14 +111,4 @@ pub fn umt_range_f64(start: f64, end: Option<f64>, step: Option<f64>) -> Vec<f64
     }
 
     result
-}
-
-/// Rounds like JavaScript's `Math.round` (ties toward positive infinity).
-fn js_round(value: f64) -> f64 {
-    let floored = value.floor();
-    if value - floored >= 0.5 {
-        floored + 1.0
-    } else {
-        floored
-    }
 }

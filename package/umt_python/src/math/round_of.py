@@ -1,5 +1,7 @@
 import math
 
+from .js_round import js_round
+
 
 def round_of(value: float, precision: int = 0) -> float:
     """
@@ -26,8 +28,4 @@ def round_of(value: float, precision: int = 0) -> float:
         multiplier = math.inf
     if multiplier == 0:
         return math.nan
-    scaled = value * multiplier
-    if not math.isfinite(scaled):
-        return scaled / multiplier
-    lower = math.floor(scaled)
-    return (lower + 1 if scaled - lower >= 0.5 else lower) / multiplier
+    return js_round(value * multiplier) / multiplier

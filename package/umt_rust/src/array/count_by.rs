@@ -27,13 +27,7 @@ where
     K: Hash + Eq,
     F: Fn(&T) -> K,
 {
-    let mut result: HashMap<K, usize> = HashMap::new();
-
-    for item in array {
-        *result.entry(iteratee(item)).or_insert(0) += 1;
-    }
-
-    result
+    umt_count_by_indexed(array, |item, _| iteratee(item))
 }
 
 /// Counts elements of an array with index access in the iteratee.

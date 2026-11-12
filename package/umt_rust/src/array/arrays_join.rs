@@ -1,5 +1,5 @@
+use super::ordered_unique::ordered_unique_by;
 use super::unique::same_value_zero_bits;
-use std::collections::HashSet;
 use std::hash::Hash;
 
 /// Join arrays without duplicates.
@@ -21,18 +21,7 @@ use std::hash::Hash;
 /// assert_eq!(umt_arrays_join(&[&[1, 2, 3][..], &[2, 3, 4][..]]), vec![1, 2, 3, 4]);
 /// ```
 pub fn umt_arrays_join<T: Clone + Hash + Eq>(arrays: &[&[T]]) -> Vec<T> {
-    let mut seen: HashSet<&T> = HashSet::new();
-    let mut result = Vec::new();
-
-    for array in arrays {
-        for item in *array {
-            if seen.insert(item) {
-                result.push(item.clone());
-            }
-        }
-    }
-
-    result
+    ordered_unique_by(arrays.iter().flat_map(|array| array.iter()), |item| item)
 }
 
 /// Join two arrays without duplicates.
@@ -61,16 +50,13 @@ pub fn umt_arrays_join_two<T: Clone + Hash + Eq>(array1: &[T], array2: &[T]) -> 
 ///
 /// Vector with unique elements from all input arrays
 pub fn umt_arrays_join_f64(arrays: &[&[f64]]) -> Vec<f64> {
-    let mut seen: HashSet<u64> = HashSet::new();
-    let mut result = Vec::new();
-
-    for array in arrays {
-        for &item in *array {
-            if seen.insert(same_value_zero_bits(item)) {
-                result.push(if item == 0.0 { 0.0 } else { item });
-            }
+    let mut result = ordered_unique_by(arrays.iter().flat_map(|array| array.iter()), |&item| {
+        same_value_zero_bits(item)
+    });
+    for item in &mut result {
+        if *item == 0.0 {
+            *item = 0.0;
         }
     }
-
     result
 }

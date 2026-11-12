@@ -13,9 +13,12 @@ from .object_map_values import object_map_values
 from .object_merge import object_merge
 from .object_merge_deep import object_merge_deep
 from .object_omit import object_omit
+from .object_omit_deep import object_omit_deep
 from .object_pick import object_pick
 from .object_pick_deep import object_pick_deep
 from .object_set import object_set
+from .object_unset import object_unset
+from .object_update import object_update
 from .omit_by import omit_by
 from .path_segments import path_segments
 from .pick_by import pick_by
@@ -41,9 +44,12 @@ __all__ = [
     "object_merge",
     "object_merge_deep",
     "object_omit",
+    "object_omit_deep",
     "object_pick",
     "object_pick_deep",
     "object_set",
+    "object_unset",
+    "object_update",
     "omit_by",
     "path_segments",
     "pick_by",

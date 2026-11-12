@@ -23,9 +23,10 @@ class TestIsNotEmptyList(unittest.TestCase):
         self.assertFalse(is_not_empty(set()))
 
     def test_returns_false_for_other_values(self):
-        self.assertFalse(is_not_empty("hello"))
+        self.assertTrue(is_not_empty("hello"))
         self.assertFalse(is_not_empty(123))
-        self.assertFalse(is_not_empty(None))
+        with self.assertRaises(TypeError):
+            is_not_empty(None)
 
 
 if __name__ == "__main__":

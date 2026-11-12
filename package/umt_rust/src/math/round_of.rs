@@ -1,3 +1,5 @@
+use super::js_round;
+
 /// Rounds a number to a specified precision.
 ///
 /// This function takes a number and a precision as input and returns the number rounded to the specified precision.
@@ -13,12 +15,5 @@
 /// The number rounded to the specified precision.
 pub fn umt_round_of(num: f64, precision: i32) -> f64 {
     let factor = 10f64.powi(precision);
-    let scaled = num * factor;
-    let lower = scaled.floor();
-    let rounded = if scaled - lower >= 0.5 {
-        lower + 1.0
-    } else {
-        lower
-    };
-    rounded / factor
+    js_round(num * factor) / factor
 }

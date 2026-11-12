@@ -1,3 +1,6 @@
+mod format_bytes;
+pub use format_bytes::{umt_format_bytes, umt_format_bytes_default};
+
 mod format_number;
 pub use format_number::{
     FormatNumberOptions, FormatStyle, umt_format_number, umt_format_number_default,

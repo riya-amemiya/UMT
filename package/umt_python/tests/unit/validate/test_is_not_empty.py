@@ -13,9 +13,10 @@ class TestIsNotEmpty(unittest.TestCase):
 
     def test_list_and_other_values(self):
         self.assertTrue(is_not_empty([1, 2, 3]))
-        self.assertFalse(is_not_empty("hello"))
+        self.assertTrue(is_not_empty("hello"))
         self.assertFalse(is_not_empty(123))
-        self.assertFalse(is_not_empty(None))
+        with self.assertRaises(TypeError):
+            is_not_empty(None)
         self.assertFalse(is_not_empty([]))
         self.assertFalse(is_not_empty(""))
         self.assertFalse(is_not_empty(set()))

@@ -144,9 +144,29 @@ pub fn math_get_decimal_length(value: f64) -> usize {
 pub fn math_in_range(value: f64, start: f64, end: f64) -> bool {
     umt_rust::math::umt_in_range(value, start, end)
 }
+#[wasm_bindgen(js_name = "inverseLerp")]
+pub fn math_inverse_lerp(start: f64, end: f64, value: f64) -> f64 {
+    umt_rust::math::umt_inverse_lerp(start, end, value)
+}
+#[wasm_bindgen(js_name = "isPrime")]
+pub fn math_is_prime(n: f64) -> bool {
+    umt_rust::math::umt_is_prime(n)
+}
 #[wasm_bindgen(js_name = "lcm")]
 pub fn math_lcm(a: i32, b: i32) -> i32 {
     umt_rust::math::umt_lcm(a, b)
+}
+#[wasm_bindgen(js_name = "lcmMultiple")]
+pub fn math_lcm_multiple(numbers: Vec<i32>) -> i32 {
+    umt_rust::math::umt_lcm_multiple(&numbers)
+}
+#[wasm_bindgen(js_name = "lerp")]
+pub fn math_lerp(start: f64, end: f64, t: f64) -> f64 {
+    umt_rust::math::umt_lerp(start, end, t)
+}
+#[wasm_bindgen(js_name = "mapRange")]
+pub fn math_map_range(value: f64, in_min: f64, in_max: f64, out_min: f64, out_max: f64) -> f64 {
+    umt_rust::math::umt_map_range(value, in_min, in_max, out_min, out_max)
 }
 #[wasm_bindgen(js_name = "mathConverter")]
 pub fn math_math_converter(equation: &str) -> String {
@@ -197,6 +217,10 @@ pub fn math_percentile(array: Vec<f64>, percentile: f64) -> Result<f64, JsValue>
     umt_rust::math::umt_percentile(&array, percentile)
         .map_err(|e| JsValue::from_str(&e.to_string()))
 }
+#[wasm_bindgen(js_name = "quantile")]
+pub fn math_quantile(values: Vec<f64>, q: f64) -> Result<f64, JsValue> {
+    umt_rust::math::umt_quantile(&values, q).map_err(|e| JsValue::from_str(&e.to_string()))
+}
 #[wasm_bindgen(js_name = "radToDeg")]
 pub fn math_rad_to_deg(x: f64) -> f64 {
     umt_rust::math::umt_rad_to_deg(x)
@@ -220,6 +244,10 @@ pub fn math_softmax(x: Vec<f64>, decimal_place: i32) -> Vec<f64> {
 #[wasm_bindgen(js_name = "standardDeviation")]
 pub fn math_standard_deviation(values: Vec<f64>) -> f64 {
     umt_rust::math::umt_standard_deviation(&values)
+}
+#[wasm_bindgen(js_name = "standardDeviationWithSample")]
+pub fn math_standard_deviation_with_sample(values: Vec<f64>, sample: bool) -> f64 {
+    umt_rust::math::umt_standard_deviation_with_sample(&values, sample)
 }
 #[wasm_bindgen(js_name = "subtract")]
 pub fn math_subtract(numbers: Vec<f64>) -> f64 {
@@ -257,9 +285,21 @@ pub fn math_uuidv7() -> String {
 pub fn math_value_swap(x: f64, y: f64) -> Vec<f64> {
     umt_rust::math::umt_value_swap(x, y)
 }
+#[wasm_bindgen(js_name = "variance")]
+pub fn math_variance(values: Vec<f64>, sample: bool) -> f64 {
+    umt_rust::math::umt_variance(&values, sample)
+}
 #[wasm_bindgen(js_name = "literalExpression")]
 pub fn math_calculator_literal_expression(x: &str) -> String {
     umt_rust::math::calculator::umt_literal_expression(x)
+}
+#[wasm_bindgen(js_name = "formatBytes")]
+pub fn number_format_bytes(bytes: f64, decimals: i32) -> String {
+    umt_rust::number::umt_format_bytes(bytes, decimals)
+}
+#[wasm_bindgen(js_name = "formatBytesDefault")]
+pub fn number_format_bytes_default(bytes: f64) -> String {
+    umt_rust::number::umt_format_bytes_default(bytes)
 }
 #[wasm_bindgen(js_name = "formatNumberDefault")]
 pub fn number_format_number_default(value: f64) -> String {
@@ -367,9 +407,18 @@ pub fn string_constant_case(s: &str) -> String {
 pub fn string_count_occurrences(s: &str, search: &str) -> usize {
     umt_rust::string::umt_count_occurrences(s, search)
 }
+#[wasm_bindgen(js_name = "damerauLevenshteinDistance")]
+pub fn string_damerau_levenshtein_distance(s1: &str, s2: &str) -> usize {
+    umt_rust::string::umt_damerau_levenshtein_distance(s1, s2)
+}
 #[wasm_bindgen(js_name = "deburr")]
 pub fn string_deburr(s: &str) -> String {
     umt_rust::string::umt_deburr(s)
+}
+#[wasm_bindgen(js_name = "decodeBase64Url")]
+pub fn string_decode_base64_url(base64_url_string: &str) -> Result<String, JsValue> {
+    umt_rust::string::umt_decode_base64_url(base64_url_string)
+        .map_err(|e| JsValue::from_str(&e.to_string()))
 }
 #[wasm_bindgen(js_name = "dedent")]
 pub fn string_dedent(s: &str) -> String {
@@ -378,6 +427,10 @@ pub fn string_dedent(s: &str) -> String {
 #[wasm_bindgen(js_name = "deleteSpaces")]
 pub fn string_delete_spaces(s: &str) -> String {
     umt_rust::string::umt_delete_spaces(s)
+}
+#[wasm_bindgen(js_name = "encodeBase64Url")]
+pub fn string_encode_base64_url(s: &str) -> String {
+    umt_rust::string::umt_encode_base64_url(s)
 }
 #[wasm_bindgen(js_name = "ensurePrefix")]
 pub fn string_ensure_prefix(s: &str, prefix: &str) -> String {
@@ -403,6 +456,14 @@ pub fn string_from_base64(base64_string: &str) -> Result<String, JsValue> {
 #[wasm_bindgen(js_name = "hasNoLetters")]
 pub fn string_has_no_letters(text: &str) -> bool {
     umt_rust::string::umt_has_no_letters(text)
+}
+#[wasm_bindgen(js_name = "indent")]
+pub fn string_indent(s: &str, count: usize, unit: &str) -> String {
+    umt_rust::string::umt_indent(s, count, unit)
+}
+#[wasm_bindgen(js_name = "indentDefault")]
+pub fn string_indent_default(s: &str, count: usize) -> String {
+    umt_rust::string::umt_indent_default(s, count)
 }
 #[wasm_bindgen(js_name = "kebabCase")]
 pub fn string_kebab_case(s: &str) -> String {
@@ -451,6 +512,10 @@ pub fn string_reverse_string(s: &str) -> String {
 #[wasm_bindgen(js_name = "sanitizeString")]
 pub fn string_sanitize_string(s: &str) -> String {
     umt_rust::string::umt_sanitize_string(s)
+}
+#[wasm_bindgen(js_name = "sentenceCase")]
+pub fn string_sentence_case(s: &str) -> String {
+    umt_rust::string::umt_sentence_case(s)
 }
 #[wasm_bindgen(js_name = "slugify")]
 pub fn string_slugify(s: &str) -> String {
@@ -516,6 +581,14 @@ pub fn string_truncate(s: &str, length: usize, suffix: &str) -> String {
 pub fn string_truncate_default(s: &str, length: usize) -> String {
     umt_rust::string::umt_truncate_default(s, length)
 }
+#[wasm_bindgen(js_name = "truncateMiddle")]
+pub fn string_truncate_middle(s: &str, length: usize, separator: &str) -> String {
+    umt_rust::string::umt_truncate_middle(s, length, separator)
+}
+#[wasm_bindgen(js_name = "truncateMiddleDefault")]
+pub fn string_truncate_middle_default(s: &str, length: usize) -> String {
+    umt_rust::string::umt_truncate_middle_default(s, length)
+}
 #[wasm_bindgen(js_name = "uncapitalize")]
 pub fn string_uncapitalize(s: &str) -> String {
     umt_rust::string::umt_uncapitalize(s)
@@ -528,6 +601,10 @@ pub fn string_unescape_html(s: &str) -> String {
 pub fn string_word_count(s: &str) -> usize {
     umt_rust::string::umt_word_count(s)
 }
+#[wasm_bindgen(js_name = "wrapText")]
+pub fn string_wrap_text(s: &str, width: usize) -> String {
+    umt_rust::string::umt_wrap_text(s, width)
+}
 #[wasm_bindgen(js_name = "convertTime")]
 pub fn time_convert_time(value: f64, from_unit: &str, to_unit: &str) -> Option<f64> {
     umt_rust::time::umt_convert_time(value, from_unit, to_unit)
@@ -535,6 +612,10 @@ pub fn time_convert_time(value: f64, from_unit: &str, to_unit: &str) -> Option<f
 #[wasm_bindgen(js_name = "convertTimeFromStr")]
 pub fn time_convert_time_from_str(value: &str, from_unit: &str, to_unit: &str) -> Option<f64> {
     umt_rust::time::umt_convert_time_from_str(value, from_unit, to_unit)
+}
+#[wasm_bindgen(js_name = "formatDuration")]
+pub fn time_format_duration(milliseconds: f64) -> String {
+    umt_rust::time::umt_format_duration(milliseconds)
 }
 #[wasm_bindgen(js_name = "escapeRegexp")]
 pub fn tool_escape_regexp(string: &str) -> String {

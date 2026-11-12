@@ -1,4 +1,4 @@
-use std::collections::HashSet;
+use super::ordered_unique::ordered_unique_by;
 use std::hash::Hash;
 
 /// Removes duplicate values from an array based on a selector function.
@@ -27,15 +27,5 @@ where
     K: Hash + Eq,
     F: Fn(&T) -> K,
 {
-    let mut seen = HashSet::new();
-    let mut result = Vec::new();
-
-    for item in array {
-        let key = selector(item);
-        if seen.insert(key) {
-            result.push(item.clone());
-        }
-    }
-
-    result
+    ordered_unique_by(array, selector)
 }

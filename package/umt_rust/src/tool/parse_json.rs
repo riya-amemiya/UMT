@@ -1,3 +1,4 @@
+use crate::object::remove_prototype::DANGEROUS_KEYS;
 use serde::de::DeserializeOwned;
 use serde_json;
 
@@ -22,8 +23,6 @@ impl From<serde_json::Error> for JsonParseError {
         }
     }
 }
-
-const DANGEROUS_KEYS: [&str; 3] = ["__proto__", "constructor", "prototype"];
 
 /// Removes prototype-polluting keys from every object in a parsed JSON value.
 fn strip_dangerous_keys(value: &mut serde_json::Value) {

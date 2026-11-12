@@ -1,4 +1,7 @@
+import itertools
 from typing import Any
+
+from .ordered_unique import ordered_unique
 
 
 def get_arrays_diff(array: list[Any], *arrays: list[Any]) -> list[Any]:
@@ -16,17 +19,9 @@ def get_arrays_diff(array: list[Any], *arrays: list[Any]) -> list[Any]:
         >>> get_arrays_diff([1, 2, 3], [2, 3, 4])
         [1, 4]
     """
-    all_values: dict[Any, None] = dict.fromkeys(array)
     duplicates: set[Any] = set()
-
-    for arr in arrays:
-        for value in arr:
-            if value in duplicates:
-                continue
-            if value in all_values:
-                del all_values[value]
-                duplicates.add(value)
-            else:
-                all_values[value] = None
-
-    return list(all_values)
+    merged = ordered_unique(
+        itertools.chain(ordered_unique(array), *arrays),
+        on_duplicate=duplicates.add,
+    )
+    return [value for value in merged if value not in duplicates]

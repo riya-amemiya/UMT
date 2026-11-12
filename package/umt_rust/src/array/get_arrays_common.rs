@@ -1,3 +1,4 @@
+use super::ordered_unique::ordered_unique_by;
 use super::unique::same_value_zero_bits;
 use std::collections::HashSet;
 use std::hash::Hash;
@@ -35,17 +36,12 @@ pub fn umt_get_arrays_common<T: Clone + Hash + Eq>(arrays: &[&[T]]) -> Vec<T> {
 
     let other_sets: Vec<HashSet<&T>> = arrays[1..].iter().map(|arr| arr.iter().collect()).collect();
 
-    let mut seen: HashSet<&T> = HashSet::new();
-    let mut result = Vec::new();
-
-    for item in arrays[0] {
-        if !seen.contains(item) && other_sets.iter().all(|set| set.contains(item)) {
-            seen.insert(item);
-            result.push(item.clone());
-        }
-    }
-
-    result
+    ordered_unique_by(
+        arrays[0]
+            .iter()
+            .filter(|item| other_sets.iter().all(|set| set.contains(item))),
+        |item| item,
+    )
 }
 
 /// Extract common elements from exactly two arrays.
@@ -89,16 +85,11 @@ pub fn umt_get_arrays_common_f64(arrays: &[&[f64]]) -> Vec<f64> {
         .map(|arr| arr.iter().map(|&x| same_value_zero_bits(x)).collect())
         .collect();
 
-    let mut seen: HashSet<u64> = HashSet::new();
-    let mut result = Vec::new();
-
-    for &item in arrays[0] {
-        let key = same_value_zero_bits(item);
-        if !seen.contains(&key) && other_sets.iter().all(|set| set.contains(&key)) {
-            seen.insert(key);
-            result.push(item);
-        }
-    }
-
-    result
+    ordered_unique_by(
+        arrays[0].iter().filter(|&&item| {
+            let key = same_value_zero_bits(item);
+            other_sets.iter().all(|set| set.contains(&key))
+        }),
+        |&item| same_value_zero_bits(item),
+    )
 }

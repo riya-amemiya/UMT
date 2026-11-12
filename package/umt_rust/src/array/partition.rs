@@ -23,18 +23,7 @@ where
     T: Clone,
     F: Fn(&T) -> bool,
 {
-    let mut pass = Vec::new();
-    let mut fail = Vec::new();
-
-    for item in array {
-        if predicate(item) {
-            pass.push(item.clone());
-        } else {
-            fail.push(item.clone());
-        }
-    }
-
-    (pass, fail)
+    umt_partition_indexed(array, |item, _| predicate(item))
 }
 
 /// Splits an array into two vectors with index access in the predicate.

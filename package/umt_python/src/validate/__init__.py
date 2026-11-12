@@ -1,5 +1,6 @@
 from .any_validator import AnyReturnType, any_validator
 from .array_of import ArrayOfReturnType, array_of
+from .between import between
 from .bigint import BigIntReturnType, BigIntRule, bigint
 from .boolean import BooleanReturnType, boolean
 from .date import DateReturnType, date
@@ -9,6 +10,7 @@ from .exact_length import exact_length
 from .file import FileReturnType, file
 from .func import FunctionReturnType, FunctionSchema, FunctionValidator, func
 from .instance_of import InstanceOfReturnType, instance_of
+from .integer import integer
 from .is_array import is_array
 from .is_boolean import is_boolean
 from .is_browser import is_browser
@@ -25,6 +27,8 @@ from .is_perfect_square import is_perfect_square
 from .is_prime_number import is_prime_number
 from .is_string import is_string
 from .is_value_nan import is_value_nan
+from .length_between import length_between
+from .literal import LiteralReturnType, literal
 from .map import MapReturnType, map_validator
 from .max_length import max_length
 from .max_value import max_value
@@ -61,11 +65,14 @@ from .parse_email import (
     parse_email,
 )
 from .prime import prime
+from .record import RecordReturnType, record
 from .regex_match import regex_match
 from .set_of import SetOfReturnType, set_of
 from .string import StringReturnType, StringRule, string
 from .template_literal import TemplateLiteralReturnType, template_literal
+from .tuple_validator import TupleReturnType, tuple_validator
 from .unknown_validator import UnknownReturnType, unknown_validator
+from .url import url
 from .uuid import uuid
 from .validate_email import validate_email
 
@@ -84,6 +91,7 @@ __all__ = [
     "InstanceOfReturnType",
     "IntersectionReturnType",
     "IsDeepEqualOptions",
+    "LiteralReturnType",
     "MapReturnType",
     "NeverReturnType",
     "NullReturn",
@@ -96,15 +104,18 @@ __all__ = [
     "ParseEmailLevel",
     "ParseEmailOptions",
     "ParseEmailResult",
+    "RecordReturnType",
     "SetOfReturnType",
     "StringReturnType",
     "StringRule",
     "TemplateLiteralReturnType",
+    "TupleReturnType",
     "UndefinedReturn",
     "UnionReturnType",
     "UnknownReturnType",
     "any_validator",
     "array_of",
+    "between",
     "bigint",
     "boolean",
     "date",
@@ -114,6 +125,7 @@ __all__ = [
     "file",
     "func",
     "instance_of",
+    "integer",
     "intersection",
     "is_array",
     "is_boolean",
@@ -131,6 +143,8 @@ __all__ = [
     "is_prime_number",
     "is_string",
     "is_value_nan",
+    "length_between",
+    "literal",
     "map_validator",
     "max_length",
     "max_value",
@@ -149,13 +163,16 @@ __all__ = [
     "partial",
     "pick_keys",
     "prime",
+    "record",
     "regex_match",
     "required",
     "set_of",
     "string",
     "template_literal",
+    "tuple_validator",
     "union",
     "unknown_validator",
+    "url",
     "uuid",
     "validate_email",
 ]

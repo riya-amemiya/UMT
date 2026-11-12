@@ -20,6 +20,7 @@ mod test_is_prime_number_exact;
 mod test_is_string;
 mod test_is_value_nan;
 mod test_js_number_coercion;
+mod test_literal;
 mod test_never;
 mod test_parse_email;
 mod test_parse_email_levels;
@@ -34,6 +35,7 @@ mod any {
 mod array {
     mod test_array_of;
     mod test_core;
+    mod test_tuple;
     mod test_validate_array_mod;
 }
 
@@ -67,10 +69,12 @@ mod map {
 }
 
 mod number {
+    mod test_between;
     mod test_core;
     mod test_double;
     mod test_even;
     mod test_even_float;
+    mod test_integer;
     mod test_max_value;
     mod test_min_value;
     mod test_odd;
@@ -88,6 +92,7 @@ mod object {
     mod test_optional;
     mod test_partial;
     mod test_pick_keys;
+    mod test_record;
     mod test_required;
     mod test_union;
     mod test_validate_object_mod;
@@ -103,6 +108,7 @@ mod string {
     mod test_exact_length;
     mod test_exact_length_utf16;
     mod test_length;
+    mod test_length_between;
     mod test_length_utf16;
     mod test_max_length;
     mod test_max_length_utf16;
@@ -111,6 +117,7 @@ mod string {
     mod test_number_string;
     mod test_one_of;
     mod test_regex_match;
+    mod test_url;
     mod test_uuid;
     mod test_uuid_versions;
     mod test_validate_string_mod;

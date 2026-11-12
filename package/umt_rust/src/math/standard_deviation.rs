@@ -1,6 +1,6 @@
-use super::umt_average;
+use super::umt_variance;
 
-/// Calculates the standard deviation of a set of values.
+/// Calculates the population standard deviation of a set of values.
 ///
 /// The standard deviation is a measure of the amount of variation or dispersion
 /// of a set of values. A low standard deviation indicates that the values tend
@@ -24,24 +24,32 @@ use super::umt_average;
 /// assert!((result - 0.816496580927726).abs() < 1e-10);
 /// ```
 pub fn umt_standard_deviation(values: &[f64]) -> f64 {
-    if values.is_empty() {
-        return 0.0;
-    }
+    umt_standard_deviation_with_sample(values, false)
+}
 
-    let avg = umt_average(values.to_vec());
-
-    // Calculate the squared differences from the mean
-    let square_diffs: Vec<f64> = values
-        .iter()
-        .map(|&value| {
-            let diff = value - avg;
-            diff * diff
-        })
-        .collect();
-
-    // Calculate the mean of the squared differences
-    let avg_square_diff = umt_average(square_diffs);
-
-    // Return the square root of the mean squared differences
-    avg_square_diff.sqrt()
+/// Calculates the standard deviation of a set of values, choosing between the
+/// population and the sample variance.
+///
+/// # Arguments
+///
+/// * `values` - A slice of f64 values.
+/// * `sample` - If `true`, uses the sample variance (`n - 1`) instead of the
+///   population variance (`n`).
+///
+/// # Returns
+///
+/// The standard deviation, 0.0 for an empty slice, or NaN for a sample of a
+/// single value.
+///
+/// # Examples
+///
+/// ```
+/// use umt_rust::math::umt_standard_deviation_with_sample;
+///
+/// assert_eq!(umt_standard_deviation_with_sample(&[1.0, 2.0, 3.0], true), 1.0);
+/// let population = umt_standard_deviation_with_sample(&[1.0, 2.0, 3.0], false);
+/// assert!((population - 0.816496580927726).abs() < 1e-10);
+/// ```
+pub fn umt_standard_deviation_with_sample(values: &[f64], sample: bool) -> f64 {
+    umt_variance(values, sample).sqrt()
 }

@@ -1,3 +1,4 @@
+import time
 import unittest
 
 from src.function import memoize
@@ -144,6 +145,59 @@ class TestMemoizeEdgeCases(unittest.TestCase):
         memoized = memoize(lambda a, b: a + b, resolver=lambda a, b: f"{a}-{b}")
         self.assertEqual(memoized(1, 2), 3)
         self.assertIn("1-2", memoized.cache)
+
+    def test_ttl_returns_cached_result_before_expiry(self):
+        calls: list[int] = []
+
+        def double(n: int) -> int:
+            calls.append(n)
+            return n * 2
+
+        memoized = memoize(double, ttl=10_000)
+        self.assertEqual(memoized(5), 10)
+        self.assertEqual(memoized(5), 10)
+        self.assertEqual(calls, [5])
+
+    def test_ttl_recomputes_after_expiry(self):
+        calls: list[int] = []
+
+        def double(n: int) -> int:
+            calls.append(n)
+            return n * 2
+
+        memoized = memoize(double, ttl=50)
+        memoized(5)
+        time.sleep(0.08)
+        self.assertEqual(memoized(5), 10)
+        self.assertEqual(calls, [5, 5])
+        self.assertEqual(len(memoized.cache), 1)
+        memoized(5)
+        self.assertEqual(calls, [5, 5])
+
+    def test_ttl_with_max_size_and_resolver(self):
+        calls: list[str] = []
+
+        def add(a: int, b: int) -> int:
+            calls.append(f"{a}-{b}")
+            return a + b
+
+        memoized = memoize(add, max_size=2, resolver=lambda a, b: f"{a}-{b}", ttl=50)
+        memoized(1, 2)
+        memoized(3, 4)
+        time.sleep(0.08)
+        memoized(1, 2)
+        self.assertEqual(len(calls), 3)
+        self.assertEqual(list(memoized.cache.keys()), ["3-4", "1-2"])
+
+        memoized(5, 6)
+        self.assertNotIn("3-4", memoized.cache)
+        self.assertIn("1-2", memoized.cache)
+        self.assertIn("5-6", memoized.cache)
+
+    def test_ttl_treats_entry_without_expiration_as_expired(self):
+        memoized = memoize(lambda n: n * 2, ttl=10_000)
+        memoized.cache[5] = 0
+        self.assertEqual(memoized(5), 10)
 
 
 if __name__ == "__main__":

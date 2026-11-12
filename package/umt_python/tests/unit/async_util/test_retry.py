@@ -114,6 +114,45 @@ class TestRetryOptions(unittest.IsolatedAsyncioTestCase):
             await retry(fn, retries=1, delay=4.0, jitter=True)
         self.assertEqual(slept, [2.0])
 
+    async def test_max_delay_caps_each_backoff_delay(self):
+        fn, _state = _failing(3)
+        slept = []
+
+        async def fake_sleep(seconds):
+            slept.append(seconds)
+
+        with patch.object(retry_module.asyncio, "sleep", fake_sleep):
+            result = await retry(
+                fn, retries=3, delay=0.5, backoff="exponential", max_delay=0.8
+            )
+        self.assertEqual(result, "ok")
+        self.assertEqual(slept, [0.5, 0.8, 0.8])
+
+    async def test_max_delay_is_applied_after_jitter(self):
+        fn, _state = _failing(2)
+        slept = []
+
+        async def fake_sleep(seconds):
+            slept.append(seconds)
+
+        with (
+            patch.object(retry_module.asyncio, "sleep", fake_sleep),
+            patch.object(retry_module.random_module, "random", return_value=0.5),
+        ):
+            await retry(fn, retries=2, delay=8.0, jitter=True, max_delay=3.0)
+        self.assertEqual(slept, [3.0, 3.0])
+
+    async def test_max_delay_above_the_computed_delay_keeps_it(self):
+        fn, _state = _failing(2)
+        slept = []
+
+        async def fake_sleep(seconds):
+            slept.append(seconds)
+
+        with patch.object(retry_module.asyncio, "sleep", fake_sleep):
+            await retry(fn, retries=2, delay=1.0, backoff="linear", max_delay=10.0)
+        self.assertEqual(slept, [1.0, 2.0])
+
     async def test_large_retry_budget_does_not_recurse(self):
         fn, state = _failing(3000)
         result = await retry(fn, retries=3000, delay=0)

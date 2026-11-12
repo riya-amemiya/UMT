@@ -103,6 +103,53 @@ describe("retry", () => {
     expect(attempts).toBe(2);
   });
 
+  it("caps each backoff delay at maxDelay", async () => {
+    const timeoutSpy = jest.spyOn(globalThis, "setTimeout");
+    const function_ = jest.fn(() => Promise.reject(new Error("nope")));
+    await expect(
+      retry(function_, {
+        retries: 3,
+        delay: 1000,
+        backoff: "exponential",
+        maxDelay: 2,
+      }),
+    ).rejects.toThrow("nope");
+    expect(timeoutSpy.mock.calls.map((call) => call[1])).toEqual([2, 2, 2]);
+    timeoutSpy.mockRestore();
+  });
+
+  it("keeps delays below maxDelay unchanged", async () => {
+    const timeoutSpy = jest.spyOn(globalThis, "setTimeout");
+    const function_ = jest.fn(() => Promise.reject(new Error("nope")));
+    await expect(
+      retry(function_, {
+        retries: 2,
+        delay: 1,
+        backoff: "linear",
+        maxDelay: 100,
+      }),
+    ).rejects.toThrow("nope");
+    expect(timeoutSpy.mock.calls.map((call) => call[1])).toEqual([1, 2]);
+    timeoutSpy.mockRestore();
+  });
+
+  it("applies maxDelay after jitter", async () => {
+    const timeoutSpy = jest.spyOn(globalThis, "setTimeout");
+    const randomSpy = jest.spyOn(Math, "random").mockReturnValue(0.5);
+    const function_ = jest.fn(() => Promise.reject(new Error("nope")));
+    await expect(
+      retry(function_, {
+        retries: 2,
+        delay: 8,
+        jitter: true,
+        maxDelay: 3,
+      }),
+    ).rejects.toThrow("nope");
+    expect(timeoutSpy.mock.calls.map((call) => call[1])).toEqual([3, 3]);
+    randomSpy.mockRestore();
+    timeoutSpy.mockRestore();
+  });
+
   it("rejects immediately when signal is already aborted", async () => {
     const controller = new AbortController();
     controller.abort(new Error("cancelled"));

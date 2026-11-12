@@ -1,5 +1,7 @@
 use std::cell::Cell;
 use std::rc::Rc;
+use std::thread;
+use std::time::Duration;
 use umt_rust::function::{umt_memoize, umt_memoize_with_resolver};
 
 #[test]
@@ -165,4 +167,90 @@ fn test_memoize_with_resolver_and_zero_max_size_keeps_latest_entry() {
     assert_eq!(memoized.cache_size(), 1);
     assert!(!memoized.cache_has(&"1".to_string()));
     assert!(memoized.cache_has(&"2".to_string()));
+}
+
+#[test]
+fn test_memoize_ttl_returns_cached_result_before_expiry() {
+    let call_count = Rc::new(Cell::new(0));
+    let cc = call_count.clone();
+    let memoized = umt_memoize(
+        move |n: i32| {
+            cc.set(cc.get() + 1);
+            n * 2
+        },
+        None,
+    )
+    .with_ttl(Duration::from_secs(10));
+
+    assert_eq!(memoized.call(5), 10);
+    assert_eq!(memoized.call(5), 10);
+    assert_eq!(call_count.get(), 1);
+}
+
+#[test]
+fn test_memoize_ttl_recomputes_after_expiry() {
+    let call_count = Rc::new(Cell::new(0));
+    let cc = call_count.clone();
+    let memoized = umt_memoize(
+        move |n: i32| {
+            cc.set(cc.get() + 1);
+            n * 2
+        },
+        None,
+    )
+    .with_ttl(Duration::from_millis(30));
+
+    memoized.call(5);
+    thread::sleep(Duration::from_millis(50));
+    assert_eq!(memoized.call(5), 10);
+    assert_eq!(call_count.get(), 2);
+    assert_eq!(memoized.cache_size(), 1);
+    memoized.call(5);
+    assert_eq!(call_count.get(), 2);
+}
+
+#[test]
+fn test_memoize_with_resolver_ttl_and_max_size() {
+    let call_count = Rc::new(Cell::new(0));
+    let cc = call_count.clone();
+    let memoized = umt_memoize_with_resolver(
+        move |(a, b): (i32, i32)| {
+            cc.set(cc.get() + 1);
+            a + b
+        },
+        |&(a, b): &(i32, i32)| format!("{}-{}", a, b),
+        Some(2),
+    )
+    .with_ttl(Duration::from_millis(30));
+
+    memoized.call((1, 2));
+    memoized.call((3, 4));
+    thread::sleep(Duration::from_millis(50));
+    memoized.call((1, 2));
+    assert_eq!(call_count.get(), 3);
+
+    memoized.call((5, 6));
+    assert!(!memoized.cache_has(&"3-4".to_string()));
+    assert!(memoized.cache_has(&"1-2".to_string()));
+    assert!(memoized.cache_has(&"5-6".to_string()));
+}
+
+#[test]
+fn test_memoize_cache_clear_resets_ttl_entries() {
+    let call_count = Rc::new(Cell::new(0));
+    let cc = call_count.clone();
+    let memoized = umt_memoize(
+        move |n: i32| {
+            cc.set(cc.get() + 1);
+            n * 2
+        },
+        None,
+    )
+    .with_ttl(Duration::from_secs(10));
+
+    memoized.call(5);
+    memoized.cache_clear();
+    assert_eq!(memoized.cache_size(), 0);
+    memoized.call(5);
+    assert_eq!(call_count.get(), 2);
 }

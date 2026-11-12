@@ -1,18 +1,11 @@
 from collections.abc import Callable
 from typing import TypeVar
 
+from .compare_function_default import compare_function_default
+
 T = TypeVar("T")
 
 CompareFunction = Callable[[T, T], int | float]
-
-
-def _compare_function_default(a: T, b: T) -> int | float:
-    """Default comparison function."""
-    if a < b:  # type: ignore
-        return -1
-    if a > b:  # type: ignore
-        return 1
-    return 0
 
 
 def _merge(
@@ -62,7 +55,7 @@ def merge_sort(
         return list(array)
 
     if compare_function is None:
-        compare_function = _compare_function_default
+        compare_function = compare_function_default
 
     middle = len(array) // 2
     left = array[:middle]

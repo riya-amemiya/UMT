@@ -1,6 +1,7 @@
 import math
 
 from .get_decimal_length import get_decimal_length
+from .js_round import js_round
 
 
 def gcd(x: float, y: float, *z: float) -> float:
@@ -58,4 +59,4 @@ def _gcd_integer(x: float, y: float, *z: float) -> float:
 
 def _round_absolute(value: float) -> int:
     """Rounds half up to the nearest integer and drops the sign."""
-    return abs(value if isinstance(value, int) else math.floor(value + 0.5))
+    return abs(int(js_round(value)))

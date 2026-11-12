@@ -16,12 +16,16 @@ from .flexible_number_conversion import flexible_number_conversion
 from .gcd import gcd
 from .get_decimal_length import get_decimal_length
 from .in_range import in_range
+from .inverse_lerp import inverse_lerp
 from .is_double import is_double
 from .is_perfect_square import is_perfect_square
+from .is_prime import is_prime
 from .is_prime_number import is_prime_number
 from .lcm import lcm
+from .lerp import lerp
 from .linear_congruential_generator import linear_congruential_generator
 from .literal_expression import literal_expression
+from .map_range import map_range
 from .math_converter import math_converter
 from .math_separator import math_separator
 from .max_value import max_value
@@ -35,6 +39,7 @@ from .n_hr import n_hr
 from .n_pr import n_pr
 from .percentile import percentile
 from .prime_factorization import PrimeFactor, prime_factorization
+from .quantile import quantile
 from .quotient import quotient
 from .rad_to_deg import rad_to_deg
 from .random_int import random_int
@@ -50,6 +55,7 @@ from .to_celsius import to_celsius
 from .to_kelvin import to_kelvin
 from .uuidv7 import uuidv7
 from .value_swap import value_swap
+from .variance import variance
 from .xoshiro256 import xoshiro256
 
 __all__ = [
@@ -74,12 +80,16 @@ __all__ = [
     "gcd",
     "get_decimal_length",
     "in_range",
+    "inverse_lerp",
     "is_double",
     "is_perfect_square",
+    "is_prime",
     "is_prime_number",
     "lcm",
+    "lerp",
     "linear_congruential_generator",
     "literal_expression",
+    "map_range",
     "math_converter",
     "math_separator",
     "max_value",
@@ -93,6 +103,7 @@ __all__ = [
     "n_pr",
     "percentile",
     "prime_factorization",
+    "quantile",
     "quotient",
     "rad_to_deg",
     "random_int",
@@ -108,5 +119,6 @@ __all__ = [
     "to_kelvin",
     "uuidv7",
     "value_swap",
+    "variance",
     "xoshiro256",
 ]

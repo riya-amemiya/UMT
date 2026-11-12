@@ -159,3 +159,76 @@ fn test_retry_supports_jitter() {
     );
     assert_eq!(attempts.get(), 2);
 }
+
+#[test]
+fn test_retry_with_max_delay_caps_each_delay() {
+    let attempts = Cell::new(0);
+    let started = std::time::Instant::now();
+    let result: Result<&str, String> = umt_rust::async_util::umt_retry_with_max_delay(
+        || {
+            attempts.set(attempts.get() + 1);
+            Err("nope".to_string())
+        },
+        options_with(3, 60_000, Backoff::Exponential, false, |_, _| true),
+        1,
+    );
+    assert_eq!(result, Err("nope".to_string()));
+    assert_eq!(attempts.get(), 4);
+    assert!(started.elapsed() < std::time::Duration::from_secs(10));
+}
+
+#[test]
+fn test_retry_with_max_delay_applies_after_jitter() {
+    let attempts = Cell::new(0);
+    let started = std::time::Instant::now();
+    let result = umt_rust::async_util::umt_retry_with_max_delay(
+        || {
+            attempts.set(attempts.get() + 1);
+            if attempts.get() < 3 {
+                Err("nope".to_string())
+            } else {
+                Ok("ok")
+            }
+        },
+        options_with(3, 60_000, Backoff::Linear, true, |_, _| true),
+        0,
+    );
+    assert_eq!(result, Ok("ok"));
+    assert_eq!(attempts.get(), 3);
+    assert!(started.elapsed() < std::time::Duration::from_secs(10));
+}
+
+#[test]
+fn test_retry_with_max_delay_keeps_smaller_delays() {
+    let attempts = Cell::new(0);
+    let started = std::time::Instant::now();
+    let result = umt_rust::async_util::umt_retry_with_max_delay(
+        || {
+            attempts.set(attempts.get() + 1);
+            if attempts.get() < 3 {
+                Err("nope".to_string())
+            } else {
+                Ok("ok")
+            }
+        },
+        options_with(2, 20, Backoff::Fixed, false, |_, _| true),
+        1_000,
+    );
+    assert_eq!(result, Ok("ok"));
+    assert!(started.elapsed() >= std::time::Duration::from_millis(40));
+}
+
+#[test]
+fn test_retry_with_max_delay_respects_should_retry() {
+    let attempts = Cell::new(0);
+    let result: Result<&str, String> = umt_rust::async_util::umt_retry_with_max_delay(
+        || {
+            attempts.set(attempts.get() + 1);
+            Err("fatal".to_string())
+        },
+        options_with(5, 60_000, Backoff::Fixed, false, |_, _| false),
+        1,
+    );
+    assert_eq!(result, Err("fatal".to_string()));
+    assert_eq!(attempts.get(), 1);
+}

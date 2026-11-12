@@ -163,6 +163,58 @@ class TestDebounceTimerReuse(unittest.TestCase):
         time.sleep(0.1)
         self.assertEqual(calls, [1])
 
+    def test_flush_invokes_pending_call_immediately(self):
+        calls: list[int] = []
+        debounced = debounce(lambda n: calls.append(n), 0.1)
+
+        debounced(1)
+        debounced(2)
+        debounced.flush()
+        self.assertEqual(calls, [2])
+        self.assertFalse(debounced.pending())
+
+        time.sleep(0.15)
+        self.assertEqual(calls, [2])
+
+    def test_flush_does_nothing_without_pending_timer(self):
+        calls: list[int] = []
+        debounced = debounce(lambda n: calls.append(n), 0.1)
+
+        debounced.flush()
+        self.assertEqual(calls, [])
+
+    def test_flush_does_not_invoke_when_trailing_false(self):
+        calls: list[int] = []
+        debounced = debounce(
+            lambda n: calls.append(n), 0.1, leading=True, trailing=False
+        )
+
+        debounced(1)
+        debounced(2)
+        debounced.flush()
+        self.assertEqual(calls, [1])
+        self.assertFalse(debounced.pending())
+
+    def test_flush_does_not_invoke_again_after_leading_call(self):
+        calls: list[int] = []
+        debounced = debounce(lambda n: calls.append(n), 0.1, leading=True)
+
+        debounced(1)
+        debounced.flush()
+        self.assertEqual(calls, [1])
+
+    def test_pending_reports_timer_state(self):
+        debounced = debounce(lambda: None, 0.05)
+
+        self.assertFalse(debounced.pending())
+        debounced()
+        self.assertTrue(debounced.pending())
+        time.sleep(0.1)
+        self.assertFalse(debounced.pending())
+        debounced()
+        debounced.cancel()
+        self.assertFalse(debounced.pending())
+
 
 if __name__ == "__main__":
     unittest.main()

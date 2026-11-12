@@ -33,6 +33,13 @@ class TestMathConverter(unittest.TestCase):
         result = math_converter("0*0")
         self.assertEqual(result, "0*0")
 
+    def test_stops_once_expansion_repeats(self):
+        self.assertEqual(math_converter("5*5"), "5*5+0*0")
+        self.assertEqual(math_converter("10*10"), "10*10+0*0")
+        self.assertEqual(math_converter("100*100"), "100*100+0*0")
+        self.assertEqual(math_converter("10^3"), "10*10+0*0")
+        self.assertEqual(math_converter("2000*2000"), "3000*1000+1000*1000+0*0")
+
     def test_docstring_example(self):
         result = math_converter("1250*1250")
         self.assertIn("1500", result)

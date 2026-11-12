@@ -4,6 +4,12 @@
 use super::core::{ValidateCoreReturnType, ValidateReturnType};
 use super::{umt_is_double, umt_is_prime_number};
 
+mod between;
+mod integer;
+
+pub use between::*;
+pub use integer::*;
+
 /// Validates a number value with optional validation rules
 ///
 /// # Arguments

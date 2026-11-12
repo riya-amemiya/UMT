@@ -7,6 +7,7 @@ export * from "./date";
 export * from "./file";
 export * from "./function";
 export * from "./instanceof";
+export * from "./literal";
 export * from "./map";
 export * from "./never";
 export * from "./number";

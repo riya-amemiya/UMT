@@ -1,5 +1,7 @@
 from typing import TypeVar
 
+from .ordered_unique import ordered_unique
+
 T = TypeVar("T")
 
 
@@ -19,10 +21,4 @@ def unique(array: list[T]) -> list[T]:
         >>> unique(['a', 'b', 'a', 'c'])
         ['a', 'b', 'c']
     """
-    seen: set[T] = set()
-    result: list[T] = []
-    for item in array:
-        if item not in seen:
-            seen.add(item)
-            result.append(item)
-    return result
+    return ordered_unique(array)

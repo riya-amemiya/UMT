@@ -1,11 +1,11 @@
 import json
 from typing import Any, NoReturn
 
-_DANGEROUS_KEYS = ("__proto__", "constructor", "prototype")
+from ..object.dangerous_keys import DANGEROUS_KEYS
 
 
 def _strip_dangerous_keys(parsed: dict[str, Any]) -> dict[str, Any]:
-    for key in _DANGEROUS_KEYS:
+    for key in DANGEROUS_KEYS:
         parsed.pop(key, None)
     return parsed
 

@@ -7,10 +7,14 @@ use super::core::{ValidateCoreReturnType, ValidateReturnType};
 use super::{ParseEmailLevel, ParseEmailOptions, umt_is_number_str, umt_parse_email};
 
 mod exact_length;
+mod length_between;
 mod one_of;
+mod url;
 
 pub use exact_length::*;
+pub use length_between::*;
 pub use one_of::*;
+pub use url::*;
 
 /// Validates a string value with optional validation rules
 ///

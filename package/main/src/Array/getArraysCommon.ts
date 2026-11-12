@@ -1,3 +1,5 @@
+import { orderedUnique } from "./setHelpers/orderedUnique";
+
 /**
 Extract common elements from multiple arrays
 @param {T[]} array The first array
@@ -20,46 +22,11 @@ export const getArraysCommon = <O, T extends unknown[] = unknown[]>(
     array_.length > THRESHOLD ? new Set(array_) : array_,
   );
 
-  const uniqueResult: unknown[] = [];
-
-  // Use a Set to track seen items for uniqueness if the input array is large,
-  // otherwise just check the result array which is faster for small sizes.
-  const isUseSeenSet = array.length > THRESHOLD;
-  const seen = isUseSeenSet ? new Set<unknown>() : undefined;
-
-  for (const item of array) {
-    // Check uniqueness
-    if (seen) {
-      if (seen.has(item)) {
-        continue;
-      }
-    } else if (uniqueResult.includes(item)) {
-      continue;
-    }
-
-    // Check if item is present in all other arrays/sets
-    let isCommon = true;
-    for (const collection of otherCollections) {
-      if (collection instanceof Set) {
-        if (!collection.has(item)) {
-          isCommon = false;
-          break;
-        }
-      } else if (!collection.includes(item)) {
-        isCommon = false;
-        break;
-      }
-    }
-
-    if (!isCommon) {
-      continue;
-    }
-
-    if (seen) {
-      seen.add(item);
-    }
-    uniqueResult.push(item);
-  }
-
-  return uniqueResult as unknown as O;
+  return orderedUnique<unknown>([array]).filter((item) =>
+    otherCollections.every((collection) =>
+      collection instanceof Set
+        ? collection.has(item)
+        : collection.includes(item),
+    ),
+  ) as unknown as O;
 };

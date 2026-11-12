@@ -1,5 +1,5 @@
 /**
-A throttled function with a cancel method.
+A throttled function with cancel, flush and pending methods.
 */
 export interface ThrottledFunction<
   T extends (...arguments_: unknown[]) => unknown,
@@ -9,6 +9,15 @@ export interface ThrottledFunction<
   Cancels any pending throttled invocation.
   */
   cancel: () => void;
+  /**
+  Immediately runs the pending trailing invocation, if any, and clears the
+  timer. Does nothing when no trailing invocation is pending.
+  */
+  flush: () => void;
+  /**
+  Returns whether a trailing throttled invocation is currently pending.
+  */
+  pending: () => boolean;
 }
 
 /**
@@ -17,12 +26,16 @@ invokes it at most once per the specified wait period.
 
 @param function_ - The function to throttle.
 @param wait - The minimum time between invocations in milliseconds.
-@returns The throttled function with a cancel method.
+@returns The throttled function with cancel, flush and pending methods.
 
 @example
 ```typescript
 const throttled = throttle(() => console.log("called"), 300);
+throttled(); // logs "called"
 throttled();
+throttled.pending(); // true
+throttled.flush(); // logs "called" immediately
+throttled.pending(); // false
 throttled();
 throttled.cancel();
 ```
@@ -75,6 +88,17 @@ export const throttle = <T extends (...arguments_: unknown[]) => unknown>(
     lastContext = undefined;
     lastCallTime = 0;
   };
+
+  throttled.flush = () => {
+    if (timerId === undefined) {
+      return;
+    }
+    clearTimeout(timerId);
+    timerId = undefined;
+    invoke();
+  };
+
+  throttled.pending = () => timerId !== undefined;
 
   return throttled;
 };

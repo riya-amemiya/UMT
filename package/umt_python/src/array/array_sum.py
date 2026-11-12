@@ -1,5 +1,4 @@
-import math
-
+from ..math.js_round import js_round
 from ..math.number_to_js_string import number_to_js_string
 
 
@@ -37,13 +36,5 @@ def array_sum(x: list[int | float]) -> int | float:
     scale = 10.0**max_decimal
     scaled = 0.0
     for num in x:
-        scaled += _js_round(num * scale)
+        scaled += js_round(num * scale)
     return scaled / scale
-
-
-def _js_round(value: float) -> float:
-    """Rounds like JavaScript's Math.round (ties toward positive infinity)."""
-    if not math.isfinite(value):
-        return value
-    floored = math.floor(value)
-    return floored + 1 if value - floored >= 0.5 else floored

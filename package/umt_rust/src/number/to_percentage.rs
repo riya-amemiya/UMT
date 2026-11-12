@@ -1,3 +1,5 @@
+use crate::math::js_round;
+
 /// Calculates the percentage of a value relative to a total.
 ///
 /// Returns 0.0 when the total is 0.0 to avoid division by zero.
@@ -17,7 +19,7 @@ pub fn umt_to_percentage(value: f64, total: f64, decimals: i32) -> f64 {
     }
 
     let factor = 10_f64.powi(decimals);
-    ((value / total) * 100.0 * factor + 0.5).floor() / factor
+    js_round((value / total) * 100.0 * factor) / factor
 }
 
 /// Calculates the percentage of a value relative to a total with 2 decimal places by default.

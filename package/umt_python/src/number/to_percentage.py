@@ -1,5 +1,7 @@
 import math
 
+from ..math.js_round import js_round
+
 
 def to_percentage(value: float | int, total: float | int, decimals: int = 2) -> float:
     """
@@ -34,5 +36,4 @@ def to_percentage(value: float | int, total: float | int, decimals: int = 2) -> 
     scaled = (value / total) * 100 * factor
     if not math.isfinite(scaled):
         return scaled
-    # Mimic JS Math.round(x) behavior: floor(x + 0.5)
-    return math.floor(scaled + 0.5) / factor
+    return js_round(scaled) / factor
