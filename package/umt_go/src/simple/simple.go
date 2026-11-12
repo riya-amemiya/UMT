@@ -100,7 +100,7 @@ func DeviationValueSimple(scores []float64, target float64) float64 {
 		return 50
 	}
 
-	return ((target - avg) / sd) * 10 + 50
+	return ((target-avg)/sd)*10 + 50
 }
 
 // average calculates the arithmetic mean of a slice of float64 values.

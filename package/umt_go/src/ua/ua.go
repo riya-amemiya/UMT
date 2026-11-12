@@ -54,11 +54,11 @@ var (
 
 // Pre-compiled regular expressions for device detection.
 var (
-	reBot             = regexp.MustCompile(`(?i)bot|googlebot|crawler|spider|robot|crawling`)
-	reMobileDevice    = regexp.MustCompile(`(?i)iphone|ipod|webos|blackberry|iemobile|opera mini`)
-	reMobileFlag      = regexp.MustCompile(`(?i)mobile`)
-	reTabletIPad      = regexp.MustCompile(`(?i)ipad`)
-	reDesktop         = regexp.MustCompile(`(?i)windows|macintosh|linux`)
+	reBot          = regexp.MustCompile(`(?i)bot|googlebot|crawler|spider|robot|crawling`)
+	reMobileDevice = regexp.MustCompile(`(?i)iphone|ipod|webos|blackberry|iemobile|opera mini`)
+	reMobileFlag   = regexp.MustCompile(`(?i)mobile`)
+	reTabletIPad   = regexp.MustCompile(`(?i)ipad`)
+	reDesktop      = regexp.MustCompile(`(?i)windows|macintosh|linux`)
 )
 
 // ExtractBrowserFromUserAgent extracts browser information from a user agent string.
