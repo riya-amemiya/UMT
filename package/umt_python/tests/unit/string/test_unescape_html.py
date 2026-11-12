@@ -78,5 +78,34 @@ class TestUnescapeHtml(unittest.TestCase):
         )
 
 
+class TestUnescapeHtmlUnsafeCodePoints(unittest.TestCase):
+    def test_null_and_control_characters_stay_escaped(self):
+        self.assertEqual(unescape_html("&#0;"), "&#0;")
+        self.assertEqual(unescape_html("&#x1F;"), "&#x1F;")
+        self.assertEqual(unescape_html("&#127;"), "&#127;")
+        self.assertEqual(unescape_html("&#128;"), "&#128;")
+        self.assertEqual(unescape_html("&#x9F;"), "&#x9F;")
+
+    def test_tab_line_feed_and_carriage_return_are_decoded(self):
+        self.assertEqual(unescape_html("&#9;&#10;&#13;"), "\t\n\r")
+        self.assertEqual(unescape_html("&#x20;&#160;"), "  ")
+
+    def test_surrogates_and_out_of_range_stay_escaped(self):
+        self.assertEqual(unescape_html("&#55296;"), "&#55296;")
+        self.assertEqual(unescape_html("&#xDFFF;"), "&#xDFFF;")
+        self.assertEqual(unescape_html("&#1114112;"), "&#1114112;")
+        self.assertEqual(unescape_html("&#x110000;"), "&#x110000;")
+        self.assertEqual(unescape_html("&#x10FFFF;"), "\U0010ffff")
+
+    def test_digit_count_limits(self):
+        self.assertEqual(unescape_html("&#00000065;"), "&#00000065;")
+        self.assertEqual(unescape_html("&#0000065;"), "A")
+        self.assertEqual(unescape_html("&#x0000041;"), "&#x0000041;")
+        self.assertEqual(unescape_html("&#x000041;"), "A")
+
+    def test_non_ascii_digits_are_not_decoded(self):
+        self.assertEqual(unescape_html("&#٦٥;"), "&#٦٥;")
+
+
 if __name__ == "__main__":
     unittest.main()

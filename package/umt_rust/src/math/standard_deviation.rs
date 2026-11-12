@@ -13,7 +13,7 @@ use super::umt_average;
 ///
 /// # Returns
 ///
-/// The standard deviation.
+/// The standard deviation, or 0.0 for an empty slice.
 ///
 /// # Examples
 ///
@@ -25,7 +25,7 @@ use super::umt_average;
 /// ```
 pub fn umt_standard_deviation(values: &[f64]) -> f64 {
     if values.is_empty() {
-        return f64::NAN;
+        return 0.0;
     }
 
     let avg = umt_average(values.to_vec());

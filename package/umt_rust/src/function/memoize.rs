@@ -56,9 +56,6 @@ where
             let mut order = self.insertion_order.borrow_mut();
             if let Some(oldest) = order.pop_front() {
                 cache.remove(&oldest);
-            } else {
-                // max_size == 0: nothing to evict, skip insertion
-                return result;
             }
         }
         cache.insert(arg.clone(), result.clone());
@@ -181,9 +178,6 @@ where
             let mut order = self.insertion_order.borrow_mut();
             if let Some(oldest) = order.pop_front() {
                 cache.remove(&oldest);
-            } else {
-                // max_size == 0: nothing to evict, skip insertion
-                return result;
             }
         }
         cache.insert(key.clone(), result.clone());

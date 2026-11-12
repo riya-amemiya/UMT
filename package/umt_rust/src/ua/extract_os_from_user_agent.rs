@@ -32,11 +32,11 @@ impl std::fmt::Display for Os {
     }
 }
 
-static IOS_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"iphone|ipad|ipod").unwrap());
-static ANDROID_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"android").unwrap());
-static MACOS_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"mac os x").unwrap());
-static WINDOWS_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"windows|win32").unwrap());
-static LINUX_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"linux").unwrap());
+static IOS_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"(?i-u)iphone|ipad|ipod").unwrap());
+static ANDROID_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"(?i-u)android").unwrap());
+static MACOS_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"(?i-u)mac os x").unwrap());
+static WINDOWS_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"(?i-u)windows|win32").unwrap());
+static LINUX_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"(?i-u)linux").unwrap());
 
 /// Extracts operating system information from a User-Agent string.
 ///
@@ -58,30 +58,28 @@ static LINUX_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"linux").unwrap(
 /// ```
 #[inline]
 pub fn umt_extract_os_from_user_agent(ua: &str) -> Os {
-    let ua_lower = ua.to_lowercase();
-
     // iOS detection (iPhone, iPad, iPod)
-    if IOS_RE.is_match(&ua_lower) {
+    if IOS_RE.is_match(ua) {
         return Os::Ios;
     }
 
     // Android detection
-    if ANDROID_RE.is_match(&ua_lower) {
+    if ANDROID_RE.is_match(ua) {
         return Os::Android;
     }
 
     // macOS detection
-    if MACOS_RE.is_match(&ua_lower) {
+    if MACOS_RE.is_match(ua) {
         return Os::MacOs;
     }
 
     // Windows detection
-    if WINDOWS_RE.is_match(&ua_lower) {
+    if WINDOWS_RE.is_match(ua) {
         return Os::Windows;
     }
 
     // Linux detection
-    if LINUX_RE.is_match(&ua_lower) {
+    if LINUX_RE.is_match(ua) {
         return Os::Linux;
     }
 

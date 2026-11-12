@@ -15,6 +15,19 @@ impl std::fmt::Display for Base58Error {
 
 impl std::error::Error for Base58Error {}
 
+const fn base58_decode_table() -> [u8; 256] {
+    let mut table = [0xFFu8; 256];
+    let alphabet = b"123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
+    let mut index = 0;
+    while index < alphabet.len() {
+        table[alphabet[index] as usize] = index as u8;
+        index += 1;
+    }
+    table
+}
+
+const BASE58_DECODE_TABLE: [u8; 256] = base58_decode_table();
+
 /// Decodes a Base58 string to bytes.
 ///
 /// Uses the Bitcoin Base58 alphabet which excludes ambiguous characters
@@ -38,38 +51,34 @@ impl std::error::Error for Base58Error {}
 /// assert_eq!(String::from_utf8(result).unwrap(), "Hello");
 /// ```
 pub fn umt_decode_base58(input: &str) -> Result<Vec<u8>, Base58Error> {
-    const ALPHABET: &str = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
-
     if input.is_empty() {
         return Ok(Vec::new());
     }
 
-    // Convert Base58 string to big integer
-    let mut big_number = BigUint::zero();
-    let fifty_eight = BigUint::from(58u32);
-
+    let mut digits: Vec<u8> = Vec::with_capacity(input.len());
     for char in input.chars() {
-        let value = match ALPHABET.find(char) {
-            Some(v) => v,
-            None => {
-                return Err(Base58Error {
-                    message: format!("Invalid base58 character: {}", char),
-                });
-            }
-        };
-        big_number = big_number * &fifty_eight + BigUint::from(value);
+        let value = BASE58_DECODE_TABLE
+            .get(char as usize)
+            .copied()
+            .unwrap_or(0xFF);
+        if value == 0xFF {
+            return Err(Base58Error {
+                message: format!("Invalid base58 character: {}", char),
+            });
+        }
+        digits.push(value);
     }
 
-    // Convert big integer to bytes
-    let bytes = big_number.to_bytes_be();
+    // Convert Base58 string to big integer
+    let big_number = BigUint::from_radix_be(&digits, 58).unwrap_or_default();
 
     // Count leading '1's (which represent leading zeros)
-    let leading_ones = input.chars().take_while(|&c| c == '1').count();
+    let leading_ones = digits.iter().take_while(|&&digit| digit == 0).count();
 
     // Prepend leading zeros
     let mut result = vec![0u8; leading_ones];
     if !big_number.is_zero() {
-        result.extend(bytes);
+        result.extend(big_number.to_bytes_be());
     }
 
     Ok(result)

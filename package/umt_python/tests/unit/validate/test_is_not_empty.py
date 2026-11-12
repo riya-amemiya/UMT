@@ -11,8 +11,8 @@ class TestIsNotEmpty(unittest.TestCase):
     def test_empty_values(self):
         self.assertFalse(is_not_empty({}))
 
-    def test_non_dict_values(self):
-        self.assertFalse(is_not_empty([1, 2, 3]))
+    def test_list_and_other_values(self):
+        self.assertTrue(is_not_empty([1, 2, 3]))
         self.assertFalse(is_not_empty("hello"))
         self.assertFalse(is_not_empty(123))
         self.assertFalse(is_not_empty(None))

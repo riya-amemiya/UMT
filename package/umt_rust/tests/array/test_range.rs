@@ -88,3 +88,36 @@ fn test_umt_range_f64_invalid_negative_step() {
     assert_eq!(umt_range_f64(1.0, Some(5.0), Some(-1.0)), Vec::<f64>::new());
     assert_eq!(umt_range_f64(5.0, Some(5.0), Some(-1.0)), Vec::<f64>::new());
 }
+
+#[test]
+fn test_umt_range_f64_rounds_half_toward_positive_infinity() {
+    assert_eq!(
+        umt_range_f64(0.5e-10, Some(1.2e-10), Some(1e-10)),
+        vec![1e-10]
+    );
+    assert_eq!(
+        umt_range_f64(-0.5e-10, Some(-1.2e-10), Some(-1e-10)),
+        vec![0.0]
+    );
+    assert_eq!(
+        umt_range_f64(0.0, Some(0.3), Some(0.1)),
+        vec![0.0, 0.1, 0.2]
+    );
+}
+
+#[test]
+fn test_umt_range_f64_rounds_exactly_near_half_and_large_values() {
+    assert_eq!(
+        umt_range_f64(1e-11, Some(5e-11), Some(1e-11)),
+        vec![0.0, 0.0, 0.0, 0.0, 0.0]
+    );
+    assert_eq!(
+        umt_range_f64(450361.0000000001, Some(450362.0), Some(0.3)),
+        vec![
+            450361.0000000001,
+            450361.3000000001,
+            450361.6000000001,
+            450361.9000000001
+        ]
+    );
+}

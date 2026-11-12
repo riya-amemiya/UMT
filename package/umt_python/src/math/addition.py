@@ -19,6 +19,9 @@ def addition(*numbers: float) -> float:
         >>> addition(1, 2, 3)
         6
     """
+    if all(isinstance(element, int) for element in numbers):
+        return float(sum(numbers))
+
     z = 10 ** max_value(*[get_decimal_length(element) for element in numbers])
     total = sum(multiplication(current, z) for current in numbers)
     return total / z

@@ -8,29 +8,26 @@
 ///
 /// # Returns
 ///
-/// A vector containing the prime factors of the input integer.
+/// A vector containing the prime factors of the absolute value of the input integer.
+/// The result is empty for 0, 1 and -1.
 pub fn umt_factorize(n: i32) -> Vec<i32> {
     let mut result = vec![];
-    let mut n = n;
+    let mut remaining = n.unsigned_abs();
 
-    if n <= 1 {
-        if n == 1 {
-            result.push(1);
+    let mut factor = 2_u32;
+    while factor
+        .checked_mul(factor)
+        .is_some_and(|square| square <= remaining)
+    {
+        while remaining.is_multiple_of(factor) {
+            result.push(factor as i32);
+            remaining /= factor;
         }
-        return result;
+        factor += 1;
     }
 
-    let mut i = 2;
-    while i * i <= n {
-        while n % i == 0 {
-            result.push(i);
-            n /= i;
-        }
-        i += 1;
-    }
-
-    if n > 1 {
-        result.push(n);
+    if remaining > 1 {
+        result.push(remaining as i32);
     }
 
     result

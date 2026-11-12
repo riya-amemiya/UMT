@@ -1,3 +1,4 @@
+use super::unique::same_value_zero_bits;
 use std::collections::HashSet;
 use std::hash::Hash;
 
@@ -20,12 +21,12 @@ use std::hash::Hash;
 /// assert_eq!(umt_arrays_join(&[&[1, 2, 3][..], &[2, 3, 4][..]]), vec![1, 2, 3, 4]);
 /// ```
 pub fn umt_arrays_join<T: Clone + Hash + Eq>(arrays: &[&[T]]) -> Vec<T> {
-    let mut seen = HashSet::new();
+    let mut seen: HashSet<&T> = HashSet::new();
     let mut result = Vec::new();
 
     for array in arrays {
         for item in *array {
-            if seen.insert(item.clone()) {
+            if seen.insert(item) {
                 result.push(item.clone());
             }
         }
@@ -60,18 +61,13 @@ pub fn umt_arrays_join_two<T: Clone + Hash + Eq>(array1: &[T], array2: &[T]) -> 
 ///
 /// Vector with unique elements from all input arrays
 pub fn umt_arrays_join_f64(arrays: &[&[f64]]) -> Vec<f64> {
+    let mut seen: HashSet<u64> = HashSet::new();
     let mut result = Vec::new();
-    let mut has_nan = false;
 
     for array in arrays {
         for &item in *array {
-            if item.is_nan() {
-                if !has_nan {
-                    result.push(item);
-                    has_nan = true;
-                }
-            } else if !result.contains(&item) {
-                result.push(item);
+            if seen.insert(same_value_zero_bits(item)) {
+                result.push(if item == 0.0 { 0.0 } else { item });
             }
         }
     }

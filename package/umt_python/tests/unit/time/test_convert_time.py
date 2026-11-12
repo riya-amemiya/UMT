@@ -1,3 +1,4 @@
+import math
 import unittest
 
 from src.time import convert_time
@@ -49,6 +50,21 @@ class TestConvertTime(unittest.TestCase):
     def test_docstring_examples(self):
         self.assertEqual(convert_time(1, "hours", "minutes"), 60.0)
         self.assertEqual(convert_time("1000", "ms", "s"), 1.0)
+
+
+class TestConvertTimeDecimalSafe(unittest.TestCase):
+    def test_multiplies_without_floating_point_error(self):
+        self.assertEqual(convert_time(1.1, "seconds", "milliseconds"), 1100.0)
+        self.assertEqual(convert_time("1.1", "s", "ms"), 1100.0)
+
+    def test_matches_typescript_division_result(self):
+        self.assertEqual(
+            convert_time(0.3, "milliseconds", "seconds"), 0.00030000000000000003
+        )
+        self.assertEqual(convert_time(4.35, "seconds", "milliseconds"), 4350.0)
+
+    def test_nan_propagates(self):
+        self.assertTrue(math.isnan(convert_time(float("nan"), "hours", "seconds")))
 
 
 if __name__ == "__main__":

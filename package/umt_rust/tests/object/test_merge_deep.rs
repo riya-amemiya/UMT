@@ -273,3 +273,45 @@ fn test_merge_deep_two_objects() {
         panic!("Expected object for key 'nested'");
     }
 }
+
+fn nested_object(key: &str, value: i64) -> HashMap<String, Value> {
+    let mut inner = HashMap::new();
+    inner.insert(key.to_string(), Value::Int(value));
+
+    let mut outer = HashMap::new();
+    outer.insert("a".to_string(), Value::Object(inner));
+    outer
+}
+
+#[test]
+fn test_should_merge_nested_objects_across_many_sources_without_mutation() {
+    let target = nested_object("x", 1);
+    let first = nested_object("y", 2);
+    let second = nested_object("z", 3);
+
+    let result = umt_merge_deep(&target, &[&first, &second]);
+
+    let mut expected_inner = HashMap::new();
+    expected_inner.insert("x".to_string(), Value::Int(1));
+    expected_inner.insert("y".to_string(), Value::Int(2));
+    expected_inner.insert("z".to_string(), Value::Int(3));
+    assert_eq!(result.get("a"), Some(&Value::Object(expected_inner)));
+
+    assert_eq!(target, nested_object("x", 1));
+    assert_eq!(first, nested_object("y", 2));
+    assert_eq!(second, nested_object("z", 3));
+}
+
+#[test]
+fn test_should_replace_object_with_non_object_and_back() {
+    let target = nested_object("x", 1);
+
+    let mut primitive = HashMap::new();
+    primitive.insert("a".to_string(), Value::Int(5));
+
+    let replaced = umt_merge_deep(&target, &[&primitive]);
+    assert_eq!(replaced.get("a"), Some(&Value::Int(5)));
+
+    let restored = umt_merge_deep(&primitive, &[&target]);
+    assert_eq!(restored, target);
+}

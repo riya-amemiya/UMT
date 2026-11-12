@@ -139,3 +139,30 @@ fn test_memoize_cache_clear() {
     memoized.cache_clear();
     assert_eq!(memoized.cache_size(), 0);
 }
+
+#[test]
+fn test_memoize_with_zero_max_size_keeps_latest_entry() {
+    let memoized = umt_memoize(|n: i32| n * 2, Some(0));
+
+    assert_eq!(memoized.call(1), 2);
+    assert_eq!(memoized.cache_size(), 1);
+    assert!(memoized.cache_has(&1));
+
+    assert_eq!(memoized.call(2), 4);
+    assert_eq!(memoized.cache_size(), 1);
+    assert!(!memoized.cache_has(&1));
+    assert!(memoized.cache_has(&2));
+}
+
+#[test]
+fn test_memoize_with_resolver_and_zero_max_size_keeps_latest_entry() {
+    let memoized = umt_memoize_with_resolver(|n: i32| n * 2, |n: &i32| n.to_string(), Some(0));
+
+    assert_eq!(memoized.call(1), 2);
+    assert_eq!(memoized.cache_size(), 1);
+
+    assert_eq!(memoized.call(2), 4);
+    assert_eq!(memoized.cache_size(), 1);
+    assert!(!memoized.cache_has(&"1".to_string()));
+    assert!(memoized.cache_has(&"2".to_string()));
+}

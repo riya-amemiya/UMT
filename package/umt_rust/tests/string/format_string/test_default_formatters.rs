@@ -84,7 +84,7 @@ fn test_pad_formatter_empty_pad_char() {
     let formatters = create_default_formatters();
     let pad = formatters.get("pad").unwrap();
     // Empty pad char string should default to '0'
-    assert_eq!(pad("5", &["3".to_string(), "".to_string()]), "005");
+    assert_eq!(pad("5", &["3".to_string(), "".to_string()]), "5");
 }
 
 #[test]
@@ -141,7 +141,7 @@ fn test_number_formatter_invalid_input() {
     let number = formatters.get("number").unwrap();
 
     // Invalid number should default to 0
-    assert_eq!(number("abc", &[]), "0");
+    assert_eq!(number("abc", &[]), "NaN");
 }
 
 #[test]
@@ -154,4 +154,85 @@ fn test_number_formatter_no_decimal() {
         number("42", &["en".to_string(), "0".to_string(), "2".to_string()]),
         "42"
     );
+}
+
+#[test]
+fn test_currency_formatter() {
+    let formatters = create_default_formatters();
+    let currency = formatters.get("currency").unwrap();
+    assert_eq!(currency("1234.5", &[]), "$1,234.50");
+    assert_eq!(
+        currency("1234.5", &["en-US".to_string(), "EUR".to_string()]),
+        "\u{20ac}1,234.50"
+    );
+    assert_eq!(currency(" 2 ", &["en-US".to_string()]), "$2.00");
+}
+
+#[test]
+fn test_number_formatter_groups_digits() {
+    let formatters = create_default_formatters();
+    let number = formatters.get("number").unwrap();
+    assert_eq!(number("1234.5", &[]), "1,234.5");
+    assert_eq!(number(" 1234.5 ", &[]), "1,234.5");
+    assert_eq!(
+        number(
+            "1234.5",
+            &["en-US".to_string(), "2".to_string(), "2".to_string()]
+        ),
+        "1,234.50"
+    );
+    assert_eq!(number("1234.5", &["de-DE".to_string()]), "1.234,5");
+    assert_eq!(
+        number(
+            "1.5",
+            &["en-US".to_string(), "x".to_string(), "y".to_string()]
+        ),
+        "1.5"
+    );
+    assert_eq!(number("abc", &[]), "NaN");
+}
+
+#[test]
+fn test_pad_formatter_length_follows_javascript_number_rules() {
+    let formatters = create_default_formatters();
+    let pad = formatters.get("pad").unwrap();
+    assert_eq!(pad("5", &[]), "05");
+    assert_eq!(pad("5", &["abc".to_string()]), "5");
+    assert_eq!(pad("5", &["-1".to_string()]), "5");
+    assert_eq!(pad("5", &["Infinity".to_string()]), "5");
+    assert_eq!(pad("5", &["-Infinity".to_string()]), "5");
+    assert_eq!(pad("5", &["".to_string()]), "5");
+    assert_eq!(pad("5", &["0x4".to_string()]), "0005");
+    assert_eq!(pad("5", &["0o4".to_string()]), "0005");
+    assert_eq!(pad("5", &["0B100".to_string()]), "0005");
+    assert_eq!(pad("5", &["0x+4".to_string()]), "5");
+    assert_eq!(pad("5", &["0xZ".to_string()]), "5");
+    assert_eq!(
+        pad("5", &["1e1".to_string(), "x".to_string()]),
+        "xxxxxxxxx5"
+    );
+    assert_eq!(pad("5", &["1e".to_string()]), "5");
+    assert_eq!(pad("5", &["--".to_string()]), "5");
+}
+
+#[test]
+fn test_pad_formatter_uses_whole_pad_string() {
+    let formatters = create_default_formatters();
+    let pad = formatters.get("pad").unwrap();
+    assert_eq!(pad("5", &["4".to_string(), "ab".to_string()]), "aba5");
+    assert_eq!(pad("5", &["3".to_string(), " ".to_string()]), "  5");
+    assert_eq!(pad("\u{3042}", &["5".to_string()]), "0000\u{3042}");
+}
+
+#[test]
+fn test_plural_formatter_follows_javascript_number_rules() {
+    let formatters = create_default_formatters();
+    let plural = formatters.get("plural").unwrap();
+    let args = ["item".to_string(), "items".to_string()];
+    assert_eq!(plural(" 1 ", &args), "item");
+    assert_eq!(plural("1.0", &args), "item");
+    assert_eq!(plural("abc", &args), "items");
+    assert_eq!(plural("", &args), "items");
+    assert_eq!(plural("1", &[]), "");
+    assert_eq!(plural("2", &[]), "");
 }

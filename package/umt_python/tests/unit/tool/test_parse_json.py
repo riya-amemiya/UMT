@@ -43,5 +43,30 @@ class TestParseJson(unittest.TestCase):
         self.assertEqual(parse_json('{"a": 1}'), {"a": 1})
 
 
+class TestParseJsonSanitization(unittest.TestCase):
+    def test_strips_proto_key(self):
+        result = parse_json('{"__proto__": {"polluted": true}, "safe": 1}')
+        self.assertEqual(result, {"safe": 1})
+
+    def test_strips_constructor_and_prototype_keys(self):
+        result = parse_json(
+            '{"constructor": {"polluted": true}, "prototype": {"bad": true}, "ok": 2}'
+        )
+        self.assertEqual(result, {"ok": 2})
+
+    def test_strips_dangerous_keys_in_nested_objects(self):
+        result = parse_json('{"a": {"__proto__": {"x": 1}, "b": 2}}')
+        self.assertEqual(result, {"a": {"b": 2}})
+
+    def test_strips_dangerous_keys_inside_arrays(self):
+        result = parse_json('[{"prototype": 1, "a": 1}]')
+        self.assertEqual(result, [{"a": 1}])
+
+    def test_rejects_non_standard_constants(self):
+        for text in ("NaN", "Infinity", "-Infinity", '{"a": NaN}'):
+            with self.assertRaises(json.JSONDecodeError):
+                parse_json(text)
+
+
 if __name__ == "__main__":
     unittest.main()

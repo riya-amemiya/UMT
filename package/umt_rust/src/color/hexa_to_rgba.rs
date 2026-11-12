@@ -17,7 +17,7 @@ impl std::fmt::Display for HexColorError {
 impl std::error::Error for HexColorError {}
 
 static HEX_RE: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^#([\da-fA-F]{3}|[\da-fA-F]{6}|[\da-fA-F]{8})$").unwrap());
+    LazyLock::new(|| Regex::new(r"^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$").unwrap());
 
 /// Convert hexadecimal color code to RGBA color values
 ///
@@ -50,28 +50,14 @@ pub fn umt_hexa_to_rgba(hex: &str) -> Result<Rgba, HexColorError> {
     }
 
     // Remove the # prefix
-    let hex_code = &hex[1..];
+    let digits = &hex.as_bytes()[1..];
+    let nibble = |index: usize| f64::from(char::from(digits[index]).to_digit(16).unwrap_or(0));
+    let pair = |index: usize| nibble(index) * 16.0 + nibble(index + 1);
 
-    // Convert 3-digit hex to 6-digit format
-    let expanded_hex = if hex_code.len() == 3 {
-        hex_code
-            .chars()
-            .map(|c| format!("{}{}", c, c))
-            .collect::<String>()
-    } else {
-        hex_code.to_string()
-    };
-
-    // Parse RGB values
-    let r = u8::from_str_radix(&expanded_hex[0..2], 16).unwrap() as f64;
-    let g = u8::from_str_radix(&expanded_hex[2..4], 16).unwrap() as f64;
-    let b = u8::from_str_radix(&expanded_hex[4..6], 16).unwrap() as f64;
-
-    // Parse alpha value (default to 255 if not provided)
-    let alpha_value = if expanded_hex.len() == 8 {
-        u8::from_str_radix(&expanded_hex[6..8], 16).unwrap() as f64
-    } else {
-        255.0
+    let (r, g, b, alpha_value) = match digits.len() {
+        3 => (nibble(0) * 17.0, nibble(1) * 17.0, nibble(2) * 17.0, 255.0),
+        8 => (pair(0), pair(2), pair(4), pair(6)),
+        _ => (pair(0), pair(2), pair(4), 255.0),
     };
 
     // Round alpha to 2 decimal places

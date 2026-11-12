@@ -43,3 +43,30 @@ def test_matches_handles_none_values() -> None:
     assert match_none({"a": None}) is True
     assert match_none({"a": False}) is False
     assert match_none({}) is False
+
+
+def test_matches_compares_containers_by_identity() -> None:
+    shared = [1, 2]
+    matcher = matches({"a": shared})
+    assert matcher({"a": shared}) is True
+    assert matcher({"a": [1, 2]}) is False
+
+
+def test_matches_treats_int_and_float_as_the_same_number() -> None:
+    assert matches({"a": 1})({"a": 1.0}) is True
+    assert matches({"a": 1.5})({"a": 1.5}) is True
+
+
+def test_matches_keeps_bool_distinct_from_numbers() -> None:
+    assert matches({"a": True})({"a": 1}) is False
+    assert matches({"a": True})({"a": True}) is True
+
+
+def test_matches_never_matches_nan() -> None:
+    nan = float("nan")
+    assert matches({"a": nan})({"a": nan}) is False
+
+
+def test_matches_rejects_non_primitive_value_for_primitive_pattern() -> None:
+    assert matches({"a": 1})({"a": [1]}) is False
+    assert matches({"a": "x"})({"a": None}) is False

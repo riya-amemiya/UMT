@@ -33,6 +33,7 @@ pub mod get_timezone_offset_string;
 pub mod is_between;
 pub mod is_business_day;
 pub mod is_leap_year;
+pub mod is_same;
 pub mod is_same_day;
 pub mod is_weekend;
 pub mod ms_by_unit;
@@ -65,6 +66,7 @@ pub use get_timezone_offset_string::{
 pub use is_between::umt_is_between;
 pub use is_business_day::umt_is_business_day;
 pub use is_leap_year::umt_is_leap_year;
+pub use is_same::umt_is_same;
 pub use is_same_day::umt_is_same_day;
 pub use is_weekend::umt_is_weekend;
 pub use ms_by_unit::{DurationUnit, umt_ms_by_unit};

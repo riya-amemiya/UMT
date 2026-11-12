@@ -16,13 +16,5 @@
 /// ```
 #[inline]
 pub fn umt_trim_end_characters(s: &str, chars: &str) -> String {
-    let char_set: Vec<char> = chars.chars().collect();
-    let s_chars: Vec<char> = s.chars().collect();
-
-    let mut end_index = s_chars.len();
-    while end_index > 0 && char_set.contains(&s_chars[end_index - 1]) {
-        end_index -= 1;
-    }
-
-    s_chars[..end_index].iter().collect()
+    s.trim_end_matches(|c: char| chars.contains(c)).to_string()
 }

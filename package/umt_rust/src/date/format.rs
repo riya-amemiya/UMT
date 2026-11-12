@@ -4,13 +4,16 @@
 
 use chrono::{DateTime, Datelike, Timelike, Utc};
 use regex::Regex;
+use std::fmt::Write;
 use std::sync::LazyLock;
 
 use super::get_timezone_offset_string::{
     umt_get_timezone_offset_string, umt_get_timezone_offset_string_compact,
 };
 
-static ESCAPED_TEXT_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"\[([^\]]+)]").unwrap());
+static FORMAT_TOKEN_RE: LazyLock<Regex> = LazyLock::new(|| {
+    Regex::new(r"\[([^\]]+)]|YYYY|YY|MM|M|DD|D|d|HH|H|hh|h|mm|m|ss|s|SSS|A|a|ZZ|Z").unwrap()
+});
 
 /// Converts a date to a string according to the specified format pattern.
 ///
@@ -65,78 +68,61 @@ pub fn umt_format(
     timezone_offset_minutes: i32,
 ) -> String {
     let hours = date.hour();
-    let year_string = date.year().to_string();
-    let month_string = date.month().to_string();
-    let date_string = date.day().to_string();
-    let hour_string = hours.to_string();
-    let minute_string = date.minute().to_string();
-    let second_string = date.second().to_string();
-    let _millisecond_string = (date.nanosecond() / 1_000_000).to_string();
-    let day_string = date.weekday().num_days_from_sunday().to_string();
-    let ampm = if hours < 12 { "AM" } else { "PM" };
-
-    let timezone_string = umt_get_timezone_offset_string(timezone_offset_minutes);
-    let timezone_compact = umt_get_timezone_offset_string_compact(timezone_offset_minutes);
-
     let hour_12 = if hours.is_multiple_of(12) {
         12
     } else {
         hours % 12
     };
+    let mut result = String::with_capacity(format_string.len() + 16);
+    let mut last_end = 0;
 
-    // Build replacement map
-    let replacements: Vec<(&str, String)> = vec![
-        ("YYYY", format!("{:04}", date.year())),
-        (
-            "YY",
-            year_string
-                .chars()
-                .skip(year_string.len().saturating_sub(2))
-                .collect(),
-        ),
-        ("MM", format!("{:02}", date.month())),
-        ("M", month_string),
-        ("DD", format!("{:02}", date.day())),
-        ("D", date_string),
-        ("d", day_string),
-        ("HH", format!("{:02}", hours)),
-        ("H", hour_string),
-        ("hh", format!("{:02}", hour_12)),
-        ("h", hour_12.to_string()),
-        ("mm", format!("{:02}", date.minute())),
-        ("m", minute_string),
-        ("ss", format!("{:02}", date.second())),
-        ("s", second_string),
-        ("SSS", format!("{:03}", date.nanosecond() / 1_000_000)),
-        ("A", ampm.to_string()),
-        ("a", ampm.to_lowercase()),
-        ("ZZ", timezone_compact),
-        ("Z", timezone_string),
-    ];
+    for captures in FORMAT_TOKEN_RE.captures_iter(format_string) {
+        let token = captures.get(0).unwrap();
+        result.push_str(&format_string[last_end..token.start()]);
+        last_end = token.end();
 
-    // Handle escaped text in brackets
-    let mut result = format_string.to_string();
-    let mut escaped_texts: Vec<(String, String)> = Vec::new();
+        if let Some(escaped) = captures.get(1) {
+            result.push_str(escaped.as_str());
+            continue;
+        }
 
-    // Replace escaped text with placeholders
-    for (i, cap) in ESCAPED_TEXT_RE.captures_iter(format_string).enumerate() {
-        let placeholder = format!("\x00ESC{}\x00", i);
-        let full_match = cap.get(0).unwrap().as_str();
-        let inner_text = cap.get(1).unwrap().as_str();
-        escaped_texts.push((placeholder.clone(), inner_text.to_string()));
-        result = result.replace(full_match, &placeholder);
+        let _ = match token.as_str() {
+            "YYYY" => write!(result, "{:04}", date.year()),
+            "YY" => {
+                let year_string = date.year().to_string();
+                result.push_str(&year_string[year_string.len().saturating_sub(2)..]);
+                Ok(())
+            }
+            "MM" => write!(result, "{:02}", date.month()),
+            "M" => write!(result, "{}", date.month()),
+            "DD" => write!(result, "{:02}", date.day()),
+            "D" => write!(result, "{}", date.day()),
+            "d" => write!(result, "{}", date.weekday().num_days_from_sunday()),
+            "HH" => write!(result, "{:02}", hours),
+            "H" => write!(result, "{}", hours),
+            "hh" => write!(result, "{:02}", hour_12),
+            "h" => write!(result, "{}", hour_12),
+            "mm" => write!(result, "{:02}", date.minute()),
+            "m" => write!(result, "{}", date.minute()),
+            "ss" => write!(result, "{:02}", date.second()),
+            "s" => write!(result, "{}", date.second()),
+            "SSS" => write!(result, "{:03}", date.nanosecond() / 1_000_000),
+            "A" => write!(result, "{}", if hours < 12 { "AM" } else { "PM" }),
+            "a" => write!(result, "{}", if hours < 12 { "am" } else { "pm" }),
+            "ZZ" => write!(
+                result,
+                "{}",
+                umt_get_timezone_offset_string_compact(timezone_offset_minutes)
+            ),
+            _ => write!(
+                result,
+                "{}",
+                umt_get_timezone_offset_string(timezone_offset_minutes)
+            ),
+        };
     }
 
-    // Apply format replacements (order matters - longer patterns first)
-    for (pattern, replacement) in &replacements {
-        result = result.replace(pattern, replacement);
-    }
-
-    // Restore escaped texts
-    for (placeholder, text) in escaped_texts {
-        result = result.replace(&placeholder, &text);
-    }
-
+    result.push_str(&format_string[last_end..]);
     result
 }
 

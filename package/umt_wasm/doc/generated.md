@@ -2,7 +2,7 @@
 
 This file is produced by `codegen/`. Do not edit by hand.
 
-Generated 150 wrappers. 274 functions are not auto-exposable and are listed below for future hand-written adapters.
+Generated 150 wrappers. 282 functions are not auto-exposable and are listed below for future hand-written adapters.
 
 ## Generated
 
@@ -176,6 +176,8 @@ Generated 150 wrappers. 274 functions are not auto-exposable and are listed belo
 | `umt_rust::array::compact::umt_compact` | generic type parameters |
 | `umt_rust::array::compact::umt_compact_options` | generic type parameters |
 | `umt_rust::array::compare_function_default::umt_compare_function_default` | generic type parameters |
+| `umt_rust::array::count_by::umt_count_by` | generic type parameters |
+| `umt_rust::array::count_by::umt_count_by_indexed` | generic type parameters |
 | `umt_rust::array::drop::umt_drop` | generic type parameters |
 | `umt_rust::array::drop::umt_drop_left` | generic type parameters |
 | `umt_rust::array::drop::umt_drop_right` | generic type parameters |
@@ -191,6 +193,8 @@ Generated 150 wrappers. 274 functions are not auto-exposable and are listed belo
 | `umt_rust::array::insertion_sort::umt_insertion_sort` | generic type parameters |
 | `umt_rust::array::insertion_sort::umt_insertion_sort_in_place` | generic type parameters |
 | `umt_rust::array::merge_sort::umt_merge_sort` | generic type parameters |
+| `umt_rust::array::partition::umt_partition` | generic type parameters |
+| `umt_rust::array::partition::umt_partition_indexed` | generic type parameters |
 | `umt_rust::array::pop::umt_pop` | generic type parameters |
 | `umt_rust::array::quick_sort::umt_quick_sort` | generic type parameters |
 | `umt_rust::array::quick_sort::umt_quick_sort_in_place` | generic type parameters |
@@ -199,6 +203,7 @@ Generated 150 wrappers. 274 functions are not auto-exposable and are listed belo
 | `umt_rust::array::shuffle::umt_shuffle` | generic type parameters |
 | `umt_rust::array::shuffle::umt_shuffle_in_place` | generic type parameters |
 | `umt_rust::array::shuffle_2d_array::umt_shuffle_2d_array` | generic type parameters |
+| `umt_rust::array::sliding::umt_sliding` | generic type parameters |
 | `umt_rust::array::tim_sort::umt_tim_sort` | generic type parameters |
 | `umt_rust::array::tim_sort::umt_tim_sort_in_place` | generic type parameters |
 | `umt_rust::array::ultra_number_sort::umt_ultra_number_sort` | unsupported parameter type `& mut Vec < f64 >` |
@@ -212,6 +217,7 @@ Generated 150 wrappers. 274 functions are not auto-exposable and are listed belo
 | `umt_rust::array::zip_longest::umt_zip_longest_many` | generic type parameters |
 | `umt_rust::async_util::debounce_async::umt_debounce_async` | generic type parameters |
 | `umt_rust::async_util::defer::umt_defer` | generic type parameters |
+| `umt_rust::async_util::map_series::umt_map_series` | generic type parameters |
 | `umt_rust::async_util::p_settled::umt_p_settled` | generic type parameters |
 | `umt_rust::async_util::parallel::umt_parallel` | generic type parameters |
 | `umt_rust::async_util::retry::umt_retry` | generic type parameters |
@@ -246,6 +252,7 @@ Generated 150 wrappers. 274 functions are not auto-exposable and are listed belo
 | `umt_rust::date::get_quarter::umt_get_quarter` | unsupported parameter type `& DateTime < Utc >` |
 | `umt_rust::date::is_between::umt_is_between` | unsupported parameter type `& DateTime < Utc >` |
 | `umt_rust::date::is_business_day::umt_is_business_day` | unsupported parameter type `& DateTime < Utc >` |
+| `umt_rust::date::is_same::umt_is_same` | unsupported parameter type `& DateTime < Utc >` |
 | `umt_rust::date::is_same_day::umt_is_same_day` | unsupported parameter type `& DateTime < Utc >` |
 | `umt_rust::date::is_weekend::umt_is_weekend` | unsupported parameter type `& DateTime < Utc >` |
 | `umt_rust::date::ms_by_unit::umt_ms_by_unit` | unsupported parameter type `DurationUnit` |
@@ -347,6 +354,7 @@ Generated 150 wrappers. 274 functions are not auto-exposable and are listed belo
 | `umt_rust::random::seeded_random::umt_seeded_random` | unsupported return type `impl FnMut () -> f64` |
 | `umt_rust::random::seeded_random::umt_seeded_random_from_str` | unsupported return type `impl FnMut () -> f64` |
 | `umt_rust::random::weighted_choice::umt_weighted_choice` | generic type parameters |
+| `umt_rust::random::weighted_choice::umt_weighted_choice_at` | generic type parameters |
 | `umt_rust::simple::array::quick_sort_simple::umt_quick_sort_simple` | generic type parameters |
 | `umt_rust::simple::date::birthday_simple::umt_birthday_simple_datetime` | unsupported parameter type `& DateTime` |
 | `umt_rust::simple::date::birthday_simple::umt_birthday_simple_props` | unsupported parameter type `& BirthdayProperties` |

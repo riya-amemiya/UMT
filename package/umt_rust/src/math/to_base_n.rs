@@ -28,10 +28,10 @@ pub fn umt_to_base_n(value: i64, radix: u32) -> String {
     }
 
     let negative = value < 0;
-    let mut n = value.abs();
+    let mut n = value.unsigned_abs();
     let digits = b"0123456789abcdefghijklmnopqrstuvwxyz";
     let mut bytes = Vec::with_capacity(65);
-    let radix = i64::from(radix);
+    let radix = u64::from(radix);
 
     while n > 0 {
         bytes.push(digits[(n % radix) as usize]);

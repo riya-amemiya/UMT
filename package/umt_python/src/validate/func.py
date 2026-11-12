@@ -84,7 +84,11 @@ class FunctionValidator:
                 the return value fails validation.
         """
         if not callable(function_):
-            raise TypeError(self._message or "value is not a function")
+            raise TypeError(
+                self._message
+                if self._message is not None
+                else "value is not a function"
+            )
 
         inputs = self._schema.input if self._schema else None
         output = self._schema.output if self._schema else None
@@ -92,7 +96,9 @@ class FunctionValidator:
         def wrapped(*arguments_: object) -> object:
             if inputs is not None:
                 for index, input_validator in enumerate(inputs):
-                    result = input_validator(arguments_[index])
+                    result = input_validator(
+                        arguments_[index] if index < len(arguments_) else None
+                    )
                     if not result.validate:
                         raise TypeError(
                             result.message

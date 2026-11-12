@@ -23,20 +23,24 @@ def xoshiro256(
         >>> 0 <= result < 1
         True
     """
-    # Ensure unsigned 32-bit operations
     s0 = state[0] & 0xFFFFFFFF
     s3 = state[3] & 0xFFFFFFFF
-    total = (s0 + s3) & 0xFFFFFFFF
-    result = (bitwise(total, 23) + s0) & 0xFFFFFFFF
+    result = (bitwise(s0 + s3, 23) + s0) & 0xFFFFFFFF
 
-    t = (state[1] << 17) & 0xFFFFFFFF
+    t = state[1] << 17
 
-    state[2] ^= state[0]
-    state[3] ^= state[1]
-    state[1] ^= state[2]
-    state[0] ^= state[3]
+    state[2] = _to_int32(state[2] ^ state[0])
+    state[3] = _to_int32(state[3] ^ state[1])
+    state[1] = _to_int32(state[1] ^ state[2])
+    state[0] = _to_int32(state[0] ^ state[3])
 
-    state[2] ^= t
+    state[2] = _to_int32(state[2] ^ t)
     state[3] = bitwise(state[3], 45)
 
     return min_value + (result / (2**32)) * (max_value - min_value)
+
+
+def _to_int32(value: int) -> int:
+    """Wraps an integer to the signed 32-bit range used by bitwise operators."""
+    unsigned = value & 0xFFFFFFFF
+    return unsigned - 0x100000000 if unsigned >= 0x80000000 else unsigned

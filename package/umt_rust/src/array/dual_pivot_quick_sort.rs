@@ -12,26 +12,11 @@ struct PartitionResult {
 /// Get the median of three elements in the array.
 fn median_of_three<T, F>(array: &[T], a: usize, b: usize, c: usize, compare: &F) -> usize
 where
-    T: Clone,
     F: Fn(&T, &T) -> i32,
 {
-    // Create a vector of (index, value) pairs and sort by value
-    let mut values = [
-        (a, array[a].clone()),
-        (b, array[b].clone()),
-        (c, array[c].clone()),
-    ];
-    values.sort_by(|(_, va), (_, vb)| {
-        let cmp = compare(va, vb);
-        if cmp < 0 {
-            std::cmp::Ordering::Less
-        } else if cmp > 0 {
-            std::cmp::Ordering::Greater
-        } else {
-            std::cmp::Ordering::Equal
-        }
-    });
-    values[1].0
+    let mut indices = [a, b, c];
+    indices.sort_by(|&x, &y| compare(&array[x], &array[y]).cmp(&0));
+    indices[1]
 }
 
 /// Select dual pivots and partition the array into three parts.

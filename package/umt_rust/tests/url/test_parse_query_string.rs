@@ -56,18 +56,18 @@ fn test_parse_url_with_no_query_string() {
 }
 
 #[test]
-fn test_reject_proto_key() {
+fn test_keep_proto_key() {
     let result = umt_parse_query_string("?__proto__=polluted&safe=value");
     assert_eq!(result.get("safe").unwrap(), "value");
-    assert!(!result.contains_key("__proto__"));
-    assert_eq!(result.len(), 1);
+    assert_eq!(result.get("__proto__").unwrap(), "polluted");
+    assert_eq!(result.len(), 2);
 }
 
 #[test]
-fn test_reject_constructor_and_prototype_keys() {
+fn test_keep_constructor_and_prototype_keys() {
     let result = umt_parse_query_string("?constructor=bad&prototype=bad&ok=good");
     assert_eq!(result.get("ok").unwrap(), "good");
-    assert!(!result.contains_key("constructor"));
-    assert!(!result.contains_key("prototype"));
-    assert_eq!(result.len(), 1);
+    assert_eq!(result.get("constructor").unwrap(), "bad");
+    assert_eq!(result.get("prototype").unwrap(), "bad");
+    assert_eq!(result.len(), 3);
 }

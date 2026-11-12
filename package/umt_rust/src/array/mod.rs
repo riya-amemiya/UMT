@@ -24,6 +24,12 @@ pub use chunk::*;
 pub mod drop;
 pub use drop::*;
 
+pub mod sliding;
+pub use sliding::*;
+
+pub mod partition;
+pub use partition::*;
+
 pub mod arrays_join;
 pub use arrays_join::*;
 
@@ -49,6 +55,9 @@ pub use generate_number_array::*;
 
 pub mod group_by;
 pub use group_by::*;
+
+pub mod count_by;
+pub use count_by::*;
 
 pub mod range;
 pub use range::*;

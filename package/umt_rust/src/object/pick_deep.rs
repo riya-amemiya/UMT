@@ -51,89 +51,45 @@ pub fn umt_pick_deep(object: &HashMap<String, Value>, keys: &[&str]) -> HashMap<
     let mut result: HashMap<String, Value> = HashMap::new();
 
     for key in keys {
-        let parts: Vec<&str> = key.split('.').collect();
-        set_nested_value(&mut result, object, &parts);
+        pick_path(&mut result, object, key);
     }
 
     result
 }
 
-/// Helper function to set a nested value in the result object.
-fn set_nested_value(
-    result: &mut HashMap<String, Value>,
-    source: &HashMap<String, Value>,
-    parts: &[&str],
-) {
-    if parts.is_empty() {
-        return;
-    }
+/// Copies the value at a dot-separated path from `source` into `result`,
+/// walking both objects in a single pass like the TypeScript `pickDeep`.
+///
+/// A segment missing from the current source object is skipped, and an
+/// intermediate segment that exists creates an empty object in the result
+/// even when a later segment cannot be resolved.
+fn pick_path(result: &mut HashMap<String, Value>, source: &HashMap<String, Value>, key: &str) {
+    let last_index = key.split('.').count() - 1;
+    let mut current = Some(source);
+    let mut target = Some(result);
 
-    // Navigate to the value in the source
-    let value = get_nested_value(source, parts);
-    if value.is_none() {
-        return;
-    }
-    let value = value.unwrap();
+    for (index, part) in key.split('.').enumerate() {
+        let Some(value) = current.and_then(|map| map.get(part)) else {
+            continue;
+        };
 
-    // Build the nested structure in the result
-    if parts.len() == 1 {
-        result.insert(parts[0].to_string(), value);
-    } else {
-        // Get or create the nested object structure
-        let first = parts[0];
-        let remaining = &parts[1..];
-
-        // Ensure the path exists in result
-        let nested = result
-            .entry(first.to_string())
-            .or_insert_with(|| Value::Object(HashMap::new()));
-
-        if let Value::Object(map) = nested {
-            set_nested_value_recursive(map, remaining, value);
+        if index == last_index {
+            if let Some(map) = target.as_mut() {
+                map.insert(part.to_string(), value.clone());
+            }
+            continue;
         }
-    }
-}
 
-/// Recursively set a value at the given path in a nested structure.
-fn set_nested_value_recursive(result: &mut HashMap<String, Value>, parts: &[&str], value: Value) {
-    if parts.is_empty() {
-        return;
-    }
-
-    if parts.len() == 1 {
-        result.insert(parts[0].to_string(), value);
-    } else {
-        let first = parts[0];
-        let remaining = &parts[1..];
-
-        let nested = result
-            .entry(first.to_string())
-            .or_insert_with(|| Value::Object(HashMap::new()));
-
-        if let Value::Object(map) = nested {
-            set_nested_value_recursive(map, remaining, value);
-        }
-    }
-}
-
-/// Helper function to get a nested value from an object using a path.
-fn get_nested_value(object: &HashMap<String, Value>, parts: &[&str]) -> Option<Value> {
-    if parts.is_empty() {
-        return None;
-    }
-
-    let first = parts[0];
-    let value = object.get(first)?;
-
-    if parts.len() == 1 {
-        return Some(value.clone());
-    }
-
-    // Navigate deeper
-    if let Value::Object(inner) = value {
-        get_nested_value(inner, &parts[1..])
-    } else {
-        None
+        target = target.and_then(|map| {
+            let nested = map
+                .entry(part.to_string())
+                .or_insert_with(|| Value::Object(HashMap::new()));
+            if nested.is_null() {
+                *nested = Value::Object(HashMap::new());
+            }
+            nested.as_object_mut()
+        });
+        current = value.as_object();
     }
 }
 

@@ -1,5 +1,7 @@
 //! Double (floating point) number checking utility
 
+use super::js_number::js_string_to_number;
+
 /// Determines if the value is a floating point number (has decimal part)
 ///
 /// # Arguments
@@ -27,6 +29,9 @@ pub fn umt_is_double(x: f64) -> bool {
 
 /// Determines if a string represents a double value
 ///
+/// The string is converted with JavaScript `Number(string)` rules, so
+/// surrounding whitespace is ignored.
+///
 /// # Arguments
 /// * `s` - The string to check
 ///
@@ -44,8 +49,5 @@ pub fn umt_is_double(x: f64) -> bool {
 /// ```
 #[inline]
 pub fn umt_is_double_str(s: &str) -> bool {
-    match s.parse::<f64>() {
-        Ok(n) => umt_is_double(n),
-        Err(_) => false,
-    }
+    umt_is_double(js_string_to_number(s))
 }

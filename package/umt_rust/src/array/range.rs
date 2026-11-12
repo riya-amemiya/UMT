@@ -94,7 +94,7 @@ pub fn umt_range_f64(start: f64, end: Option<f64>, step: Option<f64>) -> Vec<f64
         let mut index = actual_start;
         while index < actual_end {
             // Handle floating point precision
-            let rounded = (index * 1e10).round() / 1e10;
+            let rounded = js_round(index * 1e10) / 1e10;
             result.push(rounded);
             index += step_val;
         }
@@ -102,11 +102,21 @@ pub fn umt_range_f64(start: f64, end: Option<f64>, step: Option<f64>) -> Vec<f64
         let mut index = actual_start;
         while index > actual_end {
             // Handle floating point precision
-            let rounded = (index * 1e10).round() / 1e10;
+            let rounded = js_round(index * 1e10) / 1e10;
             result.push(rounded);
             index += step_val;
         }
     }
 
     result
+}
+
+/// Rounds like JavaScript's `Math.round` (ties toward positive infinity).
+fn js_round(value: f64) -> f64 {
+    let floored = value.floor();
+    if value - floored >= 0.5 {
+        floored + 1.0
+    } else {
+        floored
+    }
 }

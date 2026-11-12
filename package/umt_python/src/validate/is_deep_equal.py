@@ -2,6 +2,8 @@ import math
 from collections import Counter
 from dataclasses import dataclass
 
+from .is_equal import is_equal
+
 
 @dataclass
 class IsDeepEqualOptions:
@@ -54,14 +56,10 @@ def is_deep_equal(
         if type(x) is not type(y):
             return False
 
-        if isinstance(x, (int, float, str, bool)):
-            if (
-                isinstance(x, float)
-                and isinstance(y, float)
-                and math.isnan(x)
-                and math.isnan(y)
-            ):
-                return True
+        if isinstance(x, float) and isinstance(y, float):
+            return is_equal(x, y)
+
+        if isinstance(x, (int, str, bool)):
             return x == y
 
         id_x = id(x)
@@ -83,10 +81,12 @@ def is_deep_equal(
                 try:
 
                     def _make_hashable_key(item: object) -> tuple[type, object]:
-                        t = type(item)
-                        if t is float and math.isnan(item):  # type: ignore
-                            return (float, "NaN")
-                        return (t, item)
+                        if isinstance(item, float):
+                            if math.isnan(item):
+                                return (float, "NaN")
+                            if item == 0.0:
+                                return (float, repr(item))
+                        return (type(item), item)
 
                     return Counter(_make_hashable_key(i) for i in x) == Counter(
                         _make_hashable_key(i) for i in y

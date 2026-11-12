@@ -1,3 +1,5 @@
+import math
+
 from src.number.to_percentage import to_percentage
 
 
@@ -74,3 +76,10 @@ def test_handle_negative_half_rounding():
     # (0.025 / 1) * 100 = 2.5.
     # round(2.5) = 3.
     assert to_percentage(0.025, 1, 0) == 3.0
+
+
+def test_non_finite_inputs_propagate():
+    assert math.isnan(to_percentage(float("nan"), 100))
+    assert math.isnan(to_percentage(1, float("nan")))
+    assert to_percentage(float("inf"), 100) == float("inf")
+    assert to_percentage(float("-inf"), 100) == float("-inf")

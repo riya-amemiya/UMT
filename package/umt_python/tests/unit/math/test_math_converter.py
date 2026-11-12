@@ -6,7 +6,7 @@ from src.math import math_converter
 class TestMathConverter(unittest.TestCase):
     def test_square_pattern(self):
         result = math_converter("1250*1250")
-        self.assertEqual(result, "1500.0*1000+400.0*100+200.0*100+50*50")
+        self.assertEqual(result, "1500*1000+400*100+200*100+50*50")
 
     def test_power_pattern(self):
         result = math_converter("100^100")
@@ -22,7 +22,7 @@ class TestMathConverter(unittest.TestCase):
 
     def test_small_remainder(self):
         result = math_converter("150*150")
-        self.assertEqual(result, "200.0*100+50*50")
+        self.assertEqual(result, "200*100+50*50")
 
     def test_larger_remainder_with_recursion(self):
         result = math_converter("1500*1500")

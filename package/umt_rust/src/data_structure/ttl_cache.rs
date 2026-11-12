@@ -14,17 +14,25 @@ use std::hash::Hash;
 /// - **delete(key)**: Remove a specific entry
 /// - **clear()**: Remove all entries
 /// - **size()**: Get the number of entries (including expired)
+///
+/// ## Time Complexity
+/// - get: O(1)
+/// - set: O(1) amortized
+/// - has: O(1)
+/// - delete: O(1)
 pub struct TTLCache<K, V> {
     default_ttl_ms: u64,
     max_size: Option<usize>,
     map: HashMap<K, TTLEntry<V>>,
-    insertion_order: VecDeque<K>,
+    insertion_order: VecDeque<(K, u64)>,
+    next_sequence: u64,
     now_ms_fn: Box<dyn Fn() -> u64>,
 }
 
 struct TTLEntry<V> {
     value: V,
     expires_at_ms: u64,
+    sequence: u64,
 }
 
 /// Returns current time in milliseconds since UNIX epoch.
@@ -42,13 +50,7 @@ impl<K: Eq + Hash + Clone, V> TTLCache<K, V> {
     /// * `default_ttl_ms` - Default time-to-live in milliseconds for cache entries
     /// * `max_size` - Optional maximum number of entries
     pub fn new(default_ttl_ms: u64, max_size: Option<usize>) -> Self {
-        TTLCache {
-            default_ttl_ms,
-            max_size,
-            map: HashMap::new(),
-            insertion_order: VecDeque::new(),
-            now_ms_fn: Box::new(system_now_ms),
-        }
+        Self::with_clock(default_ttl_ms, max_size, Box::new(system_now_ms))
     }
 
     /// Creates a new TTLCache with a custom clock function (for testing).
@@ -63,6 +65,7 @@ impl<K: Eq + Hash + Clone, V> TTLCache<K, V> {
             max_size,
             map: HashMap::new(),
             insertion_order: VecDeque::new(),
+            next_sequence: 0,
             now_ms_fn,
         }
     }
@@ -78,20 +81,50 @@ impl<K: Eq + Hash + Clone, V> TTLCache<K, V> {
         (self.now_ms_fn)()
     }
 
-    /// Retrieves a value by key. Returns `None` if the key
-    /// does not exist or has expired.
-    pub fn get(&mut self, key: &K) -> Option<&V> {
+    /// Removes the entry for `key` when it has expired and reports whether it did.
+    fn remove_if_expired(&mut self, key: &K) -> bool {
         let now = self.now_ms();
         let expired = self
             .map
             .get(key)
             .is_some_and(|entry| now >= entry.expires_at_ms);
-
         if expired {
             self.map.remove(key);
-            if let Some(pos) = self.insertion_order.iter().position(|k| k == key) {
-                self.insertion_order.remove(pos);
+        }
+        expired
+    }
+
+    /// Removes the oldest inserted entry that is still present.
+    fn evict_oldest(&mut self) {
+        while let Some((key, sequence)) = self.insertion_order.pop_front() {
+            let is_live = self
+                .map
+                .get(&key)
+                .is_some_and(|entry| entry.sequence == sequence);
+            if is_live {
+                self.map.remove(&key);
+                return;
             }
+        }
+    }
+
+    /// Records the insertion of `key`, dropping stale records once they
+    /// outnumber the live entries.
+    fn record_insertion(&mut self, key: K, sequence: u64) {
+        if self.insertion_order.len() > 2 * self.map.len() + 16 {
+            let map = &self.map;
+            self.insertion_order.retain(|(recorded_key, recorded)| {
+                map.get(recorded_key)
+                    .is_some_and(|entry| entry.sequence == *recorded)
+            });
+        }
+        self.insertion_order.push_back((key, sequence));
+    }
+
+    /// Retrieves a value by key. Returns `None` if the key
+    /// does not exist or has expired.
+    pub fn get(&mut self, key: &K) -> Option<&V> {
+        if self.remove_if_expired(key) {
             return None;
         }
 
@@ -110,27 +143,28 @@ impl<K: Eq + Hash + Clone, V> TTLCache<K, V> {
         let effective_ttl = ttl_ms.unwrap_or(self.default_ttl_ms);
         let expires_at_ms = self.now_ms() + effective_ttl;
 
-        if let std::collections::hash_map::Entry::Occupied(mut e) = self.map.entry(key.clone()) {
-            e.insert(TTLEntry {
-                value,
-                expires_at_ms,
-            });
+        if let Some(entry) = self.map.get_mut(&key) {
+            entry.value = value;
+            entry.expires_at_ms = expires_at_ms;
             return;
         }
 
-        if let Some(max) = self.max_size
-            && self.map.len() >= max
-            && let Some(oldest_key) = self.insertion_order.pop_front()
-        {
-            self.map.remove(&oldest_key);
+        let sequence = self.next_sequence;
+        self.next_sequence += 1;
+
+        if let Some(max) = self.max_size {
+            if self.map.len() >= max {
+                self.evict_oldest();
+            }
+            self.record_insertion(key.clone(), sequence);
         }
 
-        self.insertion_order.push_back(key.clone());
         self.map.insert(
             key,
             TTLEntry {
                 value,
                 expires_at_ms,
+                sequence,
             },
         );
     }
@@ -138,17 +172,7 @@ impl<K: Eq + Hash + Clone, V> TTLCache<K, V> {
     /// Checks whether a non-expired key exists in the cache.
     /// Removes the entry if it has expired.
     pub fn has(&mut self, key: &K) -> bool {
-        let now = self.now_ms();
-        let expired = self
-            .map
-            .get(key)
-            .is_some_and(|entry| now >= entry.expires_at_ms);
-
-        if expired {
-            self.map.remove(key);
-            if let Some(pos) = self.insertion_order.iter().position(|k| k == key) {
-                self.insertion_order.remove(pos);
-            }
+        if self.remove_if_expired(key) {
             return false;
         }
 
@@ -158,14 +182,7 @@ impl<K: Eq + Hash + Clone, V> TTLCache<K, V> {
     /// Removes an entry from the cache by key.
     /// Returns `true` if the entry was found and removed.
     pub fn delete(&mut self, key: &K) -> bool {
-        if self.map.remove(key).is_some() {
-            if let Some(pos) = self.insertion_order.iter().position(|k| k == key) {
-                self.insertion_order.remove(pos);
-            }
-            true
-        } else {
-            false
-        }
+        self.map.remove(key).is_some()
     }
 
     /// Removes all entries from the cache.

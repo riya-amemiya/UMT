@@ -43,3 +43,12 @@ fn test_handle_unicode_characters() {
     assert_eq!(umt_levenshtein_distance("😀", "😁"), 1);
     assert_eq!(umt_levenshtein_distance("こんにちは", "こんばんは"), 2);
 }
+
+#[test]
+fn test_argument_order_does_not_change_distance() {
+    assert_eq!(umt_levenshtein_distance("abc", "abcdef"), 3);
+    assert_eq!(umt_levenshtein_distance("abcdef", "abc"), 3);
+    assert_eq!(umt_levenshtein_distance("abcdef", ""), 6);
+    assert_eq!(umt_levenshtein_distance("", "abcdef"), 6);
+    assert_eq!(umt_levenshtein_distance("same", "same"), 0);
+}

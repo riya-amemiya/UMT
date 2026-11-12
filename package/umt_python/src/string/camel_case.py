@@ -1,6 +1,6 @@
 import re
 
-_NON_ALNUM_FOLLOWED_RE = re.compile(r"[^a-zA-Z0-9]+(.)")
+_NON_ALNUM_FOLLOWED_RE = re.compile(r"[^a-zA-Z0-9]+([^\n\r\u2028\u2029])")
 _TRAILING_NON_ALNUM_RE = re.compile(r"[^a-zA-Z0-9]+$")
 
 
@@ -28,6 +28,6 @@ def camel_case(string_: str) -> str:
     """
     result = _NON_ALNUM_FOLLOWED_RE.sub(_upper_following, string_)
     result = _TRAILING_NON_ALNUM_RE.sub("", result)
-    if result:
+    if result and "A" <= result[0] <= "Z":
         result = result[0].lower() + result[1:]
     return result

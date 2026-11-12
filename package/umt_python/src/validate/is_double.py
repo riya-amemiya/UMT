@@ -1,5 +1,7 @@
 import math
 
+from ..math.js_string_to_number import js_string_to_number
+
 
 def is_double(value: object, loose: bool = True) -> bool:
     """
@@ -25,10 +27,13 @@ def is_double(value: object, loose: bool = True) -> bool:
         return False
 
     if loose:
-        try:
-            num = float(value)  # type: ignore[arg-type]
-        except (ValueError, TypeError):
-            return False
+        if isinstance(value, str):
+            num = js_string_to_number(value)
+        else:
+            try:
+                num = float(value)  # type: ignore[arg-type]
+            except (ValueError, TypeError):
+                return False
     else:
         if not isinstance(value, (float, int)):
             return False

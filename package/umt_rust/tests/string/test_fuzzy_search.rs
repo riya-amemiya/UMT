@@ -82,3 +82,59 @@ fn test_fuzzy_search_default() {
     let result = umt_fuzzy_search_default("hello", &["hello", "helo"]);
     assert!(!result.is_empty());
 }
+
+#[test]
+fn test_distance_budget_is_floored_from_threshold() {
+    let result = umt_fuzzy_search("abcdefghij", &["abcdefghiX", "abcdefghij"], 0.9);
+    assert_eq!(
+        result,
+        vec![FuzzyMatch {
+            item: "abcdefghij".to_string(),
+            score: 1.0
+        }]
+    );
+}
+
+#[test]
+fn test_length_difference_filter() {
+    let result = umt_fuzzy_search("abc", &["", "a", "abcdefgh", "ABC"], 0.3);
+    let items: Vec<&str> = result.iter().map(|entry| entry.item.as_str()).collect();
+    assert_eq!(items, vec!["ABC", "abcdefgh", "a"]);
+    assert_eq!(result[1].score, 0.375);
+    assert_eq!(result[2].score, 0.33333333333333337);
+}
+
+#[test]
+fn test_early_exit_and_final_distance_over_budget() {
+    assert!(umt_fuzzy_search("abcdef", &["uvwxyz"], 0.5).is_empty());
+    assert!(umt_fuzzy_search("abcd", &["abxy"], 0.75).is_empty());
+}
+
+#[test]
+fn test_query_longer_than_item() {
+    let result = umt_fuzzy_search("kitchen", &["kitten"], 0.5);
+    assert_eq!(result.len(), 1);
+    assert_eq!(result[0].score, 0.7142857142857143);
+}
+
+#[test]
+fn test_sorted_by_score_descending() {
+    let result = umt_fuzzy_search("kitten", &["sitting", "mitten", "kitchen"], 0.5);
+    let items: Vec<&str> = result.iter().map(|entry| entry.item.as_str()).collect();
+    assert_eq!(items, vec!["mitten", "kitchen", "sitting"]);
+}
+
+#[test]
+fn test_nan_threshold_keeps_every_item() {
+    let result = umt_fuzzy_search("ab", &["xy"], f64::NAN);
+    assert_eq!(result.len(), 1);
+    assert_eq!(result[0].score, 0.0);
+}
+
+#[test]
+fn test_case_insensitive_exact_threshold() {
+    let result = umt_fuzzy_search("HeLLo", &["hEllO"], 1.0);
+    assert_eq!(result.len(), 1);
+    assert_eq!(result[0].score, 1.0);
+    assert!(umt_fuzzy_search("", &["hEllO"], 1.0).is_empty());
+}

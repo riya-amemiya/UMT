@@ -44,3 +44,10 @@ fn test_handle_non_ascii_characters() {
     );
     assert_eq!(umt_trim_start_characters("！！Hello", "！"), "Hello");
 }
+
+#[test]
+fn test_chars_are_a_set_not_a_prefix() {
+    assert_eq!(umt_trim_start_characters("abcabcX", "cba"), "X");
+    assert_eq!(umt_trim_start_characters("  hello", ""), "  hello");
+    assert_eq!(umt_trim_start_characters("aaa", "a"), "");
+}

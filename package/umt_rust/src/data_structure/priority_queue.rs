@@ -256,14 +256,9 @@ impl<T: Clone> PriorityQueue<T> {
             return None;
         }
 
-        if self.heap.len() == 1 {
-            return Some(self.heap.pop()?.value);
-        }
-
-        let result = self.heap[0].value.clone();
-        self.heap[0] = self.heap.pop()?;
+        let item = self.heap.swap_remove(0);
         self.heapify_down(0);
-        Some(result)
+        Some(item.value)
     }
 
     /// Returns a reference to the element with the highest priority without removing it.
@@ -391,11 +386,13 @@ impl<T: Clone> PriorityQueue<T> {
             self.min_priority = 0.0;
             return;
         }
-        self.min_priority = self
-            .heap
-            .iter()
-            .map(|item| item.priority)
-            .fold(f64::INFINITY, f64::min);
+        let mut min = self.heap[0].priority;
+        for item in &self.heap[1..] {
+            if item.priority < min {
+                min = item.priority;
+            }
+        }
+        self.min_priority = min;
     }
 
     /// Builds a max heap from the current heap array.

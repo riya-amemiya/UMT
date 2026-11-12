@@ -1,6 +1,20 @@
+import re
+
+_LEADING_INTEGER_RE = re.compile(
+    r"[\t\n\v\f\r \N{NO-BREAK SPACE}\N{OGHAM SPACE MARK}\N{EN QUAD}-\N{HAIR SPACE}"
+    r"\N{LINE SEPARATOR}\N{PARAGRAPH SEPARATOR}\N{NARROW NO-BREAK SPACE}"
+    r"\N{MEDIUM MATHEMATICAL SPACE}\N{IDEOGRAPHIC SPACE}\N{ZERO WIDTH NO-BREAK SPACE}]*"
+    r"([+-]?[0-9]+)"
+)
+
+
 def get_ip_class(ip: str) -> str:
     """
     Gets the IP address class (A, B, C, D, or E).
+
+    The first octet is read like JavaScript ``parseInt(octet, 10)``: leading
+    whitespace and a sign are accepted, and parsing stops at the first
+    character that is not an ASCII digit.
 
     Args:
         ip: IPv4 address
@@ -23,16 +37,14 @@ def get_ip_class(ip: str) -> str:
     if len(parts) != 4:
         return ""
 
-    try:
-        first_octet = int(parts[0])
-    except ValueError:
+    leading_integer = _LEADING_INTEGER_RE.match(parts[0])
+    if leading_integer is None:
         return ""
 
-    if first_octet < 0 or first_octet > 255:
+    first_octet = int(leading_integer.group(1))
+    if first_octet <= 0 or first_octet > 255:
         return ""
 
-    if first_octet == 0:
-        return ""
     if first_octet < 128:
         return "A"
     if first_octet < 192:

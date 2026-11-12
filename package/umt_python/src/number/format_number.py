@@ -1,6 +1,8 @@
 """Locale-aware number formatting ported from package/main Number/formatNumber.ts."""
 
+import math
 from dataclasses import dataclass
+from decimal import ROUND_HALF_UP, Context, Decimal
 from typing import Literal
 
 FormatStyle = Literal["decimal", "currency", "percent"]
@@ -37,6 +39,8 @@ _CURRENCY_SYMBOLS: dict[str, str] = {
 # diverge from the standard "2 digits" rule and use 0 instead.
 _ZERO_FRACTION_CURRENCIES = frozenset({"JPY", "KRW"})
 
+_ROUNDING_CONTEXT = Context(prec=500, rounding=ROUND_HALF_UP)
+
 
 def _resolve_locale_spec(locale: str | None) -> _LocaleSpec:
     if locale is None:
@@ -63,34 +67,26 @@ def _default_fraction_digits(
     return (0, 3)
 
 
-def _round_half_away_from_zero(value: float, digits: int) -> float:
-    if digits < 0:
-        msg = "digits must be non-negative"
-        raise ValueError(msg)
-    factor = 10**digits
-    scaled = value * factor
-    # Python's round() uses banker's rounding; Intl.NumberFormat rounds
-    # half away from zero, so we cannot delegate to round() here.
-    rounded = int(scaled + 0.5) if scaled >= 0 else -int(-scaled + 0.5)
-    return rounded / factor
-
-
 def _format_absolute(
     value: float,
+    scale: int,
     min_fraction: int,
     max_fraction: int,
     spec: _LocaleSpec,
 ) -> str:
-    rounded = _round_half_away_from_zero(value, max_fraction)
-    integer_part = int(rounded)
-    remainder = abs(rounded - integer_part)
+    if math.isnan(value):
+        return "NaN"
+    if math.isinf(value):
+        return "\u221e"
 
-    integer_str = f"{integer_part:,}".replace(",", spec.thousands)
+    rounded = (
+        Decimal(repr(value))
+        .scaleb(scale, _ROUNDING_CONTEXT)
+        .quantize(Decimal(1).scaleb(-max_fraction), context=_ROUNDING_CONTEXT)
+    )
+    integer_digits, _, fraction_digits = f"{rounded:f}".partition(".")
+    integer_str = f"{int(integer_digits):,}".replace(",", spec.thousands)
 
-    if max_fraction == 0:
-        return integer_str
-
-    fraction_digits = f"{remainder:.{max_fraction}f}"[2:]
     trimmed = fraction_digits.rstrip("0")
     if len(trimmed) < min_fraction:
         trimmed = fraction_digits[:min_fraction]
@@ -144,9 +140,14 @@ def format_number(
 
     spec = _resolve_locale_spec(locale)
 
-    scaled_value = value * 100 if style == "percent" else value
-    sign = "-" if scaled_value < 0 else ""
-    magnitude = _format_absolute(abs(scaled_value), min_fraction, max_fraction, spec)
+    sign = "-" if not math.isnan(value) and math.copysign(1, value) < 0 else ""
+    magnitude = _format_absolute(
+        abs(float(value)),
+        2 if style == "percent" else 0,
+        min_fraction,
+        max_fraction,
+        spec,
+    )
 
     if style == "percent":
         return f"{sign}{magnitude}%"

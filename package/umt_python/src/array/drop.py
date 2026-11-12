@@ -32,11 +32,11 @@ def drop(
     if n < 0:
         return list(array)
 
-    if direction == "left":
-        return array[n:]
     if direction == "right":
         return array[: len(array) - n]
-    mid = len(array) // 2
-    start = mid - n // 2
-    end = mid + (n + 1) // 2
-    return array[:start] + array[end:]
+    if direction == "between":
+        mid = len(array) // 2
+        start = mid - n // 2
+        end = mid + (n + 1) // 2
+        return array[:start] + array[end:]
+    return array[n:]

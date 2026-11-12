@@ -37,6 +37,7 @@ mod is_perfect_square;
 mod is_prime_number;
 mod is_string;
 mod is_value_nan;
+mod js_number;
 mod never;
 mod parse_email;
 mod template_literal;

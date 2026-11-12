@@ -2,6 +2,8 @@ pub mod sleep;
 pub use sleep::*;
 pub mod defer;
 pub use defer::*;
+pub mod map_series;
+pub use map_series::*;
 pub mod parallel;
 pub use parallel::*;
 pub mod p_settled;

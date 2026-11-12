@@ -27,7 +27,7 @@ pub fn umt_encode_base32<T: AsRef<[u8]>>(input: T) -> String {
         return String::new();
     }
 
-    let mut result = String::new();
+    let mut result = String::with_capacity(bytes.len().div_ceil(5) * 8);
     let mut buffer: u32 = 0;
     let mut buffer_length: u32 = 0;
 
@@ -49,7 +49,7 @@ pub fn umt_encode_base32<T: AsRef<[u8]>>(input: T) -> String {
 
     // Add padding
     let padding_length = (8 - (result.len() % 8)) % 8;
-    result.push_str(&"=".repeat(padding_length));
+    result.extend(std::iter::repeat_n('=', padding_length));
 
     result
 }

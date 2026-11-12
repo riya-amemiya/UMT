@@ -24,13 +24,13 @@ pub fn umt_get_arrays_diff<T: Clone + Hash + Eq>(arrays: &[&[T]]) -> Vec<T> {
         return vec![];
     }
 
-    let mut all_values = HashSet::new();
-    let mut duplicates = HashSet::new();
+    let mut all_values: HashSet<&T> = HashSet::new();
+    let mut duplicates: HashSet<&T> = HashSet::new();
 
     // First array - add all to all_values
     if let Some(first) = arrays.first() {
         for item in *first {
-            all_values.insert(item.clone());
+            all_values.insert(item);
         }
     }
 
@@ -38,20 +38,20 @@ pub fn umt_get_arrays_diff<T: Clone + Hash + Eq>(arrays: &[&[T]]) -> Vec<T> {
     for array in arrays.iter().skip(1) {
         for item in *array {
             if all_values.contains(item) {
-                duplicates.insert(item.clone());
+                duplicates.insert(item);
             } else {
-                all_values.insert(item.clone());
+                all_values.insert(item);
             }
         }
     }
 
     // Return elements that are not duplicates, preserving order
     let mut result = Vec::new();
-    let mut seen = HashSet::new();
+    let mut seen: HashSet<&T> = HashSet::new();
 
     for array in arrays {
         for item in *array {
-            if !duplicates.contains(item) && seen.insert(item.clone()) {
+            if !duplicates.contains(item) && seen.insert(item) {
                 result.push(item.clone());
             }
         }

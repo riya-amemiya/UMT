@@ -1,3 +1,5 @@
+use super::umt_addition;
+
 /// Converts temperature from Celsius to Kelvin.
 ///
 /// # Arguments
@@ -19,5 +21,5 @@
 /// ```
 #[inline]
 pub fn umt_to_kelvin(celsius: f64) -> f64 {
-    celsius + 273.15
+    umt_addition(&[celsius, 273.15])
 }

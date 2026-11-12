@@ -23,7 +23,33 @@ impl From<serde_json::Error> for JsonParseError {
     }
 }
 
+const DANGEROUS_KEYS: [&str; 3] = ["__proto__", "constructor", "prototype"];
+
+/// Removes prototype-polluting keys from every object in a parsed JSON value.
+fn strip_dangerous_keys(value: &mut serde_json::Value) {
+    match value {
+        serde_json::Value::Object(map) => {
+            for key in DANGEROUS_KEYS {
+                map.remove(key);
+            }
+            for nested in map.values_mut() {
+                strip_dangerous_keys(nested);
+            }
+        }
+        serde_json::Value::Array(items) => {
+            for nested in items {
+                strip_dangerous_keys(nested);
+            }
+        }
+        _ => {}
+    }
+}
+
 /// Parses a JSON string into a typed Rust value.
+///
+/// Like the TypeScript `parseJson`, the keys `__proto__`, `constructor` and
+/// `prototype` are stripped from every parsed object. Input that cannot
+/// contain those keys is deserialized directly in a single pass.
 ///
 /// # Arguments
 ///
@@ -53,7 +79,15 @@ impl From<serde_json::Error> for JsonParseError {
 /// ```
 #[inline]
 pub fn umt_parse_json<T: DeserializeOwned>(json: &str) -> Result<T, JsonParseError> {
-    serde_json::from_str(json).map_err(JsonParseError::from)
+    let may_contain_dangerous_key =
+        json.contains('\\') || DANGEROUS_KEYS.iter().any(|key| json.contains(key));
+    if !may_contain_dangerous_key {
+        return serde_json::from_str(json).map_err(JsonParseError::from);
+    }
+
+    let mut value: serde_json::Value = serde_json::from_str(json)?;
+    strip_dangerous_keys(&mut value);
+    serde_json::from_value(value).map_err(JsonParseError::from)
 }
 
 /// Parses a JSON string into a serde_json::Value.

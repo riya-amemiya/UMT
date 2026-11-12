@@ -51,5 +51,42 @@ class TestDefaultFormatters(unittest.TestCase):
         )
 
 
+class TestPadFormatterLength(unittest.TestCase):
+    def test_non_numeric_length_adds_no_padding(self):
+        self.assertEqual(default_formatters["pad"](5, "abc"), "5")
+
+    def test_infinite_length_adds_no_padding(self):
+        self.assertEqual(default_formatters["pad"](5, "Infinity"), "5")
+
+    def test_negative_length_adds_no_padding(self):
+        self.assertEqual(default_formatters["pad"](5, "-1"), "5")
+
+    def test_default_length_and_char(self):
+        self.assertEqual(default_formatters["pad"](5), "05")
+
+    def test_space_pad_char(self):
+        self.assertEqual(default_formatters["pad"](5, "3", " "), "  5")
+
+    def test_radix_literal_length(self):
+        self.assertEqual(default_formatters["pad"](5, "0x5"), "00005")
+
+    def test_python_only_numeric_spelling_adds_no_padding(self):
+        self.assertEqual(default_formatters["pad"](5, "1_0"), "5")
+        self.assertEqual(default_formatters["pad"](5, "inf"), "5")
+
+
+class TestPluralFormatterMissingArguments(unittest.TestCase):
+    def test_missing_plural_form(self):
+        self.assertEqual(default_formatters["plural"](1, "item"), "item")
+        self.assertEqual(default_formatters["plural"](2, "item"), "undefined")
+
+    def test_missing_both_forms(self):
+        self.assertEqual(default_formatters["plural"](1), "undefined")
+
+    def test_python_only_numeric_spelling_is_not_one(self):
+        self.assertEqual(default_formatters["plural"]("1_0", "a", "b"), "b")
+        self.assertEqual(default_formatters["plural"]("0x1", "a", "b"), "a")
+
+
 if __name__ == "__main__":
     unittest.main()

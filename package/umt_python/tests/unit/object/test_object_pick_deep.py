@@ -59,5 +59,16 @@ class TestObjectPickDeep(unittest.TestCase):
         )
 
 
+class TestObjectPickDeepPlaceholder(unittest.TestCase):
+    def test_replaces_picked_none_when_later_path_steps_into_it(self):
+        self.assertEqual(object_pick_deep({"a": None}, "a", "a.b"), {"a": {}})
+
+    def test_keeps_picked_primitive_when_later_path_steps_into_it(self):
+        self.assertEqual(object_pick_deep({"a": 1}, "a", "a.b"), {"a": 1})
+
+    def test_skips_missing_segment_and_matches_later_segment(self):
+        self.assertEqual(object_pick_deep({"b": 2}, "x.b"), {"b": 2})
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -60,5 +60,25 @@ class TestFormatRelative(unittest.TestCase):
         )
 
 
+class TestFormatRelativeLocaleLanguage(unittest.TestCase):
+    def setUp(self):
+        self.base = datetime(2025, 4, 15, 12, 0, 0)
+
+    def test_region_subtag_resolves_to_japanese(self):
+        target = self.base + timedelta(days=1)
+        self.assertEqual(format_relative(target, self.base, "ja-JP"), "\u660e\u65e5")
+        self.assertEqual(format_relative(target, self.base, "JA-jp"), "\u660e\u65e5")
+
+    def test_region_subtag_resolves_to_english(self):
+        target = self.base + timedelta(days=1)
+        self.assertEqual(format_relative(target, self.base, "en-US"), "tomorrow")
+
+    def test_missing_or_unsupported_locale_uses_english(self):
+        target = self.base + timedelta(days=1)
+        self.assertEqual(format_relative(target, self.base), "tomorrow")
+        self.assertEqual(format_relative(target, self.base, "fr"), "tomorrow")
+        self.assertEqual(format_relative(target, self.base, "jam"), "tomorrow")
+
+
 if __name__ == "__main__":
     unittest.main()

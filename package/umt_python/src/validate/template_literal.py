@@ -40,14 +40,14 @@ def _escape_regex(input_value: str) -> str:
 
 def _tag_to_pattern(tag: object) -> str:
     if tag == "string":
-        return ".*?"
+        return "[^\\n\\r\\u2028\\u2029]*?"
     if tag == "number":
-        return r"-?(?:\d+\.\d+|\d+(?:\.\d*)?|\.\d+)"
+        return r"-?(?:[0-9]+\.[0-9]+|[0-9]+(?:\.[0-9]*)?|\.[0-9]+)"
     if tag == "boolean":
         return "(?:true|false)"
     if tag == "bigint":
-        return r"-?\d+"
-    return ".+?"
+        return r"-?[0-9]+"
+    return "[^\\n\\r\\u2028\\u2029]+?"
 
 
 def _detect_validator_tag(validator: TemplateLiteralValidator) -> object:

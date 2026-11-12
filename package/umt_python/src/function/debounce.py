@@ -49,51 +49,34 @@ class DebouncedFunction:
         self._last_kwargs: dict[str, Any] | None = None
         self._lock = threading.Lock()
 
-    def _schedule_check(self) -> None:
-        """Schedule a timer that fires after the remaining wait time.
+    def _start_timer(self, delay: float) -> None:
+        """Start the single pending timer. Must be called with the lock held."""
+        self._timer = threading.Timer(delay, self._on_timer)
+        self._timer.daemon = True
+        self._timer.start()
 
-        When the timer fires, if enough time has elapsed since the last call
-        the trailing invocation is performed.  Otherwise, the timer is
-        rescheduled for the remaining duration.
+    def _on_timer(self) -> None:
+        """Callback executed when the scheduled timer fires.
+
+        If calls arrived while the timer was pending, the timer is rescheduled
+        for the remaining duration instead of firing. Otherwise the trailing
+        invocation is performed if applicable.
         """
         with self._lock:
             elapsed = time.monotonic() - self._last_call_time
             remaining = self._wait - elapsed
 
-        if remaining <= 0:
-            self._fire_trailing()
-        else:
-            with self._lock:
-                self._timer = threading.Timer(remaining, self._on_timer)
-                self._timer.daemon = True
-                self._timer.start()
+            if remaining > 0:
+                self._start_timer(remaining)
+                return
 
-    def _on_timer(self) -> None:
-        """Callback executed when the scheduled timer fires."""
-        with self._lock:
-            elapsed = time.monotonic() - self._last_call_time
-            remaining = self._wait - elapsed
-
-        if remaining <= 0:
-            self._fire_trailing()
-        else:
-            with self._lock:
-                self._timer = threading.Timer(remaining, self._on_timer)
-                self._timer.daemon = True
-                self._timer.start()
-
-    def _fire_trailing(self) -> None:
-        """Invoke the function on the trailing edge if applicable."""
-        with self._lock:
             self._timer = None
-            if self._trailing and self._last_args is not None:
-                args = self._last_args
-                kwargs = self._last_kwargs
-                self._last_args = None
-                self._last_kwargs = None
-            else:
-                self._last_args = None
-                self._last_kwargs = None
+            args = self._last_args
+            kwargs = self._last_kwargs
+            self._last_args = None
+            self._last_kwargs = None
+
+            if not self._trailing or args is None:
                 return
 
         self._func(*args, **(kwargs or {}))
@@ -114,20 +97,12 @@ class DebouncedFunction:
                 captured_args = None
                 captured_kwargs = None
 
-            # Cancel any existing timer so we can reschedule.
-            if self._timer is not None:
-                self._timer.cancel()
-                self._timer = None
+            if is_first_call:
+                self._start_timer(self._wait)
 
         # Leading-edge invocation (outside lock).
         if captured_args is not None:
             self._func(*captured_args, **(captured_kwargs or {}))
-
-        # Schedule a new timer for the trailing edge.
-        with self._lock:
-            self._timer = threading.Timer(self._wait, self._on_timer)
-            self._timer.daemon = True
-            self._timer.start()
 
     def cancel(self) -> None:
         """Cancel any pending debounced invocation and reset state."""

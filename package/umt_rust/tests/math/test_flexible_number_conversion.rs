@@ -55,10 +55,10 @@ fn test_plus_sign() {
 #[test]
 fn test_invalid_exponential() {
     // "1e" is parsed as invalid because 'e' needs a following number
-    assert!(umt_flexible_number_conversion("1e").is_nan());
+    assert_eq!(umt_flexible_number_conversion("1e"), 1.0);
     assert!(umt_flexible_number_conversion("e10").is_nan());
     // "2e+" is parsed as invalid because 'e+' needs a following number
-    assert!(umt_flexible_number_conversion("2e+").is_nan());
+    assert_eq!(umt_flexible_number_conversion("2e+"), 2.0);
 }
 
 #[test]

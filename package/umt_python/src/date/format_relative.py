@@ -118,7 +118,8 @@ def format_relative(
     )
     abs_delta = abs(delta_ms)
 
-    formatter = _format_ja if locale == "ja" else _format_en
+    language = "" if locale is None else locale.split("-")[0].lower()
+    formatter = _format_ja if language == "ja" else _format_en
 
     for unit, ms in _THRESHOLDS:
         if abs_delta >= ms:

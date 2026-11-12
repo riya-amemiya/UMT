@@ -1,3 +1,6 @@
+from .number_to_js_string import number_to_js_string
+
+
 def get_decimal_length(value: float) -> int:
     """
     Gets the number of decimal places in a number.
@@ -16,9 +19,7 @@ def get_decimal_length(value: float) -> int:
         >>> get_decimal_length(1.0)
         0
     """
-    string_value = str(value)
-    if "." in string_value:
-        decimal_part = string_value.split(".")[1]
-        if decimal_part and len(decimal_part) > 0:
-            return len(decimal_part)
-    return 0
+    if isinstance(value, int):
+        return 0
+    _, separator, decimal_part = number_to_js_string(value).partition(".")
+    return len(decimal_part) if separator else 0

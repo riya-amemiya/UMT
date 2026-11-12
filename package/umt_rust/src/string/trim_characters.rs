@@ -1,6 +1,3 @@
-use super::trim_end_characters::umt_trim_end_characters;
-use super::trim_start_characters::umt_trim_start_characters;
-
 /// Removes specified characters from both ends of a string
 ///
 /// # Arguments
@@ -18,5 +15,5 @@ use super::trim_start_characters::umt_trim_start_characters;
 /// ```
 #[inline]
 pub fn umt_trim_characters(s: &str, chars: &str) -> String {
-    umt_trim_end_characters(&umt_trim_start_characters(s, chars), chars)
+    s.trim_matches(|c: char| chars.contains(c)).to_string()
 }

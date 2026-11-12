@@ -101,3 +101,50 @@ fn test_arrays_join_large_arrays() {
     assert_eq!(result[0], 0);
     assert_eq!(result[result.len() - 1], 14_999);
 }
+
+#[test]
+fn test_arrays_join_owned_strings() {
+    let first = ["a".to_string(), "\u{3042}".to_string()];
+    let second = ["\u{3042}".to_string(), "b".to_string()];
+    assert_eq!(
+        umt_arrays_join(&[&first[..], &second[..]]),
+        vec!["a".to_string(), "\u{3042}".to_string(), "b".to_string()]
+    );
+}
+
+#[test]
+fn test_arrays_join_f64_nan_and_signed_zero() {
+    let first = [f64::NAN, 0.0, 1.5];
+    let second = [-0.0, f64::NAN, 1.5, -2.0];
+    let result = umt_arrays_join_f64(&[&first[..], &second[..]]);
+    assert_eq!(result.len(), 4);
+    assert!(result[0].is_nan());
+    assert!(result[1] == 0.0 && result[1].is_sign_positive());
+    assert_eq!(result[2], 1.5);
+    assert_eq!(result[3], -2.0);
+}
+
+#[test]
+fn test_arrays_join_f64_large_arrays() {
+    let first: Vec<f64> = (0..20_000).map(f64::from).collect();
+    let second: Vec<f64> = (10_000..30_000).map(f64::from).collect();
+    let result = umt_arrays_join_f64(&[&first[..], &second[..]]);
+    assert_eq!(result.len(), 30_000);
+    assert_eq!(result[0], 0.0);
+    assert_eq!(result[29_999], 29_999.0);
+}
+
+#[test]
+fn test_arrays_join_f64_empty() {
+    let empty: &[&[f64]] = &[];
+    assert_eq!(umt_arrays_join_f64(empty), Vec::<f64>::new());
+}
+
+#[test]
+fn test_arrays_join_f64_negative_zero_becomes_positive_zero() {
+    let first = [-0.0, 2.0];
+    let result = umt_arrays_join_f64(&[&first[..]]);
+    assert_eq!(result.len(), 2);
+    assert!(result[0] == 0.0 && result[0].is_sign_positive());
+    assert_eq!(result[1], 2.0);
+}

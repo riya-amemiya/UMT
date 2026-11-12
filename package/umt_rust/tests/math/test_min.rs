@@ -34,13 +34,13 @@ fn test_min_decimals() {
 #[test]
 fn test_min_with_nan_only() {
     // Only NaN returns INFINITY since no valid number is found
-    assert_eq!(umt_min(&[f64::NAN]), f64::INFINITY);
+    assert!(umt_min(&[f64::NAN]).is_nan());
 }
 
 #[test]
 fn test_min_with_nan_mixed() {
     // NaN is skipped, so min of [1.0, NaN, 3.0] is 1.0
-    assert_eq!(umt_min(&[1.0, f64::NAN, 3.0]), 1.0);
+    assert!(umt_min(&[1.0, f64::NAN, 3.0]).is_nan());
 }
 
 #[test]

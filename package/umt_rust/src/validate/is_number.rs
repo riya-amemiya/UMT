@@ -1,5 +1,7 @@
 //! Number type checking utility
 
+use super::js_number::js_string_to_number;
+
 /// Determines if the value is a finite number
 ///
 /// # Arguments
@@ -24,6 +26,10 @@ pub fn umt_is_number(number: f64) -> bool {
 
 /// Determines if a string represents a valid number
 ///
+/// The string is converted with JavaScript `Number(string)` rules, so
+/// surrounding whitespace is ignored, `0x` / `0o` / `0b` literals are
+/// accepted, and an empty or whitespace-only string converts to `0`.
+///
 /// # Arguments
 /// * `s` - The string to check
 ///
@@ -37,15 +43,13 @@ pub fn umt_is_number(number: f64) -> bool {
 /// assert!(umt_is_number_str("0.1"));
 /// assert!(umt_is_number_str("42"));
 /// assert!(umt_is_number_str("-123.45"));
+/// assert!(umt_is_number_str(" 0x10 "));
+/// assert!(umt_is_number_str(""));
 /// assert!(!umt_is_number_str("abc"));
-/// assert!(!umt_is_number_str(""));
 /// ```
 #[inline]
 pub fn umt_is_number_str(s: &str) -> bool {
-    match s.parse::<f64>() {
-        Ok(n) => n.is_finite(),
-        Err(_) => false,
-    }
+    js_string_to_number(s).is_finite()
 }
 
 /// Checks if an i64 is a valid number (always true for integers)

@@ -1,3 +1,6 @@
+import math
+
+
 def clamp(value: float, min_val: float, max_val: float) -> float:
     """
     Clamps a number between a minimum and maximum value.
@@ -18,4 +21,6 @@ def clamp(value: float, min_val: float, max_val: float) -> float:
         >>> clamp(15, 0, 10)
         10
     """
+    if math.isnan(value) or math.isnan(min_val) or math.isnan(max_val):
+        return float("nan")
     return min(max(value, min_val), max_val)

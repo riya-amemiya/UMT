@@ -1,6 +1,8 @@
 use std::collections::HashMap;
 use std::hash::Hash;
 
+use crate::math::{umt_division, umt_multiplication};
+
 /// A unit converter that can convert between different units using base unit ratios.
 ///
 /// This struct stores conversion ratios to a base unit and provides a method
@@ -66,7 +68,8 @@ where
 
     /// Converts a value from one unit to another.
     ///
-    /// The conversion formula is: `(value / from_ratio) * to_ratio`
+    /// The conversion formula is: `(value / from_ratio) * to_ratio`, computed
+    /// with the decimal-safe division and multiplication helpers.
     ///
     /// # Arguments
     ///
@@ -104,7 +107,10 @@ where
             return Some(f64::NAN);
         }
 
-        Some((value / from_ratio) * to_ratio)
+        Some(umt_multiplication(&[
+            umt_division(value, *from_ratio),
+            *to_ratio,
+        ]))
     }
 
     /// Checks if a unit exists in this converter.

@@ -5,9 +5,28 @@ use std::sync::LazyLock;
 static ARRAY_INDEX_RE: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"^(.+?)\[(-?\d+)\]$").unwrap());
 
+fn property<'a>(value: &'a Value, key: &str) -> Option<&'a Value> {
+    match value {
+        Value::Object(map) => map.get(key),
+        Value::Array(items) => {
+            let is_canonical_index = key == "0"
+                || (!key.starts_with('0')
+                    && !key.is_empty()
+                    && key.bytes().all(|b| b.is_ascii_digit()));
+            if is_canonical_index {
+                items.get(key.parse::<usize>().ok()?)
+            } else {
+                None
+            }
+        }
+        _ => None,
+    }
+}
+
 /// Retrieves a value from a JSON object using a dot-notation path with array index support.
 ///
 /// Supports nested properties and array access with positive/negative indices.
+/// An array segment also resolves canonical index keys (e.g. "items.0").
 ///
 /// # Arguments
 ///
@@ -28,40 +47,27 @@ static ARRAY_INDEX_RE: LazyLock<Regex> =
 /// assert_eq!(get_value(&obj, "name"), Some(&json!("Alice")));
 /// ```
 pub fn get_value<'a>(object: &'a Value, path: &str) -> Option<&'a Value> {
-    if path.is_empty() {
-        return None;
-    }
-
-    let parts: Vec<&str> = path.split('.').collect();
-
     let mut current = object;
 
-    for part in parts {
-        // Check if it's an object
-        if !current.is_object() && !current.is_array() {
-            return None;
-        }
+    for part in path.split('.') {
+        let (key, index) = match ARRAY_INDEX_RE.captures(part) {
+            Some(caps) => (
+                caps.get(1)?.as_str(),
+                Some(caps.get(2)?.as_str().parse::<i64>().ok()?),
+            ),
+            None => (part, None),
+        };
 
-        if let Some(caps) = ARRAY_INDEX_RE.captures(part) {
-            // Handle array notation like "items[0]" or "items[-1]"
-            let key = caps.get(1)?.as_str();
-            let index: i64 = caps.get(2)?.as_str().parse().ok()?;
+        current = property(current, key)?;
 
-            // Get the object property first
-            current = current.get(key)?;
-
-            // Then get the array element
-            let arr = current.as_array()?;
-            let actual_index = if index < 0 {
-                (arr.len() as i64 + index) as usize
+        if let Some(index) = index {
+            let items = current.as_array()?;
+            let resolved = if index < 0 {
+                items.len() as i64 + index
             } else {
-                index as usize
+                index
             };
-
-            current = arr.get(actual_index)?;
-        } else {
-            // Simple property access
-            current = current.get(part)?;
+            current = items.get(usize::try_from(resolved).ok()?)?;
         }
     }
 

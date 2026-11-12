@@ -1,5 +1,7 @@
 import math
 
+from .get_decimal_length import get_decimal_length
+
 
 def gcd(x: float, y: float, *z: float) -> float:
     """
@@ -21,34 +23,39 @@ def gcd(x: float, y: float, *z: float) -> float:
         >>> gcd(0.5, 0.25)
         0.25
     """
-    numbers = [x, y, *z]
+    numbers = (x, y, *z)
 
-    # Convert all inputs to (numerator, denominator) pairs
-    fractions = []
-    for num in numbers:
-        if hasattr(num, "as_integer_ratio"):
-            fractions.append(num.as_integer_ratio())
-        else:
-            # Fallback for types compatible with int/float but missing the method (e.g. strings)
-            try:
-                fractions.append(int(num).as_integer_ratio())
-            except (ValueError, TypeError):
-                fractions.append(float(num).as_integer_ratio())
+    if any(
+        isinstance(number, float) and math.isfinite(number) and not number.is_integer()
+        for number in numbers
+    ):
+        multiplier = 10 ** max(get_decimal_length(number) for number in numbers)
+        return (
+            _gcd_integer(*[float(number) * multiplier for number in numbers])
+            / multiplier
+        )
 
-    numerators = [n for n, _ in fractions]
-    denominators = [d for _, d in fractions]
+    return float(_gcd_integer(*numbers))
 
-    # Optimization: if all are integers
-    if all(d == 1 for d in denominators):
-        return float(math.gcd(*numerators))
 
-    common_denominator = math.lcm(*denominators)
+def _gcd_integer(x: float, y: float, *z: float) -> float:
+    """Computes the GCD of the rounded absolute values of the inputs."""
+    if math.isfinite(x) and not math.isfinite(y) and _round_absolute(x) == 0:
+        return abs(y)
+    if math.isfinite(y) and not math.isfinite(x) and _round_absolute(y) == 0:
+        return abs(x)
 
-    scaled_numerators = [
-        num * (common_denominator // den)
-        for num, den in zip(numerators, denominators, strict=True)
-    ]
+    rounded_x = _round_absolute(x)
+    rounded_y = _round_absolute(y)
 
-    result_numerator = math.gcd(*scaled_numerators)
+    if rounded_x == 0:
+        return rounded_y
+    if rounded_y == 0:
+        return rounded_x
 
-    return result_numerator / common_denominator
+    return math.gcd(rounded_x, rounded_y, *[_round_absolute(element) for element in z])
+
+
+def _round_absolute(value: float) -> int:
+    """Rounds half up to the nearest integer and drops the sign."""
+    return abs(value if isinstance(value, int) else math.floor(value + 0.5))

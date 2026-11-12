@@ -86,19 +86,65 @@ fn format_en_auto(value: i64, unit: RelativeUnit) -> String {
     }
 }
 
+fn unit_ja(unit: RelativeUnit) -> &'static str {
+    match unit {
+        RelativeUnit::Year => "\u{5e74}",
+        RelativeUnit::Month => "\u{304b}\u{6708}",
+        RelativeUnit::Week => "\u{9031}\u{9593}",
+        RelativeUnit::Day => "\u{65e5}",
+        RelativeUnit::Hour => "\u{6642}\u{9593}",
+        RelativeUnit::Minute => "\u{5206}",
+        RelativeUnit::Second => "\u{79d2}",
+    }
+}
+
+/// Japanese special wording for `numeric: "auto"`, returning `None` when the
+/// value has no special phrasing for the unit.
+fn auto_special_ja(unit: RelativeUnit, value: i64) -> Option<&'static str> {
+    match (unit, value) {
+        (RelativeUnit::Year, 1) => Some("\u{6765}\u{5e74}"),
+        (RelativeUnit::Year, -1) => Some("\u{6628}\u{5e74}"),
+        (RelativeUnit::Month, 1) => Some("\u{6765}\u{6708}"),
+        (RelativeUnit::Month, -1) => Some("\u{5148}\u{6708}"),
+        (RelativeUnit::Week, 1) => Some("\u{6765}\u{9031}"),
+        (RelativeUnit::Week, -1) => Some("\u{5148}\u{9031}"),
+        (RelativeUnit::Day, 2) => Some("\u{660e}\u{5f8c}\u{65e5}"),
+        (RelativeUnit::Day, 1) => Some("\u{660e}\u{65e5}"),
+        (RelativeUnit::Day, -1) => Some("\u{6628}\u{65e5}"),
+        (RelativeUnit::Day, -2) => Some("\u{4e00}\u{6628}\u{65e5}"),
+        (RelativeUnit::Second, 0) => Some("\u{4eca}"),
+        _ => None,
+    }
+}
+
+/// Formats a `value`/`unit` pair the way `Intl.RelativeTimeFormat("ja",
+/// { numeric: "auto" })` would.
+fn format_ja_auto(value: i64, unit: RelativeUnit) -> String {
+    if let Some(special) = auto_special_ja(unit, value) {
+        return special.to_string();
+    }
+
+    if value > 0 {
+        format!("{} {}\u{5f8c}", value, unit_ja(unit))
+    } else {
+        format!("{} {}\u{524d}", value.abs(), unit_ja(unit))
+    }
+}
+
 /// Formats a date relative to a base date.
 ///
 /// Picks the largest unit that fits the absolute delta and formats it the
 /// way `Intl.RelativeTimeFormat(locale, { numeric: "auto" })` would for the
-/// English (`"en"`) locale. Locales other than `"en"` fall back to English
-/// wording, because the Rust standard library and `chrono` do not provide
-/// `Intl`-style locale data.
+/// English (`"en"`) and Japanese (`"ja"`) locales. Other locales fall back
+/// to English wording, because the Rust standard library and `chrono` do not
+/// provide `Intl`-style locale data.
 ///
 /// # Arguments
 ///
 /// * `date` - The target date
 /// * `base_date` - Reference date
-/// * `_locale` - BCP 47 locale tag (only `"en"` is fully supported)
+/// * `locale` - BCP 47 locale tag (`"en"` and `"ja"` are supported; the
+///   language subtag decides, so `"ja-JP"` formats as Japanese)
 ///
 /// # Returns
 ///
@@ -120,16 +166,26 @@ fn format_en_auto(value: i64, unit: RelativeUnit) -> String {
 pub fn umt_format_relative(
     date: &DateTime<Utc>,
     base_date: &DateTime<Utc>,
-    _locale: Option<&str>,
+    locale: Option<&str>,
 ) -> String {
+    let is_japanese = locale.is_some_and(|tag| {
+        tag.split('-')
+            .next()
+            .is_some_and(|language| language.eq_ignore_ascii_case("ja"))
+    });
+    let formatter = if is_japanese {
+        format_ja_auto
+    } else {
+        format_en_auto
+    };
     let delta_ms = date.timestamp_millis() - base_date.timestamp_millis();
     let abs_delta = delta_ms.unsigned_abs();
 
     for (unit, ms) in THRESHOLDS {
         if abs_delta >= ms {
             let value = js_round(delta_ms as f64 / ms as f64);
-            return format_en_auto(value, unit);
+            return formatter(value, unit);
         }
     }
-    format_en_auto(0, RelativeUnit::Second)
+    formatter(0, RelativeUnit::Second)
 }

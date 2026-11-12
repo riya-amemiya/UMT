@@ -38,5 +38,5 @@ fn test_standard_deviation_single() {
 
 #[test]
 fn test_standard_deviation_empty() {
-    assert!(umt_standard_deviation(&[]).is_nan());
+    assert_eq!(umt_standard_deviation(&[]), 0.0);
 }

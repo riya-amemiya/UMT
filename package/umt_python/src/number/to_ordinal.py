@@ -1,3 +1,8 @@
+import math
+
+from ..math.number_to_js_string import number_to_js_string
+
+
 def to_ordinal(value: int | float) -> str:
     """
     Converts a number to its English ordinal string representation.
@@ -16,16 +21,20 @@ def to_ordinal(value: int | float) -> str:
     to_ordinal(21)  # "21st"
     to_ordinal(112) # "112th"
     """
-    module100 = value % 100
+    text = number_to_js_string(value) if isinstance(value, float) else str(value)
+    if not math.isfinite(value):
+        return f"{text}th"
+
+    module100 = math.fmod(value, 100)
     if 11 <= module100 <= 13:
-        return f"{value}th"
+        return f"{text}th"
 
-    module10 = value % 10
+    module10 = math.fmod(value, 10)
     if module10 == 1:
-        return f"{value}st"
+        return f"{text}st"
     if module10 == 2:
-        return f"{value}nd"
+        return f"{text}nd"
     if module10 == 3:
-        return f"{value}rd"
+        return f"{text}rd"
 
-    return f"{value}th"
+    return f"{text}th"

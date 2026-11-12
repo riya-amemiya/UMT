@@ -59,3 +59,8 @@ class TestLazyTake:
         result = list(lazy_take(gen, 2))
         assert result == [1, 2]
         assert next(gen) == 3
+
+    def test_takes_nothing_when_n_is_negative(self):
+        gen = iter([1, 2, 3])
+        assert list(lazy_take(gen, -1)) == []
+        assert next(gen) == 1

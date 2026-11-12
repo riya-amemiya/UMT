@@ -27,9 +27,10 @@ def is_perfect_square(n: int | float) -> bool:
         return False
 
     if isinstance(n, float):
-        if not n.is_integer():
+        if n < 0:
             return False
-        n = int(n)
+        root = math.sqrt(n)
+        return root == math.inf or root.is_integer()
 
     if not isinstance(n, int):
         return False

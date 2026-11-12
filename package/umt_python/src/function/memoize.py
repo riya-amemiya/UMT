@@ -23,14 +23,21 @@ class MemoizedFunction:
         self.cache: OrderedDict[Any, Any] = OrderedDict()
 
     def __call__(self, *args: Any) -> Any:  # noqa: ANN401
-        key = self._resolver(*args) if self._resolver is not None else args[0]
+        if self._resolver is not None:
+            key = self._resolver(*args)
+        else:
+            key = args[0] if args else None
 
         if key in self.cache:
             return self.cache[key]
 
         result = self._fn(*args)
 
-        if self._max_size is not None and len(self.cache) >= self._max_size:
+        if (
+            self._max_size is not None
+            and self.cache
+            and len(self.cache) >= self._max_size
+        ):
             self.cache.popitem(last=False)
 
         self.cache[key] = result

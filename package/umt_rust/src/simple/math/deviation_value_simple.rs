@@ -1,22 +1,4 @@
-use crate::math::{umt_average, umt_deviation_value};
-
-/// Calculates the standard deviation of a population.
-///
-/// # Arguments
-///
-/// * `values` - A slice of f64 numbers.
-///
-/// # Returns
-///
-/// The population standard deviation of the values.
-fn standard_deviation(values: &[f64]) -> f64 {
-    if values.is_empty() {
-        return 0.0;
-    }
-    let avg = values.iter().sum::<f64>() / values.len() as f64;
-    let variance = values.iter().map(|x| (x - avg).powi(2)).sum::<f64>() / values.len() as f64;
-    variance.sqrt()
-}
+use crate::math::{umt_average, umt_deviation_value, umt_standard_deviation};
 
 /// Calculates the deviation value (T-score) using an array of reference values.
 ///
@@ -44,8 +26,8 @@ fn standard_deviation(values: &[f64]) -> f64 {
 /// ```
 #[inline]
 pub fn umt_deviation_value_simple_from_array(value: f64, reference_values: Vec<f64>) -> f64 {
-    let avg = umt_average(reference_values.clone());
-    let sd = standard_deviation(&reference_values);
+    let sd = umt_standard_deviation(&reference_values);
+    let avg = umt_average(reference_values);
 
     if sd == 0.0 {
         50.0

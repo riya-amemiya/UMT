@@ -28,44 +28,54 @@ pub fn umt_merge_sort<T: Clone + PartialOrd>(
     }
 
     let compare_fn = compare.unwrap_or(umt_compare_function_default);
-    merge_sort_impl(array, &compare_fn)
+    let mut result = array.to_vec();
+    let mut aux = array.to_vec();
+    merge_sort_impl(&mut result, &mut aux, 0, array.len(), &compare_fn);
+    result
 }
 
-fn merge_sort_impl<T: Clone, F>(array: &[T], compare: &F) -> Vec<T>
-where
+fn merge_sort_impl<T: Clone, F>(
+    array: &mut [T],
+    aux: &mut [T],
+    start: usize,
+    end: usize,
+    compare: &F,
+) where
     F: Fn(&T, &T) -> i32,
 {
-    if array.len() <= 1 {
-        return array.to_vec();
+    if end - start <= 1 {
+        return;
     }
 
-    let middle = array.len() / 2;
-    let left = merge_sort_impl(&array[..middle], compare);
-    let right = merge_sort_impl(&array[middle..], compare);
+    let mid = start + (end - start) / 2;
+    merge_sort_impl(array, aux, start, mid, compare);
+    merge_sort_impl(array, aux, mid, end, compare);
 
-    merge(&left, &right, compare)
+    merge(array, aux, start, mid, end, compare);
 }
 
-fn merge<T: Clone, F>(left: &[T], right: &[T], compare: &F) -> Vec<T>
-where
+fn merge<T: Clone, F>(
+    array: &mut [T],
+    aux: &mut [T],
+    start: usize,
+    mid: usize,
+    end: usize,
+    compare: &F,
+) where
     F: Fn(&T, &T) -> i32,
 {
-    let mut result = Vec::with_capacity(left.len() + right.len());
-    let mut left_idx = 0;
-    let mut right_idx = 0;
+    aux[start..end].clone_from_slice(&array[start..end]);
 
-    while left_idx < left.len() && right_idx < right.len() {
-        if compare(&left[left_idx], &right[right_idx]) <= 0 {
-            result.push(left[left_idx].clone());
+    let mut left_idx = start;
+    let mut right_idx = mid;
+
+    for slot in &mut array[start..end] {
+        if left_idx < mid && (right_idx >= end || compare(&aux[left_idx], &aux[right_idx]) <= 0) {
+            *slot = aux[left_idx].clone();
             left_idx += 1;
         } else {
-            result.push(right[right_idx].clone());
+            *slot = aux[right_idx].clone();
             right_idx += 1;
         }
     }
-
-    result.extend_from_slice(&left[left_idx..]);
-    result.extend_from_slice(&right[right_idx..]);
-
-    result
 }

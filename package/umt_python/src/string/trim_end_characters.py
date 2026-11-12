@@ -17,7 +17,4 @@ def trim_end_characters(string_: str, chars: str) -> str:
         >>> trim_end_characters("abc123", "xyz")
         'abc123'
     """
-    end_index = len(string_)
-    while end_index > 0 and string_[end_index - 1] in chars:
-        end_index -= 1
-    return string_[:end_index]
+    return string_.rstrip(chars) if chars else string_

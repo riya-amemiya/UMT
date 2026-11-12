@@ -91,3 +91,31 @@ fn test_merge_sort_does_not_mutate_original() {
     let _ = umt_merge_sort(&arr, None);
     assert_eq!(arr, vec![3, 1, 4, 1, 5]);
 }
+
+#[test]
+fn test_merge_sort_is_stable() {
+    let arr: Vec<(i32, i32)> = (0..101).map(|i| (i % 4, i)).collect();
+    let compare: fn(&(i32, i32), &(i32, i32)) -> i32 = |a, b| a.0 - b.0;
+    let mut expected = arr.clone();
+    expected.sort_by_key(|item| item.0);
+    assert_eq!(umt_merge_sort(&arr, Some(compare)), expected);
+}
+
+#[test]
+fn test_merge_sort_odd_length_and_two_elements() {
+    assert_eq!(umt_merge_sort(&[2, 1], None), vec![1, 2]);
+    assert_eq!(umt_merge_sort(&[3, 1, 2], None), vec![1, 2, 3]);
+    assert_eq!(
+        umt_merge_sort(&[5, -1, 4, -2, 3, 0, 1], None),
+        vec![-2, -1, 0, 1, 3, 4, 5]
+    );
+}
+
+#[test]
+fn test_merge_sort_owned_strings() {
+    let arr = vec!["pear".to_string(), "apple".to_string(), "fig".to_string()];
+    assert_eq!(
+        umt_merge_sort(&arr, None),
+        vec!["apple".to_string(), "fig".to_string(), "pear".to_string()]
+    );
+}

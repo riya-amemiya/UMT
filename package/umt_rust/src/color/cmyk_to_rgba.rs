@@ -1,3 +1,5 @@
+use crate::math::{umt_clamp, umt_division, umt_multiplication, umt_round_of, umt_subtract};
+
 /// RGBA color representation
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Rgba {
@@ -55,35 +57,21 @@ pub struct Hsla {
 pub fn umt_cmyk_to_rgba(c: f64, m: f64, y: f64, k: f64, a: Option<f64>) -> Rgba {
     let alpha = a.unwrap_or(1.0);
 
-    // Clamp CMYK values to 0-100 range
-    let clamped_c = c.clamp(0.0, 100.0);
-    let clamped_m = m.clamp(0.0, 100.0);
-    let clamped_y = y.clamp(0.0, 100.0);
-    let clamped_k = k.clamp(0.0, 100.0);
-
     // Convert CMYK values to 0-1 range
-    let c_percentage = clamped_c / 100.0;
-    let m_percentage = clamped_m / 100.0;
-    let y_percentage = clamped_y / 100.0;
-    let k_percentage = clamped_k / 100.0;
+    let c_percentage = umt_division(umt_clamp(c, 0.0, 100.0), 100.0);
+    let m_percentage = umt_division(umt_clamp(m, 0.0, 100.0), 100.0);
+    let y_percentage = umt_division(umt_clamp(y, 0.0, 100.0), 100.0);
+    let k_remainder = umt_subtract(&[1.0, umt_division(umt_clamp(k, 0.0, 100.0), 100.0)]);
 
     // Calculate RGB values
-    let r = 255.0 * (1.0 - c_percentage) * (1.0 - k_percentage);
-    let g = 255.0 * (1.0 - m_percentage) * (1.0 - k_percentage);
-    let b = 255.0 * (1.0 - y_percentage) * (1.0 - k_percentage);
-
-    // Round RGB values
-    let rounded_r = r.round();
-    let rounded_g = g.round();
-    let rounded_b = b.round();
-
-    // Clamp alpha value to 0-1 range
-    let clamped_a = alpha.clamp(0.0, 1.0);
+    let r = umt_multiplication(&[255.0, umt_subtract(&[1.0, c_percentage]), k_remainder]);
+    let g = umt_multiplication(&[255.0, umt_subtract(&[1.0, m_percentage]), k_remainder]);
+    let b = umt_multiplication(&[255.0, umt_subtract(&[1.0, y_percentage]), k_remainder]);
 
     Rgba {
-        r: rounded_r,
-        g: rounded_g,
-        b: rounded_b,
-        a: clamped_a,
+        r: umt_round_of(r, 0),
+        g: umt_round_of(g, 0),
+        b: umt_round_of(b, 0),
+        a: umt_clamp(alpha, 0.0, 1.0),
     }
 }

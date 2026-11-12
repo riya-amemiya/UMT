@@ -91,3 +91,45 @@ fn test_drop_with_strings() {
         vec!["a", "b", "c"]
     );
 }
+
+#[test]
+fn test_drop_right_exceeds_length() {
+    assert_eq!(
+        umt_drop(&[1, 2, 3], 3, DropDirection::Right),
+        Vec::<i32>::new()
+    );
+    assert_eq!(umt_drop(&[1, 2, 3], 4, DropDirection::Right), vec![1, 2]);
+    assert_eq!(umt_drop(&[1, 2, 3], 5, DropDirection::Right), vec![1]);
+    assert_eq!(
+        umt_drop(&[1, 2, 3], 6, DropDirection::Right),
+        Vec::<i32>::new()
+    );
+    assert_eq!(
+        umt_drop(&[1, 2, 3], 7, DropDirection::Right),
+        Vec::<i32>::new()
+    );
+}
+
+#[test]
+fn test_drop_between_exceeds_length() {
+    assert_eq!(
+        umt_drop(&[1, 2, 3, 4, 5], 4, DropDirection::Between),
+        vec![5]
+    );
+    assert_eq!(
+        umt_drop(&[1, 2, 3, 4, 5], 5, DropDirection::Between),
+        Vec::<i32>::new()
+    );
+    assert_eq!(
+        umt_drop(&[1, 2, 3, 4, 5], 6, DropDirection::Between),
+        vec![1, 2, 3, 4]
+    );
+    assert_eq!(
+        umt_drop(&[1, 2, 3, 4, 5], 7, DropDirection::Between),
+        vec![1, 2, 3, 4]
+    );
+    assert_eq!(
+        umt_drop(&[1, 2, 3], 10, DropDirection::Between),
+        Vec::<i32>::new()
+    );
+}

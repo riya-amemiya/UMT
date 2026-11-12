@@ -25,18 +25,22 @@ pub fn umt_is_perfect_square(number: i64) -> bool {
         return false;
     }
 
-    let sqrt = (number as f64).sqrt();
-    let sqrt_floor = sqrt.floor() as i64;
-    sqrt_floor * sqrt_floor == number
+    let root = number.isqrt();
+    root * root == number
 }
 
-/// Determines if a given f64 integer value is a perfect square
+/// Determines if a given f64 value is a perfect square
+///
+/// Mirrors the TypeScript `isPerfectSquare`: the value is a perfect square
+/// when it is not negative and its double precision square root is an
+/// integer. Positive infinity therefore counts as a perfect square and NaN
+/// does not.
 ///
 /// # Arguments
-/// * `number` - Number to check (must be a non-negative integer value)
+/// * `number` - Number to check
 ///
 /// # Returns
-/// true if the number is a perfect square integer, false otherwise
+/// true if the square root of the number is an integer, false otherwise
 ///
 /// # Examples
 /// ```
@@ -47,7 +51,7 @@ pub fn umt_is_perfect_square(number: i64) -> bool {
 /// ```
 #[inline]
 pub fn umt_is_perfect_square_f64(number: f64) -> bool {
-    if number < 0.0 || number.fract() != 0.0 {
+    if number < 0.0 {
         return false;
     }
 

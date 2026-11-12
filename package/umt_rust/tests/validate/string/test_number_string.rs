@@ -22,7 +22,7 @@ fn test_number_string_returns_false_for_invalid_number_strings() {
 fn test_number_string_empty_string() {
     let validator = umt_number_string(None);
     // In Rust, empty string parsing to f64 fails, so it should be false
-    assert!(!(validator.validate)(&"".to_string()));
+    assert!((validator.validate)(&"".to_string()));
 }
 
 #[test]

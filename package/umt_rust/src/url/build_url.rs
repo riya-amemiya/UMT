@@ -1,10 +1,16 @@
+use super::parse_query_string::decode_percent;
 use std::collections::HashMap;
+
+const SPECIAL_SCHEMES: [&str; 6] = ["http", "https", "ws", "wss", "ftp", "file"];
+const UPPER_HEX_DIGITS: &[u8; 16] = b"0123456789ABCDEF";
 
 /// Builds a URL with query parameters appended.
 ///
-/// Dangerous keys (`__proto__`, `constructor`, `prototype`) are silently
-/// dropped to prevent prototype-pollution-style attacks, matching the
-/// TypeScript source-of-truth behaviour.
+/// Keys and values are serialized as `application/x-www-form-urlencoded`,
+/// the same way JavaScript `URLSearchParams` does. No key is filtered out.
+/// The query string is placed before the fragment of the base URL. When
+/// parameters are appended, the existing query string of the base URL is
+/// serialized again the same way.
 ///
 /// # Arguments
 ///
@@ -29,81 +35,81 @@ use std::collections::HashMap;
 /// );
 /// ```
 pub fn umt_build_url(base: &str, params: Option<&HashMap<String, String>>) -> String {
-    let empty = HashMap::new();
-    let params = params.unwrap_or(&empty);
-
-    // Separate the base into the part before '?' and any existing query string
-    let (base_part, existing_query) = match base.find('?') {
-        Some(idx) => (&base[..idx], &base[idx + 1..]),
+    let (without_fragment, fragment) = match base.find('#') {
+        Some(idx) => (&base[..idx], &base[idx..]),
         None => (base, ""),
     };
+    let (base_part, existing_query) = match without_fragment.find('?') {
+        Some(idx) => (&without_fragment[..idx], &without_fragment[idx + 1..]),
+        None => (without_fragment, ""),
+    };
 
-    // Determine if base has a scheme with authority (e.g. "https://host")
-    // and if the path portion is empty, normalize it to "/"
-    let normalized_base = if let Some(authority_start) = base_part.find("://") {
-        let after_scheme = &base_part[authority_start + 3..];
-        if !after_scheme.contains('/') {
-            // No path after authority — add trailing slash
-            format!("{base_part}/")
-        } else {
-            base_part.to_string()
+    let needs_root_path = base_part.find("://").is_some_and(|authority_start| {
+        let scheme = &base_part[..authority_start];
+        !base_part[authority_start + 3..].contains('/')
+            && SPECIAL_SCHEMES
+                .iter()
+                .any(|special| scheme.eq_ignore_ascii_case(special))
+    });
+
+    let query = match params.filter(|params| !params.is_empty()) {
+        Some(params) => {
+            let mut query = String::with_capacity(existing_query.len());
+            for pair in existing_query.split('&').filter(|pair| !pair.is_empty()) {
+                let (key, value) = pair.split_once('=').unwrap_or((pair, ""));
+                push_pair(&mut query, &decode_percent(key), &decode_percent(value));
+            }
+            for (key, value) in params {
+                push_pair(&mut query, key, value);
+            }
+            query
         }
-    } else {
-        base_part.to_string()
+        None => String::from(existing_query),
     };
 
-    // Build safe params (skip dangerous keys)
-    let safe_params: Vec<(&str, &str)> = params
-        .iter()
-        .filter(|(k, _)| {
-            let k = k.as_str();
-            k != "__proto__" && k != "constructor" && k != "prototype"
-        })
-        .map(|(k, v)| (k.as_str(), v.as_str()))
-        .collect();
-
-    // Encode the new query string
-    let new_query = safe_params
-        .iter()
-        .map(|(k, v)| format!("{}={}", encode_component(k), encode_component(v)))
-        .collect::<Vec<_>>()
-        .join("&");
-
-    // Combine existing and new query strings
-    let combined_query = match (existing_query.is_empty(), new_query.is_empty()) {
-        (false, false) => format!("{existing_query}&{new_query}"),
-        (true, false) => new_query,
-        (false, true) => existing_query.to_string(),
-        (true, true) => String::new(),
-    };
-
-    if combined_query.is_empty() {
-        normalized_base
-    } else {
-        format!("{normalized_base}?{combined_query}")
+    let mut result = String::with_capacity(base.len() + query.len() + 2);
+    result.push_str(base_part);
+    if needs_root_path {
+        result.push('/');
     }
+    if !query.is_empty() {
+        result.push('?');
+        result.push_str(&query);
+    }
+    result.push_str(fragment);
+    result
 }
 
-/// Percent-encodes a string for use in URL query parameters.
+/// Appends one `key=value` pair to `query`, separated from the previous pair by `&`.
+fn push_pair(query: &mut String, key: &str, value: &str) {
+    if !query.is_empty() {
+        query.push('&');
+    }
+    encode_component(query, key);
+    query.push('=');
+    encode_component(query, value);
+}
+
+/// Percent-encodes a string for use in URL query parameters and appends it to `output`.
 ///
 /// This follows the `application/x-www-form-urlencoded` convention where
 /// spaces are encoded as `+` and other special characters are
 /// percent-encoded, matching the behaviour of JavaScript's
 /// `URLSearchParams.append`.
-fn encode_component(input: &str) -> String {
-    let mut result = String::with_capacity(input.len());
+fn encode_component(output: &mut String, input: &str) {
     for byte in input.bytes() {
         match byte {
             b'A'..=b'Z' | b'a'..=b'z' | b'0'..=b'9' | b'-' | b'_' | b'.' | b'*' => {
-                result.push(byte as char);
+                output.push(char::from(byte));
             }
             b' ' => {
-                result.push('+');
+                output.push('+');
             }
             _ => {
-                result.push_str(&format!("%{byte:02X}"));
+                output.push('%');
+                output.push(char::from(UPPER_HEX_DIGITS[usize::from(byte >> 4)]));
+                output.push(char::from(UPPER_HEX_DIGITS[usize::from(byte & 0x0F)]));
             }
         }
     }
-    result
 }

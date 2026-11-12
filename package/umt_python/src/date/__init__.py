@@ -17,6 +17,7 @@ from .get_timezone_offset_string import get_timezone_offset_string
 from .is_between import is_between
 from .is_business_day import is_business_day
 from .is_leap_year import is_leap_year
+from .is_same import is_same
 from .is_same_day import is_same_day
 from .is_weekend import is_weekend
 from .ms_by_unit import ms_by_unit
@@ -48,6 +49,7 @@ __all__ = [
     "is_between",
     "is_business_day",
     "is_leap_year",
+    "is_same",
     "is_same_day",
     "is_weekend",
     "ms_by_unit",

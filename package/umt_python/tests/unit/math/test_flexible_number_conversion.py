@@ -55,17 +55,17 @@ class TestFlexibleNumberConversion(unittest.TestCase):
         self.assertEqual(flexible_number_conversion("+infinity"), float("inf"))
         self.assertEqual(flexible_number_conversion("-infinity"), float("-inf"))
 
-    def test_invalid_hex_extracts_leading_zero(self):
+    def test_invalid_hex_returns_nan(self):
         result = flexible_number_conversion("0xZZZ")
-        self.assertEqual(result, 0)
+        self.assertTrue(math.isnan(result))
 
-    def test_invalid_octal_extracts_leading_zero(self):
+    def test_invalid_octal_returns_nan(self):
         result = flexible_number_conversion("0o999")
-        self.assertEqual(result, 0)
+        self.assertTrue(math.isnan(result))
 
-    def test_invalid_binary_extracts_leading_zero(self):
+    def test_invalid_binary_returns_nan(self):
         result = flexible_number_conversion("0b222")
-        self.assertEqual(result, 0)
+        self.assertTrue(math.isnan(result))
 
     def test_partial_number_dash_only(self):
         result = flexible_number_conversion("-abc")
@@ -75,9 +75,9 @@ class TestFlexibleNumberConversion(unittest.TestCase):
         result = flexible_number_conversion(".abc")
         self.assertTrue(math.isnan(result))
 
-    def test_multiple_dots_invalid_float(self):
+    def test_multiple_dots_parses_leading_float(self):
         result = flexible_number_conversion("1.2.3abc")
-        self.assertTrue(math.isnan(result))
+        self.assertEqual(result, 1.2)
 
     def test_docstring_example(self):
         self.assertEqual(flexible_number_conversion(123), 123)

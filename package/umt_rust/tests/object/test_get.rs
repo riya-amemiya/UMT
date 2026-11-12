@@ -77,3 +77,20 @@ fn test_returns_default_when_indexing_into_primitive() {
         Some(Value::Int(0))
     );
 }
+
+#[test]
+fn test_reads_array_elements_by_index_segment() {
+    let data = obj! {"a" => Value::Array(vec![Value::Int(10), obj!{"b" => 5}])};
+    assert_eq!(umt_get_path(&data, "a.0", None), Some(Value::Int(10)));
+    assert_eq!(umt_get_path(&data, "a.1.b", None), Some(Value::Int(5)));
+}
+
+#[test]
+fn test_returns_default_for_missing_or_non_canonical_array_index() {
+    let data = obj! {"a" => Value::Array(vec![Value::Int(10)])};
+    let fallback = Some(Value::String("fallback".to_string()));
+    assert_eq!(umt_get_path(&data, "a.1", fallback.clone()), fallback);
+    assert_eq!(umt_get_path(&data, "a.00", fallback.clone()), fallback);
+    assert_eq!(umt_get_path(&data, "a.x", fallback.clone()), fallback);
+    assert_eq!(umt_get_path(&data, "a.0.b", fallback.clone()), fallback);
+}

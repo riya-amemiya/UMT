@@ -17,6 +17,7 @@ mod test_get_timezone_offset_string;
 mod test_is_between;
 mod test_is_business_day;
 mod test_is_leap_year;
+mod test_is_same;
 mod test_is_same_day;
 mod test_is_weekend;
 mod test_ms_by_unit;

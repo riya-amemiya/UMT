@@ -30,9 +30,18 @@ def is_equal(a: object, b: object) -> bool:
         >>> is_equal(obj, {"a": 1})
         False
     """
+    if a is b:
+        return True
     if isinstance(a, float) and isinstance(b, float):
         if math.isnan(a) and math.isnan(b):
             return True
         if a == 0.0 and b == 0.0:
             return math.copysign(1.0, a) == math.copysign(1.0, b)
-    return a is b
+        return a == b
+    if isinstance(a, bool) or isinstance(b, bool):
+        return False
+    if isinstance(a, int) and isinstance(b, int):
+        return a == b
+    if isinstance(a, str) and isinstance(b, str):
+        return a == b
+    return False

@@ -1,3 +1,6 @@
+import math
+
+
 def range_array(
     start: int | float,
     end: int | float | None = None,
@@ -36,14 +39,20 @@ def range_array(
     if step > 0:
         index = actual_start
         while index < actual_end:
-            rounded_value = round(index * 1e10) / 1e10
+            rounded_value = _js_round(index * 1e10) / 1e10
             result.append(rounded_value)
             index += step
     else:
         index = actual_start
         while index > actual_end:
-            rounded_value = round(index * 1e10) / 1e10
+            rounded_value = _js_round(index * 1e10) / 1e10
             result.append(rounded_value)
             index += step
 
     return result
+
+
+def _js_round(value: float) -> float:
+    """Rounds like JavaScript's Math.round (ties toward positive infinity)."""
+    floored = math.floor(value)
+    return floored + 1 if value - floored >= 0.5 else floored

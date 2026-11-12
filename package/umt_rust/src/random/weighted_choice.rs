@@ -7,7 +7,50 @@ pub struct WeightedItem<T> {
     pub weight: f64,
 }
 
-/// Returns a random element using cumulative weights and binary search.
+/// Returns the value whose cumulative weight range contains `target`.
+///
+/// Walks the running total of the positive weights and returns the first value
+/// whose running total exceeds `target`, falling back to the last value when
+/// none does. A NaN `target` selects the first value. This is the selection
+/// step of [`umt_weighted_choice`] with the sampled point supplied by the
+/// caller.
+///
+/// # Arguments
+///
+/// * `items` - Items with weights.
+/// * `target` - A point in `[0, total weight)`.
+///
+/// # Returns
+///
+/// A reference to the selected value, or `None` if the slice is empty.
+///
+/// # Examples
+///
+/// ```
+/// use umt_rust::random::{umt_weighted_choice_at, WeightedItem};
+///
+/// let items = vec![
+///     WeightedItem { value: "a", weight: 1.0 },
+///     WeightedItem { value: "b", weight: 4.0 },
+/// ];
+/// assert_eq!(umt_weighted_choice_at(&items, 0.5), Some(&"a"));
+/// assert_eq!(umt_weighted_choice_at(&items, 1.0), Some(&"b"));
+/// ```
+pub fn umt_weighted_choice_at<T>(items: &[WeightedItem<T>], target: f64) -> Option<&T> {
+    let (last, rest) = items.split_last()?;
+    let mut cumulative = 0.0;
+    for item in rest {
+        if item.weight > 0.0 {
+            cumulative += item.weight;
+        }
+        if cumulative > target || target.is_nan() {
+            return Some(&item.value);
+        }
+    }
+    Some(&last.value)
+}
+
+/// Returns a random element by sampling a point on the cumulative weights.
 ///
 /// Items with non-positive weights are skipped from the pool (their weight does
 /// not contribute to the total). Mirrors the TypeScript `weightedChoice`, which
@@ -37,29 +80,14 @@ pub fn umt_weighted_choice<T: Clone>(items: &[WeightedItem<T>]) -> Option<T> {
         return None;
     }
 
-    let mut cumulative: Vec<f64> = Vec::with_capacity(items.len());
     let mut total = 0.0;
     for item in items {
         if item.weight > 0.0 {
             total += item.weight;
         }
-        cumulative.push(total);
     }
 
     let mut rng = rand::rng();
     let value: f64 = rng.random();
-    let target = value * total;
-
-    let mut lo = 0usize;
-    let mut hi = cumulative.len() - 1;
-    while lo < hi {
-        let mid = (lo + hi) >> 1;
-        if cumulative[mid] <= target {
-            lo = mid + 1;
-        } else {
-            hi = mid;
-        }
-    }
-
-    Some(items[lo].value.clone())
+    Some(umt_weighted_choice_at(items, value * total)?.clone())
 }

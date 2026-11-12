@@ -59,6 +59,23 @@ class TestRangeArray(unittest.TestCase):
         self.assertEqual(range_array(5), [0, 1, 2, 3, 4])
         self.assertEqual(range_array(2, 10, 2), [2, 4, 6, 8])
 
+    def test_rounds_half_toward_positive_infinity(self):
+        self.assertEqual(range_array(0.5e-10, 1.2e-10, 1e-10), [1e-10])
+        self.assertEqual(range_array(-0.5e-10, -1.2e-10, -1e-10), [0])
+        self.assertEqual(range_array(0, 0.3, 0.1), [0, 0.1, 0.2])
+
+    def test_rounds_exactly_near_half_and_large_values(self):
+        self.assertEqual(range_array(1e-11, 5e-11, 1e-11), [0, 0, 0, 0, 0])
+        self.assertEqual(
+            range_array(450361.0000000001, 450362, 0.3),
+            [
+                450361.0000000001,
+                450361.3000000001,
+                450361.6000000001,
+                450361.9000000001,
+            ],
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

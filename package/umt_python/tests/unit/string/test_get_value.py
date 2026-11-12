@@ -198,5 +198,40 @@ class TestGetValueDataTypes(unittest.TestCase):
         self.assertEqual(get_value(obj, "mixed[3]"), False)
 
 
+class TestGetValueListProperties(unittest.TestCase):
+    def test_canonical_index_key(self):
+        self.assertEqual(get_value({"items": ["A", "B"]}, "items.0"), "A")
+        self.assertEqual(get_value({"items": [["x", "y"]]}, "items[0].1"), "y")
+        self.assertEqual(get_value([10, 20], "1"), 20)
+
+    def test_length_key(self):
+        self.assertEqual(get_value({"items": ["A", "B"]}, "items.length"), 2)
+
+    def test_non_canonical_index_key(self):
+        self.assertIsNone(get_value({"items": ["A"]}, "items.01"))
+        self.assertIsNone(get_value({"items": ["A"]}, "items.-1"))
+        self.assertIsNone(get_value({"items": ["A"]}, "items.name"))
+
+    def test_index_key_out_of_bounds(self):
+        self.assertIsNone(get_value({"items": ["A"]}, "items.5"))
+
+    def test_empty_key_segments(self):
+        self.assertEqual(get_value({"": 1}, ""), 1)
+        self.assertEqual(get_value({"a": {"": 2}}, "a."), 2)
+
+    def test_string_value_has_no_properties(self):
+        self.assertIsNone(get_value({"s": "abc"}, "s.length"))
+
+    def test_trailing_newline_is_part_of_the_key(self):
+        self.assertIsNone(get_value({"items": ["A"]}, "items[0]\n"))
+        self.assertIsNone(get_value({"items": ["A"]}, "items.0\n"))
+        self.assertEqual(get_value({"items[0]\n": 1}, "items[0]\n"), 1)
+
+    def test_non_ascii_digits_are_not_an_index(self):
+        self.assertIsNone(get_value({"items": ["A", "B"]}, "items[١]"))
+        self.assertIsNone(get_value({"items": ["A", "B"]}, "items.١"))
+        self.assertEqual(get_value({"items[١]": 2}, "items[١]"), 2)
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -16,14 +16,17 @@ def get_arrays_diff(array: list[Any], *arrays: list[Any]) -> list[Any]:
         >>> get_arrays_diff([1, 2, 3], [2, 3, 4])
         [1, 4]
     """
-    all_values: set[Any] = set(array)
+    all_values: dict[Any, None] = dict.fromkeys(array)
     duplicates: set[Any] = set()
 
     for arr in arrays:
         for value in arr:
+            if value in duplicates:
+                continue
             if value in all_values:
+                del all_values[value]
                 duplicates.add(value)
             else:
-                all_values.add(value)
+                all_values[value] = None
 
-    return [value for value in all_values if value not in duplicates]
+    return list(all_values)

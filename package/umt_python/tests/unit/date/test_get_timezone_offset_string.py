@@ -56,5 +56,18 @@ class TestGetTimezoneOffsetString(unittest.TestCase):
         )
 
 
+class TestGetTimezoneOffsetStringNaive(unittest.TestCase):
+    def test_naive_datetime_uses_offset_of_that_date(self):
+        for dt in (datetime(2021, 1, 1, 12), datetime(2021, 7, 1, 12)):
+            offset = dt.astimezone().utcoffset()
+            assert offset is not None
+            total_minutes = int(offset.total_seconds() / 60)
+            sign = "+" if total_minutes >= 0 else "-"
+            expected = (
+                f"{sign}{abs(total_minutes) // 60:02d}:{abs(total_minutes) % 60:02d}"
+            )
+            self.assertEqual(get_timezone_offset_string(dt), expected)
+
+
 if __name__ == "__main__":
     unittest.main()

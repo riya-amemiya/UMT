@@ -85,3 +85,38 @@ fn test_handle_acronyms() {
     assert_eq!(umt_kebab_case("HTML"), "html");
     assert_eq!(umt_kebab_case("XMLParser"), "xml-parser");
 }
+
+#[test]
+fn test_non_ascii_characters_become_dashes() {
+    assert_eq!(umt_kebab_case("h\u{e9}llo"), "h-llo");
+    assert_eq!(umt_kebab_case("a\u{e9}B"), "a-b");
+    assert_eq!(umt_kebab_case("\u{65e5}\u{672c}\u{8a9e}"), "");
+}
+
+#[test]
+fn test_digits_do_not_create_boundaries() {
+    assert_eq!(umt_kebab_case("AB1"), "ab1");
+    assert_eq!(umt_kebab_case("a1B"), "a1b");
+    assert_eq!(umt_kebab_case("version2Beta"), "version2beta");
+    assert_eq!(umt_kebab_case("HTML5Parser"), "html5parser");
+}
+
+#[test]
+fn test_uppercase_run_boundaries() {
+    assert_eq!(umt_kebab_case("A"), "a");
+    assert_eq!(umt_kebab_case("Ab"), "ab");
+    assert_eq!(umt_kebab_case("ABC"), "abc");
+    assert_eq!(umt_kebab_case("ABc"), "a-bc");
+    assert_eq!(umt_kebab_case("ABCd"), "ab-cd");
+    assert_eq!(umt_kebab_case("aBC"), "a-bc");
+    assert_eq!(umt_kebab_case("getHTTPResponse"), "get-http-response");
+}
+
+#[test]
+fn test_separator_runs_collapse_and_edges_are_trimmed() {
+    assert_eq!(umt_kebab_case("--a--b--"), "a-b");
+    assert_eq!(umt_kebab_case("aB-C"), "a-b-c");
+    assert_eq!(umt_kebab_case("fooBar_baz qux"), "foo-bar-baz-qux");
+    assert_eq!(umt_kebab_case("-"), "");
+    assert_eq!(umt_kebab_case(""), "");
+}

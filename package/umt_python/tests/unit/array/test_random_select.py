@@ -66,6 +66,10 @@ class TestRandomSelect(unittest.TestCase):
         result = random_select([1, 2, 3, 4, 5], 2)
         self.assertEqual(len(result), 2)
 
+    def test_negative_count_returns_empty(self):
+        self.assertEqual(random_select([1, 2, 3], -1), [])
+        self.assertEqual(random_select([1, 2, 3], -1, allow_duplicates=True), [])
+
 
 if __name__ == "__main__":
     unittest.main()

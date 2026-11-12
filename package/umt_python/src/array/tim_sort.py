@@ -41,30 +41,25 @@ def _merge(
     compare_function: CompareFunction[T],
 ) -> None:
     """Merges two sorted portions of the array."""
+    if compare_function(array[mid], array[mid + 1]) <= 0:
+        return
+
     left = array[start : mid + 1]
-    right = array[mid + 1 : end + 1]
+    left_length = len(left)
     left_index = 0
-    right_index = 0
+    right_index = mid + 1
     array_index = start
 
-    while left_index < len(left) and right_index < len(right):
-        if compare_function(left[left_index], right[right_index]) <= 0:
+    while left_index < left_length and right_index <= end:
+        if compare_function(left[left_index], array[right_index]) <= 0:
             array[array_index] = left[left_index]
             left_index += 1
         else:
-            array[array_index] = right[right_index]
+            array[array_index] = array[right_index]
             right_index += 1
         array_index += 1
 
-    while left_index < len(left):
-        array[array_index] = left[left_index]
-        left_index += 1
-        array_index += 1
-
-    while right_index < len(right):
-        array[array_index] = right[right_index]
-        right_index += 1
-        array_index += 1
+    array[array_index : array_index + left_length - left_index] = left[left_index:]
 
 
 def _get_min_run_length(n: int) -> int:

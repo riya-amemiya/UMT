@@ -1,4 +1,5 @@
 use super::cmyk_to_rgba::Cmyk;
+use crate::math::{umt_division, umt_round_of, umt_subtract};
 
 /// Error type for RGBA color conversion
 #[derive(Debug, Clone, PartialEq)]
@@ -61,31 +62,23 @@ pub fn umt_rgba_to_cmyk(rgba: RgbaInput) -> Result<Cmyk, RgbaError> {
         });
     }
 
-    let r_prime = r / 255.0;
-    let g_prime = g / 255.0;
-    let b_prime = b / 255.0;
+    let r_prime = umt_division(r, 255.0);
+    let g_prime = umt_division(g, 255.0);
+    let b_prime = umt_division(b, 255.0);
 
-    let max_val = r_prime.max(g_prime).max(b_prime);
-    let k = 1.0 - max_val;
+    let k = umt_subtract(&[1.0, r_prime.max(g_prime).max(b_prime)]);
+    let k_remainder = umt_subtract(&[1.0, k]);
 
-    let (c, m, y) = if (1.0 - k).abs() < f64::EPSILON {
-        // Black - avoid division by zero
-        (0.0, 0.0, 0.0)
-    } else {
-        let c = (1.0 - r_prime - k) / (1.0 - k);
-        let m = (1.0 - g_prime - k) / (1.0 - k);
-        let y = (1.0 - b_prime - k) / (1.0 - k);
-        (c, m, y)
+    let channel = |prime: f64| -> f64 {
+        let value = umt_division(umt_subtract(&[umt_subtract(&[1.0, prime]), k]), k_remainder);
+        if value.is_nan() { 0.0 } else { value }
     };
 
-    // Round to 2 decimal places
-    let round_to_2 = |x: f64| (x * 100.0).round() / 100.0;
-
     Ok(Cmyk {
-        c: round_to_2(c * 100.0),
-        m: round_to_2(m * 100.0),
-        y: round_to_2(y * 100.0),
-        k: round_to_2(k * 100.0),
+        c: umt_round_of(channel(r_prime) * 100.0, 2),
+        m: umt_round_of(channel(g_prime) * 100.0, 2),
+        y: umt_round_of(channel(b_prime) * 100.0, 2),
+        k: umt_round_of(k * 100.0, 2),
         a: alpha,
     })
 }

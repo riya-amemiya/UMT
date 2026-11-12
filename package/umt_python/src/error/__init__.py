@@ -4,6 +4,7 @@ from .map_result import map_result
 from .match_result import match_result
 from .retry import retry
 from .safe_execute import Error, Result, Success, safe_execute
+from .safe_execute_async import safe_execute_async
 from .success_function import success_function
 
 __all__ = [
@@ -16,5 +17,6 @@ __all__ = [
     "match_result",
     "retry",
     "safe_execute",
+    "safe_execute_async",
     "success_function",
 ]

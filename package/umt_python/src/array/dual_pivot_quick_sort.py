@@ -39,16 +39,14 @@ def _median_of_three(
     compare_function: CompareFunction[T],
 ) -> int:
     """Get the median of three elements in the array."""
-    values = [
-        {"index": a, "value": array[a]},
-        {"index": b, "value": array[b]},
-        {"index": c, "value": array[c]},
-    ]
-    values.sort(key=lambda x: x["value"], reverse=False)
-    sorted_values = sorted(
-        values, key=lambda x: (compare_function(x["value"], values[0]["value"]),)
-    )
-    return sorted_values[1]["index"]
+    first, second = a, b
+    if compare_function(array[first], array[second]) > 0:
+        first, second = second, first
+    if compare_function(array[second], array[c]) > 0:
+        second = c
+        if compare_function(array[first], array[second]) > 0:
+            second = first
+    return second
 
 
 def _partition(

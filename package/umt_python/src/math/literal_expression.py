@@ -4,6 +4,7 @@ import re
 from .calculator_core import calculator_core
 from .division import division
 from .gcd import gcd
+from .js_string_to_number import js_string_to_number
 from .number_to_js_string import number_to_js_string
 
 _LETTER_RE = re.compile(r"[A-Za-z]+")
@@ -61,14 +62,16 @@ def literal_expression(x: str) -> str:
 
     variable_part = _split_filter(_COEFFICIENT_SPLIT_RE, variable_part[0])
 
-    if math.isnan(_to_number(variable_part[0])):
+    if math.isnan(js_string_to_number(variable_part[0])):
         return numerical_part
 
-    common_gcd = gcd(_to_number(variable_part[0]), _to_number(numerical_part))
+    common_gcd = gcd(
+        js_string_to_number(variable_part[0]), js_string_to_number(numerical_part)
+    )
     if common_gcd != 1:
         numerical_part = (
-            f"{number_to_js_string(division(_to_number(numerical_part), common_gcd))}"
-            f"/{number_to_js_string(division(_to_number(variable_part[0]), common_gcd))}"
+            f"{number_to_js_string(division(js_string_to_number(numerical_part), common_gcd))}"
+            f"/{number_to_js_string(division(js_string_to_number(variable_part[0]), common_gcd))}"
         )
         if _FRACTION_OVER_ONE_RE.search(numerical_part):
             return numerical_part.replace("/1", "", 1)
@@ -85,14 +88,3 @@ def _split_filter(pattern: re.Pattern[str], value: str) -> list[str]:
     """
     parts = pattern.split(value)
     return [part for part in parts if part]
-
-
-def _to_number(value: str) -> float:
-    """Mimics JavaScript's ``Number(value)`` coercion, returning NaN on failure."""
-    stripped = value.strip()
-    if stripped == "":
-        return 0.0
-    try:
-        return float(stripped)
-    except ValueError:
-        return float("nan")

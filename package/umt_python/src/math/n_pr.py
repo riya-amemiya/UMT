@@ -30,4 +30,7 @@ def n_pr(n: int | float, r: int) -> float:
                 result *= n - index
             return result
 
-    return math.perm(n, r)
+    try:
+        return float(math.perm(n, r))
+    except OverflowError:
+        return float("inf")

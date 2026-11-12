@@ -21,20 +21,17 @@ pub fn umt_levenshtein_distance(s1: &str, s2: &str) -> usize {
         return 0;
     }
 
-    let chars1: Vec<char> = s1.chars().collect();
-    let chars2: Vec<char> = s2.chars().collect();
+    let mut chars1: Vec<char> = s1.chars().collect();
+    let mut chars2: Vec<char> = s2.chars().collect();
+
+    // Ensure chars1 is the shorter sequence to minimize space to O(min(n, m))
+    if chars1.len() > chars2.len() {
+        std::mem::swap(&mut chars1, &mut chars2);
+    }
     let (len1, len2) = (chars1.len(), chars2.len());
 
     if len1 == 0 {
         return len2;
-    }
-    if len2 == 0 {
-        return len1;
-    }
-
-    // Ensure chars1 is the shorter sequence to minimize space to O(min(n, m))
-    if len1 > len2 {
-        return umt_levenshtein_distance(s2, s1);
     }
 
     // Single-row optimization: only one row + a diagonal variable needed

@@ -13,7 +13,9 @@ def is_not_empty(obj: object) -> bool:
         False
         >>> is_not_empty({"a": 1})
         True
+        >>> is_not_empty([1])
+        True
     """
-    if isinstance(obj, dict):
+    if isinstance(obj, (dict, list)):
         return len(obj) > 0
     return False

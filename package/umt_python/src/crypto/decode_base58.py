@@ -1,3 +1,11 @@
+_BASE58_INDEX = {
+    char: index
+    for index, char in enumerate(
+        "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
+    )
+}
+
+
 def decode_base58(input_data: str) -> bytes:
     """
     Decodes a Base58 string to bytes.
@@ -15,24 +23,16 @@ def decode_base58(input_data: str) -> bytes:
         >>> decode_base58("9Ajdvzr")
         b'Hello'
     """
-    alphabet = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
     big_number = 0
 
     for char in input_data:
-        value = alphabet.find(char)
-        if value == -1:
+        value = _BASE58_INDEX.get(char)
+        if value is None:
             raise ValueError(f"Invalid base58 character: {char}")
         big_number = big_number * 58 + value
 
-    result = []
-    while big_number > 0:
-        result.insert(0, big_number % 256)
-        big_number //= 256
+    leading_ones = len(input_data) - len(input_data.lstrip("1"))
 
-    leading_ones = 0
-    for char in input_data:
-        if char != "1":
-            break
-        leading_ones += 1
-
-    return bytes([0] * leading_ones + result)
+    return bytes(leading_ones) + big_number.to_bytes(
+        (big_number.bit_length() + 7) // 8, "big"
+    )

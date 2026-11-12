@@ -106,7 +106,7 @@ class TestObjectValidator(unittest.TestCase):
         )
         result = validator({"first": 1, "second": "ok"})
         self.assertFalse(result.validate)
-        self.assertEqual(calls, [1, {"first": 1, "second": "ok"}])
+        self.assertEqual(calls, [1])
 
     def test_exposes_the_shape_attribute(self):
         shape = {"name": _string_validator}

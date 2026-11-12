@@ -1,4 +1,8 @@
 use super::cmyk_to_rgba::Rgba;
+use crate::math::{
+    umt_addition, umt_clamp, umt_division, umt_division_with_remainder, umt_multiplication,
+    umt_round_of, umt_subtract,
+};
 
 /// Error type for HSLA color conversion
 #[derive(Debug, Clone, PartialEq)]
@@ -65,58 +69,69 @@ pub fn umt_hsla_to_rgba(h: f64, s: f64, l: f64, a: Option<f64>) -> Result<Rgba, 
     }
 
     // Normalize values
-    let hue = (h % 360.0) / 360.0;
-    let saturation = s.clamp(0.0, 100.0) / 100.0;
-    let lightness = l.clamp(0.0, 100.0) / 100.0;
+    let hue_remainder = umt_division_with_remainder(h, 360.0).map_or(0, |result| result.remainder);
+    let hue = umt_division(hue_remainder as f64, 360.0);
+    let saturation = umt_division(umt_clamp(s, 0.0, 100.0), 100.0);
+    let lightness = umt_division(umt_clamp(l, 0.0, 100.0), 100.0);
 
     let (r, g, b) = if saturation == 0.0 {
         (lightness, lightness, lightness)
     } else {
+        let one_third = umt_division(1.0, 3.0);
+        let two_thirds = umt_division(2.0, 3.0);
         let hue_to_rgb = |p: f64, q: f64, t: f64| -> f64 {
-            let mut t_adjusted = t;
-            if t < 0.0 {
-                t_adjusted = t + 1.0;
+            let t_adjusted = if t > 1.0 {
+                umt_subtract(&[t, 1.0])
+            } else if t < 0.0 {
+                umt_addition(&[t, 1.0])
+            } else {
+                t
+            };
+            if t_adjusted < umt_division(1.0, 6.0) {
+                return umt_addition(&[
+                    p,
+                    umt_multiplication(&[
+                        umt_subtract(&[q, p]),
+                        umt_multiplication(&[6.0, t_adjusted]),
+                    ]),
+                ]);
             }
-            if t > 1.0 {
-                t_adjusted = t - 1.0;
-            }
-            if t_adjusted < 1.0 / 6.0 {
-                return p + (q - p) * 6.0 * t_adjusted;
-            }
-            if t_adjusted < 1.0 / 2.0 {
+            if t_adjusted < umt_division(1.0, 2.0) {
                 return q;
             }
-            if t_adjusted < 2.0 / 3.0 {
-                return p + (q - p) * (2.0 / 3.0 - t_adjusted) * 6.0;
+            if t_adjusted < two_thirds {
+                return umt_addition(&[
+                    p,
+                    umt_multiplication(&[
+                        umt_subtract(&[q, p]),
+                        umt_multiplication(&[umt_subtract(&[two_thirds, t_adjusted]), 6.0]),
+                    ]),
+                ]);
             }
             p
         };
 
         let q = if lightness < 0.5 {
-            lightness * (1.0 + saturation)
+            umt_multiplication(&[lightness, umt_addition(&[1.0, saturation])])
         } else {
-            lightness + saturation - lightness * saturation
+            umt_subtract(&[
+                umt_addition(&[lightness, saturation]),
+                umt_multiplication(&[lightness, saturation]),
+            ])
         };
-        let p = 2.0 * lightness - q;
+        let p = umt_subtract(&[umt_multiplication(&[2.0, lightness]), q]);
 
-        let r = hue_to_rgb(p, q, hue + 1.0 / 3.0);
+        let r = hue_to_rgb(p, q, umt_addition(&[hue, one_third]));
         let g = hue_to_rgb(p, q, hue);
-        let b = hue_to_rgb(p, q, hue - 1.0 / 3.0);
+        let b = hue_to_rgb(p, q, umt_subtract(&[hue, one_third]));
 
         (r, g, b)
     };
 
-    // Round to 2 decimal places
-    let round_to_2 = |x: f64| (x * 100.0).round() / 100.0;
-    let rounded_r = round_to_2(r * 255.0);
-    let rounded_g = round_to_2(g * 255.0);
-    let rounded_b = round_to_2(b * 255.0);
-    let clamped_a = alpha.clamp(0.0, 1.0);
-
     Ok(Rgba {
-        r: rounded_r,
-        g: rounded_g,
-        b: rounded_b,
-        a: clamped_a,
+        r: umt_round_of(umt_multiplication(&[r, 255.0]), 2),
+        g: umt_round_of(umt_multiplication(&[g, 255.0]), 2),
+        b: umt_round_of(umt_multiplication(&[b, 255.0]), 2),
+        a: umt_clamp(alpha, 0.0, 1.0),
     })
 }

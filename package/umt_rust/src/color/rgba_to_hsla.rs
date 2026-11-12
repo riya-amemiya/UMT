@@ -1,5 +1,6 @@
 use super::cmyk_to_rgba::Hsla;
 use super::rgba_to_cmyk::{RgbaError, RgbaInput};
+use crate::math::{umt_addition, umt_division, umt_multiplication, umt_round_of, umt_subtract};
 
 /// Convert RGBA color values to HSLA color space
 ///
@@ -38,42 +39,50 @@ pub fn umt_rgba_to_hsla(rgba: RgbaInput) -> Result<Hsla, RgbaError> {
         });
     }
 
-    let r_prime = r / 255.0;
-    let g_prime = g / 255.0;
-    let b_prime = b / 255.0;
+    let r_prime = umt_division(r, 255.0);
+    let g_prime = umt_division(g, 255.0);
+    let b_prime = umt_division(b, 255.0);
 
     let max = r_prime.max(g_prime).max(b_prime);
     let min = r_prime.min(g_prime).min(b_prime);
-    let diff = max - min;
+    let diff = umt_subtract(&[max, min]);
+    let sum = umt_addition(&[max, min]);
 
-    let l = (max + min) / 2.0;
+    let l = umt_division(sum, 2.0);
 
     let s = if diff == 0.0 {
         0.0
     } else {
-        diff / (1.0 - (max + min - 1.0).abs())
+        umt_division(diff, umt_subtract(&[1.0, umt_subtract(&[sum, 1.0]).abs()]))
     };
 
-    let mut h = 0.0;
-
-    if diff != 0.0 {
-        if (max - r_prime).abs() < f64::EPSILON {
-            h = (g_prime - b_prime) / diff + if g_prime < b_prime { 6.0 } else { 0.0 };
-        } else if (max - g_prime).abs() < f64::EPSILON {
-            h = (b_prime - r_prime) / diff + 2.0;
-        } else if (max - b_prime).abs() < f64::EPSILON {
-            h = (r_prime - g_prime) / diff + 4.0;
-        }
-        h *= 60.0;
-    }
-
-    // Round to 2 decimal places
-    let round_to_2 = |x: f64| (x * 100.0).round() / 100.0;
+    let h = if diff == 0.0 {
+        0.0
+    } else if max == r_prime {
+        let offset = if g_prime < b_prime { 6.0 } else { 0.0 };
+        umt_multiplication(&[
+            umt_addition(&[
+                umt_division(umt_subtract(&[g_prime, b_prime]), diff),
+                offset,
+            ]),
+            60.0,
+        ])
+    } else if max == g_prime {
+        umt_multiplication(&[
+            umt_addition(&[umt_division(umt_subtract(&[b_prime, r_prime]), diff), 2.0]),
+            60.0,
+        ])
+    } else {
+        umt_multiplication(&[
+            umt_addition(&[umt_division(umt_subtract(&[r_prime, g_prime]), diff), 4.0]),
+            60.0,
+        ])
+    };
 
     Ok(Hsla {
-        h: round_to_2(h),
-        s: round_to_2(s * 100.0),
-        l: round_to_2(l * 100.0),
+        h: umt_round_of(h, 2),
+        s: umt_round_of(s * 100.0, 2),
+        l: umt_round_of(l * 100.0, 2),
         a: alpha,
     })
 }

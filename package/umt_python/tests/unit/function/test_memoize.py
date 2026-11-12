@@ -119,5 +119,32 @@ class TestMemoize(unittest.TestCase):
         self.assertEqual(len(memoized.cache), 1)
 
 
+class TestMemoizeEdgeCases(unittest.TestCase):
+    def test_zero_argument_call_uses_none_key(self):
+        calls: list[int] = []
+
+        def produce():
+            calls.append(1)
+            return 42
+
+        memoized = memoize(produce)
+        self.assertEqual(memoized(), 42)
+        self.assertEqual(memoized(), 42)
+        self.assertEqual(len(calls), 1)
+        self.assertIn(None, memoized.cache)
+
+    def test_max_size_zero_keeps_latest_entry(self):
+        memoized = memoize(lambda n: n * 2, max_size=0)
+        self.assertEqual(memoized(1), 2)
+        self.assertEqual(len(memoized.cache), 1)
+        self.assertEqual(memoized(2), 4)
+        self.assertEqual(list(memoized.cache.keys()), [2])
+
+    def test_resolver_is_used_when_given(self):
+        memoized = memoize(lambda a, b: a + b, resolver=lambda a, b: f"{a}-{b}")
+        self.assertEqual(memoized(1, 2), 3)
+        self.assertIn("1-2", memoized.cache)
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -44,3 +44,19 @@ fn test_return_original_string_on_empty_padding_string() {
     assert_eq!(umt_pad_start("abc", 5, ""), "abc");
     assert_eq!(umt_pad_start("test", 10, ""), "test");
 }
+
+#[test]
+fn test_length_is_counted_in_characters() {
+    assert_eq!(umt_pad_start("\u{3042}", 3, "x"), "xx\u{3042}");
+    assert_eq!(
+        umt_pad_start("a", 5, "\u{3042}\u{3044}"),
+        "\u{3042}\u{3044}\u{3042}\u{3044}a"
+    );
+}
+
+#[test]
+fn test_string_already_at_target_length() {
+    assert_eq!(umt_pad_start("abc", 3, "x"), "abc");
+    assert_eq!(umt_pad_start("abc", 2, "x"), "abc");
+    assert_eq!(umt_pad_start("abc", 5, ""), "abc");
+}

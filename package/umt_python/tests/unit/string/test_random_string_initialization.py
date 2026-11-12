@@ -27,10 +27,9 @@ class TestRandomStringInitialization(unittest.TestCase):
         s = generator(0)
         self.assertEqual(s, "")
 
-    def test_callable_with_empty_pool_raises_error(self):
+    def test_callable_with_empty_pool_returns_empty_string(self):
         generator = random_string_initialization(char_pool="")
-        with self.assertRaises(ValueError):
-            generator(5)
+        self.assertEqual(generator(5), "")
 
     def test_docstring_example(self):
         custom_random = random_string_initialization("xyz")

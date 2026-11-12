@@ -1,3 +1,4 @@
+import math
 import unittest
 
 from src.unit import unit_converter_initialization
@@ -79,6 +80,23 @@ class TestUnitConverterInitialization(unittest.TestCase):
         self.assertEqual(converter(0.5, "double", "base"), 0.25)
 
         self.assertEqual(converter(2, "base", "half"), 1.0)
+
+
+class TestUnitConverterInitializationDecimalSafe(unittest.TestCase):
+    def test_converts_without_floating_point_error(self):
+        converter = unit_converter_initialization(
+            {
+                "base": 1,
+                "tenth": 0.1,
+                "triple": 3,
+            }
+        )
+        self.assertEqual(converter(0.3, "tenth", "base"), 3.0)
+        self.assertEqual(converter(1.1, "base", "triple"), 3.3)
+
+    def test_zero_ratio_returns_nan(self):
+        converter = unit_converter_initialization({"base": 1, "zero": 0})
+        self.assertTrue(math.isnan(converter(5, "zero", "base")))
 
 
 if __name__ == "__main__":

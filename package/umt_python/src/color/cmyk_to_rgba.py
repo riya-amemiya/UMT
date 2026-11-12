@@ -1,3 +1,10 @@
+from ..math.clamp import clamp
+from ..math.division import division
+from ..math.multiplication import multiplication
+from ..math.round_of import round_of
+from ..math.subtraction import subtraction
+
+
 def cmyk_to_rgba(
     c: float, m: float, y: float, k: float, a: float = 1.0
 ) -> dict[str, float]:
@@ -18,24 +25,18 @@ def cmyk_to_rgba(
         >>> cmyk_to_rgba(100, 100, 0, 60.78)
         {'r': 0, 'g': 0, 'b': 100, 'a': 1.0}
     """
-    clamped_c = max(0, min(100, c))
-    clamped_m = max(0, min(100, m))
-    clamped_y = max(0, min(100, y))
-    clamped_k = max(0, min(100, k))
+    c_percentage = division(clamp(c, 0, 100), 100)
+    m_percentage = division(clamp(m, 0, 100), 100)
+    y_percentage = division(clamp(y, 0, 100), 100)
+    k_remainder = subtraction(1, division(clamp(k, 0, 100), 100))
 
-    c_percentage = clamped_c / 100
-    m_percentage = clamped_m / 100
-    y_percentage = clamped_y / 100
-    k_percentage = clamped_k / 100
+    r = multiplication(255, subtraction(1, c_percentage), k_remainder)
+    g = multiplication(255, subtraction(1, m_percentage), k_remainder)
+    b = multiplication(255, subtraction(1, y_percentage), k_remainder)
 
-    r = 255 * (1 - c_percentage) * (1 - k_percentage)
-    g = 255 * (1 - m_percentage) * (1 - k_percentage)
-    b = 255 * (1 - y_percentage) * (1 - k_percentage)
-
-    rounded_r = round(r)
-    rounded_g = round(g)
-    rounded_b = round(b)
-
-    clamped_a = max(0, min(1, a))
-
-    return {"r": rounded_r, "g": rounded_g, "b": rounded_b, "a": clamped_a}
+    return {
+        "r": round_of(r),
+        "g": round_of(g),
+        "b": round_of(b),
+        "a": clamp(a, 0, 1),
+    }

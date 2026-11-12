@@ -104,3 +104,34 @@ fn test_random_select_produces_random_results() {
     assert_eq!(result1.len(), 10);
     assert_eq!(result2.len(), 10);
 }
+
+#[test]
+fn test_random_select_most_of_large_array_is_unique() {
+    let array: Vec<i32> = (0..10_000).collect();
+    let result = umt_random_select(&array, 9_000, false);
+    assert_eq!(result.len(), 9_000);
+    let unique: HashSet<i32> = result.iter().copied().collect();
+    assert_eq!(unique.len(), 9_000);
+    assert!(result.iter().all(|value| (0..10_000).contains(value)));
+}
+
+#[test]
+fn test_random_select_whole_array_is_permutation() {
+    let array: Vec<i32> = (0..500).collect();
+    let mut result = umt_random_select(&array, 500, false);
+    result.sort_unstable();
+    assert_eq!(result, array);
+
+    let mut over = umt_random_select(&array, 5_000, false);
+    over.sort_unstable();
+    assert_eq!(over, array);
+}
+
+#[test]
+fn test_random_select_below_shuffle_threshold_is_unique() {
+    let array: Vec<i32> = (0..10).collect();
+    let result = umt_random_select(&array, 8, false);
+    assert_eq!(result.len(), 8);
+    let unique: HashSet<i32> = result.iter().copied().collect();
+    assert_eq!(unique.len(), 8);
+}

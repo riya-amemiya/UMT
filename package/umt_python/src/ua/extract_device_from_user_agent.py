@@ -3,14 +3,16 @@ from typing import Literal
 
 DeviceType = Literal["bot", "mobile", "tablet", "desktop", "other"]
 
-_BOT_RE = re.compile(r"bot|googlebot|crawler|spider|robot|crawling", re.IGNORECASE)
-_MOBILE_RE = re.compile(
-    r"iphone|ipod|webos|blackberry|iemobile|opera mini", re.IGNORECASE
+_BOT_RE = re.compile(
+    r"bot|googlebot|crawler|spider|robot|crawling", re.IGNORECASE | re.ASCII
 )
-_ANDROID_RE = re.compile(r"android", re.IGNORECASE)
-_MOBILE_CHECK_RE = re.compile(r"mobile", re.IGNORECASE)
-_TABLET_RE = re.compile(r"ipad|android(?!.*mobile)", re.IGNORECASE)
-_DESKTOP_RE = re.compile(r"windows|macintosh|linux", re.IGNORECASE)
+_MOBILE_RE = re.compile(
+    r"iphone|ipod|webos|blackberry|iemobile|opera mini", re.IGNORECASE | re.ASCII
+)
+_ANDROID_RE = re.compile(r"android", re.IGNORECASE | re.ASCII)
+_MOBILE_CHECK_RE = re.compile(r"mobile", re.IGNORECASE | re.ASCII)
+_TABLET_RE = re.compile(r"ipad|android(?!.*mobile)", re.IGNORECASE | re.ASCII)
+_DESKTOP_RE = re.compile(r"windows|macintosh|linux", re.IGNORECASE | re.ASCII)
 
 
 def extract_device_from_user_agent(ua: str) -> DeviceType:

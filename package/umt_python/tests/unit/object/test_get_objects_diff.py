@@ -102,3 +102,39 @@ def test_should_not_mutate_original_objects():
 
     assert obj1 == obj1_copy
     assert obj2 == obj2_copy
+
+
+def test_should_keep_keys_in_first_seen_order():
+    result = get_objects_diff({"z": 1, "a": 2}, {"m": 3, "a": 2, "b": 4})
+    assert list(result.keys()) == ["z", "m", "b"]
+
+
+def test_should_treat_nan_values_as_equal():
+    nan = float("nan")
+    assert get_objects_diff({"a": nan}, {"a": float("nan")}) == {}
+    result = get_objects_diff({"a": 1}, {"a": nan})
+    assert result["a"] is nan
+
+
+def test_should_treat_int_and_float_as_the_same_number():
+    assert get_objects_diff({"a": 1}, {"a": 1.0}) == {}
+
+
+def test_should_keep_bool_distinct_from_numbers():
+    assert get_objects_diff({"a": True}, {"a": 1}) == {"a": 1}
+    assert get_objects_diff({"a": True}, {"a": True}) == {}
+
+
+def test_should_compare_strings_and_none_by_value():
+    assert get_objects_diff({"a": "x", "b": None}, {"a": "x", "b": None}) == {}
+    assert get_objects_diff({"a": "1"}, {"a": 1}) == {"a": 1}
+
+
+def test_should_compare_lists_by_identity():
+    shared = [1, 2, 3]
+    assert get_objects_diff({"a": shared}, {"a": shared}) == {}
+    assert get_objects_diff({"a": [1]}, {"a": [1]}) == {"a": [1]}
+
+
+def test_should_drop_key_when_every_value_is_shared():
+    assert get_objects_diff({"x": 1}, {"x": 1}, {"x": "s"}, {"x": "s"}) == {}

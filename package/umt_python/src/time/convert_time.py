@@ -1,5 +1,7 @@
 from typing import Literal
 
+from ..math.division import division
+from ..math.multiplication import multiplication
 from .normalize_time_unit import normalize_time_unit
 
 TimeUnit = Literal["milliseconds", "seconds", "minutes", "hours"]
@@ -39,5 +41,5 @@ def convert_time(
     normalized_from_unit = normalize_time_unit(from_unit, "long")
     normalized_to_unit = normalize_time_unit(to_unit, "long")
 
-    milliseconds = numeric_value * CONVERSION_RATES[normalized_from_unit]
-    return milliseconds / CONVERSION_RATES[normalized_to_unit]
+    milliseconds = multiplication(numeric_value, CONVERSION_RATES[normalized_from_unit])
+    return division(milliseconds, CONVERSION_RATES[normalized_to_unit])

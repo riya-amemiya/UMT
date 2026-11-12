@@ -6,6 +6,7 @@ from .check_flag_alignment import check_flag_alignment
 from .chunk import chunk
 from .compact import compact
 from .compare_function_default import compare_function_default
+from .count_by import count_by
 from .drop import drop
 from .dual_pivot_quick_sort import dual_pivot_quick_sort
 from .first import first
@@ -17,12 +18,14 @@ from .insertion_sort import insertion_sort
 from .insertion_sort_range import insertion_sort_range
 from .key_by import key_by
 from .merge_sort import merge_sort
+from .partition import partition
 from .pop import pop
 from .quick_sort import quick_sort
 from .random_select import random_select
 from .range_array import range_array
 from .shuffle import shuffle
 from .shuffle_2d_array import shuffle_2d_array
+from .sliding import sliding
 from .tim_sort import tim_sort
 from .ultra_number_sort import ultra_number_sort
 from .uniq_by import uniq_by
@@ -41,6 +44,7 @@ __all__ = [
     "chunk",
     "compact",
     "compare_function_default",
+    "count_by",
     "drop",
     "dual_pivot_quick_sort",
     "first",
@@ -52,12 +56,14 @@ __all__ = [
     "insertion_sort_range",
     "key_by",
     "merge_sort",
+    "partition",
     "pop",
     "quick_sort",
     "random_select",
     "range_array",
     "shuffle",
     "shuffle_2d_array",
+    "sliding",
     "tim_sort",
     "ultra_number_sort",
     "uniq_by",

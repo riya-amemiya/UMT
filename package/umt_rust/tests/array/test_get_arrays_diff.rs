@@ -96,3 +96,31 @@ fn test_get_arrays_diff_empty() {
     let empty: &[&[i32]] = &[];
     assert_eq!(umt_get_arrays_diff(empty), Vec::<i32>::new());
 }
+
+#[test]
+fn test_get_arrays_diff_owned_strings_preserve_order() {
+    let first = [
+        "pear".to_string(),
+        "apple".to_string(),
+        "\u{3042}".to_string(),
+    ];
+    let second = ["apple".to_string(), "kiwi".to_string()];
+    assert_eq!(
+        umt_get_arrays_diff(&[&first[..], &second[..]]),
+        vec![
+            "pear".to_string(),
+            "\u{3042}".to_string(),
+            "kiwi".to_string()
+        ]
+    );
+}
+
+#[test]
+fn test_get_arrays_diff_repeated_values() {
+    assert_eq!(umt_get_arrays_diff(&[&[2, 1, 2][..]]), vec![2, 1]);
+    assert_eq!(umt_get_arrays_diff(&[&[1][..], &[2, 2, 2][..]]), vec![1]);
+    assert_eq!(
+        umt_get_arrays_diff(&[&[1, 2][..], &[2][..], &[2, 3][..]]),
+        vec![1, 3]
+    );
+}

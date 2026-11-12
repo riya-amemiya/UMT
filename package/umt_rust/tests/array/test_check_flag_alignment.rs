@@ -327,3 +327,52 @@ fn test_single_cell_false() {
     }]];
     assert!(!umt_check_flag_alignment(&matrix));
 }
+
+fn cells(flags: &[&[bool]]) -> Vec<Vec<Cell>> {
+    flags
+        .iter()
+        .map(|row| row.iter().map(|&flag| Cell { value: 0, flag }).collect())
+        .collect()
+}
+
+#[test]
+fn test_wide_matrix_diagonals() {
+    let main_diagonal: &[&[bool]] = &[&[true, false, false], &[false, true, false]];
+    let anti_diagonal: &[&[bool]] = &[&[false, false, true], &[false, true, false]];
+    let no_alignment: &[&[bool]] = &[&[true, false, false], &[false, false, true]];
+
+    assert!(umt_check_flag_alignment(&cells(main_diagonal)));
+    assert!(umt_check_flag_alignment(&cells(anti_diagonal)));
+    assert!(!umt_check_flag_alignment(&cells(no_alignment)));
+}
+
+#[test]
+fn test_tall_matrix_has_no_diagonals() {
+    let matrix: &[&[bool]] = &[&[true, false], &[false, true], &[false, false]];
+    assert!(!umt_check_flag_alignment(&cells(matrix)));
+}
+
+#[test]
+fn test_bool_wide_matrix_diagonals() {
+    assert!(umt_check_flag_alignment_bool(&[
+        vec![true, false, false],
+        vec![false, true, false],
+    ]));
+    assert!(umt_check_flag_alignment_bool(&[
+        vec![false, false, true],
+        vec![false, true, false],
+    ]));
+    assert!(!umt_check_flag_alignment_bool(&[
+        vec![true, false, false],
+        vec![false, false, true],
+    ]));
+}
+
+#[test]
+fn test_bool_tall_matrix_has_no_diagonals() {
+    assert!(!umt_check_flag_alignment_bool(&[
+        vec![true, false],
+        vec![false, true],
+        vec![false, false],
+    ]));
+}

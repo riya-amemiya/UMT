@@ -36,14 +36,16 @@ class TestParseQueryString(unittest.TestCase):
         result = parse_query_string("https://example.com/path")
         self.assertEqual(result, {})
 
-    def test_reject_proto_key(self):
+    def test_keeps_proto_key(self):
         result = parse_query_string("?__proto__=polluted&safe=value")
-        self.assertEqual(result, {"safe": "value"})
-        self.assertNotIn("__proto__", result)
+        self.assertEqual(result, {"__proto__": "polluted", "safe": "value"})
+        self.assertIn("__proto__", result)
 
-    def test_reject_constructor_and_prototype_keys(self):
+    def test_keeps_constructor_and_prototype_keys(self):
         result = parse_query_string("?constructor=bad&prototype=bad&ok=good")
-        self.assertEqual(result, {"ok": "good"})
+        self.assertEqual(
+            result, {"constructor": "bad", "prototype": "bad", "ok": "good"}
+        )
 
 
 if __name__ == "__main__":

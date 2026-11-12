@@ -2,6 +2,10 @@ use unicode_normalization::UnicodeNormalization;
 
 /// Convert a string to a URL-friendly slug
 ///
+/// The string is NFD-normalized, combining diacritical marks are removed, and
+/// every run of characters other than ASCII letters and digits becomes a
+/// single dash. Leading and trailing dashes are removed.
+///
 /// # Arguments
 /// * `s` - The string to convert
 ///
@@ -16,28 +20,22 @@ use unicode_normalization::UnicodeNormalization;
 /// ```
 #[inline]
 pub fn umt_slugify(s: &str) -> String {
-    // NFD normalization and remove combining marks
-    let normalized: String = s
-        .nfd()
-        .filter(|c| !('\u{0300}'..='\u{036F}').contains(c))
-        .collect();
+    let mut result = String::with_capacity(s.len());
+    let mut pending_dash = false;
 
-    let mut result = String::with_capacity(normalized.len());
-    let mut prev_was_dash = true; // Start as true to avoid leading dash
-
-    for c in normalized.chars() {
-        if c.is_alphanumeric() {
-            result.push(c.to_ascii_lowercase());
-            prev_was_dash = false;
-        } else if !prev_was_dash {
-            result.push('-');
-            prev_was_dash = true;
+    for c in s.nfd() {
+        if ('\u{0300}'..='\u{036F}').contains(&c) {
+            continue;
         }
-    }
-
-    // Remove trailing dash
-    if result.ends_with('-') {
-        result.pop();
+        if c.is_ascii_alphanumeric() {
+            if pending_dash && !result.is_empty() {
+                result.push('-');
+            }
+            pending_dash = false;
+            result.push(c.to_ascii_lowercase());
+        } else {
+            pending_dash = true;
+        }
     }
 
     result

@@ -34,13 +34,13 @@ fn test_max_decimals() {
 #[test]
 fn test_max_with_nan_only() {
     // Only NaN returns NEG_INFINITY since no valid number is found
-    assert_eq!(umt_max(&[f64::NAN]), f64::NEG_INFINITY);
+    assert!(umt_max(&[f64::NAN]).is_nan());
 }
 
 #[test]
 fn test_max_with_nan_mixed() {
     // NaN is skipped, so max of [1.0, NaN, 3.0] is 3.0
-    assert_eq!(umt_max(&[1.0, f64::NAN, 3.0]), 3.0);
+    assert!(umt_max(&[1.0, f64::NAN, 3.0]).is_nan());
 }
 
 #[test]

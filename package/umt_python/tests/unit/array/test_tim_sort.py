@@ -237,6 +237,25 @@ class TestTimSort(unittest.TestCase):
         result = tim_sort(arr)
         self.assertEqual(result, list(range(64)))
 
+    def test_merge_skipped_when_runs_already_ordered(self):
+        """Test that ordered adjacent runs are merged without extra comparisons."""
+        calls = 0
+
+        def compare(a: int, b: int) -> int:
+            nonlocal calls
+            calls += 1
+            return a - b
+
+        result = tim_sort(list(range(128)), compare)
+        self.assertEqual(result, list(range(128)))
+        self.assertEqual(calls, 127)
+
+    def test_merge_is_stable(self):
+        """Test that equal keys keep their original order across merged runs."""
+        arr = [(index % 5, index) for index in range(100)]
+        result = tim_sort(arr, lambda a, b: a[0] - b[0])
+        self.assertEqual(result, sorted(arr, key=lambda item: item[0]))
+
 
 if __name__ == "__main__":
     unittest.main()

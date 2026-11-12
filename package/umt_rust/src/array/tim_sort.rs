@@ -9,19 +9,22 @@ where
     T: Clone,
     F: Fn(&T, &T) -> i32,
 {
+    if compare(&array[mid], &array[mid + 1]) <= 0 {
+        return;
+    }
+
     let left: Vec<T> = array[start..=mid].to_vec();
-    let right: Vec<T> = array[(mid + 1)..=end].to_vec();
 
     let mut left_index = 0;
-    let mut right_index = 0;
+    let mut right_index = mid + 1;
     let mut array_index = start;
 
-    while left_index < left.len() && right_index < right.len() {
-        if compare(&left[left_index], &right[right_index]) <= 0 {
+    while left_index < left.len() && right_index <= end {
+        if compare(&left[left_index], &array[right_index]) <= 0 {
             array[array_index] = left[left_index].clone();
             left_index += 1;
         } else {
-            array[array_index] = right[right_index].clone();
+            array[array_index] = array[right_index].clone();
             right_index += 1;
         }
         array_index += 1;
@@ -30,12 +33,6 @@ where
     while left_index < left.len() {
         array[array_index] = left[left_index].clone();
         left_index += 1;
-        array_index += 1;
-    }
-
-    while right_index < right.len() {
-        array[array_index] = right[right_index].clone();
-        right_index += 1;
         array_index += 1;
     }
 }

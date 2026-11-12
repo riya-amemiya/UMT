@@ -2,7 +2,7 @@ use regex::Regex;
 use std::sync::LazyLock;
 
 static ABSOLUTE_URL_RE: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"(?i)^[a-z][\da-z+.\-]*:").unwrap());
+    LazyLock::new(|| Regex::new(r"(?i-u)^[a-z][0-9a-z+.\-]*:").unwrap());
 
 /// Checks whether a URL string is absolute (RFC 3986).
 ///

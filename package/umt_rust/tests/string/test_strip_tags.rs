@@ -57,3 +57,11 @@ fn test_leaves_unclosed_angle_brackets() {
 fn test_removes_adjacent_tags() {
     assert_eq!(umt_strip_tags("<p></p>text<div>x</div>"), "textx");
 }
+
+#[test]
+fn test_repeats_until_no_tag_is_left() {
+    assert_eq!(umt_strip_tags("<<<a>b>c>d"), "d");
+    assert_eq!(umt_strip_tags("no tags"), "no tags");
+    assert_eq!(umt_strip_tags("a < b > c"), "a  c");
+    assert_eq!(umt_strip_tags("a <"), "a <");
+}

@@ -1,7 +1,12 @@
+use regex::Regex;
+use std::sync::LazyLock;
 use unicode_normalization::UnicodeNormalization;
 
+static DIACRITIC_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"\p{Diacritic}").unwrap());
+
 /// Removes diacritical marks from a string by decomposing characters and
-/// stripping the combining marks (e.g. "é" becomes "e").
+/// stripping every character with the Unicode `Diacritic` property
+/// (e.g. "é" becomes "e").
 ///
 /// # Arguments
 /// * `s` - The string to deburr
@@ -17,7 +22,6 @@ use unicode_normalization::UnicodeNormalization;
 /// ```
 #[inline]
 pub fn umt_deburr(s: &str) -> String {
-    s.nfd()
-        .filter(|c| !('\u{0300}'..='\u{036F}').contains(c))
-        .collect()
+    let decomposed: String = s.nfd().collect();
+    DIACRITIC_RE.replace_all(&decomposed, "").into_owned()
 }

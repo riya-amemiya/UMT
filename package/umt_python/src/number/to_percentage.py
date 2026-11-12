@@ -31,5 +31,8 @@ def to_percentage(value: float | int, total: float | int, decimals: int = 2) -> 
         return 0.0
 
     factor = 10**decimals
+    scaled = (value / total) * 100 * factor
+    if not math.isfinite(scaled):
+        return scaled
     # Mimic JS Math.round(x) behavior: floor(x + 0.5)
-    return math.floor((value / total) * 100 * factor + 0.5) / factor
+    return math.floor(scaled + 0.5) / factor

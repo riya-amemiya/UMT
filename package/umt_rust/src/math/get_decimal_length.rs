@@ -10,10 +10,12 @@
 ///
 /// The length of the decimal part of the input number.
 pub fn umt_get_decimal_length(value: f64) -> usize {
-    let value_string = value.to_string();
-    let value_string_split: Vec<&str> = value_string.split(".").collect();
-    if value_string_split.len() == 1 {
+    if value.fract() == 0.0 {
         return 0;
     }
-    value_string_split[1].len()
+    value
+        .to_string()
+        .split('.')
+        .nth(1)
+        .map_or(0, |decimal_part| decimal_part.len())
 }

@@ -23,4 +23,11 @@ def n_cr(n: int, r: int) -> float:
     if r in (0, n):
         return 1
 
-    return float(math.comb(n, r))
+    effective_r = min(r, n - r)
+    if effective_r > 170:
+        return float("nan")
+    try:
+        float(math.perm(n, effective_r))
+    except OverflowError:
+        return float("inf")
+    return float(math.comb(n, effective_r))

@@ -1,6 +1,9 @@
 from collections.abc import Callable
 from typing import TypeVar
 
+from ..math.division import division
+from ..math.multiplication import multiplication
+
 K = TypeVar("K", bound=str)
 
 
@@ -28,6 +31,9 @@ def unit_converter_initialization(
     """
 
     def converter(value: float, from_unit: str, to_unit: str) -> float:
-        return (value / to_base_unit_ratios[from_unit]) * to_base_unit_ratios[to_unit]
+        return multiplication(
+            division(value, to_base_unit_ratios[from_unit]),
+            to_base_unit_ratios[to_unit],
+        )
 
     return converter
