@@ -1,8 +1,11 @@
+import sys
 import unittest
 from unittest.mock import patch
 
 from src.async_util import AbortSignal, retry
 from src.error.retry import _compute_delay
+
+retry_module = sys.modules["src.error.retry"]
 
 
 def _failing(times, error_factory=lambda: ValueError("nope")):
@@ -32,7 +35,7 @@ class TestComputeDelay(unittest.TestCase):
         self.assertEqual(_compute_delay(2.0, 4, "exponential", False), 16.0)
 
     def test_jitter_multiplies_by_a_random_factor(self):
-        with patch("src.error.retry.random_module.random", return_value=0.25):
+        with patch.object(retry_module.random_module, "random", return_value=0.25):
             self.assertEqual(_compute_delay(2.0, 3, "linear", True), 1.5)
 
 
@@ -92,7 +95,7 @@ class TestRetryOptions(unittest.IsolatedAsyncioTestCase):
             async def fake_sleep(seconds, slept=slept):
                 slept.append(seconds)
 
-            with patch("src.error.retry.asyncio.sleep", fake_sleep):
+            with patch.object(retry_module.asyncio, "sleep", fake_sleep):
                 result = await retry(fn, retries=3, delay=0.5, backoff=backoff)
             self.assertEqual(result, "ok")
             self.assertEqual(slept, delays)
@@ -105,8 +108,8 @@ class TestRetryOptions(unittest.IsolatedAsyncioTestCase):
             slept.append(seconds)
 
         with (
-            patch("src.error.retry.asyncio.sleep", fake_sleep),
-            patch("src.error.retry.random_module.random", return_value=0.5),
+            patch.object(retry_module.asyncio, "sleep", fake_sleep),
+            patch.object(retry_module.random_module, "random", return_value=0.5),
         ):
             await retry(fn, retries=1, delay=4.0, jitter=True)
         self.assertEqual(slept, [2.0])
