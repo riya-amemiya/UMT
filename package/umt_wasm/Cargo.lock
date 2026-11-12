@@ -397,7 +397,7 @@ checksum = "fd3ca314f692efd6c868f8408f53fe444634a845f96c028b97d35f6a1f79f0ee"
 
 [[package]]
 name = "umt-plugin-wasm"
-version = "0.4.0"
+version = "0.5.0"
 dependencies = [
  "umt_rust",
  "wasm-bindgen",
@@ -405,7 +405,7 @@ dependencies = [
 
 [[package]]
 name = "umt_rust"
-version = "0.7.1"
+version = "0.8.0"
 dependencies = [
  "base64",
  "chrono",
