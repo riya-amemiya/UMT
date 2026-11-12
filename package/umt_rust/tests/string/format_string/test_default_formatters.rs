@@ -83,7 +83,7 @@ fn test_pad_formatter_no_padding_needed() {
 fn test_pad_formatter_empty_pad_char() {
     let formatters = create_default_formatters();
     let pad = formatters.get("pad").unwrap();
-    // Empty pad char string should default to '0'
+    // Empty pad char string adds no padding, like padStart with ""
     assert_eq!(pad("5", &["3".to_string(), "".to_string()]), "5");
 }
 

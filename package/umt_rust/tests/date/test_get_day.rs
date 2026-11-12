@@ -35,10 +35,10 @@ fn test_get_day_japanese_default() {
 
 #[test]
 fn test_get_day_invalid_day_numbers_return_sunday() {
-    // Days should wrap around (using modulo)
-    assert_eq!(umt_get_day(7, DayLanguage::Ja), "日"); // 7 % 7 = 0 (Sunday)
-    assert_eq!(umt_get_day(8, DayLanguage::Ja), "\u{65e5}"); // 8 % 7 = 1 (Monday)
-    assert_eq!(umt_get_day(100, DayLanguage::Ja), "\u{65e5}"); // 100 % 7 = 2 (Tuesday)
+    // Day numbers outside 0-6 fall back to Sunday
+    assert_eq!(umt_get_day(7, DayLanguage::Ja), "日"); // falls back to Sunday
+    assert_eq!(umt_get_day(8, DayLanguage::Ja), "\u{65e5}"); // falls back to Sunday
+    assert_eq!(umt_get_day(100, DayLanguage::Ja), "\u{65e5}"); // falls back to Sunday
 }
 
 #[test]

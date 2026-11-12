@@ -21,7 +21,7 @@ fn test_number_string_returns_false_for_invalid_number_strings() {
 #[test]
 fn test_number_string_empty_string() {
     let validator = umt_number_string(None);
-    // In Rust, empty string parsing to f64 fails, so it should be false
+    // Empty string converts to 0 like JavaScript Number(""), so it should be true
     assert!((validator.validate)(&"".to_string()));
 }
 

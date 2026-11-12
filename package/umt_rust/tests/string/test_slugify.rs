@@ -4,7 +4,7 @@ use umt_rust::string::umt_slugify;
 fn test_convert_text_to_url_friendly_slug_according_to_jsdoc_examples() {
     assert_eq!(umt_slugify("Hello World!"), "hello-world");
     assert_eq!(umt_slugify("This is a Test"), "this-is-a-test");
-    // Note: Rust implementation keeps unicode alphanumeric characters
+    // Note: non-ASCII letters and digits are treated as separators
     assert_eq!(umt_slugify("Japanese: こんにちは"), "japanese");
 }
 

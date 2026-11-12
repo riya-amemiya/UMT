@@ -37,7 +37,7 @@ fn test_is_number_str_returns_false_for_invalid_number_strings() {
 
 #[test]
 fn test_is_number_str_returns_true_for_empty_string() {
-    // In Rust, empty string is not a valid number
+    // Empty string converts to 0 like JavaScript Number("")
     assert!(umt_is_number_str(""));
 }
 

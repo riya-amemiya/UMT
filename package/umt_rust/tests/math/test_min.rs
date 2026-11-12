@@ -33,13 +33,13 @@ fn test_min_decimals() {
 // In Rust, NaN comparisons always return false, so NaN values are effectively skipped
 #[test]
 fn test_min_with_nan_only() {
-    // Only NaN returns INFINITY since no valid number is found
+    // Only NaN returns NaN, matching Math.min
     assert!(umt_min(&[f64::NAN]).is_nan());
 }
 
 #[test]
 fn test_min_with_nan_mixed() {
-    // NaN is skipped, so min of [1.0, NaN, 3.0] is 1.0
+    // NaN propagates, so min of [1.0, NaN, 3.0] is NaN
     assert!(umt_min(&[1.0, f64::NAN, 3.0]).is_nan());
 }
 
