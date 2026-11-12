@@ -43,12 +43,12 @@ pub fn umt_decode_hex(input: &str) -> Result<Vec<u8>, HexError> {
         return Err(invalid());
     }
 
-    input
-        .as_bytes()
-        .chunks_exact(2)
-        .map(|pair| {
-            let high = char::from(pair[0]).to_digit(16).ok_or_else(invalid)?;
-            let low = char::from(pair[1]).to_digit(16).ok_or_else(invalid)?;
+    let (pairs, _) = input.as_bytes().as_chunks::<2>();
+    pairs
+        .iter()
+        .map(|&[high, low]| {
+            let high = char::from(high).to_digit(16).ok_or_else(invalid)?;
+            let low = char::from(low).to_digit(16).ok_or_else(invalid)?;
             Ok(((high << 4) | low) as u8)
         })
         .collect()

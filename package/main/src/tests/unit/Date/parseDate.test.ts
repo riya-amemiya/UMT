@@ -143,4 +143,11 @@ describe("parseDate", () => {
       new Date(2024, 1, 29).getTime(),
     );
   });
+
+  it("treats an opening bracket inside escaped text as a literal", () => {
+    expect(parseDate("[xy", "[x[y]").getTime()).toBe(
+      new Date(1970, 0, 1).getTime(),
+    );
+    expect(isInvalid(parseDate("x[y", "[x[y]"))).toBe(true);
+  });
 });

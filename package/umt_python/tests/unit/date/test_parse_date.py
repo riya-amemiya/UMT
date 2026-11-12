@@ -128,6 +128,10 @@ class TestParseDate(unittest.TestCase):
     def test_accepts_february_29_in_leap_year(self):
         self.assertEqual(parse_date("2024-02-29", "YYYY-MM-DD"), datetime(2024, 2, 29))
 
+    def test_opening_bracket_inside_escaped_text_is_literal(self):
+        self.assertEqual(parse_date("[xy", "[x[y]"), datetime(1970, 1, 1))
+        self.assertIsNone(parse_date("x[y", "[x[y]"))
+
 
 if __name__ == "__main__":
     unittest.main()

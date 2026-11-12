@@ -190,3 +190,12 @@ fn test_accepts_february_29_in_leap_year() {
         Some(date(2024, 2, 29, 0, 0, 0))
     );
 }
+
+#[test]
+fn test_opening_bracket_inside_escaped_text_is_literal() {
+    assert_eq!(
+        umt_parse_date("[xy", "[x[y]"),
+        Some(date(1970, 1, 1, 0, 0, 0))
+    );
+    assert_eq!(umt_parse_date("x[y", "[x[y]"), None);
+}

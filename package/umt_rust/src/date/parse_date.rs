@@ -5,7 +5,7 @@ use regex::Regex;
 use std::sync::LazyLock;
 
 static FORMAT_TOKEN_RE: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"\[([^\]]+)]|YYYY|YY|MM|M|DD|D|d|HH|H|hh|h|mm|m|ss|s|SSS|A|a|ZZ|Z|(?s:(.))")
+    Regex::new(r"\[([^\[\]]+)]|YYYY|YY|MM|M|DD|D|d|HH|H|hh|h|mm|m|ss|s|SSS|A|a|ZZ|Z|(?s:(.))")
         .unwrap()
 });
 
