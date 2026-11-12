@@ -1,7 +1,7 @@
 import { escapeRegExp } from "@/Tool/escapeRegExp";
 
 const formatTokenPattern =
-  /\[([^\[\]]+)]|YYYY|YY|MM|M|DD|D|d|HH|H|hh|h|mm|m|ss|s|SSS|A|a|ZZ|Z|([\s\S])/g;
+  /\[([^[\]]+)]|YYYY|YY|MM|M|DD|D|d|HH|H|hh|h|mm|m|ss|s|SSS|A|a|ZZ|Z|([\s\S])/g;
 
 const tokenPatterns: Record<string, string> = {
   YYYY: "[0-9]{4}",
