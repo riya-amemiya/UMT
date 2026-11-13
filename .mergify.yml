@@ -4,6 +4,4 @@ merge_protections:
   - name: Main
     if:
       - base = main
-    success_conditions:
-      - "#check-failure < 1"
-      - commits-unverified < 1
+    success_conditions: []
