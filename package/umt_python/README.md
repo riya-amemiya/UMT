@@ -44,14 +44,14 @@ Public names are re-exported from `src/__init__.py`. Grouped the same way as Typ
 | Module | Examples |
 | --- | --- |
 | `advance` | `range_advance` |
-| `array` | `chunk`, `unique`, `ultra_number_sort`, `zip_arrays`, `unzip`, `sort_by`, `min_by`, `max_by`, `take_while`, `drop_while` |
-| `async_util` | `sleep`, `parallel`, `timeout`, `debounce_async`, `memoize_async` |
+| `array` | `chunk`, `unique`, `count_by`, `partition`, `sliding`, `unzip`, `sort_by`, `min_by`, `max_by`, `take_while`, `drop_while` |
+| `async_util` | `sleep`, `parallel`, `timeout`, `debounce_async`, `memoize_async`, `map_series` |
 | `color` | `hexa_to_rgba`, `rgba_to_hsla`, `get_luminance`, `get_contrast_ratio` (see below) |
 | `consts` | `ONE_DAY_MS`, `HttpStatus` |
 | `crypto` | `encode_base32`, `decode_base32`, `decode_base58`, `encode_hex`, `decode_hex` (see below) |
 | `data_structure` | `LRUCache`, `TTLCache`, `PriorityQueue`, `Deque` |
-| `date` | `is_between`, `add_business_days`, `from_unix` (see below) |
-| `error` | `safe_execute`, `match_result`, `unwrap_or`, `map_error` |
+| `date` | `is_between`, `is_same`, `add_business_days`, `parse_date`, `from_unix` (see below) |
+| `error` | `safe_execute`, `safe_execute_async`, `match_result`, `unwrap_or`, `map_error` |
 | `function` | `debounce`, `memoize`, `throttle` |
 | `ip` | `ip_to_long`, `cidr_to_long`, `is_in_range`, `is_private_ip`, `is_valid_ip`, `parse_cidr` (see below) |
 | `iterator` | `lazy_map`, `lazy_filter`, `lazy_take`, `lazy_chunk`, `lazy_zip` |
@@ -70,7 +70,7 @@ Public names are re-exported from `src/__init__.py`. Grouped the same way as Typ
 | `url` | `build_url`, `parse_query_string`, `stringify_query`, `is_absolute_url`, `join_path` (see below) |
 | `validate` | `is_number`, `array_of`, `parse_email` (see below) |
 
-Not every TypeScript helper is ported yet. There is no `is_same` (use `is_same_day` or compare truncated values with `start_of`). There is no date `format` (TypeScript `format` / Rust `umt_format` / Go `FormatDate`). There is also no `count_by`, `partition`, `sliding`, `map_series`, or `safe_execute_async`.
+Not every TypeScript helper is ported yet. There is no date `format` (TypeScript `format` / Rust `umt_format` / Go `FormatDate`). `is_same`, `count_by`, `partition`, `sliding`, `map_series`, and `safe_execute_async` are ported.
 
 ## Date helpers
 
@@ -83,6 +83,7 @@ Local-time calendar helpers aligned with TypeScript `package/main/src/Date`. Wee
 | `sub_business_days` | `(date, amount, holidays=None) -> datetime` | `add_business_days(date, -amount, holidays)` | `sub_business_days(datetime(2025, 4, 21, 9, 30), 1)  # datetime(2025, 4, 18, 9, 30)` |
 | `is_business_day` | `(date, holidays=None) -> bool` | Weekday and not in `holidays` | `is_business_day(datetime(2025, 4, 21))  # True` |
 | `business_days_between` | `(start, end, holidays=None) -> int` | Business days from `start` (excluded) to `end` (included), compared by calendar day. Negative when `end` is before `start`. Inverse of `add_business_days` when `end` is a business day. | `business_days_between(datetime(2025, 4, 18), datetime(2025, 4, 21))  # 1` / `business_days_between(datetime(2025, 4, 21), datetime(2025, 4, 18))  # -1` |
+| `is_same` | `(left, right, unit=None) -> bool` | Same truncation rules as `is_after`. Omit `unit` for exact timestamps. | `is_same(datetime(2025, 4, 15, 1), datetime(2025, 4, 15, 23), "day")  # True` |
 | `is_after` / `is_before` | `(date, compare, unit=None) -> bool` | Strict comparison. Omit `unit` for exact timestamps; with a unit, both dates are truncated with `start_of` first. | `is_after(datetime(2025, 4, 16), datetime(2025, 4, 15))  # True` / `is_before(datetime(2025, 4, 15, 1), datetime(2025, 4, 15, 23), "day")  # False` |
 | `days_in_month` | `(date) -> int` | Days in the month of `date` (28–31) | `days_in_month(datetime(2024, 2, 1))  # 29` |
 | `parse_date` | `(string, format_string) -> datetime \| None` | Inverse of `date_format` with the same tokens and `[text]` escapes. `YY` is 2000–2099. Missing fields default to 1970-01-01 00:00:00. `Z` / `ZZ` give an aware datetime in that offset; otherwise naive local. Returns `None` on mismatch, out-of-range fields, a disagreeing `d`, or year 0. | `parse_date("2025-04-04", "YYYY-MM-DD")  # datetime(2025, 4, 4, 0, 0)` / `parse_date("2025-13-01", "YYYY-MM-DD")  # None` |
@@ -112,7 +113,7 @@ Unicode-aware helpers aligned with TypeScript `package/main/src/String`.
 | `to_half_width` | `(string_: str) -> str` | **Broader than TypeScript / Rust / Go**: `U+FF01`–`U+FF5E` (full-width `!` through `~`, including digits and letters) plus ideographic space `U+3000` → `" "`. Those ports convert only `０-９Ａ-Ｚａ-ｚ`. `str.maketrans` / `translate`, not regex. | `to_half_width("ＡＢＣ１２３")  # "ABC123"` / `to_half_width("！　")  # "! "` |
 | `camel_case` | `(string_: str) -> str` | Replaces non-alphanumeric runs, then lowercases only the first character. Does not split acronyms. | `camel_case("hello-world")  # "helloWorld"` / `camel_case("HELLO")  # "hELLO"` |
 | `kebab_case` | `(string_: str) -> str` | Inserts dashes on case boundaries and replaces separators. Splits acronyms. | `kebab_case("XMLHttpRequest")  # "xml-http-request"` |
-| `slugify` | `(string_: str) -> str` | NFD, strip combining marks, lowercase, hyphenate. Python `\w` is Unicode, so CJK stays: `"Japanese: こんにちは"` → `"japanese-こんにちは"`. TypeScript / Go drop those letters (`"japanese"`). | `slugify("Hello World!")  # "hello-world"` / `slugify("Café")  # "cafe"` |
+| `slugify` | `(string_: str) -> str` | NFD, strip combining marks, lowercase, hyphenate. ASCII letters and digits only, so CJK is dropped: `"Japanese: こんにちは"` → `"japanese"`. TypeScript / Rust / wasm match. Go also drops CJK but decomposes only a fixed Latin-1 table. | `slugify("Hello World!")  # "hello-world"` / `slugify("Café")  # "cafe"` |
 | `to_base64` | `(char: str) -> str` | UTF-8 → standard Base64 (`A-Za-z0-9+/`, `=` padding). Empty → `""`. Not URL-safe. | `to_base64("Hello World")  # "SGVsbG8gV29ybGQ="` / `to_base64("")  # ""` |
 | `from_base64` | `(base64_string: str) -> str` | Standard Base64 → UTF-8. Empty → `""`. **Requires padding.** Invalid Base64, missing padding, and invalid UTF-8 raise `ValueError("Invalid Base64 string")`. TypeScript `fromBase64` accepts missing padding (`"SGVsbG8gV29ybGQ"`) and maps invalid UTF-8 to U+FFFD. | `from_base64("SGVsbG8gV29ybGQ=")  # "Hello World"` |
 | `encode_base64_url` | `(char: str) -> str` | UTF-8 → URL-safe Base64 (RFC 4648 section 5, `-` and `_`). No `=` padding. Empty → `""`. | `encode_base64_url("Hello World")  # "SGVsbG8gV29ybGQ"` / `encode_base64_url("???>")  # "Pz8_Pg"` |
@@ -171,7 +172,7 @@ RFC 4648 Base32 (`A-Z` + `2-7`, `=` padding), aligned with TypeScript `package/m
 
 ## parse_email
 
-`parse_email(email, ParseEmailOptions(level=...))` returns `ParseEmailResult(valid, parts)`. `level` is required: `"basic"` \| `"rfc822"` \| `"rfc2822"` \| `"rfc5321"` \| `"rfc5322"`. There is **no** TypeScript 320-character pre-check.
+`parse_email(email, ParseEmailOptions(level=...))` returns `ParseEmailResult(valid, parts)`. `level` is required: `"basic"` \| `"rfc822"` \| `"rfc2822"` \| `"rfc5321"` \| `"rfc5322"`. Inputs longer than **320** UTF-16 code units are rejected before the regex, matching TypeScript / Rust (a non-BMP character counts as two).
 
 ```python
 from umt_python import ParseEmailOptions, parse_email
@@ -210,7 +211,7 @@ Coarse User-Agent labels aligned with TypeScript `package/main/src/UA`. Matching
 | `extract_os_from_user_agent` | `(ua: str) -> OsType` | iPhone / iPad / iPod → `"ios"` even when the string contains `like Mac OS X`. Android wins over the `Linux` token. | `extract_os_from_user_agent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)")  # "macos"` |
 | `parse_user_agent` | `(user_agent: str) -> UserAgentInfo` | TypedDict `{browser, device, os}`. | `parse_user_agent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) Chrome/91.0")  # {'browser': 'chrome', 'device': 'desktop', 'os': 'macos'}` |
 
-Fixed regexes in this package are compiled once at module level (`re.compile`): UA extractors, `hexa_to_rgba`, `is_absolute_url`, `join_path`, `math_converter`, `parse_email`, `strip_ansi` / `strip_tags`, `unescape_html`, `escape_html`, `camel_case`, `kebab_case`, `slugify`, `normalize_whitespace`, `sanitize_string`, `delete_spaces`, `escape_regexp`, calculator / `calculator_core` (except the currency-symbol pattern), `literal_expression`, `apply_formatter`, `get_value`. Caller-built patterns (`format_string`, `regex_match`, optional `words` pattern, `template_literal`, calculator currency symbol) stay inline. `to_full_width` / `to_half_width` use module-level `str.maketrans` tables, not regex.
+Fixed regexes in this package are compiled once at module level (`re.compile`): UA extractors, `hexa_to_rgba`, `is_absolute_url`, `join_path`, `math_converter`, `parse_email`, `parse_date`, `strip_ansi` / `strip_tags`, `unescape_html`, `escape_html`, `camel_case`, `kebab_case`, `slugify`, `normalize_whitespace`, `sanitize_string`, `delete_spaces`, `escape_regexp`, calculator / `calculator_core` (except the currency-symbol pattern), `literal_expression`, `apply_formatter`, `get_value`, `decode_hex`, `decode_base64_url`, `parse_cidr`. Caller-built patterns (`format_string`, `regex_match`, optional `words` pattern, `template_literal`, calculator currency symbol) stay inline. `to_full_width` / `to_half_width` use module-level `str.maketrans` tables, not regex.
 
 ## Function List
 
@@ -281,15 +282,17 @@ Fixed regexes in this package are compiled once at module level (`re.compile`): 
 - Date week math uses Sunday-start weeks. Do not assume ISO weeks (`datetime.isocalendar()`).
 - IP helpers are IPv4 only. They validate input (TypeScript does not). `subnet_mask_to_cidr` requires a contiguous mask; TypeScript `subnetMaskToCidr` only counts set bits. `is_private_ip` is RFC 1918 only (not loopback or link-local). The three RFC 1918 `(network, mask)` pairs are hoisted at module load, matching TypeScript / Rust / Go.
 - `decode_base32` raises `ValueError` on invalid / lowercase characters. TypeScript `decodeBase32` maps those to `0`.
-- `from_base64` requires padding and raises `ValueError` on invalid Base64 or invalid UTF-8. TypeScript `fromBase64` accepts missing padding and maps invalid UTF-8 to U+FFFD. Not URL-safe.
+- `from_base64` requires padding and raises `ValueError` on invalid Base64 or invalid UTF-8. TypeScript `fromBase64` accepts missing padding and maps invalid UTF-8 to U+FFFD. Not URL-safe. `encode_base64_url` has no padding; `decode_base64_url` accepts padding and raises `ValueError` on invalid input.
+- `decode_hex` raises `ValueError` on odd length or non-hex characters. TypeScript `decodeHex` does not validate.
+- `is_valid_ip` matches `ip_to_long` (leading-zero octets are invalid). TypeScript `isValidIp` also rejects leading zeros, but TypeScript `ipToLong` accepts them.
 - `rad_to_deg` / `deg_to_rad` use `division` / `multiplication`. They do not wrap angles to 0–360. Rust / Go use native `*` `/`.
 - `to_base_n` defaults to radix 2. `True` / `False` are `1` / `0` because `bool` is an `int`.
 - `hexa_to_rgba` requires `#` plus 3, 6, or 8 hex digits. TypeScript `hexaToRgba` does not validate.
 - `unescape_html` decodes numeric entities with `chr()`. TypeScript `unescapeHtml` additionally rejects NULL, most C0 controls, DEL, C1, surrogates, and out-of-range values.
 - `escape_html` encodes `& < > " '` only. TypeScript `escapeHtml` also encodes backtick (`&#x60;`) and `/` (`&#x2F;`).
 - `to_full_width` converts ASCII alnum only. `to_half_width` also converts full-width punctuation (`U+FF01`–`U+FF5E`) and ideographic space; TypeScript / Rust / Go `toHalfWidth` convert digits and letters only.
-- `slugify` keeps Unicode letters (Python `\w`). TypeScript / Go `slugify` use ASCII `\w` and drop CJK.
-- `parse_email` requires `ParseEmailOptions`. It does not apply TypeScript's 320-character ReDoS cap.
+- `slugify` is ASCII-only. CJK is dropped (`"Japanese: こんにちは"` → `"japanese"`), matching TypeScript / Rust / wasm. Go also drops CJK but uses a Latin-1 NFD table.
+- `parse_email` requires `ParseEmailOptions`. It rejects length `> 320` UTF-16 code units, matching TypeScript / Rust.
 - `math_converter` formats split terms with `float` (`"1500.0*1000+…"`). TypeScript / Rust / Go emit integers (`"1500*1000+…"`).
 - UA helpers are coarse labels. Opera (`OPR/`) is `"other"`. Android without a `mobile` token is `"tablet"`. iPhone UAs that contain `like Mac OS X` are `"ios"`.
 - `sanitize_string` is ASCII-only. CJK, emoji, and accented letters are dropped. It is not `strip_ansi`: `"\x1b[31mred\x1b[0m"` becomes `"[31mred[0m"`.

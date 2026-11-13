@@ -81,7 +81,7 @@ src/
 ├── Color/                   # Color conversion functions
 ├── Consts/                  # Constant definitions
 ├── Crypto/                  # Cryptographic functions
-├── DataStructure/           # Data structures (PriorityQueue, LRUCache, TTLCache)
+├── DataStructure/           # Data structures (PriorityQueue, LRUCache, TTLCache, Deque)
 ├── Date/                    # Date manipulation functions
 ├── Decorator/               # Class-field validation decorators
 ├── Error/                   # Error handling and Result type functions

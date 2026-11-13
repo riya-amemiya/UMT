@@ -38,11 +38,15 @@ Subpath exports match source modules (`umt/Array`, `umt/Date`, `umt/Validate`, �
 
 Input validation is the caller's responsibility. Functions do not throw on invalid arguments unless throwing is the function's purpose (for example `unwrap`).
 
-IP helpers (`umt/IP`) are IPv4 only. TypeScript does not validate dotted-decimal strings; the Python and Rust ports raise / return `Err` on malformed addresses and reject non-contiguous subnet masks. `isPrivateIp` is RFC 1918 only (not loopback or link-local). TypeScript, Python, Rust, and Go hoist the three RFC 1918 `(network, mask)` pairs at module load.
+IP helpers (`umt/IP`) are IPv4 only. TypeScript does not validate dotted-decimal strings; the Python and Rust ports raise / return `Err` on malformed addresses and reject non-contiguous subnet masks. `isPrivateIp` is RFC 1918 only (not loopback or link-local). TypeScript, Python, Rust, and Go hoist the three RFC 1918 `(network, mask)` pairs at module load. TypeScript `isValidIp` rejects leading-zero octets (`"192.168.01.1"`) even though `ipToLong` accepts them. Python / Rust `is_valid_ip` matches `ip_to_long` (both reject leading zeros). `parseCidr` clears host bits (`"192.168.1.130/25"` → `"192.168.1.128"`); TypeScript does not validate the string, Python / Rust do.
 
 `decodeBase32` (`umt/Crypto`) is RFC 4648 (`A-Z` + `2-7`). It skips `=` anywhere and, in TypeScript, maps invalid / lowercase characters to value `0` instead of throwing (`"1A"` → `[0]`). Python / Rust / Go error on those inputs. Wasm skips encode (generic) and decode (`Result`).
 
 `toBase64` / `fromBase64` (`umt/String`) are standard Base64 (`A-Za-z0-9+/`, `=` padding), not URL-safe. Empty input is `""`. TypeScript `fromBase64` uses `atob` then `TextDecoder`: missing padding is accepted (`"SGVsbG8gV29ybGQ"` → `"Hello World"`); invalid characters throw `InvalidCharacterError`; invalid UTF-8 becomes U+FFFD (`"gA=="` → `"�"`). Python / Rust / Go require padding and error on invalid Base64. Rust also returns `Err` on invalid UTF-8; Go returns the decoded bytes even when they are not valid UTF-8. Wasm generates both from Rust (`fromBase64` is a `Result`).
+
+`encodeBase64Url` / `decodeBase64Url` (`umt/String`) are RFC 4648 section 5 (`-` `_`). Encode never emits `=` padding (`"Hello World"` → `"SGVsbG8gV29ybGQ"`). Decode accepts padding. TypeScript rewrites to standard Base64 then `fromBase64`. Python / Rust require the URL-safe alphabet and error on invalid input; Rust also errors on invalid UTF-8. Wasm generates both from Rust. Go has neither.
+
+`encodeHex` / `decodeHex` (`umt/Crypto`) are lowercase hex, two digits per byte. Empty encode is `""`. `"Hello"` → `"48656c6c6f"`. TypeScript `decodeHex` does not validate: odd length drops the last character (`"abc"` → `[171]`); non-hex pairs become `0` (`"zz"` → `[0]`). Python / Rust error. Wasm skips both (generic encode, `Result` decode). Go has neither.
 
 `toBaseN` (`umt/Math`) defaults to radix **2** (`toBaseN(10)` → `"1010"`). A radix outside `2`–`36` throws `RangeError` in TypeScript. Python `to_base_n` also defaults to 2. Rust `umt_to_base_n` returns the string `"Invalid radix"`. Go `ToBaseN` panics. Wasm `toBaseN` follows Rust.
 
@@ -56,9 +60,9 @@ IP helpers (`umt/IP`) are IPv4 only. TypeScript does not validate dotted-decimal
 
 `toFullWidth` (`umt/String`) converts ASCII digits and letters only (`[0-9A-Za-z]`, `+ 0xFEE0`). Ports match. `toHalfWidth` in TypeScript / Rust / Go converts full-width digits and letters only (`０-９Ａ-Ｚａ-ｚ`). Python `to_half_width` also maps `U+FF01`–`U+FF5E` (full-width punctuation) and ideographic space `U+3000` → `" "`.
 
-`slugify` (`umt/String`) uses JavaScript `\w` (`[A-Za-z0-9_]`), so CJK and other non-ASCII letters are dropped (`"Japanese: こんにちは"` → `"japanese"`). Go `Slugify` matches that ASCII `\w` but decomposes only a fixed Latin-1 table instead of full Unicode NFD. Python `slugify` and Rust `umt_slugify` keep Unicode letters (`"japanese-こんにちは"`). Wasm `slugify` follows Rust.
+`slugify` (`umt/String`) keeps ASCII letters and digits only, so CJK is dropped (`"Japanese: こんにちは"` → `"japanese"`). TypeScript, Python, Rust, and wasm match. Go `Slugify` also drops CJK but decomposes only a fixed Latin-1 table instead of full Unicode NFD.
 
-`parseEmail` (`umt/Validate`) rejects strings longer than 320 characters before the RFC regex. Python has no global cap. Rust `umt_parse_email` maps `Rfc822` to the Basic pattern and `Rfc5322` to the Rfc5321 pattern. Go `ParseEmail` is basic-only and returns an error; `ParseEmailWithLevel` applies 998 / 256 limits on some RFC levels.
+`parseEmail` (`umt/Validate`) rejects strings longer than 320 UTF-16 code units before the RFC regex. Python and Rust apply the same 320-unit cap. Rust `umt_parse_email` uses the matching regex for every level (`Rfc822` and `Rfc5322` included). Go `ParseEmail` is basic-only and returns an error; `ParseEmailWithLevel` applies 998 / 256 limits on some RFC levels.
 
 `mathConverter("1250*1250")` is `"1500*1000+400*100+200*100+50*50"` in TypeScript, Rust, and Go. Python `math_converter` emits float terms (`"1500.0*1000+400.0*100+200.0*100+50*50"`).
 

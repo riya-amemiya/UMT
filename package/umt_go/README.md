@@ -73,7 +73,7 @@ Public code lives in `src/<package>`. Tests are `src/tests/<package>/*_test.go` 
 | `urlutil` | `src/urlutil` | `BuildUrl`, `ParseQueryString`, `IsAbsoluteUrl`, `JoinPath` (see below) |
 | `validate` | `src/validate` | `IsNumber`, `ArrayOf`, `ParseEmail` (see below) |
 
-Not every TypeScript helper is ported. There is no `IsBetween`, `AddBusinessDays`, `FromUnix` / `ToUnix`, `WeekOfYear`, `GetQuarter`, or `IsSame`. There is also no `CountBy`, `Partition`, `Sliding`, `MapSeries`, or `SafeExecuteAsync`.
+Not every TypeScript helper is ported. There is no `IsBetween`, `AddBusinessDays`, `FromUnix` / `ToUnix`, `WeekOfYear`, `GetQuarter`, `IsSame`, or `ParseDate`. There is also no `CountBy`, `Partition`, `Sliding`, `MapSeries`, `SafeExecuteAsync`, `EncodeHex` / `DecodeHex`, `EncodeBase64Url` / `DecodeBase64Url`, `IsValidIp`, or `ParseCidr`.
 
 ## Date helpers
 
@@ -104,7 +104,7 @@ Unicode-aware helpers in `src/str`, aligned with TypeScript `package/main/src/St
 | `ToHalfWidth` | Full-width digits and letters only (`０-９Ａ-Ｚａ-ｚ`). CJK, punctuation, and ideographic space stay. Python also converts `U+FF01`–`U+FF5E` and `U+3000`. |
 | `CamelCase` | Replaces non-alphanumeric runs, then lowercases only the first rune. Does not split acronyms (`"HELLO"` → `"hELLO"`, `"XMLHttpRequest"` → `"xMLHttpRequest"`). |
 | `KebabCase` | Inserts dashes on case boundaries and replaces separators. Splits acronyms (`"XMLHttpRequest"` → `"xml-http-request"`). |
-| `Slugify` | Lowercase hyphenated slug. Go `\w` is ASCII, so CJK is dropped (`"Japanese: こんにちは"` → `"japanese"`), matching TypeScript. Diacritics are decomposed through a **fixed Latin-1 table**, not full Unicode NFD. Python / Rust keep Unicode letters. |
+| `Slugify` | Lowercase hyphenated slug. Go `\w` is ASCII, so CJK is dropped (`"Japanese: こんにちは"` → `"japanese"`), matching TypeScript / Python / Rust / wasm. Diacritics are decomposed through a **fixed Latin-1 table**, not full Unicode NFD. |
 | `ToBase64` | UTF-8 → standard Base64 (`encoding/base64.StdEncoding`). Empty → `""`. `"Hello World"` → `"SGVsbG8gV29ybGQ="`. Not URL-safe. |
 | `FromBase64` | `(string, error)`. Empty → `("", nil)`. **Requires padding.** Invalid Base64 → `"Invalid Base64 string"`. Invalid UTF-8 is returned as raw bytes (not an error): `"gA=="` → `"\x80"`. TypeScript `fromBase64` accepts missing padding and maps invalid UTF-8 to U+FFFD; Rust errors on invalid UTF-8. |
 
@@ -160,7 +160,7 @@ Fixed regexes in this package are compiled once with package-level `regexp.MustC
 
 ## parseEmail
 
-`ParseEmail(email)` validates at **basic** and returns `(EmailParts, error)`. `ParseEmailWithLevel(email, level)` returns `ParseEmailResult` (`Valid`, `Parts`). Level names are case-insensitive (`"RFC5322"` works). Unknown or empty level is invalid. There is no TypeScript 320-character global cap; `rfc2822` / `rfc5322` reject length `> 998`, `rfc5321` rejects length `> 256` or local `> 64`.
+`ParseEmail(email)` validates at **basic** and returns `(EmailParts, error)`. `ParseEmailWithLevel(email, level)` returns `ParseEmailResult` (`Valid`, `Parts`). Level names are case-insensitive (`"RFC5322"` works). Unknown or empty level is invalid. Go has no 320-character global cap (TypeScript / Python / Rust do); `rfc2822` / `rfc5322` reject length `> 998`, `rfc5321` rejects length `> 256` or local `> 64`.
 
 ```go
 import "github.com/riya-amemiya/umt-go/src/validate"

@@ -5,7 +5,7 @@
 Wasm Packageに依存関係はありません。
 JavaScriptからの呼び出しに対応しています。
 
-`umt-plugin-wasm` wraps [`umt_rust`](../umt_rust) with wasm-bindgen. TypeScript `package/main` remains the behavioral source of truth; this package only exposes what the Rust crate can map across the wasm ABI.
+`umt-plugin-wasm` wraps [`umt_rust`](../umt_rust) with wasm-bindgen. Crate version is **0.5.0** (depends on `umt_rust` 0.8.0). TypeScript `package/main` remains the behavioral source of truth; this package only exposes what the Rust crate can map across the wasm ABI.
 
 ## Install
 
@@ -53,11 +53,11 @@ To expose a skipped or unprefixed function, add an adapter in `src/manual.rs` (u
 
 A few Date helpers that already use wasm-friendly types (`umt_is_leap_year`, `umt_day_of_week`, timezone offset strings) are generated automatically.
 
-`slugify` and `mathConverter` are generated. They follow the Rust crate, so wasm `slugify` keeps CJK letters (`"japanese-こんにちは"`), unlike TypeScript / Go. `calculator` (HashMap exchange rates), `parseEmail` (`Option<ParseEmailOptions>`), and the UA extractors (`Browser` / `Device` / `Os` / `UserAgentInfo`) are skipped.
+`slugify` and `mathConverter` are generated. They follow the Rust crate, so wasm `slugify` drops CJK (`"japanese"`), matching TypeScript / Python / Rust. `calculator` (HashMap exchange rates), `parseEmail` (`Option<ParseEmailOptions>`), and the UA extractors (`Browser` / `Device` / `Os` / `UserAgentInfo`) are skipped.
 
 `toBaseN` / `toBinary` / `toHex` are generated from Rust (`i64`). Invalid radix returns the string `"Invalid radix"`. TypeScript `toBaseN` defaults to radix 2 and throws `RangeError`; Go panics. `encodeBase32` (generic `AsRef<[u8]>`) and `decodeBase32` / `decodeBase32ToString` (`Result<_, Base32Error>`) are skipped. TypeScript `decodeBase32` maps invalid characters to `0`; the Rust decode that wasm would wrap errors instead.
 
-`toBase64` / `fromBase64` are generated. They follow Rust: padding is required, invalid Base64 and invalid UTF-8 become JS exceptions. TypeScript `fromBase64` uses `atob` + `TextDecoder` (missing padding accepted; invalid UTF-8 → U+FFFD). `degToRad` / `radToDeg` are generated from Rust native float multiply, not TypeScript's `multiplication` / `division` helpers.
+`toBase64` / `fromBase64` are generated. They follow Rust: padding is required, invalid Base64 and invalid UTF-8 become JS exceptions. TypeScript `fromBase64` uses `atob` + `TextDecoder` (missing padding accepted; invalid UTF-8 → U+FFFD). `encodeBase64Url` / `decodeBase64Url` are generated the same way (URL-safe alphabet, decode is a `Result`). `encodeHex` (generic) and `decodeHex` (`Result<_, HexError>`) are skipped. `degToRad` / `radToDeg` are generated from Rust native float multiply, not TypeScript's `multiplication` / `division` helpers.
 
 `sanitizeString`, `deleteSpaces`, `joinPath`, `escapeRegexp`, `escapeHtml`, `toFullWidth`, and `toHalfWidth` are generated. `sanitizeString` is ASCII-only (CJK / emoji dropped) and is not `stripAnsi` (ESC gone, CSI leftovers remain). `joinPath` takes an array of strings, not rest arguments, and does not resolve `.` / `..`. Wasm's JS name is `escapeRegexp` (lowercase `p`); TypeScript is `escapeRegExp`. Wasm `escapeHtml` follows Rust (no backtick or `/`). Wasm `toHalfWidth` is full-width alnum only, not Python's broader punctuation / space table.
 
