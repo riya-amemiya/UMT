@@ -41,16 +41,25 @@ Local-time calendar helpers. Week boundaries are Sunday-start (JavaScript `Date#
 | `weekOfYear(date)`                                             | Sunday-start week index. Week 1 contains January 1 of that local year. Uses day-count rounding so DST does not shift the week number. Not ISO-8601 (Monday-start) week numbering.                                                                                                   |
 | `fromUnix(value, unit?)` / `toUnix(date, unit?)`               | Default unit is `"s"`.`toUnix(..., "s")` is `Math.floor(date.getTime() / 1000)`.                                                                                                                                                                                                    |
 | `format(date, formatString?)`                                  | Token formatter on **local** `Date` fields. Default pattern is `"YYYY-MM-DDTHH:mm:ssZ"`.`[text]` is copied as-is. `Z` / `ZZ` use `date`'s timezone offset. Throws `TypeError("Invalid Date in format")` if `date` is not a `Date`.                                                  |
+| `parseDate(string, formatString)`                              | Inverse of `format` with the same tokens and `[text]` escapes. `YY` is 2000–2099. Missing fields default to 1970-01-01 00:00:00. `Z` / `ZZ` are that offset; otherwise local. Returns an **Invalid Date** on mismatch, out-of-range fields, or a `d` that disagrees with the calendar date. Python / Rust return `None`. |
+| `isAfter` / `isBefore`                                         | Strict comparison. Omit `unit` for exact timestamps; with a unit, both dates are truncated with `startOf` first. Same calendar day at `"day"` is not after or before.                                                                                                              |
+| `daysInMonth(date)`                                            | Local-time days in that month (28–31). Leap-year February is 29. Invalid Date → `NaN`.                                                                                                                                                                                              |
+| `businessDaysBetween(start, end, holidays?)`                   | Start excluded, end included. Inverse of `addBusinessDays` when `end` is a business day. Negative when `end` is before `start`. Same calendar day → `0` (not `-0`).                                                                                                                |
 
 `DateInclusivity` is `"()"` \| `"[]"` \| `"[)"` \| `"(]"`. `UnixTimeUnit` is `"s"` \| `"ms"`. `DateBoundaryUnit` is `second` \| `minute` \| `hour` \| `day` \| `week` \| `month` \| `quarter` \| `year`.
 
 ```ts
 import {
   addBusinessDays,
+  businessDaysBetween,
+  daysInMonth,
   format,
   fromUnix,
   getQuarter,
+  isAfter,
   isBetween,
+  isSame,
+  parseDate,
   toUnix,
   weekOfYear,
 } from "umt/Date";
@@ -73,9 +82,17 @@ toUnix(new Date(1_700_000_000_999)); // 1700000000
 
 format(new Date(2023, 5, 10, 15, 30, 45), "YYYY-MM-DD"); // "2023-06-10"
 format(new Date(2023, 5, 10, 15, 30, 45), "[Year:] YYYY"); // "Year: 2023"
+
+parseDate("2025-04-04", "YYYY-MM-DD").getTime(); // local 2025-04-04
+Number.isNaN(parseDate("2025-13-01", "YYYY-MM-DD").getTime()); // true
+isAfter(new Date(2025, 3, 16), new Date(2025, 3, 15)); // true
+isAfter(new Date(2025, 3, 15, 23), new Date(2025, 3, 15, 1), "day"); // false
+isSame(new Date(2025, 3, 15, 1), new Date(2025, 3, 15, 23), "day"); // true
+daysInMonth(new Date(2024, 1, 1)); // 29
+businessDaysBetween(new Date(2025, 3, 18), new Date(2025, 3, 21)); // 1 (Fri → Mon)
 ```
 
-Python and Rust ports of these helpers live in `package/umt_python` and `package/umt_rust`. Rust treats `DateTime<Utc>` calendar fields as wall-clock values except `fromUnix` / `toUnix`, which use real epoch timestamps. `isSame` exists in TypeScript only. Date `format` is not ported to Python. Rust `umt_format` takes an explicit `timezone_offset_minutes` (no default pattern; use `umt_format_iso` for the ISO-like default). Go `FormatDate` has the same tokens except it has no `Z` / `ZZ`. Wasm skips `umt_format` (`DateTime<Utc>`).
+Python and Rust ports of these helpers live in `package/umt_python` and `package/umt_rust`. Rust treats `DateTime<Utc>` calendar fields as wall-clock values except `fromUnix` / `toUnix`, which use real epoch timestamps. `isSame` is in TypeScript, Python, and Rust. Date `format` is not ported to Python. Rust `umt_format` takes an explicit `timezone_offset_minutes` (no default pattern; use `umt_format_iso` for the ISO-like default). Go has `FormatDate` (no `Z` / `ZZ`) but not `IsBetween`, `AddBusinessDays`, unix conversion, `IsSame`, or `ParseDate`. Wasm skips Date helpers that take `DateTime<Utc>` (`umt_format`, `umt_parse_date`, `umt_is_same`, `umt_is_after`, `umt_business_days_between`, …).
 
 ## IP helpers
 
@@ -93,6 +110,8 @@ Input validation is the caller's responsibility. These functions do not throw on
 | `getIpClass(ip)`                              | Classful first-octet lookup (`A`–`E`).`0.0.0.0` and malformed input return `""`.                                                                                                                                                                                             |
 | `getNetworkAddress(ip, mask)`                 | `ipToLong(ip) & cidrToLong(subnetMaskToCidr(mask))` as an unsigned 32-bit number.                                                                                                                                                                                            |
 | `ipToBinaryString(ip)`                        | 32-character `0`/`1` string, eight bits per octet.                                                                                                                                                                                                                           |
+| `isValidIp(ip)`                               | Four decimal octets `0`–`255`, **no leading zeros**, no whitespace. `"192.168.01.1"` is `false` even though TypeScript `ipToLong` accepts that string. Python / Rust `is_valid_ip` matches `ip_to_long` (both reject leading zeros).                                             |
+| `parseCidr(cidr)`                             | `"network/prefix"` → `{ networkAddress, prefixLength }` with host bits cleared (`"192.168.1.130/25"` → `"192.168.1.128"`). TypeScript does **not** validate. Python / Rust error on a bad address or prefix.                                                                   |
 
 ```ts
 import {
@@ -101,7 +120,9 @@ import {
   ipToLong,
   isInRange,
   isPrivateIp,
+  isValidIp,
   longToIp,
+  parseCidr,
 } from "umt/IP";
 
 ipToLong("192.168.1.1"); // 3232235777
@@ -110,6 +131,9 @@ cidrToSubnetMask(24); // "255.255.255.0"
 isInRange("192.168.1.2", "192.168.1.0", 24); // true
 isPrivateIp("10.0.0.1"); // true
 isPrivateIp("127.0.0.1"); // false
+isValidIp("192.168.1.1"); // true
+isValidIp("192.168.01.1"); // false
+parseCidr("192.168.1.130/25"); // { networkAddress: "192.168.1.128", prefixLength: 25 }
 longToIp(getNetworkAddress("192.168.1.1", "255.255.255.0")); // "192.168.1.0"
 ```
 
@@ -124,12 +148,16 @@ RFC 4648 Base32 in `umt/Crypto` (alphabet `A-Z` + `2-7`, `=` padding). Python, R
 | `encodeBase32(input)`             | `string` or `Uint8Array` → padded Base32. Empty input → `""`. `"Hello"` → `"JBSWY3DP"`. `"f"` → `"MY======"`. Python accepts `str` \| `bytes`; Go takes `[]byte` only.                                                                                                                                                                   |
 | `decodeBase32(input)`             | Base32 → `Uint8Array`. Skips `=` **anywhere** (`"JB=SWY3DP"` equals `"JBSWY3DP"`). TypeScript does **not** throw: invalid / lowercase characters map to value `0` (same as `A`), so `"1A"` is `[0]`. Python / Rust / Go error on `1`, `0`, `@`, lowercase, and non-ASCII.                                                                  |
 | `decodeBase32ToString(input)`     | UTF-8 decode of `decodeBase32`. `"JBSWY3DP"` → `"Hello"`. `"4OAZHY4CSPRYDK7DQGQ6HANP"` → `"こんにちは"`.                                                                                                                                                                                                                                  |
+| `encodeHex(input)`                | `string` or `Uint8Array` → lowercase hex, two digits per byte. Empty → `""`. `"Hello"` → `"48656c6c6f"`. Python accepts `str` \| `bytes`; Rust is generic `AsRef<[u8]>`. Go has no hex helpers.                                                                                                                                             |
+| `decodeHex(input)`                | Hex → `Uint8Array`. Accepts upper and lower case. TypeScript does **not** validate: odd length drops the last character (`"abc"` → `[171]`); non-hex pairs become `0` (`"zz"` → `[0]`). Python / Rust error (`ValueError` / `Err("Invalid hex string")`). Wasm skips encode (generic) and decode (`Result`). |
 
 ```ts
 import {
   decodeBase32,
   decodeBase32ToString,
+  decodeHex,
   encodeBase32,
+  encodeHex,
 } from "umt/Crypto";
 
 encodeBase32("Hello"); // "JBSWY3DP"
@@ -137,9 +165,13 @@ encodeBase32("f"); // "MY======"
 decodeBase32ToString("JBSWY3DP"); // "Hello"
 decodeBase32ToString("MY======"); // "f"
 Array.from(decodeBase32("1A")); // [0] (invalid `1` treated as 0)
+encodeHex("Hello"); // "48656c6c6f"
+encodeHex(new Uint8Array([0, 255])); // "00ff"
+Array.from(decodeHex("48656c6c6f")); // [72, 101, 108, 108, 111]
+Array.from(decodeHex("00FF")); // [0, 255]
 ```
 
-Wasm skips all three: `umt_encode_base32` is generic (`AsRef<[u8]>`), and the decode helpers return `Result<_, Base32Error>`.
+Wasm skips Base32 (generic encode, `Result` decode) and hex (`umt_encode_hex` is generic; `umt_decode_hex` returns `Result<Vec<u8>, HexError>`).
 
 ## Validate and Standard Schema
 
@@ -170,7 +202,7 @@ UMT validators never return a `Promise` from `~standard.validate`.
 
 ### parseEmail
 
-`parseEmail({ email, options: { level } })` returns `{ valid, parts? }` with `parts: { local, domain }` when the regex matches. `level` is required: `"basic"` \| `"rfc822"` \| `"rfc2822"` \| `"rfc5321"` \| `"rfc5322"`. Inputs longer than **320** characters are rejected before the regex (ReDoS). Python and Rust do not apply that global cap; Go applies 998 / 256 only on some RFC levels.
+`parseEmail({ email, options: { level } })` returns `{ valid, parts? }` with `parts: { local, domain }` when the regex matches. `level` is required: `"basic"` \| `"rfc822"` \| `"rfc2822"` \| `"rfc5321"` \| `"rfc5322"`. Inputs longer than **320** UTF-16 code units are rejected before the regex (ReDoS). Python and Rust apply the same 320-unit cap. Go has no global cap; `rfc2822` / `rfc5322` reject length `> 998`, `rfc5321` rejects length `> 256`.
 
 | Level     | Behavior                                                                                                                  |
 | --------- | ------------------------------------------------------------------------------------------------------------------------- |
@@ -191,7 +223,7 @@ parseEmail({ email: "user@localhost", options: { level: "rfc5321" } }).valid; //
 parseEmail({ email: "userexample.com", options: { level: "basic" } }).valid; // false
 ```
 
-Python `parse_email(email, ParseEmailOptions(level=...))` keeps the five patterns. Rust `umt_parse_email` maps `Rfc822` → the Basic pattern and `Rfc5322` → the Rfc5321 pattern; `None` options default to Basic. Go `ParseEmail(email)` returns `(EmailParts, error)` at basic only; `ParseEmailWithLevel(email, level)` returns `{Valid, Parts}` (unknown / empty level is invalid). Wasm skips `umt_parse_email` (custom options type).
+Python `parse_email(email, ParseEmailOptions(level=...))` keeps the five patterns and the 320-unit cap. Rust `umt_parse_email` uses the matching regex for every level (`Rfc822` / `Rfc5322` included); `None` options default to Basic. Go `ParseEmail(email)` returns `(EmailParts, error)` at basic only; `ParseEmailWithLevel(email, level)` returns `{Valid, Parts}` (unknown / empty level is invalid). Wasm skips `umt_parse_email` (custom options type).
 
 ## Decorator
 
@@ -251,16 +283,20 @@ Unicode-aware string utilities in `umt/String`. Python, Rust, and Go ports exist
 | `unescapeHtml(string)`        | Named entities (`&amp;` `&lt;` `&gt;` `&quot;` `&#39;` `&#x27;` `&#x2F;` `&#x60;` `&#x3D;`) plus decimal / hex numeric references (`&#65;`, `&#x41;`).`&#X41;` (uppercase `X`) is left unchanged. Dangerous code points are **not** decoded (NULL, C0 except TAB/LF/CR, DEL, C1, surrogates, `>0x10FFFF`). Python / Rust / Go do not apply those extra filters.      |
 | `camelCase(string)`           | Replaces non-alphanumeric runs, then lowercases **only the first character**. Does not split acronyms: `"HELLO"` → `"hELLO"`, `"XMLHttpRequest"` → `"xMLHttpRequest"`.                                                                                                                                                                                               |
 | `kebabCase(string)`           | Inserts dashes on `aB` / `ABc` boundaries, replaces spaces / underscores / other non-alphanumerics, lowercases. Splits acronyms: `"XMLHttpRequest"` → `"xml-http-request"`.                                                                                                                                                                                          |
-| `slugify(string)`             | NFD, strip combining marks `U+0300`–`U+036F`, lowercase, then collapse non-`[A-Za-z0-9-]` runs and underscores to `-`. JS `\w` is ASCII, so CJK is dropped: `"Japanese: こんにちは"` → `"japanese"`. Python / Rust keep those letters (`"japanese-こんにちは"`). Go matches TypeScript (ASCII `\w`) but decomposes only a fixed Latin-1 table, not full Unicode NFD. |
+| `slugify(string)`             | NFD, strip combining marks `U+0300`–`U+036F`, lowercase, then collapse non-ASCII-alnum runs and underscores to `-`. CJK is dropped: `"Japanese: こんにちは"` → `"japanese"`. TypeScript, Python, Rust, and wasm match. Go matches the ASCII drop but decomposes only a fixed Latin-1 table, not full Unicode NFD. |
 | `escapeHtml(string)`          | Escapes `& < > " '` plus **backtick** (`&#x60;`) and **forward slash** (`&#x2F;`) so older-browser attribute delimiters and `</script>` injection are harder. Python / Rust / Go escape only `& < > " '`; `` ` `` and `/` stay.                                                                                                                                      |
 | `toFullWidth(string)`         | ASCII digits and letters only (`[0-9A-Za-z]`), each code point `+ 0xFEE0`. Punctuation and space stay: `"a-b!"` → `"ａ-ｂ!"`. Ports match. Inverse of `toHalfWidth` for those characters.                                                                                                                                                                            |
 | `toHalfWidth(string)`         | Full-width digits and letters only (`０-９Ａ-Ｚａ-ｚ`), each code point `- 0xFEE0`. CJK, punctuation, and ideographic space stay. Python **also** converts `U+FF01`–`U+FF5E` (full-width `!` through `~`) and `U+3000` → `" "`. Rust / Go match TypeScript.                                                                                                          |
 | `toBase64(string)`            | UTF-8 → standard Base64 (`A-Za-z0-9+/`, `=` padding). Empty → `""`. `"Hello World"` → `"SGVsbG8gV29ybGQ="`. Not URL-safe (`-` `_`). Python / Rust / Go / wasm match the alphabet. Encoding, not encryption — distinct from `umt/Crypto` Base32.                                                                                                                        |
 | `fromBase64(string)`          | Standard Base64 → UTF-8 string. Empty → `""`. Uses `atob` then `TextDecoder`. **Missing padding is accepted** (`"SGVsbG8gV29ybGQ"` → `"Hello World"`). Invalid characters throw `InvalidCharacterError`. Invalid UTF-8 becomes U+FFFD (`"gA=="` → `"�"`). Python / Rust / Go **require** padding and error on invalid Base64. Rust also errors on invalid UTF-8; Go returns the raw bytes; Python raises `ValueError`. Wasm follows Rust. |
+| `encodeBase64Url(string)`     | UTF-8 → RFC 4648 section 5 (`-` `_`), **no `=` padding**. Empty → `""`. `"Hello World"` → `"SGVsbG8gV29ybGQ"`. `"???>"` → `"Pz8_Pg"`. Python / Rust / wasm match. Go has no URL-safe helpers.                                                                                                                                                  |
+| `decodeBase64Url(string)`     | URL-safe Base64 → UTF-8. Padding optional. TypeScript rewrites `-`/`_` then calls `fromBase64` (invalid UTF-8 → U+FFFD). Python / Rust require the URL-safe alphabet and error on invalid Base64; Rust also errors on invalid UTF-8. Wasm generates both from Rust.                                                                              |
 
 ```ts
 import {
+  decodeBase64Url,
   deleteSpaces,
+  encodeBase64Url,
   escapeHtml,
   fromBase64,
   sanitizeString,
@@ -303,6 +339,10 @@ toBase64(""); // ""
 fromBase64("SGVsbG8gV29ybGQ="); // "Hello World"
 fromBase64("SGVsbG8gV29ybGQ"); // "Hello World" (padding optional in TypeScript)
 fromBase64("YQ=="); // "a"
+encodeBase64Url("Hello World"); // "SGVsbG8gV29ybGQ"
+encodeBase64Url("???>"); // "Pz8_Pg"
+decodeBase64Url("SGVsbG8gV29ybGQ"); // "Hello World"
+decodeBase64Url("Zg=="); // "f"
 ```
 
 Go splits the custom-pattern case into `Words` vs `WordsWithPattern`.
@@ -314,16 +354,21 @@ Go splits the custom-pattern case into `Words` vs `WordsWithPattern`.
 | Function                | Behavior                                                                                                                                                                                                                                                                                                         |
 | ----------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `hexaToRgba(hex)`       | `#` plus 3, 6, or 8 hex digits → `{ r, g, b, a }`.`r`/`g`/`b` are `0`–`255`; `a` is `0`–`1` rounded to 2 decimals (`#FF000080` → `0.5`). TypeScript does **not** validate; malformed input can yield `NaN`. Python / Rust / Go require the `#` + hex pattern and error otherwise.                                |
+| `getLuminance({ r, g, b, a? })` | WCAG 2.1 relative luminance `0`–`1`. Alpha is ignored. TypeScript does not range-check. Python raises `ValueError("Invalid rgba value")` outside `r`/`g`/`b` `0`–`255` or `a` `0`–`1`. Wasm skips both luminance helpers (`RgbaInput`).                                                              |
+| `getContrastRatio(a, b)` | WCAG 2.1 contrast `1`–`21`. Argument order does not matter. Black / white is `21`. Identical colors are `1`.                                                                                                                                                                                                  |
 | `isAbsoluteUrl(url)`    | RFC 3986 scheme check: letter, then letters / digits / `+` / `.` / `-`, then `:`.`mailto:` and `tel:` are absolute. Protocol-relative (`"//example.com"`), relative paths, and schemes starting with a digit are not.                                                                                            |
 | `joinPath(...segments)` | String join, not `path.join` and not a URL parser. Keeps the first segment's leading `/` and the last segment's trailing `/`. Strips leading `/` from later segments and trailing `/` from earlier ones, then drops empty pieces. No `.` / `..` resolution. No segments → `""`. A single `"///"` stays `"///"`.  |
+| `stringifyQuery(params)` | Inverse of `parseQueryString`. `application/x-www-form-urlencoded`, no leading `?`. Empty → `""`. `"hello world"` → `"hello+world"`. Wasm skips it (`HashMap`).                                                                                                                                               |
 
 ```ts
-import { hexaToRgba } from "umt/Color";
-import { isAbsoluteUrl, joinPath } from "umt/URL";
+import { getContrastRatio, getLuminance, hexaToRgba } from "umt/Color";
+import { isAbsoluteUrl, joinPath, stringifyQuery } from "umt/URL";
 
 hexaToRgba("#FF0000"); // { r: 255, g: 0, b: 0, a: 1 }
 hexaToRgba("#F00"); // { r: 255, g: 0, b: 0, a: 1 }
 hexaToRgba("#FF000080"); // { r: 255, g: 0, b: 0, a: 0.5 }
+getLuminance({ r: 255, g: 0, b: 0 }); // 0.2126
+getContrastRatio({ r: 0, g: 0, b: 0 }, { r: 255, g: 255, b: 255 }); // 21
 
 isAbsoluteUrl("https://example.com"); // true
 isAbsoluteUrl("mailto:user@host"); // true
@@ -334,9 +379,10 @@ joinPath("https://example.com/", "/api/", "/users"); // "https://example.com/api
 joinPath("/a/", "/b/", "/c"); // "/a/b/c"
 joinPath("a", "", "b"); // "a/b"
 joinPath(); // ""
+stringifyQuery({ q: "hello world", tag: "a&b" }); // "q=hello+world&tag=a%26b"
 ```
 
-Wasm codegen skips `umt_hexa_to_rgba` (custom `Result`) and generates `isAbsoluteUrl` / `joinPath` / `normalizeWhitespace` / `unescapeHtml` / `escapeHtml` / `camelCase` / `slugify` / `sanitizeString` / `deleteSpaces` / `toFullWidth` / `toHalfWidth` / `escapeRegexp`. Wasm `slugify` follows Rust and keeps CJK. Wasm `escapeHtml` / `toHalfWidth` follow Rust (no backtick or `/` escaping; half-width conversion is alnum-only). Wasm's JS name is `escapeRegexp` (lowercase `p`); TypeScript is `escapeRegExp`.
+Wasm codegen skips `umt_hexa_to_rgba` (custom `Result`) and generates `isAbsoluteUrl` / `joinPath` / `normalizeWhitespace` / `unescapeHtml` / `escapeHtml` / `camelCase` / `slugify` / `sanitizeString` / `deleteSpaces` / `toFullWidth` / `toHalfWidth` / `escapeRegexp` / `encodeBase64Url` / `decodeBase64Url`. Wasm `slugify` follows Rust and drops CJK (`"japanese"`), matching TypeScript. Wasm `escapeHtml` / `toHalfWidth` follow Rust (no backtick or `/` escaping; half-width conversion is alnum-only). Wasm's JS name is `escapeRegexp` (lowercase `p`); TypeScript is `escapeRegExp`.
 
 ## Tool helpers
 
@@ -355,7 +401,7 @@ escapeRegExp("path/to/file.txt"); // "path/to/file\\.txt"
 
 ## Array, Async, and Error helpers
 
-These TypeScript helpers are **not** ported to Python, Rust, or Go yet.
+Python and Rust port `countBy` / `partition` / `sliding` / `mapSeries`. Python also has `safe_execute_async`. Rust `umt_map_series` is synchronous (`Result`; the first `Err` stops). Go still has none of these. Wasm skips the generic array helpers and `umt_map_series`.
 
 | Function                      | Behavior                                                                                                                                                                                                        |
 | ----------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |

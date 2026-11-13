@@ -99,7 +99,7 @@ i18n.translate("items", { count: 5, params: { count: 5 } }); // "5個のアイ�
 ## Constraints
 
 - Not a drop-in for `i18next` / `FormatJS`. No ICU message format.
-- Depends on `umt` (types). Main `umt` v5 is ESM-only; this package still has an optional Babel CJS build (`bun run build:babel`).
+- Depends on `umt` 5.x types (`umt/types`). Main `umt` v5 is ESM-only. The companion CommonJS package `umt-i18n-common` is no longer built; an optional Babel ES5 build remains (`bun run build:babel` → `module/es5`).
 - `setLocale` does not change the default locale.
 
 ## Development

@@ -4,7 +4,7 @@ A collection of useful functions that I personally created.
 
 It is for personal use, so there may be destructive changes.
 
-TypeScript `package/main` is the source of truth. Public functions are prefixed with `umt_`, except `umt_rust::ip` (unprefixed; wasm codegen ignores them). Tests live in `tests/` (integration style), not in `src/`. Nightly toolchain, edition 2024. Crate version is in `Cargo.toml` (currently 0.7.1).
+TypeScript `package/main` is the source of truth. Public functions are prefixed with `umt_`, except `umt_rust::ip` (unprefixed; wasm codegen ignores them). Tests live in `tests/` (integration style), not in `src/`. Nightly toolchain, edition 2024. Crate version is in `Cargo.toml` (currently 0.8.0).
 
 ```bash
 cargo test
@@ -22,8 +22,8 @@ cargo doc --open
 | Module | Notes |
 | --- | --- |
 | `advance`, `array`, `async_util`, `color`, `consts` | Same grouping as TypeScript |
-| `crypto` | RFC 4648 Base32 / Base58. See below |
-| `data_structure` | `LRUCache`, `TTLCache`, `PriorityQueue` |
+| `crypto` | RFC 4648 Base32 / Base58 / hex. See below |
+| `data_structure` | `LRUCache`, `TTLCache`, `PriorityQueue`, `Deque` |
 | `date` | Calendar helpers; wasm skips most (`DateTime<Utc>`) |
 | `error`, `function` | Result helpers; debounce / memoize / throttle |
 | `ip` | **Not** `umt_`-prefixed. See below |
@@ -32,7 +32,7 @@ cargo doc --open
 
 Runtime dependencies include `chrono`, `regex`, `serde`, `rand`, and others listed in `Cargo.toml` (the crate is not dependency-free).
 
-Fixed regexes are compiled once in `std::sync::LazyLock` statics (`umt_strip_ansi`, `umt_strip_tags`, `umt_words`, `umt_normalize_whitespace`, `umt_unescape_html`, `umt_is_absolute_url`, `umt_hexa_to_rgba`, `umt_format` escaped-text `[...]`, `umt_math_converter`, `umt_literal_expression`, `apply_formatter`, `get_value`, `parse_email`, UA extractors). Patterns built from caller input stay inline (`format_string` placeholder `{...}`, calculator, `umt_regex_match`). Date `umt_format` is not string `format_string`. Prefer `LazyLock` over compiling the same pattern on every call.
+Fixed regexes are compiled once in `std::sync::LazyLock` statics (`umt_strip_ansi`, `umt_strip_tags`, `umt_words`, `umt_normalize_whitespace`, `umt_unescape_html`, `umt_is_absolute_url`, `umt_hexa_to_rgba`, `umt_format` escaped-text `[...]`, `umt_parse_date` format tokens, `umt_math_converter`, `umt_literal_expression`, `apply_formatter`, `get_value`, `parse_email`, UA extractors). Patterns built from caller input stay inline (`format_string` placeholder `{...}`, calculator, `umt_regex_match`). Date `umt_format` is not string `format_string`. Prefer `LazyLock` over compiling the same pattern on every call.
 
 ## Date helpers
 
@@ -48,6 +48,9 @@ Local-time calendar helpers in `src/date/`. Week boundaries are Sunday-start. Th
 | `umt_week_of_year` | Sunday-start week index. Week 1 contains January 1. Not ISO-8601. |
 | `umt_from_unix` / `umt_to_unix` | `UnixTimeUnit::Second` or `Millisecond`. Seconds are floored. No default unit — pass `UnixTimeUnit::Second` to match TS/Python `"s"`. |
 | `umt_format` / `umt_format_iso` | Token formatter. No default pattern — pass `"YYYY-MM-DDTHH:mm:ssZ"` or use `umt_format_iso`. Third argument is `timezone_offset_minutes` (TypeScript `format` reads the `Date`'s own offset). `[text]` is copied as-is. Wasm skips both (`DateTime<Utc>`). |
+| `umt_parse_date` | Inverse of `umt_format`. Same tokens and `[text]` escapes. Returns `None` on mismatch or out-of-range fields (TypeScript returns an Invalid Date). Wasm skips it (`Option<DateTime<Utc>>`). |
+| `umt_is_same` / `umt_is_after` / `umt_is_before` | Strict equality / comparison. `unit` is `Option<DateBoundaryUnit>`. Omit (`None`) for exact timestamps. Wasm skips all three. |
+| `umt_days_in_month` / `umt_business_days_between` | Local-time month length; signed business-day count (start excluded, end included). Wasm skips both. |
 
 ```rust
 use chrono::{Datelike, TimeZone, Utc};
@@ -71,9 +74,7 @@ assert_eq!(umt_format(&friday, "YYYY-MM-DD", 0), "2025-04-18");
 assert_eq!(umt_format(&friday, "[Year:] YYYY", 0), "Year: 2025");
 ```
 
-There is no `umt_is_same` yet (TypeScript `isSame`). Use `umt_is_same_day` or compare `umt_start_of` results.
-
-Wasm bindings for most of these Date helpers are **not** auto-generated (`DateTime<Utc>` / custom enums). See `package/umt_wasm/doc/index.md`.
+`umt_is_same` matches TypeScript / Python `isSame`. Wasm bindings for most of these Date helpers are **not** auto-generated (`DateTime<Utc>` / custom enums). See `package/umt_wasm/doc/index.md`.
 
 ## Crypto helpers
 
@@ -84,13 +85,21 @@ RFC 4648 Base32 in `src/crypto/` (alphabet `A-Z` + `2-7`, `=` padding). Encoding
 | `umt_encode_base32` | Generic `AsRef<[u8]>` (string or bytes). Empty input → `""`. `"Hello"` → `"JBSWY3DP"`. `"f"` → `"MY======"`. Wasm skips it (generics). |
 | `umt_decode_base32` | `Result<Vec<u8>, Base32Error>`. Skips `=` anywhere. **Errors** on invalid / lowercase characters (`"1A"`, `"jbswy3dp"`). TypeScript `decodeBase32` maps those to value `0` and does not throw. Uses a `const [u8; 256]` lookup (`0xFF` = invalid). Wasm skips it (`Result`). |
 | `umt_decode_base32_to_string` | UTF-8 string of `umt_decode_base32`. Wasm skips it. |
+| `umt_encode_hex` | Generic `AsRef<[u8]>`. Lowercase, two digits per byte. Empty → `""`. `"Hello"` → `"48656c6c6f"`. Wasm skips it (generics). |
+| `umt_decode_hex` | `Result<Vec<u8>, HexError>`. Accepts upper and lower case. **Errors** on odd length or non-hex (`"abc"`, `"zz"`). TypeScript `decodeHex` does not validate. Wasm skips it (`Result`). |
 
 ```rust
-use umt_rust::crypto::{umt_decode_base32, umt_decode_base32_to_string, umt_encode_base32};
+use umt_rust::crypto::{
+    umt_decode_base32, umt_decode_base32_to_string, umt_decode_hex, umt_encode_base32,
+    umt_encode_hex,
+};
 
 assert_eq!(umt_encode_base32("Hello"), "JBSWY3DP");
 assert_eq!(umt_decode_base32_to_string("JBSWY3DP").unwrap(), "Hello");
 assert!(umt_decode_base32("1A").is_err());
+assert_eq!(umt_encode_hex("Hello"), "48656c6c6f");
+assert_eq!(umt_decode_hex("00FF").unwrap(), vec![0, 255]);
+assert!(umt_decode_hex("abc").is_err());
 ```
 
 ## String helpers
@@ -111,16 +120,18 @@ Unicode-aware string utilities in `src/string/`. Most helpers match TypeScript `
 | `umt_to_half_width` | Full-width digits and letters only (`０-９Ａ-Ｚａ-ｚ`). CJK, punctuation, and ideographic space stay. Python also converts `U+FF01`–`U+FF5E` and `U+3000`. Generated for wasm. |
 | `umt_camel_case` | Lowercases only the first alphanumeric character. Does not split acronyms (`"HELLO"` → `"hELLO"`). |
 | `umt_kebab_case` | Inserts dashes on case boundaries. Splits acronyms (`"XMLHttpRequest"` → `"xml-http-request"`). |
-| `umt_slugify` | NFD, drop combining marks, lowercase, hyphenate. `char::is_alphanumeric` keeps CJK (`"Japanese: こんにちは"` → `"japanese-こんにちは"`). TypeScript / Go drop those letters. Generated for wasm. |
+| `umt_slugify` | NFD, drop combining marks, lowercase, hyphenate. ASCII letters and digits only, so CJK is dropped (`"Japanese: こんにちは"` → `"japanese"`). TypeScript / Python / wasm match. Generated for wasm. |
 | `umt_to_base64` | UTF-8 → standard Base64 (`STANDARD` engine). Empty → `""`. `"Hello World"` → `"SGVsbG8gV29ybGQ="`. Generated for wasm. |
 | `umt_from_base64` | `Result<String, String>`. Empty → `Ok("")`. **Requires padding.** Invalid Base64 → `Err("Invalid Base64 string")`. Invalid UTF-8 (`"gA=="`) → `Err("Invalid UTF-8 sequence")`. TypeScript `fromBase64` accepts missing padding and maps invalid UTF-8 to U+FFFD. Generated for wasm. |
+| `umt_encode_base64_url` | RFC 4648 section 5, no padding. `"Hello World"` → `"SGVsbG8gV29ybGQ"`. Generated for wasm. |
+| `umt_decode_base64_url` | Padding optional. Invalid Base64 → `Err("Invalid Base64 string")`. Invalid UTF-8 → `Err("Invalid UTF-8 sequence")`. Generated for wasm. |
 
 ```rust
 use umt_rust::string::{
-    umt_camel_case, umt_delete_spaces, umt_escape_html, umt_from_base64, umt_kebab_case,
-    umt_normalize_whitespace, umt_sanitize_string, umt_slugify, umt_strip_ansi,
-    umt_strip_tags, umt_to_base64, umt_to_full_width, umt_to_half_width, umt_unescape_html,
-    umt_words,
+    umt_camel_case, umt_decode_base64_url, umt_delete_spaces, umt_encode_base64_url,
+    umt_escape_html, umt_from_base64, umt_kebab_case, umt_normalize_whitespace,
+    umt_sanitize_string, umt_slugify, umt_strip_ansi, umt_strip_tags, umt_to_base64,
+    umt_to_full_width, umt_to_half_width, umt_unescape_html, umt_words,
 };
 
 assert_eq!(umt_strip_ansi("\u{001B}[31mred\u{001B}[0m"), "red");
@@ -137,10 +148,12 @@ assert_eq!(umt_to_half_width("ＡＢＣ１２３"), "ABC123");
 assert_eq!(umt_camel_case("hello-world"), "helloWorld");
 assert_eq!(umt_kebab_case("XMLHttpRequest"), "xml-http-request");
 assert_eq!(umt_slugify("Hello World!"), "hello-world");
-assert_eq!(umt_slugify("Japanese: こんにちは"), "japanese-こんにちは");
+assert_eq!(umt_slugify("Japanese: こんにちは"), "japanese");
 assert_eq!(umt_to_base64("Hello World"), "SGVsbG8gV29ybGQ=");
 assert_eq!(umt_from_base64("SGVsbG8gV29ybGQ=").unwrap(), "Hello World");
 assert!(umt_from_base64("SGVsbG8gV29ybGQ").is_err());
+assert_eq!(umt_encode_base64_url("Hello World"), "SGVsbG8gV29ybGQ");
+assert_eq!(umt_decode_base64_url("SGVsbG8gV29ybGQ").unwrap(), "Hello World");
 assert_eq!(umt_from_base64("gA==").unwrap_err(), "Invalid UTF-8 sequence");
 ```
 
@@ -149,6 +162,8 @@ assert_eq!(umt_from_base64("gA==").unwrap_err(), "Invalid UTF-8 sequence");
 | Function | Notes |
 | --- | --- |
 | `umt_hexa_to_rgba` | `#` plus 3, 6, or 8 hex digits → `Rgba`. Invalid input is `Err`. Wasm skips this (`Result<Rgba, HexColorError>`). TypeScript `hexaToRgba` does not validate. |
+| `umt_get_luminance` / `umt_get_contrast_ratio` | WCAG 2.1 relative luminance and contrast. Wasm skips both (`RgbaInput`). |
+| `umt_stringify_query` | Inverse of `umt_parse_query_string`. No leading `?`. Wasm skips it (`HashMap`). |
 | `umt_is_absolute_url` | RFC 3986 scheme check. Protocol-relative URLs are not absolute. Generated for wasm. |
 | `umt_join_path` | Slash-normalizing string join (`&[&str]`), not `std::path::Path`. Keeps the first segment's leading `/` and the last segment's trailing `/`. Empty pieces are dropped. No `.` / `..` resolution. Uses `trim_start_matches` / `trim_end_matches`, not a regex. Generated for wasm. |
 | `umt_escape_regexp` | Escapes `$ ( ) * + . ? [ \ ] ^ { | }`. Hyphen and `/` are not escaped. Char scan, not a regex. Wasm JS name is `escapeRegexp` (lowercase `p`). |
@@ -174,7 +189,7 @@ assert_eq!(umt_escape_regexp("foo-bar"), "foo-bar");
 
 ## parseEmail and calculator
 
-`umt_parse_email(email, options)` returns `{ valid, parts }`. `None` options default to `ParseEmailLevel::Basic`. **`Rfc822` uses the Basic regex; `Rfc5322` uses the Rfc5321 regex.** There is no TypeScript 320-character pre-check. Wasm skips this function (custom `ParseEmailOptions`).
+`umt_parse_email(email, options)` returns `{ valid, parts }`. `None` options default to `ParseEmailLevel::Basic`. Each level uses its own regex (`Rfc822` and `Rfc5322` included). Inputs longer than **320** UTF-16 code units are rejected, matching TypeScript / Python. Wasm skips this function (custom `ParseEmailOptions`).
 
 ```rust
 use umt_rust::validate::{umt_parse_email, ParseEmailLevel, ParseEmailOptions};
@@ -259,11 +274,13 @@ IPv4 utilities in `src/ip/`. Names are **not** `umt_`-prefixed (`umt_rust::ip::c
 | `get_ip_class` | Classful first-octet lookup. `0.0.0.0` and malformed input return `""`. |
 | `get_network_address` | Returns `u32`, not a dotted string. |
 | `ip_to_binary_string` | 32-character `0`/`1` string. |
+| `is_valid_ip` | `true` exactly when `ip_to_long` accepts the input (no leading zeros). TypeScript `isValidIp` also rejects leading zeros, but TypeScript `ipToLong` accepts them. |
+| `parse_cidr` | `"network/prefix"` → `ParsedCidr` with host bits cleared. Invalid address or prefix is `Err`. TypeScript `parseCidr` does not validate. |
 
 ```rust
 use umt_rust::ip::{
     cidr_to_subnet_mask, get_network_address, ip_to_long, is_in_range, is_private_ip,
-    long_to_ip,
+    is_valid_ip, long_to_ip, parse_cidr,
 };
 
 assert_eq!(ip_to_long("192.168.1.1").unwrap(), 3232235777);
@@ -272,6 +289,12 @@ assert_eq!(cidr_to_subnet_mask(24).unwrap(), "255.255.255.0");
 assert!(is_in_range("192.168.1.2", "192.168.1.0", 24).unwrap());
 assert!(is_private_ip("10.0.0.1").unwrap());
 assert!(!is_private_ip("127.0.0.1").unwrap());
+assert!(is_valid_ip("192.168.1.1"));
+assert!(!is_valid_ip("192.168.01.1"));
+assert_eq!(
+    parse_cidr("192.168.1.130/25").unwrap().network_address,
+    "192.168.1.128"
+);
 assert_eq!(
     get_network_address("192.168.1.1", "255.255.255.0").unwrap(),
     3232235776

@@ -30,7 +30,7 @@ Each module typically has:
 
 - Public functions are prefixed with `umt_` **except** `umt_rust::ip` (`cidr_to_long`, `ip_to_long`, …). Wasm codegen only wraps `pub fn umt_*`.
 - Performance-critical functions may use `#[inline]`
-- Cache fixed `regex::Regex` values in `std::sync::LazyLock` statics. Do not use `OnceLock` for these; the crate already uses `LazyLock` (`umt_strip_ansi`, `umt_strip_tags`, `umt_words`, `umt_normalize_whitespace`, `umt_unescape_html`, `umt_is_absolute_url`, `umt_hexa_to_rgba`, `umt_format` escaped-text, `umt_math_converter`, `umt_literal_expression`, `apply_formatter`, `get_value`, `parse_email`, UA extractors). Caller-built patterns (`format_string` placeholder `{...}`, calculator, `umt_regex_match`) stay inline.
+- Cache fixed `regex::Regex` values in `std::sync::LazyLock` statics. Do not use `OnceLock` for these; the crate already uses `LazyLock` (`umt_strip_ansi`, `umt_strip_tags`, `umt_words`, `umt_normalize_whitespace`, `umt_unescape_html`, `umt_is_absolute_url`, `umt_hexa_to_rgba`, `umt_format` escaped-text, `umt_parse_date` format tokens, `umt_math_converter`, `umt_literal_expression`, `apply_formatter`, `get_value`, `parse_email`, UA extractors). Caller-built patterns (`format_string` placeholder `{...}`, calculator, `umt_regex_match`) stay inline.
 - Tests must be in `tests/`, not in `src/`
 - Stable Rust only (no `let_chains`)
 - IP helpers return `Result` (except `long_to_ip` → `String` and `get_ip_class` → `""` on invalid input)
@@ -39,7 +39,7 @@ Each module typically has:
 - `umt_sanitize_string` is ASCII-only (CJK / emoji dropped) and is not `umt_strip_ansi`. `umt_join_path` is a slash join (`trim_start_matches` / `trim_end_matches`), not a regex. `umt_escape_regexp` does not escape `-` or `/`; wasm JS name is `escapeRegexp`.
 - `umt_escape_html` encodes `& < > " '` only (TypeScript also encodes backtick and `/`). `umt_to_full_width` is ASCII alnum only. `umt_to_half_width` is full-width alnum only (Python also converts `U+FF01`–`U+FF5E` and `U+3000`). `is_private_ip` hoists RFC 1918 masks in a `LazyLock` static.
 - `umt_decode_base32` uses a `const [u8; 256]` lookup (`0xFF` = invalid) and returns `Err` on invalid / lowercase characters. TypeScript maps those to `0`. Wasm skips encode (generic) and decode (`Result`).
-- `umt_from_base64` uses the `STANDARD` engine (padding required). Invalid Base64 → `Err("Invalid Base64 string")`. Invalid UTF-8 → `Err("Invalid UTF-8 sequence")`. TypeScript `fromBase64` accepts missing padding and maps invalid UTF-8 to U+FFFD. Wasm generates both.
+- `umt_from_base64` uses the `STANDARD` engine (padding required). Invalid Base64 → `Err("Invalid Base64 string")`. Invalid UTF-8 → `Err("Invalid UTF-8 sequence")`. TypeScript `fromBase64` accepts missing padding and maps invalid UTF-8 to U+FFFD. Wasm generates both. `umt_encode_base64_url` has no padding; `umt_decode_base64_url` accepts padding. `umt_decode_hex` returns `Err` on odd length or non-hex. `umt_slugify` is ASCII-only (`"japanese"`). `umt_parse_email` rejects length `> 320` UTF-16 code units and uses the matching regex for every RFC level.
 - `umt_to_base_n` has no default radix. Invalid radix returns the string `"Invalid radix"`. Wasm generates `toBaseN` / `toBinary` / `toHex`.
 - `umt_rad_to_deg` / `umt_deg_to_rad` use native `f64` multiply, not `umt_division` / `umt_multiplication`. Wasm generates both.
 
