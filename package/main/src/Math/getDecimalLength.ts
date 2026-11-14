@@ -9,6 +9,6 @@ getDecimalLength(1.0); // 0
 */
 export const getDecimalLength = (value: number) => {
   const string_ = value.toString();
-  const x = string_.split(".", 2)[1];
-  return x !== undefined && x.length > 0 ? x.length : 0;
+  const index = string_.indexOf(".");
+  return index === -1 ? 0 : string_.length - index - 1;
 };
