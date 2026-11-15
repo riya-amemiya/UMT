@@ -17,7 +17,7 @@ TSCONFIG     := tsconfig.json
 
 build:
 	$(TSC)
-	$(TSC_ALIAS) -p $(TSCONFIG)
+	$(TSC_ALIAS) -p $(TSCONFIG) --resolve-full-paths
 
 build-clean:
 	rm -rf $(ESM_DIR)
