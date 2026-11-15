@@ -150,4 +150,20 @@ describe("parseDate", () => {
     );
     expect(isInvalid(parseDate("x[y", "[x[y]"))).toBe(true);
   });
+
+  it("keeps results stable when the same format is reused", () => {
+    expect(parseDate("2025-04-04", "YYYY-MM-DD").getTime()).toBe(
+      new Date(2025, 3, 4).getTime(),
+    );
+    expect(isInvalid(parseDate("not-a-date", "YYYY-MM-DD"))).toBe(true);
+    expect(parseDate("1999-12-31", "YYYY-MM-DD").getTime()).toBe(
+      new Date(1999, 11, 31).getTime(),
+    );
+    expect(parseDate("15:30", "HH:mm").getTime()).toBe(
+      new Date(1970, 0, 1, 15, 30).getTime(),
+    );
+    expect(parseDate("2020-01-02", "YYYY-MM-DD").getTime()).toBe(
+      new Date(2020, 0, 2).getTime(),
+    );
+  });
 });

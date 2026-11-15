@@ -41,6 +41,42 @@ interface ParsedFields {
   offsetInRange: boolean;
 }
 
+interface CompiledFormat {
+  regex: RegExp;
+  tokens: string[];
+}
+
+// Format strings are typically reused (logs, APIs, CSV columns). Cache the
+// compiled matcher and captured tokens so later calls skip walking the
+// pattern and constructing a new RegExp.
+const compiledFormats = new Map<string, CompiledFormat>();
+
+const compileFormat = (formatString: string): CompiledFormat => {
+  const cached = compiledFormats.get(formatString);
+  if (cached !== undefined) {
+    return cached;
+  }
+
+  const tokens: string[] = [];
+  const source = formatString.replaceAll(
+    formatTokenPattern,
+    (match: string, escaped?: string, literal?: string) => {
+      const text = escaped ?? literal;
+      if (text !== undefined) {
+        return escapeRegExp(text);
+      }
+      tokens.push(match);
+      return `(${tokenPatterns[match]})`;
+    },
+  );
+  const compiled: CompiledFormat = {
+    regex: new RegExp(`^${source}$`),
+    tokens,
+  };
+  compiledFormats.set(formatString, compiled);
+  return compiled;
+};
+
 const applyToken = (
   fields: ParsedFields,
   token: string,
@@ -128,19 +164,8 @@ parseDate("2025-04-04T15:30:00+09:00", "YYYY-MM-DDTHH:mm:ssZ"); // 2025-04-04T06
 parseDate("2025-13-01", "YYYY-MM-DD"); // Invalid Date
 */
 export const parseDate = (string: string, formatString: string): Date => {
-  const tokens: string[] = [];
-  const source = formatString.replaceAll(
-    formatTokenPattern,
-    (match: string, escaped?: string, literal?: string) => {
-      const text = escaped ?? literal;
-      if (text !== undefined) {
-        return escapeRegExp(text);
-      }
-      tokens.push(match);
-      return `(${tokenPatterns[match]})`;
-    },
-  );
-  const matched = new RegExp(`^${source}$`).exec(string);
+  const { regex, tokens } = compileFormat(formatString);
+  const matched = regex.exec(string);
   if (matched === null) {
     return new Date(Number.NaN);
   }
