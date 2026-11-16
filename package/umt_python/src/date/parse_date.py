@@ -31,6 +31,28 @@ _TOKEN_PATTERNS = {
     "Z": "[+-][0-9]{2}:[0-9]{2}",
 }
 
+_compiled_formats: dict[str, tuple[re.Pattern[str], tuple[str, ...]]] = {}
+
+
+def _compile_format(format_string: str) -> tuple[re.Pattern[str], tuple[str, ...]]:
+    cached = _compiled_formats.get(format_string)
+    if cached is not None:
+        return cached
+
+    tokens: list[str] = []
+
+    def replacer(match: re.Match[str]) -> str:
+        text = match.group(1) or match.group(2)
+        if text is not None:
+            return re.escape(text)
+        tokens.append(match.group(0))
+        return f"({_TOKEN_PATTERNS[match.group(0)]})"
+
+    source = _FORMAT_TOKEN_PATTERN.sub(replacer, format_string)
+    compiled = (re.compile(source), tuple(tokens))
+    _compiled_formats[format_string] = compiled
+    return compiled
+
 
 @dataclass
 class _ParsedFields:
@@ -122,17 +144,8 @@ def parse_date(string: str, format_string: str) -> datetime | None:
         >>> parse_date("2025-13-01", "YYYY-MM-DD") is None
         True
     """
-    tokens: list[str] = []
-
-    def replacer(match: re.Match[str]) -> str:
-        text = match.group(1) or match.group(2)
-        if text is not None:
-            return re.escape(text)
-        tokens.append(match.group(0))
-        return f"({_TOKEN_PATTERNS[match.group(0)]})"
-
-    source = _FORMAT_TOKEN_PATTERN.sub(replacer, format_string)
-    matched = re.fullmatch(source, string)
+    regex, tokens = _compile_format(format_string)
+    matched = regex.fullmatch(string)
     if matched is None:
         return None
 
