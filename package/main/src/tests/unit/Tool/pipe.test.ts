@@ -395,8 +395,8 @@ describe("Pipe", () => {
       expect(result).toBe("6");
     });
 
-    it("applies up to nine functions", () => {
-      const result: number = pipe(
+    it("applies up to twenty functions", () => {
+      const result: string = pipe(
         0,
         (x) => x + 1,
         (x) => x + 1,
@@ -407,8 +407,19 @@ describe("Pipe", () => {
         (x) => x + 1,
         (x) => x + 1,
         (x) => x + 1,
+        (x) => x + 1,
+        (x) => x + 1,
+        (x) => x + 1,
+        (x) => x + 1,
+        (x) => x + 1,
+        (x) => x + 1,
+        (x) => x + 1,
+        (x) => x + 1,
+        (x) => x + 1,
+        (x) => x + 1,
+        (x) => `${x}`,
       );
-      expect(result).toBe(9);
+      expect(result).toBe("19");
     });
 
     it("returns the result instead of a Pipe instance", () => {
