@@ -132,6 +132,16 @@ class TestParseDate(unittest.TestCase):
         self.assertEqual(parse_date("[xy", "[x[y]"), datetime(1970, 1, 1))
         self.assertIsNone(parse_date("x[y", "[x[y]"))
 
+    def test_reuses_a_compiled_format_across_calls(self):
+        self.assertEqual(parse_date("2025-04-04", "YYYY-MM-DD"), datetime(2025, 4, 4))
+        self.assertEqual(parse_date("2024-12-31", "YYYY-MM-DD"), datetime(2024, 12, 31))
+        self.assertIsNone(parse_date("2025-13-01", "YYYY-MM-DD"))
+        self.assertEqual(
+            parse_date("04/04/2025 3:30 PM", "MM/DD/YYYY h:mm A"),
+            datetime(2025, 4, 4, 15, 30),
+        )
+        self.assertEqual(parse_date("2026-01-02", "YYYY-MM-DD"), datetime(2026, 1, 2))
+
 
 if __name__ == "__main__":
     unittest.main()
