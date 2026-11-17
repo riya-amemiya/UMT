@@ -129,6 +129,11 @@
       "import": "./module/Object/index.js",
       "default": "./module/Object/index.js"
     },
+    "./Pipe": {
+      "types": "./module/Pipe/index.d.ts",
+      "import": "./module/Pipe/index.js",
+      "default": "./module/Pipe/index.js"
+    },
     "./Predicate": {
       "types": "./module/Predicate/index.d.ts",
       "import": "./module/Predicate/index.js",

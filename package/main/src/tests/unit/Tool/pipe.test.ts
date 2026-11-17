@@ -379,6 +379,54 @@ describe("Pipe", () => {
     });
   });
 
+  describe("with functions", () => {
+    it("returns the value after applying one function", () => {
+      const result: number = pipe(2, (x) => x * 2);
+      expect(result).toBe(4);
+    });
+
+    it("applies functions from left to right", () => {
+      const result: string = pipe(
+        1,
+        (x) => x + 1,
+        (x) => x * 3,
+        (x) => `${x}`,
+      );
+      expect(result).toBe("6");
+    });
+
+    it("applies up to twenty functions", () => {
+      const result: string = pipe(
+        0,
+        (x) => x + 1,
+        (x) => x + 1,
+        (x) => x + 1,
+        (x) => x + 1,
+        (x) => x + 1,
+        (x) => x + 1,
+        (x) => x + 1,
+        (x) => x + 1,
+        (x) => x + 1,
+        (x) => x + 1,
+        (x) => x + 1,
+        (x) => x + 1,
+        (x) => x + 1,
+        (x) => x + 1,
+        (x) => x + 1,
+        (x) => x + 1,
+        (x) => x + 1,
+        (x) => x + 1,
+        (x) => x + 1,
+        (x) => `${x}`,
+      );
+      expect(result).toBe("19");
+    });
+
+    it("returns the result instead of a Pipe instance", () => {
+      expect(pipe(1, (x) => x)).not.toBeInstanceOf(Pipe);
+    });
+  });
+
   describe("filterResult()", () => {
     it("returns success result when predicate is true", () => {
       const result = pipe<unknown>(42)
