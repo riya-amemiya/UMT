@@ -199,3 +199,24 @@ fn test_opening_bracket_inside_escaped_text_is_literal() {
     );
     assert_eq!(umt_parse_date("x[y", "[x[y]"), None);
 }
+
+#[test]
+fn test_reuses_a_compiled_format_across_calls() {
+    assert_eq!(
+        umt_parse_date("2025-04-04", "YYYY-MM-DD"),
+        Some(date(2025, 4, 4, 0, 0, 0))
+    );
+    assert_eq!(
+        umt_parse_date("2024-12-31", "YYYY-MM-DD"),
+        Some(date(2024, 12, 31, 0, 0, 0))
+    );
+    assert_eq!(umt_parse_date("2025-13-01", "YYYY-MM-DD"), None);
+    assert_eq!(
+        umt_parse_date("04/04/2025 3:30 PM", "MM/DD/YYYY h:mm A"),
+        Some(date(2025, 4, 4, 15, 30, 0))
+    );
+    assert_eq!(
+        umt_parse_date("2026-01-02", "YYYY-MM-DD"),
+        Some(date(2026, 1, 2, 0, 0, 0))
+    );
+}
