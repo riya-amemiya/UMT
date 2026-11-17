@@ -106,6 +106,86 @@ Creates a new Pipe instance with an initial value
 @param initialValue Initial value for the pipeline
 @returns New Pipe instance
 */
-export function pipe<T>(initialValue: T): Pipe<T> {
-  return new Pipe(initialValue);
+export function pipe<T>(initialValue: T): Pipe<T>;
+export function pipe<A, B>(initialValue: A, function1: (input: A) => B): B;
+export function pipe<A, B, C>(
+  initialValue: A,
+  function1: (input: A) => B,
+  function2: (input: B) => C,
+): C;
+export function pipe<A, B, C, D>(
+  initialValue: A,
+  function1: (input: A) => B,
+  function2: (input: B) => C,
+  function3: (input: C) => D,
+): D;
+export function pipe<A, B, C, D, E>(
+  initialValue: A,
+  function1: (input: A) => B,
+  function2: (input: B) => C,
+  function3: (input: C) => D,
+  function4: (input: D) => E,
+): E;
+export function pipe<A, B, C, D, E, F>(
+  initialValue: A,
+  function1: (input: A) => B,
+  function2: (input: B) => C,
+  function3: (input: C) => D,
+  function4: (input: D) => E,
+  function5: (input: E) => F,
+): F;
+export function pipe<A, B, C, D, E, F, G>(
+  initialValue: A,
+  function1: (input: A) => B,
+  function2: (input: B) => C,
+  function3: (input: C) => D,
+  function4: (input: D) => E,
+  function5: (input: E) => F,
+  function6: (input: F) => G,
+): G;
+export function pipe<A, B, C, D, E, F, G, H>(
+  initialValue: A,
+  function1: (input: A) => B,
+  function2: (input: B) => C,
+  function3: (input: C) => D,
+  function4: (input: D) => E,
+  function5: (input: E) => F,
+  function6: (input: F) => G,
+  function7: (input: G) => H,
+): H;
+export function pipe<A, B, C, D, E, F, G, H, I>(
+  initialValue: A,
+  function1: (input: A) => B,
+  function2: (input: B) => C,
+  function3: (input: C) => D,
+  function4: (input: D) => E,
+  function5: (input: E) => F,
+  function6: (input: F) => G,
+  function7: (input: G) => H,
+  function8: (input: H) => I,
+): I;
+export function pipe<A, B, C, D, E, F, G, H, I, J>(
+  initialValue: A,
+  function1: (input: A) => B,
+  function2: (input: B) => C,
+  function3: (input: C) => D,
+  function4: (input: D) => E,
+  function5: (input: E) => F,
+  function6: (input: F) => G,
+  function7: (input: G) => H,
+  function8: (input: H) => I,
+  function9: (input: I) => J,
+): J;
+export function pipe(
+  initialValue: unknown,
+  ...functions: ((input: unknown) => unknown)[]
+): unknown {
+  if (functions.length === 0) {
+    return new Pipe(initialValue);
+  }
+  let value = initialValue;
+  for (const function_ of functions) {
+    value = function_(value);
+  }
+  return value;
 }
