@@ -2,12 +2,21 @@
 
 use chrono::{DateTime, Datelike, Duration, NaiveDate, TimeZone, Utc};
 use regex::Regex;
-use std::sync::LazyLock;
+use std::collections::HashMap;
+use std::sync::{Arc, LazyLock, RwLock};
 
 static FORMAT_TOKEN_RE: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r"\[([^\[\]]+)]|YYYY|YY|MM|M|DD|D|d|HH|H|hh|h|mm|m|ss|s|SSS|A|a|ZZ|Z|(?s:(.))")
         .unwrap()
 });
+
+struct CompiledFormat {
+    pattern: Regex,
+    tokens: Vec<String>,
+}
+
+static COMPILED_FORMATS: LazyLock<RwLock<HashMap<String, Arc<CompiledFormat>>>> =
+    LazyLock::new(|| RwLock::new(HashMap::new()));
 
 fn token_pattern(token: &str) -> &'static str {
     match token {
@@ -21,6 +30,36 @@ fn token_pattern(token: &str) -> &'static str {
         "ZZ" => "[+-][0-9]{4}",
         _ => "[+-][0-9]{2}:[0-9]{2}",
     }
+}
+
+fn compile_format(format_string: &str) -> Option<Arc<CompiledFormat>> {
+    if let Some(compiled) = COMPILED_FORMATS.read().unwrap().get(format_string).cloned() {
+        return Some(compiled);
+    }
+
+    let mut tokens = Vec::new();
+    let mut source = String::from("^");
+    for captures in FORMAT_TOKEN_RE.captures_iter(format_string) {
+        match captures.get(1).or_else(|| captures.get(2)) {
+            Some(text) => source.push_str(&regex::escape(text.as_str())),
+            None => {
+                let token = captures.get(0).unwrap().as_str();
+                tokens.push(token.to_owned());
+                source.push('(');
+                source.push_str(token_pattern(token));
+                source.push(')');
+            }
+        }
+    }
+    source.push('$');
+    let compiled = Arc::new(CompiledFormat {
+        pattern: Regex::new(&source).ok()?,
+        tokens,
+    });
+    let mut cache = COMPILED_FORMATS.write().unwrap();
+    Some(Arc::clone(
+        cache.entry(format_string.to_owned()).or_insert(compiled),
+    ))
 }
 
 struct ParsedFields {
@@ -122,23 +161,8 @@ impl ParsedFields {
 /// assert_eq!(umt_parse_date("2025-13-01", "YYYY-MM-DD"), None);
 /// ```
 pub fn umt_parse_date(string: &str, format_string: &str) -> Option<DateTime<Utc>> {
-    let mut tokens: Vec<&str> = Vec::new();
-    let mut source = String::from("^");
-    for captures in FORMAT_TOKEN_RE.captures_iter(format_string) {
-        match captures.get(1).or_else(|| captures.get(2)) {
-            Some(text) => source.push_str(&regex::escape(text.as_str())),
-            None => {
-                let token = captures.get(0).unwrap().as_str();
-                tokens.push(token);
-                source.push('(');
-                source.push_str(token_pattern(token));
-                source.push(')');
-            }
-        }
-    }
-    source.push('$');
-    let pattern = Regex::new(&source).ok()?;
-    let matched = pattern.captures(string)?;
+    let compiled = compile_format(format_string)?;
+    let matched = compiled.pattern.captures(string)?;
 
     let mut fields = ParsedFields {
         year: 1970,
@@ -154,7 +178,7 @@ pub fn umt_parse_date(string: &str, format_string: &str) -> Option<DateTime<Utc>
         offset: None,
         offset_in_range: true,
     };
-    for (index, token) in tokens.iter().enumerate() {
+    for (index, token) in compiled.tokens.iter().enumerate() {
         fields.apply(token, matched.get(index + 1).map_or("", |m| m.as_str()));
     }
 
