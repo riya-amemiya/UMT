@@ -26,6 +26,10 @@ pub fn umt_multiplication(numbers: &[f64]) -> f64 {
         return 1.0;
     }
 
+    if numbers.iter().all(|n| n.fract() == 0.0) {
+        return numbers.iter().product();
+    }
+
     numbers.iter().fold(1.0, |accumulator, &number| {
         let n = 10_f64
             .powi((umt_get_decimal_length(accumulator) + umt_get_decimal_length(number)) as i32);

@@ -73,3 +73,20 @@ fn test_multiplication_empty() {
 fn test_multiplication_single() {
     assert_eq!(umt_multiplication(&[5.0]), 5.0);
 }
+
+#[test]
+fn test_multiplication_matches_native_product_for_integers() {
+    assert_eq!(umt_multiplication(&[2.0, 3.0]), 2.0 * 3.0);
+    assert_eq!(
+        umt_multiplication(&[1.0, 2.0, 3.0, 4.0, 5.0]),
+        1.0 * 2.0 * 3.0 * 4.0 * 5.0
+    );
+    assert_eq!(umt_multiplication(&[-10.0, 4.0, 6.0]), -10.0 * 4.0 * 6.0);
+    assert_eq!(umt_multiplication(&[1e9, 1e9]), 1e9 * 1e9);
+}
+
+#[test]
+fn test_multiplication_keeps_decimal_product_exact() {
+    assert_eq!(umt_multiplication(&[0.1, 0.2]), 0.02);
+    assert_eq!(umt_multiplication(&[0.1, 0.2, 0.3]), 0.006);
+}
