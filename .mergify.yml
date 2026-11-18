@@ -1,7 +1,78 @@
+shared:
+  ci: &ci
+    - or:
+        - -files ~= ^(package/main/|\.github/workflows/main-package-bun\.yml$)
+        - and:
+            - check-success = Run Lint (ubuntu-latest)
+            - check-success = Build Package (ubuntu-latest)
+            - check-success = Run Tests (ubuntu-latest)
+    - or:
+        - -files ~= ^(package/main/|\.github/workflows/main-package-node\.yml$)
+        - and:
+            - check-success = Run Tests (Node.js) (20.x, ubuntu-latest)
+            - check-success = Run Tests (Node.js) (22.x, ubuntu-latest)
+            - check-success = Run Tests (Node.js) (24.x, ubuntu-latest)
+            - check-success = Run Tests (Node.js) (26.x, ubuntu-latest)
+    - or:
+        - -files ~= ^(package/umt_python/|\.github/workflows/python-package-ci\.yml$)
+        - and:
+            - check-success = Run Format Check (3.10, ubuntu-latest)
+            - check-success = Run Format Check (3.11, ubuntu-latest)
+            - check-success = Run Format Check (3.12, ubuntu-latest)
+            - check-success = Run Format Check (3.13, ubuntu-latest)
+            - check-success = Run Format Check (3.14, ubuntu-latest)
+            - check-success = Run Format Check (3.15, ubuntu-latest)
+            - check-success = Run Lint (3.10, ubuntu-latest)
+            - check-success = Run Lint (3.11, ubuntu-latest)
+            - check-success = Run Lint (3.12, ubuntu-latest)
+            - check-success = Run Lint (3.13, ubuntu-latest)
+            - check-success = Run Lint (3.14, ubuntu-latest)
+            - check-success = Run Lint (3.15, ubuntu-latest)
+            - check-success = Run Type Check (3.10, ubuntu-latest)
+            - check-success = Run Type Check (3.11, ubuntu-latest)
+            - check-success = Run Type Check (3.12, ubuntu-latest)
+            - check-success = Run Type Check (3.13, ubuntu-latest)
+            - check-success = Run Type Check (3.14, ubuntu-latest)
+            - check-success = Run Type Check (3.15, ubuntu-latest)
+            - check-success = Run Tests (3.10, ubuntu-latest)
+            - check-success = Run Tests (3.11, ubuntu-latest)
+            - check-success = Run Tests (3.12, ubuntu-latest)
+            - check-success = Run Tests (3.13, ubuntu-latest)
+            - check-success = Run Tests (3.14, ubuntu-latest)
+            - check-success = Run Tests (3.15, ubuntu-latest)
+    - or:
+        - -files ~= ^(package/umt_rust/|\.github/workflows/rust-package-ci\.yml$)
+        - and:
+            - check-success = Check Format
+            - check-success = Run Clippy
+            - check-success = Build Package
+    - or:
+        - -files ~= ^(package/umt_(wasm|rust)/|\.github/workflows/wasm-plugin-ci\.yml$)
+        - and:
+            - check-success = Check Format
+            - check-success = Run Clippy
+            - check-success = Build Package
+            - check-success = Run Tests
+            - check-success = Check Generated Bindings In Sync
+            - check-success = Build Wasm and Run Jest
+    - or:
+        - -files ~= (\.nix|(^|/)flake\.lock)$|^\.github/workflows/nix-fmt\.yml$
+        - and:
+            - check-success = nix fmt (root)
+            - check-success = nix fmt (main)
+            - check-success = nix fmt (i18n)
+            - check-success = nix fmt (wasm)
 merge_protections_settings:
   auto_merge_conditions: true
+queue_rules:
+  - name: default
+    queue_conditions: &queue_ci
+      - or:
+          - base != main
+          - and: *ci
+    merge_conditions: *queue_ci
 merge_protections:
   - name: Main
     if:
       - base = main
-    success_conditions: []
+    success_conditions: *ci
