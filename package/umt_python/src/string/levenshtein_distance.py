@@ -38,12 +38,18 @@ def levenshtein_distance(string1: str, string2: str) -> int:
     for i, char1 in enumerate(string1):
         current_row[0] = i + 1
         for j, char2 in enumerate(string2):
-            cost = 0 if char1 == char2 else 1
-            current_row[j + 1] = min(
-                previous_row[j + 1] + 1,
-                current_row[j] + 1,
-                previous_row[j] + cost,
-            )
+            deletion = previous_row[j + 1] + 1
+            insertion = current_row[j] + 1
+            substitution = previous_row[j] + (0 if char1 == char2 else 1)
+            if insertion < deletion:
+                if substitution < insertion:
+                    current_row[j + 1] = substitution
+                else:
+                    current_row[j + 1] = insertion
+            elif substitution < deletion:
+                current_row[j + 1] = substitution
+            else:
+                current_row[j + 1] = deletion
         previous_row, current_row = current_row, previous_row
 
     return previous_row[length2]
