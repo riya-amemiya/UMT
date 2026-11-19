@@ -168,6 +168,7 @@ mod math {
     mod test_mode;
     mod test_multiples;
     mod test_multiplication;
+    mod test_multiplication_parity;
     mod test_ncr;
     mod test_ncr_parity;
     mod test_nhr;
