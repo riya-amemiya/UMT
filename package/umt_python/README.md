@@ -64,13 +64,13 @@ Public names are re-exported from `src/__init__.py`. Grouped the same way as Typ
 | `simple` | `birthday_simple`, `now_simple` |
 | `string` | `format_string`, `slugify`, `strip_ansi`, `strip_tags`, `words`, `normalize_whitespace`, `unescape_html`, `escape_html`, `camel_case`, `kebab_case`, `sanitize_string`, `delete_spaces`, `to_full_width`, `to_half_width`, `to_base64`, `from_base64`, `encode_base64_url`, `decode_base64_url` (see below) |
 | `time` | `convert_time`, `format_duration` |
-| `tool` | `pipe`, `unwrap`, `parse_json`, `escape_regexp` (see below) |
+| `tool` | `pipe` (fluent `Pipe` only; see below), `unwrap`, `parse_json`, `escape_regexp` (see below) |
 | `ua` | `parse_user_agent`, `extract_browser_from_user_agent`, `extract_device_from_user_agent`, `extract_os_from_user_agent` (see below) |
 | `unit` | `to_celsius`, `to_kelvin` |
 | `url` | `build_url`, `parse_query_string`, `stringify_query`, `is_absolute_url`, `join_path` (see below) |
 | `validate` | `is_number`, `array_of`, `parse_email` (see below) |
 
-Not every TypeScript helper is ported yet. There is no date `format` (TypeScript `format` / Rust `umt_format` / Go `FormatDate`). `is_same`, `count_by`, `partition`, `sliding`, `map_series`, and `safe_execute_async` are ported.
+Not every TypeScript helper is ported yet. There is no date `format` (TypeScript `format` / Rust `umt_format` / Go `FormatDate`). `is_same`, `count_by`, `partition`, `sliding`, `map_series`, and `safe_execute_async` are ported. TypeScript `umt/Pipe` operators and data-first `pipe(value, fn, ...)` are not.
 
 ## Date helpers
 
@@ -211,7 +211,7 @@ Coarse User-Agent labels aligned with TypeScript `package/main/src/UA`. Matching
 | `extract_os_from_user_agent` | `(ua: str) -> OsType` | iPhone / iPad / iPod → `"ios"` even when the string contains `like Mac OS X`. Android wins over the `Linux` token. | `extract_os_from_user_agent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)")  # "macos"` |
 | `parse_user_agent` | `(user_agent: str) -> UserAgentInfo` | TypedDict `{browser, device, os}`. | `parse_user_agent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) Chrome/91.0")  # {'browser': 'chrome', 'device': 'desktop', 'os': 'macos'}` |
 
-Fixed regexes in this package are compiled once at module level (`re.compile`): UA extractors, `hexa_to_rgba`, `is_absolute_url`, `join_path`, `math_converter`, `parse_email`, `parse_date`, `strip_ansi` / `strip_tags`, `unescape_html`, `escape_html`, `camel_case`, `kebab_case`, `slugify`, `normalize_whitespace`, `sanitize_string`, `delete_spaces`, `escape_regexp`, calculator / `calculator_core` (except the currency-symbol pattern), `literal_expression`, `apply_formatter`, `get_value`, `decode_hex`, `decode_base64_url`, `parse_cidr`. Caller-built patterns (`format_string`, `regex_match`, optional `words` pattern, `template_literal`, calculator currency symbol) stay inline. `to_full_width` / `to_half_width` use module-level `str.maketrans` tables, not regex.
+Fixed regexes in this package are compiled once at module level (`re.compile`): UA extractors, `hexa_to_rgba`, `is_absolute_url`, `join_path`, `math_converter`, `parse_email`, `parse_date` format matchers, `strip_ansi` / `strip_tags`, `unescape_html`, `escape_html`, `camel_case`, `kebab_case`, `slugify`, `normalize_whitespace`, `sanitize_string`, `delete_spaces`, `escape_regexp`, calculator / `calculator_core` (except the currency-symbol pattern), `literal_expression`, `apply_formatter`, `get_value`, `decode_hex`, `decode_base64_url`, `parse_cidr`. Caller-built patterns (`format_string`, `regex_match`, optional `words` pattern, `template_literal`, calculator currency symbol) stay inline. `to_full_width` / `to_half_width` use module-level `str.maketrans` tables, not regex. `parse_date` caches compiled format matchers the same way TypeScript `parseDate` and Rust `umt_parse_date` do.
 
 ## Function List
 
@@ -298,6 +298,7 @@ Fixed regexes in this package are compiled once at module level (`re.compile`): 
 - `sanitize_string` is ASCII-only. CJK, emoji, and accented letters are dropped. It is not `strip_ansi`: `"\x1b[31mred\x1b[0m"` becomes `"[31mred[0m"`.
 - `join_path` does not resolve `.` / `..` and does not use OS separators.
 - `escape_regexp` does not escape `-` or `/`.
+- `pipe(value)` returns a fluent `Pipe` (`map` / `when` / `tap` / `filter_strict` / `filter_with_default` / `filter_result` / `end`). Extra positional functions are **not** accepted. TypeScript 5.3.0 `pipe(value, fn, ...)` is data-first and `umt/Pipe` operators (`filter`, `transform`, `fold`, …) are TypeScript-only. `filter_strict` raises `ValueError`; TypeScript throws `Error`.
 
 ## Development
 

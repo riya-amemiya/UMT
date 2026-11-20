@@ -67,13 +67,13 @@ Public code lives in `src/<package>`. Tests are `src/tests/<package>/*_test.go` 
 | `simple` | `src/simple` | `BirthdaySimple`, `NowSimple` |
 | `str` | `src/str` | `FormatString`, `Slugify`, `StripAnsi`, `SanitizeString`, `Words`, `ToBase64`, `FromBase64` |
 | `timeutil` | `src/timeutil` | `ConvertTime` |
-| `tool` | `src/tool` | `Pipe`, `Unwrap`, `ParseJson`, `EscapeRegExp` |
+| `tool` | `src/tool` | `Pipe` (data-first `any`; see below), `Unwrap`, `ParseJson`, `EscapeRegExp` |
 | `ua` | `src/ua` | `ParseUserAgent`, `ExtractBrowserFromUserAgent` (see below) |
 | `unit` | `src/unit` | `ToCelsius`, `ToKelvin` |
 | `urlutil` | `src/urlutil` | `BuildUrl`, `ParseQueryString`, `IsAbsoluteUrl`, `JoinPath` (see below) |
 | `validate` | `src/validate` | `IsNumber`, `ArrayOf`, `ParseEmail` (see below) |
 
-Not every TypeScript helper is ported. There is no `IsBetween`, `AddBusinessDays`, `FromUnix` / `ToUnix`, `WeekOfYear`, `GetQuarter`, `IsSame`, or `ParseDate`. There is also no `CountBy`, `Partition`, `Sliding`, `MapSeries`, `SafeExecuteAsync`, `EncodeHex` / `DecodeHex`, `EncodeBase64Url` / `DecodeBase64Url`, `IsValidIp`, or `ParseCidr`.
+Not every TypeScript helper is ported. There is no `IsBetween`, `AddBusinessDays`, `FromUnix` / `ToUnix`, `WeekOfYear`, `GetQuarter`, `IsSame`, or `ParseDate`. There is also no `CountBy`, `Partition`, `Sliding`, `MapSeries`, `SafeExecuteAsync`, `EncodeHex` / `DecodeHex`, `EncodeBase64Url` / `DecodeBase64Url`, `IsValidIp`, `ParseCidr`, or TypeScript `umt/Pipe` operators (`filter`, `transform`, `fold`, …).
 
 ## Date helpers
 
@@ -259,6 +259,22 @@ in, _ := ip.IsInRange("192.168.1.2", "192.168.1.0/24")
 net, _ := ip.GetNetworkAddress("192.168.1.1", "255.255.255.0") // "192.168.1.0"
 bin, _ := ip.IpToBinaryString("192.168.0.1")
 // "11000000101010000000000000000001"
+```
+
+## Pipe
+
+`Pipe(value, fns...)` in `src/tool` is data-first with `any`. Functions run left-to-right. With no functions, **the value is returned** (`Pipe(1)` is `1`). There is no fluent `Pipe` class.
+
+TypeScript `pipe(value)` returns a fluent `Pipe<T>`; `pipe(value, fn, ...)` matches this Go shape. Python / Rust `pipe` / `umt_pipe` are fluent-only and do not take extra functions. TypeScript `umt/Pipe` operators are not ported.
+
+```go
+import "github.com/riya-amemiya/umt-go/src/tool"
+
+_ = tool.Pipe(1) // 1
+_ = tool.Pipe(1,
+	func(v any) any { return v.(int) + 1 },
+	func(v any) any { return v.(int) * 2 },
+) // 4
 ```
 
 ## Development
