@@ -66,6 +66,9 @@ Input validation is the caller's responsibility. This library must not validate 
 - **Testing framework**: Jest with SWC transformer for fast TypeScript compilation
 - **Coverage**: Enabled by default, excludes environment detection utilities (`isBrowser`, `isNode`, `isBun`, `isNodeWebkit`) and `src/tests/benchmark/**`
 - **TypeScript pin**: Keep `typescript` at 6.0.3. TypeScript 7.x breaks `typescript-eslint` and `ts-node` loading `jest.config.ts` (see `COMPATIBILITY.md`)
+- **Pipe**: `pipe(value)` is fluent `Pipe<T>`; `pipe(value, fn, ...)` is data-first (5.3.0). Operators live in `src/Pipe` / `umt/Pipe` and are TypeScript-only. Python / Rust stay fluent-only. Go `Pipe` is data-first `any`. Wasm skips `umt_pipe`.
+- **parseDate**: Cache compiled format matchers (`Map` keyed by format string). Python / Rust do the same with `re.compile` / `LazyLock`.
+- **Build**: `tsc-alias --resolve-full-paths` so published ESM relative imports include `.js` extensions.
 
 ## Codebase Structure
 
@@ -92,6 +95,7 @@ src/
 ├── Math/                    # Mathematical functions
 ├── Number/                  # Number formatting (toOrdinal, formatNumber, toPercentage)
 ├── Object/                  # Object manipulation functions
+├── Pipe/                    # Data-first pipe operators (filter, transform, fold, …)
 ├── Predicate/               # Predicate combinators (not, every, some, matches, isNullish)
 ├── Random/                  # randomChoice, seededRandom, weightedChoice
 ├── Simple/                  # Simple version functions

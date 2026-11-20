@@ -15,7 +15,7 @@ CI uses `oven-sh/setup-bun` with `bun-version: latest` (not a pinned 1.2.x).
 
 Do not merge Dependabot bumps to TypeScript 7.x until both of these work:
 
-- `typescript-eslint` 8.69.x refuses to load under TypeScript 7.0, so `bun run lint:ci` fails.
+- `typescript-eslint` 8.x currently refuses to load under TypeScript 7.0, so `bun run lint:ci` fails.
 - `ts-node` 10.9.2 cannot parse `jest.config.ts` under TypeScript 7.0, so `npx jest` on Node 20 fails.
 
 Hold `typescript` at 6.0.3 (revert the version in those three `package.json` files if Dependabot moves it). `biome` formatting-only follow-ups from the same bump are fine.
@@ -27,6 +27,7 @@ Hold `typescript` at 6.0.3 (revert the version in those three `package.json` fil
 ```ts
 import { chunk, isBetween } from "umt";
 import { isBetween as isBetweenDate } from "umt/Date";
+import { filter } from "umt/Pipe";
 ```
 
 ```js
@@ -34,7 +35,11 @@ import { isBetween as isBetweenDate } from "umt/Date";
 const { chunk } = require("umt");
 ```
 
-Subpath exports match source modules (`umt/Array`, `umt/Date`, `umt/Validate`, …). Tree-shaking follows those ESM entry points.
+Subpath exports match source modules (`umt/Array`, `umt/Date`, `umt/Pipe`, `umt/Validate`, …). Tree-shaking follows those ESM entry points.
+
+From **5.2.1**, the published `module/` tree rewrites relative imports with `.js` extensions (`tsc-alias --resolve-full-paths`). Node.js ESM requires that; without it, `import { chunk } from "umt"` can fail with `ERR_MODULE_NOT_FOUND` on bare relative specifiers.
+
+`pipe` (`umt/Tool`) is overloaded in **5.3.0**: `pipe(value)` returns a fluent `Pipe<T>`; `pipe(value, fn, ...fns)` applies the functions left-to-right and returns the result. Data-first operators (`filter`, `transform`, `fold`, …) are `umt/Pipe` only. Python / Rust keep the fluent `Pipe` class and do not accept extra functions. Go `Pipe` is data-first with `any` and returns the value even with no functions. Wasm skips `umt_pipe` (generics).
 
 Input validation is the caller's responsibility. Functions do not throw on invalid arguments unless throwing is the function's purpose (for example `unwrap`).
 

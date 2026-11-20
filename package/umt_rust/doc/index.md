@@ -28,7 +28,7 @@ cargo doc --open
 | `error`, `function` | Result helpers; debounce / memoize / throttle |
 | `ip` | **Not** `umt_`-prefixed. See below |
 | `iterator`, `map`, `math`, `number`, `object` | |
-| `predicate`, `random`, `simple`, `string`, `time`, `tool`, `ua`, `unit`, `url`, `validate` | |
+| `predicate`, `random`, `simple`, `string`, `time`, `tool`, `ua`, `unit`, `url`, `validate` | `umt_pipe` is fluent-only (see below). |
 
 Runtime dependencies include `chrono`, `regex`, `serde`, `rand`, and others listed in `Cargo.toml` (the crate is not dependency-free).
 
@@ -185,6 +185,16 @@ assert_eq!(
 assert_eq!(umt_join_path(&["a", "", "b"]), "a/b");
 assert_eq!(umt_escape_regexp("a.b"), "a\\.b");
 assert_eq!(umt_escape_regexp("foo-bar"), "foo-bar");
+```
+
+## Pipe
+
+`umt_pipe(value)` returns a fluent `Pipe<T>` (`map` / `when` / `tap` / `filter_strict` / `filter_with_default` / `filter_result` / `end`). Extra function arguments are **not** accepted. TypeScript 5.3.0 `pipe(value, fn, ...)` is data-first and `umt/Pipe` operators (`filter`, `transform`, `fold`, …) are TypeScript-only. Go `Pipe` is data-first with `any` and returns the value even with no functions. Wasm skips `umt_pipe` (generic type parameters). `filter_strict` panics with `"Value did not match filter predicate"` (TypeScript throws `Error`; Python raises `ValueError`).
+
+```rust
+use umt_rust::tool::umt_pipe;
+
+assert_eq!(umt_pipe(1).map(|x| x + 1).end(), 2);
 ```
 
 ## parseEmail and calculator

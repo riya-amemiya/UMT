@@ -399,6 +399,73 @@ escapeRegExp("path/to/file.txt"); // "path/to/file\\.txt"
 
 `calculator` builds its currency-symbol regex with this helper at call time (the symbol is caller input).
 
+`pipe` / `createPipeline` (`umt/Tool`) and the data-first operators (`umt/Pipe`) are documented under [Pipe helpers](#pipe-helpers).
+
+## Pipe helpers
+
+`pipe` (`umt/Tool`) has two call shapes in TypeScript **5.3.0+**. Data-first operators live in `umt/Pipe` and are **not** ported. `createPipeline` is a separate callable `Pipeline` API.
+
+| Call | Result |
+| ---- | ------ |
+| `pipe(value)` | Fluent `Pipe<T>`. Chain `.map` / `.when` / `.tap` / `.filterStrict` / `.filterWithDefault` / `.filterResult`, then `.end()`. |
+| `pipe(value, fn, ...fns)` | Applies functions **left-to-right** and returns the value (not a `Pipe`). Typed overloads cover up to **20** functions; extra functions still run at runtime. |
+
+Python `pipe` / Rust `umt_pipe` are fluent-only (`pipe(value)` → `Pipe`). Go `Pipe(value, fns...)` is data-first with `any` and returns the value even with no functions (`Pipe(1)` is `1`, not a builder). Wasm skips `umt_pipe` (generics).
+
+| Operator | Behavior |
+| -------- | -------- |
+| `defaultTo(fallback)` | `??` — only `null` / `undefined` are replaced. `0`, `""`, and `false` stay. |
+| `filter(predicate)` | Native `Array#filter`. Does not mutate. Predicate gets `(value, index)`. |
+| `find(predicate)` | First match, or `undefined`. Predicate gets `(value, index)`. |
+| `flatMap(fn)` | Native `Array#flatMap` (one level). Non-array returns stay as elements. |
+| `fold(reducer, initial)` | Reduce with a required initial value. Empty array → `initial`. Reducer gets `(accumulator, value, index)`. |
+| `join(separator?)` | Native `Array#join`. Omit the separator → `","`. |
+| `replace(pattern, replacement)` | Native `String#replace`. A string pattern replaces the **first** match only; use a `/g` regex for all. |
+| `slice(start?, end?)` | Native `Array#slice`. Negative indexes count from the end. No indexes → a shallow copy. |
+| `split(separator, limit?)` | Native `String#split`. `split(",")` on `""` is `[""]`, not `[]`. |
+| `toLowerCase()` / `toUpperCase()` / `trim()` | Zero-arg factories. Call them (`trim()`), do not pass the function itself. |
+| `transform(fn)` | Arrays: `map` each element (the function receives the element **only**, so `Number.parseInt` is safe). Non-arrays: apply to the value. |
+
+`filter` / `find` / `flatMap` / `slice` / `transform` do not mutate the input array. `filterStrict` throws `Error("Value did not match filter predicate")`. Python `filter_strict` raises `ValueError`; Rust `filter_strict` panics with the same message.
+
+```ts
+import {
+  defaultTo,
+  filter,
+  fold,
+  join,
+  replace,
+  split,
+  toUpperCase,
+  transform,
+  trim,
+} from "umt/Pipe";
+import { pipe } from "umt/Tool";
+
+pipe(1)
+  .map((x) => x + 1)
+  .end(); // 2
+
+pipe(1, (x) => x + 1, (x) => x * 3, (x) => `${x}`); // "6"
+
+pipe([1, 2, 3, 4], filter((x) => x % 2 === 0)); // [2, 4]
+pipe(undefined, defaultTo("")); // ""
+pipe(0, defaultTo(1)); // 0
+pipe("a-b-c", replace("-", "+")); // "a+b-c" (first match)
+pipe("a-b-c", replace(/-/g, "+")); // "a+b+c"
+pipe(["10", "10", "10"], transform(Number.parseInt)); // [10, 10, 10]
+
+pipe(
+  " a , b , c ",
+  split(","),
+  transform(trim()),
+  transform(toUpperCase()),
+  join("-"),
+); // "A-B-C"
+
+pipe("1,2,3", split(","), transform(Number), fold((sum, x) => sum + x, 0)); // 6
+```
+
 ## Array, Async, and Error helpers
 
 Python and Rust port `countBy` / `partition` / `sliding` / `mapSeries`. Python also has `safe_execute_async`. Rust `umt_map_series` is synchronous (`Result`; the first `Err` stops). Go still has none of these. Wasm skips the generic array helpers and `umt_map_series`.
@@ -836,6 +903,22 @@ Python and Go return the same lowercase strings. Rust uses `Browser` / `Device` 
 - [unflattenObject](https://github.com/riya-amemiya/UMT/wiki/Function.unflattenObject)
 - [unset](https://github.com/riya-amemiya/UMT/wiki/Function.unset)
 - [update](https://github.com/riya-amemiya/UMT/wiki/Function.update)
+
+### Pipe
+
+- [defaultTo](https://github.com/riya-amemiya/UMT/wiki/Function.defaultTo)
+- [filter](https://github.com/riya-amemiya/UMT/wiki/Function.filter)
+- [find](https://github.com/riya-amemiya/UMT/wiki/Function.find)
+- [flatMap](https://github.com/riya-amemiya/UMT/wiki/Function.flatMap)
+- [fold](https://github.com/riya-amemiya/UMT/wiki/Function.fold)
+- [join](https://github.com/riya-amemiya/UMT/wiki/Function.join)
+- [replace](https://github.com/riya-amemiya/UMT/wiki/Function.replace)
+- [slice](https://github.com/riya-amemiya/UMT/wiki/Function.slice)
+- [split](https://github.com/riya-amemiya/UMT/wiki/Function.split)
+- [toLowerCase](https://github.com/riya-amemiya/UMT/wiki/Function.toLowerCase)
+- [toUpperCase](https://github.com/riya-amemiya/UMT/wiki/Function.toUpperCase)
+- [transform](https://github.com/riya-amemiya/UMT/wiki/Function.transform)
+- [trim](https://github.com/riya-amemiya/UMT/wiki/Function.trim)
 
 ### Predicate
 

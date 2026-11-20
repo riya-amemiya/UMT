@@ -61,6 +61,8 @@ A few Date helpers that already use wasm-friendly types (`umt_is_leap_year`, `um
 
 `sanitizeString`, `deleteSpaces`, `joinPath`, `escapeRegexp`, `escapeHtml`, `toFullWidth`, and `toHalfWidth` are generated. `sanitizeString` is ASCII-only (CJK / emoji dropped) and is not `stripAnsi` (ESC gone, CSI leftovers remain). `joinPath` takes an array of strings, not rest arguments, and does not resolve `.` / `..`. Wasm's JS name is `escapeRegexp` (lowercase `p`); TypeScript is `escapeRegExp`. Wasm `escapeHtml` follows Rust (no backtick or `/`). Wasm `toHalfWidth` is full-width alnum only, not Python's broader punctuation / space table.
 
+`umt_pipe` and `umt_create_pipeline` are skipped (generic type parameters). TypeScript 5.3.0 data-first `pipe(value, fn, ...)` and `umt/Pipe` operators (`filter`, `transform`, `fold`, …) have no wasm equivalent.
+
 ## Build and test
 
 ```bash
