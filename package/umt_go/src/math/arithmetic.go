@@ -127,6 +127,21 @@ func Multiplication(nums ...float64) float64 {
 		}
 	}
 
+	allIntegers := true
+	for _, n := range nums {
+		if n != stdmath.Trunc(n) {
+			allIntegers = false
+			break
+		}
+	}
+	if allIntegers {
+		result := 1.0
+		for _, n := range nums {
+			result *= n
+		}
+		return result
+	}
+
 	result := parseBigFloat(nums[0])
 	for _, n := range nums[1:] {
 		result.Mul(result, parseBigFloat(n))

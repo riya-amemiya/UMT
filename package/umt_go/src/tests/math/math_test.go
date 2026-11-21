@@ -125,6 +125,64 @@ func TestMultiplication(t *testing.T) {
 	}
 }
 
+func TestMultiplicationEmptyAndSingle(t *testing.T) {
+	if got := umt_math.Multiplication(); got != 1 {
+		t.Errorf("Multiplication() = %v, want 1", got)
+	}
+	if got := umt_math.Multiplication(7); got != 7 {
+		t.Errorf("Multiplication(7) = %v, want 7", got)
+	}
+	if got := umt_math.Multiplication(1, 2, 3); got != 6 {
+		t.Errorf("Multiplication(1, 2, 3) = %v, want 6", got)
+	}
+}
+
+func TestMultiplicationMatchesNativeProductForIntegers(t *testing.T) {
+	cases := [][]float64{
+		{2, 3},
+		{1, 2, 3, 4, 5},
+		{-10, 4, 6},
+		{1e6, 1e6},
+		{1e9, 1e9},
+		{0, 5},
+		{-2, 3},
+	}
+	for _, args := range cases {
+		native := 1.0
+		for _, n := range args {
+			native *= n
+		}
+		got := umt_math.Multiplication(args...)
+		if got != native {
+			t.Errorf("Multiplication(%v) = %v, want native product %v", args, got, native)
+		}
+	}
+}
+
+func TestMultiplicationKeepsDecimalProductExact(t *testing.T) {
+	if got := umt_math.Multiplication(0.1, 0.2); got != 0.02 {
+		t.Errorf("Multiplication(0.1, 0.2) = %v, want 0.02", got)
+	}
+	if got := umt_math.Multiplication(0.1, 0.2, 0.3); got != 0.006 {
+		t.Errorf("Multiplication(0.1, 0.2, 0.3) = %v, want 0.006", got)
+	}
+	if got := umt_math.Multiplication(0.5, 2); got != 1 {
+		t.Errorf("Multiplication(0.5, 2) = %v, want 1", got)
+	}
+}
+
+func TestMultiplicationNonFinite(t *testing.T) {
+	if !stdmath.IsNaN(umt_math.Multiplication(stdmath.NaN(), 2)) {
+		t.Error("Multiplication(NaN, 2) should return NaN")
+	}
+	if !stdmath.IsInf(umt_math.Multiplication(stdmath.Inf(1), 2), 1) {
+		t.Error("Multiplication(+Inf, 2) should return +Inf")
+	}
+	if !stdmath.IsInf(umt_math.Multiplication(stdmath.Inf(-1), 2), -1) {
+		t.Error("Multiplication(-Inf, 2) should return -Inf")
+	}
+}
+
 func TestDivision(t *testing.T) {
 	tests := []struct {
 		name     string
