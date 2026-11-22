@@ -20,11 +20,4 @@ def count_occurrences(string_: str, search: str) -> int:
         >>> count_occurrences("hello", "")
         0
     """
-    if search == "":
-        return 0
-    count = 0
-    index = string_.find(search)
-    while index != -1:
-        count += 1
-        index = string_.find(search, index + len(search))
-    return count
+    return 0 if search == "" else string_.count(search)
