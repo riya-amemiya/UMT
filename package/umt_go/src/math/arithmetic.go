@@ -57,6 +57,21 @@ func Addition(nums ...float64) float64 {
 		return stdmath.Inf(-1)
 	}
 
+	allIntegers := true
+	for _, n := range nums {
+		if n != stdmath.Trunc(n) {
+			allIntegers = false
+			break
+		}
+	}
+	if allIntegers {
+		result := 0.0
+		for _, n := range nums {
+			result += n
+		}
+		return result
+	}
+
 	result := new(big.Float).SetPrec(256)
 	for _, n := range nums {
 		result.Add(result, parseBigFloat(n))
