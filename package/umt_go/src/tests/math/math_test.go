@@ -81,6 +81,70 @@ func TestSubtraction(t *testing.T) {
 	}
 }
 
+func TestSubtractionEmptyAndSingle(t *testing.T) {
+	if got := umt_math.Subtraction(); got != 0 {
+		t.Errorf("Subtraction() = %v, want 0", got)
+	}
+	if got := umt_math.Subtraction(7); got != 7 {
+		t.Errorf("Subtraction(7) = %v, want 7", got)
+	}
+	if got := umt_math.Subtraction(5, 2, 1); got != 2 {
+		t.Errorf("Subtraction(5, 2, 1) = %v, want 2", got)
+	}
+}
+
+func TestSubtractionMatchesNativeDiffForIntegers(t *testing.T) {
+	cases := [][]float64{
+		{2, 3},
+		{10, 1, 2, 3, 4},
+		{-10, 4, 6},
+		{1e6, 1e6},
+		{1e9, 1e9},
+		{0, 5},
+		{-2, 3},
+	}
+	for _, args := range cases {
+		native := args[0]
+		for _, n := range args[1:] {
+			native -= n
+		}
+		got := umt_math.Subtraction(args...)
+		if got != native {
+			t.Errorf("Subtraction(%v) = %v, want native diff %v", args, got, native)
+		}
+	}
+}
+
+func TestSubtractionKeepsDecimalDiffExact(t *testing.T) {
+	if got := umt_math.Subtraction(0.3, 0.1); got != 0.2 {
+		t.Errorf("Subtraction(0.3, 0.1) = %v, want 0.2", got)
+	}
+	if got := umt_math.Subtraction(1, 0.1, 0.2); got != 0.7 {
+		t.Errorf("Subtraction(1, 0.1, 0.2) = %v, want 0.7", got)
+	}
+	if got := umt_math.Subtraction(2, 0.3); got != 1.7 {
+		t.Errorf("Subtraction(2, 0.3) = %v, want 1.7", got)
+	}
+}
+
+func TestSubtractionNonFinite(t *testing.T) {
+	if !stdmath.IsNaN(umt_math.Subtraction(stdmath.NaN(), 2)) {
+		t.Error("Subtraction(NaN, 2) should return NaN")
+	}
+	if !stdmath.IsInf(umt_math.Subtraction(stdmath.Inf(1), 2), 1) {
+		t.Error("Subtraction(+Inf, 2) should return +Inf")
+	}
+	if !stdmath.IsInf(umt_math.Subtraction(stdmath.Inf(-1), 2), -1) {
+		t.Error("Subtraction(-Inf, 2) should return -Inf")
+	}
+	if !stdmath.IsInf(umt_math.Subtraction(5, stdmath.Inf(1)), -1) {
+		t.Error("Subtraction(5, +Inf) should return -Inf")
+	}
+	if !stdmath.IsInf(umt_math.Subtraction(5, stdmath.Inf(-1)), 1) {
+		t.Error("Subtraction(5, -Inf) should return +Inf")
+	}
+}
+
 func TestMultiplication(t *testing.T) {
 	tests := []struct {
 		name     string
