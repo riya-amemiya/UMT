@@ -85,6 +85,21 @@ func Subtraction(nums ...float64) float64 {
 		return nums[0]
 	}
 
+	allIntegers := true
+	for _, n := range nums {
+		if n != stdmath.Trunc(n) {
+			allIntegers = false
+			break
+		}
+	}
+	if allIntegers {
+		result := nums[0]
+		for _, n := range nums[1:] {
+			result -= n
+		}
+		return result
+	}
+
 	result := parseBigFloat(nums[0])
 	for _, n := range nums[1:] {
 		if stdmath.IsInf(n, 0) {
