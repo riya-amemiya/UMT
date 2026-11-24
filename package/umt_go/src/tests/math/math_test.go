@@ -52,6 +52,67 @@ func TestAddition(t *testing.T) {
 	}
 }
 
+func TestAdditionEmptyAndSingle(t *testing.T) {
+	if got := umt_math.Addition(); got != 0 {
+		t.Errorf("Addition() = %v, want 0", got)
+	}
+	if got := umt_math.Addition(7); got != 7 {
+		t.Errorf("Addition(7) = %v, want 7", got)
+	}
+	if got := umt_math.Addition(1, 2, 3); got != 6 {
+		t.Errorf("Addition(1, 2, 3) = %v, want 6", got)
+	}
+}
+
+func TestAdditionMatchesNativeSumForIntegers(t *testing.T) {
+	cases := [][]float64{
+		{2, 3},
+		{1, 2, 3, 4, 5},
+		{-10, 4, 6},
+		{1e6, 1e6},
+		{1e9, 1e9},
+		{0, 5},
+		{-2, 3},
+	}
+	for _, args := range cases {
+		native := 0.0
+		for _, n := range args {
+			native += n
+		}
+		got := umt_math.Addition(args...)
+		if got != native {
+			t.Errorf("Addition(%v) = %v, want native sum %v", args, got, native)
+		}
+	}
+}
+
+func TestAdditionKeepsDecimalSumExact(t *testing.T) {
+	if got := umt_math.Addition(0.1, 0.2); got != 0.3 {
+		t.Errorf("Addition(0.1, 0.2) = %v, want 0.3", got)
+	}
+	if got := umt_math.Addition(0.1, 0.2, 0.3); got != 0.6 {
+		t.Errorf("Addition(0.1, 0.2, 0.3) = %v, want 0.6", got)
+	}
+	if got := umt_math.Addition(2, 0.3); got != 2.3 {
+		t.Errorf("Addition(2, 0.3) = %v, want 2.3", got)
+	}
+}
+
+func TestAdditionNonFinite(t *testing.T) {
+	if !stdmath.IsNaN(umt_math.Addition(stdmath.NaN(), 2)) {
+		t.Error("Addition(NaN, 2) should return NaN")
+	}
+	if !stdmath.IsInf(umt_math.Addition(stdmath.Inf(1), 2), 1) {
+		t.Error("Addition(+Inf, 2) should return +Inf")
+	}
+	if !stdmath.IsInf(umt_math.Addition(stdmath.Inf(-1), 2), -1) {
+		t.Error("Addition(-Inf, 2) should return -Inf")
+	}
+	if !stdmath.IsNaN(umt_math.Addition(stdmath.Inf(1), stdmath.Inf(-1))) {
+		t.Error("Addition(+Inf, -Inf) should return NaN")
+	}
+}
+
 func TestSubtraction(t *testing.T) {
 	tests := []struct {
 		name     string
