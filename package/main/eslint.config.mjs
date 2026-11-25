@@ -87,6 +87,7 @@ export default defineConfig(
       "unicorn/prefer-promise-try": "off",
       "unicorn/prefer-short-arrow-method": "error",
       "unicorn/prefer-error-is-error": "error",
+      "unicorn/prefer-options-parameter": "off",
     },
   },
 );
