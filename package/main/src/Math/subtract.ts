@@ -3,6 +3,14 @@ import { getDecimalLength } from "./getDecimalLength";
 import { max } from "./max";
 import { multiplication } from "./multiplication";
 
+const subtractIntegers = (numbers: number[]): number => {
+  let result = numbers[0];
+  for (let index = 1; index < numbers.length; index++) {
+    result -= numbers[index];
+  }
+  return result;
+};
+
 /**
 Performs subtraction with arbitrary number of arguments without floating point errors
 @param  {number[]} numbers Array of numbers to subtract
@@ -17,6 +25,9 @@ are subtracted from it.
 */
 
 export const subtract = (...numbers: number[]): number => {
+  if (numbers.length > 0 && numbers.every((n) => Number.isInteger(n))) {
+    return subtractIntegers(numbers);
+  }
   const [first, ...rest] = numbers;
   const restSum = addition(...rest);
   const z = 10 ** max(getDecimalLength(first), getDecimalLength(restSum));
