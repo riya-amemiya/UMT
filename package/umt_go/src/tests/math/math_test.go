@@ -355,6 +355,73 @@ func TestDivision(t *testing.T) {
 	}
 }
 
+func TestDivisionEmptyAndSingle(t *testing.T) {
+	if got := umt_math.Division(); got != 0 {
+		t.Errorf("Division() = %v, want 0", got)
+	}
+	if got := umt_math.Division(7); got != 7 {
+		t.Errorf("Division(7) = %v, want 7", got)
+	}
+	if got := umt_math.Division(10, 2, 5); got != 1 {
+		t.Errorf("Division(10, 2, 5) = %v, want 1", got)
+	}
+}
+
+func TestDivisionMatchesNativeQuotientForIntegers(t *testing.T) {
+	cases := [][]float64{
+		{10, 2},
+		{10, 2, 5},
+		{8, 2, 2},
+		{-10, 2},
+		{10, -2},
+		{-10, -2},
+		{1e6, 1e6},
+		{1e9, 1e9},
+		{0, 5},
+		{-8, 2, 2},
+	}
+	for _, args := range cases {
+		native := args[0]
+		for _, n := range args[1:] {
+			native /= n
+		}
+		got := umt_math.Division(args...)
+		if got != native {
+			t.Errorf("Division(%v) = %v, want native quotient %v", args, got, native)
+		}
+	}
+}
+
+func TestDivisionKeepsDecimalQuotientExact(t *testing.T) {
+	if got := umt_math.Division(0.1, 0.2); got != 0.5 {
+		t.Errorf("Division(0.1, 0.2) = %v, want 0.5", got)
+	}
+	if got := umt_math.Division(10.5, 2.1); got != 5 {
+		t.Errorf("Division(10.5, 2.1) = %v, want 5", got)
+	}
+	if got := umt_math.Division(1, 0.5); got != 2 {
+		t.Errorf("Division(1, 0.5) = %v, want 2", got)
+	}
+}
+
+func TestDivisionNonFinite(t *testing.T) {
+	if !stdmath.IsNaN(umt_math.Division(stdmath.NaN(), 2)) {
+		t.Error("Division(NaN, 2) should return NaN")
+	}
+	if !stdmath.IsInf(umt_math.Division(stdmath.Inf(1), 2), 1) {
+		t.Error("Division(+Inf, 2) should return +Inf")
+	}
+	if !stdmath.IsInf(umt_math.Division(stdmath.Inf(-1), 2), -1) {
+		t.Error("Division(-Inf, 2) should return -Inf")
+	}
+	if !stdmath.IsNaN(umt_math.Division(1, 0)) {
+		t.Error("Division(1, 0) should return NaN")
+	}
+	if !stdmath.IsNaN(umt_math.Division(1, 2, 0)) {
+		t.Error("Division(1, 2, 0) should return NaN")
+	}
+}
+
 func TestQuotient(t *testing.T) {
 	tests := []struct {
 		name     string
