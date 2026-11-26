@@ -71,3 +71,17 @@ fn test_subtract_empty() {
 fn test_subtract_single() {
     assert_eq!(umt_subtract(&[5.0]), 5.0);
 }
+
+#[test]
+fn test_subtract_matches_native_minus_for_integers() {
+    assert_eq!(umt_subtract(&[2.0, 3.0]), 2.0 - 3.0);
+    assert_eq!(umt_subtract(&[5.0, 2.0, 1.0]), 5.0 - 2.0 - 1.0);
+    assert_eq!(umt_subtract(&[10.0, 1.0, 1.0, 1.0]), 10.0 - 1.0 - 1.0 - 1.0);
+    assert_eq!(umt_subtract(&[-10.0, 4.0, 6.0]), -10.0 - 4.0 - 6.0);
+}
+
+#[test]
+fn test_subtract_keeps_decimal_difference_exact() {
+    assert_eq!(umt_subtract(&[0.3, 0.1]), 0.2);
+    assert_eq!(umt_subtract(&[2.0, 0.3]), 1.7);
+}

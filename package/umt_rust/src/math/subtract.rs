@@ -30,6 +30,10 @@ pub fn umt_subtract(numbers: &[f64]) -> f64 {
         return 0.0;
     }
 
+    if numbers.iter().all(|n| n.fract() == 0.0) {
+        return numbers[1..].iter().fold(numbers[0], |acc, n| acc - n);
+    }
+
     numbers
         .iter()
         .enumerate()

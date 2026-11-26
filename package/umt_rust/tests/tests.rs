@@ -189,6 +189,7 @@ mod math {
     mod test_standard_deviation;
     mod test_standard_deviation_parity;
     mod test_subtract;
+    mod test_subtract_parity;
     mod test_sum_precise;
     mod test_to_base_n;
     mod test_to_base_n_parity;
