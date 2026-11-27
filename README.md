@@ -90,3 +90,4 @@ Dependabot may propose `typescript` 7.x in `package/main`, `package/umt_i18n`, a
 - TypeScript `umt` v5 is ESM-only. See [package/main/COMPATIBILITY.md](package/main/COMPATIBILITY.md). CI runs Node 20 / 22 / 24 / 26.
 - Python requires 3.10+. CI currently runs 3.10–3.15.
 - Go IP / CIDR signatures are not the TypeScript ones (CIDR strings, dotted `GetNetworkAddress`). See [package/umt_go/README.md](package/umt_go/README.md).
+- Decimal-safe `addition` / `subtract` / `multiplication`. TypeScript `division` is binary (optional remainder pair); Go `Division` is variadic. `countOccurrences` is non-overlapping (empty search → `0`). See [package/main/README.md](package/main/README.md).

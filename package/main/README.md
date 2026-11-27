@@ -287,6 +287,7 @@ Unicode-aware string utilities in `umt/String`. Python, Rust, and Go ports exist
 | `escapeHtml(string)`          | Escapes `& < > " '` plus **backtick** (`&#x60;`) and **forward slash** (`&#x2F;`) so older-browser attribute delimiters and `</script>` injection are harder. Python / Rust / Go escape only `& < > " '`; `` ` `` and `/` stay.                                                                                                                                      |
 | `toFullWidth(string)`         | ASCII digits and letters only (`[0-9A-Za-z]`), each code point `+ 0xFEE0`. Punctuation and space stay: `"a-b!"` → `"ａ-ｂ!"`. Ports match. Inverse of `toHalfWidth` for those characters.                                                                                                                                                                            |
 | `toHalfWidth(string)`         | Full-width digits and letters only (`０-９Ａ-Ｚａ-ｚ`), each code point `- 0xFEE0`. CJK, punctuation, and ideographic space stay. Python **also** converts `U+FF01`–`U+FF5E` (full-width `!` through `~`) and `U+3000` → `" "`. Rust / Go match TypeScript.                                                                                                          |
+| `countOccurrences(string, search)` | Non-overlapping substring count. `"aaaa"` / `"aa"` is `2`, not `3`. Empty `search` → `0` (unlike Python `str.count("")`, which is length+1). Empty input → `0`. Python `count_occurrences`, Rust `umt_count_occurrences`, Go `CountOccurrences`, and wasm `countOccurrences` match. |
 | `toBase64(string)`            | UTF-8 → standard Base64 (`A-Za-z0-9+/`, `=` padding). Empty → `""`. `"Hello World"` → `"SGVsbG8gV29ybGQ="`. Not URL-safe (`-` `_`). Python / Rust / Go / wasm match the alphabet. Encoding, not encryption — distinct from `umt/Crypto` Base32.                                                                                                                        |
 | `fromBase64(string)`          | Standard Base64 → UTF-8 string. Empty → `""`. Uses `atob` then `TextDecoder`. **Missing padding is accepted** (`"SGVsbG8gV29ybGQ"` → `"Hello World"`). Invalid characters throw `InvalidCharacterError`. Invalid UTF-8 becomes U+FFFD (`"gA=="` → `"�"`). Python / Rust / Go **require** padding and error on invalid Base64. Rust also errors on invalid UTF-8; Go returns the raw bytes; Python raises `ValueError`. Wasm follows Rust. |
 | `encodeBase64Url(string)`     | UTF-8 → RFC 4648 section 5 (`-` `_`), **no `=` padding**. Empty → `""`. `"Hello World"` → `"SGVsbG8gV29ybGQ"`. `"???>"` → `"Pz8_Pg"`. Python / Rust / wasm match. Go has no URL-safe helpers.                                                                                                                                                  |
@@ -294,6 +295,7 @@ Unicode-aware string utilities in `umt/String`. Python, Rust, and Go ports exist
 
 ```ts
 import {
+  countOccurrences,
   decodeBase64Url,
   deleteSpaces,
   encodeBase64Url,
@@ -313,6 +315,9 @@ stripAnsi("\u001B[31mred\u001B[0m"); // "red"
 sanitizeString("\u001B[31mred\u001B[0m"); // "[31mred[0m"
 sanitizeString("héllo"); // "hllo"
 sanitizeString("日本語"); // ""
+countOccurrences("ababab", "ab"); // 3
+countOccurrences("aaaa", "aa"); // 2 (non-overlapping)
+countOccurrences("hello", ""); // 0
 deleteSpaces("  tab\t space "); // "tabspace"
 stripTags("<p>Hello <b>World</b></p>"); // "Hello World"
 stripTags("<sc<script>ript>"); // ""
@@ -382,7 +387,7 @@ joinPath(); // ""
 stringifyQuery({ q: "hello world", tag: "a&b" }); // "q=hello+world&tag=a%26b"
 ```
 
-Wasm codegen skips `umt_hexa_to_rgba` (custom `Result`) and generates `isAbsoluteUrl` / `joinPath` / `normalizeWhitespace` / `unescapeHtml` / `escapeHtml` / `camelCase` / `slugify` / `sanitizeString` / `deleteSpaces` / `toFullWidth` / `toHalfWidth` / `escapeRegexp` / `encodeBase64Url` / `decodeBase64Url`. Wasm `slugify` follows Rust and drops CJK (`"japanese"`), matching TypeScript. Wasm `escapeHtml` / `toHalfWidth` follow Rust (no backtick or `/` escaping; half-width conversion is alnum-only). Wasm's JS name is `escapeRegexp` (lowercase `p`); TypeScript is `escapeRegExp`.
+Wasm codegen skips `umt_hexa_to_rgba` (custom `Result`) and generates `isAbsoluteUrl` / `joinPath` / `normalizeWhitespace` / `unescapeHtml` / `escapeHtml` / `camelCase` / `slugify` / `sanitizeString` / `deleteSpaces` / `countOccurrences` / `toFullWidth` / `toHalfWidth` / `escapeRegexp` / `encodeBase64Url` / `decodeBase64Url`. Wasm `slugify` follows Rust and drops CJK (`"japanese"`), matching TypeScript. Wasm `escapeHtml` / `toHalfWidth` follow Rust (no backtick or `/` escaping; half-width conversion is alnum-only). Wasm's JS name is `escapeRegexp` (lowercase `p`); TypeScript is `escapeRegExp`.
 
 ## Tool helpers
 
@@ -498,6 +503,10 @@ Expression utilities in `umt/Math`. Python, Rust, and Go ports exist (`calculato
 
 | Function                             | Behavior                                                                                                                                                                                                                                                                                                                                                                                                                                         |
 | ------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `addition(...numbers)`               | Decimal-safe sum. Empty → `0`. `addition(0.1, 0.2)` is `0.3`. Python / Rust / Go / wasm match.                                                                                                                                                                                                                                                                                                                                                  |
+| `subtract(...numbers)`               | First argument is the minuend. `subtract(0.3, 0.1)` is `0.2`; `subtract(1, 0.1, 0.2)` is `0.7`. Empty `subtract()` **throws** in TypeScript. Python `subtraction()`, Rust `umt_subtract(&[])`, and Go `Subtraction()` return `0`. Wasm follows Rust.                                                                                                                                                                                              |
+| `multiplication(...numbers)`         | Decimal-safe product. Empty → `1`. `multiplication(0.1, 0.2)` is `0.02`; `multiplication(0.1, 0.2, 0.3)` is `0.006`. Python / Rust / Go / wasm match.                                                                                                                                                                                                                                                                                            |
+| `division(x, y, isFloor?)`           | **Binary**, not variadic. Default `isFloor` true returns the quotient (`division(0.1, 0.2)` is `0.5`). `false` returns `[quotient, remainder]` of the **decimal-stripped integers** (`division(10, 3, false)` → `[3, 1]`; `division(1.5, 0.7, false)` → `[2, 1]`). Divisor `0` → `NaN` (or `[NaN, NaN]`). Python matches (remainder values are floats). Rust `umt_division` has no remainder flag; `umt_division_with_remainder` is separate and wasm-skipped. Go `Division` is **variadic** (`Division(10, 2, 5)` is `1`) with no remainder mode; empty → `0`. |
 | `calculator(expression, exchange?)`  | Strips whitespace. If the string contains `=`, solves a single-variable equation (`"x=5"` → `"5"`, `"2x=6"` → `"3"`). Otherwise evaluates `+ - * / ^` and parentheses. Incomplete input is returned as-is (`"1+"` → `"1+"`).`^` reduces the last pair first (`"2^2^2"` → `"16"`). Optional `exchange` replaces `symbol` + digits (`"$10*2"` with `{ $: 100 }` → `"2000"`). Finite results are rounded to 10 decimal places before `toString()`.  |
 | `calculatorInitialization(exchange)` | Returns `(expression) => calculator(expression, exchange)`.                                                                                                                                                                                                                                                                                                                                                                                      |
 | `mathConverter(equation)`            | Rewrites `n*n` or `n^2` as a sum of simpler products (`"1250*1250"` → `"1500*1000+400*100+200*100+50*50"`). Unequal `*` operands and `+` are left unchanged.                                                                                                                                                                                                                                                                                     |
@@ -506,14 +515,26 @@ Expression utilities in `umt/Math`. Python, Rust, and Go ports exist (`calculato
 
 ```ts
 import {
+  addition,
   calculator,
   calculatorInitialization,
   degToRad,
+  division,
   mathConverter,
+  multiplication,
   radToDeg,
+  subtract,
   toBaseN,
 } from "umt/Math";
 
+addition(0.1, 0.2); // 0.3
+addition(); // 0
+subtract(0.3, 0.1); // 0.2
+subtract(1, 0.1, 0.2); // 0.7
+multiplication(0.1, 0.2, 0.3); // 0.006
+multiplication(); // 1
+division(0.1, 0.2); // 0.5
+division(10, 3, false); // [3, 1]
 calculator("1+2"); // "3"
 calculator("(2+3)*4"); // "20"
 calculator("2^2^2"); // "16"
@@ -528,7 +549,7 @@ radToDeg(Math.PI); // 180
 degToRad(180); // 3.141592653589793
 ```
 
-Wasm generates `mathConverter`, `toBaseN` / `toBinary` / `toHex` (Rust: `i64`, `"Invalid radix"` on a bad base), and `degToRad` / `radToDeg` (native float multiply). It skips `calculator` (`HashMap` exchange rates).
+Wasm generates `addition` / `subtract` / `multiplication` (arrays of `f64`; empty subtract is `0`, unlike TypeScript), binary `division` (no remainder pair — `umt_division_with_remainder` is skipped), `mathConverter`, `toBaseN` / `toBinary` / `toHex` (Rust: `i64`, `"Invalid radix"` on a bad base), and `degToRad` / `radToDeg` (native float multiply). It skips `calculator` (`HashMap` exchange rates).
 
 ## UA helpers
 

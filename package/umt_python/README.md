@@ -56,13 +56,13 @@ Public names are re-exported from `src/__init__.py`. Grouped the same way as Typ
 | `ip` | `ip_to_long`, `cidr_to_long`, `is_in_range`, `is_private_ip`, `is_valid_ip`, `parse_cidr` (see below) |
 | `iterator` | `lazy_map`, `lazy_filter`, `lazy_take`, `lazy_chunk`, `lazy_zip` |
 | `map` | `group_by_to_map`, `zip_to_map` |
-| `math` | `gcd`, `lcm`, `n_cr`, `sum_precise`, `calculator`, `math_converter`, `to_base_n`, `deg_to_rad`, `rad_to_deg`, `variance`, `standard_deviation`, `quantile`, `lerp`, `inverse_lerp`, `map_range`, `is_prime` (see below) |
+| `math` | `addition`, `subtraction`, `multiplication`, `division`, `gcd`, `lcm`, `n_cr`, `sum_precise`, `calculator`, `math_converter`, `to_base_n`, `deg_to_rad`, `rad_to_deg`, `variance`, `standard_deviation`, `quantile`, `lerp`, `inverse_lerp`, `map_range`, `is_prime` (see below) |
 | `number` | `format_bytes`, `format_number`, `to_ordinal`, `to_percentage` |
 | `object` | `object_get`, `object_update`, `object_unset`, `object_omit_deep`, `deep_clone`, `flatten_object` |
 | `predicate` | `every`, `some`, `is_nullish` |
 | `random` | `random_choice`, `seeded_random` |
 | `simple` | `birthday_simple`, `now_simple` |
-| `string` | `format_string`, `slugify`, `strip_ansi`, `strip_tags`, `words`, `normalize_whitespace`, `unescape_html`, `escape_html`, `camel_case`, `kebab_case`, `sanitize_string`, `delete_spaces`, `to_full_width`, `to_half_width`, `to_base64`, `from_base64`, `encode_base64_url`, `decode_base64_url` (see below) |
+| `string` | `format_string`, `slugify`, `strip_ansi`, `strip_tags`, `words`, `normalize_whitespace`, `unescape_html`, `escape_html`, `camel_case`, `kebab_case`, `sanitize_string`, `delete_spaces`, `count_occurrences`, `to_full_width`, `to_half_width`, `to_base64`, `from_base64`, `encode_base64_url`, `decode_base64_url` (see below) |
 | `time` | `convert_time`, `format_duration` |
 | `tool` | `pipe` (fluent `Pipe` only; see below), `unwrap`, `parse_json`, `escape_regexp` (see below) |
 | `ua` | `parse_user_agent`, `extract_browser_from_user_agent`, `extract_device_from_user_agent`, `extract_os_from_user_agent` (see below) |
@@ -107,6 +107,7 @@ Unicode-aware helpers aligned with TypeScript `package/main/src/String`.
 | `normalize_whitespace` | `(string_: str) -> str` | Collapses Unicode `\s+` to a single space and trims. Unlike `delete_spaces`, words stay separated. | `normalize_whitespace("hello   world")  # "hello world"` |
 | `delete_spaces` | `(string_: str) -> str` | Removes every Unicode `\s` character (spaces, tabs, newlines, em space, ideographic space). | `delete_spaces("Hello World")  # "HelloWorld"` / `delete_spaces("  tab\t space ")  # "tabspace"` |
 | `sanitize_string` | `(string_: str) -> str` | Keeps printable ASCII (space to tilde) plus TAB / LF / CR. Drops NULL, other C0, DEL, ANSI ESC, and **all non-ASCII** (CJK, emoji, `"é"`). Unlike `strip_ansi`, CSI leftovers remain. | `sanitize_string("\x1b[31mred\x1b[0m")  # "[31mred[0m"` / `sanitize_string("héllo")  # "hllo"` / `sanitize_string("日本語")  # ""` |
+| `count_occurrences` | `(string_: str, search: str) -> int` | Non-overlapping substring count. `"aaaa"` / `"aa"` is `2`, not `3`. Empty `search` → `0` (native `str.count("")` is length+1). | `count_occurrences("ababab", "ab")  # 3` / `count_occurrences("aaaa", "aa")  # 2` / `count_occurrences("hello", "")  # 0` |
 | `unescape_html` | `(string_: str) -> str` | Named entities plus decimal / hex numeric references. `&#X41;` (uppercase `X`) is left unchanged. Decodes via `chr()` — it does **not** apply TypeScript's extra rejection of NULL / C0 / DEL / C1 / surrogates. | `unescape_html("Tom &amp; Jerry")  # "Tom & Jerry"` / `unescape_html("&#65;")  # "A"` |
 | `escape_html` | `(string_: str) -> str` | Encodes `& < > " '`. Does **not** encode backtick or `/`. TypeScript `escapeHtml` also maps backtick → `&#x60;` and `/` → `&#x2F;`. Cached `re.compile(r"[&<>\"']")`. | `escape_html("<script></script>")  # "&lt;script&gt;&lt;/script&gt;"` / `escape_html("Tom & Jerry")  # "Tom &amp; Jerry"` |
 | `to_full_width` | `(string_: str) -> str` | ASCII digits and letters only (`0-9A-Za-z`), each code point `+ 0xFEE0`. Punctuation and space stay. `str.maketrans` / `translate`, not regex. | `to_full_width("Abc123")  # "Ａｂｃ１２３"` / `to_full_width("a-b!")  # "ａ-ｂ!"` |
@@ -188,6 +189,10 @@ parse_email("user@localhost", ParseEmailOptions(level="rfc5321")).valid  # False
 
 | Function | Type | Description | Example |
 | --- | --- | --- | --- |
+| `addition` | `(*numbers: float) -> float` | Decimal-safe sum. Empty → `0.0`. `addition(0.1, 0.2)` is `0.3`. | `addition(0.1, 0.2)  # 0.3` / `addition()  # 0.0` |
+| `subtraction` | `(*numbers: float) -> float` | First argument is the minuend. Empty → `0.0` (TypeScript `subtract()` with no arguments throws). | `subtraction(0.3, 0.1)  # 0.2` / `subtraction(1, 0.1, 0.2)  # 0.7` |
+| `multiplication` | `(*numbers: float) -> float` | Decimal-safe product. Empty → `1.0`. | `multiplication(0.1, 0.2, 0.3)  # 0.006` / `multiplication()  # 1.0` |
+| `division` | `(x: float, y: float, is_floor: bool = True) -> float \| list[float]` | **Binary**, not variadic. Default returns the quotient. `is_floor=False` returns `[quotient, remainder]` of the decimal-stripped integers (remainder values are floats). Divisor `0` → `nan`. Go `Division` is variadic. | `division(0.1, 0.2)  # 0.5` / `division(10, 3, False)  # [3, 1.0]` / `division(1.5, 0.7, False)  # [2, 1.0]` |
 | `calculator` | `(expression: str, exchange=None) -> str` | Strips whitespace. `=` solves a single-variable equation (`"x=5"` → `"5"`). Otherwise evaluates `+ - * / ^` and parentheses. Incomplete input is returned as-is. `^` reduces the last pair first (`"2^2^2"` → `"16"`). | `calculator("1+2")  # "3"` / `calculator("$10*2", {"$": 100})  # "2000"` |
 | `math_converter` | `(equation: str) -> str` | Rewrites `n*n` or `n^2` as a sum of simpler products. Uses `float` in the rewritten terms, so the string is `"1500.0*1000+…"` rather than TypeScript / Go `"1500*1000+…"`. An expansion that reproduces its own input is returned after the first repetition (`"5*5"` → `"5*5+0*0"`), matching TypeScript and Rust. | `math_converter("1250*1250")  # "1500.0*1000+400.0*100+200.0*100+50*50"` |
 | `lcm` | `(x: float, y: float, *z: float) -> float` | LCM of two or more numbers. `0` if any argument is `0`. Decimals are scaled like `gcd`. | `lcm(2, 3, 4)  # 12.0` |
@@ -286,6 +291,8 @@ Fixed regexes in this package are compiled once at module level (`re.compile`): 
 - `decode_hex` raises `ValueError` on odd length or non-hex characters. TypeScript `decodeHex` does not validate.
 - `is_valid_ip` matches `ip_to_long` (leading-zero octets are invalid). TypeScript `isValidIp` also rejects leading zeros, but TypeScript `ipToLong` accepts them.
 - `rad_to_deg` / `deg_to_rad` use `division` / `multiplication`. They do not wrap angles to 0–360. Rust / Go use native `*` `/`.
+- Empty `addition()` is `0.0`; empty `multiplication()` is `1.0`; empty `subtraction()` is `0.0` (TypeScript `subtract()` throws). `division` is binary. `is_floor=False` returns `[quotient, remainder]` of the decimal-stripped integers. Go `Division` is variadic.
+- `count_occurrences` is non-overlapping (`"aaaa"` / `"aa"` → `2`). Empty search → `0`, not native `str.count("")`.
 - `to_base_n` defaults to radix 2. `True` / `False` are `1` / `0` because `bool` is an `int`.
 - `hexa_to_rgba` requires `#` plus 3, 6, or 8 hex digits. TypeScript `hexaToRgba` does not validate.
 - `unescape_html` decodes numeric entities with `chr()`. TypeScript `unescapeHtml` additionally rejects NULL, most C0 controls, DEL, C1, surrogates, and out-of-range values.
