@@ -142,6 +142,7 @@ mod math {
     mod test_deg_to_rad;
     mod test_deviation_value;
     mod test_division;
+    mod test_division_parity;
     mod test_factorial;
     mod test_factorize;
     mod test_factorize_parity;

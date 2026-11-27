@@ -124,3 +124,20 @@ fn test_division_both_negative_decimals() {
     let result = umt_division(-0.16, -0.2);
     assert!((result - 0.8).abs() < 1e-10);
 }
+
+#[test]
+fn test_division_matches_native_div_for_integers() {
+    assert_eq!(umt_division(10.0, 2.0), 10.0 / 2.0);
+    assert_eq!(umt_division(7.0, 2.0), 7.0 / 2.0);
+    assert_eq!(umt_division(-10.0, 2.0), -10.0 / 2.0);
+    assert_eq!(umt_division(10.0, -2.0), 10.0 / -2.0);
+    assert_eq!(umt_division(-10.0, -2.0), -10.0 / -2.0);
+    assert_eq!(umt_division(1.0, 3.0), 1.0 / 3.0);
+    assert_eq!(umt_division(1e6, 1e6), 1e6 / 1e6);
+}
+
+#[test]
+fn test_division_keeps_decimal_quotient_exact() {
+    assert_eq!(umt_division(0.1, 0.2), 0.5);
+    assert_eq!(umt_division(2.0, 0.5), 4.0);
+}
