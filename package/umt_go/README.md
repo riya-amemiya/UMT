@@ -59,13 +59,13 @@ Public code lives in `src/<package>`. Tests are `src/tests/<package>/*_test.go` 
 | `ip` | `src/ip` | `IpToLong`, `IsInRange`, `IsPrivateIp` |
 | `iterator` | `src/iterator` | `LazyMap`, `LazyFilter`, `LazyTake` |
 | `maputil` | `src/maputil` | `GroupByToMap`, `ZipToMap` |
-| `math` | `src/math` | `Random`, `MustRandom`, `GCD`, `Calculator`, `MathConverter`, `ToBaseN`, `DegToRad`, `RadToDeg` (see below) |
+| `math` | `src/math` | `Addition`, `Subtraction`, `Multiplication`, `Division`, `Random`, `MustRandom`, `GCD`, `Calculator`, `MathConverter`, `ToBaseN`, `DegToRad`, `RadToDeg` (see below) |
 | `number` | `src/number` | `FormatNumber`, `ToOrdinal` |
 | `object` | `src/object` | `Get`, `DeepClone`, `FlattenObject` |
 | `predicate` | `src/predicate` | `Every`, `Some`, `IsNullish` |
 | `random` | `src/random` | `RandomChoice`, `SeededRandom` |
 | `simple` | `src/simple` | `BirthdaySimple`, `NowSimple` |
-| `str` | `src/str` | `FormatString`, `Slugify`, `StripAnsi`, `SanitizeString`, `Words`, `ToBase64`, `FromBase64` |
+| `str` | `src/str` | `FormatString`, `Slugify`, `StripAnsi`, `SanitizeString`, `CountOccurrences`, `Words`, `ToBase64`, `FromBase64` |
 | `timeutil` | `src/timeutil` | `ConvertTime` |
 | `tool` | `src/tool` | `Pipe` (data-first `any`; see below), `Unwrap`, `ParseJson`, `EscapeRegExp` |
 | `ua` | `src/ua` | `ParseUserAgent`, `ExtractBrowserFromUserAgent` (see below) |
@@ -98,6 +98,7 @@ Unicode-aware helpers in `src/str`, aligned with TypeScript `package/main/src/St
 | `NormalizeWhitespace` | Collapses Unicode `\s+` to a single space and trims. Unlike `DeleteSpaces`, words stay separated. |
 | `DeleteSpaces` | Removes every Unicode space (`unicode.IsSpace`), including em space and ideographic space. `"Hello World"` → `"HelloWorld"`. |
 | `SanitizeString` | Keeps printable ASCII (space to tilde) plus TAB / LF / CR. Drops NULL, other C0, DEL, ANSI ESC, and **all non-ASCII** (CJK, emoji, `"é"`). Unlike `StripAnsi`, CSI leftovers remain (`"\x1b[31mred\x1b[0m"` → `"[31mred[0m"`). |
+| `CountOccurrences` | Non-overlapping substring count. `"aaaa"` / `"aa"` is `2`, not `3`. Empty search → `0`. |
 | `UnescapeHtml` | Named entities plus decimal / hex numeric references. `&#X41;` (uppercase `X`) is left unchanged. Decodes via `rune` — it does **not** apply TypeScript's extra rejection of NULL / C0 / DEL / C1 / surrogates. |
 | `EscapeHtml` | Encodes `& < > " '`. Does **not** encode backtick or `/`. TypeScript `escapeHtml` also maps backtick → `&#x60;` and `/` → `&#x2F;`. Rune scan, not a regex. |
 | `ToFullWidth` | ASCII digits and letters only (`0-9A-Za-z`), each rune `+ 0xFEE0`. Punctuation and space stay (`"a-b!"` → `"ａ-ｂ!"`). |
@@ -118,6 +119,9 @@ _ = str.NormalizeWhitespace("  hello   world \t\n foo ") // "hello world foo"
 _ = str.DeleteSpaces("  tab\t space ")                   // "tabspace"
 _ = str.SanitizeString("\x1b[31mred\x1b[0m")             // "[31mred[0m"
 _ = str.SanitizeString("日本語")                           // ""
+_ = str.CountOccurrences("ababab", "ab")                  // 3
+_ = str.CountOccurrences("aaaa", "aa")                    // 2
+_ = str.CountOccurrences("hello", "")                     // 0
 _ = str.UnescapeHtml("Tom &amp; Jerry") // "Tom & Jerry"
 _ = str.EscapeHtml("<script></script>") // "&lt;script&gt;&lt;/script&gt;"
 _ = str.ToFullWidth("Abc123") // "Ａｂｃ１２３"
@@ -197,9 +201,16 @@ _, err := cryptoutil.DecodeBase32("1A") // error: Invalid base32 character: 1
 
 `math.DegToRad` / `math.RadToDeg` use native `*` `/` (`deg * math.Pi / 180`), not TypeScript / Python's `multiplication` / `division` helpers. They do not wrap angles. `RadToDeg(math.Pi)` is 180.
 
+`Addition` / `Subtraction` / `Multiplication` / `Division` keep decimal results exact (`Addition(0.1, 0.2)` is `0.3`). Empty `Addition` is `0`; empty `Multiplication` is `1`; empty `Subtraction` is `0` (TypeScript `subtract()` throws). `Division` is **variadic** (`Division(10, 2, 5)` is `1`) and has no remainder mode. TypeScript / Python / Rust `division` is binary; `isFloor: false` returns `[quotient, remainder]`. Empty `Division` is `0`; a single argument is returned unchanged. Divisor `0` → `NaN`.
+
 ```go
 import "github.com/riya-amemiya/umt-go/src/math"
 
+_ = math.Addition(0.1, 0.2)                          // 0.3
+_ = math.Subtraction(0.3, 0.1)                       // 0.2
+_ = math.Multiplication(0.1, 0.2, 0.3)               // 0.006
+_ = math.Division(0.1, 0.2)                          // 0.5
+_ = math.Division(10, 2, 5)                          // 1
 _ = math.Calculator("1+2", nil)                      // "3"
 _ = math.Calculator("$10*2", map[string]any{"$": 100}) // "2000"
 _ = math.MathConverter("1250*1250")                  // "1500*1000+400*100+200*100+50*50"

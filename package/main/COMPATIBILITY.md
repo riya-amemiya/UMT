@@ -57,6 +57,10 @@ IP helpers (`umt/IP`) are IPv4 only. TypeScript does not validate dotted-decimal
 
 `degToRad` / `radToDeg` (`umt/Math`) in TypeScript and Python go through `multiplication` / `division`, not native `*` `/`. They do not wrap angles to 0–360. `radToDeg(Math.PI)` is `180`; `NaN` / `Infinity` propagate. Rust, Go, and wasm use native float multiply (`x * 180 / PI`).
 
+`addition` / `subtract` / `multiplication` (`umt/Math`) keep decimal sums exact (`addition(0.1, 0.2)` is `0.3`). Empty `addition` is `0`; empty `multiplication` is `1`. TypeScript `subtract()` with no arguments throws; Python `subtraction()`, Rust `umt_subtract(&[])`, and Go `Subtraction()` return `0`. `division(x, y, isFloor?)` is binary in TypeScript / Python / Rust / wasm. `isFloor: false` returns `[quotient, remainder]` of the decimal-stripped integers (`division(10, 3, false)` → `[3, 1]`; `division(1.5, 0.7, false)` → `[2, 1]`). Divisor `0` → `NaN`. Go `Division` is variadic (`Division(10, 2, 5)` is `1`) and has no remainder mode.
+
+`countOccurrences` (`umt/String`) is non-overlapping (`"aaaa"` / `"aa"` → `2`). Empty search → `0`. Python `count_occurrences`, Rust `umt_count_occurrences`, Go `CountOccurrences`, and wasm match. Native Python `str.count("")` is length+1; the port special-cases empty to `0`.
+
 `hexaToRgba` (`umt/Color`) does not validate in TypeScript (malformed input can yield `NaN` components). Python, Rust, and Go require `#` plus 3, 6, or 8 hex digits.
 
 `unescapeHtml` (`umt/String`) in TypeScript leaves dangerous numeric character references unchanged: NULL (`0`), C0 controls except TAB / LF / CR, DEL (`127`), C1 (`128`–`159`), surrogates (`0xD800`–`0xDFFF`), and values above `0x10FFFF`. Python / Rust / Go decode numeric entities through the language code-point APIs and do not apply those extra filters.

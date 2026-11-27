@@ -114,6 +114,7 @@ Unicode-aware string utilities in `src/string/`. Most helpers match TypeScript `
 | `umt_normalize_whitespace` | Collapses Unicode `\s+` to a single space and trims. |
 | `umt_delete_spaces` | Removes every Unicode whitespace character (`char::is_whitespace`). `"Hello World"` → `"HelloWorld"`. |
 | `umt_sanitize_string` | Keeps printable ASCII (space through tilde) plus TAB / LF / CR. Drops NULL, other C0, DEL, ANSI ESC, and **all non-ASCII** (CJK, emoji, `"é"`). Unlike `umt_strip_ansi`, CSI leftovers remain (`"\u{001B}[31mred\u{001B}[0m"` → `"[31mred[0m"`). Char filter, not a regex. |
+| `umt_count_occurrences` | Non-overlapping substring count. `"aaaa"` / `"aa"` is `2`, not `3`. Empty search → `0`. Generated for wasm. |
 | `umt_unescape_html` | Named entities plus decimal / hex numeric references. Decodes via `char::from_u32` (rejects surrogates and out-of-range). Does **not** apply TypeScript's extra NULL / C0 / DEL / C1 filters. |
 | `umt_escape_html` | Encodes `& < > " '`. Does **not** encode backtick or `/`. TypeScript `escapeHtml` also maps backtick → `&#x60;` and `/` → `&#x2F;`. Char scan, not a regex. Generated for wasm. |
 | `umt_to_full_width` | ASCII digits and letters only (`0-9A-Za-z`), each code point `+ 0xFEE0`. Punctuation and space stay (`"a-b!"` → `"ａ-ｂ!"`). Generated for wasm. |
@@ -128,15 +129,19 @@ Unicode-aware string utilities in `src/string/`. Most helpers match TypeScript `
 
 ```rust
 use umt_rust::string::{
-    umt_camel_case, umt_decode_base64_url, umt_delete_spaces, umt_encode_base64_url,
-    umt_escape_html, umt_from_base64, umt_kebab_case, umt_normalize_whitespace,
-    umt_sanitize_string, umt_slugify, umt_strip_ansi, umt_strip_tags, umt_to_base64,
-    umt_to_full_width, umt_to_half_width, umt_unescape_html, umt_words,
+    umt_camel_case, umt_count_occurrences, umt_decode_base64_url, umt_delete_spaces,
+    umt_encode_base64_url, umt_escape_html, umt_from_base64, umt_kebab_case,
+    umt_normalize_whitespace, umt_sanitize_string, umt_slugify, umt_strip_ansi,
+    umt_strip_tags, umt_to_base64, umt_to_full_width, umt_to_half_width,
+    umt_unescape_html, umt_words,
 };
 
 assert_eq!(umt_strip_ansi("\u{001B}[31mred\u{001B}[0m"), "red");
 assert_eq!(umt_sanitize_string("\u{001B}[31mred\u{001B}[0m"), "[31mred[0m");
 assert_eq!(umt_sanitize_string("日本語"), "");
+assert_eq!(umt_count_occurrences("ababab", "ab"), 3);
+assert_eq!(umt_count_occurrences("aaaa", "aa"), 2);
+assert_eq!(umt_count_occurrences("hello", ""), 0);
 assert_eq!(umt_delete_spaces("  tab\t space "), "tabspace");
 assert_eq!(umt_strip_tags("<p>Hello <b>World</b></p>"), "Hello World");
 assert_eq!(umt_words("XMLHttpRequest", None), vec!["XML", "Http", "Request"]);
@@ -220,10 +225,21 @@ assert!(!umt_parse_email("user@localhost", Some(rfc5321)).valid);
 
 `umt_rad_to_deg` / `umt_deg_to_rad` use native `f64` multiply (`x * (180.0 / PI)`), not the decimal-length `umt_division` / `umt_multiplication` helpers TypeScript / Python use. They do not wrap angles. Wasm generates both.
 
+`umt_addition` / `umt_subtract` / `umt_multiplication` take `&[f64]`. Empty addition is `0.0`; empty multiplication is `1.0`; empty subtract is `0.0` (TypeScript `subtract()` throws). `umt_division(x, y)` is binary with no remainder flag. Remainder is `umt_division_with_remainder` → `Option<DivisionResult>` (wasm-skipped). Go `Division` is variadic. Wasm generates `addition` / `subtract` / `multiplication` / `division`.
+
 ```rust
 use umt_rust::math::calculator::umt_calculator;
-use umt_rust::math::{umt_deg_to_rad, umt_math_converter, umt_rad_to_deg, umt_to_base_n};
+use umt_rust::math::{
+    umt_addition, umt_deg_to_rad, umt_division, umt_math_converter, umt_multiplication,
+    umt_rad_to_deg, umt_subtract, umt_to_base_n,
+};
 
+assert!((umt_addition(&[0.1, 0.2]) - 0.3).abs() < 1e-10);
+assert_eq!(umt_addition(&[]), 0.0);
+assert!((umt_subtract(&[0.3, 0.1]) - 0.2).abs() < 1e-10);
+assert_eq!(umt_subtract(&[]), 0.0);
+assert!((umt_multiplication(&[0.1, 0.2, 0.3]) - 0.006).abs() < 1e-10);
+assert!((umt_division(0.1, 0.2) - 0.5).abs() < 1e-10);
 assert_eq!(umt_calculator("1+2", None), "3");
 assert_eq!(umt_calculator("2^2^2", None), "16");
 assert_eq!(
