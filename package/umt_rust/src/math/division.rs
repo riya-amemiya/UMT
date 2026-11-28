@@ -33,6 +33,10 @@ pub fn umt_division(x: f64, y: f64) -> f64 {
         return f64::NAN;
     }
 
+    if x.fract() == 0.0 && y.fract() == 0.0 {
+        return x / y;
+    }
+
     let sign = x.signum() * y.signum();
     let abs_x = x.abs();
     let abs_y = y.abs();
